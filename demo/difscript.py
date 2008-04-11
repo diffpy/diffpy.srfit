@@ -7,11 +7,7 @@ __id__ = "$Id$"
 
 from SrRietveld     import *
 
-def runfit(fit):
-
-    # Fit
-    #from RefinementAPI.park.ParkOptimizer import ParkOptimizer
-    #fit.setOptimizer(ParkOptimizer())
+def initialize(fit):
     # Set the number of refinement cycles
     fit.setNumCycles(-1)
 
@@ -114,6 +110,10 @@ def runfit(fit):
     fit.mapVP("v_W",  prof1, "W")
     fit.mapVP("v_X",  prof1, "X")
 
+
+def runfit(fit):
+
+    comp = fit.getComponent(0)
     # Fitting
     stage1(fit)
     stage2(fit)
@@ -130,15 +130,6 @@ def runfit(fit):
     fit.printResults()
     fit.saveResults("ni.dif.res")
     comp.saveFitArrays("ni.dif.fit")
-
-    if 0:
-        from pylab import plot, show
-        x0,y0,u0 = comp.getDataArrays()
-        x1,y1 = comp.getFitArrays()
-        from RefinementAPI.utils import rebinArray
-        y0i = rebinArray(y0, x0, x1)
-        plot(x1, y0i, x1, y1)
-        show()
 
 def stage1(fit):
     print "stage 1"
@@ -281,4 +272,5 @@ def stage11(fit):
     
 if __name__ == "__main__":
     fit   = Fit()
+    initialize(fit)
     runfit(fit)

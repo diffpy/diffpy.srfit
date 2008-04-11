@@ -10,8 +10,26 @@ def runfit(fit):
     import difscript
 
     # Do the rietveld refinement first (it's more tempermental)
-    difscript.runfit(fit)
+    difscript.initialize(fit)
     difcomp = fit.getComponent(0)
+    # Let's see where we're starting
+    if 1:
+        calc = difcomp.getCalculator()
+        calc._prepareSrRietUI()
+        calc.calculate()
+        from pylab import plot, show, title, xlabel, ylabel, legend
+        x0,y0,u0 = difcomp.getFitDataArrays()
+        x1,y1 = difcomp.getFitArrays()
+        dy = y0-y1
+        dy -= 1.5*( abs(min(dy)) + abs(min(y0)))
+        plot(x1, y0, 'bo', x1, y1, 'r-', x1, dy, 'g--')
+        title("Initial Rietveld configuration")
+        xlabel("Q (A^-1)")
+        ylabel("I (arb.)")
+        legend(("data", "fit (R = %f)"%difcomp.getR(), "difference"))
+        show()
+    print "Rietveld fit"
+    difscript.runfit(fit)
 
     ###############################################################################
     # PDF                                                                         #
@@ -65,14 +83,65 @@ def runfit(fit):
     pdfpha.getAtom(2).x = pdfpha.getAtom(2).z = 0.5
     pdfpha.getAtom(3).x = pdfpha.getAtom(3).y = 0.5
 
+    # Check where we're at
+    if 1:
+        calc = pdfcomp.getCalculator()
+        calc.calculate()
+        from pylab import plot, show, title, xlabel, ylabel, legend
+        x0,y0,u0 = pdfcomp.getFitDataArrays()
+        x1,y1 = pdfcomp.getFitArrays()
+        dy = y0-y1
+        dy -= 1.5*( abs(min(dy)) + abs(min(y0)))
+        plot(x1, y0, 'bo', x1, y1, 'r-', x1, dy, 'g--')
+        title("Initial PDF configuration")
+        xlabel("r (A)")
+        ylabel("G (A^-2)")
+        legend(("data", "fit (R = %f)"%pdfcomp.getR(), "difference"))
+        show()
+        raw_input("Press any key to continue ... ")
+
     # Fitting
     fit.setWeight(pdfcomp, 0.5)
     fit.setWeight(difcomp, 0.5)
+    print "Rietveld+PDF fit"
     fit.refine()
     fit.printResults()
     fit.saveResults("ni.co.res")
     pdfcomp.saveFitArrays("ni.co.pdf.fit")
     difcomp.saveFitArrays("ni.co.dif.fit")
+
+    # Show final Rietveld fit
+    if 1:
+        from pylab import plot, show, title, xlabel, ylabel, legend
+        x0,y0,u0 = difcomp.getFitDataArrays()
+        x1,y1 = difcomp.getFitArrays()
+        dy = y0-y1
+        dy -= 1.5*( abs(min(dy)) + abs(min(y0)))
+        plot(x1, y0, 'bo', x1, y1, 'r-', x1, dy, 'g--')
+        title("Rietveld fit from co-refinement")
+        xlabel("Q (A^-1)")
+        ylabel("I (arb.)")
+        legend(("data", "fit (R = %f)"%difcomp.getR(), "difference"))
+        show()
+        raw_input("Press any key to continue ... ")
+
+    
+    # Show final PDF fit
+    if 1:
+        calc = pdfcomp.getCalculator()
+        calc.calculate()
+        from pylab import plot, show, title, xlabel, ylabel, legend
+        x0,y0,u0 = pdfcomp.getFitDataArrays()
+        x1,y1 = pdfcomp.getFitArrays()
+        dy = y0-y1
+        dy -= 1.5*( abs(min(dy)) + abs(min(y0)))
+        plot(x1, y0, 'bo', x1, y1, 'r-', x1, dy, 'g--')
+        title("PDF fit from co-refinement")
+        xlabel("r (A)")
+        ylabel("G (A^-2)")
+        legend(("data", "fit (R = %f)"%pdfcomp.getR(), "difference"))
+        show()
+        raw_input("Press any key to continue ... ")
 
 if __name__ == "__main__":
     from SrRietveld import Fit

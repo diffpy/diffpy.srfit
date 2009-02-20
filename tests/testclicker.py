@@ -4,12 +4,13 @@
 from diffpy.srfit.equation.clicker import clickerFactory
 import unittest
 
-Clicker = clickerFactory()
 
 class TestClicker(unittest.TestCase):
 
     def testClicker(self):
         """Test all aspects of the Clicker."""
+        Clicker = clickerFactory()
+
         c1 = Clicker()
         c2 = Clicker()
         observer = Clicker()
@@ -73,6 +74,20 @@ class TestClicker(unittest.TestCase):
         c2.removeObserver(observer)
         self.assertFalse( c2.hasObserver(observer) )
         self.assertFalse( observer.hasSubject(c2) )
+        return
+
+    def testTwoClikerTypes(self):
+        """Test using to clicker of different types."""
+        Clicker1 = clickerFactory()
+        Clicker2 = clickerFactory()
+        c1 = Clicker1()
+        c2 = Clicker2()
+        c1.click()
+        self.assertEqual(0, Clicker2._numclicks)
+        self.assertRaises(TypeError, c1.__cmp__, c2)
+        self.assertRaises(TypeError, c2.__cmp__, c1)
+        return
+
 
 if __name__ == "__main__":
 

@@ -14,31 +14,43 @@
 ########################################################################
 """Class for recording changes in objects.
 
-A Clicker is an object for recording changes of state objects. The main functions are
-'click' and '__cmp__', which changes the state of a Clicker and compares its
-state to that of other Clickers, respectively. Clickers can be embedded in other
-objects and used to record when the state of those objects changes.
+A Clicker is an object for recording changes of state in other objects. The main
+functions are 'click' and '__cmp__', which changes the counter of a Clicker and
+compares its counter to that of other Clickers, respectively. The idea is to
+click a clicker whenever the state that it monitor changes. That clicker can
+then be compared to other clickers that are used to monitor other objects.
 
-A Clicker plays the roll of both observer and subject in the traditional
-observer pattern. When clicked, a Clicker will 'click' all of its _observers.
-Clickers of the same type share a global state that records the total number of
-clicks among that type of object. Clicking a Clicker increments this global
-state and sets the local state of the Clicker equal to this value. In this way,
-the most recently clicked Clicker will compare at least as large as any other
-clicker of its type.  This allows one to keep a reference Clicker to compare
-with a pool of other Clickers.  After comparisons are made with the pool, the
-reference is be clicked so that it compares larger (more recent) than the
-Clickers in the pool.
+Clickers of the same type share a global counter that records the total number
+of independent clicks among that type of Clicker. Clicking a Clicker increments
+this global counter and sets the local counter of the Clicker equal to it.  In
+this way, the most recently clicked Clicker will compare at least as large as
+any other clicker of its type.  To use this information, one can keep a
+reference clicker and compare it with other clickers.  When the reference
+compares less than another clicker then the state information monitored by that
+clicker has changed since the last time it was compared with the monitor, and
+should therefore be reprocessed.  After the reference is compared to all other
+Clickers, it can be clicked so that it will compare greater than all other
+clickers until one of them is clicked. 
 
-Note that no effort is made to check for loops in the observation structure.
+Clickers can be composed in a network and can play the roll of observer, subject
+or both.  When clicked, a Clicker will impose its counter on all of its
+observers.  Thus, observer >= subject is always true. Composition is performed
+with 'addObserver' or 'addSubject'. Note that no effort is made to check for
+loops in the observation structure.
 
-The Clicker is created with a the clickerFactory method in this module. This
-allows one to have several types of clickers with different global state for use
-in different types of comparisons.
+The Clicker is created with a the clickerFactory method defined in this module.
+This allows one to have several types of clickers with different global counters
+for use in different types of comparisons. Since the global counter of a clicker
+is tied to its class, Clickers can only be compared with clickers with the same
+class. Thus, one should not inherit from Clicker and expect the subclasses to
+interoperate.
 """
 
 def clickerFactory():
-    """A factory for creating Clicker classes."""
+    """A factory for creating Clicker classes.
+
+    Returns Clicker class
+    """
 
     class Clicker(object):
         """Clicker class for recording state changes."""
@@ -86,16 +98,16 @@ def clickerFactory():
             return self in other._observers
 
         def click(self):
-            """Click this Clicker and all of its _observers.
+            """Click this Clicker and all of its observers.
 
-            Observers will be given the same _state as this clicker.
+            Observers will be given the same state as this clicker.
             """
             self.__class__._numclicks += 1
             self._click()
             return
 
         def _click(self):
-            """Increment the local _state without changing the global _state.
+            """Increment the local state without changing the global state.
 
             This is used internally. Do not call this method.
             """
@@ -104,8 +116,17 @@ def clickerFactory():
                 clicker._click()
 
         def __cmp__(self, other):
-            """Compare the _state of two clickers."""
+            """Compare the counter of two Clickers.
+            
+            Raises TypeError if the Clickers are from different classes.
+            """
+            if self.__class__ is not other.__class__:
+                raise TypeError("Cannot compare Clickers of different types")
             return self._state - other._state
+
+        def __str__(self):
+            """String representation."""
+            return "%i:%i"%(self._state, self.__class__._numclicks)
 
     return Clicker
 

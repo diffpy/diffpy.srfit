@@ -107,14 +107,11 @@ def clickerFactory():
             return
 
         def update(self):
-            """Update the state of this clicker to its observers.
-
-            This sets the local state to the global state and transmits this to
-            the observers.
-            """
+            """Update the observers."""
             self._state = self.__class__._numclicks
             for clicker in self._observers:
                 clicker.update()
+            return
 
         def __cmp__(self, other):
             """Compare the counter of two Clickers.

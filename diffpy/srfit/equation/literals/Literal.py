@@ -15,31 +15,36 @@
 """Literal class. 
 
 Literals are base pieces of the equation hierarchy. The have a single method,
-'identify' that identifies the Literal to a visitor. Literal has a single data
-attribute, 'clicker', that records changes in the state of a Literal. Clicker is
-found in the diffpy.equation.Clicker module.
+'identify' that identifies the Literal to a visitor. Literal has two data
+attributes: 'clicker' records changes in the state of the Literal and 'value',
+which records the most recent value of the literal. These are used by the
+Evaluator visitor.
+
+Note that even though an equation hierarchy is designed according to the visitor
+pattern, the primary purpose of the hierarchy is to flexibly and efficiently
+evaluate equations. To make this work without complex machinery, some of the
+information needed by the Evaluator visitor is stored in the data objects.
+
+The clicker is described in the diffpy.equation.clicker module.
 """
 
-from diffpy.srfit.equation.Clicker import Clicker
+
+from diffpy.srfit.equation.literals import Clicker
 
 class Literal(object):
-    """Abstract class for equation pieces, such as operators and variables.
-
-    This is the base class for the equation data structure. The structure is
-    biased heavily towards the evaluation of the equation tree, and so some
-    structure required to make that fast and efficient is contained in the base
-    class, breaking the encapsulation of responsibility.
-    """
+    """Abstract class for equation pieces, such as operators and arguments.""" 
 
     def __init__(self):
         """Initialization."""
         self.clicker = Clicker()
+        self.value = 0
         return
 
     def identify(self, visitor):
         """Identify self to a visitor."""
         m = "'%s' must override 'identify'" % self.__class__.__name__
         raise NotImplementedError(m)
+
 
 
 # version

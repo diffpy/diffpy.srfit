@@ -20,12 +20,12 @@ class Visitor(object):
     examples of use.
     """
 
-    # Variables
-    def onVariable(self, var):
-        return self._abstract("onVariable")
+    def onArgument(self, arg):
+        """Process an Argument node."""
+        return self._abstract("onArgument")
 
-    # Operators
     def onOperator(self, op):
+        """Process an Operator node."""
         return self._abstract("onOperator")
 
 

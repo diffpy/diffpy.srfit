@@ -24,7 +24,6 @@ class TestOperator(unittest.TestCase):
         """Test adding a literal."""
         a1 = literals.Argument()
         op1 = literals.Operator()
-        op1.nin = 1
         op2 = literals.Operator()
 
         op1.addLiteral(a1)

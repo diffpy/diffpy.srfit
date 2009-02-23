@@ -77,10 +77,7 @@ class TestEvaluator(unittest.TestCase):
         plus = literals.AdditionOperator()
         minus = literals.SubtractionOperator()
         import numpy
-        sin = literals.Operator()
-        sin.name = sin.symbol = "sin"
-        sin.nin = 1
-        sin.operation = numpy.sin
+        sin = literals.UfuncOperator(numpy.sin)
 
         # Create the equation v1*sin(v2) + v3
         sin.addLiteral(v2)

@@ -36,3 +36,4 @@ from diffpy.srfit.equation.literals.operators import MultiplicationOperator
 from diffpy.srfit.equation.literals.operators import DivisionOperator
 from diffpy.srfit.equation.literals.operators import ExponentiationOperator
 from diffpy.srfit.equation.literals.operators import RemainderOperator
+from diffpy.srfit.equation.literals.operators import UfuncOperator

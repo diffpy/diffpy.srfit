@@ -143,6 +143,27 @@ class RemainderOperator(Operator):
         self.operation = numpy.mod
         return
 
+class UfuncOperator(Operator):
+    """A operator wrapper around a numpy ufunc.
+
+    The name and symbol attributes are set equal to the ufunc.__name__
+    attribute. nin and nout are also taken from the ufunc.
+    
+    """
+
+    def __init__(self, op):
+        """Initialization.
+
+        Arguments
+        op  --  A numpy ufunc
+        """
+        Operator.__init__(self)
+        self.name = op.__name__
+        self.symbol = op.__name__
+        self.nin = op.nin
+        self.nout = op.nout
+        self.operation = op
+        return
 
 # version
 __id__ = "$Id$"

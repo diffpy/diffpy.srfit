@@ -42,13 +42,13 @@ class TestClicker(unittest.TestCase):
         self.assertFalse( c1 >= c2)
         self.assertFalse( c2 <= c1)
 
-        # Observe these two. Note that this does not change the state of the
-        # observer or the subjects.
+        # Observe these two. Note that this sets the state of the subject and
+        # all observers equal to the global state.
         observer.addSubject(c1)
         observer.addSubject(c2)
-        self.assertTrue( observer < c1 )
-        self.assertTrue( observer < c2 )
-        self.assertTrue( c2 > c1 )
+        self.assertTrue( observer == c1 )
+        self.assertTrue( observer == c2 )
+        self.assertTrue( c2 == c1 )
 
         # Check relations
         self.assertTrue( c1.hasObserver(observer) )

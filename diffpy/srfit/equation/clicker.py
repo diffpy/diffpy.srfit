@@ -17,7 +17,7 @@
 A Clicker is an object for recording changes of state in other objects. The main
 functions are 'click' and '__cmp__', which changes the counter of a Clicker and
 compares its counter to that of other Clickers, respectively. The idea is to
-click a clicker whenever the state that it monitor changes. That clicker can
+click a clicker whenever the state that it monitors changes. That clicker can
 then be compared to other clickers that are used to monitor other objects.
 
 Clickers of the same type share a global counter that records the total number
@@ -66,6 +66,7 @@ def clickerFactory():
         def addObserver(self, other):
             """Add a Clicker that observes this one."""
             self._observers.add(other)
+            self.update()
             return
 
         def addSubject(self, other):
@@ -107,7 +108,11 @@ def clickerFactory():
             return
 
         def update(self):
-            """Update the observers."""
+            """Update the local state and that of the observers.
+
+            This sets the local state to the global state and updates all
+            observers.
+            """
             self._state = self.__class__._numclicks
             for clicker in self._observers:
                 clicker.update()

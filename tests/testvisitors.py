@@ -5,21 +5,20 @@ import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
 import unittest
 
+def _makeArgs(num):
+    args = []
+    for i in xrange(num):
+        args.append(literals.Argument())
+    return args
+
 
 class TestEvaluator(unittest.TestCase):
 
-    def _makeArgs(self, num):
-        args = []
-        for i in xrange(num):
-            args.append(literals.Argument())
-        return args
-
     def testSimpleFunction(self):
         """Test a simple function."""
-        evaluator = visitors.Evaluator()
 
         # Make some variables
-        v1, v2, v3, v4 = self._makeArgs(4)
+        v1, v2, v3, v4 = _makeArgs(4)
 
         # Make some operations
         mult = literals.MultiplicationOperator()
@@ -42,6 +41,7 @@ class TestEvaluator(unittest.TestCase):
         v4.setValue(4)
 
         # Evaluate this
+        evaluator = visitors.Evaluator()
         mult.identify(evaluator)
         evaluator.clicker.click()
         self.assertEqual(8, evaluator.value)
@@ -70,7 +70,7 @@ class TestEvaluator(unittest.TestCase):
         evaluator = visitors.Evaluator()
 
         # Make some variables
-        v1, v2, v3 = self._makeArgs(3)
+        v1, v2, v3 = _makeArgs(3)
 
         # Make some operations
         mult = literals.MultiplicationOperator()
@@ -79,7 +79,7 @@ class TestEvaluator(unittest.TestCase):
         import numpy
         sin = literals.Operator()
         sin.name = sin.symbol = "sin"
-        sin.numargs = 1
+        sin.nin = 1
         sin.operation = numpy.sin
 
         # Create the equation v1*sin(v2) + v3
@@ -106,14 +106,14 @@ class TestEvaluator(unittest.TestCase):
         evaluator = visitors.Evaluator()
 
         # Make some variables
-        v1, v2 = self._makeArgs(2)
+        v1, v2 = _makeArgs(2)
 
         # Make some operations
         mult = literals.MultiplicationOperator()
         import numpy
         sum = literals.Operator()
         sum.name = sum.symbol = "sum"
-        sum.numargs = 1
+        sum.nin = 1
         sum.operation = numpy.sum
 
         # Create the equation sum(v1*v2)
@@ -134,6 +134,69 @@ class TestEvaluator(unittest.TestCase):
         return
 
 
+class TestValidator(unittest.TestCase):
+
+    def testSimpleFunction(self):
+        """Test a simple function."""
+
+        # Make some variables
+        v1, v2, v3, v4 = _makeArgs(4)
+
+        # Make some operations
+        mult = literals.MultiplicationOperator()
+        plus = literals.AdditionOperator()
+        minus = literals.SubtractionOperator()
+
+        # Let's hobble the plus operator
+        plus.name = None
+        plus.symbol = None
+        plus.operation = None
+
+        # Partially define the equation (v1+v3)*(v4-v2). Let's only give one
+        # variable to the '-' operation.
+        plus.addLiteral(v1)
+        plus.addLiteral(v3)
+        minus.addLiteral(v4)
+        mult.addLiteral(plus)
+        mult.addLiteral(minus)
+
+        # Now validate
+        validator = visitors.Validator()
+        mult.identify(validator)
+        self.assertEqual(4, len(validator.errors))
+
+        # Fix the equation
+        minus.addLiteral(v3)
+        validator.reset()
+        mult.identify(validator)
+        self.assertEqual(3, len(validator.errors))
+
+        # Fix the name of plus
+        plus.name = "add"
+        validator.reset()
+        mult.identify(validator)
+        self.assertEqual(2, len(validator.errors))
+
+        # Fix the symbol of plus
+        plus.symbol = "+"
+        validator.reset()
+        mult.identify(validator)
+        self.assertEqual(1, len(validator.errors))
+
+        # Fix the operation of plus
+        import numpy
+        plus.operation = numpy.add
+        validator.reset()
+        mult.identify(validator)
+        self.assertEqual(0, len(validator.errors))
+
+        # Add another literal to minus
+        minus.addLiteral(v1)
+        validator.reset()
+        mult.identify(validator)
+        self.assertEqual(1, len(validator.errors))
+
+        return
 
 if __name__ == "__main__":
 

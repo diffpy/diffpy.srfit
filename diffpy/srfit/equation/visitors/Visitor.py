@@ -16,8 +16,7 @@
 class Visitor(object):
     """Abstract class for all visitors to a literal tree.
 
-    The methods are considered self-documented. See implemented visitors for
-    examples of use.
+    See implemented visitors for examples of use.
     """
 
     def onArgument(self, arg):

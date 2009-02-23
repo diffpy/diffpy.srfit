@@ -20,7 +20,13 @@ Arguments are the leaves of an equation tree.
 from diffpy.srfit.equation.literals.Literal import Literal
 
 class Argument(Literal):
-    """Argument class."""
+    """Argument class.
+    
+    Attributes
+    name    --  A name for this Argument.
+    clicker --  A Clicker instance for recording change in the value.
+    value   --  The value of the Argument. Modified with setValue.
+    """
 
     def identify(self, visitor):
         """Identify self to a visitor."""

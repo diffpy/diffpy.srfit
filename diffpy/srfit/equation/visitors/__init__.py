@@ -22,4 +22,5 @@ Explanation of modules and how they work.
 # package version
 from diffpy.srfit.version import __version__
 
-from Evaluator import Evaluator
+from diffpy.srfit.equation.visitors.Evaluator import Evaluator
+from diffpy.srfit.equation.visitors.Validator import Validator

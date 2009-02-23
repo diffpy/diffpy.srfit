@@ -14,24 +14,46 @@
 ########################################################################
 """Operator classes. 
 
-Operators are the joining nodes of the equation tree...
+These classes are combined with Arguments to create an equation. Each Operator
+can be associated with Literals to create an equation that can be evaluated by
+the Evaluator visitor, or otherwise inspected. Operators contain data 'value'
+and 'clicker' attributes for facilitating rapid re-evaluation of an equation
+tree.
+
+The Operator class contains all the information necessary to be identified and
+evaluated by a Visitor. Thus, a single onOperator method exists in the Visitor
+base class. Other Operators can be derived from Operator (see AdditionOperator),
+but they all identify themselves with the Visitor.onOperator method.
 """
 
 from diffpy.srfit.equation.literals.Literal import Literal
+import numpy
 
 class Operator(Literal):
     """Class for holding a general operator.
 
-    This holds a general operator and records its arguments and name. This
-    should be the only Operator that visitors know how to process.
+    This holds a general operator and records its function, arguments, name and
+    symbol.  The visitors should be able to process any Operator with this
+    information alone.
+
+    Attributes
+    name    --  A name for this operator. e.g. "add" or "sin"
+    symbol  --  The symbolic representation. e.g. "+" or "sin"
+    nin     --  Number of inputs
+    nout    --  Number of outputs
+    args    --  List of Literal arguments, set with addLiteral
+    operation   --  Function that performs the operation. e.g. numpy.add or
+                    numpy.sin
+    clicker --  A Clicker instance for recording change in the value
+    value   --  The evaluated value of this Operator.
     """
 
     def __init__(self):
         """Initialization."""
         Literal.__init__(self)
-        self.name = None
         self.symbol = None
-        self.numargs = 0
+        self.nin = 2
+        self.nout = 1
         self.args = []
         self.operation = None
         return
@@ -44,19 +66,15 @@ class Operator(Literal):
     def addLiteral(self, literal):
         """Add a literal to this operator.
 
-        Raises AttributeError if the number of literals would exceed the number
-        of arguments allowed by the operator.
+        Note that order of operation matters. The first literal added is the
+        leftmost argument. The last is the rightmost.
         """
-        if len(self.args) >= self.numargs:
-            raise AttributeError("Cannot accept another literal.")
         self.args.append(literal)
         self.clicker.addSubject(literal.clicker)
-        literal.clicker.update()
         return
 
 # Some specified operators
 
-import numpy
 
 class AdditionOperator(Operator):
     """Addition operator."""
@@ -66,7 +84,6 @@ class AdditionOperator(Operator):
         Operator.__init__(self)
         self.name = "add"
         self.symbol = "+"
-        self.numargs = 2
         self.operation = numpy.add
         return
 
@@ -78,7 +95,6 @@ class SubtractionOperator(Operator):
         Operator.__init__(self)
         self.name = "subtract"
         self.symbol = "-"
-        self.numargs = 2
         self.operation = numpy.subtract
         return
 
@@ -90,7 +106,6 @@ class MultiplicationOperator(Operator):
         Operator.__init__(self)
         self.name = "multiply"
         self.symbol = "*"
-        self.numargs = 2
         self.operation = numpy.multiply
         return
 
@@ -102,7 +117,6 @@ class DivisionOperator(Operator):
         Operator.__init__(self)
         self.name = "divide"
         self.symbol = "/"
-        self.numargs = 2
         self.operation = numpy.divide
         return
 
@@ -114,7 +128,6 @@ class ExponentiationOperator(Operator):
         Operator.__init__(self)
         self.name = "power"
         self.symbol = "**"
-        self.numargs = 2
         self.operation = numpy.power
         return
 
@@ -127,7 +140,6 @@ class RemainderOperator(Operator):
         Operator.__init__(self)
         self.name = "mod"
         self.symbol = "%"
-        self.numargs = 2
         self.operation = numpy.mod
         return
 

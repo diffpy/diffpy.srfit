@@ -32,10 +32,18 @@ The clicker is described in the diffpy.equation.clicker module.
 from diffpy.srfit.equation.literals import Clicker
 
 class Literal(object):
-    """Abstract class for equation pieces, such as operators and arguments.""" 
+    """Abstract class for equation pieces, such as operators and arguments.
+    
+
+    Attributes
+    name    --  A name for this Literal.
+    clicker --  A Clicker instance for recording change in the value
+    value   --  The value stored by the Literal.
+    """ 
 
     def __init__(self):
         """Initialization."""
+        self.name = None
         self.clicker = Clicker()
         self.value = 0
         return

@@ -53,37 +53,41 @@ class Evaluator(Visitor):
         """Initialize."""
         self.value = 0
         self.clicker = Clicker()
-        self.vals = []
+        self._vals = []
         return
 
     def onArgument(self, arg):
         """Process an Argument node."""
         self.value = arg.value
-        self.vals = [arg.value]
+        self._vals = [arg.value]
         return
 
     def onOperator(self, op):
         """Process an Operator node."""
 
+        #print op.name, op.clicker, self.clicker
         # We have to re-evaluate if the operator's clicker is greater than the
         # evaluator's. 
         if op.clicker > self.clicker:
+            #print op.name, "====RECOMPUTE===="
 
             # Visit each literal in the operator's arg list and update its
             # value.
             localvals = []
             for literal in op.args:
                 literal.identify(self)
-                localvals.extend(self.vals)
+                localvals.extend(self._vals)
 
             # Now evaluate the operation. This does not check for validity.
             op.value = op.operation(*localvals)
 
         self.value = op.value
         if(op.nout == 1):
-            self.vals = [self.value]
+            self._vals = [self.value]
         elif(op.nout > 1):
-            self.vals = self.value
+            self._vals = self.value
+        else:
+            self._vals = []
 
         return
 

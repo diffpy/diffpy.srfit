@@ -14,7 +14,7 @@
 ########################################################################
 
 class Visitor(object):
-    """Abstract class for all visitors to a literal tree.
+    """Abstract class for all visitors to a Literal tree.
 
     See implemented visitors for examples of use.
     """

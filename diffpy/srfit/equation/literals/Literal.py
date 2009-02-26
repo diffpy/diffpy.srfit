@@ -45,7 +45,7 @@ class Literal(object):
         """Initialization."""
         self.name = None
         self.clicker = Clicker()
-        self.value = 0
+        self.value = None
         return
 
     def identify(self, visitor):

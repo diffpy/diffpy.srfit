@@ -48,14 +48,16 @@ class Operator(Literal):
     value   --  The evaluated value of this Operator.
     """
 
-    def __init__(self):
+    def __init__(self, name = None, symbol = None, operation = None,
+            nin = 2, nout = 1):
         """Initialization."""
         Literal.__init__(self)
-        self.symbol = None
-        self.nin = 2
-        self.nout = 1
+        self.name = name
+        self.symbol = symbol
+        self.nin = nin
+        self.nout = nout
         self.args = []
-        self.operation = None
+        self.operation = operation
         return
 
     def identify(self, visitor):

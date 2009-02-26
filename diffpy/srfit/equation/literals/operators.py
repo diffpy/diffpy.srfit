@@ -26,7 +26,7 @@ base class. Other Operators can be derived from Operator (see AdditionOperator),
 but they all identify themselves with the Visitor.onOperator method.
 """
 
-from diffpy.srfit.equation.literals.Literal import Literal
+from .Literal import Literal
 import numpy
 
 class Operator(Literal):

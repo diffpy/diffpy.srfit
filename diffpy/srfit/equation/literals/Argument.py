@@ -17,7 +17,7 @@
 Arguments are the leaves of an equation tree.
 """
 
-from diffpy.srfit.equation.literals.Literal import Literal
+from .Literal import Literal
 
 import numpy
 

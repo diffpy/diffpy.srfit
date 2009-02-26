@@ -22,18 +22,14 @@ Explanation of modules and how they work.
 # package version
 from diffpy.srfit.version import __version__
 
-# Make a clicker for this package
-from diffpy.srfit.equation.clicker import clickerFactory
-Clicker = clickerFactory()
-
 # Import the operators
 
-from diffpy.srfit.equation.literals.Argument import Argument
-from diffpy.srfit.equation.literals.operators import Operator
-from diffpy.srfit.equation.literals.operators import AdditionOperator
-from diffpy.srfit.equation.literals.operators import SubtractionOperator
-from diffpy.srfit.equation.literals.operators import MultiplicationOperator
-from diffpy.srfit.equation.literals.operators import DivisionOperator
-from diffpy.srfit.equation.literals.operators import ExponentiationOperator
-from diffpy.srfit.equation.literals.operators import RemainderOperator
-from diffpy.srfit.equation.literals.operators import UfuncOperator
+from .Argument import Argument
+from .operators import Operator
+from .operators import AdditionOperator
+from .operators import SubtractionOperator
+from .operators import MultiplicationOperator
+from .operators import DivisionOperator
+from .operators import ExponentiationOperator
+from .operators import RemainderOperator
+from .operators import UfuncOperator

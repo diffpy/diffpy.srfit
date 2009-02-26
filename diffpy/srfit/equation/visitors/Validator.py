@@ -19,9 +19,9 @@ validity of each equation as much as possible without evaluating it. It
 collects errors in a list.
 """
 
-from diffpy.srfit.equation.visitors.Visitor import Visitor
+from .Visitor import Visitor
 
-from diffpy.srfit.equation.literals import Clicker
+from .. import Clicker
 
 class Validator(Visitor):
     """Validator error for checking validity of an equation tree.

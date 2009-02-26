@@ -21,4 +21,10 @@ Explanation of modules and how they work.
 # package version
 from diffpy.srfit.version import __version__
 
+from .clicker import clickerFactory
+
+Clicker = clickerFactory()
+
+from .Equation import Equation
+
 # End of file

@@ -5,11 +5,7 @@ import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
 import unittest
 
-def _makeArgs(num):
-    args = []
-    for i in xrange(num):
-        args.append(literals.Argument())
-    return args
+from utils import _makeArgs
 
 
 class TestEvaluator(unittest.TestCase):
@@ -192,6 +188,46 @@ class TestValidator(unittest.TestCase):
         validator.reset()
         mult.identify(validator)
         self.assertEqual(1, len(validator.errors))
+
+        return
+
+class TestArgFinder(unittest.TestCase):
+
+    def testSimpleFunction(self):
+        """Test a simple function."""
+
+        # Make some variables
+        v1, v2, v3, v4 = _makeArgs(4)
+
+        # Make some operations
+        mult = literals.MultiplicationOperator()
+        plus = literals.AdditionOperator()
+        minus = literals.SubtractionOperator()
+
+        # Create the equation (v1+v3)*(v4-v2)
+        plus.addLiteral(v1)
+        plus.addLiteral(v3)
+        minus.addLiteral(v4)
+        minus.addLiteral(v2)
+        mult.addLiteral(plus)
+        mult.addLiteral(minus)
+
+        # Set the values of the variables.
+        # The equation should evaluate to (1+3)*(4-2) = 8
+        v1.setValue(1)
+        v2.setValue(2)
+        v3.setValue(3)
+        v4.setValue(4)
+
+        # now get the args
+        argfinder = visitors.ArgFinder()
+        mult.identify(argfinder)
+        args = argfinder.args
+        self.assertEqual(4, len(args))
+        self.assertTrue(v1 in args)
+        self.assertTrue(v2 in args)
+        self.assertTrue(v3 in args)
+        self.assertTrue(v4 in args)
 
         return
 

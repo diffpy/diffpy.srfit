@@ -6,12 +6,7 @@ import diffpy.srfit.equation.literals as literals
 
 import numpy
 
-def _makeArgs(num):
-    args = []
-    for i in xrange(num):
-        args.append(literals.Argument())
-        args[-1].name = "v%i"%(i+1)
-    return args
+from utils import _makeArgs
 
 x = numpy.arange(0, 20, 0.05)
 
@@ -50,10 +45,12 @@ def makeLazyEquation():
 
     evaluator = visitors.Evaluator()
 
-    def _f(a, b, c):
+    def _f(a, b, c, d, e):
         v1.setValue(a)
         v4.setValue(b)
-        v7.setValue(c)
+        v5.setValue(c)
+        v6.setValue(d)
+        v7.setValue(e)
         mult2.identify(evaluator)
         evaluator.clicker.click()
         return evaluator.value
@@ -65,8 +62,8 @@ def makeEquation():
 
     y = 50*x
 
-    def _f(a, b, c):
-        return ((a+x)*(y-b))**2.11 * numpy.exp(c)
+    def _f(a, b, c, d, e):
+        return ((a+x)*(y-b))**c * d**e
 
     return _f
 
@@ -80,41 +77,26 @@ def timeFunction(f, *args):
 
 if __name__ == "__main__":
 
-    print "Initial"
+    import random
     f1 = makeLazyEquation()
     f2 = makeEquation()
 
-    a, b, c = 3.1, 8.19973123410, 2.1
+    args = [3.1, 8.19973123410, 2.1, numpy.e, numpy.pi]
 
-    t1 = timeFunction(f1, a, b, c)
-    t2 = timeFunction(f2, a, b, c)
-    print "lazy", t1
-    print "regular", t2
+    total1 = 0
+    total2 = 0
+    for i in xrange(len(args)):
+        args[i] = 10*random.random()
+        print "Changing argument %i"%(i+1)
+        t1 = timeFunction(f1, *args)
+        t2 = timeFunction(f2, *args)
+        total1 += t1
+        total2 += t2
+        print "lazy", t1
+        print "regular", t2
 
-    # Change one of the variables
-    print "Single change"
-    c = 0.1
-    t1 = timeFunction(f1, a, b, c)
-    t2 = timeFunction(f2, a, b, c)
-    print "lazy", t1
-    print "regular", t2
-
-    # Change two
-    print "Two change"
-    a = 2.0
-    b = 2.0
-    t1 = timeFunction(f1, a, b, c)
-    t2 = timeFunction(f2, a, b, c)
-    print "lazy", t1
-    print "regular", t2
-
-    # Change three
-    print "Three change"
-    a = 1.0
-    b = 1.0
-    c = 1.0
-    t1 = timeFunction(f1, a, b, c)
-    t2 = timeFunction(f2, a, b, c)
-    print "lazy", t1
-    print "regular", t2
+    print "Totals:"
+    print "lazy", total1
+    print "regular", total2
+    print "Ratio (lazy/regular)", total1/total2
 

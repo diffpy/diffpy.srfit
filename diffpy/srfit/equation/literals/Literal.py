@@ -28,8 +28,7 @@ information needed by the Evaluator visitor is stored in the data objects.
 The clicker is described in the diffpy.equation.clicker module.
 """
 
-
-from diffpy.srfit.equation.literals import Clicker
+from .. import Clicker
 
 class Literal(object):
     """Abstract class for equation pieces, such as operators and arguments.

@@ -2,6 +2,7 @@
 """Tests for refinableobj module."""
 
 import diffpy.srfit.equation.literals as literals
+import diffpy.srfit.equation as equation
 import unittest
 
 
@@ -10,7 +11,7 @@ class TestArgument(unittest.TestCase):
     def testSetValue(self):
         """Test initialization."""
         l = literals.Argument()
-        c1 = literals.Clicker()
+        c1 = equation.Clicker()
 
         l.setValue(3.14)
         self.assertAlmostEqual(l.value, 3.14)

@@ -37,9 +37,9 @@ Evaluator does not check of the validity of the expression. See the Validator
 visitor for that.
 """
 
-from diffpy.srfit.equation.visitors.Visitor import Visitor
+from .Visitor import Visitor
 
-from diffpy.srfit.equation.literals import Clicker
+from .. import Clicker
 
 class Evaluator(Visitor):
     """Evaluator visitor for computing the value of an expression.

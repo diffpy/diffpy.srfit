@@ -28,6 +28,7 @@ class LiteralBuilder(object):
         self.literal = None
         return
 
+    # The infix operators
     def __eval(self, other, OperatorClass):
         op = OperatorClass()
         op.addLiteral(self.literal)
@@ -73,24 +74,19 @@ class OperatorBuilder(object):
             self.literal.addLiteral(arg.literal)
         return self
 
-def makeNamespace(consts, args, ops):
+def makeNamespace(constmap, args, ops):
     """Make a namespace for building an equation from a string equation."""
 
     ns = {}
 
-    for const in consts.values():
-        # Create a class with the name of the const within the namespace
-        if const in ns: continue
-        c = ArgumentBuilder(value=float(const), name="const_"+const)
-        ns[const] = c
-
-    for arg in args.values():
+    for arg in args:
         # Create a class with the name of the arg within the namespace
         if arg in ns: continue
-        c = ArgumentBuilder(name=arg)
+        value = constmap.get(arg)
+        c = ArgumentBuilder(name=arg, value=value)
         ns[arg] = c
 
-    for op in ops.values():
+    for op in ops:
         if op in ns: continue
         c = OperatorBuilder(name=op)
         ns[op] = c
@@ -151,22 +147,36 @@ def parseEquation(eqstr):
            poplist.append(i)
     map(ops.pop, poplist)
 
-    return consts, args, ops
+    # Now rename the constants
+    constmap = {}
+    tokranges = [ (tokens[i][2][1], tokens[i][3][1]) for i in consts ]
+    tokranges.sort(reverse=True)
+    idx = 0
+    neweqstr = eqstr
+    for lb, ub in tokranges:
+        cname = "_const%i"%idx
+        constmap[cname] = eval(eqstr[lb:ub])
+        idx += 1
+        neweqstr = neweqstr[:lb] + cname + neweqstr[ub:]
+        args[cname] = cname
+
+    return neweqstr, constmap, args.values(), ops.values()
 
 
 def makeEquation(eqstr):
 
-    consts, args, ops = parseEquation(eqstr)
+    neweqstr, constmap, args, ops = parseEquation(eqstr)
 
-    #print "args", args.values()
-    #print "consts", consts.values()
-    #print "ops", ops.values()
+    #print neweqstr
+    #print "args", args
+    #print "ops", ops
+    #print "constmap", constmap
 
-    ns = makeNamespace(consts, args, ops)
+    ns = makeNamespace(constmap, args, ops)
     #for key, val in ns.items():
     #    print key, val
 
-    exec("_rootwrap = " + eqstr, ns)
+    exec("_rootwrap = " + neweqstr, ns)
     rootwrap = ns["_rootwrap"]
     root = rootwrap.literal
     #print "root", root

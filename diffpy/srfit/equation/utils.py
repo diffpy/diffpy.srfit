@@ -14,8 +14,7 @@
 ########################################################################
 """Utilities for creating Equation objects."""
 
-#FIXME - Need to rename constants in the evaluated equation
-#TODO - Need to handle assignments and a shared namespace between
+#TODO - Need to handle assignments and a shared namespaces
 
 from .Equation import Equation
 import diffpy.srfit.equation.literals as literals
@@ -30,6 +29,7 @@ class LiteralBuilder(object):
 
     # The infix operators
     def __eval(self, other, OperatorClass):
+        #print OperatorClass.__name__, self.literal, other.literal
         op = OperatorClass()
         op.addLiteral(self.literal)
         op.addLiteral(other.literal)
@@ -55,24 +55,37 @@ class LiteralBuilder(object):
     def __mod__(self, other):
         return self.__eval(other, literals.RemainderOperator)
 
+    def __neg__(self):
+        op = literals.NegationOperator()
+        op.addLiteral(self.literal)
+        lb = LiteralBuilder()
+        lb.literal = op
+        return lb
+
 class ArgumentBuilder(LiteralBuilder):
 
     def __init__(self, value=None, name=None):
         self.literal = literals.Argument(value=value, name=name)
         return
 
-class OperatorBuilder(object):
+class OperatorBuilder(LiteralBuilder):
     """Acts like a numpy operator, but helps build a Literal tree."""
 
     def __init__(self, name):
-        op = getattr(numpy, name)
-        self.literal = literals.UfuncOperator(op)
+        self.name = name
+        self.literal = None
+        self.op = getattr(numpy, name)
         return
 
     def __call__(self, *args):
+        newobj = OperatorBuilder(self.name)
+        newobj.literal = literals.UfuncOperator(self.op)
+        #print self.literal,
         for arg in args:
-            self.literal.addLiteral(arg.literal)
-        return self
+            #print arg.literal,
+            newobj.literal.addLiteral(arg.literal)
+        #print
+        return newobj
 
 def makeNamespace(constmap, args, ops):
     """Make a namespace for building an equation from a string equation."""
@@ -88,7 +101,7 @@ def makeNamespace(constmap, args, ops):
 
     for op in ops:
         if op in ns: continue
-        c = OperatorBuilder(name=op)
+        c = OperatorBuilder(op)
         ns[op] = c
 
     return ns
@@ -131,6 +144,7 @@ def parseEquation(eqstr):
             consts[i] = tok[1]
 
     ignore = ("(", ",", ")")
+    constants = ("e", "pi")
 
     # Now scan the operators for variables. This will find variables that are
     # not in the numpy or builtin namespace (for now).
@@ -143,22 +157,34 @@ def parseEquation(eqstr):
            op not in ignore:
                args[i] = op
                poplist.append(i)
+        if op in constants:
+            consts[i] = op
+            poplist.append(i)
         if op in ignore or op in symbols:
-           poplist.append(i)
+            poplist.append(i)
+
+
     map(ops.pop, poplist)
 
     # Now rename the constants
     constmap = {}
+    usedconsts = {}
     tokranges = [ (tokens[i][2][1], tokens[i][3][1]) for i in consts ]
     tokranges.sort(reverse=True)
     idx = 0
     neweqstr = eqstr
     for lb, ub in tokranges:
-        cname = "_const%i"%idx
-        constmap[cname] = eval(eqstr[lb:ub])
-        idx += 1
+        key = eqstr[lb:ub]
+        if key in usedconsts:
+            cname = usedconsts[key]
+        else:
+            cname = "_const%i"%idx
+            idx += 1
+            usedconsts[key] = cname
+            # Evaluate the constant in the numpy namespace
+            constmap[cname] = eval(eqstr[lb:ub], dict(numpy.__dict__))
+            args[cname] = cname
         neweqstr = neweqstr[:lb] + cname + neweqstr[ub:]
-        args[cname] = cname
 
     return neweqstr, constmap, args.values(), ops.values()
 

@@ -59,7 +59,7 @@ class Equation(object):
         if( validator.errors ):
             m = "Errors found in Literal tree %r\n"%root
             m += "\n".join(validator.errors)
-            raise Validator(m)
+            raise ValueError(m)
 
         argfinder = ArgFinder()
         root.identify(argfinder)

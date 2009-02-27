@@ -75,6 +75,12 @@ class Operator(Literal):
         self.clicker.addSubject(literal.clicker)
         return
 
+    def __str__(self):
+        if self.name:
+            return "Operator(" + self.name + ")"
+        return self.__repr__()
+
+
 # Some specified operators
 
 
@@ -133,7 +139,6 @@ class ExponentiationOperator(Operator):
         self.operation = numpy.power
         return
 
-
 class RemainderOperator(Operator):
     """Remainder operator."""
 
@@ -143,6 +148,18 @@ class RemainderOperator(Operator):
         self.name = "mod"
         self.symbol = "%"
         self.operation = numpy.mod
+        return
+
+class NegationOperator(Operator):
+    """Negation operator."""
+
+    def __init__(self):
+        """Initialization."""
+        Operator.__init__(self)
+        self.name = "negative"
+        self.symbol = "-"
+        self.nin = 1
+        self.operation = numpy.negative
         return
 
 class UfuncOperator(Operator):

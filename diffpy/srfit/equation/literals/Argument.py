@@ -53,6 +53,11 @@ class Argument(Literal):
             self.clicker.click()
         return
 
+    def __str__(self):
+        if self.name:
+            return "Argument(" + self.name + ")"
+        return self.__repr__()
+
 # version
 __id__ = "$Id$"
 

@@ -32,4 +32,5 @@ from .operators import MultiplicationOperator
 from .operators import DivisionOperator
 from .operators import ExponentiationOperator
 from .operators import RemainderOperator
+from .operators import NegationOperator
 from .operators import UfuncOperator

@@ -53,7 +53,6 @@ class Literal(object):
         raise NotImplementedError(m)
 
 
-
 # version
 __id__ = "$Id$"
 

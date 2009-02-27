@@ -18,20 +18,29 @@
 from .Visitor import Visitor
 
 class ArgFinder(Visitor):
-    """ArgFinder extracts the Argument entries from a Literal tree.
+    """ArgFinder extracts Arguments from a Literal tree.
 
     Attributes
     args    --  The set of collected Arguments (a set, not a list!)
+    getconsts  --  Flag indicating whether to grap constant arguments.
     """
 
-    def __init__(self):
-        """Initialize."""
+    def __init__(self, getconsts = True):
+        """Initialize.
+
+        Arguments
+        getconsts   --  Flag indicating whether to grap constant arguments
+                        (default True).
+        
+        """
         self.args = set()
+        self.getconsts = getconsts
         return
 
     def onArgument(self, arg):
         """Process an Argument node."""
-        self.args.add(arg)
+        if self.getconsts or not arg.const:
+            self.args.add(arg)
         return
 
     def onOperator(self, op):

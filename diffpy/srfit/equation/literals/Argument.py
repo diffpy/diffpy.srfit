@@ -28,13 +28,16 @@ class Argument(Literal):
     name    --  A name for this Argument.
     clicker --  A Clicker instance for recording change in the value.
     value   --  The value of the Argument. Modified with setValue.
+    const   --  A flag indicating whether this is considered a constant.
+                Constants may be given special treatment by the Visitors.
     """
 
-    def __init__(self, value = None, name = None):
+    def __init__(self, value = None, name = None, const = False):
         """Initialization."""
         Literal.__init__(self)
         self.value = value
         self.name = name
+        self.const = const
         return
 
     def identify(self, visitor):

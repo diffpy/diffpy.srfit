@@ -21,11 +21,11 @@ from .visitors import ArgFinder
 class Equation(object):
     """Class for holding and evaluating a Literal tree.
 
-    The class has data attributes that are the Arguments of the tree (accessed
-    by name) and a __call__ method that uses an Evaluator to evaluate the tree.
-    It is assumed, but not checked that Arguments have unique names. If this is
-    not the case, then you shouldn't try to access the arguments through this
-    class.
+    The class has data attributes that are the non-const Arguments of the tree
+    (accessed by name) and a __call__ method that uses an Evaluator to evaluate
+    the tree.  It is assumed, but not checked that Arguments have unique names.
+    If this is not the case, then you shouldn't try to access the arguments
+    through this class.
     """
 
     def __init__(self, root=None):
@@ -61,7 +61,7 @@ class Equation(object):
             m += "\n".join(validator.errors)
             raise ValueError(m)
 
-        argfinder = ArgFinder()
+        argfinder = ArgFinder(getconsts=False)
         root.identify(argfinder)
         self.args = dict( [(arg.name, arg) for arg in argfinder.args] )
         self.root = root
@@ -70,8 +70,11 @@ class Equation(object):
     def __call__(self, **kw):
         """Call the equation.
         
-        New Argument values are acceped as keyword assignments and a ValueError
-        is thrown in a passed argument cannot be found.
+        New Argument values are acceped as keyword assignments. The equation
+        will remember values set in this way.
+
+        Raises
+        ValueError when a passed argument cannot be found
         """
         for name, val in kw.items():
             arg = self.args.get(name)

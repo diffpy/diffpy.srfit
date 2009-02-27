@@ -14,6 +14,7 @@ class TestEquationParser(unittest.TestCase):
 
         from numpy import exp, sin, divide, sqrt, array_equal, e
 
+        # Scalar equation
         eq = utils.makeEquation("A*sin(0.5*x)+divide(B,C)")
         A = 1
         x = numpy.pi
@@ -24,8 +25,9 @@ class TestEquationParser(unittest.TestCase):
         eq.B.setValue(B)
         eq.C.setValue(C)
         f = lambda A, x, B, C: A*sin(0.5*x)+divide(B,C)
-        self.assertAlmostEqual(eq(), f(A,x,B,C))
+        self.assertTrue(array_equal(eq(), f(A,x,B,C)))
 
+        # Vector equation
         eq = utils.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
         x = numpy.arange(0, 20, 0.05)
         sigma = 0.01
@@ -33,6 +35,13 @@ class TestEquationParser(unittest.TestCase):
         eq.sigma.setValue(sigma)
         f = lambda x, sigma : sqrt(e**(-0.5*(x/sigma)**2))
         self.assertTrue(array_equal(eq(), f(x,sigma)))
+
+        # Equation with constants
+        consts = {"x" : x}
+        eq = utils.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))", consts=consts)
+        self.assertTrue(array_equal(eq(sigma=sigma), f(x,sigma)))
+        self.assertTrue("sigma" in eq.args)
+        self.assertTrue("x" not in eq.args)
 
 if __name__ == "__main__":
 

@@ -12,7 +12,29 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The Equation class for holding and evaluating an equation."""
+"""The Equation class for holding and evaluating an equation.
+
+Equation is a functor that holds a Literal tree that defines an equation. It's
+__call__ method evaluates the equation at the most recent value of its
+Arguments. The non-constant arguments are accessible as attributes of the
+Equation instance.
+
+Example
+> # make a Literal tree. Here's a simple one
+> add = AdditionOperator()
+> a = Argument(name="a") # Don't forget to name these!
+> b = Argument(name="b")
+> add.addLiteral(a)
+> add.addLiteral(b)
+> # make an Equation instance and pass the root
+> eq = Equation(root = add)
+> eq(a=3, b=4) # returns 7
+> eq(a=2) # remembers b=4, returns 6
+> eq.a.setValue(-3)
+> eq.b.setValue(3)
+> eq() # uses last assignment of a and b, returns 0
+
+"""
 
 from .visitors import Evaluator
 from .visitors import Validator
@@ -21,11 +43,14 @@ from .visitors import ArgFinder
 class Equation(object):
     """Class for holding and evaluating a Literal tree.
 
-    The class has data attributes that are the non-const Arguments of the tree
+    Instances have attributes that are the non-const Arguments of the tree
     (accessed by name) and a __call__ method that uses an Evaluator to evaluate
     the tree.  It is assumed, but not checked that Arguments have unique names.
     If this is not the case, then you shouldn't try to access the arguments
     through this class.
+
+    The tree is scanned for errors when it is added. Thus, the tree should be
+    complete before putting it inside an Equation.
     """
 
     def __init__(self, root=None):
@@ -50,14 +75,13 @@ class Equation(object):
     def setRoot(self, root):
         """Set the root of the Literal tree.
 
-        This will check the tree for errors and extract the Arguments. Thus, the
-        tree should be complete before calling this method. This will raise a
-        ValueError if errors are found.
+        Raises:
+        ValueError if errors are found in the Literal tree.
         """
         validator = Validator()
         root.identify(validator)
         if( validator.errors ):
-            m = "Errors found in Literal tree %r\n"%root
+            m = "Errors found in Literal tree %s\n"%root
             m += "\n".join(validator.errors)
             raise ValueError(m)
 

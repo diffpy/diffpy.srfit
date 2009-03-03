@@ -12,9 +12,15 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Utilities for creating Equation objects."""
+"""Utilities for creating Equation objects.
 
-#TODO - Need to handle assignments and a shared namespaces
+makeEquation - A function for turning a string into an Equation instance.
+EquationBuilder - Class that is used by makeEquation. Contains data from the
+equation string which can be used for further processing.
+
+"""
+
+# TODO - Not sure how to handle user-defined functions.
 
 from .Equation import Equation
 import diffpy.srfit.equation.literals as literals
@@ -38,7 +44,8 @@ def makeEquation(eqstr, consts = {}):
 
 
 class EquationBuilder(object):
-    """This is a class for building an Equation instance from an equation string."""
+    """Class for building an Equation instance from an equation string.
+    """
 
     # Infix operators recognized by the builder
     symbols = ("+", "-", "*", "/", "**", "%")
@@ -186,29 +193,30 @@ class EquationBuilder(object):
     def __makeBuilderNamespace(self):
         """Make a namespace for holding LiteralBuilders.
         
-        This takes the operators and arguments (literals) from the equation string and
-        makes a instance of a builder class for each one (_ArgumentBuilder or
-        _OperatorBuilder). These instances are stored in the namespace under the
-        names of the literals for which they are built. When the equation is
-        evaluated in this namespace, the builder instances will do the work of
-        creating the Literal tree around which the Equation is built.
+        This takes the operators and arguments (literals) from the equation
+        string and makes a instance of a builder class for each one
+        (ArgumentBuilder or OperatorBuilder). These instances are stored in
+        the namespace under the names of the literals for which they are built.
+        When the equation is evaluated in this namespace, the builder instances
+        will do the work of creating the Literal tree around which the Equation
+        is built.
         """
 
         ns = {}
 
-        # Create an _ArgumentBuilder for every argument and constant
+        # Create an ArgumentBuilder for every argument and constant
         for arg in self._args:
             # Create a class with the name of the arg within the namespace
             if arg in ns: continue
             value = self.consts.get(arg)
             const = arg in self.consts
-            c = _ArgumentBuilder(name=arg, value=value, const=const)
+            c = ArgumentBuilder(name=arg, value=value, const=const)
             ns[arg] = c
 
-        # Create an _OperatorBuilder for each operator in the equation
+        # Create an OperatorBuilder for each operator in the equation
         for op in self._ops:
             if op in ns: continue
-            c = _OperatorBuilder(op)
+            c = OperatorBuilder(op)
             ns[op] = c
 
         return ns
@@ -217,7 +225,7 @@ class EquationBuilder(object):
 
 ## These are used by the EquationBuilder class.
 
-class _LiteralBuilder(object):
+class LiteralBuilder(object):
     """Class for building a literal from an equation."""
 
     def __init__(self):
@@ -230,14 +238,14 @@ class _LiteralBuilder(object):
         op = OperatorClass()
         op.addLiteral(self.literal)
         op.addLiteral(other.literal)
-        lb = _LiteralBuilder()
+        lb = LiteralBuilder()
         lb.literal = op
         return lb
 
     def __evalUnary(self, OperatorClass):
         op = OperatorClass()
         op.addLiteral(self.literal)
-        lb = _LiteralBuilder()
+        lb = LiteralBuilder()
         lb.literal = op
         return lb
 
@@ -262,17 +270,17 @@ class _LiteralBuilder(object):
     def __neg__(self):
         return self.__evalUnary(literals.NegationOperator)
 
-# end class _LiteralBuilder
+# end class LiteralBuilder
 
-class _ArgumentBuilder(_LiteralBuilder):
+class ArgumentBuilder(LiteralBuilder):
 
     def __init__(self, value=None, name=None, const=False):
         self.literal = literals.Argument(value=value, name=name, const=const)
         return
 
-# end class _ArgumentBuilder
+# end class ArgumentBuilder
 
-class _OperatorBuilder(_LiteralBuilder):
+class OperatorBuilder(LiteralBuilder):
     """Acts like a numpy operator, but helps build a Literal tree."""
 
     def __init__(self, name):
@@ -282,7 +290,7 @@ class _OperatorBuilder(_LiteralBuilder):
         return
 
     def __call__(self, *args):
-        newobj = _OperatorBuilder(self.name)
+        newobj = OperatorBuilder(self.name)
         newobj.literal = literals.UfuncOperator(self.op)
         #print self.literal,
         for arg in args:
@@ -291,7 +299,7 @@ class _OperatorBuilder(_LiteralBuilder):
         #print
         return newobj
 
-# end class _OperatorBuilder
+# end class OperatorBuilder
 
 # version
 __id__ = "$Id$"

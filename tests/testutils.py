@@ -27,6 +27,7 @@ class TestEquationParser(unittest.TestCase):
         f = lambda A, x, B, C: A*sin(0.5*x)+divide(B,C)
         self.assertTrue(array_equal(eq(), f(A,x,B,C)))
 
+
         # Vector equation
         eq = utils.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
         x = numpy.arange(0, 20, 0.05)
@@ -42,6 +43,14 @@ class TestEquationParser(unittest.TestCase):
         self.assertTrue(array_equal(eq(sigma=sigma), f(x,sigma)))
         self.assertTrue("sigma" in eq.args)
         self.assertTrue("x" not in eq.args)
+
+        # Equation with user-defined functions
+        funcs = {"myfunc": eq}
+        eq2 = utils.makeEquation("c*myfunc", funcs = funcs)
+        self.assertTrue(array_equal(eq2(c=2, sigma=sigma), 2*f(x,sigma)))
+        self.assertTrue("sigma" in eq2.args)
+        self.assertTrue("c" in eq2.args)
+        return
 
 if __name__ == "__main__":
 

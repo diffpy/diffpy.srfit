@@ -27,7 +27,7 @@ import diffpy.srfit.equation.literals as literals
 import numpy
 
 
-def makeEquation(eqstr, consts = {}):
+def makeEquation(eqstr, consts = {}, funcs = {}):
     """Make an equation from an equation string.
 
     Arguments
@@ -36,9 +36,13 @@ def makeEquation(eqstr, consts = {}):
                 ufunc.
     consts  --  A dictionary of constants indexed by name. Note that 'e' and
                 'pi' are already considered, so don't need to be included.
-    
+    funcs   --  A dictionary of user-defined functions. Keys are Equation
+                instances that can be used to evaluate the function.  Note that
+                the functions are not templates. If a function shows up in
+                several places in the eqstr, each instance of the function in
+                the resulting Equation will operate on the same arguments.
     """
-    builder = EquationBuilder(consts = consts)
+    builder = EquationBuilder(consts = consts, funcs = funcs)
     eq = builder.makeEquation(eqstr)
     return eq
 
@@ -54,7 +58,7 @@ class EquationBuilder(object):
     # Default constants recognized by the builder
     constants = {"e" : numpy.e, "pi" : numpy.pi}
 
-    def __init__(self, consts = {}):
+    def __init__(self, consts = {}, funcs = {}):
         """Initialize attribues.
 
         Arguments:
@@ -64,6 +68,9 @@ class EquationBuilder(object):
                     values are the value of the constant (float, array, etc.)
         """
         self.consts = dict(consts)
+        self.funcs = {}
+        for key, f in funcs.items():
+            self.funcs[key] = f.root
 
         self._neweqstr = ""
         self._args = []
@@ -117,7 +124,9 @@ class EquationBuilder(object):
                 # Check symbols
                 tok not in EquationBuilder.symbols and
                 # Check ignored characters
-                tok not in EquationBuilder.ignore
+                tok not in EquationBuilder.ignore and
+                # Check for user-defined functions
+                tok not in self.funcs
                 ):
                 args[i] = tok
                 poplist.append(i)
@@ -216,7 +225,7 @@ class EquationBuilder(object):
         # Create an OperatorBuilder for each operator in the equation
         for op in self._ops:
             if op in ns: continue
-            c = OperatorBuilder(op)
+            c = OperatorBuilder(op, self.funcs)
             ns[op] = c
 
         return ns
@@ -283,15 +292,21 @@ class ArgumentBuilder(LiteralBuilder):
 class OperatorBuilder(LiteralBuilder):
     """Acts like a numpy operator, but helps build a Literal tree."""
 
-    def __init__(self, name):
+    def __init__(self, name, funcs = {}):
         self.name = name
         self.literal = None
-        self.op = getattr(numpy, name)
+        self.funcs = funcs
+        self.op = None
+        if name in self.funcs:
+            self.literal = self.funcs[name]
+        else:
+            self.op = getattr(numpy, name)
         return
 
     def __call__(self, *args):
-        newobj = OperatorBuilder(self.name)
-        newobj.literal = literals.UfuncOperator(self.op)
+        newobj = OperatorBuilder(self.name, self.funcs)
+        if newobj.literal is None:
+            newobj.literal = literals.UfuncOperator(self.op)
         #print self.literal,
         for arg in args:
             #print arg.literal,

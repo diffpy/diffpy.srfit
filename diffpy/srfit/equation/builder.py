@@ -12,7 +12,61 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""EquationBuilder classes and utilities for creating Equations objects.
+"""Classes and utilities for creating Equations objects.
+
+The makeEquation function turns an equation string into an Equation instance.
+For example
+> eq = makeEquation("A*sin(a*x)")
+will create an Equation with Arguments A, a and x that evaluates as
+"A*sin(a*x)". 
+
+Scalar constants can be included in the equation:
+> consts = {"offset" : 3 }
+> eq = makeEquation("A*sin(a*x) + offset", consts=consts)
+This includes a constant offset in the equation. Similarly, one could have
+written
+> eq = makeEquation("A*sin(a*x) + 3")
+to get the same effect.
+
+The EquationBuilder class is at the core of makeEquation, and it can be used
+directly to create Equations. EquationBuilder instances overload the normal
+arithmetic functions so that they build an Equation object instead.
+EquationBuilder is specified in the OperatorBuilder and ArgumentBuilder classes.
+All of the numpy ufunc operators are overloaded within this module as
+OperatorBuilder instances.
+
+With a collection of ArgumentBuilders and OperatorBuilders one can simply write
+the Equation using normal python syntax.
+> A = ArgumentBuilder(name = "A")
+> a = ArgumentBuilder(name = "a")
+> x = ArgumentBuilder(name = "x")
+> # sin is defined in this module as an OperatorBuilder
+> beq = A*sin(a*x)
+> eq = beq.getEquation()
+
+The equation builder can also handle scalar constants. Staring with the above
+setup:
+> beq2 = A*sin(a*x) + 3
+> eq2 = beq2.getEquation()
+Non scalars, constant or otherwise, must be wrapped as ArgumentBuilders to use
+them in equations.
+
+Both makeEquation and EquationBuilder can make use of user-defined functions.
+Any callable python object can be wrapped as an OperatorBuilder with the
+wrapFunction function. The wrapped function is registered with this module so it
+is usable in other imports and by the makeEquationFunction. For example.
+> _f = lambda a, b : (a-b)/(a+b)
+> f = wrapFunction("f", _f)
+> # Using makeEquation
+> eq = makeEquation("c*f(a,b)")
+> # gives an Equation with c, a and b as arguments.
+> # Using EquationBuilder
+> a = ArgumentBuilder(name = "a")
+> b = ArgumentBuilder(name = "b")
+> c = ArgumentBuilder(name = "c")
+> beq = c*f(a,b)
+> eq = beq.makeEquation()
+
 """
 
 # FIXME - the builder cannot handle numpy arrays on the left of a binary
@@ -36,13 +90,13 @@ def makeEquation(eqstr, consts = {}):
                 the latter case, the name of a custom function used in the
                 equation string must match the name used in the wrapFunction
                 method.
-    consts  --  A dictionary of named constants used in the equation.
+    consts  --  A dictionary of named scalar constants used in the equation.
 
     Returns an Equation instance representing the equation string.
     """
     ns = _makeNamespace(eqstr, consts)
-    builder = eval(eqstr, ns)
-    return builder.getEquation()
+    beq = eval(eqstr, ns)
+    return beq.getEquation()
 
 def _makeNamespace(eqstr, consts):
     """Build an evaluation namespace from an equation string.

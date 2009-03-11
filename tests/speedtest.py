@@ -101,7 +101,7 @@ def speedTest1():
 
 def speedTest2():
 
-    from diffpy.srfit.equation.utils import makeEquation
+    from diffpy.srfit.equation.builder import makeEquation
 
     x = numpy.arange(0, 20, 0.05)
     qsig = 0.01

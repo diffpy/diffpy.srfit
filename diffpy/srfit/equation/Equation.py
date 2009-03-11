@@ -61,6 +61,7 @@ class Equation(object):
         self.evaluator = Evaluator()
         self.root = None
         self.args = {}
+        self.arglist = [] # to preserve order
         if root is not None:
             self.setRoot(root)
         return
@@ -87,29 +88,39 @@ class Equation(object):
 
         argfinder = ArgFinder(getconsts=False)
         root.identify(argfinder)
+        self.arglist = list(argfinder.args)
         self.args = dict( [(arg.name, arg) for arg in argfinder.args] )
         self.root = root
         return
 
-    def __call__(self, **kw):
+    def __call__(self, *args, **kw):
         """Call the equation.
         
-        New Argument values are acceped as keyword assignments. The equation
-        will remember values set in this way.
+        New Argument values are acceped as arguments or keyword assignments. The
+        order of accepted arguments is given by the arglist attribute.  The
+        equation will remember values set in this way.
 
         Raises
         ValueError when a passed argument cannot be found
         """
+        # Process args
+        for idx, val in enumerate(args):
+            if idx > len(self.arglist):
+                raise ValueError("Too many arguments")
+            arg = self.arglist[idx]
+            arg.setValue(val)
+
+        # Process kw
         for name, val in kw.items():
             arg = self.args.get(name)
             if arg is None:
                 raise ValueError("No argument named '%s' here"%name)
             arg.setValue(val)
 
+        # Evaluate the function
         self.root.identify(self.evaluator)
         self.evaluator.clicker.click()
         return self.evaluator.value
-
 
 
 # version

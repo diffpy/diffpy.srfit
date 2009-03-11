@@ -35,9 +35,10 @@ class Argument(Literal):
     def __init__(self, value = None, name = None, const = False):
         """Initialization."""
         Literal.__init__(self)
-        self.value = value
         self.name = name
         self.const = const
+        self.value = None
+        self.setValue(value)
         return
 
     def identify(self, visitor):

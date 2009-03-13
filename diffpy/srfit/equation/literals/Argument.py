@@ -27,9 +27,9 @@ class Argument(Literal):
     Attributes
     name    --  A name for this Argument.
     clicker --  A Clicker instance for recording change in the value.
-    value   --  The value of the Argument. Modified with setValue.
     const   --  A flag indicating whether this is considered a constant.
                 Constants may be given special treatment by the Visitors.
+    value   --  The value of the Argument. Modified with setValue.
     """
 
     def __init__(self, value = None, name = None, const = False):

@@ -34,3 +34,4 @@ from .operators import ExponentiationOperator
 from .operators import RemainderOperator
 from .operators import NegationOperator
 from .operators import UfuncOperator
+from .Partition import Partition

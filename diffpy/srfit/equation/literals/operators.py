@@ -14,16 +14,18 @@
 ########################################################################
 """Operator classes. 
 
-These classes are combined with Arguments to create an equation. Each Operator
-can be associated with Literals to create an equation that can be evaluated by
-the Evaluator visitor, or otherwise inspected. Operators contain data 'value'
-and 'clicker' attributes for facilitating rapid re-evaluation of an equation
-tree.
+Operators are combined with other Literals to create an equation. Operators are
+non-leaf nodes on a Literal tree. These trees can be evaluated by the Evaluator
+visitor, or otherwise inspected. 
 
 The Operator class contains all the information necessary to be identified and
 evaluated by a Visitor. Thus, a single onOperator method exists in the Visitor
 base class. Other Operators can be derived from Operator (see AdditionOperator),
 but they all identify themselves with the Visitor.onOperator method.
+
+Operators can be made to operate conditionally by specifying tags.  When applied
+to a Partition, only parts of the Partition that contain one of the tags
+specified by the Operator will be operated upon.
 """
 
 from .Literal import Literal
@@ -37,19 +39,24 @@ class Operator(Literal):
     information alone.
 
     Attributes
+    args    --  List of Literal arguments, set with addLiteral
+    clicker --  A Clicker instance for recording change in the dependent
+                arguments.
+    combine --  Flag indicating whether a Partition can be combined after this
+                operation (default False).
     name    --  A name for this operator. e.g. "add" or "sin"
-    symbol  --  The symbolic representation. e.g. "+" or "sin"
     nin     --  Number of inputs
     nout    --  Number of outputs
-    args    --  List of Literal arguments, set with addLiteral
     operation   --  Function that performs the operation. e.g. numpy.add or
-                    numpy.sin
-    clicker --  A Clicker instance for recording change in the value
-    value   --  The evaluated value of this Operator.
+    symbol  --  The symbolic representation. e.g. "+" or "sin"
+                numpy.sin
+    tags    --  Set of tags indicating what parts of a Partition to operate on.
+                If the tags set is empty, the operator works on all parts of a
+                Partition.
     """
 
     def __init__(self, name = None, symbol = None, operation = None,
-            nin = 2, nout = 1):
+            nin = 2, nout = 1, tags = []):
         """Initialization."""
         Literal.__init__(self)
         self.name = name
@@ -58,6 +65,11 @@ class Operator(Literal):
         self.nout = nout
         self.args = []
         self.operation = operation
+        self.tags = set()
+        self.tags.update(tags)
+        self.combine = False
+        # used by Evaluator
+        self._proxy = None
         return
 
     def identify(self, visitor):
@@ -183,7 +195,6 @@ class UfuncOperator(Operator):
         self.nout = op.nout
         self.operation = op
         return
-
 # version
 __id__ = "$Id$"
 

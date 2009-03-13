@@ -14,16 +14,20 @@
 ########################################################################
 """Literal class. 
 
-Literals are base pieces of the equation hierarchy. The have a single method,
-'identify' that identifies the Literal to a visitor. Literal has two data
-attributes: 'clicker' records changes in the state of the Literal and 'value',
-which records the most recent value of the literal. These are used by the
-Evaluator visitor.
+Literals are base pieces of the equation hierarchy. The 'identify' method
+identifies the Literal to a visitor by calling the identifying method of the
+vistior. 
+
+Literals have two data attributes: 
+name    --  The name of the literal as it would appear in an equation.
+clicker --  Records changes in the state of the Literal.
+The clicker is used by the Evaluator visitor. See that class for a more detailed
+description.
 
 Note that even though an equation hierarchy is designed according to the visitor
 pattern, the primary purpose of the hierarchy is to flexibly and efficiently
-evaluate equations. To make this work without complex machinery, some of the
-information needed by the Evaluator visitor is stored in the data objects.
+evaluate equations. To make this work without overly complex machinery, some of
+the information needed by the Evaluator visitor is stored in the data objects.
 
 The clicker is described in the diffpy.equation.clicker module.
 """
@@ -37,14 +41,12 @@ class Literal(object):
     Attributes
     name    --  A name for this Literal.
     clicker --  A Clicker instance for recording change in the value
-    value   --  The value stored by the Literal.
     """ 
 
     def __init__(self):
         """Initialization."""
         self.name = None
         self.clicker = Clicker()
-        self.value = None
         return
 
     def identify(self, visitor):

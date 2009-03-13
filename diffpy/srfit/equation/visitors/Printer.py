@@ -73,6 +73,14 @@ class Printer(Visitor):
         self.output += ")"
         return
 
+    def onPartition(self, part):
+        """Process a Partition node."""
+        if part.name is None:
+            self.output += "partition"
+        else:
+            self.output += str(part.name)
+        return
+
 # version
 __id__ = "$Id$"
 

@@ -49,6 +49,12 @@ class ArgFinder(Visitor):
             arg.identify(self)
         return
 
+    def onPartition(self, part):
+        """Process a Partition node."""
+        for arg in part.args:
+            arg.identify(self)
+        return
+
 
 # version
 __id__ = "$Id$"

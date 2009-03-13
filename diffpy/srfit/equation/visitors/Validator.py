@@ -32,16 +32,17 @@ class Validator(Visitor):
 
     def __init__(self):
         """Initialize."""
-        self.errors = []
-        self._nin = 0
+        self.reset()
         return
 
     def reset(self):
         """Reset the validator.
 
-        This clears the errors list.
+        This clears the errors list and non-public data.
         """
         self.errors = []
+        self._nin = 0
+        self._atroot = True
         return
 
     def onArgument(self, arg):
@@ -50,10 +51,15 @@ class Validator(Visitor):
         No assumption is made about the argument type.
         """
         self._nin = 1
+        self._atroot = False
         return
 
     def onOperator(self, op):
         """Process an Operator node."""
+        # Can only process single-valued functions
+        if op.nout != 1:
+            m = "'%s' is not single-valued (nout != 1)"%op
+            self.errors.append(m)
         # Check name
         if op.name is None:
             m = "'%s' does not have a name"%op
@@ -80,8 +86,17 @@ class Validator(Visitor):
             self.errors.append(m)
 
         self._nin = op.nout
+        self._atroot = False
         return
 
+    def onPartition(self, part):
+        """Process a Partition node."""
+        if self._atroot:
+            m = "'%s' cannot have a Partition as its root"%op
+            self.errors.append(m)
+        self._nin = 1
+        self._atroot = False
+        return
 
 # version
 __id__ = "$Id$"

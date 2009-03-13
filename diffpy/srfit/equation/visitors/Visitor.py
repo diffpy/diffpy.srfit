@@ -27,6 +27,10 @@ class Visitor(object):
         """Process an Operator node."""
         return self._abstract("onOperator")
 
+    def onPartition(self, part):
+        """Process a Partition node."""
+        return self._abstract("onPartition")
+
 
     # throw an exception
     def _abstract(self, method):

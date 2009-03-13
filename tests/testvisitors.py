@@ -235,6 +235,74 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(18, evaluator.value)
         return
 
+    def testTaggedPartition(self):
+        """Test a function with a partition in it."""
+        p1 = literals.Partition("p1")
+
+        # Make the partition 1|2
+        v1, v2, v3 = _makeArgs(3)
+        p1.addArgument(v1, "v1")
+        p1.addArgument(v2, "v2")
+
+        # make the equation sin(3*partition).
+        mult = literals.MultiplicationOperator()
+        import numpy
+        sin = literals.UFuncOperator(numpy.sin)
+
+        mult.addLiteral(p1)
+        mult.addLiteral(v3)
+        sin.addLiteral(mult)
+
+        # Make it so that the multiplication argument only works on arguments
+        # with that "v1" tag.
+        mult.tags = set(["v1"])
+        #This should then give
+        # sin(3*1) + sin(2)
+        evaluator = visitors.Evaluator()
+        sin.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(numpy.sin(3*1)+numpy.sin(2), evaluator.value)
+
+        # Now let it act on all tags
+        mult.tags = set(["v1", "v2"])
+        #This should then give
+        # sin(3*1) + sin(3*2)
+        evaluator = visitors.Evaluator()
+        sin.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(numpy.sin(3*1)+numpy.sin(3*2), evaluator.value)
+
+        # Now let mult work on "v1" and sin work on "v2"
+        mult.tags = set(["v1"])
+        sin.tags = set(["v2"])
+        # This should give
+        # 3*1 + sin(2)
+        evaluator = visitors.Evaluator()
+        sin.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(3*1+numpy.sin(2), evaluator.value)
+
+        # Don't let mult operate, give it a tag that is not in the partition.
+        mult.tags = set(["xyz"])
+        sin.tags = set()
+        #This should then give
+        # sin(1) + sin(2)
+        evaluator = visitors.Evaluator()
+        sin.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(numpy.sin(1)+numpy.sin(2), evaluator.value)
+
+        # Don't let mult either operate
+        mult.tags = set(["xyz"])
+        sin.tags = set(["xyz"])
+        #This should then give
+        # 1 + 2
+        evaluator = visitors.Evaluator()
+        sin.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(3, evaluator.value)
+        return
+
 
 
 class TestValidator(unittest.TestCase):

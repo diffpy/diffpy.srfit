@@ -35,6 +35,10 @@ For example
 
 Evaluator does not check of the validity of the expression. See the Validator
 visitor for that.
+
+If anything besides the values of the Arguments of a Literal tree gets changed,
+a new Evaluator must be used on the tree. This includes adding Literals or
+changing tags.
 """
 
 from .Visitor import Visitor
@@ -230,7 +234,10 @@ class Evaluator(Visitor):
             for tag in self.op.tags:
                 idxlist.update( self.part.tagmap.get(tag, []) )
             if not idxlist:
-                idxlist = range(len(self.partvals))
+                if not self.op.tags:
+                    idxlist = range(len(self.partvals))
+                else:
+                    idxlist = []
 
             # Now evaluate the function on each part of the partition with the
             # proper tags.

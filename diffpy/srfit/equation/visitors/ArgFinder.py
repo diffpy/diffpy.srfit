@@ -37,6 +37,11 @@ class ArgFinder(Visitor):
         self.getconsts = getconsts
         return
 
+    def reset(self):
+        """Reset the argument set."""
+        self.args = set()
+        return
+
     def onArgument(self, arg):
         """Process an Argument node."""
         if self.getconsts or not arg.const:

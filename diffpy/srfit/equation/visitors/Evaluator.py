@@ -54,10 +54,16 @@ class Evaluator(Visitor):
     def __init__(self):
         """Initialize."""
         self.value = 0
-        self.clicker = Clicker()
+        self._clicker = Clicker()
 
-        # Can we combine the partition?
-        self._combine = True
+        # Are we at the root?
+        self._atroot = True
+        return
+
+    def click(self):
+        """Click the clicker and reset non-public data."""
+        self._atroot = True
+        self._clicker.click()
         return
 
     def onArgument(self, arg):
@@ -73,7 +79,7 @@ class Evaluator(Visitor):
 
         This version deals with a single partition.
         """
-        if op.clicker > self.clicker:
+        if op.clicker > self._clicker:
 
             # This evaluates the operator and creates an Argument or Partition
             # that can be used to get its value.
@@ -103,8 +109,8 @@ class Evaluator(Visitor):
         # self._combine will be propogated to the next level of the tree. In
         # this way, combine will only be true until the first tagged operator is
         # encounterd.
-        combine = self._combine
-        self._combine = combine and not op.tags
+        atroot = self._atroot
+        self._atroot = False
 
         # Evaluation helper exclusive to this operation.
         helper = Evaluator.Helper()
@@ -118,13 +124,13 @@ class Evaluator(Visitor):
 
         # Combine if we can. This has no effect if the helper evaluation didn't
         # result in a Partition.
-        if combine:
+        if atroot or op._cancombine:
             helper.combine()
 
         # Make the proxy
         if helper.part is not None:
             if op._proxy is None:
-                op._proxy = PseudoPartition()
+                op._proxy = Evaluator.PseudoPartition()
             op._proxy.combine = helper.part.combine
             op._proxy.tags = helper.part.tags
             op._proxy.tagmap = helper.part.tagmap
@@ -134,7 +140,6 @@ class Evaluator(Visitor):
                 op._proxy = Argument()
             op._proxy.setValue(helper.value)
             self.value = helper.value
-
 
         return
 
@@ -222,7 +227,7 @@ class Evaluator(Visitor):
             # Create the set of indices that are consistent with the operator's
             # tags
             idxlist = set()
-            for tag in op.tags:
+            for tag in self.op.tags:
                 idxlist.update( self.part.tagmap.get(tag, []) )
             if not idxlist:
                 idxlist = range(len(self.partvals))
@@ -232,10 +237,6 @@ class Evaluator(Visitor):
             for idx in idxlist:
                 self.argvals[pidx] = self.partvals[idx]
                 self.partvals[idx] = self.op.operation(*self.argvals)
-
-            # See if we can combine the partition
-            if op.combine: 
-                self.combine()
 
             return
 

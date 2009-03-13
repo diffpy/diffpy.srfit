@@ -6,6 +6,6 @@ import diffpy.srfit.equation.literals as literals
 def _makeArgs(num):
     args = []
     for i in xrange(num):
-        args.append(literals.Argument())
-        args[-1].name = "v%i"%(i+1)
+        j=i+1
+        args.append(literals.Argument(name="v%i"%j, value=j))
     return args

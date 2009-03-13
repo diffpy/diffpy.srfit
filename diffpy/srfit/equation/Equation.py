@@ -119,7 +119,7 @@ class Equation(object):
 
         # Evaluate the function
         self.root.identify(self.evaluator)
-        self.evaluator.clicker.click()
+        self.evaluator.click()
         return self.evaluator.value
 
 

@@ -25,7 +25,11 @@ but they all identify themselves with the Visitor.onOperator method.
 
 Operators can be made to operate conditionally by specifying tags.  When applied
 to a Partition, only parts of the Partition that contain one of the tags
-specified by the Operator will be operated upon.
+specified by the Operator will be operated upon. Operators have a 'setCombine'
+method that will tell an Evaluator whether a Partition can be combined after the
+operation. By default they cannot. The CombineOperator will combine a Partition
+but leave other literals unchanged.  See the Partition module for combination
+rules.
 """
 
 from .Literal import Literal
@@ -42,8 +46,6 @@ class Operator(Literal):
     args    --  List of Literal arguments, set with addLiteral
     clicker --  A Clicker instance for recording change in the dependent
                 arguments.
-    combine --  Flag indicating whether a Partition can be combined after this
-                operation (default False).
     name    --  A name for this operator. e.g. "add" or "sin"
     nin     --  Number of inputs
     nout    --  Number of outputs
@@ -67,7 +69,7 @@ class Operator(Literal):
         self.operation = operation
         self.tags = set()
         self.tags.update(tags)
-        self.combine = False
+        self._cancombine = False
         # used by Evaluator
         self._proxy = None
         return
@@ -85,6 +87,19 @@ class Operator(Literal):
         """
         self.args.append(literal)
         self.clicker.addSubject(literal.clicker)
+        return
+
+    def setCombine(self, combine=True):
+        """Set whether this operator can combine Partitions.
+
+        By default, operators cannot combine Partitions.
+
+        combine --  combine flag (default True)
+        """
+        if combine != self._cancombine:
+            self._cancombine = combine
+            self._proxy = None
+            self.clicker.click()
         return
 
     def __str__(self):
@@ -174,7 +189,7 @@ class NegationOperator(Operator):
         self.operation = numpy.negative
         return
 
-class UfuncOperator(Operator):
+class UFuncOperator(Operator):
     """A operator wrapper around a numpy ufunc.
 
     The name and symbol attributes are set equal to the ufunc.__name__
@@ -195,6 +210,23 @@ class UfuncOperator(Operator):
         self.nout = op.nout
         self.operation = op
         return
+
+class CombineOperator(Operator):
+    """Operator for combining Partitions.
+
+    This acts as the identity function (f(x) = x) to non-Partition literals.
+    """
+
+    def __init__(self):
+        """Initialization."""
+        Operator.__init__(self)
+        self.name = "combine"
+        self.symbol = "combine"
+        self.nin = 1
+        self.operation = lambda x: x
+        self._cancombine = True
+        return
+
 # version
 __id__ = "$Id$"
 

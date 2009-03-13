@@ -2,7 +2,6 @@
 """Tests for refinableobj module."""
 
 import diffpy.srfit.equation.builder as builder
-from diffpy.srfit.equation.visitors.Printer import Printer
 
 import unittest
 

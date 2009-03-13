@@ -33,5 +33,6 @@ from .operators import DivisionOperator
 from .operators import ExponentiationOperator
 from .operators import RemainderOperator
 from .operators import NegationOperator
-from .operators import UfuncOperator
+from .operators import UFuncOperator
+from .operators import CombineOperator
 from .Partition import Partition

@@ -21,12 +21,13 @@ un-partition the Arguments.
 Operations operate on each Argument of a Partition separately, and perhaps
 conditionally based on the tags of the operator. Since multiple conditional
 operators can be applied to Partition, the partitioning is preserved throughout
-a calculation.  However, once all conditional operations in a Literal tree have
-operated on a Partition, it will be combined so subsequent operations will be
-quicker. The exception to this rule is when two or more Partitions must act as
-arguments in the same Operator. In this case, each Partition in the Operator
-will be combined before the operation. In addition, Operators have a 'combine'
-flag that can be set to deliberatly combine a Partition after the operation.
+a calculation.  Operators have a 'canCombine' method that will allow the
+Partiton to be combined after the operation.  There is also the CombineOperator
+whose sole purpose is to combine a partition. Note that the Operator closest to
+the Partition in the Literal tree gets the first opportunity to combine it.
+The exception to this rule is when two or more Partitions must act as
+arguments in the same Operator. In this case, each of these Partitions 
+will be combined before the operation. 
 """
 
 from .Literal import Literal
@@ -45,10 +46,10 @@ class Partition(Literal):
     tagmap  --  A map of tags to lists of Argument indicies from self.args.
     """ 
 
-    def __init__(self):
+    def __init__(self, name = ""):
         """Initialization."""
         Literal.__init__(self)
-        self.name = ""
+        self.name = name
         self.args = []
         self.tags = set()
         self.tagmap = {}
@@ -68,12 +69,13 @@ class Partition(Literal):
         All remaining method arguments are interpreted as tags.
         """
         self.args.append(arg)
+        self.clicker.addSubject(arg.clicker)
+
         self.tags.update(tags)
         for tag in tags:
             tagset = self.tagmap.get(tag, [])
             tagset.append(len(self.args)-1)
             self.tagmap[tag] = tagset
-        self.clicker.addSubject(arg.clicker)
         return
 
     def combine(self, vals):

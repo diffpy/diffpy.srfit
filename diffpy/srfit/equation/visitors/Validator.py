@@ -36,10 +36,7 @@ class Validator(Visitor):
         return
 
     def reset(self):
-        """Reset the validator.
-
-        This clears the errors list and non-public data.
-        """
+        """Click the clicker and reset non-public data."""
         self.errors = []
         self._nin = 0
         self._atroot = True

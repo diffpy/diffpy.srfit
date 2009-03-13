@@ -326,7 +326,7 @@ class OperatorBuilder(EquationBuilder):
             newobj.literal = op
         else:
             ufunc = getattr(numpy, self.name)
-            newobj.literal = literals.UfuncOperator(ufunc)
+            newobj.literal = literals.UFuncOperator(ufunc)
         #print "value:", self.name,
         for arg in args:
             # Wrap the argument if it is not already

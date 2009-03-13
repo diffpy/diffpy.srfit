@@ -34,6 +34,30 @@ class TestOperator(unittest.TestCase):
         return
         
 
+class TestPartition(unittest.TestCase):
+
+    def testAddArgument(self):
+        """Test adding an argument."""
+        a1 = literals.Argument(value = 1.0)
+        a2 = literals.Argument(value = 2.0)
+
+        p1 = literals.Partition()
+        p1.addArgument(a1, "tag1")
+        self.assertTrue(a1.clicker, p1.clicker)
+        p1.addArgument(a2, "tag1", "tag2")
+        self.assertTrue(a2.clicker, p1.clicker)
+
+        self.assertEquals([a1, a2], p1.args)
+        self.assertEquals(set(["tag1", "tag2"]), p1.tags)
+        self.assertEquals([0, 1], p1.tagmap["tag1"])
+        self.assertEquals([1], p1.tagmap["tag2"])
+
+        p1._prepare()
+        self.assertEquals( 3, p1.combine(p1._partvals) )
+        return
+
+
+
 
 
 if __name__ == "__main__":

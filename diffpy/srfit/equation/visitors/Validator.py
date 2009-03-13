@@ -50,12 +50,16 @@ class Validator(Visitor):
 
         No assumption is made about the argument type.
         """
+        if self._atroot:
+            m = "'%s' has an Argument as its root"%arg
+            self.errors.append(m)
         self._nin = 1
         self._atroot = False
         return
 
     def onOperator(self, op):
         """Process an Operator node."""
+        self._atroot = False
         # Can only process single-valued functions
         if op.nout != 1:
             m = "'%s' is not single-valued (nout != 1)"%op
@@ -92,7 +96,7 @@ class Validator(Visitor):
     def onPartition(self, part):
         """Process a Partition node."""
         if self._atroot:
-            m = "'%s' cannot have a Partition as its root"%op
+            m = "'%s' has a Partition as its root"%part
             self.errors.append(m)
         self._nin = 1
         self._atroot = False

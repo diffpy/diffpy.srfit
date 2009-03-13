@@ -79,14 +79,15 @@ class Evaluator(Visitor):
             # that can be used to get its value.
             self._createProxy(op)
 
-        op._proxy.identify(self)
+        # Doesn't do anything right now
+        # op._proxy.identify(self)
         return
 
     def _createProxy(self, op):
         """Create a proxy that can be called in place of an Operator.
 
         The type of proxy depends on the arguments of the Operator. It uses the
-        Evaluator.Helper class for actually evaluating the proxy.
+        Helper class for actually evaluating the operation.
 
         Partition Logic
         * If two or more arguments of the Operator are Partitions, then each
@@ -122,16 +123,18 @@ class Evaluator(Visitor):
 
         # Make the proxy
         if helper.part is not None:
-            literal = PseudoPartition()
-            literal.combine = helper.part.combine
-            literal.tags = helper.part.tags
-            literal.tagmap = helper.part.tagmap
-            literal._partvals = helper.partvals
+            if op._proxy is None:
+                op._proxy = PseudoPartition()
+            op._proxy.combine = helper.part.combine
+            op._proxy.tags = helper.part.tags
+            op._proxy.tagmap = helper.part.tagmap
+            op._proxy._partvals = helper.partvals
         else:
-            literal = Argument(value = helper.value)
+            if op._proxy is None:
+                op._proxy = Argument()
+            op._proxy.setValue(helper.value)
             self.value = helper.value
 
-        op._proxy = literal
 
         return
 

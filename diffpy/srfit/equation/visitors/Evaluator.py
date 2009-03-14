@@ -72,10 +72,16 @@ class Evaluator(Visitor):
 
     def onArgument(self, arg):
         """Process an Argument node."""
+        self.value = arg.value
+        self._atroot = False
         return
 
     def onPartition(self, part):
         """Process a Partition node."""
+        part._prepare()
+        if self._atroot and part.clicker > self._clicker:
+            self.value = part.combine(part._partvals)
+        self._atroot = False
         return
 
     def onOperator(self, op):
@@ -182,7 +188,6 @@ class Evaluator(Visitor):
 
         def onPartition(self, part):
             """Record a Partition."""
-            part._prepare()
             self.args.append(part)
             self.argvals.append(None) # A place-holder
             # Record the location of the partition

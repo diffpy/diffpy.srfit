@@ -39,7 +39,6 @@ class Validator(Visitor):
         """Click the clicker and reset non-public data."""
         self.errors = []
         self._nin = 0
-        self._atroot = True
         return
 
     def onArgument(self, arg):
@@ -47,16 +46,11 @@ class Validator(Visitor):
 
         No assumption is made about the argument type.
         """
-        if self._atroot:
-            m = "'%s' has an Argument as its root"%arg
-            self.errors.append(m)
         self._nin = 1
-        self._atroot = False
         return
 
     def onOperator(self, op):
         """Process an Operator node."""
-        self._atroot = False
         # Can only process single-valued functions
         if op.nout != 1:
             m = "'%s' is not single-valued (nout != 1)"%op
@@ -87,16 +81,11 @@ class Validator(Visitor):
             self.errors.append(m)
 
         self._nin = op.nout
-        self._atroot = False
         return
 
     def onPartition(self, part):
         """Process a Partition node."""
-        if self._atroot:
-            m = "'%s' has a Partition as its root"%part
-            self.errors.append(m)
         self._nin = 1
-        self._atroot = False
         return
 
 # version

@@ -126,6 +126,29 @@ class TestEvaluator(unittest.TestCase):
         self.assertAlmostEqual(50, evaluator.value)
         return
 
+    def testTrivialEquation(self):
+        v1 = literals.Argument(value = 1)
+        evaluator = visitors.Evaluator()
+        v1.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(1, evaluator.value)
+        return
+
+    def testTrivialPartition(self):
+        """Test a function with a partition in it."""
+        p1 = literals.Partition("p1")
+
+        # Make the partition 1|2
+        v1, v2, v3 = _makeArgs(3)
+        p1.addArgument(v1)
+        p1.addArgument(v2)
+        p1.addArgument(v3)
+        evaluator = visitors.Evaluator()
+        p1.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(6, evaluator.value)
+        return
+
     def testSimplePartition(self):
         """Test a function with a partition in it."""
         p1 = literals.Partition("p1")

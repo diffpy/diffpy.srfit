@@ -69,6 +69,9 @@ class Partition(Literal):
         All remaining method arguments are interpreted as tags.
         """
         self.args.append(arg)
+        # This will say "here I am" to the Evaluator visitor, that only acts if
+        # a Literal is more recent that it's last calculation.
+        arg.clicker.click()
         self.clicker.addSubject(arg.clicker)
 
         self.tags.update(tags)

@@ -33,7 +33,9 @@ directly to create Equations. EquationBuilder instances overload the normal
 arithmetic functions so that they build an Equation object instead.
 EquationBuilder is specified in the OperatorBuilder and ArgumentBuilder classes.
 All of the numpy ufunc operators are overloaded within this module as
-OperatorBuilder instances.
+OperatorBuilder instances. You can register new builder objects with the
+'registerBuilder' method, which will allow those builders to be used by name in
+the makeEquation method.
 
 With a collection of ArgumentBuilders and OperatorBuilders one can simply write
 the Equation using normal python syntax.
@@ -87,6 +89,8 @@ import diffpy.srfit.equation.literals as literals
 import numpy
 
 import sys
+
+custombuilders = {}
 
 def makeEquation(eqstr, consts = {}):
     """Make an equation from an equation string.
@@ -160,6 +164,8 @@ def _makeNamespace(eqstr, consts):
         if (
             # Check local namespace
             tok not in dir(sys.modules[__name__]) and
+            # Check custom builders
+            tok not in custombuilders and
             # Check symbols
             tok not in symbols and
             # Check ignored characters
@@ -182,10 +188,13 @@ def _makeNamespace(eqstr, consts):
 
     # Now start making the namespace
     ns = {}
-    # Get the operators
+    # Get the operators, partitions and generators
     for opname in eqops.values():
         #print opname
-        opbuilder = getattr(sys.modules[__name__], opname)
+        if opname in custombuilders:
+            opbuilder = custombuilders[opname]
+        else:
+            opbuilder = getattr(sys.modules[__name__], opname)
         #print opbuilder
         ns[opname] = opbuilder
     # Make the arguments
@@ -314,12 +323,31 @@ class ArgumentBuilder(EquationBuilder):
 
 # end class ArgumentBuilder
 
+class PartitionBuilder(EquationBuilder):
+
+    def __init__(self, part):
+        EquationBuilder.__init__(self)
+        self.literal = part
+        return
+
+# end class PartitionBuilder
+
+class GeneratorBuilder(EquationBuilder):
+
+    def __init__(self, gen):
+        EquationBuilder.__init__(self)
+        self.literal = gen
+        return
+
+# end class GeneratorBuilder
+
 class OperatorBuilder(EquationBuilder):
     """Acts like an operator, but helps build a Literal tree."""
 
-    def __init__(self, name):
+    def __init__(self, name, op = None):
         EquationBuilder.__init__(self)
         self.name = name
+        self.literal = op
         return
 
     def __call__(self, *args):
@@ -349,6 +377,7 @@ class OperatorBuilder(EquationBuilder):
 
 # end class OperatorBuilder
 
+
 def wrapFunction(name, func, nin = 2, nout = 1):
     """Wrap a function in an OperatorBuilder instance.
 
@@ -371,28 +400,35 @@ def wrapFunction(name, func, nin = 2, nout = 1):
     op.operation = func
     
     # Create the OperatorBuilder
-    opbuilder = OperatorBuilder(name)
-    opbuilder.literal = op
+    opbuilder = OperatorBuilder(name, op)
 
     # Register it with the module
-    setattr(sys.modules[__name__], name, opbuilder)
+    registerBuilder(name, opbuilder)
 
     # Return it
     return opbuilder
 
+def wrapPartition(name, part):
+    """Wrap a Partition as a builder and register it with the module."""
+    part.name = name
+    partbuilder = PartitionBuilder(part)
+    registerBuilder(name, partbuilder)
+    return partbuilder
+
 def wrapGenerator(name, gen):
-    """Wrap a generator in a GeneratorBuilder instance.
+    """Wrap a Generator as a builder and register it with the module."""
+    gen.name = name
+    genbuilder = GeneratorBuilder(gen)
+    registerBuilder(name, genbuilder)
+    return genbuilder
 
-    This will register the GeneratorBuilder instance as an attribute of this
-    module so it can be recognized in an equation string when parsed with the
-    makeEquation method.
-    
-    name    --  The name of the funciton
-    gen     --  A Generator instance.
-    """
-    return
+def registerBuilder(name, builder):
+    """Register builder in this module so it can be used in makeEquation."""
+    global custom
+    custombuilders[name] = builder
 
-# Export all numpy operators as OperatorBuilder instances.
+# Export all numpy operators as OperatorBuilder instances in the module
+# namespace.
 for name in dir(numpy):
     op = getattr(numpy, name)
     if isinstance(op, numpy.ufunc):

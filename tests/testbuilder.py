@@ -2,10 +2,13 @@
 """Tests for refinableobj module."""
 
 import diffpy.srfit.equation.builder as builder
+import diffpy.srfit.equation.literals as literals
 
 import unittest
 
 import numpy
+
+from utils import _makeArgs
 
 
 class TestEquationParser(unittest.TestCase):
@@ -52,6 +55,27 @@ class TestEquationParser(unittest.TestCase):
         self.assertTrue(array_equal(eq2(c=2, sigma=sigma), 2*f(x,sigma)))
         self.assertTrue("sigma" in eq2.args)
         self.assertTrue("c" in eq2.args)
+
+        # Equation with partition
+        p1 = literals.Partition("p1")
+        v1, v2 = _makeArgs(2)
+        p1.addArgument(v1)
+        p1.addArgument(v2)
+        builder.wrapPartition("p1", p1)
+        eq = builder.makeEquation("A*p1 + B")
+        eq.A.setValue(A)
+        eq.B.setValue(B)
+        self.assertEquals( (1*1+4)+(1*2+4), eq() )
+        
+
+        # Equation with Generator
+        g1 = literals.Generator("g1")
+        g1.literal = p1
+        builder.wrapGenerator("g1", g1)
+        eq = builder.makeEquation("A*g1 + B")
+        eq.A.setValue(A)
+        eq.B.setValue(B)
+        self.assertEquals( (1*1+4)+(1*2+4), eq() )
         return
 
     def testBuildEquation(self):
@@ -95,6 +119,28 @@ class TestEquationParser(unittest.TestCase):
         eq = beq.getEquation()
         f = lambda x, sigma : sqrt(e**(-0.5*(x/sigma)**2))
         self.assertTrue(array_equal(eq(), numpy.sqrt(e**(-0.5*(_x/0.1)**2))))
+
+
+        # Equation with partition
+        _p1 = literals.Partition("p1")
+        v1, v2 = _makeArgs(2)
+        _p1.addArgument(v1)
+        _p1.addArgument(v2)
+        A = builder.ArgumentBuilder(name="A", value = 1)
+        B = builder.ArgumentBuilder(name="A", value = 4)
+        p1 = builder.wrapPartition("p1", _p1)
+        beq = A*p1 + B
+        eq = beq.getEquation()
+        self.assertEquals( (1*1+4)+(1*2+4), eq() )
+        
+
+        # Equation with Generator
+        _g1 = literals.Generator("g1")
+        _g1.literal = _p1
+        g1 = builder.wrapGenerator("g1", _g1)
+        geq = A*g1 + B
+        eq = geq.getEquation()
+        self.assertEquals( (1*1+4)+(1*2+4), eq() )
 
         return
 

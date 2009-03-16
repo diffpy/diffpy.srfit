@@ -60,6 +60,12 @@ class ArgFinder(Visitor):
             arg.identify(self)
         return
 
+    def onGenerator(self, gen):
+        """Process a Generator node."""
+        for arg in gen.args:
+            arg.identify(self)
+        return
+
 
 # version
 __id__ = "$Id$"

@@ -88,6 +88,12 @@ class Validator(Visitor):
         self._nin = 1
         return
 
+    def onGenerator(self, gen):
+        """Process a Generator node."""
+        self._nin = 1
+        return
+
+
 # version
 __id__ = "$Id$"
 

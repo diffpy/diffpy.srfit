@@ -132,6 +132,16 @@ class TestEvaluator(unittest.TestCase):
         v1.identify(evaluator)
         evaluator.click()
         self.assertEqual(1, evaluator.value)
+
+        v1.setValue(2)
+        v1.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(2, evaluator.value)
+
+        # can we do it again?
+        v1.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(2, evaluator.value)
         return
 
     def testTrivialPartition(self):
@@ -147,6 +157,17 @@ class TestEvaluator(unittest.TestCase):
         p1.identify(evaluator)
         evaluator.click()
         self.assertEqual(6, evaluator.value)
+
+        # Change a value
+        v3.setValue(4)
+        p1.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(7, evaluator.value)
+
+        # Can we do it again?
+        p1.identify(evaluator)
+        evaluator.click()
+        self.assertEqual(7, evaluator.value)
         return
 
     def testSimplePartition(self):
@@ -278,7 +299,8 @@ class TestEvaluator(unittest.TestCase):
 
         # Make it so that the multiplication argument only works on arguments
         # with that "v1" tag.
-        mult.tags = set(["v1"])
+        mult.clearTags()
+        mult.addTags("v1")
         #This should then give
         # sin(3*1) + sin(2)
         evaluator = visitors.Evaluator()
@@ -287,7 +309,8 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(numpy.sin(3*1)+numpy.sin(2), evaluator.value)
 
         # Now let it act on all tags
-        mult.tags = set(["v1", "v2"])
+        mult.clearTags()
+        mult.addTags("v1", "v2")
         #This should then give
         # sin(3*1) + sin(3*2)
         evaluator = visitors.Evaluator()
@@ -296,8 +319,10 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(numpy.sin(3*1)+numpy.sin(3*2), evaluator.value)
 
         # Now let mult work on "v1" and sin work on "v2"
-        mult.tags = set(["v1"])
-        sin.tags = set(["v2"])
+        mult.clearTags()
+        mult.addTags("v1")
+        sin.clearTags()
+        sin.addTags("v2")
         # This should give
         # 3*1 + sin(2)
         evaluator = visitors.Evaluator()
@@ -306,8 +331,9 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(3*1+numpy.sin(2), evaluator.value)
 
         # Don't let mult operate, give it a tag that is not in the partition.
-        mult.tags = set(["xyz"])
-        sin.tags = set()
+        mult.clearTags()
+        mult.addTags("xyz")
+        sin.clearTags()
         #This should then give
         # sin(1) + sin(2)
         evaluator = visitors.Evaluator()
@@ -316,8 +342,10 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(numpy.sin(1)+numpy.sin(2), evaluator.value)
 
         # Don't let mult either operate
-        mult.tags = set(["xyz"])
-        sin.tags = set(["xyz"])
+        mult.clearTags()
+        mult.addTags("xyz")
+        sin.clearTags()
+        sin.addTags("xyz")
         #This should then give
         # 1 + 2
         evaluator = visitors.Evaluator()
@@ -325,6 +353,242 @@ class TestEvaluator(unittest.TestCase):
         evaluator.click()
         self.assertEqual(3, evaluator.value)
         return
+
+    def testArrayPartition(self):
+        """Test an array partition."""
+
+        import numpy
+
+        _x = numpy.arange(0, 10, 0.05)
+        g1 = numpy.exp(-0.5*((_x - 3.0)/0.2)**2)
+        g2 = numpy.exp(-0.5*((_x - 5.0)/0.2)**2)
+        g3 = numpy.exp(-0.5*((_x - 7.0)/0.2)**2)
+
+        # Three gaussians with different centers
+        a1 = literals.Argument(name = "a1", value = g1)
+        a2 = literals.Argument(name = "a2", value = g2)
+        a3 = literals.Argument(name = "a3", value = g3)
+
+        class ThreePeak(literals.Partition):
+
+            def __init__(self):
+                literals.Partition.__init__(self, "threepeak")
+
+                self.addArgument(a1, "A-A", "A")
+                self.addArgument(a2, "A-B", "B-A", "A", "B")
+                self.addArgument(a3, "B-B", "B")
+                return
+
+        amp = literals.Argument(name = "amp", value = 1.0)
+        mult = literals.MultiplicationOperator()
+        mult.addLiteral(amp)
+        mult.addLiteral(ThreePeak())
+
+        # Test this.
+        evaluator = visitors.Evaluator()
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(g1+g2+g3, evaluator.value) )
+
+        # Now we want to selectively increase the peak height of all peaks
+        # involving "A"
+        amp.setValue(2.0)
+        mult.addTags("A")
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(2*g1+2*g2+g3, evaluator.value) )
+
+        # Back to normal
+        amp.setValue(1.0)
+        mult.clearTags()
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(g1+g2+g3, evaluator.value) )
+
+        # Let't try back-to-back amplitude changes
+        amp.setValue(3.0)
+        amp2 = literals.Argument(name = "amp2", value = 5.0)
+        mult2 = literals.MultiplicationOperator()
+
+        mult2.addLiteral(amp2)
+        mult2.addLiteral(mult)
+
+        mult.addTags("A")
+        mult2.addTags("B")
+
+        evaluator = visitors.Evaluator()
+        mult2.identify(evaluator)
+        evaluator.click()
+        r = evaluator.value - (3*g1 + 3*5*g2 + 5*g3)
+        self.assertTrue( numpy.dot(r, r)**0.5 < 1e-6)
+        return
+
+    def testSimpleGenerator(self):
+        """Test a simple Generator."""
+
+        import numpy
+
+        _x = numpy.arange(0, 10, 0.05)
+        g1 = numpy.exp(-0.5*((_x - 3.0)/2)**2)
+        g2 = numpy.exp(-0.5*((_x - 5.0)/2)**2)
+        g3 = numpy.exp(-0.5*((_x - 7.0)/2)**2)
+
+        # Three gaussians with different centers
+        a1 = literals.Argument(name = "a1", value = g1)
+        a2 = literals.Argument(name = "a2", value = g2)
+        a3 = literals.Argument(name = "a3", value = g3)
+
+        class ThreePeak(literals.Partition):
+
+            def __init__(self):
+                literals.Partition.__init__(self, "threepeak")
+
+                self.addArgument(a1, "A-A", "A")
+                self.addArgument(a2, "A-B", "B-A", "A", "B")
+                self.addArgument(a3, "B-B", "B")
+                return
+
+        gen1 = literals.Generator("threepeak")
+        gen1.literal = ThreePeak()
+
+        amp = literals.Argument(name = "amp", value = 1.0)
+        mult = literals.MultiplicationOperator()
+        mult.addLiteral(amp)
+        mult.addLiteral(gen1)
+
+        # Test this.
+        evaluator = visitors.Evaluator()
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(g1+g2+g3, evaluator.value) )
+
+        # Now we want to selectively increase the peak height of all peaks
+        # involving "A"
+        amp.setValue(2.0)
+        mult.addTags("A")
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(2*g1+2*g2+g3, evaluator.value) )
+
+        # Back to normal
+        amp.setValue(1.0)
+        mult.clearTags()
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(g1+g2+g3, evaluator.value) )
+        return
+
+
+    def testGenerator(self):
+        """Test a real partitioning of a PDF using a generator."""
+        
+        import numpy
+
+        _x = numpy.arange(0, 10, 0.05)
+
+        def _gaussian(sigma, x0, x):
+            """Gaussian function."""
+            return 1.0/(numpy.sqrt(2*numpy.pi)*sigma) \
+                    * numpy.exp( -0.5 * ((x-x0)/sigma)**2 )
+
+        from diffpy.srfit.equation import builder
+        g = builder.wrapFunction("g", _gaussian, 3)
+
+        s1 = builder.ArgumentBuilder(name = "s1", value = 0.2)
+        s2 = builder.ArgumentBuilder(name = "s2", value = 0.2)
+        s3 = builder.ArgumentBuilder(name = "s3", value = 0.2)
+        x1 = builder.ArgumentBuilder(name = "x1", value = 3.0)
+        x2 = builder.ArgumentBuilder(name = "x2", value = 5.0)
+        x3 = builder.ArgumentBuilder(name = "x3", value = 7.0)
+        A1 = builder.ArgumentBuilder(name = "A1", value = 1.0)
+        A2 = builder.ArgumentBuilder(name = "A2", value = 1.0)
+        A3 = builder.ArgumentBuilder(name = "A3", value = 1.0)
+        x = builder.ArgumentBuilder(name = "x", value = _x, const=True)
+        ggen1 = A1*g(s1, x1, x)
+        ggen2 = A2*g(s2, x2, x)
+        ggen3 = A3*g(s3, x3, x)
+        g1 = ggen1.getEquation()
+        g2 = ggen2.getEquation()
+        g3 = ggen3.getEquation()
+
+        class ThreePeak(literals.Generator):
+            """Generator of three gaussians."""
+
+            def __init__(self):
+                literals.Generator.__init__(self, "threepeak")
+                self.literal = None
+                self.__setup()
+                return
+
+            def __setup(self):
+                self.g1 = g1
+                self.g2 = g2
+                self.g3 = g3
+
+                self.a1 = literals.Argument(value = self.g1())
+                self.a2 = literals.Argument(value = self.g2())
+                self.a3 = literals.Argument(value = self.g3())
+
+                self.addLiteral(self.g1.root)
+                self.addLiteral(self.g2.root)
+                self.addLiteral(self.g3.root)
+
+                # Make the initial partition
+                self.literal = literals.Partition("threepeak")
+                self.literal.addArgument(self.a1, "A-A", "A")
+                self.literal.addArgument(self.a2, "A-B", "B-A", "A", "B")
+                self.literal.addArgument(self.a3, "B-B", "B")
+                return
+
+            def generate(self, clicker):
+
+                self.a1.setValue( self.g1() )
+                self.a2.setValue( self.g2() )
+                self.a3.setValue( self.g3() )
+
+                return
+
+        # Now our three peaks are generated dynamically
+        gen1 = ThreePeak()
+
+        amp = literals.Argument(name = "amp", value = 1.0)
+        mult = literals.MultiplicationOperator()
+        mult.addLiteral(amp)
+        mult.addLiteral(gen1)
+
+        # Test this.
+        evaluator = visitors.Evaluator()
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(g1()+g2()+g3(), evaluator.value) )
+
+        # Now we want to selectively increase the peak height of all peaks
+        # involving "A"
+        amp.setValue(2.0)
+        mult.addTags("A")
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(2*g1()+2*g2()+g3(), evaluator.value) )
+        # Back to normal
+        amp.setValue(1.0)
+        mult.clearTags()
+        mult.identify(evaluator)
+        evaluator.click()
+        self.assertTrue( numpy.array_equal(g1()+g2()+g3(), evaluator.value) )
+
+        # Now change some values
+        finder = visitors.ArgFinder() 
+        gen1.identify(finder)
+
+        for arg in finder.args:
+            arg.setValue(0.12345)
+            mult.identify(evaluator)
+            evaluator.click()
+            self.assertTrue( 
+                    numpy.array_equal(g1()+g2()+g3(), evaluator.value) )
+
+        return
+
 
 
 

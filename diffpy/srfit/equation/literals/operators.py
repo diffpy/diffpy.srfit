@@ -25,11 +25,13 @@ but they all identify themselves with the Visitor.onOperator method.
 
 Operators can be made to operate conditionally by specifying tags.  When applied
 to a Partition, only parts of the Partition that contain one of the tags
-specified by the Operator will be operated upon. Operators have a 'setCombine'
-method that will tell an Evaluator whether a Partition can be combined after the
-operation. By default they cannot. The CombineOperator will combine a Partition
-but leave other literals unchanged.  See the Partition module for combination
-rules.
+specified by the Operator will be operated upon.  If the operator specifies no
+tags, then it will work on all parts of a Partition.
+
+Operators have a 'setCombine' method that will tell an Evaluator whether a
+Partition can be combined after the operation. By default they cannot. The
+CombineOperator will combine a Partition but leave other literals unchanged.
+See the Partition module for combination rules.
 """
 
 from .Literal import Literal
@@ -52,9 +54,6 @@ class Operator(Literal):
     operation   --  Function that performs the operation. e.g. numpy.add or
     symbol  --  The symbolic representation. e.g. "+" or "sin"
                 numpy.sin
-    tags    --  Set of tags indicating what parts of a Partition to operate on.
-                If the tags set is empty, the operator works on all parts of a
-                Partition.
     """
 
     def __init__(self, name = None, symbol = None, operation = None,
@@ -67,8 +66,7 @@ class Operator(Literal):
         self.nout = nout
         self.args = []
         self.operation = operation
-        self.tags = set()
-        self.tags.update(tags)
+        self._tags = set(tags)
         self._cancombine = False
         # used by Evaluator
         self._proxy = None
@@ -100,6 +98,20 @@ class Operator(Literal):
             self._cancombine = combine
             self._proxy = None
             self.clicker.click()
+        return
+
+    def addTags(self, *args):
+        """Add tags to the operator."""
+        map(self._tags.add, args)
+        self._proxy = None
+        self.clicker.click()
+        return
+
+    def clearTags(self):
+        """Clear all tags."""
+        self._tags = set()
+        self._proxy = None
+        self.clicker.click()
         return
 
     def __str__(self):

@@ -81,6 +81,14 @@ class Printer(Visitor):
             self.output += str(part.name)
         return
 
+    def onGenerator(self, gen):
+        """Process a Generator node."""
+        self.output += "Generator(%s)"%gen.name
+        for arg in gen.args:
+            arg.identify(self)
+        return
+
+
 # version
 __id__ = "$Id$"
 

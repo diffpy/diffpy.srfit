@@ -67,6 +67,14 @@ is usable in other imports and by the makeEquationFunction. For example.
 > beq = c*f(a,b)
 > eq = beq.makeEquation()
 
+Tags can be passed to Operators using both makeEquation and EquationBuilder.
+When an OperatorBuilder is called with extra arguments, these arguments are
+interpreted as tags. For example, in the above example, the last two lines could
+be replaced by
+> beq = c*f(a,b,"tag1")
+> eq = beq.makeEquation()
+and the 'f' function would only operate on Partition Arguments with the "tag1"
+tag.
 """
 
 # FIXME - the builder cannot handle numpy arrays on the left of a binary
@@ -315,6 +323,7 @@ class OperatorBuilder(EquationBuilder):
         return
 
     def __call__(self, *args):
+        """Args past nin are considered tags."""
         newobj = OperatorBuilder(self.name)
         if self.literal is not None:
             op = literals.Operator()
@@ -328,12 +337,13 @@ class OperatorBuilder(EquationBuilder):
             ufunc = getattr(numpy, self.name)
             newobj.literal = literals.UFuncOperator(ufunc)
         #print "value:", self.name,
-        for arg in args:
+        for arg in args[:newobj.literal.nin]:
             # Wrap the argument if it is not already
             if not isinstance(arg, EquationBuilder):
                 arg = ArgumentBuilder(value=arg, const=True)
             newobj.literal.addLiteral(arg.literal)
             #print arg.literal, arg.literal.value
+        newobj.literal.addTags(*args[newobj.literal.nin:])
         #print
         return newobj
 
@@ -369,6 +379,18 @@ def wrapFunction(name, func, nin = 2, nout = 1):
 
     # Return it
     return opbuilder
+
+def wrapGenerator(name, gen):
+    """Wrap a generator in a GeneratorBuilder instance.
+
+    This will register the GeneratorBuilder instance as an attribute of this
+    module so it can be recognized in an equation string when parsed with the
+    makeEquation method.
+    
+    name    --  The name of the funciton
+    gen     --  A Generator instance.
+    """
+    return
 
 # Export all numpy operators as OperatorBuilder instances.
 for name in dir(numpy):

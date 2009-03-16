@@ -100,7 +100,7 @@ class Partition(Literal):
 
     def __str__(self):
         if self.name:
-            return "Argument(" + self.name + ")"
+            return "Partition(" + self.name + ")"
         return self.__repr__()
 
 # version

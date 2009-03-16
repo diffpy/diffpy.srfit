@@ -25,6 +25,7 @@ from diffpy.srfit.version import __version__
 # Import the operators
 
 from .Argument import Argument
+from .Generator import Generator
 from .operators import Operator
 from .operators import AdditionOperator
 from .operators import SubtractionOperator

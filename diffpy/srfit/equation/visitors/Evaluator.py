@@ -36,9 +36,8 @@ For example
 Evaluator does not check of the validity of the expression. See the Validator
 visitor for that.
 
-If anything besides the values of the Arguments of a Literal tree gets changed,
-a new Evaluator must be used on the tree. This includes adding Literals or
-changing tags.
+Note that if Literals are added to a tree, a new Evaluator should be used to
+ensure that the change is included in the calculation.
 """
 
 from .Visitor import Visitor
@@ -52,7 +51,6 @@ class Evaluator(Visitor):
     
     Arguments
     value   --  The value of the expression
-    clicker --  A reference
     """
 
     def __init__(self):
@@ -78,10 +76,17 @@ class Evaluator(Visitor):
 
     def onPartition(self, part):
         """Process a Partition node."""
-        part._prepare()
-        if self._atroot and part.clicker > self._clicker:
-            self.value = part.combine(part._partvals)
+        if part.clicker > self._clicker:
+            part._prepare()
+            if self._atroot:
+                self.value = part.combine(part._partvals)
         self._atroot = False
+        return
+
+    def onGenerator(self, gen):
+        """Process a Generator node."""
+        gen.generate(self._clicker)
+        gen.literal.identify(self)
         return
 
     def onOperator(self, op):
@@ -194,6 +199,11 @@ class Evaluator(Visitor):
             self.partidx.append(len(self.args)-1)
             return
 
+        def onGenerator(self, gen):
+            """Record a Generator."""
+            gen.literal.identify(self)
+            return
+
         def onOperator(self, op):
             """Process an Operator through its proxy."""
             op._proxy.identify(self)
@@ -236,10 +246,10 @@ class Evaluator(Visitor):
             # Create the set of indices that are consistent with the operator's
             # tags
             idxlist = set()
-            for tag in self.op.tags:
+            for tag in self.op._tags:
                 idxlist.update( self.part.tagmap.get(tag, []) )
             if not idxlist:
-                if not self.op.tags:
+                if not self.op._tags:
                     idxlist = range(len(self.partvals))
                 else:
                     idxlist = []

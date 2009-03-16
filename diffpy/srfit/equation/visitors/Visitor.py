@@ -31,6 +31,11 @@ class Visitor(object):
         """Process a Partition node."""
         return self._abstract("onPartition")
 
+    def onGenerator(self, gen):
+        """Process a Generator node."""
+        return self._abstract("onGenerator")
+
+
 
     # throw an exception
     def _abstract(self, method):

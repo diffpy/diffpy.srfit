@@ -63,9 +63,12 @@ class TestEquationParser(unittest.TestCase):
         p1.addArgument(v2)
         builder.wrapPartition("p1", p1)
         eq = builder.makeEquation("A*p1 + B")
-        eq.A.setValue(A)
-        eq.B.setValue(B)
-        self.assertEquals( (1*1+4)+(1*2+4), eq() )
+        eq.A.setValue(2)
+        eq.B.setValue(4)
+        self.assertEquals( (2*1+4)+(2*2+4), eq() )
+
+
+        # Partition equation with tags
         
 
         # Equation with Generator
@@ -73,9 +76,30 @@ class TestEquationParser(unittest.TestCase):
         g1.literal = p1
         builder.wrapGenerator("g1", g1)
         eq = builder.makeEquation("A*g1 + B")
-        eq.A.setValue(A)
-        eq.B.setValue(B)
-        self.assertEquals( (1*1+4)+(1*2+4), eq() )
+        eq.A.setValue(2)
+        eq.B.setValue(4)
+        self.assertEquals( (2*1+4)+(2*2+4), eq() )
+
+
+        # Partition equation with tags
+        p1 = literals.Partition("p1")
+        v1, v2 = _makeArgs(2)
+        p1.addArgument(v1, "tag", "tag1")
+        p1.addArgument(v2, "tag", "tag2")
+        builder.wrapPartition("p1", p1)
+        eq = builder.makeEquation("add(A*p1, B, 'tag1')")
+        eq.A.setValue(2)
+        eq.B.setValue(4)
+        # Addition should only apply to tag1, multiplication applies to both
+        self.assertEquals( (2*1+4)+(2*2+0), eq() )
+
+        eq = builder.makeEquation("add( multiply(A, p1, 'tag1'), B, 'tag2')")
+        eq.A.setValue(2)
+        eq.B.setValue(4)
+        # Addition should only apply to tag2, multiplication applies only to
+        # tag1
+        self.assertEquals( (2*1+0)+(2+4), eq() )
+
         return
 
     def testBuildEquation(self):
@@ -126,12 +150,12 @@ class TestEquationParser(unittest.TestCase):
         v1, v2 = _makeArgs(2)
         _p1.addArgument(v1)
         _p1.addArgument(v2)
-        A = builder.ArgumentBuilder(name="A", value = 1)
-        B = builder.ArgumentBuilder(name="A", value = 4)
+        A = builder.ArgumentBuilder(name="A", value = 2)
+        B = builder.ArgumentBuilder(name="B", value = 4)
         p1 = builder.wrapPartition("p1", _p1)
         beq = A*p1 + B
         eq = beq.getEquation()
-        self.assertEquals( (1*1+4)+(1*2+4), eq() )
+        self.assertEquals( (2*1+4)+(2*2+4), eq() )
         
 
         # Equation with Generator
@@ -140,8 +164,20 @@ class TestEquationParser(unittest.TestCase):
         g1 = builder.wrapGenerator("g1", _g1)
         geq = A*g1 + B
         eq = geq.getEquation()
-        self.assertEquals( (1*1+4)+(1*2+4), eq() )
+        self.assertEquals( (2*1+4)+(2*2+4), eq() )
 
+
+        # Equation with conditional operator
+        add =  builder.add
+        _p1 = literals.Partition("p1")
+        v1, v2 = _makeArgs(2)
+        _p1.addArgument(v1, "tag1")
+        _p1.addArgument(v2, "tag2")
+        p1 = builder.wrapPartition("p1", _p1)
+        beq = add(A*p1, B, "tag1")
+        eq = beq.getEquation()
+        self.assertEquals( (2*1+4)+(2*2+0), eq() )
+        
         return
 
 

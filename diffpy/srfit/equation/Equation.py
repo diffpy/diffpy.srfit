@@ -34,6 +34,7 @@ Example
 > eq.b.setValue(3)
 > eq() # uses last assignment of a and b, returns 0
 
+See the class documentation for more information.
 """
 
 from .visitors import Evaluator
@@ -44,13 +45,21 @@ class Equation(object):
     """Class for holding and evaluating a Literal tree.
 
     Instances have attributes that are the non-const Arguments of the tree
-    (accessed by name) and a __call__ method that uses an Evaluator to evaluate
-    the tree.  It is assumed, but not checked that Arguments have unique names.
-    If this is not the case, then you shouldn't try to access the arguments
-    through this class.
+    (accessed by name) and a __call__ method that uses an Evaluator vistor to
+    evaluate the tree.  It is assumed, but not checked that Arguments have
+    unique names.  If this is not the case, then one should keep their own list
+    of Arguments.
 
     The tree is scanned for errors when it is added. Thus, the tree should be
     complete before putting it inside an Equation.
+
+    Attributes
+    evaluator   --  An Evaluator instance unique to this Equation
+    root        --  The root Literal of the equation tree
+    args        --  A dictionary of Arguments from the root, indexed by
+                    name. This is used by the __call__ method.
+    arglist     --  A list of Arguments, used to preserve the order of the
+                    Arguments, which is used by the __call__ method.
     """
 
     def __init__(self, root=None):
@@ -62,6 +71,7 @@ class Equation(object):
         self.root = None
         self.args = {}
         self.arglist = [] # to preserve order
+
         if root is not None:
             self.setRoot(root)
         return
@@ -81,7 +91,7 @@ class Equation(object):
         """
         validator = Validator()
         root.identify(validator)
-        if( validator.errors ):
+        if validator.errors:
             m = "Errors found in Literal tree %s\n"%root
             m += "\n".join(validator.errors)
             raise ValueError(m)
@@ -96,9 +106,9 @@ class Equation(object):
     def __call__(self, *args, **kw):
         """Call the equation.
         
-        New Argument values are acceped as arguments or keyword assignments. The
-        order of accepted arguments is given by the arglist attribute.  The
-        equation will remember values set in this way.
+        New Argument values are acceped as arguments or keyword assignments (or
+        both).  The order of accepted arguments is given by the arglist
+        attribute.  The Equation will remember values set in this way.
 
         Raises
         ValueError when a passed argument cannot be found

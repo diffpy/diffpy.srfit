@@ -14,11 +14,12 @@
 ########################################################################
 """Class for recording changes in objects.
 
-A Clicker is an object for recording changes of state in other objects. The main
-functions are 'click' and '__cmp__', which changes the counter of a Clicker and
-compares its counter to that of other Clickers, respectively. The idea is to
-click a clicker whenever the state that it monitors changes. That clicker can
-then be compared to other clickers that are used to monitor other objects.
+A Clicker is an object for recording changes of state in other objects. The
+main functions are 'click' and '__cmp__', which changes the counter of a
+Clicker and compares its counter to that of other Clickers, respectively. The
+way to use a clicker is to click a clicker whenever the state that it monitors
+changes. That clicker can then be compared to other clickers that are used to
+monitor other objects.
 
 Clickers of the same type share a global counter that records the total number
 of independent clicks among that type of Clicker. Clicking a Clicker increments
@@ -32,18 +33,18 @@ should therefore be reprocessed.  After the reference is compared to all other
 Clickers, it can be clicked so that it will compare greater than all other
 clickers until one of them is clicked. 
 
-Clickers can be composed in a network and can play the roll of observer, subject
-or both.  When clicked, a Clicker will impose its counter on all of its
+Clickers can be composed in a network and can play the roll of observer,
+subject or both.  When clicked, a Clicker will impose its counter on all of its
 observers.  Thus, observer >= subject is always true. Composition is performed
 with 'addObserver' or 'addSubject'. Note that no effort is made to check for
 loops in the observation structure.
 
-The Clicker is created with a the clickerFactory method defined in this module.
-This allows one to have several types of clickers with different global counters
-for use in different types of comparisons. Since the global counter of a clicker
-is tied to its class, Clickers can only be compared with clickers with the same
-class. Thus, one should not inherit from Clicker and expect the subclasses to
-interoperate.
+A Clicker class is created with a the clickerFactory method defined in this
+module.  This allows one to have several types of clickers with different
+global counters for use in different types of comparisons. Since the global
+counter of a clicker is tied to its class, Clickers can only be compared with
+clickers with the same class. Thus, one should not inherit from Clicker and
+expect the subclasses to interoperate.
 """
 
 def clickerFactory():
@@ -53,7 +54,17 @@ def clickerFactory():
     """
 
     class Clicker(object):
-        """Clicker class for recording state changes."""
+        """Clicker class for recording state changes."
+
+        Attributes
+        _numclicks  --  A class-attribute integer for holding the total number
+                        of clicks (integer). This is modified with the click
+                        method.
+        _observers  --  A set of observer Clickers. This is modified with the
+                        addObserver method. The addSubject method will modify
+                        the _observers set for its argument.
+        
+        """
 
         _numclicks = 0
 

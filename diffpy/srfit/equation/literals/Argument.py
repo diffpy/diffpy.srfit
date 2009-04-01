@@ -14,7 +14,8 @@
 ########################################################################
 """Argument class. 
 
-Arguments are the leaves of an equation tree.
+Arguments are the leaves of an equation tree, in essense a variable or a
+constant.
 """
 
 from .Literal import Literal

@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Literal class. 
+"""Literal base class used to construct equation trees.
 
 Literals are base pieces of the equation hierarchy. The 'identify' method
 identifies the Literal to a visitor by calling the identifying method of the
@@ -36,10 +36,9 @@ from .. import Clicker
 
 class Literal(object):
     """Abstract class for equation pieces, such as operators and arguments.
-    
 
     Attributes
-    name    --  A name for this Literal.
+    name    --  A name for this Literal (default None).
     clicker --  A Clicker instance for recording change in the value
     """ 
 

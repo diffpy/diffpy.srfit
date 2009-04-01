@@ -15,13 +15,13 @@
 """Generator class. 
 
 Not all equations can be easily expressed with Arguments, Partitions and
-Operators. The Generator class is disigned to provide a lower-level interface
+Operators. The Generator class is designed to provide a lower-level interface
 for equation builders. It is similar to an Operator, except that a Generator
-creates another Literal. This literal can be created or updated with the
+creates another Literal. This Literal can be created or updated with the
 'generate' method of the Generator. Generators are treated as leaf nodes (like
 Arguments and Partitions) of a Literal tree. They can be dependent on other
-Literals to update their clock, but those details are up to classes that inherit
-from Generator.
+Literals to update their clicker, but those details are up to classes that
+inherit from Generator.
 """
 
 from .Literal import Literal

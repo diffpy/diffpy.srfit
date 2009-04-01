@@ -54,6 +54,10 @@ class Operator(Literal):
     operation   --  Function that performs the operation. e.g. numpy.add or
     symbol  --  The symbolic representation. e.g. "+" or "sin"
                 numpy.sin
+    _tags   --  Set of tags for this operator
+    _cancombine --  Indicates whether this operator can combine a Partition.
+    _proxy      --  The Argument or Partition that this Operator results in
+                    (used by the Evaluator).
     """
 
     def __init__(self, name = None, symbol = None, operation = None,

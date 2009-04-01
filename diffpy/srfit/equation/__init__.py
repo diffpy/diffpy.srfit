@@ -37,8 +37,8 @@ builder     --  The builder module contains classes and methods that aid in the
                 construction of Equations. There are options for creating an
                 Equation from a string, or from EquationBuilder objects.  See
                 the module documentation for a discription of these tools.
-clicker     --  The clicker module contains the Clicker class and
-                clickerFactory methods (see below).
+clicker     --  The clicker module defines the Clicker class and
+                clickerFactory method (see below).
 Equation    --  The Equation module contains the Equation class (see below).
 
 Classes:

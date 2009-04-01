@@ -17,6 +17,9 @@
 The Validator walks an equation tree composed of Literals and checks the
 validity of each equation as much as possible without evaluating it. It
 collects errors in a list.
+
+The Validator checks that the input count of each Operator is equal to the
+output count of its arguments.
 """
 
 from .Visitor import Visitor
@@ -28,6 +31,8 @@ class Validator(Visitor):
 
     Attributes:
     errors  --  List of strings describing errors.
+    _nin    --  Variable for counting the number input arguments for an
+                operator.
     """
 
     def __init__(self):

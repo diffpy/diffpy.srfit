@@ -47,9 +47,8 @@ Partition   --  Contains the Partition class (see below). The module
                 documentation contains more information about Partitions.
 
 Classes:
-Argument    --  Contains the Argument class. Arguments have a value and name,
-                and can be made to appear as constant. Arguments are leaf nodes
-                of an equation tree.
+Argument    --  Arguments have a value and name, and can be made to appear as
+                constant. Arguments are leaf nodes of an equation tree.
 Generator   --  A Generator is a Literal that can generate other Literals. Use
                 of generators help extend the architecture to include equations
                 that are not easily expressed as with other Literals.

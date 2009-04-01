@@ -12,7 +12,21 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
+"""Base visitor class.
 
+Visitors work with Literal trees to perform a specified action. They are
+designed according to the visitor pattern
+(http://en.wikipedia.org/wiki/Visitor_pattern).
+
+Visitors work with the following Literal classes
+(diffpy.srfit.equation.literals):
+Argument
+Generator
+Operator
+Partition
+
+See the Visitor class for the required methods that each Visitor must overload.
+"""
 class Visitor(object):
     """Abstract class for all visitors to a Literal tree.
 
@@ -34,7 +48,6 @@ class Visitor(object):
     def onGenerator(self, gen):
         """Process a Generator node."""
         return self._abstract("onGenerator")
-
 
 
     # throw an exception

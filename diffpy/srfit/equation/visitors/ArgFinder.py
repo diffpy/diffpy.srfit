@@ -13,6 +13,10 @@
 #
 ########################################################################
 """Visitor for extracting the Argument entries in a Literal tree.
+
+ArgFinder extracts all Arguments from a literal true, even "hidden" ones that
+are contained in Partitions within and below Generators.
+
 """ 
 
 from .Visitor import Visitor
@@ -22,7 +26,7 @@ class ArgFinder(Visitor):
 
     Attributes
     args    --  The set of collected Arguments (a set, not a list!)
-    getconsts  --  Flag indicating whether to grap constant arguments.
+    getconsts  --  Flag indicating whether to grab constant arguments.
     """
 
     def __init__(self, getconsts = True):

@@ -16,7 +16,7 @@
 
 This package contains modules and subpackages that are used to create Equation
 objects. An Equation is a functor that remembers its state, and that can
-quickly reevaluate its value based on changes in its variables. Equations can
+quickly re-evaluate its value based on changes in its variables. Equations can
 be used to encapsulate simple expressions or complex signal generators,
 provided one gets to know how to create and use Literal classes (from the
 literals subpackage), that are the basic building blocks of an Equation.

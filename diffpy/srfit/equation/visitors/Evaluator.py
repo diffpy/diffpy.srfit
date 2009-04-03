@@ -49,8 +49,11 @@ from .. import Clicker
 class Evaluator(Visitor):
     """Evaluator visitor for computing the value of an expression.
     
-    Arguments
-    value   --  The value of the expression
+    Attributes
+    value       --  The value of the expression
+    _clicker    --  A Clicker that is compared with the Clicker of each Literal
+                    in the tree.
+    _atroot     --  Flag indicating if we're at the root of the tree.
     """
 
     def __init__(self):

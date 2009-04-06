@@ -421,8 +421,17 @@ class OperatorBuilder(EquationBuilder):
         self.literal = op
         return
 
-    def __call__(self, *args):
-        """Args past nin are considered tags."""
+    def __call__(self, *args, **kw):
+        """Call the operator builder.
+
+        This creates a new builder that encapsulates the operation.
+        
+        args    --  Arguments of the operation. Args past nin are considered
+                    tags.
+        kw      --  Key-word arguments. If "combine" appears and is True, the
+                    operation is allowed to combine any partitions it
+                    encounters after the operation.
+        """
         newobj = OperatorBuilder(self.name)
 
         # If all we have is a name, then we assume that it is the name of a
@@ -442,6 +451,7 @@ class OperatorBuilder(EquationBuilder):
             op.operation = self.literal.operation
             newobj.literal = op
 
+        combine = kw.get("combine", False)
         # Wrap scalar arguments and process tags
         for arg in args[:newobj.literal.nin]:
             # Wrap the argument if it is not already
@@ -449,6 +459,7 @@ class OperatorBuilder(EquationBuilder):
                 arg = ArgumentBuilder(value=arg, const=True)
             newobj.literal.addLiteral(arg.literal)
         newobj.literal.addTags(*args[newobj.literal.nin:])
+        newobj.literal.setCombine(combine)
         #print
         return newobj
 

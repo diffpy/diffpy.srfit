@@ -16,6 +16,26 @@ class TestArgument(unittest.TestCase):
         l.setValue(3.14)
         self.assertAlmostEqual(l.value, 3.14)
         self.assertTrue(c1 < l.clicker)
+
+        # Try again
+        c1.click()
+        l.setValue(3.14)
+        self.assertTrue(c1 > l.clicker)
+
+        # Try array
+        import numpy
+        x = numpy.arange(0, 10, 0.1)
+        l.setValue(x)
+        self.assertTrue( l.value is x )
+
+        # Change the array
+        y = numpy.arange(0, 10, 0.5)
+        l.setValue(y)
+        self.assertTrue( l.value is y )
+
+        # Back to scalar
+        l.setValue(1.01)
+        self.assertAlmostEqual(l.value, 1.01)
         return
 
 

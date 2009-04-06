@@ -42,9 +42,9 @@ loops in the observation structure.
 A Clicker class is created with a the clickerFactory method defined in this
 module.  This allows one to have several types of clickers with different
 global counters for use in different types of comparisons. Since the global
-counter of a clicker is tied to its class, Clickers can only be compared with
-clickers with the same class. Thus, one should not inherit from Clicker and
-expect the subclasses to interoperate.
+counter of a clicker is tied to its class, Clickers can only be meaningfully
+compared with clickers with the same class. Thus, one should not inherit from
+Clicker and expect the subclasses to interoperate.
 """
 
 def clickerFactory():
@@ -130,12 +130,7 @@ def clickerFactory():
             return
 
         def __cmp__(self, other):
-            """Compare the counter of two Clickers.
-            
-            Raises TypeError if the Clickers are from different classes.
-            """
-            if self.__class__ is not other.__class__:
-                raise TypeError("Cannot compare Clickers of different types")
+            """Compare the counter of two Clickers."""
             return self._state - other._state
 
         def __str__(self):

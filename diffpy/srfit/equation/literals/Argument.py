@@ -52,8 +52,16 @@ class Argument(Literal):
 
         This will click the clicker.
         """
-        if not numpy.array_equiv(val, self.value):
-            #print self.name, "changed"
+        # This faster than using numpy.array_equiv.
+        # The most common case is that of comparing scalars so we check that
+        # first.
+        notequiv = (val != self.value)
+        if notequiv is True:
+            self.value = val
+            self.clicker.click()
+        elif notequiv is False:
+            return
+        elif notequiv.any():
             self.value = val
             self.clicker.click()
         return

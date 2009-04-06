@@ -76,19 +76,6 @@ class TestClicker(unittest.TestCase):
         self.assertFalse( observer.hasSubject(c2) )
         return
 
-    def testTwoClikerTypes(self):
-        """Test using to clicker of different types."""
-        Clicker1 = clickerFactory()
-        Clicker2 = clickerFactory()
-        c1 = Clicker1()
-        c2 = Clicker2()
-        c1.click()
-        self.assertEqual(0, Clicker2._numclicks)
-        self.assertRaises(TypeError, c1.__cmp__, c2)
-        self.assertRaises(TypeError, c2.__cmp__, c1)
-        return
-
-
 if __name__ == "__main__":
 
     unittest.main()

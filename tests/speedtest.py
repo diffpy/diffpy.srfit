@@ -108,34 +108,53 @@ def speedTest2():
     sigma = 0.003
 
 
-    eqstr = "exp((x*qsig)**2)*(exp(((x-1)/sigma1)**2)+exp(((x-2)/sigma2)**2))"
-    eq = makeEquation(eqstr)
-    #print eq.args.keys()
-    eq.x.setValue(x)
+    eqstr = """\
+    A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2))\
+    """
+    eq = makeEquation(eqstr, consts = {"x" : x})
     eq.qsig.setValue(qsig)
     eq.sigma1.setValue(sigma)
     eq.sigma2.setValue(sigma)
-
-    t1 = timeFunction(eq)
-    eq.qsig.setValue(0.02)
-    t2 = timeFunction(eq)
-    eq.sigma2.setValue(0.005)
-    t3 = timeFunction(eq)
-    eq.sigma1.setValue(0.005)
-    t4 = timeFunction(eq)
-    print "Mine", t1, t2, t3, t4, t1+t2+t3+t4
+    eq.A0.setValue(1.0)
 
     from numpy import exp
-    def f(qsig, sigma1, sigma2):
-        return exp((x*qsig)**2)*(exp(((x-1)/sigma1)**2)+exp(((x-2)/sigma2)**2))
+    def f(A0, qsig, sigma1, sigma2):
+        return A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2))
 
-    t1 = timeFunction(f, qsig, sigma, sigma)
-    t2 = timeFunction(f, 0.02, sigma, sigma)
-    t3 = timeFunction(f, 0.02, 0.005, sigma)
-    t4 = timeFunction(f, 0.02, 0.005, 0.005)
-    print "Numpy", t1, t2, t3, t4, t1+t2+t3+t4
+    tnpy = 0
+    teq = 0
+    import random
+    # Randomly change variables
+    numargs = len(eq.args)
+    choices = range(numargs)
+    args = [0.0]*(len(eq.args))
+
+    mutate = 2
+
+    # The call-loop
+    random.seed()
+    numcalls = 1000
+    for _i in xrange(numcalls):
+        # Mutate values
+        n = mutate
+        if n == 0:
+            n = random.choice(choices)
+        for _j in xrange(n):
+            idx = random.choice(choices)
+            args[idx] = random.random()
+
+        # Time the different functions with these arguments
+        tnpy += timeFunction(f, *args)
+        teq += timeFunction(eq, *args)
+
+    print "Average call time (%i calls):" % numcalls
+    print "numpy: ", tnpy/numcalls
+    print "equation: ", teq/numcalls
+    print "ratio: ", teq/tnpy
+
     return
 
 if __name__ == "__main__":
     #speedTest1()
     speedTest2()
+

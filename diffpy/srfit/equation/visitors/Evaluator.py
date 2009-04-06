@@ -83,7 +83,6 @@ class Evaluator(Visitor):
             part._prepare()
             if self._atroot:
                 self.value = part.combine(part._partvals)
-        self._atroot = False
         return
 
     def onGenerator(self, gen):
@@ -103,8 +102,9 @@ class Evaluator(Visitor):
             # that can be used to get its value.
             self._createProxy(op)
 
-        # Doesn't do anything right now
+        # Doesn't do anything right now, as this is handled in _createProxy
         # op._proxy.identify(self)
+        self._atroot = False
         return
 
     def _createProxy(self, op):
@@ -148,7 +148,7 @@ class Evaluator(Visitor):
         # Make the proxy
         if helper.part is not None:
             if op._proxy is None:
-                op._proxy = Evaluator.PseudoPartition()
+                op._proxy = Evaluator._PseudoPartition()
             op._proxy.combine = helper.part.combine
             op._proxy.tags = helper.part.tags
             op._proxy.tagmap = helper.part.tagmap
@@ -156,7 +156,10 @@ class Evaluator(Visitor):
         else:
             if op._proxy is None:
                 op._proxy = Argument()
-            op._proxy.setValue(helper.value)
+            # We bypass setValue because we don't have to worry about the
+            # clock. This gives us a nice speedup.
+            #op._proxy.setValue(helper.value)
+            op._proxy.value = helper.value
             self.value = helper.value
 
         return
@@ -276,7 +279,7 @@ class Evaluator(Visitor):
 
     # End class Helper
 
-    class PseudoPartition(Partition):
+    class _PseudoPartition(Partition):
         """A partition-like object that can be used to hold the output of an
         operated partition.
         """
@@ -289,7 +292,7 @@ class Evaluator(Visitor):
             """
             return
 
-    # End class PseudoPartition
+    # End class _PseudoPartition
 
 # End class Evaluator
 

@@ -100,6 +100,13 @@ class TestEquationParser(unittest.TestCase):
         # tag1
         self.assertEquals( (2*1+0)+(2+4), eq() )
 
+        eq = builder.makeEquation("multiply(A, p1, 'tag1', combine=True) + c")
+        eq.A.setValue(2)
+        eq.c.setValue(1)
+        # Multiplication should only apply to tag2, 'c' should only be added
+        # once, since  the partition is combined by the multiplication
+        self.assertEquals( ((2*1)+(2))+1, eq() )
+
         return
 
     def testBuildEquation(self):

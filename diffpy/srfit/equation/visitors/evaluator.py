@@ -40,7 +40,7 @@ Note that if Literals are added to a tree, a new Evaluator should be used to
 ensure that the change is included in the calculation.
 """
 
-from .Visitor import Visitor
+from .visitor import Visitor
 from ..literals import Partition
 from ..literals import Argument
 

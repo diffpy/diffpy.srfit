@@ -30,7 +30,7 @@ arguments in the same Operator. In this case, each of these Partitions
 will be combined before the operation. 
 """
 
-from .Literal import Literal
+from .literal import Literal
 
 import numpy
 

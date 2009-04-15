@@ -20,7 +20,7 @@ which is valid as a string equivalent of the equation.
 Printer is mostly 
 """
 
-from .Visitor import Visitor
+from .visitor import Visitor
 
 from .. import Clicker
 

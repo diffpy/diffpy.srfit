@@ -24,7 +24,7 @@ Literals to update their clicker, but those details are up to classes that
 inherit from Generator.
 """
 
-from .Literal import Literal
+from .literal import Literal
 
 import numpy
 

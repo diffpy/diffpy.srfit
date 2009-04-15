@@ -35,15 +35,15 @@ clicker that can be compared to that of a Literal, and make a decision on
 whether to reprocess the information on a given node of the Literal tree. 
 
 Modules:
-Argument    --  Contains the Argument class (see below). The module
+argument    --  Contains the Argument class (see below). The module
                 documentation contains more information about Arguments.
-Generator   --  Contains the Generator class (see below). The module
+generator   --  Contains the Generator class (see below). The module
                 documentation contains more information about Generators.
-Literal     --  Contains the Literal base class. The module documentation
+literal     --  Contains the Literal base class. The module documentation
                 contains more information about Literals.
 operators   --  Contains various Operator classes (see below). The module
                 documentation contains more information about Operators.
-Partition   --  Contains the Partition class (see below). The module
+partition   --  Contains the Partition class (see below). The module
                 documentation contains more information about Partitions.
 
 Classes:
@@ -82,9 +82,9 @@ from diffpy.srfit.version import __version__
 
 # Import the operators
 
-from .Argument import Argument
-from .Generator import Generator
-from .Partition import Partition
+from .argument import Argument
+from .generator import Generator
+from .partition import Partition
 from .operators import Operator
 from .operators import AdditionOperator
 from .operators import SubtractionOperator

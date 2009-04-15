@@ -19,7 +19,7 @@ are contained in Partitions within and below Generators.
 
 """ 
 
-from .Visitor import Visitor
+from .visitor import Visitor
 
 class ArgFinder(Visitor):
     """ArgFinder extracts Arguments from a Literal tree.

@@ -22,7 +22,7 @@ The Validator checks that the input count of each Operator is equal to the
 output count of its arguments.
 """
 
-from .Visitor import Visitor
+from .visitor import Visitor
 
 from .. import Clicker
 

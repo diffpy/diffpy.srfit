@@ -96,7 +96,7 @@ EquationBuilder objects.
 import sys
 import numpy
 
-from .Equation import Equation
+from .equationmod import Equation
 import diffpy.srfit.equation.literals as literals
 
 custombuilders = {}

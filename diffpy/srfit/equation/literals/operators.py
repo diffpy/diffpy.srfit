@@ -34,7 +34,7 @@ CombineOperator will combine a Partition but leave other literals unchanged.
 See the Partition module for combination rules.
 """
 
-from .Literal import Literal
+from .literal import Literal
 import numpy
 
 class Operator(Literal):

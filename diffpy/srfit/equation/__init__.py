@@ -39,7 +39,7 @@ builder     --  The builder module contains classes and methods that aid in the
                 the module documentation for a discription of these tools.
 clicker     --  The clicker module defines the Clicker class and
                 clickerFactory method (see below).
-Equation    --  The Equation module contains the Equation class (see below).
+equationmod --  The equationmod module contains the Equation class (see below).
 
 Classes:
 Clicker     --  The Clicker class records the change of state in another
@@ -67,6 +67,6 @@ from .clicker import clickerFactory
 
 Clicker = clickerFactory()
 
-from .Equation import Equation
+from .equationmod import Equation
 
 # End of file

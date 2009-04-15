@@ -18,7 +18,7 @@ Arguments are the leaves of an equation tree, in essense a variable or a
 constant.
 """
 
-from .Literal import Literal
+from .literal import Literal
 
 import numpy
 

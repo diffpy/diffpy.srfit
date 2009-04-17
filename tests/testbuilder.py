@@ -14,11 +14,13 @@ class TestRegistration(unittest.TestCase):
 
     def testRegisterArg(self):
 
+        factory = builder.EquationFactory()
+
         v1 = _makeArgs(1)[0]
 
-        builder.wrapArgument(v1)
+        factory.registerArgument("v1", v1)
 
-        eq = builder.makeEquation("v1")
+        eq = factory.makeEquation("v1")
 
         self.assertTrue(v1 is eq.arglist[0])
         return
@@ -30,8 +32,10 @@ class TestEquationParser(unittest.TestCase):
 
         from numpy import exp, sin, divide, sqrt, array_equal, e
 
+        factory = builder.EquationFactory()
+
         # Scalar equation
-        eq = builder.makeEquation("A*sin(0.5*x)+divide(B,C)")
+        eq = factory.makeEquation("A*sin(0.5*x)+divide(B,C)")
         A = 1
         x = numpy.pi
         B = 4.0
@@ -44,8 +48,9 @@ class TestEquationParser(unittest.TestCase):
         self.assertTrue(array_equal(eq(), f(A,x,B,C)))
 
 
+
         # Vector equation
-        eq = builder.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
+        eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
         x = numpy.arange(0, 1, 0.05)
         sigma = 0.1
         eq.x.setValue(x)
@@ -55,16 +60,16 @@ class TestEquationParser(unittest.TestCase):
 
 
         # Equation with constants
-        consts = {"x" : x}
-        eq = builder.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))", consts=consts)
+        factory.registerConstant("x", x)
+        eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
         self.assertTrue("sigma" in eq.args)
         self.assertTrue("x" not in eq.args)
         self.assertTrue(array_equal(eq(sigma=sigma), f(x,sigma)))
 
 
         # Equation with user-defined functions
-        builder.wrapFunction("myfunc", eq, 1)
-        eq2 = builder.makeEquation("c*myfunc(sigma)")
+        factory.registerFunction("myfunc", eq, 1)
+        eq2 = factory.makeEquation("c*myfunc(sigma)")
         self.assertTrue(array_equal(eq2(c=2, sigma=sigma), 2*f(x,sigma)))
         self.assertTrue("sigma" in eq2.args)
         self.assertTrue("c" in eq2.args)
@@ -74,21 +79,18 @@ class TestEquationParser(unittest.TestCase):
         v1, v2 = _makeArgs(2)
         p1.addArgument(v1)
         p1.addArgument(v2)
-        builder.wrapPartition("p1", p1)
-        eq = builder.makeEquation("A*p1 + B")
+        factory.registerPartition("p1", p1)
+        eq = factory.makeEquation("A*p1 + B")
         eq.A.setValue(2)
         eq.B.setValue(4)
         self.assertEquals( (2*1+4)+(2*2+4), eq() )
 
 
-        # Partition equation with tags
-        
-
         # Equation with Generator
         g1 = literals.Generator("g1")
         g1.literal = p1
-        builder.wrapGenerator("g1", g1)
-        eq = builder.makeEquation("A*g1 + B")
+        factory.registerGenerator("g1", g1)
+        eq = factory.makeEquation("A*g1 + B")
         eq.A.setValue(2)
         eq.B.setValue(4)
         self.assertEquals( (2*1+4)+(2*2+4), eq() )
@@ -99,21 +101,21 @@ class TestEquationParser(unittest.TestCase):
         v1, v2 = _makeArgs(2)
         p1.addArgument(v1, "tag", "tag1")
         p1.addArgument(v2, "tag", "tag2")
-        builder.wrapPartition("p1", p1)
-        eq = builder.makeEquation("add(A*p1, B, 'tag1')")
+        factory.registerPartition("p1", p1)
+        eq = factory.makeEquation("add(A*p1, B, 'tag1')")
         eq.A.setValue(2)
         eq.B.setValue(4)
         # Addition should only apply to tag1, multiplication applies to both
         self.assertEquals( (2*1+4)+(2*2+0), eq() )
 
-        eq = builder.makeEquation("add( multiply(A, p1, 'tag1'), B, 'tag2')")
+        eq = factory.makeEquation("add( multiply(A, p1, 'tag1'), B, 'tag2')")
         eq.A.setValue(2)
         eq.B.setValue(4)
         # Addition should only apply to tag2, multiplication applies only to
         # tag1
         self.assertEquals( (2*1+0)+(2+4), eq() )
 
-        eq = builder.makeEquation("multiply(A, p1, 'tag1', combine=True) + c")
+        eq = factory.makeEquation("multiply(A, p1, 'tag1', combine=True) + c")
         eq.A.setValue(2)
         eq.c.setValue(1)
         # Multiplication should only apply to tag2, 'c' should only be added

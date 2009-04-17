@@ -19,7 +19,7 @@ from numpy import exp
 from pylab import plot, show
 
 from diffpy.srfit.equation.literals import Partition, Argument
-from diffpy.srfit.equation import builder
+from diffpy.srfit.equation.builder import EquationFactory
 
 # The data
 x = numpy.arange(0, 10, 0.1)
@@ -42,13 +42,14 @@ gpart.addArgument(a1, "A", "A-A")
 gpart.addArgument(a2, "A", "B", "A-B", "B-A")
 gpart.addArgument(a3, "B", "B-B")
 
-# Make this partition known to the builder so we can use it in an equation.
-builder.wrapPartition("gpart", gpart)
+# Make this partition known to the factory so we can use it in an equation.
+factory = EquationFactory()
+factory.registerPartition("gpart", gpart)
 
 #### Now the fun begins ###
 
 # Make the equation "A0 * gpart + c".
-eq = builder.makeEquation("A0 * gpart + c")
+eq = factory.makeEquation("A0 * gpart + c")
 
 y1 = eq(A0=1, c=0)
 y2 = eq(A0=2, c=0)
@@ -57,7 +58,7 @@ show()
 raw_input("Press anything")
 
 # Make the same equation, but only modify the amplitude of the "B-B" pair
-eq = builder.makeEquation("multiply(A0, gpart, 'B-B') + c")
+eq = factory.makeEquation("multiply(A0, gpart, 'B-B') + c")
 
 y3 = eq(A0=2, c=0)
 plot(x, y1, x, y2, x, y3)
@@ -65,7 +66,7 @@ show()
 raw_input("Press anything")
 
 # Do this again, but add an arbitrary constant to the "A" pairs
-eq = builder.makeEquation("add( multiply(A0, gpart, 'B-B'), c, 'A')")
+eq = factory.makeEquation("add( multiply(A0, gpart, 'B-B'), c, 'A')")
 
 y4 = eq(A0=2, c=1)
 plot(x, y1, x, y2, x, y3, x, y4)

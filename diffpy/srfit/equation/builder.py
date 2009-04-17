@@ -14,28 +14,38 @@
 ########################################################################
 """Classes and utilities for creating Equations objects.
 
-The makeEquation function turns the string-representation of an equation into
-an Equation instance.  For example
-> eq = makeEquation("A*sin(a*x)")
+The EquationFactory class is used to create Equation instances within an
+isolated namespace. A string equation can be given to an EquationFactory to be
+turned into an Equation instance. User-defined literals can be registered with
+the factory so that they are used in the equation.
+
+An example using the EquationFactory:
+The makeEquation method turns the string-representation of an equation into
+an Equation instance.
+> factory = EquationFactory()
+> eq = factory.makeEquation("A*sin(a*x)")
 will create an Equation with Arguments A, a and x that evaluates as
-"A*sin(a*x)". 
+"A*sin(a*x)". The Arguments A, a and x are created by the factory.
 
-Scalar constants can be included in the equation:
-> consts = {"offset" : 3 }
-> eq = makeEquation("A*sin(a*x) + offset", consts=consts)
-This includes a constant offset in the equation. Similarly, one could have
-written
-> eq = makeEquation("A*sin(a*x) + 3")
-to get the same effect.
+Custom Arguments and constants can be included in the equation:
+> factory.registerConstant("offset", 3)
+> A = Argument(name = "A", value = 1.0)
+> factory.registerArgument("A", A)
+> eq = factory.makeEquation("A*sin(a*x) + offset")
+This includes a constant offset in the equation and makes sure that the
+user-defined Argument is in the equation. This is can be used to assure that
+the same instance of an Argument appears in multiple equation. Other literals
+can be registered in a similar fashion.
 
-The EquationBuilder class is at the core of makeEquation, and it can be used
-directly to create Equations. EquationBuilder instances overload normal
-arithmetic operations so that they build an Equation object instead.
-EquationBuilder is specified in the ArgumentBuilder, GeneratorBuilder,
-OperatorBuilder and PartitionBuilder classes.  All of the numpy ufunc operators
-are overloaded within this module as OperatorBuilder instances. You can
-register new builder objects with the 'registerBuilder' method, which will
-allow those builders to be used by name in the makeEquation method.
+The EquationBuilder class does the hard work of making an Equation from a
+string in EquationFactory.makeEquation. EquationBuilder can be used directly to
+create Equations. EquationBuilder instances overload normal arithmetic
+operations so that they build an Equation object instead.  EquationBuilder is
+specified in the ArgumentBuilder, GeneratorBuilder, OperatorBuilder and
+PartitionBuilder classes.  All of the numpy ufunc operators are overloaded
+within this module as OperatorBuilder instances. You can create builders from
+literals by using the "wrap" methods within this module or by using the builder
+classes directly.
 
 With a collection of EquationBuilder objects, one can simply write
 the Equation using normal python syntax:
@@ -52,20 +62,13 @@ setup:
 > eq2 = beq2.getEquation()
 Here, the object returned by 'A*sin(a*x)' knows how to add itself to the scalar
 '3' to return another EquationBuilder object.  Non scalars, constant or
-otherwise, must be wrapped as ArgumentBuilders in order to be used in
-this way.
+otherwise, must be wrapped as ArgumentBuilders in order to be used in this way.
 
-Both makeEquation and EquationBuilder can make use of user-defined functions.
-Any callable python object can be wrapped as an OperatorBuilder with the
-wrapFunction function. The wrapped function is registered with this module so it
-is usable in other imports and by the makeEquationFunction. For example.
+EquationBuilder can make use of user-defined functions.  Any callable python
+object can be wrapped as an OperatorBuilder with the wrapFunction method. For
+example.
 > _f = lambda a, b : (a-b)/(a+b)
 > f = wrapFunction("f", _f)
-> # The builder, "f", which is a wrapper around _f is now registered with this
-> # module as a custom builder.
-> # Using makeEquation
-> eq = makeEquation("c*f(a,b)")
-> # gives an Equation with c, a and b as arguments.
 > # Using EquationBuilder
 > a = ArgumentBuilder(name = "a")
 > b = ArgumentBuilder(name = "b")
@@ -73,18 +76,15 @@ is usable in other imports and by the makeEquationFunction. For example.
 > beq = c*f(a,b)
 > eq = beq.makeEquation()
 
-Tags can be passed to Operators using both makeEquation and EquationBuilder
-(see the diffpy.srfit.equation.literals.operator module).  When an
-OperatorBuilder is called with extra arguments, these arguments are interpreted
-as tags. For example, in the above example, the last two lines could be
-replaced by
+Tags can be passed to Operators using both the EquationFactory and
+EquationBuilder (see the diffpy.srfit.equation.literals.operator module).  When
+an OperatorBuilder is called with extra arguments, these arguments are
+interpreted as tags. For example, in the above example, the last two lines
+could be replaced by
 > beq = c*f(a,b,"tag1")
 > eq = beq.makeEquation()
 and the 'f' function would only operate on Partitions Arguments that have a
 "tag1" tag.
-
-Also included in this module is the 'custombuilders' dictionary of wrapped
-EquationBuilder objects. 
 """
 
 # NOTE - the builder cannot handle numpy arrays on the left of a binary
@@ -99,129 +99,165 @@ import numpy
 from .equationmod import Equation
 import diffpy.srfit.equation.literals as literals
 
-custombuilders = {}
+class EquationFactory(object):
+    """A Factory for Equation classes."""
 
-def makeEquation(eqstr, consts = {}):
-    """Make an equation from an equation string.
+    def __init__(self):
+        self.consts = {}
+        self.builders = {}
+        self.registerConstant("pi", numpy.pi)
+        self.registerConstant("e", numpy.e)
+        return
 
-    Arguments
-    eqstr   --  An equation in string form using standard python syntax. The
-                equation string can use any function that exists as a numpy
-                ufunc or that has been created with the wrapFunction method. In
-                the latter case, the name of a custom function used in the
-                equation string must match the name used in the wrapFunction
-                method.
-    consts  --  A dictionary of named scalar constants used in the equation.
+    def makeEquation(self, eqstr):
+        """Make an equation from an equation string.
 
-    Returns an Equation instance representing the equation string.
-    """
-    ns = _makeNamespace(eqstr, consts)
-    beq = eval(eqstr, ns)
-    return beq.getEquation()
+        Arguments
+        eqstr   --  An equation in string form using standard python syntax.
+                    The equation string can use any function registered literal
+                    or function, including numpy ufuncs that are automatically
+                    registered.
 
-def _makeNamespace(eqstr, consts):
-    """Build an evaluation namespace from an equation string.
-    
-    Arguments
-    eqstr   --  An equation in string form using standard python syntax. The
-                equation string can use any function that exists as a numpy
-                ufunc or that has been created with the wrapFunction method. In
-                the latter case, the name of a custom function used in the
-                equation string must match the name used in the wrapFunction
-                method.
-    consts  --  A dictionary of named constants used in the equation.
+        Returns an Equation instance representing the equation string.
+        """
+        ns = self._makeNamespace(eqstr)
+        beq = eval(eqstr, ns)
+        return beq.getEquation()
 
-    Returns a dictionary of the name, ArgumentBuilder pairs.
-    """
-    import tokenize
-    import token
-    import cStringIO
-    import sys
+    def registerConstant(self, name, value):
+        """Register a named constant with the factory."""
+        arg = literals.Argument(name=name, value=value, const=True)
+        self.registerArgument(name, arg)
+        return
 
-    interface = cStringIO.StringIO(eqstr).readline
-    # output is a 5-tuple
-    # token[0] = token type
-    # token[1] = token string
-    # token[2] = (srow, scol) - row and col where the token begins
-    # token[3] = (erow, ecol) - row and col where the token ends
-    # token[4] = line where the token was found
-    tokens = tokenize.generate_tokens(interface)
-    tokens = list(tokens)
+    def registerArgument(self, name, arg):
+        """Register a named Argument with the factory."""
+        argbuilder = wrapArgument(name, arg)
+        self.registerBuilder(name, argbuilder)
+        return
 
-    # Scan for argumens and operators. This will be wrong on the first pass
-    # since variables like "a" and "x" will appear as operators to the
-    # tokenizer.
-    eqargs = {}
-    eqconsts = {}
-    eqops = {}
-    symbols = ("+", "-", "*", "/", "**", "%")
-    ignore = ("(", ",", ")")
+    def registerFunction(self, name, func, nin = 2, nout = 1):
+        """Register a named function with the factory.
 
-    consts = dict(consts)
-    consts.update( { "pi" : numpy.pi, "e" : numpy.e } )
+        This will register the OperatorBuilder instance as an attribute of this
+        module so it can be recognized in an equation string when parsed with
+        the makeEquation method.
+        
+        name    --  The name of the funciton
+        func    --  A callable python object
+        nin     --  The number of input arguments (default 2)
+        nout    --  The number of return values (default 1)
 
-    for i, tok in enumerate(tokens):
-        if tok[0] in (token.NAME, token.OP):
-            eqops[i] = tok[1]
-        #elif tok[0] == token.NUMBER:
-        #    eqconsts[i] = tok[1]
+        """
+        opbuilder = wrapFunction(name, func, nin, nout)
+        self.registerBuilder(name, opbuilder)
+        return
 
-    # Scan the tokens in ops for arguments and constants.
-    poplist = []
-    for i, tok in eqops.items():
-        # Move genuine varibles to the eqargs dictionary
-        if (
-            # Check local namespace
-            tok not in dir(sys.modules[__name__]) and
-            # Check custom builders
-            tok not in custombuilders and
-            # Check symbols
-            tok not in symbols and
-            # Check ignored characters
-            tok not in ignore and
-            # Check constants
-            tok not in consts
-            ):
-            eqargs[i] = tok
-            poplist.append(i)
-        # Move constants to the eqconsts dictionary
-        elif tok in consts:
-            eqconsts[i] = tok
-            poplist.append(i)
-        # Discard it if it is is in the ignore or symbol list
-        elif tok in ignore or tok in symbols:
-            poplist.append(i)
+    def registerPartition(self, name, part):
+        """Register a named Partition with the factory."""
+        partbuilder = wrapPartition(name, part)
+        self.registerBuilder(name, partbuilder)
+        return
 
-    # Discard the tokens that were moved or ignored
-    map(eqops.pop, poplist)
+    def registerGenerator(self, name, gen):
+        """Register a named Generator with the factory."""
+        genbuilder = wrapGenerator(name, gen)
+        self.registerBuilder(name, genbuilder)
+        return
 
-    # Now start making the namespace
-    ns = {}
-    # Get the operators, partitions and generators
-    for opname in eqops.values():
-        #print opname
-        if opname in custombuilders:
-            opbuilder = custombuilders[opname]
-        else:
-            opbuilder = getattr(sys.modules[__name__], opname)
-        #print opbuilder
-        ns[opname] = opbuilder
-    # Make the arguments
-    for argname in eqargs.values():
-        #print argname
-        argbuilder = ArgumentBuilder(name = argname)
-        #print argbuilder
-        ns[argname] = argbuilder
-    # Get the constants
-    for constname in eqconsts.values():
-        #print constname
-        val = eval(constname, consts)
-        constbuilder = ArgumentBuilder(name = constname, value = val, 
-            const = True)
-        ns[constname] = constbuilder
+    def registerBuilder(self, name, builder):
+        """Register builder in this module so it can be used in makeEquation."""
+        self.builders[name] = builder
+        return
 
-    return ns
+    def deRegisterBuilder(self, name):
+        """De-register a builder by name."""
+        if name in self.builders:
+            del self.builders[name]
+        return
 
+    def _makeNamespace(self, eqstr):
+        """Create an evaluation namespace from an equation string.
+        
+        Arguments
+        eqstr   --  An equation in string as specified in the makeEquation
+                    method.
+
+        Returns a dictionary of the name, EquationBuilder pairs.
+        """
+        import tokenize
+        import token
+        import cStringIO
+        import sys
+
+        interface = cStringIO.StringIO(eqstr).readline
+        # output is a 5-tuple
+        # token[0] = token type
+        # token[1] = token string
+        # token[2] = (srow, scol) - row and col where the token begins
+        # token[3] = (erow, ecol) - row and col where the token ends
+        # token[4] = line where the token was found
+        tokens = tokenize.generate_tokens(interface)
+        tokens = list(tokens)
+
+        # Scan for argumens and operators. This will be wrong on the first pass
+        # since variables like "a" and "x" will appear as operators to the
+        # tokenizer.
+        eqargs = {}
+        eqops = {}
+        symbols = ("+", "-", "*", "/", "**", "%")
+        ignore = ("(", ",", ")")
+
+        for i, tok in enumerate(tokens):
+            if tok[0] in (token.NAME, token.OP):
+                eqops[i] = tok[1]
+
+        # Scan the tokens for names that are not defined in the module or in
+        # self.builders. These will be treated as Arguments that need to be
+        # generated.
+        poplist = []
+        for i, tok in eqops.items():
+            # Move genuine varibles to the eqargs dictionary
+            if (
+                # Check local namespace
+                tok not in dir(sys.modules[__name__]) and
+                # Check custom builders
+                tok not in self.builders and
+                # Check symbols
+                tok not in symbols and
+                # Check ignored characters
+                tok not in ignore
+                ):
+                eqargs[i] = tok
+                poplist.append(i)
+            # Discard it if it is is in the ignore or symbol list
+            elif tok in ignore or tok in symbols:
+                poplist.append(i)
+
+        # Discard the tokens that were moved or ignored
+        map(eqops.pop, poplist)
+
+        # Now start making the namespace
+        ns = dict(self.builders)
+
+        # Get the operators, partitions and generators
+        for opname in eqops.values():
+            #print opname
+            if opname not in self.builders:
+                opbuilder = getattr(sys.modules[__name__], opname)
+                #print opbuilder
+                ns[opname] = opbuilder
+
+        # Make the arguments
+        for argname in eqargs.values():
+            #print argname
+            argbuilder = ArgumentBuilder(name = argname)
+            #print argbuilder
+            ns[argname] = argbuilder
+
+        return ns
+
+# End class EquationFactory
 
 class EquationBuilder(object):
     """Class for building Equation objects.
@@ -472,10 +508,11 @@ class OperatorBuilder(EquationBuilder):
 
 # end class OperatorBuilder
 
+# Utility functions
+
 def wrapArgument(name, arg):
-    """Wrap an Argument as a builder and register it with the module."""
+    """Wrap an Argument as a builder."""
     argbuilder = ArgumentBuilder(arg = arg)
-    registerBuilder(name, argbuilder)
     return argbuilder
 
 def wrapFunction(name, func, nin = 2, nout = 1):
@@ -502,42 +539,26 @@ def wrapFunction(name, func, nin = 2, nout = 1):
     # Create the OperatorBuilder
     opbuilder = OperatorBuilder(name, op)
 
-    # Register it with the module
-    registerBuilder(name, opbuilder)
-
     # Return it
     return opbuilder
 
 def wrapPartition(name, part):
-    """Wrap a Partition as a builder and register it with the module.
+    """Wrap a Partition as a builder.
 
     Returns the wrapped Partition.
     """
     part.name = name
     partbuilder = PartitionBuilder(part)
-    registerBuilder(name, partbuilder)
     return partbuilder
 
 def wrapGenerator(name, gen):
-    """Wrap a Generator as a builder and register it with the module.
+    """Wrap a Generator as a builder.
     
     Returns the wrapped Generator.
     """
     gen.name = name
     genbuilder = GeneratorBuilder(gen)
-    registerBuilder(name, genbuilder)
     return genbuilder
-
-def registerBuilder(name, builder):
-    """Register builder in this module so it can be used in makeEquation."""
-    custombuilders[name] = builder
-    return
-
-def deRegisterBuilder(name):
-    """De-register a builder by name."""
-    if name in custombuilders:
-        del custombuilders[name]
-    return
 
 # Export all numpy operators as OperatorBuilder instances in the module
 # namespace.

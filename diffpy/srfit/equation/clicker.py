@@ -57,13 +57,16 @@ def clickerFactory():
         """Clicker class for recording state changes."
 
         Attributes
-        _numclicks  --  A class-attribute integer for holding the total number
-                        of clicks (integer). This is modified with the click
+        _numclicks  --  A class-attribute for holding the total number of
+                        clicks (integer). This is modified with the click
                         method.
         _observers  --  A set of observer Clickers. This is modified with the
                         addObserver method. The addSubject method will modify
                         the _observers set for its argument.
+        _state      --  The current state of this Clicker (int, default 0).
+                        This is modified with the click method.
         
+
         """
 
         _numclicks = 0

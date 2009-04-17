@@ -336,7 +336,7 @@ class ArgumentBuilder(EquationBuilder):
     literal     --  The Argument wrapped by this instance.
     """
 
-    def __init__(self, value=None, name=None, const=False):
+    def __init__(self, value = None, name = None, const = False, arg = None):
         """Create an ArgumentBuilder instance, containing a new Argument.
 
         Arguments
@@ -344,9 +344,16 @@ class ArgumentBuilder(EquationBuilder):
         name    --  The name of the wrapped Argument (string, default None)
         const   --  Flag indicating whether the Argument is constant (bool,
                     default False)
+        arg     --  A pre-defined Argument to use. If this is None (default),
+                    then a new Argument will be created from value, name and
+                    const.
         """
         EquationBuilder.__init__(self)
-        self.literal = literals.Argument(value=value, name=name, const=const)
+        if arg is None:
+            self.literal = literals.Argument(value=value, name=name,
+                    const=const)
+        else:
+            self.literal = arg
         return
 
 # end class ArgumentBuilder
@@ -465,6 +472,11 @@ class OperatorBuilder(EquationBuilder):
 
 # end class OperatorBuilder
 
+def wrapArgument(name, arg):
+    """Wrap an Argument as a builder and register it with the module."""
+    argbuilder = ArgumentBuilder(arg = arg)
+    registerBuilder(name, argbuilder)
+    return argbuilder
 
 def wrapFunction(name, func, nin = 2, nout = 1):
     """Wrap a function in an OperatorBuilder instance.
@@ -518,8 +530,14 @@ def wrapGenerator(name, gen):
 
 def registerBuilder(name, builder):
     """Register builder in this module so it can be used in makeEquation."""
-    global custom
     custombuilders[name] = builder
+    return
+
+def deRegisterBuilder(name):
+    """De-register a builder by name."""
+    if name in custombuilders:
+        del custombuilders[name]
+    return
 
 # Export all numpy operators as OperatorBuilder instances in the module
 # namespace.

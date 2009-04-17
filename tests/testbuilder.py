@@ -10,6 +10,19 @@ import numpy
 
 from utils import _makeArgs
 
+class TestRegistration(unittest.TestCase):
+
+    def testRegisterArg(self):
+
+        v1 = _makeArgs(1)[0]
+
+        builder.wrapArgument(v1)
+
+        eq = builder.makeEquation("v1")
+
+        self.assertTrue(v1 is eq.arglist[0])
+        return
+
 
 class TestEquationParser(unittest.TestCase):
 

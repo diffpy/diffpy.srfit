@@ -43,16 +43,16 @@ class Restraint(object):
 
     def __init__(self):
         """Initialization. """
+        self._clicker = Clicker()
         self.eq = None
         self.lb = -inf
         self.up = inf
         self.prefactor = 1
         self.power = 2
         self._value = 0
-        self._clicker = Clicker()
         return
 
-    def constrain(self, eq, lb = -inf, ub = inf, prefactor = 1, power = 2):
+    def restrain(self, eq, lb = -inf, ub = inf, prefactor = 1, power = 2):
         """Constrain a Parameter according to an Equation."""
         self.eq = eq
         self.lb = lb

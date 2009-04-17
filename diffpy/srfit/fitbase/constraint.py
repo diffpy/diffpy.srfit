@@ -43,10 +43,10 @@ class Constraint(object):
 
     def update(self):
         """Update the parameter according to the equation."""
-        # this will be evaluated quickly
+        # This will be evaluated quickly thanks to the Equation class.
         val = self.eq()
-        # This will only click the parameter if val has changed since last
-        # time.
+        # This will only change the Parameter if val is different from the
+        # currently stored value.
         self.par.setValue(val)
         return
 

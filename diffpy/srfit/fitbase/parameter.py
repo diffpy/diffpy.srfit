@@ -19,6 +19,9 @@ Parameters encapsulate an adjustable parameter of a Calculator.
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation import Clicker
+from diffpy.srfit.equation.builder import EquationFactory
+
+from .modelorganizer import ModelOrganizer
 
 class Parameter(Argument):
     """Parameter class.
@@ -55,7 +58,7 @@ class Parameter(Argument):
         return self.__repr__()
 
 
-class ParameterSet(dict):
+class ParameterSet(ModelOrganizer):
     """A collection of Parameters and ParameterSets.
 
     This class organizes Parameters and other ParameterSets. Contained objects
@@ -66,14 +69,22 @@ class ParameterSet(dict):
     It is recommended to add objects using the 'insert' method, which takes
     care of assigning a key and associating the clickers of the objects.
 
-    There is no attempt to preserve the order of objects within a ParameterSet.
-    When an order is required, assume that contained objects are ordered
-    alphabetically.
+    Constraints and Restraints can be applied within a ParameterSet.
 
     Attributes
     name    --  A name for this ParameterSet. Names should be unique within a
                 ParameterSet.
     clicker --  A Clicker instance for recording changes in contained objects.
+    constraints     --  A dictionary of Constraints, indexed by the constrained
+                        Parameter. 
+    pardict --  A dictionary containing the Parameters and ParameterSets held
+                herein.
+    restraints      --  A set of Restraints.
+    suborganizers   --  A list of ParameterSets that this ParameterSets knows
+                        about (for quick access).
+    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
+                        instance that is used to create constraints and
+                        restraints from strings.
 
     """
 
@@ -82,9 +93,12 @@ class ParameterSet(dict):
 
         name    --  The name of this ParameterSet.
         """
-        dict.__init__(self)
+        ModelOrganizer.__init__(self)
         self.name = name
         self.clicker = Clicker()
+        self.constraints = {}
+        self.restraints = set()
+        self._eqfactory = EquationFactory()
         return
 
     def __getattr__(self, name):
@@ -114,7 +128,14 @@ class ParameterSet(dict):
 
         self[par.name] = par
         self.clicker.addSubject(par.clicker)
+
+        if isinstance(par, ParameterSet):
+            self.suborganizers.add(par)
+        else:
+            self._eqfactory.registerArgument(par.name, par)
+
         return
+
 
 # version
 __id__ = "$Id$"

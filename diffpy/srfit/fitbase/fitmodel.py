@@ -19,60 +19,69 @@ of a FitModel is to serve as an error calculator for an exernal fitting
 framework.
 """
 
-from numpy import concatenate, sqrt, inf
+from numpy import concatenate, sqrt, inf, dot
 
 from .parameter import Parameter
 from .constraint import Constraint
+from .utils import base 
 
-from diffpy.srfit.equation import builder
+from .modelorganizer import ModelOrganizer
 
-class FitModel(object):
+from diffpy.srfit.equation import Equation
+from diffpy.srfit.equation.builder import EquationFactory
+
+class FitModel(ModelOrganizer):
     """FitModel class.
 
     Attributes
     contributions   --  A list of Contributions to the model. Modified by the
                         addContribution method.
+    suborganizers   --  Alias for contributions.
     constraints     --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method, but they are also "borrowed" from
                         the Contributions. The order of this list is not
                         guaranteed to be immutable.
-    restraints      --  A list of Restraints. Restraints can be added using the
+    restraints      --  A set of Restraints. Restraints can be added using the
                         'restrain' method, but they are also "borrowed" from
                         the contributions. 
     variables       --  A list of Parameters to be varied during the fit.
     fixed           --  A list of Parameters that are fixed, but still managed
                         by the FitModel.
-
     _aliasmap       --  A map from Parameters to their aliases.
-    _allnames       --  A set of all names from _aliasmap.
+    _constraintlist --  An ordered list of the constraints.
+    _doprepare      --  A flag indicating that the the attributes need to be
+                        prepared for calculation.
+    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
+                        instance that is used to create constraints and
+                        restraints from strings.
     _weights        --  The weighing factor for each contribution. This value
                         is multiplied by the residual of the contribution when
                         determining the overall residual.
-    _doprepare      --  A flag indicating that the the attributes need to be
-                        prepared for calculation.
 
     """
 
     def __init__(self):
         """Initialization."""
-        self.contributions = []
+        ModelOrganizer.__init__(self)
+        self.contributions = self.suborganizers
         self.constraints = {}
-        self.restraints = []
+        self._constraintlist = []
+        self.restraints = set()
         self.variables = []
         self.fixed = []
 
         self._aliasmap = {}
-        self._allnames = set()
-        self._allnames = {}
         self._weights = []
+
+        self._eqfactory = EquationFactory()
 
         self._doprepare = True
         return
 
     def addContribution(self, con, weight = 1.0):
         """Add a contribution to the FitModel."""
-        self.contributions.append[con]
+        self.contributions.append(con)
         self._weights.append[weight]
         return
 
@@ -104,7 +113,7 @@ class FitModel(object):
 
         # Update the constraints. These are ordered such that the list only
         # needs to be cycled once.
-        for con in self.constraints.values():
+        for con in self._constraintlist:
             con.update()
 
         # Calculate the bare chiv
@@ -112,12 +121,11 @@ class FitModel(object):
             sqrt(self.weights[i])*self.contributions[i].residual() \
                     for i in range(len(self.contributions))])
 
+        # Calculate the point-average chi^2
+        w = dot(chiv, chiv)/len(chiv)
         # Now we must append the restraints
-        penalties = [ sqrt(res.penalty()) for res in self.restraints ]
+        penalties = [ sqrt(res.penalty(w)) for res in self.restraints ]
         chiv = concatenate( [ chiv, penalties ] )
-
-        # Advance the reference clicker
-        self.refclicker.click()
 
         return chiv
 
@@ -133,17 +141,20 @@ class FitModel(object):
         Constraints can have inter-dependencies that require that they are
         updated in a specific order. This will set the proper order.
         """
-        # Update constraints and restraints. Note that built-in constraints
-        # override user-defined ones.
-        # FIXME - detect multiple constraints on the same parameter.
+        # Update constraints and restraints.
         for con in self.contributions:
-            self.constraints.update( con.getConstraints() )
-            self.restraints.extend( con.getRestraints() )
+            self.restraints.update( con.getRestraints() )
+            constraints = con.getConstraints()
+            pars = con.intersect( constraints.keys() )
+            if pars:
+                message = "There are multiple constraints on '%s'"%pars.pop()
+                raise AttributeError(message)
+            self.constraints.update(constraints)
 
-        # Reorder the constraints. Constraints with the most dependencies are
-        # ordered first. Constraintes without dependencies are put anywhere.
+        # Reorder the constraints. Constraints are ordered such that a given
+        # constraint is placed before its dependencies.
 
-        conpars = [con.par for con in self.constraints]
+        self._constraintlist = self.constraints.values()
 
         # Create a depth-1 map of the constraint dependencies
         depmap = {}
@@ -151,7 +162,7 @@ class FitModel(object):
             depmap[con] = set()
             # Now check the constraint's equation for constrained arguments
             for arg in con.eq.args.values():
-                if arg in conpars:
+                if arg in self.constraints:
                     depmap[con].add( arg )
 
         # Turn the dependency map into multi-level map.
@@ -176,7 +187,7 @@ class FitModel(object):
             # Otherwise, these are equivalant
             return 0
 
-        self.constraints.sort(cmp)
+        self._constraintlist.sort(cmp)
 
         self._doprepare = False
         return
@@ -204,15 +215,13 @@ class FitModel(object):
         # Record the aliases
         self._aliasmap[par] = []
         self._aliasmap[par].append(par.name)
-        self._allnames.add(par.name)
                 
-        # Register the parameter with the builder module
-        builder.wrapArgument(par.name, par)
+        # Register the parameter with the eqfactory
+        self._eqfactory.registerArgument(par.name, par)
 
         if alias is not None:
             self._aliasmap[par].append(alias)
-            self._allnames.add(alias)
-            builder.wrapArgument(alias, par)
+            self._eqfactory.registerArgument(alias, par)
 
         return
 
@@ -231,13 +240,13 @@ class FitModel(object):
         else:
             raise ValueError("'%s' is not part of the FitModel"%par)
 
-        # De-register the Parameter with the builder module
+        # De-register the Parameter with the equation factory
+        self._eqfactory.deRegisterBuilder(par.name)
         for name in self._aliasmap[par]:
-            builder.deRegisterBuilder(name)
+            self._eqfactory.deRegisterBuilder(name)
 
         del self._aliasmap[par]
         
-
         return
 
     def newVar(self, name, value, fixed = False):
@@ -261,10 +270,12 @@ class FitModel(object):
         self.addVar(par, fixed=fixed)
         return par
 
-    def fixVar(self, par):
+    def fixVar(self, par, value = None):
         """Fix a variable so that it doesn't change.
 
         par     --  A Parameter that has already been added to the FitModel.
+        value   --  A new value for the variable. If this is None
+                    (default), then the value will not be changed.
 
         Raises ValueError if par is not part of the FitModel.
         
@@ -277,14 +288,19 @@ class FitModel(object):
         else:
             raise ValueError("'%s' is not part of the FitModel"%par)
 
+        if value is not None:
+            par.setValue(value)
+
         return
 
-    def freeVar(self, par):
+    def freeVar(self, par, value = None):
         """Free a variable so that it is refined.
 
         Note that variables are free by default.
 
         par     --  A Parameter that has already been added to the FitModel.
+        value   --  A new value for the variable. If this is None
+                    (default), then the value will not be changed.
 
         Raises ValueError if par is not part of the FitModel.
         
@@ -297,137 +313,10 @@ class FitModel(object):
         else:
             raise ValueError("'%s' is not part of the FitModel"%par)
 
-        return
-
-    def constrain(self, par, eqstr, ns = {}):
-        """Constrain a parameter to an equation.
-
-        Note that only one constraint can exist on a Parameter at a time. The
-        most recent constraint override all other user-defined constraints.
-        Built-in constraints override all other constraints.
-
-        par     --  The Parameter to constrain. It does not need to be a
-                    variable.
-        eqstr   --  A string representation of the constraint equation. The
-                    constraint equation must consist of numpy operators and
-                    "known" Parameters. Parameters are known if they are in the
-                    ns argument, or if they have been added to this FitModel
-                    with the 'add' or 'new' methods.
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel (default {}).
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitModel and that is not defined in ns.
-
-        """
-        # Check if ns overloads any variables.
-        if self._allnames.intersect(ns.keys()):
-            raise ValueError("ns uses a taken name")
-
-        # Register the parameters in the namespace to the builder module
-        for name, arg in ns.items():
-            builder.wrapArgument(name, arg)
-
-        # Make the constraint
-        eq = builder.makeEquation()
-        con = Constraint()
-        con.constrain(par, eq)
-
-        # De-register the parameters. This may help detect errors in other
-        # constraints.
-        for name in ns:
-            builder.deRegisterBuilder(name)
-
-        # Now check the equation for arguments that do not exist in ns or in
-        # this FitModel
-        for name in eq.args:
-            if name not in ns and name not in self._allnames:
-                msg = "Constraint uses '%s', which is not defined" %name
-                raise ValueError(msg)
-
-        # Now we can store the constraint
-        self.constraints[par] = con
-
-        self._doprepare = True
-        return
-
-    def unconstrain(self, par)
-        """Unconstrain a parameter.
-
-        This removes any constraints on a parameter, including built-in
-        constraints.
-        """
-        if par in self.constraints:
-            del self.constraints[par]
-        return
-
-    def restrain(self, eqstr, lb = -inf, ub = inf, prefactor = 1, power = 2,  
-            ns = {}):
-        """Restrain an expression to specified bounds
-
-        eqstr   --  An equation to evaluate against the bounds.
-        lb      --  The lower bound on the restraint evaluation (default -inf).
-        ub      --  The lower bound on the restraint evaluation (default inf).
-        prefactor   --  A multiplicative prefactor for the restraint 
-                        (default 1).
-        power   --  The power of the penalty (default 2).
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel (default {}).
-
-        The penalty is calculated as 
-        prefactor * max(0, lb - val, val - ub) ** power
-        and val is the value of the calculated equation.
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitModel and that is not defined in ns.
-
-        Returns the Restraint object for use with the 'unrestrain' method.
-
-        """
-        # Check if ns overloads any variables.
-        if self._allnames.intersect(ns.keys()):
-            raise ValueError("ns uses a taken name")
-
-        # Register the parameters in the namespace to the builder module
-        for name, arg in ns.items():
-            builder.wrapArgument(name, arg)
-
-        # Make the constraint
-        eq = builder.makeEquation()
-        res = Restraint()
-        res.restrain(eq, lb, ub, prefactor, power)
-
-        # De-register the parameters. This may help detect errors in other
-        # restraints.
-        for name in ns:
-            builder.deRegisterBuilder(name)
-
-        # Now check the equation for arguments that do not exist in ns or in
-        # this FitModel
-        for name in eq.args:
-            if name not in ns and name not in self._allnames:
-                msg = "Restrain uses '%s', which is not defined" %name
-                raise ValueError(msg)
-
-        # Now we can store the constraint
-        self.restraints.append(res)
-
-        return res
-
-    def unrestrain(self, res):
-        """Remove a restraint from the FitModel.
-        
-        res     --  A Restraint object returned from the 'restrain' method.
-        """
-        if res in self.restraints:
-            self.restraints.remove(res)
+        if value is not None:
+            par.setValue(value)
 
         return
-
 
 # version
 __id__ = "$Id$"

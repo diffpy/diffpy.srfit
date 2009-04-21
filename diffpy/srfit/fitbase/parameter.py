@@ -57,6 +57,7 @@ class Parameter(Argument):
             return "Parameter(" + self.name + ")"
         return self.__repr__()
 
+# End class Parameter
 
 class ParameterSet(ModelOrganizer):
     """A collection of Parameters and ParameterSets.
@@ -99,11 +100,12 @@ class ParameterSet(ModelOrganizer):
         self.constraints = {}
         self.restraints = set()
         self._eqfactory = EquationFactory()
+        self.pardict = {}
         return
 
     def __getattr__(self, name):
         """Gives access to the contained objects as attributes."""
-        arg = self.get(name)
+        arg = self.pardict.get(name)
         if arg is None:
             raise AttributeError(name)
         return arg
@@ -112,21 +114,21 @@ class ParameterSet(ModelOrganizer):
         """Store a Parameter or ParameterSet.
 
         par     --  The Parameter or ParameterSet to be stored.
-        check   --  If True (default), an ValueError is raised if the name
-                    of par computes as False, or if an object of that name has
+        check   --  If True (default), an ValueError is raised if the parameter
+                    has an invalid name, or if an object of that name has
                     already been inserted.
         """
         if check:
             message = ""
             if not par.name:
                 message = "Object '%s' has no name"%par
-            elif par.name in self:
+            elif par.name in self.pardict:
                 message = "Object with name '%s' already exists"%par.name
 
             if message:
                 raise ValueError(message)
 
-        self[par.name] = par
+        self.pardict[par.name] = par
         self.clicker.addSubject(par.clicker)
 
         if isinstance(par, ParameterSet):
@@ -136,6 +138,7 @@ class ParameterSet(ModelOrganizer):
 
         return
 
+# End class ParameterSet
 
 # version
 __id__ = "$Id$"

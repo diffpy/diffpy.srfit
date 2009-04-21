@@ -32,56 +32,58 @@ class FitModel(ModelOrganizer):
     """FitModel class.
 
     Attributes
-    contributions   --  A list of Contributions to the model. Modified by the
-                        addContribution method.
-    suborganizers   --  Alias for contributions.
-    constraints     --  A dictionary of Constraints, indexed by the constrained
-                        Parameter. Constraints can be added using the
-                        'constrain' method, but they are also "borrowed" from
-                        the Contributions. The order of this list is not
-                        guaranteed to be immutable.
-    restraints      --  A set of Restraints. Restraints can be added using the
-                        'restrain' method, but they are also "borrowed" from
-                        the contributions. 
-    variables       --  A list of Parameters to be varied during the fit.
-    fixed           --  A list of Parameters that are fixed, but still managed
-                        by the FitModel.
+    clicker         --  A Clicker instance for recording changes in contained
+                        Parameters and Contributions.
+    name            --  A name for this FitModel.
     _aliasmap       --  A map from Parameters to their aliases.
-    _constraintlist --  An ordered list of the constraints.
+    _constraintlist --  An ordered list of the constraints from this and all
+                        sub-components.
+    _constraints    --  A dictionary of Constraints, indexed by the constrained
+                        Parameter. Constraints can be added using the
+                        'constrain' method.
     _doprepare      --  A flag indicating that the the attributes need to be
                         prepared for calculation.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from strings.
+    _fixed          --  A list of Parameters that are fixed, but still managed
+                        by the FitModel.
+    _organizers     --  A list of Contributions to the model. Modified by the
+                        addContribution method.
+    _orgdict        --  A dictionary containing the Parameters and
+                        Contributions indexed by name.
+    _parameters      --  A list of variable Parameters.
+    _restraintlist  --  A list of restraints form this and all sub-components.
+    _restraints     --  A set of Restraints. Restraints can be added using the
+                        'restrain' method.
     _weights        --  The weighing factor for each contribution. This value
                         is multiplied by the residual of the contribution when
                         determining the overall residual.
 
     """
 
-    def __init__(self):
+    def __init__(self, name = "fit"):
         """Initialization."""
-        ModelOrganizer.__init__(self)
-        self.contributions = self.suborganizers
+        ModelOrganizer.__init__(self, name)
+        self._organizers = self._organizers
         self._constraintlist = []
-        self.variables = []
-        self.fixed = []
-
+        self._restraintlist = []
+        self._fixed = []
         self._aliasmap = {}
         self._weights = []
-
         self._doprepare = True
         return
 
     def addContribution(self, con, weight = 1.0):
         """Add a contribution to the FitModel."""
-        self.contributions.append(con)
+        self._addOrganizer(self, con, check=True)
         self._weights.append[weight]
+        self._doprepare = True
         return
 
     def setWeight(con, weight):
         """Set the weight of a contribution."""
-        idx = self.contributions.index(con)
+        idx = self._organizers.index(con)
         self._weights[idx] = weight
         return
 
@@ -90,7 +92,7 @@ class FitModel(ModelOrganizer):
 
         Arguments
         p   --  The list of current variable values, provided in the same order
-                as the 'variables' list.
+                as the '_parameters' list.
 
         The residual is by default the weighted concatenation of each 
         contribution's residual, plus the value of each restraint. The array
@@ -103,7 +105,7 @@ class FitModel(ModelOrganizer):
 
         # Update the variable parameters.
         for i, val in enumerate(p):
-            self.variables[i].setValue(val)
+            self._parameters[i].setValue(val)
 
         # Update the constraints. These are ordered such that the list only
         # needs to be cycled once.
@@ -112,13 +114,13 @@ class FitModel(ModelOrganizer):
 
         # Calculate the bare chiv
         chiv = concatenate([ 
-            sqrt(self.weights[i])*self.contributions[i].residual() \
-                    for i in range(len(self.contributions))])
+            sqrt(self._weights[i])*self._organizers[i].residual() \
+                    for i in range(len(self._organizers))])
 
         # Calculate the point-average chi^2
         w = dot(chiv, chiv)/len(chiv)
         # Now we must append the restraints
-        penalties = [ sqrt(res.penalty(w)) for res in self.restraints ]
+        penalties = [ sqrt(res.penalty(w)) for res in self._restraintlist ]
         chiv = concatenate( [ chiv, penalties ] )
 
         return chiv
@@ -136,27 +138,30 @@ class FitModel(ModelOrganizer):
         updated in a specific order. This will set the proper order.
         """
         # Update constraints and restraints.
-        for con in self.contributions:
-            self.restraints.update( con.getRestraints() )
-            constraints = con.getConstraints()
-            pars = con.intersect( constraints.keys() )
+        rset = set(self._restraints)
+        cdict = dict(self._constraints)
+        for con in self._organizers:
+            rset.update( con._getRestraints() )
+            constraints = con._getConstraints()
+            pars = set(cdict.keys()).intersect( constraints.keys() )
             if pars:
                 message = "There are multiple constraints on '%s'"%pars.pop()
                 raise AttributeError(message)
-            self.constraints.update(constraints)
+            cdict.update(constraints)
 
         # Reorder the constraints. Constraints are ordered such that a given
         # constraint is placed before its dependencies.
 
-        self._constraintlist = self.constraints.values()
+        self._restraintlist = list(rset)
+        self._constraintlist = cdict.values()
 
         # Create a depth-1 map of the constraint dependencies
         depmap = {}
-        for con in constraints:
+        for con in self._constraintlist:
             depmap[con] = set()
             # Now check the constraint's equation for constrained arguments
             for arg in con.eq.args.values():
-                if arg in self.constraints:
+                if arg in self._constraintlist:
                     depmap[con].add( arg )
 
         # Turn the dependency map into multi-level map.
@@ -201,21 +206,22 @@ class FitModel(ModelOrganizer):
         """
         if value is not None:
             par.setValue(value)
+
         if fixed:
-            self.fixed.append(par)
+            self._fixed.append(par)
         else:
-            self.variables.append(par)
+            self._addParameter(par)
 
         # Record the aliases
         self._aliasmap[par] = []
         self._aliasmap[par].append(par.name)
                 
-        # Register the parameter with the eqfactory
-        self._eqfactory.registerArgument(par.name, par)
-
+        # Register the parameter aliases with the eqfactory
         if alias is not None:
             self._aliasmap[par].append(alias)
             self._eqfactory.registerArgument(alias, par)
+
+        self._doprepare = True
 
         return
 
@@ -227,10 +233,10 @@ class FitModel(ModelOrganizer):
         Raises ValueError if par is not part of the FitModel.
 
         """
-        if par in self.variables:
-            self.variables.remove(par)
-        elif par in self.fixed:
-            self.fixed.remove(par)
+        if par in self._parameters:
+            self._parameters.remove(par)
+        elif par in self._fixed:
+            self._fixed.remove(par)
         else:
             raise ValueError("'%s' is not part of the FitModel"%par)
 
@@ -239,7 +245,9 @@ class FitModel(ModelOrganizer):
         for name in self._aliasmap[par]:
             self._eqfactory.deRegisterBuilder(name)
 
+        # Remove this from the alias map and the organizer dictionary
         del self._aliasmap[par]
+        del self._orgdict[par.name]
         
         return
 
@@ -274,10 +282,10 @@ class FitModel(ModelOrganizer):
         Raises ValueError if par is not part of the FitModel.
         
         """
-        if par in self.variables:
-            self.variables.remove(par)
-            self.fixed.append(par)
-        elif par in self.fixed:
+        if par in self._parameters:
+            self._parameters.remove(par)
+            self._fixed.append(par)
+        elif par in self._fixed:
             pass
         else:
             raise ValueError("'%s' is not part of the FitModel"%par)
@@ -300,11 +308,11 @@ class FitModel(ModelOrganizer):
         Raises ValueError if par is not part of the FitModel.
         
         """
-        if par in self.variables:
+        if par in self._parameters:
             pass
-        elif par in self.fixed:
-            self.fixed.remove(par)
-            self.variables.append(par)
+        elif par in self._fixed:
+            self._fixed.remove(par)
+            self._parameters.append(par)
         else:
             raise ValueError("'%s' is not part of the FitModel"%par)
 

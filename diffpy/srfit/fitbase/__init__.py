@@ -37,9 +37,6 @@ Methods:
 # package version
 from diffpy.srfit.version import __version__
 
-from fitmodel import FitModel
-
-from .parameter import Parameter
-from .parameter import ParameterSet
+from .fitmodel import FitModel
 
 # End of file

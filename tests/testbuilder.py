@@ -23,7 +23,17 @@ class TestRegistration(unittest.TestCase):
         eq = factory.makeEquation("v1")
 
         self.assertTrue(v1 is eq.arglist[0])
+        self.assertEquals(1, len(eq.arglist))
+
+        # Try to parse an equation with buildargs turned off
+        self.assertRaises(ValueError, factory.makeEquation, "v1 + v2", False)
+
+        # Make sure we can still use constants
+        eq = factory.makeEquation("v1 + 2", False)
+        self.assertTrue(v1 is eq.arglist[0])
+        self.assertEquals(1, len(eq.arglist))
         return
+
 
 
 class TestEquationParser(unittest.TestCase):
@@ -46,7 +56,6 @@ class TestEquationParser(unittest.TestCase):
         eq.C.setValue(C)
         f = lambda A, x, B, C: A*sin(0.5*x)+divide(B,C)
         self.assertTrue(array_equal(eq(), f(A,x,B,C)))
-
 
 
         # Vector equation

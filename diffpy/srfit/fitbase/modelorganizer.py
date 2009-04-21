@@ -14,7 +14,14 @@
 ########################################################################
 """The ModelOrganizer class."""
 
+from numpy import inf
+
+from .constraint import Constraint
+from .restraint import Restraint
+
 from diffpy.srfit.equation.builder import EquationFactory
+from diffpy.srfit.equation import Equation
+
 
 class ModelOrganizer(object):
     """A mixin base class for organizing pieces of a FitModel.
@@ -56,29 +63,28 @@ class ModelOrganizer(object):
         eqstr   --  A string representation of the constraint equation. The
                     constraint equation must consist of numpy operators and
                     "known" Parameters. Parameters are known if they are in the
-                    ns argument, or if they have been added to this FitModel
-                    with the 'add' or 'new' methods.
+                    ns argument, or if they have been added to the _eqfactory.
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel (default {}).
+                    in the eqstr, but not part of the ModelOrganizer (default
+                    {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitModel and that is not defined in ns.
+        the ModelOrganizer and that is not defined in ns.
 
         """
 
-        eq = equationFromString(eqstr, self._eqfactory, ns):
+        eq = equationFromString(eqstr, self._eqfactory, ns)
 
         # Make and store the constraint
         con = Constraint()
         con.constrain(par, eq)
         self.constraints[par] = con
 
-        self._doprepare = True
         return
 
-    def unconstrain(self, par)
+    def unconstrain(self, par):
         """Unconstrain a parameter.
 
         par     --  The Parameter to unconstrain.
@@ -104,7 +110,7 @@ class ModelOrganizer(object):
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False).
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel (default {}).
+                    in the eqstr, but not part of the ModelOrganizer (default {}).
 
         The penalty is calculated as 
         prefactor * max(0, lb - val, val - ub) ** power
@@ -114,13 +120,13 @@ class ModelOrganizer(object):
         Raises ValueError if ns uses a name that is already used for a
         variable.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitModel and that is not defined in ns.
+        the ModelOrganizer and that is not defined in ns.
 
         Returns the Restraint selfect for use with the 'unrestrain' method.
 
         """
 
-        if isinstance(res, string):
+        if isinstance(res, str):
             eq = equationFromString(res, self._eqfactory, ns)
         else:
             eq = Equation(root = res)
@@ -133,7 +139,7 @@ class ModelOrganizer(object):
         return res
 
     def unrestrain(self, res):
-        """Remove a restraint from the FitModel.
+        """Remove a restraint from the ModelOrganizer.
         
         res     --  A Restraint selfect returned from the 'restrain' method.
         """
@@ -160,7 +166,7 @@ class ModelOrganizer(object):
 
 # End ModelOrganizer
 
-def equationFromString(eqstr, factory, ns):
+def equationFromString(eqstr, factory, ns = {}):
     """Make an equation from a string.
 
     eqstr   --  A string representation of the equation. The
@@ -168,8 +174,9 @@ def equationFromString(eqstr, factory, ns):
                 "known" Parameters. Parameters are known if they are in 
                 ns, or already defined in the factory.
     factory --  An EquationFactory instance.
-    ns      --  A dictionary of Parameters, indexed by name, that are used
-                in the eqstr, but not already defined in the factory.
+    ns      --  A dictionary of Parameters indexed by name that are used
+                in the eqstr but not already defined in the factory 
+                (default {}).
 
     Raises ValueError if ns uses a name that is already defined in the factory.
     Raises ValueError if the equation has undefined parameters.
@@ -179,14 +186,14 @@ def equationFromString(eqstr, factory, ns):
     defined = set(factory.builders.keys())
 
     # Check if ns overloads any variables.
-    if defined.intersect(ns.keys()):
+    if defined.intersection(ns.keys()):
         raise ValueError("ns contains defined names")
 
     # Register the ns parameters in the equation factory
     for name, arg in ns.items():
         factory.registerArgument(name, arg)
 
-    eq = factory.getEquation(eqstr, buildargs = False)
+    eq = factory.makeEquation(eqstr, buildargs = False)
 
     # Clean the ns parameters
     for name in ns:

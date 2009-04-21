@@ -102,14 +102,16 @@ import diffpy.srfit.equation.literals as literals
 class EquationFactory(object):
     """A Factory for Equation classes."""
 
+    symbols = ("+", "-", "*", "/", "**", "%")
+    ignore = ("(", ",", ")")
+
     def __init__(self):
-        self.consts = {}
         self.builders = {}
         self.registerConstant("pi", numpy.pi)
         self.registerConstant("e", numpy.e)
         return
 
-    def makeEquation(self, eqstr):
+    def makeEquation(self, eqstr, buildargs = True):
         """Make an equation from an equation string.
 
         Arguments
@@ -117,10 +119,14 @@ class EquationFactory(object):
                     The equation string can use any function registered literal
                     or function, including numpy ufuncs that are automatically
                     registered.
+        buildargs   --  A flag indicating whether new Argument instances can be
+                    created by the Factory (default True). If False, then the a
+                    ValueError will be raised if there are undefined arguments
+                    in the eqstr.
 
         Returns an Equation instance representing the equation string.
         """
-        ns = self._makeNamespace(eqstr)
+        ns = self._makeNamespace(eqstr, buildargs)
         beq = eval(eqstr, ns)
         return beq.getEquation()
 
@@ -176,12 +182,16 @@ class EquationFactory(object):
             del self.builders[name]
         return
 
-    def _makeNamespace(self, eqstr):
+    def _makeNamespace(self, eqstr, buildargs):
         """Create an evaluation namespace from an equation string.
         
         Arguments
         eqstr   --  An equation in string as specified in the makeEquation
                     method.
+        buildargs   --  A flag indicating whether new Argument instances can be
+                    created by the Factory. If False, then the a ValueError
+                    will be raised if there are undefined arguments in the
+                    eqstr.
 
         Returns a dictionary of the name, EquationBuilder pairs.
         """
@@ -205,8 +215,6 @@ class EquationFactory(object):
         # tokenizer.
         eqargs = {}
         eqops = {}
-        symbols = ("+", "-", "*", "/", "**", "%")
-        ignore = ("(", ",", ")")
 
         for i, tok in enumerate(tokens):
             if tok[0] in (token.NAME, token.OP):
@@ -224,18 +232,25 @@ class EquationFactory(object):
                 # Check custom builders
                 tok not in self.builders and
                 # Check symbols
-                tok not in symbols and
+                tok not in EquationFactory.symbols and
                 # Check ignored characters
-                tok not in ignore
+                tok not in EquationFactory.ignore
                 ):
                 eqargs[i] = tok
                 poplist.append(i)
             # Discard it if it is is in the ignore or symbol list
-            elif tok in ignore or tok in symbols:
+            elif tok in EquationFactory.ignore\
+                    or tok in EquationFactory.symbols:
                 poplist.append(i)
 
         # Discard the tokens that were moved or ignored
         map(eqops.pop, poplist)
+
+        # Raise an error if there are arguments that need to be created, but
+        # this is disallowed.
+        if not buildargs and eqargs:
+            msg = "The equation contains undefined arguments"
+            raise ValueError(msg)
 
         # Now start making the namespace
         ns = dict(self.builders)

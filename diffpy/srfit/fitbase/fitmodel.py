@@ -23,8 +23,6 @@ from numpy import concatenate, sqrt, inf, dot
 
 from .parameter import Parameter
 from .constraint import Constraint
-from .utils import base 
-
 from .modelorganizer import ModelOrganizer
 
 from diffpy.srfit.equation import Equation
@@ -65,16 +63,12 @@ class FitModel(ModelOrganizer):
         """Initialization."""
         ModelOrganizer.__init__(self)
         self.contributions = self.suborganizers
-        self.constraints = {}
         self._constraintlist = []
-        self.restraints = set()
         self.variables = []
         self.fixed = []
 
         self._aliasmap = {}
         self._weights = []
-
-        self._eqfactory = EquationFactory()
 
         self._doprepare = True
         return
@@ -293,6 +287,7 @@ class FitModel(ModelOrganizer):
 
         return
 
+
     def freeVar(self, par, value = None):
         """Free a variable so that it is refined.
 
@@ -318,6 +313,33 @@ class FitModel(ModelOrganizer):
 
         return
 
+    # Overloaded
+    def constrain(self, par, eqstr, ns = {}):
+        """Constrain a parameter to an equation.
+
+        Note that only one constraint can exist on a Parameter at a time. The
+        most recent constraint override all other user-defined constraints.
+        Built-in constraints override all other constraints.
+
+        par     --  The Parameter to constrain. It does not need to be a
+                    variable.
+        eqstr   --  A string representation of the constraint equation. The
+                    constraint equation must consist of numpy operators and
+                    "known" Parameters. Parameters are known if they are in the
+                    ns argument, or if they have been added to this FitModel
+                    with the 'add' or 'new' methods.
+        ns      --  A dictionary of Parameters, indexed by name, that are used
+                    in the eqstr, but not part of the FitModel (default {}).
+
+        Raises ValueError if ns uses a name that is already used for a
+        variable.
+        Raises ValueError if eqstr depends on a Parameter that is not part of
+        the FitModel and that is not defined in ns.
+
+        """
+        ModelOrganizer.constrain(self, par, eqstr, ns)
+        self._doprepare = True
+        return
 # version
 __id__ = "$Id$"
 

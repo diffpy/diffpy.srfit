@@ -33,7 +33,8 @@ class Restraint(object):
     prefactor   --  A multiplicative prefactor for the restraint (default 1).
     power   --  The power of the penalty (default 2).
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
-                the unrestrained point-average chi^2 (chi^2/numpoints) (default False).
+                the unrestrained point-average chi^2 (chi^2/numpoints) 
+                (default False).
 
     The penalty is calculated as 
     prefactor * max(0, lb - val, val - ub) ** power
@@ -73,11 +74,11 @@ class Restraint(object):
         self.scaled = scaled
         return
 
-    def penalty(self, w):
+    def penalty(self, w = 1.0):
         """Calculate the penalty of the restraint.
 
         w   --  The point-average chi^2 which is optionally used to scale the
-                penalty.
+                penalty (default 1.0).
         
         """
         val = self.eq()

@@ -78,14 +78,13 @@ class ModelOrganizer(object):
         return arg
 
     def constrain(self, par, eqstr, ns = {}):
-        """Constrain a parameter to an equation.
+        """Constrain a Parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time. The
         most recent constraint override all other user-defined constraints.
         Built-in constraints override all other constraints.
 
-        par     --  The Parameter to constrain. It does not need to be a
-                    variable.
+        par     --  The Parameter to constrain.
         eqstr   --  A string representation of the constraint equation. The
                     constraint equation must consist of numpy operators and
                     "known" Parameters. Parameters are known if they are in the
@@ -95,7 +94,7 @@ class ModelOrganizer(object):
                     {}).
 
         Raises ValueError if ns uses a name that is already used for a
-        variable.
+        Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the ModelOrganizer and that is not defined in ns.
 
@@ -110,7 +109,7 @@ class ModelOrganizer(object):
         return
 
     def unconstrain(self, par):
-        """Unconstrain a parameter.
+        """Unconstrain a Parameter.
 
         par     --  The Parameter to unconstrain.
 
@@ -144,7 +143,7 @@ class ModelOrganizer(object):
         the average chi^2 if scaled is True.
 
         Raises ValueError if ns uses a name that is already used for a
-        variable.
+        Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the ModelOrganizer and that is not defined in ns.
 
@@ -315,7 +314,7 @@ def equationFromString(eqstr, factory, ns = {}):
 
     defined = set(factory.builders.keys())
 
-    # Check if ns overloads any variables.
+    # Check if ns overloads any parameters.
     if defined.intersection(ns.keys()):
         raise ValueError("ns contains defined names")
 

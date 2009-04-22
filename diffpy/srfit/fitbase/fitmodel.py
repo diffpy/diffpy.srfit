@@ -22,11 +22,7 @@ framework.
 from numpy import concatenate, sqrt, inf, dot
 
 from .parameter import Parameter
-from .constraint import Constraint
 from .modelorganizer import ModelOrganizer
-
-from diffpy.srfit.equation import Equation
-from diffpy.srfit.equation.builder import EquationFactory
 
 class FitModel(ModelOrganizer):
     """FitModel class.
@@ -65,7 +61,6 @@ class FitModel(ModelOrganizer):
     def __init__(self, name = "fit"):
         """Initialization."""
         ModelOrganizer.__init__(self, name)
-        self._organizers = self._organizers
         self._constraintlist = []
         self._restraintlist = []
         self._fixed = []

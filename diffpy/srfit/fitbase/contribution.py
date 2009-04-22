@@ -21,6 +21,7 @@ and a Profile that holds the signal.
 from numpy import concatenate, sqrt, inf, dot
 
 from diffpy.srfit.equation import Equation
+from diffpy.srfit.equation.literals import Generator
 
 from .parameter import Parameter
 from .modelorganizer import ModelOrganizer, equationFromString
@@ -37,7 +38,6 @@ class Contribution(ModelOrganizer):
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and Contributions.
     name            --  A name for this Contribution.
-    _aliasmap       --  A map from Parameters to their aliases.
     _calcname       --  A name for the Calculator.
     _calculator     --  A Calculator instance for generating a signal.
                         Contributions can share a Calculator instance.
@@ -51,17 +51,16 @@ class Contribution(ModelOrganizer):
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from strings.
-    _fixed          --  A list of Parameters that are fixed, but still managed
-                        by the FitModel.
     _organizers     --  A reference to the Calcualtor's _organizers attribute.
     _orgdict        --  A reference to the Calculator's _orgdict attribute.
     _parameters     --  A reference to the Calculator's _parameters attribute.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' method.
-    _weights        --  The weighing factor for each contribution. This value
-                        is multiplied by the residual of the contribution when
-                        determining the overall residual.
-
+    _xname          --  The name of of the independent variable from the
+                        profile (default None). 
+    _yname          --  The name of of the observed profile (default None). 
+    _dyname         --  The name of of the uncertainty in the observed profile
+                        (default None).
     """
 
     def __init__(self, name):
@@ -71,16 +70,74 @@ class Contribution(ModelOrganizer):
         self._profile = None
         self._calculator = None
         self._calcname = None
+        self._xname = None
+        self._yname = None
+        self._dyname = None
         return
 
-    def setProfile(self, profile):
+    def setProfile(self, profile, xname = None, yname = None, dyname = None):
         """Assign the profile for this contribution.
         
         profile --  A Profile that specifies the calculation points and which
                     will store the calculated signal.
+        xname   --  The name of the independent variable from the Profile
+                    (default None). If this is provided, then the variable will
+                    be usable within the Equation with the specified name.
+        yname   --  The name of the observed profile (default None). If this is
+                    provided, then the observed profile will be usable within
+                    the Equation with the specified name.
+        dyname  --  The name of the uncertainty in the observed profile
+                    (default None). If this is provided, then the uncertainty
+                    in the observed profile will be usable within the Equation
+                    with the specified name.
 
         """
         self._profile = profile
+
+        # Clear the previous profile information
+        if self._xname is not None:
+            self._eqfactory.deRegisterGenerator(self._xname)
+            self._xname = None
+
+        if self._yname is not None:
+            self._eqfactory.deRegisterGenerator(self._yname)
+            self._yname = None
+
+        if self._dyname is not None:
+            self._eqfactory.deRegisterGenerator(self._dyname)
+            self._dyname = None
+
+        # This creates a Generator that will produce the desired array in an
+        # equation. This cannot be done with a Parameter alone because the user
+        # may change the calculation points in the profile after it has been
+        # added to the Contribution.
+        def registerArray(name, attrname):
+            g = Generator(name)
+            g.literal = Parameter(name)
+
+            def generate(clicker):
+                a = getattr(self._profile, attrname)
+                g.literal.setValue(a)
+                return
+
+            # Set the generate method of the generator to produce the array.
+            g.generate = generate
+
+            self._eqfactory.registerGenerator(name, g)
+            return
+
+        if xname is not None:
+            self._xname = xname
+            registerArray(xname, "x")
+
+        if yname is not None:
+            self._yname = yname
+            registerArray(yname, "y")
+
+        if dyname is not None:
+            self._dyname = dyname
+            registerArray(dyname, "dy")
+
         return
 
     def setCalculator(self, calc, name):

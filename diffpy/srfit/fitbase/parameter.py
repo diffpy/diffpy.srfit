@@ -20,8 +20,6 @@ Parameters encapsulate an adjustable parameter of a Calculator.
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation import Clicker
 
-from .modelorganizer import ModelOrganizer
-
 class Parameter(Argument):
     """Parameter class.
     

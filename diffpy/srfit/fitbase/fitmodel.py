@@ -199,6 +199,8 @@ class FitModel(ModelOrganizer):
         fixed   --  Fix the variable so that it does not vary (default False).
 
         """
+        self.clicker.addSubject(par.clicker)
+
         if value is not None:
             par.setValue(value)
 
@@ -243,6 +245,7 @@ class FitModel(ModelOrganizer):
         # Remove this from the alias map and the organizer dictionary
         del self._aliasmap[par]
         del self._orgdict[par.name]
+        self.clicker.removeSubject(par.clicker)
         
         return
 

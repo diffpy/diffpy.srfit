@@ -18,6 +18,7 @@ from numpy import inf
 
 from .constraint import Constraint
 from .restraint import Restraint
+from .parameter import Parameter
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.equation import Clicker
@@ -201,56 +202,26 @@ class ModelOrganizer(object):
 
         return
 
-    def _addOrganizer(self, org, check=True):
-        """Store a ModelOrganizer.
-
-        org     --  The ModelOrganizer to be stored.
-        check   --  If True (default), an ValueError is raised if the
-                    ModelOrganizer has an invalid name, or if a Parameter or
-                    ModelOrganizer of that name has already been inserted.
-
-        """
-        if check:
-            message = ""
-            if not org.name:
-                message = "ModelOrganizer has no name"%org
-            elif org.name in self._orgdict:
-                message = "Object with name '%s' already exists"%org.name
-
-            if message:
-                raise ValueError(message)
-
-        self._orgdict[org.name] = org
-        self._organizers.append(org)
-        self.clicker.addSubject(org.clicker)
+    def _newParameter(self, name, value, check=True):
+        """Add a new parameter that can be used in the equation."""
+        p = Parameter(name, value)
+        self._addParameter(p, check)
         return
 
-    def _addParameter(self, par, check=True):
-        """Store a Parameter.
 
-        Parameters added in this way are registered with the _eqfactory.
-
-        par     --  The Parameter to be stored.
-        check   --  If True (default), an ValueError is raised if the parameter
-                    has an invalid name, or if a Parameter or ModelOrganizer of
-                    that name has already been inserted.
-
+    def _removeParameter(self, par):
+        """Remove a parameter.
+        
+        raises ValueError if par is not part of the ModelOrganizer.
         """
-        if check:
-            message = ""
-            if not par.name:
-                message = "Parameter has no name"%par
-            elif par.name in self._orgdict:
-                message = "Object with name '%s' already exists"%par.name
+        if par not in self._parameters:
+            m = "'%s' is not part of the %s" % (par, self.__class__.__name__)
+            raise ValueError(m)
 
-            if message:
-                raise ValueError(message)
-
-        self._orgdict[par.name] = par
-        self._parameters.append(par)
-        self._eqfactory.registerArgument(par.name, par)
-        self.clicker.addSubject(par.clicker)
-
+        self._parameters.remove(par)
+        del self._orgdict[par.name]
+        self._eqfactory.deRegisterBuilder(par.name)
+        self.clicker.removeSubject(par.clicker)
         return
 
     def _addOrganizer(self, org, check=True):
@@ -275,6 +246,21 @@ class ModelOrganizer(object):
         self._orgdict[org.name] = org
         self._organizers.append(org)
         self.clicker.addSubject(org.clicker)
+        return
+
+    def _removeOrganizer(self, org):
+        """Remove an organizer.
+        
+        raises ValueError if organizer is not part of the ModelOrganizer.
+        """
+        if org not in self._organizers:
+            m = "'%s' is not part of the %s" % (org, self.__class__.__name__)
+            raise ValueError(m)
+
+        self._organizers.remove(org)
+        del self._orgdict[org.name]
+        self.clicker.removeSubject(org.clicker)
+
         return
 
     def _getConstraints(self):

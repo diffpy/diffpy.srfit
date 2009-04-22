@@ -26,15 +26,12 @@ class TestFitModel(unittest.TestCase):
 
         # Set up the Contribution
         self.contribution = Contribution("cont")
-        A = Parameter("A", 1)
-        k = Parameter("k", 1)
-        c = Parameter("c", 0)
-        self.contribution._addParameter(A)
-        self.contribution._addParameter(k)
-        self.contribution._addParameter(c)
+        self.contribution._newParameter("A", 1)
+        self.contribution._newParameter("k", 1)
+        self.contribution._newParameter("c", 0)
         self.contribution.setCalculator(self.calc, "x")
         self.contribution.setEquation("A*sin(k*x + c)")
-        self.contribution.setProfile(self.profile)
+        self.contribution.setProfile(self.profile, yname = "y", dyname = "dy")
 
         self.model.addContribution(self.contribution)
         return
@@ -107,6 +104,26 @@ class TestFitModel(unittest.TestCase):
         y = sin(x+2)
         chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
         self.assertAlmostEqual(chi2, dot(res, res) )
+
+        # Remove those
+        self.contribution.unrestrain(r1)
+        self.contribution.unconstrain(self.contribution.c)
+        self.contribution.c.setValue(0)
+        self.model._prepare()
+        res = self.model.residual([])
+        chi2 = 0
+        self.assertAlmostEqual(chi2, dot(res, res) )
+
+        # Now try to use the observed profile inside of the equation
+        # Set the equation equal to the data
+        self.contribution.setEquation("y")
+        res = self.model.residual([])
+        self.assertAlmostEquals(0, dot(res, res))
+
+        # Now add the uncertainty. This should give dy/dy = 1 for the residual
+        self.contribution.setEquation("y+dy")
+        res = self.model.residual([])
+        self.assertAlmostEquals(len(res), dot(res, res))
 
         return
 

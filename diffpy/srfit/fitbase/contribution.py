@@ -14,8 +14,8 @@
 ########################################################################
 """Contribution class. 
 
-Contributions organize an Equation that calculates the signal, and a DataSet
-that holds the signal.
+Contributions organize an Equation and Calculator that calculate the signal,
+and a Profile that holds the signal.
 """
 
 from numpy import concatenate, sqrt, inf, dot
@@ -30,17 +30,17 @@ class Contribution(ModelOrganizer):
     """Contribution class.
 
     Contributions organize an Equation that calculates the signal, and a
-    DataSet that holds the signal. Contraints and Restraints can be created as
+    Profile that holds the signal. Contraints and Restraints can be created as
     part of a Contribution.
 
     Attributes
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and Contributions.
-    name            --  A name for this FitModel.
+    name            --  A name for this Contribution.
     _aliasmap       --  A map from Parameters to their aliases.
     _calcname       --  A name for the Calculator.
-    _calculator     --  A Calculator instance for generating a signal. Each
-                        Contribution needs its own Calculator instance.
+    _calculator     --  A Calculator instance for generating a signal.
+                        Contributions can share a Calculator instance.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
@@ -74,12 +74,13 @@ class Contribution(ModelOrganizer):
         return
 
     def setProfile(self, profile):
-        """Assign the profile for this contribution."""
-        self._profile = profile
+        """Assign the profile for this contribution.
         
-        # Let the calculator know about the data ranges
-        if self._calculator is not None:
-            self._calculator.setProfile(profile)
+        profile --  A Profile that specifies the calculation points and which
+                    will store the calculated signal.
+
+        """
+        self._profile = profile
         return
 
     def setCalculator(self, calc, name):
@@ -95,20 +96,14 @@ class Contribution(ModelOrganizer):
         self._calculator = calc
         self._calcname = name
 
-        # Give the calculator access to the data set
-        calc.setProfile(self._profile)
+        # Let the ModelOrganizer structure know of the calculator
+        self._addOrganizer(calc)
 
         # Register the calculator with the equation factory
         self._eqfactory.registerGenerator(name, calc)
 
         # Create the default equation
         self._eq = self._eqfactory.makeEquation(name)
-
-        # We want direct access to the Calculator parameters, so we will make
-        # our relevant data members a proxy for the Calculator's.
-        self._organizers = calc._organizers
-        self._orgdict = calc._orgdict
-        self._parameters calc._parameters
 
         return
 
@@ -140,14 +135,19 @@ class Contribution(ModelOrganizer):
         """Calculate the residual for this contribution.
 
         It is assumed that all parameters have been assigned their most current
-        values by the FitModel. 
+        values by the FitModel.
 
-        The residual is by default an array chiv, defined is such that
-        dot(chiv, chiv) = chi^2.
+        The residual is by default an array chiv:
+        chiv = (eq() - self._profile.y) / self._profile.dy
         
         """
 
-        chiv = (eq() - self._profile._yr) / self._profile._dyr
+        # Make sure that the calculator knows about the profile associated with
+        # this contribution since multiple contributions may be using the same
+        # calculator.
+        self._calculator.setProfile(self._profile)
+
+        chiv = (self._eq() - self._profile.y) / self._profile.dy
         return chiv
 
 

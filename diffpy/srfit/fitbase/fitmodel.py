@@ -71,8 +71,8 @@ class FitModel(ModelOrganizer):
 
     def addContribution(self, con, weight = 1.0):
         """Add a contribution to the FitModel."""
-        self._addOrganizer(self, con, check=True)
-        self._weights.append[weight]
+        self._addOrganizer(con, check=True)
+        self._weights.append(weight)
         self._doprepare = True
         return
 
@@ -138,7 +138,7 @@ class FitModel(ModelOrganizer):
         for con in self._organizers:
             rset.update( con._getRestraints() )
             constraints = con._getConstraints()
-            pars = set(cdict.keys()).intersect( constraints.keys() )
+            pars = set(cdict.keys()).intersection( constraints.keys() )
             if pars:
                 message = "There are multiple constraints on '%s'"%pars.pop()
                 raise AttributeError(message)
@@ -290,7 +290,6 @@ class FitModel(ModelOrganizer):
 
         return
 
-
     def freeVar(self, par, value = None):
         """Free a variable so that it is refined.
 
@@ -343,6 +342,63 @@ class FitModel(ModelOrganizer):
         ModelOrganizer.constrain(self, par, eqstr, ns)
         self._doprepare = True
         return
+
+    def unconstrain(self, par):
+        """Unconstrain a Parameter.
+
+        par     --  The Parameter to unconstrain.
+
+        This removes any constraints on a parameter, including built-in
+        constraints.
+        """
+        ModelOrganizer.unconstrain(self, par)
+        self._doprepare = True
+        return
+
+    def restrain(self, res, lb = -inf, ub = inf, prefactor = 1, power = 2,  
+            scaled = False, ns = {}):
+        """Restrain an expression to specified bounds
+
+        res     --  An equation string or Parameter to restrain.
+        lb      --  The lower bound on the restraint evaluation (default -inf).
+        ub      --  The lower bound on the restraint evaluation (default inf).
+        prefactor   --  A multiplicative prefactor for the restraint 
+                        (default 1).
+        power   --  The power of the penalty (default 2).
+        scaled  --  A flag indicating if the restraint is scaled (multiplied)
+                    by the unrestrained point-average chi^2 (chi^2/numpoints)
+                    (default False).
+        ns      --  A dictionary of Parameters, indexed by name, that are used
+                    in the eqstr, but not part of the FitModel 
+                    (default {}).
+
+        The penalty is calculated as 
+        prefactor * max(0, lb - val, val - ub) ** power
+        and val is the value of the calculated equation. This is multipled by
+        the average chi^2 if scaled is True.
+
+        Raises ValueError if ns uses a name that is already used for a
+        Parameter.
+        Raises ValueError if eqstr depends on a Parameter that is not part of
+        the FitModel and that is not defined in ns.
+
+        Returns the Restraint selfect for use with the 'unrestrain' method.
+
+        """
+        res = ModelOrganizer.restrain(self, res, lb, ub, prefactor, power,
+                scaled, ns)
+        self._doprepare = True
+        return res
+
+    def unrestrain(self, res):
+        """Remove a restraint from the FitModel.
+        
+        res     --  A Restraint returned from the 'restrain' method.
+        """
+        ModelOrganizer.unrestrain(self, res)
+        self._doprepare = True
+        return
+
 # version
 __id__ = "$Id$"
 

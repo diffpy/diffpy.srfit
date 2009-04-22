@@ -166,7 +166,7 @@ class ModelOrganizer(object):
     def unrestrain(self, res):
         """Remove a restraint from the ModelOrganizer.
         
-        res     --  A Restraint selfect returned from the 'restrain' method.
+        res     --  A Restraint returned from the 'restrain' method.
         """
         if res in self._restraints:
             self._restraints.remove(res)

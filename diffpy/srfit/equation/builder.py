@@ -195,6 +195,38 @@ class EquationFactory(object):
 
         Returns a dictionary of the name, EquationBuilder pairs.
         """
+        import sys
+
+        eqops, eqargs = self._getOpsAndArgs(eqstr)
+
+        # Raise an error if there are arguments that need to be created, but
+        # this is disallowed.
+        if not buildargs and eqargs:
+            msg = "The equation contains undefined arguments"
+            raise ValueError(msg)
+
+        # Now start making the namespace
+        ns = dict(self.builders)
+
+        # Get the operators, partitions and generators
+        for opname in eqops:
+            #print opname
+            if opname not in self.builders:
+                opbuilder = getattr(sys.modules[__name__], opname)
+                #print opbuilder
+                ns[opname] = opbuilder
+
+        # Make the arguments
+        for argname in eqargs:
+            #print argname
+            argbuilder = ArgumentBuilder(name = argname)
+            #print argbuilder
+            ns[argname] = argbuilder
+
+        return ns
+
+    def _getOpsAndArgs(self, eqstr):
+        """Get the Operator and Argument names from an equation."""
         import tokenize
         import token
         import cStringIO
@@ -246,31 +278,7 @@ class EquationFactory(object):
         # Discard the tokens that were moved or ignored
         map(eqops.pop, poplist)
 
-        # Raise an error if there are arguments that need to be created, but
-        # this is disallowed.
-        if not buildargs and eqargs:
-            msg = "The equation contains undefined arguments"
-            raise ValueError(msg)
-
-        # Now start making the namespace
-        ns = dict(self.builders)
-
-        # Get the operators, partitions and generators
-        for opname in eqops.values():
-            #print opname
-            if opname not in self.builders:
-                opbuilder = getattr(sys.modules[__name__], opname)
-                #print opbuilder
-                ns[opname] = opbuilder
-
-        # Make the arguments
-        for argname in eqargs.values():
-            #print argname
-            argbuilder = ArgumentBuilder(name = argname)
-            #print argbuilder
-            ns[argname] = argbuilder
-
-        return ns
+        return eqops.values(), eqargs.values()
 
 # End class EquationFactory
 

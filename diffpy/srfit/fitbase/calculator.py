@@ -19,7 +19,7 @@ so that it can be used within a diffpy.srfit.equation.Equation.
 
 """
 
-from numpy import array
+from numpy import array, asarray
 
 from .parameter import Parameter
 
@@ -63,6 +63,17 @@ class Calculator(ModelOrganizer):
         return
 
     # Overload me!
+    def __call__(self, x):
+        """Evaluate the profile.
+
+        This method only takes the independent variables to calculate over. The
+        values of the calculator Parameters should be changed directly. 
+
+        """
+        return x
+
+    ## No need to overload anything below here
+
     def eval(self):
         """Evaluate the profile.
 
@@ -70,14 +81,13 @@ class Calculator(ModelOrganizer):
         should be changed directly. The independent variable to calculate over
         is defined in the _profile attribute.
 
-        This method calculates the profile and stores it in _profile.y.  This
-        method needs to be overloaded.
+        This method calculates the profile and stores it in _profile.y.
 
         """
-        self._profile.ycalc = array( self._profile.x )
+        y = self.__call__(self._profile.x)
+        self._profile.ycalc = asarray(y)
         return
 
-    ## No need to overload anything below here
         
     def setProfile(self, profile):
         """Assign the profile.

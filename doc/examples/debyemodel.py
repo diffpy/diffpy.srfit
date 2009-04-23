@@ -94,9 +94,7 @@ if __name__ == "__main__":
 
     # Demonstrate the Debye calculation
 
-    xy = numpy.loadtxt("data/PbADPs.dat")
-    x = xy[:,0]
-    y = xy[:,1]
+    x, y = numpy.loadtxt("data/PbADPs.dat", unpack=True)
 
     profile = Profile()
     profile.setObservedProfile(x, y)

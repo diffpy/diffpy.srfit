@@ -37,6 +37,10 @@ Methods:
 # package version
 from diffpy.srfit.version import __version__
 
+from .calculator import Calculator
+from .contribution import Contribution
 from .fitmodel import FitModel
+from .parameter import Parameter
+from .profile import Profile
 
 # End of file

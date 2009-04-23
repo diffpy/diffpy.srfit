@@ -48,7 +48,7 @@ class FitModel(ModelOrganizer):
                         addContribution method.
     _orgdict        --  A dictionary containing the Parameters and
                         Contributions indexed by name.
-    _parameters      --  A list of variable Parameters.
+    _parameters     --  A list of variable Parameters.
     _restraintlist  --  A list of restraints form this and all sub-components.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' method.
@@ -87,7 +87,9 @@ class FitModel(ModelOrganizer):
 
         Arguments
         p   --  The list of current variable values, provided in the same order
-                as the '_parameters' list.
+                as the '_parameters' list. If p is an empty iterable, then it
+                is assumed that the parameters have already been updated in
+                some other way, and the update is skipped.
 
         The residual is by default the weighted concatenation of each 
         contribution's residual, plus the value of each restraint. The array

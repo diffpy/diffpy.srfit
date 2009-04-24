@@ -37,6 +37,9 @@ class Profile(object):
     x       --  A numpy array of the calculated independent variable (default
                 None)
     ycalc   --  A numpy array of the calculated signal (default None).
+    _recalc --  A flag indicating that the profile should be recalculated, even
+                if the paramters didn't change. This gets set whenever the
+                calculation arrays change.
 
     """
 
@@ -49,6 +52,8 @@ class Profile(object):
         self.dy = None
         self.x = None
         self.ycalc = None
+        self._recalc = True
+        return
 
     def setObservedProfile(self, xobs, yobs, dyobs = None):
         """Set the observed profile.
@@ -145,8 +150,10 @@ class Profile(object):
             self.x = self.xobs[indices]
             self.y = self.yobs[indices]
             self.dy = self.dyobs[indices]
+            self._recalc = True
         else:
             self.setCalculationPoints(numpy.arange(xmin, xmax+0.5*dx, dx))
+
         return
 
     def setCalculationPoints(self, x):
@@ -171,6 +178,8 @@ class Profile(object):
             # FIXME - This does not follow error propogation rules and it
             # introduces (more) correlation between the data points.
             self.dy = rebinArray(self.dyobs, self.xobs, self.x)
+
+        self._recalc = True
         return
 
 # End class Profile

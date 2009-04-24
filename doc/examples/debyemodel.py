@@ -119,6 +119,7 @@ def makeModel():
     # Load data and add it to the profile
     x, y = numpy.loadtxt("data/PbADPs.dat", unpack=True)
     profile.setObservedProfile(x, y)
+    profile.setCalculationRange()
 
 
     # Create the Contribution, that will associate the profile with the Debye
@@ -213,6 +214,25 @@ def parkOptimize():
 
     print "tvar =", tvar
     print "offset =", offset
+
+    
+    # Plot this for fun.
+    # Note that since the contribution was given the name "pb", it is
+    # accessible from the model with this name. This is a useful way to
+    # organize multiple contributions to a fit.
+    T = model.pb.profile.x
+    U = model.pb.profile.y
+    Ucalc = model.pb.profile.ycalc
+
+    import pylab
+    pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")
+    lbl1 = "$T_d$=%3.1f K, off=%1.5f $\AA^2$"% (abs(tvar),offset)
+    pylab.plot(T,Ucalc,label=lbl1)
+    pylab.xlabel("T (K)")
+    pylab.ylabel("$U_{iso} (\AA^2)$")
+    pylab.legend(loc = (0.0,0.8))
+
+    pylab.show()
 
     return
 

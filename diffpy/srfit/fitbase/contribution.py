@@ -38,14 +38,14 @@ class Contribution(ModelOrganizer):
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and Contributions.
     name            --  A name for this Contribution.
+    profile         --  A Profile that holds the measured (and calcuated)
+                        signal.
     _calcname       --  A name for the Calculator.
     _calculator     --  A Calculator instance for generating a signal.
                         Contributions can share a Calculator instance.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-    _profile        --  A Profile that holds the measured (and calcuated)
-                        signal.
     _eq             --  An Equation instance that generates a modified profile
                         with the Calculator.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
@@ -67,7 +67,7 @@ class Contribution(ModelOrganizer):
         """Initialization."""
         ModelOrganizer.__init__(self, name)
         self._eq = None
-        self._profile = None
+        self.profile = None
         self._calculator = None
         self._calcname = None
         self._xname = None
@@ -92,7 +92,7 @@ class Contribution(ModelOrganizer):
                     with the specified name.
 
         """
-        self._profile = profile
+        self.profile = profile
 
         # Clear the previous profile information
         if self._xname is not None:
@@ -116,7 +116,7 @@ class Contribution(ModelOrganizer):
             g.literal = Parameter(name)
 
             def generate(clicker):
-                a = getattr(self._profile, attrname)
+                a = getattr(self.profile, attrname)
                 g.literal.setValue(a)
                 return
 
@@ -201,17 +201,17 @@ class Contribution(ModelOrganizer):
         values by the FitModel.
 
         The residual is by default an array chiv:
-        chiv = (eq() - self._profile.y) / self._profile.dy
+        chiv = (eq() - self.profile.y) / self.profile.dy
         
         """
 
         # Make sure that the calculator knows about the profile associated with
         # this contribution since multiple contributions may be using the same
         # calculator.
-        self._calculator.setProfile(self._profile)
-        self._profile.ycalc = self._eq()
+        self._calculator.setProfile(self.profile)
+        self.profile.ycalc = self._eq()
 
-        chiv = (self._profile.ycalc - self._profile.y) / self._profile.dy
+        chiv = (self.profile.ycalc - self.profile.y) / self.profile.dy
         return chiv
 
 

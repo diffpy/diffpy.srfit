@@ -35,6 +35,8 @@ class Calculator(ModelOrganizer):
     literal         --  This is literal created or modified by the generate
                         method (by default, a Parameter)
     name            --  A name for this organizer.
+    profile         --  A Profile instance that contains the calculation range
+                        and will contain the calculated profile.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
@@ -42,8 +44,6 @@ class Calculator(ModelOrganizer):
                         ModelOrganizers indexed by name.
     _parameters     --  A list of parameters that this ModelOrganizer knows
                         about.
-    _profile        --  A Profile instance that contains the calculation range
-                        and will contain the calculated profile.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' method.
     _organizers     --  A list of ModelOrganizers that this ModelOrganizer
@@ -57,7 +57,7 @@ class Calculator(ModelOrganizer):
     def __init__(self, name):
         """Initialize the attributes."""
         ModelOrganizer.__init__(self, name)
-        self._profile = None
+        self.profile = None
         self.literal = Parameter(name)
         self.args = []
         return
@@ -79,13 +79,13 @@ class Calculator(ModelOrganizer):
 
         This method takes no arguments. The values of the calculator Parameters
         should be changed directly. The independent variable to calculate over
-        is defined in the _profile attribute.
+        is defined in the profile attribute.
 
-        This method calculates the profile and stores it in _profile.y.
+        This method calculates the profile and stores it in profile.y.
 
         """
-        y = self.__call__(self._profile.x)
-        self._profile.ycalc = asarray(y)
+        y = self.__call__(self.profile.x)
+        self.profile.ycalc = asarray(y)
         return
 
         
@@ -96,7 +96,7 @@ class Calculator(ModelOrganizer):
                     will store the calculated signal.
 
         """
-        self._profile = profile
+        self.profile = profile
         return
 
     # Generator methods. 
@@ -113,10 +113,11 @@ class Calculator(ModelOrganizer):
                     clicker, then the profile should be re-evaluated.
 
         """
-        if self.clicker >= clicker:
+        if self.clicker >= clicker or self.profile._recalc:
             self.eval()
-            self.literal.setValue( self._profile.ycalc )
+            self.literal.setValue( self.profile.ycalc )
             self.clicker.click()
+            self.profile._recalc = False
         return
 
     def identify(self, visitor):

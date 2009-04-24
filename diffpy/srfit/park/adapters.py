@@ -60,11 +60,15 @@ class FitnessAdapter(park.Fitness):
         park.Fitness.__init__(self)
         self._fitmodel = fitmodel
         # Make a parameter set and add the variables from the FitModel
-        self.parameterset = park.ParameterSet()
+        self.__parameterset = park.ParameterSet()
         for par in fitmodel._parameters:
-            self.parameterset.append( ParameterProxy(par) )
+            self.__parameterset.append( ParameterProxy(par) )
 
         return
+
+    def _parameterset(self):
+        return self.__parameterset
+    parameterset = property(_parameterset)
 
     def derivs(self):
         """Parameters with analytic derivatives.

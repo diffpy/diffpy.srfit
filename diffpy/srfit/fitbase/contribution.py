@@ -140,17 +140,23 @@ class Contribution(ModelOrganizer):
 
         return
 
-    def setCalculator(self, calc, name):
+    def setCalculator(self, calc, name = None):
         """Set the Calculator to be used by this Contribution.
 
         The Calculator is given a name so that it can be used as part of the
-        equation that is used to generate the signal.
+        equation that is used to generate the signal. This can be different
+        from the name of the Calculator for attribute purposes.
 
         calc    --  A Calculator instance
-        name    --  A name for the calculator
+        name    --  A name for the calculator. If name is None (default), then
+                    the Calculator's name attribute will be used.
 
         """
         self._calculator = calc
+
+        if name is None:
+            name = calc.name
+
         self._calcname = name
 
         # Let the ModelOrganizer structure know of the calculator
@@ -203,8 +209,9 @@ class Contribution(ModelOrganizer):
         # this contribution since multiple contributions may be using the same
         # calculator.
         self._calculator.setProfile(self._profile)
+        self._profile.ycalc = self._eq()
 
-        chiv = (self._eq() - self._profile.y) / self._profile.dy
+        chiv = (self._profile.ycalc - self._profile.y) / self._profile.dy
         return chiv
 
 

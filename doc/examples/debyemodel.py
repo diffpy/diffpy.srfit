@@ -19,8 +19,8 @@ from functools import partial
 import numpy
 import scipy.integrate
 
-from diffpy.srfit.fitbase.calculator import Calculator
-from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
+from diffpy.srfit.park import FitnessAdapter
 
 class DebyeCalculator(Calculator):
     """A class for calculating adps from the Debye model."""
@@ -42,6 +42,21 @@ class DebyeCalculator(Calculator):
 
         return y
 
+# End class DebyeCalculator
+
+class DebyeContribution(Contribution):
+    """A Contribution that uses the DebyeCalculator."""
+
+    def __init__(self, name):
+        """Auto-initialize the calculator."""
+        Contribution.__init__(self, name)
+        self.setCalculator(DebyeCalculator())
+        return
+
+# End class DebyeContribution
+
+
+# Functions required for calculation of Debye curve
 
 def adps(m,thetaD,T):
     """calculates atomic displacement factors within the Debye model
@@ -90,26 +105,125 @@ def __phi(x):
 
     return phi
 
-if __name__ == "__main__":
+####### Example Code
 
-    # Demonstrate the Debye calculation
+def makeModel():
+    """Create a model that encompasses a profile calculator and an experimental
+    profile. The model can then be optimized using an external optimizer.
 
-    x, y = numpy.loadtxt("data/PbADPs.dat", unpack=True)
+    """
 
+    # Create a Profile. This will hold the experimental and calculated signal.
     profile = Profile()
+
+    # Load data and add it to the profile
+    x, y = numpy.loadtxt("data/PbADPs.dat", unpack=True)
     profile.setObservedProfile(x, y)
 
-    debye = DebyeCalculator()
-    debye.setProfile(profile)
 
-    debye.m.setValue(207.2)
-    debye.thetaD.setValue(240)
-    debye.offset.setValue(0.0035)
+    # Create the Contribution, that will associate the profile with the Debye
+    # Calculator. We have created a custom DebyeContribution above that
+    # performs half of the association for us.
+    contribution = DebyeContribution("pb")
+    contribution.setProfile(profile)
 
-    debye.eval()
-    ycalc = profile.ycalc
+    # Make a FitModel where we can create variables, constraints and
+    # restraints. If we had multiple profiles to fit simultaneously, the
+    # contribution from each could be added to the model.
+    model = FitModel()
+    model.addContribution(contribution)
 
-    from pylab import plot, show
-    plot(x, y, x, ycalc)
-    show()
+    # Give the calculator parameters values.  The DebyeCalculator has
+    # the name "debye", so we can access its variables from the "debye"
+    # attribute of the contribution.
+    #
+    # We know the mass of lead, so we'll set that here. We're varying the other
+    # two parameters, so we'll give them initial values below.
+    contribution.debye.m.setValue(207.2)
 
+    # Specify which parameters we want to refine. We can give them initial
+    # values in the process. 
+    model.addVar(contribution.debye.offset, 0)
+
+    # We will handle the thetaD parameter in a convoluted, yet instructive way.
+    # We want this to be positive, so we'll create a new variable to refine,
+    # named "tvar" and constrain the thetaD to be the absolute of this variable.
+    model.newVar("tvar", 300)
+    model.constrain(contribution.debye.thetaD, "abs(tvar)")
+
+    # While we're at it, let's keep the offset positive. We could do the
+    # constraint method above, but we'll use a restraint instead. This
+    # restraint will add infinity to the chi^2 if the offset goes negative.
+    from numpy import inf
+    model.restrain(contribution.debye.offset, lb=0, ub=inf)
+
+    # Give the model away so it can be used!
+    return model
+
+def scipyOptimize():
+    """Optimize the model created above using scipy."""
+
+    model = makeModel()
+
+    # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
+    # scipy.
+    from scipy.optimize.minpack import leastsq
+    from numpy import dot
+    out = leastsq(model.residual, model.getValues())
+    offset, tvar = out[0]
+
+    chiv = model.residual()
+    print "Fit using scipy's leastsq optimizer"
+    print "Chi^2 = ", numpy.dot(chiv, chiv)
+    # Get the refined variable values, noting that we didn't refine thetaD
+    # directly. If we want uncertainties, we have to go to the optimizer
+    # directly.
+    offset, tvar = model.getValues()
+
+    print "tvar =", tvar
+    print "offset =", offset
+
+    return
+
+def parkOptimize():
+    """Optimize the model created above using PARK."""
+
+    model = makeModel()
+
+    # We have to turn the model into something that PARK can use. In PARK, a
+    # Fitness object is the equivalent of a SrFit Contribution. However, we
+    # want a very lean interface to any optimizer, so we treat the entire
+    # FitModel as a Fitness object. To do this, we have written a special
+    # FitnessAdapter class in the diffpy.srfit.park package.
+    f = FitnessAdapter(model)
+
+    # Now we can fit this
+    from park.fitting.fit import fit
+    result = fit([f])
+
+    # For the basic info about the fit, we can use the FitModel directly
+    chiv = model.residual()
+
+    print "Fit using the default PARK optimizer"
+    print "Chi^2 = ", numpy.dot(chiv, chiv)
+    # Get the refined variable values, noting that we didn't refine thetaD
+    # directly. If we want uncertainties, we have to go to the optimizer
+    # directly.
+    offset, tvar = result.pvec
+
+    print "tvar =", tvar
+    print "offset =", offset
+
+    return
+
+if __name__ == "__main__":
+
+    scipyOptimize()
+    parkOptimize()
+    print \
+"""Note that the solutions are equivalent (to several digits). We cannot assess
+the parameter uncertainty without uncertainties on the data points.\
+"""
+
+
+# End of file

@@ -82,14 +82,15 @@ class FitModel(ModelOrganizer):
         self._weights[idx] = weight
         return
 
-    def residual(self, p):
+    def residual(self, p = []):
         """Calculate the residual to be optimized.
 
         Arguments
         p   --  The list of current variable values, provided in the same order
-                as the '_parameters' list. If p is an empty iterable, then it
-                is assumed that the parameters have already been updated in
-                some other way, and the update is skipped.
+                as the '_parameters' list. If p is an empty iterable (default),
+                then it is assumed that the parameters have already been
+                updated in some other way, and the explicit update within this
+                function is skipped.
 
         The residual is by default the weighted concatenation of each 
         contribution's residual, plus the value of each restraint. The array
@@ -208,6 +209,7 @@ class FitModel(ModelOrganizer):
 
         if fixed:
             self._fixed.append(par)
+            self._eqfactory.registerArgument(par.name, par)
         else:
             self._addParameter(par)
 
@@ -319,6 +321,15 @@ class FitModel(ModelOrganizer):
             par.setValue(value)
 
         return
+
+    def getValues(self):
+        """Get the current values of the variables in a list.
+
+        The list is ordered the same as the _parameters list, which is the same
+        as the order in which variables were added.
+        
+        """
+        return [par.getValue() for par in self._parameters]
 
     # Overloaded
     def constrain(self, par, eqstr, ns = {}):

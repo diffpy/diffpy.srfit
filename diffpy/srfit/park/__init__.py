@@ -27,4 +27,6 @@ Methods:
 # package version
 from diffpy.srfit.version import __version__
 
+from .adapters import FitnessAdapter
+
 # End of file

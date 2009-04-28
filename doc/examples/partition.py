@@ -55,7 +55,7 @@ y1 = eq(A0=1, c=0)
 y2 = eq(A0=2, c=0)
 plot(x, y1, x, y2)
 show()
-raw_input("Press anything")
+raw_input("Press Enter")
 
 # Make the same equation, but only modify the amplitude of the "B-B" pair
 eq = factory.makeEquation("multiply(A0, gpart, 'B-B') + c")
@@ -63,7 +63,7 @@ eq = factory.makeEquation("multiply(A0, gpart, 'B-B') + c")
 y3 = eq(A0=2, c=0)
 plot(x, y1, x, y2, x, y3)
 show()
-raw_input("Press anything")
+raw_input("Press Enter")
 
 # Do this again, but add an arbitrary constant to the "A" pairs
 eq = factory.makeEquation("add( multiply(A0, gpart, 'B-B'), c, 'A')")
@@ -71,7 +71,7 @@ eq = factory.makeEquation("add( multiply(A0, gpart, 'B-B'), c, 'A')")
 y4 = eq(A0=2, c=1)
 plot(x, y1, x, y2, x, y3, x, y4)
 show()
-raw_input("Press anything")
+raw_input("Press Enter")
 
 # What went wrong?
 # c=1 gets added to both g1 and g2 after the multiplication operation, even the

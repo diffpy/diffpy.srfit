@@ -29,16 +29,14 @@ class DebyeCalculator(Calculator):
         Calculator.__init__(self, "debye")
         self._newParameter("m", 12)
         self._newParameter("thetaD", 300)
-        self._newParameter("offset", 0)
         return
 
     def __call__(self, x):
 
         m = self.m.getValue()
         tD = self.thetaD.getValue()
-        offset = self.offset.getValue()
 
-        y = [adps(m, tD, T) + offset for T in x]
+        y = [adps(m, tD, T) for T in x]
 
         return y
 
@@ -128,6 +126,14 @@ def makeModel():
     contribution = DebyeContribution("pb")
     contribution.setProfile(profile)
 
+    # We need an offset in our equation that does not appear in the calculator.
+    # We create that here. The calcualtor is named "debye", so we can call
+    # the calculator with a string equation by this name.
+    # First we add a new parameter
+    contribution.newParameter("offset", 0)
+    # Then we define a new equation to refine in terms of the debye calculator.
+    contribution.setEquation("debye()+offset")
+
     # Make a FitModel where we can create variables, constraints and
     # restraints. If we had multiple profiles to fit simultaneously, the
     # contribution from each could be added to the model.
@@ -143,12 +149,14 @@ def makeModel():
     contribution.debye.m.setValue(207.2)
 
     # Specify which parameters we want to refine. We can give them initial
-    # values in the process. 
-    model.addVar(contribution.debye.offset, 0)
+    # values in the process. We want to refine the offset variable that we just
+    # defined in the contribution.
+    model.addVar(contribution.offset, 0)
 
     # We will handle the thetaD parameter in a convoluted, yet instructive way.
-    # We want this to be positive, so we'll create a new variable to refine,
-    # named "tvar" and constrain the thetaD to be the absolute of this variable.
+    # We want this to be positive, so we'll create a new fit variable named
+    # "tvar" and constrain the thetaD to be the absolute value of this
+    # variable.
     model.newVar("tvar", 300)
     model.constrain(contribution.debye.thetaD, "abs(tvar)")
 
@@ -156,7 +164,7 @@ def makeModel():
     # constraint method above, but we'll use a restraint instead. This
     # restraint will add infinity to the chi^2 if the offset goes negative.
     from numpy import inf
-    model.restrain(contribution.debye.offset, lb=0, ub=inf)
+    model.restrain(contribution.offset, lb=0, ub=inf)
 
     # Give the model away so it can be used!
     return model

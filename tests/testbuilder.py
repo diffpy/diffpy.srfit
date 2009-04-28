@@ -22,16 +22,16 @@ class TestRegistration(unittest.TestCase):
 
         eq = factory.makeEquation("v1")
 
-        self.assertTrue(v1 is eq.arglist[0])
-        self.assertEquals(1, len(eq.arglist))
+        self.assertTrue(v1 is eq.args[0])
+        self.assertEquals(1, len(eq.args))
 
         # Try to parse an equation with buildargs turned off
         self.assertRaises(ValueError, factory.makeEquation, "v1 + v2", False)
 
         # Make sure we can still use constants
         eq = factory.makeEquation("v1 + 2", False)
-        self.assertTrue(v1 is eq.arglist[0])
-        self.assertEquals(1, len(eq.arglist))
+        self.assertTrue(v1 is eq.args[0])
+        self.assertEquals(1, len(eq.args))
         return
 
 
@@ -71,8 +71,8 @@ class TestEquationParser(unittest.TestCase):
         # Equation with constants
         factory.registerConstant("x", x)
         eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
-        self.assertTrue("sigma" in eq.args)
-        self.assertTrue("x" not in eq.args)
+        self.assertTrue("sigma" in eq.argdict)
+        self.assertTrue("x" not in eq.argdict)
         self.assertTrue(array_equal(eq(sigma=sigma), f(x,sigma)))
 
 
@@ -80,8 +80,8 @@ class TestEquationParser(unittest.TestCase):
         factory.registerFunction("myfunc", eq, 1)
         eq2 = factory.makeEquation("c*myfunc(sigma)")
         self.assertTrue(array_equal(eq2(c=2, sigma=sigma), 2*f(x,sigma)))
-        self.assertTrue("sigma" in eq2.args)
-        self.assertTrue("c" in eq2.args)
+        self.assertTrue("sigma" in eq2.argdict)
+        self.assertTrue("c" in eq2.argdict)
 
         # Equation with partition
         p1 = literals.Partition("p1")
@@ -146,8 +146,8 @@ class TestEquationParser(unittest.TestCase):
         beq = A*sin(a*x)
         eq = beq.getEquation()
 
-        self.assertTrue("a" in eq.args)
-        self.assertTrue("A" in eq.args)
+        self.assertTrue("a" in eq.argdict)
+        self.assertTrue("A" in eq.argdict)
         self.assertTrue(array_equal(eq(), 2*numpy.sin(x)))
 
 

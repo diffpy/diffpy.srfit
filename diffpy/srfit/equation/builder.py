@@ -142,6 +142,15 @@ class EquationFactory(object):
         self.registerBuilder(name, argbuilder)
         return
 
+    def registerEquation(self, name, eq):
+        """Register the equation with the factory.
+
+        Equations are Generators, so they are evaluated in an equation string
+        without parentheses.
+        """
+        self.registerGenerator(name, eq)
+        return
+
     def registerFunction(self, name, func, nin = 2, nout = 1):
         """Register a named function with the factory.
 
@@ -202,7 +211,7 @@ class EquationFactory(object):
         # Raise an error if there are arguments that need to be created, but
         # this is disallowed.
         if not buildargs and eqargs:
-            msg = "The equation contains undefined arguments"
+            msg = "The equation contains undefined arguments %s"%eqargs
             raise ValueError(msg)
 
         # Now start making the namespace

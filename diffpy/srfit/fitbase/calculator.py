@@ -96,7 +96,9 @@ class Calculator(ModelOrganizer):
                     will store the calculated signal.
 
         """
-        self.profile = profile
+        if profile is not self.profile:
+            self.profile = profile
+            self.clicker.click()
         return
 
     # Generator methods. 
@@ -113,11 +115,9 @@ class Calculator(ModelOrganizer):
                     clicker, then the profile should be re-evaluated.
 
         """
-        if self.clicker >= clicker or self.profile._recalc:
+        if self.clicker >= clicker or self.profile.xpar.clicker >= clicker:
             self.eval()
             self.literal.setValue( self.profile.ycalc )
-            self.clicker.click()
-            self.profile._recalc = False
         return
 
     def identify(self, visitor):

@@ -29,8 +29,8 @@ class TestEquationFromString(unittest.TestCase):
         eq = equationFromString("p1+p2", factory)
 
         self.assertEqual(2, len(eq.args))
-        self.assertTrue(p1 in eq.arglist)
-        self.assertTrue(p2 in eq.arglist)
+        self.assertTrue(p1 in eq.args)
+        self.assertTrue(p2 in eq.args)
         self.assertEqual(3, eq())
 
         # Try to use a parameter that is not registered
@@ -39,9 +39,9 @@ class TestEquationFromString(unittest.TestCase):
         # Pass that argument in the ns dictionary
         eq = equationFromString("p1+p2+p3", factory, {"p3":p3})
         self.assertEqual(3, len(eq.args))
-        self.assertTrue(p1 in eq.arglist)
-        self.assertTrue(p2 in eq.arglist)
-        self.assertTrue(p3 in eq.arglist)
+        self.assertTrue(p1 in eq.args)
+        self.assertTrue(p2 in eq.args)
+        self.assertTrue(p3 in eq.args)
         self.assertEqual(6, eq())
 
         # Make sure that there are no remnants of p3 in the factory

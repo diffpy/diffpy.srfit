@@ -18,8 +18,12 @@
 
 import numpy
 
+from .parameter import Parameter
+from diffpy.srfit.equation import Clicker
+
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8
+
 
 class Profile(object):
     """One-dimensional data containers.
@@ -37,9 +41,9 @@ class Profile(object):
     x       --  A numpy array of the calculated independent variable (default
                 None)
     ycalc   --  A numpy array of the calculated signal (default None).
-    _recalc --  A flag indicating that the profile should be recalculated, even
-                if the paramters didn't change. This gets set whenever the
-                calculation arrays change.
+    xpar    --  A Parameter that stores x.
+    ypar    --  A Parameter that stores y.
+    dypar   --  A Parameter that stores dy.
 
     """
 
@@ -52,7 +56,9 @@ class Profile(object):
         self.dy = None
         self.x = None
         self.ycalc = None
-        self._recalc = True
+        self.xpar = Parameter("x")
+        self.ypar = Parameter("y")
+        self.dypar = Parameter("dy")
         return
 
     def setObservedProfile(self, xobs, yobs, dyobs = None):
@@ -150,10 +156,10 @@ class Profile(object):
             self.x = self.xobs[indices]
             self.y = self.yobs[indices]
             self.dy = self.dyobs[indices]
-            self._recalc = True
         else:
             self.setCalculationPoints(numpy.arange(xmin, xmax+0.5*dx, dx))
 
+        self._updatePars()
         return
 
     def setCalculationPoints(self, x):
@@ -179,7 +185,14 @@ class Profile(object):
             # introduces (more) correlation between the data points.
             self.dy = rebinArray(self.dyobs, self.xobs, self.x)
 
-        self._recalc = True
+        self._updatePars()
+        return
+
+    def _updatePars(self):
+        """Update the paramters holding the observed arrays."""
+        self.xpar.setValue(self.x)
+        self.ypar.setValue(self.y)
+        self.dypar.setValue(self.dy)
         return
 
 # End class Profile

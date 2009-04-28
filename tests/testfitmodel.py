@@ -40,14 +40,14 @@ class TestFitModel(unittest.TestCase):
         """Test the residual and everything that can change it."""
 
         # With thing set up as they are, the residual should be 0
-        res = self.model.residual([])
+        res = self.model.residual()
         self.assertAlmostEquals(0, dot(res, res))
 
         # Change the c value to 1 so that the equation evaluates as sin(x+1)
         x = self.profile.x
         y = sin(x+1)
         self.model.cont.c.setValue(1)
-        res = self.model.residual([])
+        res = self.model.residual()
         self.assertTrue( array_equal(y-self.profile.y, res) )
 
         # Try some constraints

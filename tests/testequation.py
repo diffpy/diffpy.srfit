@@ -44,7 +44,7 @@ class TestEquation(unittest.TestCase):
 
         # Make the equation
         eq = Equation(mult2)
-        args = eq.args.values()
+        args = eq.args
         self.assertTrue(v1 in args)
         self.assertTrue(v2 in args)
         self.assertTrue(v3 in args)

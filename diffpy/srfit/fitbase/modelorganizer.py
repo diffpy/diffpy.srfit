@@ -263,9 +263,11 @@ class ModelOrganizer(object):
 
     def _getConstraints(self):
         """Get the Constraints for this and embedded ParameterSets."""
-        constraints = dict(self._constraints)
+        constraints = {}
         for org in self._organizers:
             constraints.update( org._getConstraints() )
+        # Update with local constraints last. These override the others.
+        constraints.update(self._constraints)
 
         return constraints
 

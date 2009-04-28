@@ -35,8 +35,8 @@ class Contribution(ModelOrganizer):
     part of a Contribution.
 
     Attributes
-    clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and Contributions.
+    clicker         --  A Clicker instance for recording changes in the
+                        Parameters or the residual components.
     name            --  A name for this Contribution.
     profile         --  A Profile that holds the measured (and calcuated)
                         signal.
@@ -54,6 +54,8 @@ class Contribution(ModelOrganizer):
     _organizers     --  A reference to the Calcualtor's _organizers attribute.
     _orgdict        --  A reference to the Calculator's _orgdict attribute.
     _parameters     --  A reference to the Calculator's _parameters attribute.
+    _eq             --  An Equation instance that generates the residual
+                        equation.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' method.
     _xname          --  The name of of the independent variable from the
@@ -67,6 +69,7 @@ class Contribution(ModelOrganizer):
         """Initialization."""
         ModelOrganizer.__init__(self, name)
         self._eq = None
+        self._reseq = None
         self.profile = None
         self._calculator = None
         self._calcname = None
@@ -77,67 +80,49 @@ class Contribution(ModelOrganizer):
 
     def setProfile(self, profile, xname = None, yname = None, dyname = None):
         """Assign the profile for this contribution.
+
+        This resets the current residual.
         
         profile --  A Profile that specifies the calculation points and which
                     will store the calculated signal.
-        xname   --  The name of the independent variable from the Profile
-                    (default None). If this is provided, then the variable will
-                    be usable within the Equation with the specified name.
-        yname   --  The name of the observed profile (default None). If this is
-                    provided, then the observed profile will be usable within
+        xname   --  The name of the independent variable from the Profile. If
+                    this is None (default), then the name specified by the
+                    Profile for this parametere will be used.  This variable is
+                    usable within the Equation with the specified name.
+        yname   --  The name of the observed profile.  If this is None
+                    (default), then the name specified by the Profile for this
+                    parametere will be used.  This variable is usable within
                     the Equation with the specified name.
-        dyname  --  The name of the uncertainty in the observed profile
-                    (default None). If this is provided, then the uncertainty
-                    in the observed profile will be usable within the Equation
-                    with the specified name.
+        dyname  --  The name of the uncertainty in the observed profile. If
+                    this is None (default), then the name specified by the
+                    Profile for this parametere will be used.  This variable is
+                    usable within the Equation with the specified name.
+        
 
         """
         self.profile = profile
 
         # Clear the previous profile information
-        if self._xname is not None:
-            self._eqfactory.deRegisterGenerator(self._xname)
-            self._xname = None
+        self._eqfactory.deRegisterBuilder(self._xname)
+        self._eqfactory.deRegisterBuilder(self._yname)
+        self._eqfactory.deRegisterBuilder(self._dyname)
 
-        if self._yname is not None:
-            self._eqfactory.deRegisterGenerator(self._yname)
-            self._yname = None
+        if xname is None:
+            xname = self.profile.xpar.name
+        if yname is None:
+            yname = self.profile.ypar.name
+        if dyname is None:
+            dyname = self.profile.dypar.name
 
-        if self._dyname is not None:
-            self._eqfactory.deRegisterGenerator(self._dyname)
-            self._dyname = None
+        self._xname = xname
+        self._eqfactory.registerArgument(xname, self.profile.xpar)
+        self._yname = yname
+        self._eqfactory.registerArgument(yname, self.profile.ypar)
+        self._dyname = dyname
+        self._eqfactory.registerArgument(dyname, self.profile.dypar)
 
-        # This creates a Generator that will produce the desired array in an
-        # equation. This cannot be done with a Parameter alone because the user
-        # may change the calculation points in the profile after it has been
-        # added to the Contribution.
-        def registerArray(name, attrname):
-            g = Generator(name)
-            g.literal = Parameter(name)
-
-            def generate(clicker):
-                a = getattr(self.profile, attrname)
-                g.literal.setValue(a)
-                return
-
-            # Set the generate method of the generator to produce the array.
-            g.generate = generate
-
-            self._eqfactory.registerGenerator(name, g)
-            return
-
-        if xname is not None:
-            self._xname = xname
-            registerArray(xname, "x")
-
-        if yname is not None:
-            self._yname = yname
-            registerArray(yname, "y")
-
-        if dyname is not None:
-            self._dyname = dyname
-            registerArray(dyname, "dy")
-
+        if self._calculator is not None:
+            self.setResidualEquation()
         return
 
     def setCalculator(self, calc, name = None):
@@ -145,7 +130,8 @@ class Contribution(ModelOrganizer):
 
         The Calculator is given a name so that it can be used as part of the
         equation that is used to generate the signal. This can be different
-        from the name of the Calculator for attribute purposes.
+        from the name of the Calculator for attribute purposes. This resets the
+        current equation and residual.
 
         calc    --  A Calculator instance
         name    --  A name for the calculator. If name is None (default), then
@@ -168,29 +154,70 @@ class Contribution(ModelOrganizer):
         # Create the default equation
         self._eq = self._eqfactory.makeEquation(name)
 
+        self.setEquation(name)
         return
 
     def setEquation(self, eqstr, ns = {}):
         """Set the refinement equation for the Contribution.
 
-        eqstr   --  A string representation of the equation. The name of the
-                    Calculator can be used in the equation. Any variables that
-                    appear within eqstr will be added to the Contribution, and
-                    will be accessible as attributes.
+        eqstr   --  A string representation of the equation. Any quantity
+                    registered by setProfile and setCalculator can be can be
+                    used in the equation by name.
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the Calculator (default
+                    in the eqstr, but not part of the Contribution (default
                     {}).
+
+        The equation will be usable within setResidualEquation by calling
+        "eq()". Calling this function resets the residual equation.
 
         Raises AttributeError if the Calculator is not yet defined.
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the Calculator and that is not defined in ns.
+        the Contribution and that is not defined in ns.
         """
         if self._calculator is None:
             raise AttributeError("Define the calculator first")
 
         self._eq = equationFromString(eqstr, self._eqfactory, ns)
+
+        # Now register this with the equation factory
+        self._eqfactory.registerEquation("eq", self._eq)
+
+        if self._calculator is not None and self.profile is not None:
+            self.setResidualEquation()
+
+        return
+
+    def setResidualEquation(self, eqstr = None, ns = {}):
+        """Set the residual equation for the Contribution.
+
+        eqstr   --  A string representation of the residual. If eqstr is None
+                    (default), then the chiv residual will be used (see the
+                    residual method.)
+        ns      --  A dictionary of Parameters, indexed by name, that are used
+                    in the eqstr, but not part of the Contribution (default
+                    {}).
+
+        The quantity that will be optimized is the summed square of the
+        residual equation. Keep that in mind when defining a new equation.
+
+        Raises AttributeError if either the Calculator or the Profile is not
+        yet defined.
+        Raises ValueError if ns uses a name that is already used for a
+        Parameter.
+        Raises ValueError if eqstr depends on a Parameter that is not part of
+        the Contribution and that is not defined in ns.
+        """
+        if self._calculator is None:
+            raise AttributeError("Define the calculator first")
+        if self.profile is None:
+            raise AttributeError("Define the profile first")
+
+        if eqstr is None:
+            eqstr = "(eq - %s)/%s" % (self._yname, self._dyname)
+
+        self._reseq = equationFromString(eqstr, self._eqfactory, ns)
 
         return
 
@@ -202,17 +229,15 @@ class Contribution(ModelOrganizer):
 
         The residual is by default an array chiv:
         chiv = (eq() - self.profile.y) / self.profile.dy
+
+        This can be changed with the setResidualEquation method.
         
         """
-
-        # Make sure that the calculator knows about the profile associated with
-        # this contribution since multiple contributions may be using the same
-        # calculator.
+        # Make sure the calculator is working on our profile
         self._calculator.setProfile(self.profile)
+        # Assign the calculated profile
         self.profile.ycalc = self._eq()
-
-        chiv = (self.profile.ycalc - self.profile.y) / self.profile.dy
-        return chiv
+        return self._reseq()
 
 
 # version

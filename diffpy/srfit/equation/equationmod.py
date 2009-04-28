@@ -40,8 +40,10 @@ See the class documentation for more information.
 from .visitors import Evaluator
 from .visitors import Validator
 from .visitors import ArgFinder
+from .literals import Generator
+from .literals import Argument
 
-class Equation(object):
+class Equation(Generator):
     """Class for holding and evaluating a Literal tree.
 
     Instances have attributes that are the non-const Arguments of the tree
@@ -56,10 +58,13 @@ class Equation(object):
     Attributes
     evaluator   --  An Evaluator instance unique to this Equation
     root        --  The root Literal of the equation tree
-    args        --  A dictionary of Arguments from the root, indexed by
+    argdict     --  A dictionary of Arguments from the root, indexed by
                     name. This is used by the __call__ method.
-    arglist     --  A list of Arguments, used to preserve the order of the
+    args        --  A list of Arguments, used to preserve the order of the
                     Arguments, which is used by the __call__ method.
+    name        --  A name for this Equation.
+    clicker     --  A Clicker instance for recording change in the Generator.
+    literal     --  An Argument to store the value of te
     """
 
     def __init__(self, root=None):
@@ -67,10 +72,11 @@ class Equation(object):
 
         root    --  The root node of the Literal tree (optional)
         """
+        Generator.__init__(self)
         self.evaluator = Evaluator()
         self.root = None
-        self.args = {}
-        self.arglist = [] # to preserve order
+        self.argdict = {}
+        self.literal = Argument()
 
         if root is not None:
             self.setRoot(root)
@@ -78,7 +84,7 @@ class Equation(object):
 
     def __getattr__(self, name):
         """Gives access to the Arguments as attributes."""
-        arg = self.args.get(name)
+        arg = self.argdict.get(name)
         if arg is None:
             raise AttributeError("No argument named '%s' here"%name)
         return arg
@@ -98,16 +104,17 @@ class Equation(object):
 
         argfinder = ArgFinder(getconsts=False)
         root.identify(argfinder)
-        self.arglist = list(argfinder.args)
-        self.args = dict( [(arg.name, arg) for arg in argfinder.args] )
+        self.args = list(argfinder.args)
+        self.argdict = dict( [(arg.name, arg) for arg in argfinder.args] )
         self.root = root
+        self.clicker.addSubject(root.clicker)
         return
 
     def __call__(self, *args, **kw):
         """Call the equation.
         
         New Argument values are acceped as arguments or keyword assignments (or
-        both).  The order of accepted arguments is given by the arglist
+        both).  The order of accepted arguments is given by the args
         attribute.  The Equation will remember values set in this way.
 
         Raises
@@ -115,14 +122,14 @@ class Equation(object):
         """
         # Process args
         for idx, val in enumerate(args):
-            if idx > len(self.arglist):
+            if idx > len(self.args):
                 raise ValueError("Too many arguments")
-            arg = self.arglist[idx]
+            arg = self.args[idx]
             arg.setValue(val)
 
         # Process kw
         for name, val in kw.items():
-            arg = self.args.get(name)
+            arg = self.argdict.get(name)
             if arg is None:
                 raise ValueError("No argument named '%s' here"%name)
             arg.setValue(val)
@@ -131,6 +138,20 @@ class Equation(object):
         self.root.identify(self.evaluator)
         self.evaluator.click()
         return self.evaluator.value
+
+    # for the Generator interface
+    def generate(self, clicker):
+        """Generate the Literal.
+
+        clicker --  A Clicker instance for decision making. It is not up to the
+                    Evaluator or any other visitor to decide when it can call
+                    this method.  The clicker can be used by the Generator to
+                    make that decision.
+
+        This stores the value of the equation in the literal attribute.
+        """
+        self.literal.setValue( self() )
+        return
 
 
 # version

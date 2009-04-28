@@ -135,17 +135,22 @@ class FitModel(ModelOrganizer):
         Constraints can have inter-dependencies that require that they are
         updated in a specific order. This will set the proper order.
         """
-        # Update constraints and restraints.
+        # Update constraints and restraints. 
         rset = set(self._restraints)
-        cdict = dict(self._constraints)
+        cdict = {}
+        # We let 'newer' constraints override the others. Constraints defined
+        # in the fitmodel override all others.
         for con in self._organizers:
             rset.update( con._getRestraints() )
             constraints = con._getConstraints()
             pars = set(cdict.keys()).intersection( constraints.keys() )
             if pars:
-                message = "There are multiple constraints on '%s'"%pars.pop()
-                raise AttributeError(message)
+                m = "There are multiple internal constraints on '%s'"%\
+                        pars.pop()
+                raise AttributeError(m)
             cdict.update(constraints)
+        # Update with local constraints last
+        cdict.update(self._constraints)
 
         # Reorder the constraints. Constraints are ordered such that a given
         # constraint is placed before its dependencies.
@@ -158,7 +163,7 @@ class FitModel(ModelOrganizer):
         for con in self._constraintlist:
             depmap[con] = set()
             # Now check the constraint's equation for constrained arguments
-            for arg in con.eq.args.values():
+            for arg in con.eq.args:
                 if arg in self._constraintlist:
                     depmap[con].add( arg )
 

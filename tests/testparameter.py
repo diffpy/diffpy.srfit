@@ -3,8 +3,7 @@
 
 import unittest
 
-from diffpy.srfit.fitbase.parameter import Parameter
-
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 
 class TestParameter(unittest.TestCase):
 
@@ -30,6 +29,29 @@ class TestParameter(unittest.TestCase):
         l.setValue(1.01)
         self.assertAlmostEqual(l.getValue(), 1.01)
         return
+
+class TestParameterProxy(unittest.TestCase):
+
+    def testProxy(self):
+        """Test the ParameterProxy class."""
+        l = Parameter("l", 3.14)
+
+        # Try Accessor adaptation
+        la = ParameterProxy("l2", l)
+
+        self.assertEqual("l2", la.name)
+        self.assertEqual(l.getValue(), la.getValue())
+
+        # Change the parameter
+        l.setValue(2.3)
+        self.assertEqual(l.getValue(), la.getValue())
+
+        # Change the proxy
+        la.setValue(3.2)
+        self.assertEqual(l.getValue(), la.getValue())
+
+        return
+
 
 if __name__ == "__main__":
 

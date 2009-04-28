@@ -82,8 +82,7 @@ class ModelOrganizer(object):
         """Constrain a Parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time. The
-        most recent constraint override all other user-defined constraints.
-        Built-in constraints override all other constraints.
+        most recent constraint override all other constraints.
 
         par     --  The Parameter to constrain.
         eqstr   --  A string representation of the constraint equation. The
@@ -114,8 +113,7 @@ class ModelOrganizer(object):
 
         par     --  The Parameter to unconstrain.
 
-        This removes any constraints on a parameter, including built-in
-        constraints.
+        This removes any constraints on a parameter.
         """
         if par in self._constraints:
             del self._constraints[par]

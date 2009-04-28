@@ -81,7 +81,7 @@ class FitnessAdapter(park.Fitness):
     def residuals(self):
         """Calculate the residuals."""
 
-        return self._fitmodel.residual([])
+        return self._fitmodel.residual()
 
     def residuals_deriv(self, pars=[]):
         """No derivatives here."""

@@ -33,8 +33,8 @@ class Parameter(Argument):
     def __init__(self, name, value = 0):
         """Initialization.
         
+        name    --  The name of this Parameter.
         value   --  The initial value of this Parameter (default 0).
-        name    --  The name of this Parameter (optional, default None).
         """
         Argument.__init__(self, value, name)
         return
@@ -55,6 +55,30 @@ class Parameter(Argument):
         return self.__repr__()
 
 # End class Parameter
+
+class ParameterProxy(object):
+    """A Parameter proxy for another parameter. This allows for the same
+    parameter to have multiple names.
+    """
+    
+    # this will let the proxy register as a real Parameter
+    __class__ = Parameter
+
+    def __init__(self, name, par):
+        """Initialization.
+
+        name    --  The name of this ParameterProxy.
+        par     --  The Parameter this is a proxy for.
+        """
+        self.name = name
+        self.par = par
+        return
+
+    def __getattr__(self, name):
+        """Redirect accessors and attributes to the reference Parameter."""
+        return getattr(self.par, name)
+
+        
 
 # version
 __id__ = "$Id$"

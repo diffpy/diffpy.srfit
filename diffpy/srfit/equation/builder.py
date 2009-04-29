@@ -468,6 +468,11 @@ class GeneratorBuilder(EquationBuilder):
         self.literal = gen
         return
 
+    def __call__(self):
+        """Lets a GeneratorBuilder get called like a function."""
+        return self
+
+
 # end class GeneratorBuilder
 
 class OperatorBuilder(EquationBuilder):
@@ -598,6 +603,9 @@ for name in dir(numpy):
     op = getattr(numpy, name)
     if isinstance(op, numpy.ufunc):
         setattr(sys.modules[__name__], name, OperatorBuilder(name))
+
+# Register other functions as well
+setattr(sys.modules[__name__], "sum", wrapFunction("sum", numpy.sum, 1, 1))
 
 # version
 __id__ = "$Id$"

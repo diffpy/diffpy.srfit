@@ -62,6 +62,11 @@ class Calculator(ModelOrganizer):
         self.args = []
         return
 
+    # Make some methods public that were protected
+    addParameter = ModelOrganizer._addParameter
+    newParameter = ModelOrganizer._newParameter
+    removeParameter = ModelOrganizer._removeParameter
+
     # Overload me!
     def __call__(self, x):
         """Evaluate the profile.
@@ -112,7 +117,8 @@ class Calculator(ModelOrganizer):
         clicker --  A Clicker instance for decision making. The clicker is
                     sent by the Evaluator class to indicate its state. If the
                     clicker is greater than or equal to the Calculator's
-                    clicker, then the profile should be re-evaluated.
+                    clicker, or that of the calculation arrays, then the
+                    profile should be re-evaluated.
 
         """
         if self.clicker >= clicker or self.profile.xpar.clicker >= clicker:

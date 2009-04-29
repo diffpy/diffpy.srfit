@@ -77,6 +77,11 @@ class Contribution(ModelOrganizer):
         self._yname = None
         self._dyname = None
         return
+    
+    # Make some methods public that were protected
+    addParameter = ModelOrganizer._addParameter
+    newParameter = ModelOrganizer._newParameter
+    removeParameter = ModelOrganizer._removeParameter
 
     def setProfile(self, profile, xname = None, yname = None, dyname = None):
         """Assign the profile for this contribution.
@@ -193,14 +198,19 @@ class Contribution(ModelOrganizer):
         """Set the residual equation for the Contribution.
 
         eqstr   --  A string representation of the residual. If eqstr is None
-                    (default), then the chiv residual will be used (see the
+                    (default), then the chi2 residual will be used (see the
                     residual method.)
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not part of the Contribution (default
                     {}).
 
-        The quantity that will be optimized is the summed square of the
-        residual equation. Keep that in mind when defining a new equation.
+        Two residuals are preset for convenience, "chiv" and "resv".
+        chiv is defined such that dot(chiv, chiv) = chi^2.
+        resv is defined such that dot(resv, resv) = Rw.
+        You can call on these in your residual equation. Note that the quantity
+        that will be optimized is the summed square of the residual equation.
+        Keep that in mind when defining a new residual or using the built-in
+        ones.
 
         Raises AttributeError if either the Calculator or the Profile is not
         yet defined.
@@ -214,10 +224,20 @@ class Contribution(ModelOrganizer):
         if self.profile is None:
             raise AttributeError("Define the profile first")
 
-        if eqstr is None:
-            eqstr = "(eq - %s)/%s" % (self._yname, self._dyname)
+        # Register some convenient residuals
+        chivstr = "(eq() - %s)/%s" % (self._yname, self._dyname)
+        chiv = equationFromString(chivstr, self._eqfactory)
+        self._eqfactory.registerEquation("chiv", chiv)
 
-        self._reseq = equationFromString(eqstr, self._eqfactory, ns)
+        resvstr = "(eq() - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)
+        resv = equationFromString(resvstr, self._eqfactory)
+        self._eqfactory.registerEquation("resv", resv)
+
+        # Now set the residual to one of these or create a new one
+        if eqstr is None:
+            self._reseq = chiv
+        else:
+            self._reseq = equationFromString(eqstr, self._eqfactory, ns)
 
         return
 
@@ -229,14 +249,18 @@ class Contribution(ModelOrganizer):
 
         The residual is by default an array chiv:
         chiv = (eq() - self.profile.y) / self.profile.dy
+        The value that is optimized is dot(residual, residual).
 
-        This can be changed with the setResidualEquation method.
+        The residual equation can be changed with the setResidualEquation
+        method.
         
         """
-        # Make sure the calculator is working on our profile
+        # Make sure the calculator is working on my profile
         self._calculator.setProfile(self.profile)
         # Assign the calculated profile
         self.profile.ycalc = self._eq()
+        # Note that equations only recompute when their inputs are modified, so
+        # the following will not recompute the equation.
         return self._reseq()
 
 

@@ -27,8 +27,8 @@ class DebyeCalculator(Calculator):
 
     def __init__(self):
         Calculator.__init__(self, "debye")
-        self._newParameter("m", 12)
-        self._newParameter("thetaD", 300)
+        self.newParameter("m", 12)
+        self.newParameter("thetaD", 300)
         return
 
     def __call__(self, x):

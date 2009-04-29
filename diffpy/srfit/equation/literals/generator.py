@@ -17,11 +17,11 @@
 Not all equations can be easily expressed with Arguments, Partitions and
 Operators. The Generator class is designed to provide a lower-level interface
 for equation builders. It is similar to an Operator, except that a Generator
-creates another Literal. This Literal can be created or updated with the
-'generate' method of the Generator. Generators are treated as leaf nodes (like
-Arguments and Partitions) of a Literal tree. They can be dependent on other
-Literals to update their clicker, but those details are up to classes that
-inherit from Generator.
+creates another Literal. This Literal should be defined in the initializer, and
+can be updated with the 'generate' method of the Generator. Generators are
+treated as leaf nodes (like Arguments and Partitions) of a Literal tree. They
+can be dependent on other Literals to update their clicker, but those details
+are up to classes that inherit from Generator.
 """
 
 from .literal import Literal
@@ -37,7 +37,7 @@ class Generator(Literal):
                 are used by the ArgFinder visitor, for example.
     name    --  A name for this Generator.
     clicker --  A Clicker instance for recording change in the Generator.
-    literal --  This is literal created or modified by the generate method.
+    literal --  The literal modified by the generate method (default None).
     """ 
 
     def __init__(self, name = ""):

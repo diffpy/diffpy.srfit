@@ -69,4 +69,13 @@ Clicker = clickerFactory()
 
 from .equationmod import Equation
 
+# Try some optimizations on these classes
+try:
+    import psyco
+    psyco.bind(Clicker)
+    psyco.bind(Equation)
+except ImportError:
+    pass
+
+
 # End of file

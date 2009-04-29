@@ -56,8 +56,8 @@ class Operator(Literal):
                 numpy.sin
     _tags   --  Set of tags for this operator
     _cancombine --  Indicates whether this operator can combine a Partition.
-    _proxy      --  The Argument or Partition that this Operator results in
-                    (used by the Evaluator).
+    _proxy      --  The Argument, Partition or value that this Operator results
+                    in (used by the Evaluator).
     """
 
     def __init__(self, name = None, symbol = None, operation = None,

@@ -40,6 +40,7 @@ See the class documentation for more information.
 from .visitors import Evaluator
 from .visitors import Validator
 from .visitors import ArgFinder
+from .visitors import PartFinder
 from .literals import Generator
 from .literals import Argument
 
@@ -73,7 +74,7 @@ class Equation(Generator):
         root    --  The root node of the Literal tree (optional)
         """
         Generator.__init__(self)
-        self.evaluator = Evaluator()
+        self.evaluator = None
         self.root = None
         self.argdict = {}
         self.literal = Argument()
@@ -106,6 +107,11 @@ class Equation(Generator):
         root.identify(argfinder)
         self.args = list(argfinder.args)
         self.argdict = dict( [(arg.name, arg) for arg in argfinder.args] )
+
+        partfinder = PartFinder()
+        root.identify(partfinder)
+        self.evaluator = Evaluator(parts = bool(partfinder.parts))
+
         self.root = root
         self.clicker.addSubject(root.clicker)
         return

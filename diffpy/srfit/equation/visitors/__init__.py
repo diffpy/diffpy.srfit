@@ -39,6 +39,7 @@ visitor     --  Contains the Visitor base class. The module documentation
 Classes:
 ArgFinder   --  ArgFinder extracts Arguments from a Literal tree.
 Evaluator   --  Evaluates a Literal tree.
+PartFinder  --  PartFinder extracts partitions from a Literal tree.
 Printer     --  A not-so-pretty-printer for an Argument tree. Used primarily
                 for debugging.
 Validator   --  Used to validate a Literal tree.
@@ -50,5 +51,13 @@ from diffpy.srfit.version import __version__
 
 from .argfinder import ArgFinder
 from .printer import Printer
+from .partfinder import PartFinder
 from .evaluator import Evaluator
 from .validator import Validator
+
+# Try to optimize
+try:
+    import psyco
+    psyco.bind(Evaluator)
+except ImportError:
+    pass

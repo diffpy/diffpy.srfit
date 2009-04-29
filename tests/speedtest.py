@@ -101,7 +101,8 @@ def speedTest1():
 
 def speedTest2():
 
-    from diffpy.srfit.equation.builder import makeEquation
+    from diffpy.srfit.equation.builder import EquationFactory
+    factory = EquationFactory()
 
     x = numpy.arange(0, 20, 0.05)
     qsig = 0.01
@@ -111,7 +112,8 @@ def speedTest2():
     eqstr = """\
     A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2))\
     """
-    eq = makeEquation(eqstr, consts = {"x" : x})
+    factory.registerConstant("x", x)
+    eq = factory.makeEquation(eqstr)
     eq.qsig.setValue(qsig)
     eq.sigma1.setValue(sigma)
     eq.sigma2.setValue(sigma)
@@ -129,11 +131,11 @@ def speedTest2():
     choices = range(numargs)
     args = [0.0]*(len(eq.args))
 
-    mutate = 2
+    mutate = 1
 
     # The call-loop
     random.seed()
-    numcalls = 1000
+    numcalls = 10000
     for _i in xrange(numcalls):
         # Mutate values
         n = mutate
@@ -155,6 +157,6 @@ def speedTest2():
     return
 
 if __name__ == "__main__":
-    #speedTest1()
+
     speedTest2()
 

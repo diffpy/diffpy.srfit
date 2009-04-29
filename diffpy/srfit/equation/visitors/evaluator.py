@@ -56,13 +56,26 @@ class Evaluator(Visitor):
     _atroot     --  Flag indicating if we're at the root of the tree.
     """
 
-    def __init__(self):
-        """Initialize."""
+    def __init__(self, parts = True):
+        """Initialize.
+
+        parts   --  A flag indicating whether the Evaluator needs to process
+                    Partitions (default True). Operators are handled
+                    differently in the case that Partitions are in the literal
+                    tree, and this slows down the Evaluator. The PartFinder
+                    visitor can determine if there are Partitions in an
+                    equation, which will let you choose how to set this flag.
+        
+        """
         self.value = 0
         self._clicker = Clicker()
 
         # Are we at the root?
         self._atroot = True
+
+        # Set the onOperator method
+        if not parts:
+            self.onOperator = self.onOperatorNoParts
         return
 
     def click(self):
@@ -94,7 +107,7 @@ class Evaluator(Visitor):
     def onOperator(self, op):
         """Process an Operator node.
 
-        This version deals with a single partition.
+        This version checks for and propagates partitions.
         """
         if op.clicker > self._clicker:
 
@@ -104,6 +117,28 @@ class Evaluator(Visitor):
 
         # Doesn't do anything right now, as this is handled in _createProxy
         # op._proxy.identify(self)
+        self._atroot = False
+        return
+
+    def onOperatorNoParts(self, op):
+        """Process an Operator node.
+
+        This version is used if parts=False in the initilization.
+        """
+        if op.clicker > self._clicker:
+
+            # This evaluates the operator and creates an Argument or Partition
+            # that can be used to get its value.
+            #self._createProxy(op)
+            vals = []
+            for arg in op.args:
+                arg.identify(self)
+                vals.append(self.value)
+
+            op._proxy = op.operation(*vals)
+
+        self.value = op._proxy
+
         self._atroot = False
         return
 

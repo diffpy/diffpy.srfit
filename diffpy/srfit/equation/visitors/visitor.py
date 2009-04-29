@@ -27,6 +27,7 @@ Partition
 
 See the Visitor class for the required methods that each Visitor must overload.
 """
+
 class Visitor(object):
     """Abstract class for all visitors to a Literal tree.
 

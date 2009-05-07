@@ -86,7 +86,7 @@ class Evaluator(Visitor):
 
     def onArgument(self, arg):
         """Process an Argument node."""
-        self.value = arg.value
+        self.value = arg.getValue()
         self._atroot = False
         return
 

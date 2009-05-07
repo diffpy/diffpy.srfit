@@ -66,6 +66,14 @@ class Argument(Literal):
             self.clicker.click()
         return
 
+    def getValue(self):
+        """Get the value of the argument.
+
+        For the sake of easy subclassing, use this rather than the value
+        attribute.
+        """
+        return self.value
+
     def __str__(self):
         if self.name:
             return "Argument(" + self.name + ")"

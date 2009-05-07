@@ -15,7 +15,8 @@
 """Visitor for determining if Literal tree has any Partitions.
 
 The PartFinder has a parts list that is filled with Partitions in the Literal
-tree. It ignores Partitions that hide within Generators.
+tree. It detects Partitions that are created by Generators, provided that the
+Generator has it's literal attribute defined as a Partition.
 
 """ 
 
@@ -36,7 +37,7 @@ class PartFinder(Visitor):
         return
 
     def reset(self):
-        """Reset the argument set."""
+        """Reset the Partition list."""
         self.parts = []
         return
 

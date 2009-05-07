@@ -21,7 +21,7 @@ object from PARK.
 from diffpy.srfit.fitbase import Parameter
 import park
 
-class ParameterProxy(park.Parameter):
+class ParkParameterProxy(park.Parameter):
     """A park.Parameter subclass that serves as a proxy to a SrFit Parameter.
 
     This class is designed to expose fitted variables from a FitModel to the
@@ -48,7 +48,7 @@ class ParameterProxy(park.Parameter):
 
     value = property(_getValue, _setValue)
 
-# End class ParameterProxy
+# End class ParkParameterProxy
 
 class FitnessAdapter(park.Fitness):
     """A park.Fitness subclass that serves as an adapter to a FitModel.
@@ -62,7 +62,7 @@ class FitnessAdapter(park.Fitness):
         # Make a parameter set and add the variables from the FitModel
         self.__parameterset = park.ParameterSet()
         for par in fitmodel._parameters:
-            self.__parameterset.append( ParameterProxy(par) )
+            self.__parameterset.append( ParkParameterProxy(par) )
 
         return
 

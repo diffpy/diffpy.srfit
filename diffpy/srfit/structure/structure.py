@@ -2,12 +2,16 @@
 """Wrappers for interfacing a diffpy.Structure.Structure as a ParameterSet
 with the same hierarchy.
 
+A diffpy.Structure.Structure object is meant to be passed to a Strucure object
+from this module, which can then be used as a ParameterSet. Any change to the
+lattice or existing atoms will be registered with the Structure. Changes in the
+number of atoms will not be recognized. Thus, the diffpy.Structure.Structure
+object should be fully configured before passing it to Structure.
+
 Structure   --  Name required. Contains a Lattice ParameterSet and several
                 Atom parameter sets.
-                Other Attributes:
 Lattice     --  Named "lattice". Contains Parameters "a", "b", "c", "alpha",
                 "beta", "gamma".
-                Other Attributes:
 Atom        --  Named "%s%i" % (element, number). Contains Parameters "x", "y",
                 "z", "occupancy", "B11", "B22", "B33", "B12", "B23", "B13",
                 "B11", "B22", "B33", "B12", "B23", "B13". The asymmetric
@@ -19,24 +23,57 @@ Atom        --  Named "%s%i" % (element, number). Contains Parameters "x", "y",
 __id__ = "$Id$"
 
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
+from diffpy.srfit.fitbase.parameter import ParameterWrapper
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 
-from .wrappers import ParameterWrapper
 
 # Accessor for xyz of atoms
 def _getter(i):
-    def _f(atom):
+
+    def f(atom):
         return atom.xyz[i]
-    return _f
+
+    return f
 
 def _setter(i):
-    def _f(atom, value):
+
+    def f(atom, value):
         atom.xyz[i] = value
         return
-    return _f
+
+    return f
+
 
 class Atom(ParameterSet):
-    """A wrapper for diffpy.Structure.Atom."""
+    """A wrapper for diffpy.Structure.Atom.
+
+    This class derives from ParameterSet.
+
+    Attributes:
+    x (y, z)    --  Atom position in crystal coordinates (Parameter)
+    occupancy   --  Occupancy of the atom on its crystal location (Parameter)
+    U11         --  Anisotropic displacement factor for atom (Parameter)
+    U22         
+    U33 
+    U12         --  Same as U21
+    U21         --  Same as U12
+    U23         --  Same as U32
+    U32         --  Same as U23
+    U13         --  Same as U13
+    U31         --  Same as U31
+    Uiso        --  Isotropic ADP. May be computed from Uij.
+    B11         --  Anisotropic displacement factor for atom, (8 pi**2 U)  (Parameter)
+    B22         
+    B33 
+    B12         --  Same as B21
+    B21         --  Same as B12
+    B23         --  Same as B32
+    B32         --  Same as B23
+    B13         --  Same as B13
+    B31         --  Same as B31
+    Biso        --  Isotropic ADP. May be computed from Uij.
+    
+    """
 
     def __init__(self, atom, name):
         """Initialize
@@ -61,16 +98,17 @@ class Atom(ParameterSet):
         U31 = ParameterProxy("U31", U13)
         U23 = ParameterWrapper(a, "U23", attr = "U23")
         U32 = ParameterProxy("U32", U23)
-        self.addParameter(ParameterWrapper(a, "B11", attr = "B11"))
-        self.addParameter(ParameterWrapper(a, "B22", attr = "B22"))
-        self.addParameter(ParameterWrapper(a, "B33", attr = "B33"))
         self.addParameter(U12)
         self.addParameter(U21)
         self.addParameter(U13)
         self.addParameter(U31)
         self.addParameter(U23)
         self.addParameter(U32)
+        self.addParameter(ParameterWrapper(a, "Uiso", attr = "Uisoequiv"))
         # B
+        self.addParameter(ParameterWrapper(a, "B11", attr = "B11"))
+        self.addParameter(ParameterWrapper(a, "B22", attr = "B22"))
+        self.addParameter(ParameterWrapper(a, "B33", attr = "B33"))
         B12 = ParameterWrapper(a, "B12", attr = "B12")
         B21 = ParameterProxy("B21", B12)
         B13 = ParameterWrapper(a, "B13", attr = "B13")
@@ -83,6 +121,7 @@ class Atom(ParameterSet):
         self.addParameter(B31)
         self.addParameter(B23)
         self.addParameter(B32)
+        self.addParameter(ParameterWrapper(a, "Biso", attr = "Bisoequiv"))
 
         # Other setup
         self.__repr__ = a.__repr__
@@ -94,7 +133,7 @@ class Atom(ParameterSet):
     def _setElem(self, el):
         self.atom.element = el
 
-    element = property(self._getElem, self._setElem, "type of atom")
+    element = property(_getElem, _setElem, "type of atom")
 
 # End class Atom
 
@@ -143,7 +182,7 @@ class Structure(ParameterSet):
             self.addParameterSet(Atom(a, aname))
 
         # other setup
-        self.__stru__ = stru.__stru__
+        self.__repr__ = stru.__repr__
         return
 
 # End class Structure

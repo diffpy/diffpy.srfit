@@ -3,50 +3,92 @@
 
 import unittest
 
-from diffpy.srfit.structure.wrappers import ParameterWrapper
-from diffpy.srfit.fitbase.parameter import Parameter
+import numpy
+
+import diffpy.Structure as ds
+from diffpy.srfit.structure import Structure
 
 
 class TestParameterWrapper(unittest.TestCase):
 
-    def testWrapper(self):
-        """Test the adapter.
+    def testStructure(self):
+        """Test the structure conversion."""
 
-        This adapts a Parameter to the Parameter interface. :)
-        """
-        l = Parameter("l", 3.14)
+        a1 = ds.Atom("Cu", xyz = numpy.array([.0, .1, .2]), Uisoequiv = 0.003)
+        a2 = ds.Atom("Ag", xyz = numpy.array([.3, .4, .5]), Uisoequiv = 0.002)
+        l = ds.Lattice(2.5, 2.5, 2.5, 90, 90, 90)
 
-        # Try Accessor adaptation
-        la = ParameterWrapper(l, "l", getter = Parameter.getValue, setter =
-                Parameter.setValue)
+        dsstru = ds.Structure([a1,a2], l)
+        # Structure makes copies
+        a1 = dsstru[0]
+        a2 = dsstru[1]
 
-        self.assertEqual(l.name, la.name)
-        self.assertEqual(l.getValue(), la.getValue())
+        s = Structure(dsstru, "CuAg")
 
-        # Change the parameter
-        l.setValue(2.3)
-        self.assertEqual(l.getValue(), la.getValue())
+        def _testAtoms():
+            # Check the atoms thoroughly
+            self.assertEquals(a1.element, s.Cu0.element)
+            self.assertEquals(a2.element, s.Ag0.element)
+            self.assertEquals(a1.Uisoequiv, s.Cu0.Uiso.getValue())
+            self.assertEquals(a2.Uisoequiv, s.Ag0.Uiso.getValue())
+            self.assertEquals(a1.Bisoequiv, s.Cu0.Biso.getValue())
+            self.assertEquals(a2.Bisoequiv, s.Ag0.Biso.getValue())
+            for i in xrange(1,4):
+                for j in xrange(i,4):
+                    uijstru = getattr(a1, "U%i%i"%(i,j))
+                    uij = getattr(s.Cu0, "U%i%i"%(i,j)).getValue()
+                    uji = getattr(s.Cu0, "U%i%i"%(j,i)).getValue()
+                    self.assertEquals(uijstru, uij)
+                    self.assertEquals(uijstru, uji)
+                    bijstru = getattr(a1, "B%i%i"%(i,j))
+                    bij = getattr(s.Cu0, "B%i%i"%(i,j)).getValue()
+                    bji = getattr(s.Cu0, "B%i%i"%(j,i)).getValue()
+                    self.assertEquals(bijstru, bij)
+                    self.assertEquals(bijstru, bji)
 
-        # Change the adapter
-        la.setValue(3.2)
-        self.assertEqual(l.getValue(), la.getValue())
+            self.assertEquals(a1.xyz[0], s.Cu0.x.getValue())
+            self.assertEquals(a1.xyz[1], s.Cu0.y.getValue())
+            self.assertEquals(a1.xyz[2], s.Cu0.z.getValue())
+            return
 
-        # Try Attribute adaptation
-        la = ParameterWrapper(l, "l", attr = "value")
+        def _testLattice():
 
-        self.assertEqual(l.name, la.name)
-        self.assertEqual("value", la.attr)
-        self.assertEqual(l.getValue(), la.getValue())
+            # Test the lattice
+            self.assertEquals(dsstru.lattice.a, s.lattice.a.getValue())
+            self.assertEquals(dsstru.lattice.b, s.lattice.b.getValue())
+            self.assertEquals(dsstru.lattice.c, s.lattice.c.getValue())
+            self.assertEquals(dsstru.lattice.alpha, s.lattice.alpha.getValue())
+            self.assertEquals(dsstru.lattice.beta, s.lattice.beta.getValue())
+            self.assertEquals(dsstru.lattice.gamma, s.lattice.gamma.getValue())
 
-        # Change the parameter
-        l.setValue(2.3)
-        self.assertEqual(l.getValue(), la.getValue())
+        _testAtoms()
+        _testLattice()
 
-        # Change the adapter
-        la.setValue(3.2)
-        self.assertEqual(l.getValue(), la.getValue())
+        # Now change some values from the diffpy Structure
+        a1.xyz[1] = 0.123
+        a1.U11 = 0.321
+        a1.B32 = 0.111
+        dsstru.lattice.a = 3.0
+        dsstru.lattice.gamma = 121
+        _testAtoms()
+        _testLattice()
 
+        # Now change values from the srfit Structure
+        s.Cu0.x.setValue(0.456)
+        s.Cu0.U22.setValue(0.441)
+        s.Cu0.B13.setValue(0.550)
+        s.lattice.b.setValue(4.6)
+        s.lattice.alpha.setValue(91.3)
+        _testAtoms()
+        _testLattice()
         return
+
+
+        
+
+
+
+
 
 if __name__ == "__main__":
 

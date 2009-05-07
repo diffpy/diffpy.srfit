@@ -4,7 +4,7 @@
 import unittest
 
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.park.adapters import ParameterProxy
+from diffpy.srfit.park.adapters import ParkParameterProxy
 
 
 class TestParameterProxy(unittest.TestCase):
@@ -12,7 +12,7 @@ class TestParameterProxy(unittest.TestCase):
     def testParameterProxy(self):
         """Test ParamterProxy methods."""
         par = Parameter("test", 3.14)
-        proxy = ParameterProxy(par)
+        proxy = ParkParameterProxy(par)
 
         self.assertEquals("fitted", proxy.status)
 

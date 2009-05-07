@@ -20,6 +20,7 @@ framework.
 """
 
 from numpy import concatenate, sqrt, inf, dot
+from functools import update_wrapper
 
 from .parameter import Parameter
 from .modelorganizer import ModelOrganizer
@@ -51,7 +52,7 @@ class FitModel(ModelOrganizer):
     _parameters     --  A list of variable Parameters.
     _restraintlist  --  A list of restraints form this and all sub-components.
     _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' method.
+                        'restrain' or 'confine' methods.
     _weights        --  The weighing factor for each contribution. This value
                         is multiplied by the residual of the contribution when
                         determining the overall residual.
@@ -336,8 +337,19 @@ class FitModel(ModelOrganizer):
         """
         return [par.getValue() for par in self._parameters]
 
+    def getNames(self):
+        """Get the names of the variables in a list.
+
+        The list is ordered the same as the _parameters list, which is the same
+        as the order in which variables were added.
+        
+        """
+        return [par.name for par in self._parameters]
+
+
     # Overloaded
-    def constrain(self, par, eqstr, ns = {}):
+
+    def constrain(self, par, con, ns = {}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time. The
@@ -346,11 +358,12 @@ class FitModel(ModelOrganizer):
 
         par     --  The Parameter to constrain. It does not need to be a
                     variable.
-        eqstr   --  A string representation of the constraint equation. The
-                    constraint equation must consist of numpy operators and
-                    "known" Parameters. Parameters are known if they are in the
-                    ns argument, or if they have been added to this FitModel
-                    with the 'add' or 'new' methods.
+        con     --  A string representation of the constraint equation or a
+                    parameter to constrain to.  A constraint equation must
+                    consist of numpy operators and "known" Parameters.
+                    Parameters are known if they are in the ns argument, or if
+                    they have been added to this FitModel with the 'add' or
+                    'new' methods.
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not part of the FitModel (default {}).
 
@@ -360,7 +373,7 @@ class FitModel(ModelOrganizer):
         the FitModel and that is not defined in ns.
 
         """
-        ModelOrganizer.constrain(self, par, eqstr, ns)
+        ModelOrganizer.constrain(self, par, con, ns)
         self._doprepare = True
         return
 
@@ -408,6 +421,28 @@ class FitModel(ModelOrganizer):
         """
         res = ModelOrganizer.restrain(self, res, lb, ub, prefactor, power,
                 scaled, ns)
+        self._doprepare = True
+        return res
+
+    def confine(self, res, lb = -inf, ub = inf):
+        """Confine an expression to hard bounds.
+
+        res     --  An equation string or Parameter to restrain.
+        lb      --  The lower bound on the restraint evaluation (default -inf).
+        ub      --  The lower bound on the restraint evaluation (default inf).
+
+        The penalty is infinite if the value of the calculated equation is
+        outside the bounds.
+
+        Raises ValueError if ns uses a name that is already used for a
+        Parameter.
+        Raises ValueError if eqstr depends on a Parameter that is not part of
+        the ModelOrganizer and that is not defined in ns.
+
+        Returns the BoundsRestraint object for use with the 'unrestrain' method.
+
+        """
+        res = ModelOrganizer.confine(self, res, lb, ub)
         self._doprepare = True
         return res
 

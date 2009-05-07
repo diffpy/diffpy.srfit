@@ -161,10 +161,10 @@ def makeModel():
     model.constrain(contribution.debye.thetaD, "abs(tvar)")
 
     # While we're at it, let's keep the offset positive. We could do the
-    # constraint method above, but we'll use a restraint instead. This
+    # constraint method above, but we'll use a bounds restraint instead. This
     # restraint will add infinity to the chi^2 if the offset goes negative.
     from numpy import inf
-    model.restrain(contribution.offset, lb=0, ub=inf)
+    model.confine(contribution.offset, 0, inf)
 
     # Give the model away so it can be used!
     return model

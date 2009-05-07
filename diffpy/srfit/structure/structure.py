@@ -27,14 +27,14 @@ from diffpy.srfit.fitbase.parameterset import ParameterSet
 
 
 # Accessor for xyz of atoms
-def _getter(i):
+def _xyzgetter(i):
 
     def f(atom):
         return atom.xyz[i]
 
     return f
 
-def _setter(i):
+def _xyzsetter(i):
 
     def f(atom, value):
         atom.xyz[i] = value
@@ -83,9 +83,12 @@ class AtomParSet(ParameterSet):
         self.atom = atom
         a = atom
         # x, y, z, occupancy
-        self.addParameter(ParameterWrapper(a, "x", _getter(0), _setter(0)))
-        self.addParameter(ParameterWrapper(a, "y", _getter(1), _setter(1)))
-        self.addParameter(ParameterWrapper(a, "z", _getter(2), _setter(2)))
+        self.addParameter(ParameterWrapper(a, "x", _xyzgetter(0),
+            _xyzsetter(0)))
+        self.addParameter(ParameterWrapper(a, "y", _xyzgetter(1),
+            _xyzsetter(1)))
+        self.addParameter(ParameterWrapper(a, "z", _xyzgetter(2),
+            _xyzsetter(2)))
         self.addParameter(ParameterWrapper(a, "occupancy", attr = "occupancy"))
         # U
         self.addParameter(ParameterWrapper(a, "U11", attr = "U11"))
@@ -136,6 +139,24 @@ class AtomParSet(ParameterSet):
 
 # End class AtomParSet
 
+
+def _latgetter(par):
+
+    def f(lat):
+        return getattr(lat, par)
+
+    return f
+
+def _latsetter(par):
+
+    def f(lat, value):
+        setattr(lat, par, value)
+        lat.setLatPar()
+        return
+
+    return f
+
+
 class LatticeParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Lattice."""
 
@@ -147,12 +168,18 @@ class LatticeParSet(ParameterSet):
         ParameterSet.__init__(self, "lattice")
         self.lattice = lattice
         l = lattice
-        self.addParameter(ParameterWrapper(l, "a", attr = "a"))
-        self.addParameter(ParameterWrapper(l, "b", attr = "b"))
-        self.addParameter(ParameterWrapper(l, "c", attr = "c"))
-        self.addParameter(ParameterWrapper(l, "alpha", attr = "alpha"))
-        self.addParameter(ParameterWrapper(l, "beta", attr = "beta"))
-        self.addParameter(ParameterWrapper(l, "gamma", attr = "gamma"))
+        self.addParameter(ParameterWrapper(l, "a", _latgetter("a"),
+            _latsetter("a")))
+        self.addParameter(ParameterWrapper(l, "b", _latgetter("b"),
+            _latsetter("b")))
+        self.addParameter(ParameterWrapper(l, "c", _latgetter("c"),
+            _latsetter("c")))
+        self.addParameter(ParameterWrapper(l, "alpha", _latgetter("alpha"),
+            _latsetter("alpha")))
+        self.addParameter(ParameterWrapper(l, "beta", _latgetter("beta"),
+            _latsetter("beta")))
+        self.addParameter(ParameterWrapper(l, "gamma", _latgetter("gamma"),
+            _latsetter("gamma")))
 
         # Other setup
         self.__repr__ = l.__repr__

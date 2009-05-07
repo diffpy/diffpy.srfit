@@ -17,7 +17,7 @@
 from numpy import inf
 
 from .constraint import Constraint
-from .restraint import Restraint
+from .restraint import Restraint, BoundsRestraint
 from .parameter import Parameter
 
 from diffpy.srfit.equation.builder import EquationFactory
@@ -51,7 +51,7 @@ class ModelOrganizer(object):
     _parameters     --  A list of parameters that this ModelOrganizer knows
                         about.
     _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' method.
+                        'restrain' or 'confine' methods.
     _organizers     --  A list of ModelOrganizers that this ModelOrganizer
                         knows about.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
@@ -78,29 +78,34 @@ class ModelOrganizer(object):
             raise AttributeError(name)
         return arg
 
-    def constrain(self, par, eqstr, ns = {}):
-        """Constrain a Parameter to an equation.
+    def constrain(self, par, con, ns = {}):
+        """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time. The
-        most recent constraint override all other constraints.
+        most recent constraint override all other user-defined constraints.
+        Built-in constraints override all other constraints.
 
-        par     --  The Parameter to constrain.
-        eqstr   --  A string representation of the constraint equation. The
-                    constraint equation must consist of numpy operators and
-                    "known" Parameters. Parameters are known if they are in the
-                    ns argument, or if they have been added to the _eqfactory.
+        par     --  The Parameter to constrain. It does not need to be a
+                    variable.
+        con     --  A string representation of the constraint equation or a
+                    parameter to constrain to.  A constraint equation must
+                    consist of numpy operators and "known" Parameters.
+                    Parameters are known if they are in the ns argument, or if
+                    they have been added to this FitModel with the 'add' or
+                    'new' methods.
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the ModelOrganizer (default
-                    {}).
+                    in the eqstr, but not part of the FitModel (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
-        Parameter.
+        variable.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the ModelOrganizer and that is not defined in ns.
+        the FitModel and that is not defined in ns.
 
         """
-
-        eq = equationFromString(eqstr, self._eqfactory, ns)
+        if isinstance(con, str):
+            eq = equationFromString(con, self._eqfactory, ns)
+        else:
+            eq = Equation(root = con)
 
         # Make and store the constraint
         con = Constraint()
@@ -146,7 +151,7 @@ class ModelOrganizer(object):
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the ModelOrganizer and that is not defined in ns.
 
-        Returns the Restraint selfect for use with the 'unrestrain' method.
+        Returns the Restraint object for use with the 'unrestrain' method.
 
         """
 
@@ -163,7 +168,7 @@ class ModelOrganizer(object):
         return res
 
     def unrestrain(self, res):
-        """Remove a restraint from the ModelOrganizer.
+        """Remove a Restraint or BoundsRestraint from the ModelOrganizer.
         
         res     --  A Restraint returned from the 'restrain' method.
         """
@@ -171,6 +176,36 @@ class ModelOrganizer(object):
             self._restraints.remove(res)
 
         return
+
+    def confine(self, res, lb = -inf, ub = inf):
+        """Confine an expression to hard bounds.
+
+        res     --  An equation string or Parameter to restrain.
+        lb      --  The lower bound on the restraint evaluation (default -inf).
+        ub      --  The lower bound on the restraint evaluation (default inf).
+
+        The penalty is infinite if the value of the calculated equation is
+        outside the bounds.
+
+        Raises ValueError if ns uses a name that is already used for a
+        Parameter.
+        Raises ValueError if eqstr depends on a Parameter that is not part of
+        the ModelOrganizer and that is not defined in ns.
+
+        Returns the BoundsRestraint object for use with the 'unrestrain' method.
+
+        """
+
+        if isinstance(res, str):
+            eq = equationFromString(res, self._eqfactory, ns)
+        else:
+            eq = Equation(root = res)
+
+        # Make and store the constraint
+        res = BoundsRestraint()
+        res.confine(eq, lb, ub)
+        self._restraints.add(res)
+        return res
 
     def _addParameter(self, par, check=True):
         """Store a Parameter.
@@ -197,7 +232,6 @@ class ModelOrganizer(object):
         self._parameters.append(par)
         self._eqfactory.registerArgument(par.name, par)
         self.clicker.addSubject(par.clicker)
-
         return
 
     def _newParameter(self, name, value, check=True):
@@ -205,7 +239,6 @@ class ModelOrganizer(object):
         p = Parameter(name, value)
         self._addParameter(p, check)
         return
-
 
     def _removeParameter(self, par):
         """Remove a parameter.

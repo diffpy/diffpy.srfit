@@ -23,7 +23,7 @@ from numpy import inf
 from diffpy.srfit.equation import Clicker 
 
 class Restraint(object):
-    """Constraint class.
+    """Restraint class.
 
     Attributes
     eq      --  An equation whose evaluation is compared against the restraint
@@ -54,7 +54,7 @@ class Restraint(object):
 
     def restrain(self, eq, lb = -inf, ub = inf, prefactor = 1, power = 2,
             scaled = False):
-        """Constrain a Parameter according to an Equation.
+        """Restrain an equation to specified bounds.
         
         eq      --  An equation whose evaluation is compared against the
                     restraint bounds.
@@ -89,6 +89,57 @@ class Restraint(object):
 
         return penalty
 
+# End class Restraint
+
+class BoundsRestraint(object):
+    """Restraint-like class for hard bounds.
+
+    This class simplifies restraining a parameter or equation between hard
+    bounds.
+
+    Attributes
+    eq      --  An equation whose evaluation is compared against the restraint
+                bounds.
+    lb      --  The lower bound on the restraint evaluation (default -inf).
+    ub      --  The lower bound on the restraint evaluation (default inf).
+
+    The penalty infinite if the value of the equation is outside the bounds.
+    """
+
+    def __init__(self):
+        """Initialization. """
+        self.eq = None
+        self.lb = -inf
+        self.up = inf
+        return
+
+    def confine(self, eq, lb = -inf, ub = inf):
+        """Confine an equation to specified bounds.
+        
+        eq      --  An equation whose evaluation is compared against the
+                    restraint bounds.
+        lb      --  The lower bound on the restraint evaluation (default -inf).
+        ub      --  The lower bound on the restraint evaluation (default inf).
+        """
+        self.eq = eq
+        self.lb = lb
+        self.ub = ub
+        return
+
+    def penalty(self, w = 1.0):
+        """Calculate the penalty of the restraint.
+
+        w   --  The point-average chi^2 which is optionally used to scale the
+                penalty (default 1.0). This is provided to conform to the
+                Residual interface, but it is otherwise not used.
+        
+        """
+        val = self.eq()
+        if val < self.lb or val > self.ub:
+            return inf
+        return 0
+
+# End class BoundsRestraint
 
 # version
 __id__ = "$Id$"

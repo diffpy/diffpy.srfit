@@ -148,6 +148,12 @@ class TestModelOrganizer(unittest.TestCase):
         # Remove the constraint
         self.m.unconstrain(p1)
         self.assertEquals(0, len(self.m._constraints))
+
+        # Try an straight constraint
+        self.m.constrain(p1, p2)
+        p2.setValue(7)
+        self.m._constraints[p1].update()
+        self.assertEquals(7, p1.getValue())
         return
 
     def testRestrain(self):

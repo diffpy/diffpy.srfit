@@ -59,16 +59,41 @@ class FitnessAdapter(park.Fitness):
         """Initialize with a FitModel instance."""
         park.Fitness.__init__(self)
         self._fitmodel = fitmodel
+        self._parmap = {}
         # Make a parameter set and add the variables from the FitModel
         self.__parameterset = park.ParameterSet()
         for par in fitmodel._parameters:
-            self.__parameterset.append( ParkParameterProxy(par) )
+            parkpar = ParkParameterProxy(par)
+            self.__parameterset.append(parkpar)
+            self._parmap[par] = parkpar
 
+        # We can map bounds on variables to park bounds.
+        self.mapBounds()
         return
 
     def _parameterset(self):
         return self.__parameterset
     parameterset = property(_parameterset)
+
+    def mapBounds(self):
+        """Look for BoundRestraints and use them to set bounds on variables.
+
+        This will speed up some of parks optimizers by explicitly setting
+        bounds on variables.
+        
+        """
+        from diffpy.srfit.fitbase.restraint import BoundsRestraint
+        for res in self._fitmodel._restraints:
+
+            if not isinstance(res, BoundsRestraint):
+                pass
+
+            # Check to see if this bounds restraint on a fitting parameter.
+            if res.eq.root in self._fitmodel._parameters:
+                parkpar = self._parmap[res.eq.root]
+                parkpar.range = (res.lb, res.ub)
+
+        return
 
     def derivs(self):
         """Parameters with analytic derivatives.

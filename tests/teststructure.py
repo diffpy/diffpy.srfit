@@ -25,6 +25,8 @@ class TestParameterWrapper(unittest.TestCase):
 
         s = StructureParSet(dsstru, "CuAg")
 
+        self.assertEquals(s.name, "CuAg")
+
         def _testAtoms():
             # Check the atoms thoroughly
             self.assertEquals(a1.element, s.Cu0.element)
@@ -68,8 +70,7 @@ class TestParameterWrapper(unittest.TestCase):
         a1.xyz[1] = 0.123
         a1.U11 = 0.321
         a1.B32 = 0.111
-        dsstru.lattice.a = 3.0
-        dsstru.lattice.gamma = 121
+        dsstru.lattice.setLatPar(a=3.0, gamma=121)
         _testAtoms()
         _testLattice()
 
@@ -77,10 +78,13 @@ class TestParameterWrapper(unittest.TestCase):
         s.Cu0.x.setValue(0.456)
         s.Cu0.U22.setValue(0.441)
         s.Cu0.B13.setValue(0.550)
+        d = dsstru.lattice.dist(a1.xyz, a2.xyz)
         s.lattice.b.setValue(4.6)
         s.lattice.alpha.setValue(91.3)
         _testAtoms()
         _testLattice()
+        # Make sure the distance changed
+        self.assertNotEquals(d, dsstru.lattice.dist(a1.xyz, a2.xyz))
         return
 
 

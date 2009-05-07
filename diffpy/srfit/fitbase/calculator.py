@@ -45,7 +45,7 @@ class Calculator(ModelOrganizer):
     _parameters     --  A list of parameters that this ModelOrganizer knows
                         about.
     _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' method.
+                        'restrain' or 'confine' methods.
     _organizers     --  A list of ModelOrganizers that this ModelOrganizer
                         knows about.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
@@ -66,6 +66,8 @@ class Calculator(ModelOrganizer):
     addParameter = ModelOrganizer._addParameter
     newParameter = ModelOrganizer._newParameter
     removeParameter = ModelOrganizer._removeParameter
+    addParameterSet = ModelOrganizer._addOrganizer
+    removeParameterSet = ModelOrganizer._removeOrganizer
 
     # Overload me!
     def __call__(self, x):

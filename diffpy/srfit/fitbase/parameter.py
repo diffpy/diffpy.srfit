@@ -28,6 +28,9 @@ class Parameter(Argument):
                 ParameterSet.
     clicker --  A Clicker instance for recording change in the value.
     value   --  The value of the Parameter. Modified with setValue.
+
+    Right now this adds no significant functionality to Argument. It is
+    subclassed for future extensibility.
     """
 
     def __init__(self, name, value = 0):
@@ -38,16 +41,6 @@ class Parameter(Argument):
         """
         Argument.__init__(self, value, name)
         return
-
-    def getValue(self):
-        """Get the value of this Parameter.
-
-        This is provided as an alternative to reading the value from the
-        'value' attribute. Collaborators should interact through this method
-        whenever possible in order to allow for easy extension of the method
-        through inheritance.
-        """
-        return self.value
 
     def __str__(self):
         if self.name:
@@ -114,7 +107,7 @@ class ParameterWrapper(Parameter):
         if [getter, setter].count(None) == 1:
             raise ValueError("Specify both getter and setter")
 
-        Parameter.__init__(self, name)
+
         self.obj = obj
         self.getter = getter
         self.setter = setter
@@ -126,6 +119,9 @@ class ParameterWrapper(Parameter):
         else:
             self.getValue = self.getAttrValue
             self.setValue = self.setAttrValue
+
+        value = self.getValue()
+        Parameter.__init__(self, name, value)
         return
 
     def getAttrValue(self):

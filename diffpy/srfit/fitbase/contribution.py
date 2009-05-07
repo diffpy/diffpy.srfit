@@ -22,6 +22,7 @@ from numpy import concatenate, sqrt, inf, dot
 
 from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.literals import Generator
+from diffpy.srfit.equation.builder import EquationFactory
 
 from .parameter import Parameter
 from .modelorganizer import ModelOrganizer, equationFromString
@@ -57,7 +58,7 @@ class Contribution(ModelOrganizer):
     _eq             --  An Equation instance that generates the residual
                         equation.
     _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' method.
+                        'restrain' or 'confine' methods.
     _xname          --  The name of of the independent variable from the
                         profile (default None). 
     _yname          --  The name of of the observed profile (default None). 
@@ -165,9 +166,10 @@ class Contribution(ModelOrganizer):
     def setEquation(self, eqstr, ns = {}):
         """Set the refinement equation for the Contribution.
 
-        eqstr   --  A string representation of the equation. Any quantity
-                    registered by setProfile and setCalculator can be can be
-                    used in the equation by name.
+        eqstr   --  A string representation of the equation. Any parmetter or
+                    quantity registered by setProfile, setCalculator or
+                    registerFunction, can be can be used in the equation by
+                    name.
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not part of the Contribution (default
                     {}).
@@ -262,6 +264,70 @@ class Contribution(ModelOrganizer):
         # Note that equations only recompute when their inputs are modified, so
         # the following will not recompute the equation.
         return self._reseq()
+
+    def registerFunction(self, name, f, argnames = None, makepars = False):
+        """Register a function with the equation builder.
+
+
+        name        --  The name of the function to be used in equations
+        f           --  The callable to register
+        argnames    --  The names of the arguments to f (list or None). 
+                        If this is None, then the argument names will be
+                        extracted from the function.
+        makepars    --  flag indicating whether to make parameters from the
+                        argnames. If makepars is False (default), then it is
+                        necessary that the parameters are already part of this
+                        object in order to make the function.
+
+        This creates a function useable within equations. The function does not
+        require the arguments to be passed in the equation string, as this will
+        be handled automatically.
+
+        Raises AttributeError if makepars is False and the parameters are not
+        part of this object.
+
+        """
+
+        if argnames is None:
+            argnames = f.func_code.co_varnames
+
+        if makepars:
+            for pname in argnames:
+                self._newParameter(pname, 0)
+
+        # In order to make the function callable without plugging in the
+        # arguments, we will build an Equation instance in another factory and
+        # add the built Equation to our factory.
+        factory = EquationFactory()
+
+        for pname in argnames:
+            par = self._eqfactory.builders.get(pname)
+            if par is None:
+                m = "Function requires unspecified parameters (%s)."%pname
+                raise AttributeError(m)
+
+            factory.registerBuilder(pname, par)
+
+        factory.registerFunction(name, f, len(argnames))
+
+        argstr = ",".join(argnames)
+        eq = equationFromString("%s(%s)"%(name,argstr), factory)
+
+        self._eqfactory.registerEquation(name, eq)
+        return
+
+    def evaluateEquation(self, eqstr):
+        """Evaluate a string equation.
+
+        eqstr   --  A string equation to evaluate. The equation is evaluated at
+                    the current value of the registered parameters. The
+                    equation can be specified as described in the setEquation
+                    method.
+
+        """
+        eq = equationFromString(eqstr, self._eqfactory)
+        return eq()
+
 
 
 # version

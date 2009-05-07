@@ -44,7 +44,7 @@ class ParameterSet(ModelOrganizer):
     _parameters     --  A list of parameters that this ModelOrganizer knows
                         about.
     _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' method.
+                        'restrain' or 'confine' methods.
     _organizers     --  A list of ParameterSets that this ParameterSet knows
                         about.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory

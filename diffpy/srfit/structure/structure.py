@@ -8,16 +8,15 @@ lattice or existing atoms will be registered with the Structure. Changes in the
 number of atoms will not be recognized. Thus, the diffpy.Structure.Structure
 object should be fully configured before passing it to Structure.
 
-Structure   --  Name required. Contains a Lattice ParameterSet and several
-                Atom parameter sets.
-Lattice     --  Named "lattice". Contains Parameters "a", "b", "c", "alpha",
-                "beta", "gamma".
-Atom        --  Named "%s%i" % (element, number). Contains Parameters "x", "y",
-                "z", "occupancy", "B11", "B22", "B33", "B12", "B23", "B13",
-                "B11", "B22", "B33", "B12", "B23", "B13". The asymmetric
-                parameters also have proxies with inverted indices.
-                Other Attributes:
-                element
+StructureParSet --  Name required. Contains a Lattice ParameterSet and several
+                    AtomParSet parameter sets.
+LatticeParSet   --  Named "lattice". Contains Parameters "a", "b", "c",
+                    "alpha", "beta", "gamma".
+AtomParSet      --  Named "%s%i" % (element, number). Contains Parameters "x",
+                    "y", "z", "occupancy", "B11", "B22", "B33", "B12", "B23",
+                    "B13", "B11", "B22", "B33", "B12", "B23", "B13". The
+                    asymmetric parameters also have proxies with inverted
+                    indices.  Other Attributes: element
 
 """
 __id__ = "$Id$"
@@ -44,7 +43,7 @@ def _setter(i):
     return f
 
 
-class Atom(ParameterSet):
+class AtomParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Atom.
 
     This class derives from ParameterSet.
@@ -135,9 +134,9 @@ class Atom(ParameterSet):
 
     element = property(_getElem, _setElem, "type of atom")
 
-# End class Atom
+# End class AtomParSet
 
-class Lattice(ParameterSet):
+class LatticeParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Lattice."""
 
     def __init__(self, lattice):
@@ -159,9 +158,9 @@ class Lattice(ParameterSet):
         self.__repr__ = l.__repr__
         return
 
-# End class Lattice
+# End class LatticeParSet
 
-class Structure(ParameterSet):
+class StructureParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Structure."""
 
     def __init__(self, stru, name):
@@ -171,7 +170,7 @@ class Structure(ParameterSet):
         """
         ParameterSet.__init__(self, name)
         self.stru = stru
-        self.addParameterSet(Lattice(stru.lattice))
+        self.addParameterSet(LatticeParSet(stru.lattice))
 
         cdict = {}
         for a in stru:
@@ -179,11 +178,11 @@ class Structure(ParameterSet):
             i = cdict.get(el, 0)
             aname = "%s%i"%(el,i)
             cdict[el] = i+1
-            self.addParameterSet(Atom(a, aname))
+            self.addParameterSet(AtomParSet(a, aname))
 
         # other setup
         self.__repr__ = stru.__repr__
         return
 
-# End class Structure
+# End class StructureParSet
 

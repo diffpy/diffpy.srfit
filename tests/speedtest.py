@@ -99,7 +99,7 @@ def speedTest1():
     print "regular", total2
     print "Ratio (lazy/regular)", total1/total2
 
-def speedTest2():
+def speedTest2(mutate = 2):
 
     from diffpy.srfit.equation.builder import EquationFactory
     factory = EquationFactory()
@@ -131,11 +131,9 @@ def speedTest2():
     choices = range(numargs)
     args = [0.0]*(len(eq.args))
 
-    mutate = 1
-
     # The call-loop
     random.seed()
-    numcalls = 10000
+    numcalls = 1000
     for _i in xrange(numcalls):
         # Mutate values
         n = mutate
@@ -149,7 +147,8 @@ def speedTest2():
         tnpy += timeFunction(f, *args)
         teq += timeFunction(eq, *args)
 
-    print "Average call time (%i calls):" % numcalls
+    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
+            mutate)
     print "numpy: ", tnpy/numcalls
     print "equation: ", teq/numcalls
     print "ratio: ", teq/tnpy
@@ -158,5 +157,8 @@ def speedTest2():
 
 if __name__ == "__main__":
 
-    speedTest2()
+    speedTest2(1)
+    speedTest2(2)
+    speedTest2(3)
+    speedTest2(4)
 

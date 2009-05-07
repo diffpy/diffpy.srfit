@@ -5,25 +5,25 @@ import unittest
 
 import numpy
 
-import diffpy.Structure as ds
-from diffpy.srfit.structure import Structure
+from diffpy.Structure import Atom, Lattice, Structure
+from diffpy.srfit.structure import StructureParSet
 
 
 class TestParameterWrapper(unittest.TestCase):
 
-    def testStructure(self):
+    def testStructureParSet(self):
         """Test the structure conversion."""
 
-        a1 = ds.Atom("Cu", xyz = numpy.array([.0, .1, .2]), Uisoequiv = 0.003)
-        a2 = ds.Atom("Ag", xyz = numpy.array([.3, .4, .5]), Uisoequiv = 0.002)
-        l = ds.Lattice(2.5, 2.5, 2.5, 90, 90, 90)
+        a1 = Atom("Cu", xyz = numpy.array([.0, .1, .2]), Uisoequiv = 0.003)
+        a2 = Atom("Ag", xyz = numpy.array([.3, .4, .5]), Uisoequiv = 0.002)
+        l = Lattice(2.5, 2.5, 2.5, 90, 90, 90)
 
-        dsstru = ds.Structure([a1,a2], l)
+        dsstru = Structure([a1,a2], l)
         # Structure makes copies
         a1 = dsstru[0]
         a2 = dsstru[1]
 
-        s = Structure(dsstru, "CuAg")
+        s = StructureParSet(dsstru, "CuAg")
 
         def _testAtoms():
             # Check the atoms thoroughly
@@ -73,7 +73,7 @@ class TestParameterWrapper(unittest.TestCase):
         _testAtoms()
         _testLattice()
 
-        # Now change values from the srfit Structure
+        # Now change values from the srfit StructureParSet
         s.Cu0.x.setValue(0.456)
         s.Cu0.U22.setValue(0.441)
         s.Cu0.B13.setValue(0.550)

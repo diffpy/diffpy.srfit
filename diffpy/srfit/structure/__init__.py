@@ -27,7 +27,7 @@ Methods:
 # package version
 from diffpy.srfit.version import __version__
 
-from .structure import Structure
+from .structure import StructureParSet
 
 
 # End of file

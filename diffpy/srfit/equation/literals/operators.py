@@ -205,6 +205,36 @@ class NegationOperator(Operator):
         self.operation = numpy.negative
         return
 
+class ConvolutionOperator(Operator):
+    """numpy.convolve operator."""
+
+    def __init__(self, mode = 'same'):
+        """Initialization.
+
+        mode    --  The mode to send to numpy.convolve (default 'same').
+
+        """
+        Operator.__init__(self)
+        self.name = "convolve"
+        self.symbol = "convolve"
+
+        from functools import partial
+        self.operation = partial(numpy.convolve, mode = mode)
+        return
+
+class SumOperator(Operator):
+    """numpy.sum operator."""
+
+    def __init__(self):
+        """Initialization."""
+        Operator.__init__(self)
+        self.name = "sum"
+        self.symbol = "sum"
+        self.nin = 1
+        self.nout = 1
+        self.operation = numpy.sum
+        return
+
 class UFuncOperator(Operator):
     """A operator wrapper around a numpy ufunc.
 

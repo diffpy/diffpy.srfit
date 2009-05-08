@@ -597,15 +597,40 @@ def wrapGenerator(name, gen):
     genbuilder = GeneratorBuilder(gen)
     return genbuilder
 
-# Export all numpy operators as OperatorBuilder instances in the module
-# namespace.
-for name in dir(numpy):
-    op = getattr(numpy, name)
-    if isinstance(op, numpy.ufunc):
-        setattr(sys.modules[__name__], name, OperatorBuilder(name))
+def __wrapNumpyOperators():
+    """Export all numpy operators as OperatorBuilder instances in the module
+    namespace.
+    """
+    for name in dir(numpy):
+        op = getattr(numpy, name)
+        if isinstance(op, numpy.ufunc):
+            setattr(sys.modules[__name__], name, OperatorBuilder(name))
+__wrapNumpyOperators()
 
 # Register other functions as well
-setattr(sys.modules[__name__], "sum", wrapFunction("sum", numpy.sum, 1, 1))
+def __wrapSrFitOperators():
+    """Export all non-base operators from the
+    diffpy.srfit.equation.literals.operators module as OperatorBuilder
+    instances in the module namespace.
+    """
+    opmod = literals.operators
+    for opname in dir(opmod):
+        opclass = getattr(opmod, opname)
+        isop = False
+        try:
+            isop = issubclass(opclass, opmod.Operator)
+        except TypeError:
+            continue
+        if isop \
+            and opclass is not opmod.Operator \
+            and opclass is not opmod.UFuncOperator:
+
+            op = opclass()
+            setattr(sys.modules[__name__], op.name, 
+                    OperatorBuilder(op.name, op))
+
+    return
+__wrapSrFitOperators()
 
 # version
 __id__ = "$Id$"

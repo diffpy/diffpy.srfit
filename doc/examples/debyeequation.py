@@ -276,14 +276,10 @@ def makeModel(strufile, datname):
     # We need to add the Structure we want to fit to the contribution.
     contribution.setStructure(strufile)
 
-    # We want to add an arbitrary background. We'll assume we need 10
-    # coefficients.
-    for i in xrange(10):
-        contribution.newParameter("b%i"%i, 0)
-
-    # We also need a scale factor
+    # We need a scale factor
     contribution.newParameter("scale", 1)
 
+    # We want a background as well.
     # Write the equation for the background. We will write a python function
     # for this and add it to the contribution. As long as we use the same names
     # as things we have already defined (q for the x-name, b0, b1, ... for the
@@ -292,10 +288,22 @@ def makeModel(strufile, datname):
         return b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 +\
                 b6*q**6 + b7*q**7 +b8*q**8 + b9*q**9
 
-    contribution.registerFunction("bkgd", bkgd)
+    contribution.registerFunction("bkgd", bkgd, makepars = True)
 
-    # Now we can incorporate the scale and bkgd into our calculation
-    contribution.setEquation("scale * I() + bkgd()")
+    # We might as well broaden the signal with a gaussian as well.
+    pi = numpy.pi
+    exp = numpy.exp
+    def gaussian(q, q0, width):
+        return 1/(width*(2*pi)**0.5) * exp(-0.5 * ((q-q0)/width)**2)
+
+    contribution.registerFunction("gaussian", gaussian, makepars = True)
+    # Center the gaussian
+    contribution.q0.setValue(x[len(x)/2])
+
+    # Now we can incorporate the scale and bkgd into our calculation. We also
+    # convolve the signal with the gaussian to broaden it. Note that the data
+    # has not been broadened.
+    contribution.setEquation("scale * convolve(gaussian, I) + bkgd")
 
     # Make a FitModel where we can create variables, constraints and
     # restraints. If we had multiple profiles to fit simultaneously, the
@@ -317,8 +325,10 @@ def makeModel(strufile, datname):
     model.addVar(contribution.b8, 0)
     model.addVar(contribution.b9, 0)
 
-    # We also want to adjust the scale
+
+    # We also want to adjust the scale and the convolution width
     model.addVar(contribution.scale, 1)
+    model.addVar(contribution.width, 0.01)
 
 
     # We can also refine structural parameters. 
@@ -329,6 +339,11 @@ def makeModel(strufile, datname):
     # that.
     model.constrain(structure.lattice.b, a)
     model.constrain(structure.lattice.c, a)
+
+    # Lets keeps some things positive
+    model.confine(model.a, 0, numpy.inf)
+    model.confine(model.scale, 0, numpy.inf)
+    model.confine(model.width, 0, numpy.inf)
 
     # Give the model away so it can be used!
     return model
@@ -367,10 +382,12 @@ def scipyOptimize(strufile):
     I = model.C60.profile.y
     Icalc = model.C60.profile.ycalc
     bkgd = model.C60.evaluateEquation("bkgd()")
+    Islim = model.C60.evaluateEquation("scale * sum(gaussian) * I + bkgd")
 
     import pylab
     pylab.plot(q,I,'o',label="I(Q) Data")
     pylab.plot(q,Icalc,label="I(Q) Fit")
+    pylab.plot(q,Islim,label="I(Q) Fit w/o broadening")
     pylab.plot(q,bkgd,label="Bkgd. Fit")
     pylab.xlabel("$Q (\AA^{-1})$")
     pylab.ylabel("Intensity (arb. units)")
@@ -431,12 +448,14 @@ def parkOptimize(strufile):
     I = model.C60.profile.y
     Icalc = model.C60.profile.ycalc
     bkgd = model.C60.evaluateEquation("bkgd()")
+    Islim = model.C60.evaluateEquation("scale * sum(gaussian) * I + bkgd")
 
     import pylab
     pylab.plot(q,I,'o',label="I(Q) Data")
     pylab.plot(q,Icalc,label="I(Q) Fit")
+    pylab.plot(q,Islim,label="I(Q) Fit w/o broadening")
     pylab.plot(q,bkgd,label="Bkgd. Fit")
-    pylab.xlabel("$Q (\AA^{-1})")
+    pylab.xlabel("$Q (\AA^{-1})$")
     pylab.ylabel("Intensity (arb. units)")
     pylab.legend(loc=1)
 
@@ -448,7 +467,7 @@ if __name__ == "__main__":
 
     print "Optimize with scipy"
     scipyOptimize("data/C60.stru")
-    print "Optimize with park"
-    parkOptimize("data/C60.stru")
+    #print "Optimize with park"
+    #parkOptimize("data/C60.stru")
 
 # End of file

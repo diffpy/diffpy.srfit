@@ -274,8 +274,9 @@ class Contribution(ModelOrganizer):
         argnames    --  The names of the arguments to f (list or None). 
                         If this is None, then the argument names will be
                         extracted from the function.
-        makepars    --  flag indicating whether to make parameters from the
-                        argnames. If makepars is False (default), then it is
+        makepars    --  Flag indicating whether to make parameters from the
+                        argnames if they don't already appear in the
+                        Contribution. If makepars is False (default), then it is
                         necessary that the parameters are already part of this
                         object in order to make the function.
 
@@ -289,11 +290,13 @@ class Contribution(ModelOrganizer):
         """
 
         if argnames is None:
-            argnames = f.func_code.co_varnames
+            argnames = list(f.func_code.co_varnames)
+            argnames = argnames[:f.func_code.co_argcount]
 
         if makepars:
             for pname in argnames:
-                self._newParameter(pname, 0)
+                if pname not in self._eqfactory.builders:
+                    self._newParameter(pname, 0)
 
         # In order to make the function callable without plugging in the
         # arguments, we will build an Equation instance in another factory and

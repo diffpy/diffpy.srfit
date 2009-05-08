@@ -39,11 +39,12 @@ class Contribution(ModelOrganizer):
     clicker         --  A Clicker instance for recording changes in the
                         Parameters or the residual components.
     name            --  A name for this Contribution.
+    calculator      --  A Calculator instance for generating a signal
+                        (optional). Contributions can share a Calculator
+                        instance. If a calculator is not defined, the equation
+                        to refine must be set with the setEquation method.
     profile         --  A Profile that holds the measured (and calcuated)
                         signal.
-    _calcname       --  A name for the Calculator.
-    _calculator     --  A Calculator instance for generating a signal.
-                        Contributions can share a Calculator instance.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
@@ -72,7 +73,7 @@ class Contribution(ModelOrganizer):
         self._eq = None
         self._reseq = None
         self.profile = None
-        self._calculator = None
+        self.calculator = None
         self._calcname = None
         self._xname = None
         self._yname = None
@@ -127,7 +128,7 @@ class Contribution(ModelOrganizer):
         self._dyname = dyname
         self._eqfactory.registerArgument(dyname, self.profile.dypar)
 
-        if self._calculator is not None:
+        if self.calculator is not None:
             self.setResidualEquation()
         return
 
@@ -136,20 +137,20 @@ class Contribution(ModelOrganizer):
 
         The Calculator is given a name so that it can be used as part of the
         equation that is used to generate the signal. This can be different
-        from the name of the Calculator for attribute purposes. This resets the
-        current equation and residual.
+        from the name of the Calculator for attribute purposes. 
+        
+        Calling setCalculator sets the equation to call the calculator and
+        resets the residual.
 
         calc    --  A Calculator instance
         name    --  A name for the calculator. If name is None (default), then
                     the Calculator's name attribute will be used.
 
         """
-        self._calculator = calc
+        self.calculator = calc
 
         if name is None:
             name = calc.name
-
-        self._calcname = name
 
         # Let the ModelOrganizer structure know of the calculator
         self._addOrganizer(calc)
@@ -163,37 +164,43 @@ class Contribution(ModelOrganizer):
         self.setEquation(name)
         return
 
-    def setEquation(self, eqstr, ns = {}):
+    def setEquation(self, eqstr, ns = {}, buildargs = True):
         """Set the refinement equation for the Contribution.
 
-        eqstr   --  A string representation of the equation. Any parmetter or
-                    quantity registered by setProfile, setCalculator or
-                    registerFunction, can be can be used in the equation by
-                    name.
+        eqstr   --  A string representation of the equation. Any Parameter
+                    registered by addParameter or setProfile, or function
+                    registered by setCalculator or registerFunction  can be can
+                    be used in the equation by name.
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not part of the Contribution (default
                     {}).
+        buildargs   --  A flag indicating whether missing Parameters can be
+                    created by the Factory (default True). If False, then the a
+                    ValueError will be raised if there are undefined arguments
+                    in the eqstr. 
 
         The equation will be usable within setResidualEquation by calling
-        "eq()". Calling this function resets the residual equation.
+        "eq()" or "eq". 
+        
+        Calling setEquation resets the residual equation.
 
-        Raises AttributeError if the Calculator is not yet defined.
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the Contribution and that is not defined in ns.
-        """
-        if self._calculator is None:
-            raise AttributeError("Define the calculator first")
 
-        self._eq = equationFromString(eqstr, self._eqfactory, ns)
+        """
+        self._eq = equationFromString(eqstr, self._eqfactory, ns, buildargs)
+
+        # Register any new parameters
+        for par in self._eqfactory.newargs:
+            self.addParameter(par)
 
         # Now register this with the equation factory
         self._eqfactory.registerEquation("eq", self._eq)
 
-        if self._calculator is not None and self.profile is not None:
+        if self.profile is not None:
             self.setResidualEquation()
-
         return
 
     def setResidualEquation(self, eqstr = None, ns = {}):
@@ -214,15 +221,12 @@ class Contribution(ModelOrganizer):
         Keep that in mind when defining a new residual or using the built-in
         ones.
 
-        Raises AttributeError if either the Calculator or the Profile is not
-        yet defined.
+        Raises AttributeError if the Profile is not yet defined.
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the Contribution and that is not defined in ns.
         """
-        if self._calculator is None:
-            raise AttributeError("Define the calculator first")
         if self.profile is None:
             raise AttributeError("Define the profile first")
 
@@ -246,8 +250,9 @@ class Contribution(ModelOrganizer):
     def residual(self):
         """Calculate the residual for this contribution.
 
-        It is assumed that all parameters have been assigned their most current
-        values by the FitModel.
+        When this method is called, it is assumed that all parameters have been
+        assigned their most current values by the FitModel. This will be the
+        case when being called as part of a FitModel refinement.
 
         The residual is by default an array chiv:
         chiv = (eq() - self.profile.y) / self.profile.dy
@@ -257,50 +262,95 @@ class Contribution(ModelOrganizer):
         method.
         
         """
-        # Make sure the calculator is working on my profile
-        self._calculator.setProfile(self.profile)
+        # If we have a calculator, make sure it is working on my profile
+        if self.calculator is not None:
+            self.calculator.setProfile(self.profile)
         # Assign the calculated profile
         self.profile.ycalc = self._eq()
         # Note that equations only recompute when their inputs are modified, so
         # the following will not recompute the equation.
         return self._reseq()
 
-    def registerFunction(self, name, f, argnames = None, makepars = False):
+    def registerFunction(self, f, name = None, argnames = None, makepars = True):
         """Register a function with the equation builder.
 
+        This creates a function useable within setEquation and
+        setResidualEquation. The function does not require the arguments to be
+        passed in the equation string, as this will be handled automatically.
 
-        name        --  The name of the function to be used in equations
-        f           --  The callable to register
+        f           --  The callable to register.
+        name        --  The name of the function to be used in equations. If
+                        this is None (default), the method will try to
+                        determine the name of the function automatically.
         argnames    --  The names of the arguments to f (list or None). 
                         If this is None, then the argument names will be
                         extracted from the function.
         makepars    --  Flag indicating whether to make parameters from the
                         argnames if they don't already appear in the
-                        Contribution. If makepars is False (default), then it is
+                        Contribution (default True). Parameters created in this
+                        way are added to the contribution using the
+                        newParameter method.  If makepars is False , then it is
                         necessary that the parameters are already part of this
                         object in order to make the function.
 
-        This creates a function useable within equations. The function does not
-        require the arguments to be passed in the equation string, as this will
-        be handled automatically.
+        Note that name and argnames can be extracted from regular python
+        functions (of type 'function'), bound class methods and callable
+        classes.
 
+        Raises TypeError if name or argnames cannot be automatically
+        extracted.
+        Raises TypeError if an automatically extracted name is '<lambda>'.
         Raises AttributeError if makepars is False and the parameters are not
         part of this object.
 
         """
 
-        if argnames is None:
-            argnames = list(f.func_code.co_varnames)
-            argnames = argnames[:f.func_code.co_argcount]
+        # Extract the name and argnames if necessary
+        if name is None or argnames is None:
+
+            import inspect
+
+            func_code = None
+
+            # This will let us offset the argument list to eliminate 'self'
+            offset = 0
+
+            # check regular functions
+            if inspect.isfunction(f):
+                func_code = f.func_code
+            # check class method
+            elif inspect.ismethod(f):
+                    func_code = f.im_func.func_code
+                    offset = 1
+            # ehck functor
+            elif hasattr(f, "__call__") and hasattr(f.__call__, 'im_func'):
+                    func_code = f.__call__.im_func.func_code
+                    offset = 1
+            else:
+                m = "Cannot extract name or argnames"
+                raise TypeError(m)
+
+            # Extract the name
+            if name is None:
+                name = func_code.co_name
+                if name == '<lambda>':
+                    m = "You must supply a name name for a lambda function"
+                    raise TypeError(m)
+
+            # Extract the arguments
+            if argnames is None:
+                argnames = list(func_code.co_varnames)
+                argnames = argnames[offset:func_code.co_argcount]
 
         if makepars:
             for pname in argnames:
                 if pname not in self._eqfactory.builders:
-                    self._newParameter(pname, 0)
+                    self.newParameter(pname, 0)
 
         # In order to make the function callable without plugging in the
-        # arguments, we will build an Equation instance in another factory and
-        # add the built Equation to our factory.
+        # arguments, we will build an Equation instance and register it. We'll
+        # build it in another EquationFactory so we don't clutter up our
+        # namespace.
         factory = EquationFactory()
 
         for pname in argnames:

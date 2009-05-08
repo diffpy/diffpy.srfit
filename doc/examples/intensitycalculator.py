@@ -12,9 +12,17 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of a calculator for calculating diffraction intensity using the
-debye equation and the diffpy.Structure adapter.
+"""Example of using Calculators in FitModels.
 
+This is an example of building a FitModel in order to fit theoretical intensity
+data. To understand the basics of FitModels, see the debyemodel.py.
+
+The IntensityCalculator class is an example of a Calculator that can be used by
+a Contribution to help generate a signal.
+
+The makeModel function shows how to build a FitModel that uses the
+IntensityCalculator.  The scipyOptimize and parkOptimize functions show two
+different ways of refining the model, using scipy and park, respectively.
 """
 
 import os
@@ -26,10 +34,24 @@ from diffpy.srfit.park import FitnessAdapter
 from diffpy.srfit.structure import StructureParSet
 
 class IntensityCalculator(Calculator):
-    """A class for calculating adps from the Debye model."""
+    """A class for calculating intensity using the Debye equation.
 
-    def __init__(self):
-        Calculator.__init__(self, "intensity")
+    Calculating intensity from a structure is difficult in general. This class
+    takes a diffpy.Structure.Structure object and from that calculates a
+    theoretical intensity signal. Unlike the example in debyemodel.py, the
+    intensity calculator is not simple, so we must define this Calculator to
+    help us interface with a FitModel.
+    
+    """
+
+    def __init__(self, name):
+        """Define our calculator.
+
+        We need a handle to the diffpy.Structure.Structure object (self.stru).
+        We will also keep count of how many times the function has been called
+        (self.count).
+        """
+        Calculator.__init__(self, name)
         # We need a handle to the structure for it for the calculation.
         self.stru = None
         # Count the calls
@@ -40,23 +62,32 @@ class IntensityCalculator(Calculator):
         """Set the structure used in the calculation.
 
         This will create the refinement parameters using the Structure adapter
-        from diffpy.srfit.structure. Any changes made by the optimizer to the
-        parameters go through the adapter, which propagates the changes to the
-        diffpy.Structure.Structure object.
+        from diffpy.srfit.structure. Thus, the calculator will have its own
+        parameters, each of which will be a proxy for some part of the
+        structure. The parameters will be accessible by name under the
+        'structure' attribute of this calculator.
+        
         """
+        # Load the structure from file
         from diffpy.Structure import Structure
         self.stru = Structure()
         self.stru.read(strufile)
+
+        # Create a custom parameter set designed to interface with
+        # diffpy.Structure.Structure objects
         parset = StructureParSet(self.stru, "structure")
+        # Put this ParameterSet in the Calculator.
         self.addParameterSet(parset)
         return
 
     def __call__(self, q):
         """Calculate the intensity.
 
-        By the time this function is called the structure has been updated by
-        the optimizer. Thus, we need only call iofq with the internal structure
-        object.
+        This Calculator will be used in a contribution equation that will be
+        optimized to fit some data.  By the time this function is evaluated,
+        the structure has been updated by the optimizer via the ParameterSet
+        defined in setStructure. Thus, we need only call iofq with the internal
+        structure object.
 
         """
         self.count += 1
@@ -64,30 +95,6 @@ class IntensityCalculator(Calculator):
         return iofq(self.stru, q)
 
 # End class IntensityCalculator
-
-class IntensityContribution(Contribution):
-    """A Contribution that uses the IntensityCalculator."""
-
-    def __init__(self, name):
-        """Auto-initialize the calculator."""
-        Contribution.__init__(self, name)
-        # We're naming the calculator "I". This is the name that will be used
-        # in equations. If we left of the "I", then the name would default to
-        # the name defined in the IntensityCalculator class, which is
-        # "intensity".
-        self.setCalculator(IntensityCalculator(), "I")
-        return
-
-    def setStructure(self, strufile):
-        """Set the structure used in the calculation.
-
-        Calls the calculator method of the same name.
-        
-        """
-        self.intensity.setStructure(strufile)
-        return
-
-# End class IntensityContribution
 
 def iofq(S, q):
     """Calculate I(Q) (X-ray) using the Debye Equation.
@@ -195,23 +202,18 @@ def getXScatteringFactor(el, q):
     except ImportError:
         return 1
 
-####### Example Code
-
 def makeData(strufile, q, datname):
     """Make some fake data and save it to file.
 
-    Use the iofq function to make some data. This adds noise and a background
-    to the data and saves it to the specified filename. It only generates the
-    data if it does not exist.
+    Use the iofq function to make some data. This broadens the peaks, adds
+    noise and a background to the data and saves it to the specified filename.
+    It only generates the data if it does not exist.
 
     strufile--  A filename holding the sample structure
     q       --  The q-range to calculate over.
     datname --  The name of the file we're saving to.
 
     """
-
-    import os.path
-    if os.path.exists(datname): return
 
     # Expand the lattice by +/= 5%
     from diffpy.Structure import Structure
@@ -222,6 +224,13 @@ def makeData(strufile, q, datname):
     a = (1 + expand/100) * S.lattice.a
     S.lattice.setLatPar(a, a, a)
     y = iofq(S, q)
+
+    # We want to broaden the peaks as well. This simulates instrument effects.
+    sig = 0.2
+    q0 = q[len(q)/2]
+    g = numpy.exp(-0.5*((q-q0)/sig)**2)
+
+    y = numpy.convolve(y, g, mode='same')/sum(g)
 
     # Add a polynomial background.
     bkgd = (q + 1)**2 * (1.5*max(q) - q)**5
@@ -247,16 +256,17 @@ def makeData(strufile, q, datname):
     numpy.savetxt(datname, zip(q, y, u))
     return
 
-def makeModel(strufile, datname):
-    """Create a model that encompasses a profile calculator and an experimental
-    profile. The model can then be optimized using an external optimizer.
+####### Example Code
 
-    We need to fit a background to I(Q), but our calculator doesn't have one.
-    We can easily expand the calculator by adding the background we want to
-    fit.
+def makeModel(strufile, datname):
+    """Create a model that uses the IntensityCalculator.
+
+    This will create a Contribution that uses the IntensityCalculator,
+    associate this with a Profile, and use this to define a FitModel.
 
     """
 
+    ## The Profile
     # Create a Profile. This will hold the experimental and calculated signal.
     profile = Profile()
 
@@ -264,46 +274,50 @@ def makeModel(strufile, datname):
     x, y, u = numpy.loadtxt(datname, unpack=True)
     profile.setObservedProfile(x, y, u)
 
-
-    # Create the Contribution, that will associate the profile with the
-    # Calculator. We have created a custom IntensityContribution above that
-    # performs half of the association for us. We also want to tell the
-    # contribution to name the x-variable of the profile "q", so we can use it
-    # in equations with this name.
-    contribution = IntensityContribution("C60")
+    ## The Calculator
+    # Create an IntensityCalculator named "I". This will be the name we use to
+    # refer to the calculator from within the Contribution equation.  We also
+    # need to load the model structure we're using.
+    calculator = IntensityCalculator("I")
+    calculator.setStructure(strufile)
+    
+    ## The Contribution
+    # Create a Contribution, that will associate the Profile with the
+    # Calculator.  The calculator will be accessible as an attribute of the
+    # Contribution by its name ("I"), or simply by "calculator".  We also want
+    # to tell the contribution to name the x-variable of the profile "q", so we
+    # can use it in equations with this name.
+    contribution = Contribution("C60")
+    contribution.setCalculator(calculator)
     contribution.setProfile(profile, xname = "q")
 
-    # We need to add the Structure we want to fit to the contribution.
-    contribution.setStructure(strufile)
+    # Now we're ready to define the contribution equation. We need to modify
+    # the Calcultor, and we'll do that from within the Contribution eqation for
+    # the sake of instruction. We want to modify the calculator in three ways.
+    # We need a scale factor, a polynomial background, and we want to broaden
+    # the peaks.
 
-    # We need a scale factor
-    contribution.newParameter("scale", 1)
-
-    # We want a background as well.
-    # Write the equation for the background. We will write a python function
-    # for this and add it to the contribution. As long as we use the same names
-    # as things we have already defined (q for the x-name, b0, b1, ... for the
-    # coefficients), then the contribution will be able to use it.
+    # We can define the background as a function and tell the contribution
+    # about it.
     def bkgd(q, b0, b1, b2, b3, b4, b5, b6, b7, b8, b9):
         return b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 +\
                 b6*q**6 + b7*q**7 +b8*q**8 + b9*q**9
 
-    contribution.registerFunction("bkgd", bkgd, makepars = True)
+    contribution.registerFunction(bkgd)
 
-    # We might as well broaden the signal with a gaussian as well.
+    # We will create the broadening function in the same way.
     pi = numpy.pi
     exp = numpy.exp
     def gaussian(q, q0, width):
         return 1/(width*(2*pi)**0.5) * exp(-0.5 * ((q-q0)/width)**2)
 
-    contribution.registerFunction("gaussian", gaussian, makepars = True)
+    contribution.registerFunction(gaussian)
     # Center the gaussian
     contribution.q0.setValue(x[len(x)/2])
 
     # Now we can incorporate the scale and bkgd into our calculation. We also
-    # convolve the signal with the gaussian to broaden it. Note that the data
-    # has not been broadened.
-    contribution.setEquation("scale * convolve(gaussian, I) + bkgd")
+    # convolve the signal with the gaussian to broaden it.
+    contribution.setEquation("scale * convolve(I, gaussian) + bkgd")
 
     # Make a FitModel where we can create variables, constraints and
     # restraints. If we had multiple profiles to fit simultaneously, the
@@ -328,11 +342,10 @@ def makeModel(strufile, datname):
 
     # We also want to adjust the scale and the convolution width
     model.addVar(contribution.scale, 1)
-    model.addVar(contribution.width, 0.01)
-
+    model.addVar(contribution.width, 0.1)
 
     # We can also refine structural parameters. 
-    structure = contribution.intensity.structure
+    structure = calculator.structure
     a = structure.lattice.a
     model.addVar(a)
     # We want to allow for isotropic expansion, so we'll make constraints for
@@ -340,7 +353,7 @@ def makeModel(strufile, datname):
     model.constrain(structure.lattice.b, a)
     model.constrain(structure.lattice.c, a)
 
-    # Lets keeps some things positive
+    # Lets keeps the lattice constant, scale and broadening width positive.
     model.confine(model.a, 0, numpy.inf)
     model.confine(model.scale, 0, numpy.inf)
     model.confine(model.width, 0, numpy.inf)
@@ -360,13 +373,47 @@ def scipyOptimize(strufile):
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
     # scipy.
     from scipy.optimize.minpack import leastsq
-    from numpy import dot
+    print "Fit using scipy's LM optimizer"
     out = leastsq(model.residual, model.getValues(), full_output=1)
+
+    displayResults(model)
+
+    return
+
+def parkOptimize(strufile):
+    """Optimize the model created above using PARK."""
+
+    # Make the data and the model
+    q = numpy.arange(1, 20, 0.05)
+    makeData(strufile, q, "C60.iq")
+
+    model = makeModel(strufile, "C60.iq")
+
+    # We have to turn the model into something that PARK can use. In PARK, a
+    # Fitness object is the equivalent of a SrFit Contribution. However, we
+    # want a very lean interface to any optimizer, so we treat the entire
+    # FitModel as a Fitness object. To do this, we have written a special
+    # FitnessAdapter class in the diffpy.srfit.park package.
+    f = FitnessAdapter(model)
+
+    # Now we can fit this
+    from park.fitting.fit import fit
+    print "Fit using the default PARK optimizer"
+    result = fit([f])
+
+    displayResults(model)
+
+    return
+
+def displayResults(model):
+    """Display the results contained within a refined FitModel."""
 
     # For the basic info about the fit, we can use the FitModel directly
     chiv = model.residual()
     names = model.getNames()
     vals = model.getValues()
+
+    q = model.C60.profile.x
 
     print "Fit using the scipy LM optimizer"
     chi2 = numpy.dot(chiv, chiv)
@@ -382,92 +429,23 @@ def scipyOptimize(strufile):
     I = model.C60.profile.y
     Icalc = model.C60.profile.ycalc
     bkgd = model.C60.evaluateEquation("bkgd()")
-    Islim = model.C60.evaluateEquation("scale * sum(gaussian) * I + bkgd")
+    diff = I - Icalc
 
     import pylab
     pylab.plot(q,I,'o',label="I(Q) Data")
     pylab.plot(q,Icalc,label="I(Q) Fit")
-    pylab.plot(q,Islim,label="I(Q) Fit w/o broadening")
+    pylab.plot(q,diff,label="I(Q) diff")
     pylab.plot(q,bkgd,label="Bkgd. Fit")
     pylab.xlabel("$Q (\AA^{-1})$")
     pylab.ylabel("Intensity (arb. units)")
     pylab.legend(loc=1)
 
     pylab.show()
-
-    return
-
-def parkOptimize(strufile):
-    """Optimize the model created above using PARK."""
-
-    # Make the data and the model
-    q = numpy.arange(1, 20, 0.05)
-    makeData(strufile, q, "C60.iq")
-
-    model = makeModel(strufile, "C60.iq")
-
-    # For the default optimizer, it is much easier to find a solution if we put
-    # bounds on any parameter we know. We do this using our model, but we
-    # could also do it using the park Fitness object that we create below.
-    model.confine( model.a, 9, 11)
-    model.confine( model.scale, 0.5, 20)
-    for i in xrange(10):
-        model.confine(getattr(model, "b%i"%i), -500, 500)
-
-    # We have to turn the model into something that PARK can use. In PARK, a
-    # Fitness object is the equivalent of a SrFit Contribution. However, we
-    # want a very lean interface to any optimizer, so we treat the entire
-    # FitModel as a Fitness object. To do this, we have written a special
-    # FitnessAdapter class in the diffpy.srfit.park package.
-    f = FitnessAdapter(model)
-
-    # Now we can fit this
-    from park.fitting.fitresult import ConsoleUpdate
-    from park.optim.fitmc import FitMC
-    handler = ConsoleUpdate(improvement_delta=0.1,progress_delta=1)
-    fitter = FitMC(start_points=1)
-    from park.fitting.fit import fit
-    result = fit([f], handler=handler, fitter=fitter)
-
-    # For the basic info about the fit, we can use the FitModel directly
-    chiv = model.residual()
-    names = model.getNames()
-    vals = model.getValues()
-
-    print "Fit using the default PARK optimizer"
-    chi2 = numpy.dot(chiv, chiv)
-    rchi2 = chi2 / (len(q) - len(vals))
-    print "Chi^2 =", chi2
-    print "Red. Chi^2 =", rchi2
-    
-    for name, val in zip(names, vals):
-        print "%s = %f" % (name, val)
-
-    # Plot this for fun.
-    q = model.C60.profile.x
-    I = model.C60.profile.y
-    Icalc = model.C60.profile.ycalc
-    bkgd = model.C60.evaluateEquation("bkgd()")
-    Islim = model.C60.evaluateEquation("scale * sum(gaussian) * I + bkgd")
-
-    import pylab
-    pylab.plot(q,I,'o',label="I(Q) Data")
-    pylab.plot(q,Icalc,label="I(Q) Fit")
-    pylab.plot(q,Islim,label="I(Q) Fit w/o broadening")
-    pylab.plot(q,bkgd,label="Bkgd. Fit")
-    pylab.xlabel("$Q (\AA^{-1})$")
-    pylab.ylabel("Intensity (arb. units)")
-    pylab.legend(loc=1)
-
-    pylab.show()
-
     return
 
 if __name__ == "__main__":
 
-    print "Optimize with scipy"
     scipyOptimize("data/C60.stru")
-    #print "Optimize with park"
     #parkOptimize("data/C60.stru")
 
 # End of file

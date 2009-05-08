@@ -68,7 +68,7 @@ class ModelOrganizer(object):
         self._constraints = {}
         self._restraints = set()
         self._orgdict = {}
-        self._eqfactory = EquationFactory()
+        self._eqfactory = EquationFactory(argclass = Parameter)
         return
 
     def __getattr__(self, name):
@@ -314,7 +314,7 @@ class ModelOrganizer(object):
 
 # End ModelOrganizer
 
-def equationFromString(eqstr, factory, ns = {}):
+def equationFromString(eqstr, factory, ns = {}, buildargs = False):
     """Make an equation from a string.
 
     eqstr   --  A string representation of the equation. The
@@ -325,6 +325,9 @@ def equationFromString(eqstr, factory, ns = {}):
     ns      --  A dictionary of Parameters indexed by name that are used
                 in the eqstr but not already defined in the factory 
                 (default {}).
+    buildargs   --  A flag indicating whether missing Parameters can be created
+                by the Factory (default False). If False, then the a ValueError
+                will be raised if there are undefined arguments in the eqstr. 
 
     Raises ValueError if ns uses a name that is already defined in the factory.
     Raises ValueError if the equation has undefined parameters.
@@ -341,7 +344,7 @@ def equationFromString(eqstr, factory, ns = {}):
     for name, arg in ns.items():
         factory.registerArgument(name, arg)
 
-    eq = factory.makeEquation(eqstr, buildargs = False)
+    eq = factory.makeEquation(eqstr, buildargs)
 
     # Clean the ns parameters
     for name in ns:

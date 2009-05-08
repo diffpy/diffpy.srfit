@@ -99,6 +99,10 @@ class Calculator(ModelOrganizer):
     def setProfile(self, profile):
         """Assign the profile.
 
+        Since the same Calculator instance can be used by multiple
+        Contributions, this should be called by a contribution before the
+        Calculator is evaluated.
+
         profile --  A Profile that specifies the calculation points and which
                     will store the calculated signal.
 
@@ -108,13 +112,14 @@ class Calculator(ModelOrganizer):
             self.clicker.click()
         return
 
-    # Generator methods. 
+    # Generator methods. These are used when the Calculator is called from
+    # within an equation.
 
     def generate(self, clicker):
         """Generate the signal and store it in the literal attribute.
 
         This method conforms to the Generator interface. It does not need to be
-        overloaded. By default it creates an Parameter to store the results.
+        overloaded. By default it creates a Parameter to store the results.
 
         clicker --  A Clicker instance for decision making. The clicker is
                     sent by the Evaluator class to indicate its state. If the

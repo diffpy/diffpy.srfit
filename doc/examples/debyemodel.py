@@ -12,52 +12,32 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of a calculator for the debye model."""
+"""Example of fitting the Debye model to experimental Debye-Waller factors.
+
+This is an example of building a FitModel in order to fit experimental data.
+It is assumed that the function we need cannot be modified by us (although we
+define it below). This will help us demonstrate how to extend a function using
+SrFit.
+
+The makeModel function shows how to build a FitModel that will fit our model to
+the data. The scipyOptimize and parkOptimize functions show two different ways
+of refining the model, using scipy and park, respectively.
+
+Once you understand this, move on to the intensitycalculator.py example.
+"""
 
 from functools import partial
 
 import numpy
-import scipy.integrate
 
-from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
+from diffpy.srfit.fitbase import Contribution, FitModel, Profile
 from diffpy.srfit.park import FitnessAdapter
 
-class DebyeCalculator(Calculator):
-    """A class for calculating adps from the Debye model."""
-
-    def __init__(self):
-        Calculator.__init__(self, "debye")
-        self.newParameter("m", 12)
-        self.newParameter("thetaD", 300)
-        return
-
-    def __call__(self, x):
-
-        m = self.m.getValue()
-        tD = self.thetaD.getValue()
-
-        y = [adps(m, tD, T) for T in x]
-
-        return y
-
-# End class DebyeCalculator
-
-class DebyeContribution(Contribution):
-    """A Contribution that uses the DebyeCalculator."""
-
-    def __init__(self, name):
-        """Auto-initialize the calculator."""
-        Contribution.__init__(self, name)
-        self.setCalculator(DebyeCalculator())
-        return
-
-# End class DebyeContribution
-
-
-# Functions required for calculation of Debye curve
-
+# Functions required for calculation of Debye curve. Feel free to skip these,
+# as we treat them as if existing in some external library that we cannot
+# modify.
 def adps(m,thetaD,T):
-    """calculates atomic displacement factors within the Debye model
+    """Calculates atomic displacement factors within the Debye model
 
     <u^2> = (3h^2/4 pi^2 m kB thetaD)(phi(thetaD/T)/(ThetaD/T) + 1/4)
 
@@ -74,124 +54,174 @@ def adps(m,thetaD,T):
     kB = 1.3806503e-23  # Boltzmann's constant. J/K
     amu = 1.66053886e-27 # Atomic mass unit. kg
 
+    def __phi(x):
+        """evaluates the phi integral needed in Debye calculation
+
+        phi(x) = (1/x) int_0^x xi/(exp(xi)-1) dxi
+
+        arguments:
+        x -- float -- value of thetaD (Debye temperature)/T
+
+        returns:
+        phi -- float -- value of the phi function
+
+        """
+        def __debyeKernel(xi):
+            """function needed by debye calculators
+
+            """
+            y = xi/(numpy.exp(xi)-1)
+            return y
+
+        import scipy.integrate
+
+        int = scipy.integrate.quad(__debyeKernel, 0, x)
+        phi = (1/x) * int[0]
+
+        return phi
+
+
     m = m * amu
     u2 = (3*h**2 / (4 * numpy.pi**2 *m *kB *thetaD))*(__phi(thetaD/T)/(thetaD/T) + 1./4.)
 
     return u2*1e20
 
-def __debyeKernel(xi):
-    """function needed by debye calculators
-
-    """
-    y = xi/(numpy.exp(xi)-1)
+def debye(T, m, thetaD):
+    """A wrapped version of 'adps' that can handle an array of T-values."""
+    y = numpy.array([adps(m, thetaD, x) for x in T])
     return y
 
-def __phi(x):
-    """evaluates the phi integral needed in Debye calculation
-
-    phi(x) = (1/x) int_0^x xi/(exp(xi)-1) dxi
-
-    arguments:
-    x -- float -- value of thetaD (Debye temperature)/T
-
-    returns:
-    phi -- float -- value of the phi function
-
-    """
-    int = scipy.integrate.quad(__debyeKernel, 0, x)
-    phi = (1/x) * int[0]
-
-    return phi
 
 ####### Example Code
 
 def makeModel():
-    """Create a model that encompasses a profile calculator and an experimental
-    profile. The model can then be optimized using an external optimizer.
+    """Make the model for our problem.
 
+    Our model will be defined within a FitModel instance. The job of a FitModel
+    is to collect and associate all the data, the fitting equations, fitting
+    variables, constraints and restrations. We will demonstrate each of these
+    within the code. 
+
+    Data is held within a Profile object. The Profile is simply a container
+    that holds the data, and the theoretical profile once it has been
+    calculated.
+
+    Data is associated with a fitting equation within a Contribution. The
+    Contribution defines the equation and parameters that will be adjusted to
+    fit the data. The fitting equation can be defined within a function or
+    optionally within the Calculator class. We won't need the Calculator class
+    in this example since the signature of the fitting equation (the 'debye'
+    function) is so simple. The contribution also defines the residual function
+    to optimize for the data/equation pair. This can be modified, but we won't
+    do that here.
+
+    Once we define the FitModel, we can send it an optimizer to be optimized.
+    See the scipyOptimize and parkOptimize functions.
+    
     """
 
-    # Create a Profile. This will hold the experimental and calculated signal.
+        
+    ## The Profile
+    # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
 
-    # Load data and add it to the profile
+    # Load data and add it to the profile. It is our responsibility to get our
+    # data into the profile.
     x, y = numpy.loadtxt("data/PbADPs.dat", unpack=True)
     profile.setObservedProfile(x, y)
-    profile.setCalculationRange()
 
 
-    # Create the Contribution, that will associate the profile with the Debye
-    # Calculator. We have created a custom DebyeContribution above that
-    # performs half of the association for us.
-    contribution = DebyeContribution("pb")
-    contribution.setProfile(profile)
+    ## The Contribution
+    # The Contribution associates the profile with the Debye Calculator. 
+    contribution = Contribution("pb")
+    # Tell the contribution about the Profile. We will need to use the
+    # independent variable (the temperature) from the data to calculate the
+    # theoretical signal, so give it an informative name ('T') that we can use
+    # later.
+    contribution.setProfile(profile, xname="T")
 
-    # We need an offset in our equation that does not appear in the calculator.
-    # We create that here. The calcualtor is named "debye", so we can call
-    # the calculator with a string equation by this name.
-    # First we add a new parameter
-    contribution.newParameter("offset", 0)
-    # Then we define a new equation to refine in terms of the debye calculator.
+    # We now want to tell the contribution to use the 'debye' function defined
+    # above. The 'registerFunction' method will let us do this. Since we
+    # haven't told it otherwise, 'registerFunction' will extract the name of
+    # the function ('debye') and the names of the arguments ('T', 'm',
+    # 'thetaD'). (Note that we could have given it other names.) Since we named
+    # the x-variable 'T' above, the 'T' in the 'debye' equation will refer  to
+    # this x-variable when it gets called.
+    contribution.registerFunction(debye)
+
+    # We have a function registered to the contribution, but we have yet to
+    # define the fitting equation. On top of that, we need a vertical offset in
+    # our equation that does not appear in 'debye'.  We could have written a
+    # function that calls 'debye' that includes an offset, but this will not
+    # always be an option. Thus, we will add the offset when we define the
+    # equation.  We don't need to specify the parameters to the 'debye'
+    # function since the contribution already knows what they are.  (In fact,
+    # the '()' is optional.)
     contribution.setEquation("debye()+offset")
 
-    # Make a FitModel where we can create variables, constraints and
-    # restraints. If we had multiple profiles to fit simultaneously, the
-    # contribution from each could be added to the model.
+    # While we're at it, we should give some initial values to parameters.  We
+    # know the mass of lead, so we'll set that here. Note that we can access
+    # the fitting parameters by name as attributes of the contribution.  We're
+    # varying the other two parameters ('thetaD' and 'offset'), so we'll give
+    # them initial values below. Parameters have a 'setValue' and 'getValue'
+    # method.
+    contribution.m.setValue(207.2)
+
+    ## The FitModel
+    # The FitModel lets us define what we want to fit. It is where we can
+    # create variables, constraints and restraints. If we had multiple profiles
+    # to fit simultaneously, the contribution from each could be added to the
+    # model.
     model = FitModel()
     model.addContribution(contribution)
 
-    # Give the calculator parameters values.  The DebyeCalculator has
-    # the name "debye", so we can access its variables from the "debye"
-    # attribute of the contribution.
-    #
-    # We know the mass of lead, so we'll set that here. We're varying the other
-    # two parameters, so we'll give them initial values below.
-    contribution.debye.m.setValue(207.2)
-
     # Specify which parameters we want to refine. We can give them initial
-    # values in the process. We want to refine the offset variable that we just
-    # defined in the contribution.
+    # values in the process. This tells the model to vary the offset and to
+    # give it an initial value of 0.
     model.addVar(contribution.offset, 0)
 
-    # We will handle the thetaD parameter in a convoluted, yet instructive way.
-    # We want this to be positive, so we'll create a new fit variable named
-    # "tvar" and constrain the thetaD to be the absolute value of this
-    # variable.
+    # We will handle thetaD in a convoluted way to demonstrate how to use
+    # constraints. We want thetaD to be positive, so we'll create a new fit
+    # variable named "tvar" and constrain thetaD to be the absolute value of
+    # this variable. In this way thetaD will be be given the value abs(tvar)
+    # whenever tvar is adjusted.
     model.newVar("tvar", 300)
-    model.constrain(contribution.debye.thetaD, "abs(tvar)")
+    model.constrain(contribution.thetaD, "abs(tvar)")
 
     # While we're at it, let's keep the offset positive. We could do the
-    # constraint method above, but we'll use a bounds restraint instead. This
-    # restraint will add infinity to the chi^2 if the offset goes negative.
+    # constraint method above, but we'll use a bounds restraint in order to
+    # demonstrate the syntax. This restraint will add infinity to model's cost
+    # function if the offset becomes negative. (Any resonable optimizer will
+    # therefore keep offset >= 0).
     from numpy import inf
     model.confine(contribution.offset, 0, inf)
 
-    # Give the model away so it can be used!
+    # Return the  model. See the scipyOptimize and parkOptimize functions to
+    # see how it is used.
     return model
 
 def scipyOptimize():
-    """Optimize the model created above using scipy."""
+    """Optimize the model created above using scipy.
+
+    The FitModel we created in makeModel has a 'residual' method that we can be
+    minimized using a scipy optimizer. The details are described in the source.
+
+    """
 
     model = makeModel()
 
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
-    # scipy.
+    # scipy. We simply have to give it the function to minimize
+    # (model.residual) and the starting values of the variables
+    # (model.getValues()). We defined offset and tvar as variables, so that is
+    # what will be adjusted by the optimizer.
     from scipy.optimize.minpack import leastsq
-    from numpy import dot
-    out = leastsq(model.residual, model.getValues())
-    offset, tvar = out[0]
+    print "Fit using scipy's LM optimizer"
+    leastsq(model.residual, model.getValues())
 
-    chiv = model.residual()
-    print "Fit using scipy's leastsq optimizer"
-    print "Chi^2 = ", numpy.dot(chiv, chiv)
-    # Get the refined variable values, noting that we didn't refine thetaD
-    # directly. If we want uncertainties, we have to go to the optimizer
-    # directly.
-    offset, tvar = model.getValues()
 
-    print "tvar =", tvar
-    print "offset =", offset
-
+    # We'll look at the results in another function.
+    displayResults(model)
     return
 
 def parkOptimize():
@@ -201,30 +231,36 @@ def parkOptimize():
 
     # We have to turn the model into something that PARK can use. In PARK, a
     # Fitness object is the equivalent of a SrFit Contribution. However, we
-    # want a very lean interface to any optimizer, so we treat the entire
-    # FitModel as a Fitness object. To do this, we have written a special
-    # FitnessAdapter class in the diffpy.srfit.park package.
+    # want to use the varibles, constraints and restraints, defined in our
+    # FitModel, so we will turn it into a Fitness object. To do this, we have
+    # written a special FitnessAdapter class in the diffpy.srfit.park package.
     f = FitnessAdapter(model)
 
-    # Now we can fit this
+    # Now we can fit this using park.
     from park.fitting.fit import fit
+    print "Fit using the default PARK optimizer"
     result = fit([f])
+
+    displayResults(model)
+
+    return
+
+def displayResults(model):
+    """Display the results contained within a refined FitModel."""
 
     # For the basic info about the fit, we can use the FitModel directly
     chiv = model.residual()
 
-    print "Fit using the default PARK optimizer"
     print "Chi^2 = ", numpy.dot(chiv, chiv)
     # Get the refined variable values, noting that we didn't refine thetaD
     # directly. If we want uncertainties, we have to go to the optimizer
     # directly.
-    offset, tvar = result.pvec
+    offset, tvar = model.getValues()
 
     print "tvar =", tvar
     print "offset =", offset
-
     
-    # Plot this for fun.
+    # Plot this.
     # Note that since the contribution was given the name "pb", it is
     # accessible from the model with this name. This is a useful way to
     # organize multiple contributions to a fit.
@@ -241,7 +277,6 @@ def parkOptimize():
     pylab.legend(loc = (0.0,0.8))
 
     pylab.show()
-
     return
 
 if __name__ == "__main__":
@@ -249,7 +284,7 @@ if __name__ == "__main__":
     scipyOptimize()
     parkOptimize()
     print \
-"""Note that the solutions are equivalent (to several digits). We cannot assess
+"""\nNote that the solutions are equivalent (to several digits). We cannot assess
 the parameter uncertainty without uncertainties on the data points.\
 """
 

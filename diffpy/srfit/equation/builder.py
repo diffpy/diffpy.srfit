@@ -100,15 +100,39 @@ from .equationmod import Equation
 import diffpy.srfit.equation.literals as literals
 
 class EquationFactory(object):
-    """A Factory for Equation classes."""
+    """A Factory for Equation classes.
+
+    builders    --  A dictionary of EquationBuilders registered with the
+                    factory, indexed by name.
+    argclass    --  The class used to create new Arguments (default
+                    diffpy.srfit.equation.literals.Argument). Setting this will
+                    allow the Factory to be used with other than the default
+                    Argument type.
+    newargs     --  A list of new arguments created by makeEquation. This is
+                    redefined whenever makeEquation is called.
+    
+    """
 
     symbols = ("+", "-", "*", "/", "**", "%")
     ignore = ("(", ",", ")")
 
-    def __init__(self):
-        self.builders = {}
+    def __init__(self, argclass = literals.Argument, builders = {}):
+        """Initialize.
+
+        This registers "pi" and "e" as constants within the factory.
+
+        argclass    --  The class used to create new Arguments (default
+                        diffpy.srfit.equation.literals.Argument). The class
+                        must have "name" and "value" arguments in its
+                        constructor.
+        builders    --  A dictionary of builders to start out with (default
+                        {}).
+        """
+        self.builders = dict(builders)
+        self.argclass = argclass
         self.registerConstant("pi", numpy.pi)
         self.registerConstant("e", numpy.e)
+        self.newargs = []
         return
 
     def makeEquation(self, eqstr, buildargs = True):
@@ -119,10 +143,11 @@ class EquationFactory(object):
                     The equation string can use any function registered literal
                     or function, including numpy ufuncs that are automatically
                     registered.
-        buildargs   --  A flag indicating whether new Argument instances can be
+        buildargs   --  A flag indicating whether missing arguments can be
                     created by the Factory (default True). If False, then the a
                     ValueError will be raised if there are undefined arguments
-                    in the eqstr.
+                    in the eqstr. Built arguments will by of the type contained
+                    in the argclass attribute.
 
         Returns an Equation instance representing the equation string.
         """
@@ -131,8 +156,11 @@ class EquationFactory(object):
         return beq.getEquation()
 
     def registerConstant(self, name, value):
-        """Register a named constant with the factory."""
-        arg = literals.Argument(name=name, value=value, const=True)
+        """Register a named constant with the factory.
+
+        Built constants will be Argument instances.
+        """
+        arg = self.argclass(name=name, value=value, const=True)
         self.registerArgument(name, arg)
         return
 
@@ -197,12 +225,13 @@ class EquationFactory(object):
         Arguments
         eqstr   --  An equation in string as specified in the makeEquation
                     method.
-        buildargs   --  A flag indicating whether new Argument instances can be
+        buildargs   --  A flag indicating whether missing arguments can be
                     created by the Factory. If False, then the a ValueError
                     will be raised if there are undefined arguments in the
                     eqstr.
 
         Returns a dictionary of the name, EquationBuilder pairs.
+
         """
         import sys
 
@@ -219,18 +248,17 @@ class EquationFactory(object):
 
         # Get the operators, partitions and generators
         for opname in eqops:
-            #print opname
             if opname not in self.builders:
                 opbuilder = getattr(sys.modules[__name__], opname)
-                #print opbuilder
                 ns[opname] = opbuilder
 
         # Make the arguments
+        self.newargs = []
         for argname in eqargs:
-            #print argname
-            argbuilder = ArgumentBuilder(name = argname)
-            #print argbuilder
-            ns[argname] = argbuilder
+            if argname not in self.builders:
+                argbuilder = ArgumentBuilder(name = argname)
+                ns[argname] = argbuilder
+                self.newargs.append(argbuilder.literal)
 
         return ns
 
@@ -613,15 +641,12 @@ def __wrapSrFitOperators():
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
     instances in the module namespace.
     """
+    import inspect
     opmod = literals.operators
     for opname in dir(opmod):
         opclass = getattr(opmod, opname)
-        isop = False
-        try:
-            isop = issubclass(opclass, opmod.Operator)
-        except TypeError:
-            continue
-        if isop \
+        if inspect.isclass(opclass) \
+            and issubclass(opclass, opmod.Operator) \
             and opclass is not opmod.Operator \
             and opclass is not opmod.UFuncOperator:
 

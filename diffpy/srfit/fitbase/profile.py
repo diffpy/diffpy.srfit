@@ -41,9 +41,9 @@ class Profile(object):
     x       --  A numpy array of the calculated independent variable (default
                 None)
     ycalc   --  A numpy array of the calculated signal (default None).
-    xpar    --  A Parameter that stores x.
-    ypar    --  A Parameter that stores y.
-    dypar   --  A Parameter that stores dy.
+    xpar    --  A Parameter that stores x (named "x").
+    ypar    --  A Parameter that stores y (named "y").
+    dypar   --  A Parameter that stores dy (named "dy").
 
     """
 

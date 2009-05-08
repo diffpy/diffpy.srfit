@@ -206,21 +206,27 @@ class NegationOperator(Operator):
         return
 
 class ConvolutionOperator(Operator):
-    """numpy.convolve operator."""
+    """Scaled version of the numpy.convolve operator.
 
-    def __init__(self, mode = 'same'):
-        """Initialization.
+    This calls numpy.convolve, but divides by the sum of the second argument in
+    hopes of preserving the scale of the first argument.
+    numpy.conolve(v1, v2, mode = "same")/sum(v2)
 
-        mode    --  The mode to send to numpy.convolve (default 'same').
+    """
 
-        """
+    def __init__(self):
+        """Initialization."""
         Operator.__init__(self)
         self.name = "convolve"
         self.symbol = "convolve"
 
-        from functools import partial
-        self.operation = partial(numpy.convolve, mode = mode)
+        def conv(v1, v2):
+            """numpy.conolve(v1, v2, mode = "same")/sum(v2)"""
+            return numpy.convolve(v1, v2, mode="same")/sum(v2)
+
+        self.operation = conv
         return
+
 
 class SumOperator(Operator):
     """numpy.sum operator."""

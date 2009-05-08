@@ -33,13 +33,15 @@ class Parameter(Argument):
     subclassed for future extensibility.
     """
 
-    def __init__(self, name, value = 0):
+    def __init__(self, name, value = 0, const = False):
         """Initialization.
         
         name    --  The name of this Parameter.
         value   --  The initial value of this Parameter (default 0).
+        const   --  A flag inticating whether the Parameter is a constant (like
+                    pi).
         """
-        Argument.__init__(self, value, name)
+        Argument.__init__(self, value, name, const)
         return
 
     def __str__(self):

@@ -158,7 +158,7 @@ class EquationFactory(object):
     def registerConstant(self, name, value):
         """Register a named constant with the factory.
 
-        Built constants will be Argument instances.
+        Built constants will be self.argclass instances.
         """
         arg = self.argclass(name=name, value=value, const=True)
         self.registerArgument(name, arg)

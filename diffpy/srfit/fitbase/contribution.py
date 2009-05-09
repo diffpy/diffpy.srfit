@@ -48,16 +48,14 @@ class Contribution(ModelOrganizer):
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-    _eq             --  An Equation instance that generates a modified profile
-                        with the Calculator.
+
+    _eq             --  The Contribution equation that will be optimized.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from strings.
     _organizers     --  A reference to the Calcualtor's _organizers attribute.
     _orgdict        --  A reference to the Calculator's _orgdict attribute.
     _parameters     --  A reference to the Calculator's _parameters attribute.
-    _eq             --  An Equation instance that generates the residual
-                        equation.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
     _xname          --  The name of of the independent variable from the
@@ -158,23 +156,17 @@ class Contribution(ModelOrganizer):
         # Register the calculator with the equation factory
         self._eqfactory.registerGenerator(name, calc)
 
-        # Create the default equation
-        self._eq = self._eqfactory.makeEquation(name)
-
         self.setEquation(name)
         return
 
-    def setEquation(self, eqstr, ns = {}, buildargs = True):
+    def setEquation(self, eqstr, makepars = True):
         """Set the refinement equation for the Contribution.
 
         eqstr   --  A string representation of the equation. Any Parameter
                     registered by addParameter or setProfile, or function
                     registered by setCalculator or registerFunction  can be can
                     be used in the equation by name.
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the Contribution (default
-                    {}).
-        buildargs   --  A flag indicating whether missing Parameters can be
+        makepars    --  A flag indicating whether missing Parameters can be
                     created by the Factory (default True). If False, then the a
                     ValueError will be raised if there are undefined arguments
                     in the eqstr. 
@@ -184,34 +176,22 @@ class Contribution(ModelOrganizer):
         
         Calling setEquation resets the residual equation.
 
-        Raises ValueError if ns uses a name that is already used for a
-        Parameter.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the Contribution and that is not defined in ns.
+        Raises ValueError if makepars is false and eqstr depends on a Parameter
+        that is not part of the Contribution.
 
         """
-        self._eq = equationFromString(eqstr, self._eqfactory, ns, buildargs)
-
-        # Register any new parameters
-        for par in self._eqfactory.newargs:
-            self.addParameter(par)
-
-        # Now register this with the equation factory
-        self._eqfactory.registerEquation("eq", self._eq)
+        self._eq = self.registerStringFunction(eqstr, "eq", makepars)
 
         if self.profile is not None:
             self.setResidualEquation()
         return
 
-    def setResidualEquation(self, eqstr = None, ns = {}):
+    def setResidualEquation(self, eqstr = None):
         """Set the residual equation for the Contribution.
 
         eqstr   --  A string representation of the residual. If eqstr is None
                     (default), then the chi2 residual will be used (see the
                     residual method.)
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the Contribution (default
-                    {}).
 
         Two residuals are preset for convenience, "chiv" and "resv".
         chiv is defined such that dot(chiv, chiv) = chi^2.
@@ -243,7 +223,7 @@ class Contribution(ModelOrganizer):
         if eqstr is None:
             self._reseq = chiv
         else:
-            self._reseq = equationFromString(eqstr, self._eqfactory, ns)
+            self._reseq = equationFromString(eqstr, self._eqfactory)
 
         return
 
@@ -271,14 +251,16 @@ class Contribution(ModelOrganizer):
         # the following will not recompute the equation.
         return self._reseq()
 
-    def registerFunction(self, f, name = None, argnames = None, makepars = True):
-        """Register a function with the equation builder.
+    def registerFunction(self, f, name = None, argnames = None, 
+            makepars = True):
+        """Register a function so it can be used in the Contribution equation.
 
         This creates a function useable within setEquation and
         setResidualEquation. The function does not require the arguments to be
         passed in the equation string, as this will be handled automatically.
 
-        f           --  The callable to register.
+        f           --  The callable to register. If this is an Equation
+                        instance, then all that needs to be provied is a name.
         name        --  The name of the function to be used in equations. If
                         this is None (default), the method will try to
                         determine the name of the function automatically.
@@ -302,8 +284,18 @@ class Contribution(ModelOrganizer):
         Raises TypeError if an automatically extracted name is '<lambda>'.
         Raises AttributeError if makepars is False and the parameters are not
         part of this object.
+        Raises ValueError if f is an Equation object and name is None.
+
+        Returns the callable Equation object.
 
         """
+
+        if isinstance(f, Equation):
+            if name is None:
+                m = "Equation must be given a name"
+                raise ValueError(m)
+            self._eqfactory.registerEquation(name, f)
+            return f
 
         # Extract the name and argnames if necessary
         if name is None or argnames is None:
@@ -367,7 +359,45 @@ class Contribution(ModelOrganizer):
         eq = equationFromString("%s(%s)"%(name,argstr), factory)
 
         self._eqfactory.registerEquation(name, eq)
-        return
+
+        return eq
+
+    def registerStringFunction(self, fstr, name, makepars = True):
+        """Register a string function.
+
+        This creates a function useable within setEquation and
+        setResidualEquation. The function does not require the arguments to be
+        passed in the equation string, as this will be handled automatically.
+
+        fstr        --  A string equation to register.
+        name        --  The name of the function to be used in equations. 
+        makepars    --  Flag indicating whether to make parameters from the
+                        arguments of fstr if they don't already appear in the
+                        Contribution (default True). Parameters created in this
+                        way are added to the contribution using the
+                        newParameter method.  If makepars is False , then it is
+                        necessary that the parameters are already part of this
+                        object in order to make the function.
+
+        Raises AttributeError if makepars is False and the parameters are not
+        part of this object.
+
+        Returns the callable Equation object.
+
+        """
+
+        # Build the equation instance.
+        eq = equationFromString(fstr, self._eqfactory, buildargs =
+                makepars)
+
+        # Register any new parameters
+        for par in self._eqfactory.newargs:
+            self._addParameter(par)
+
+        # Register the equation by name
+        self._eqfactory.registerEquation(name, eq)
+
+        return eq
 
     def evaluateEquation(self, eqstr):
         """Evaluate a string equation.

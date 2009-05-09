@@ -191,15 +191,31 @@ class ModelOrganizer(object):
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the ModelOrganizer and that is not defined in ns.
+        Raises ValueError if lb == ub.
 
         Returns the BoundsRestraint object for use with the 'unrestrain' method.
 
         """
 
+        if lb == ub:
+            m = "Bounds must be different"
+            raise ValueError(m)
+
         if isinstance(res, str):
             eq = equationFromString(res, self._eqfactory, ns)
         else:
             eq = Equation(root = res)
+            val = res.getValue()
+            # Reset the value of the parameter if it is out of bounds.
+            # Optimizers might choke on getting infinte residual right out of
+            # the gate.
+            if val < lb or val > ub:
+                if lb is not -inf:
+                    res.setValue(lb)
+                elif ub is not inf:
+                    res.setValue(ub)
+                else:
+                    res.setValue(0)
 
         # Make and store the constraint
         res = BoundsRestraint()

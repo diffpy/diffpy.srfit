@@ -42,11 +42,6 @@ class TestContribution(unittest.TestCase):
 
         # Try to add a parameter
         c = Parameter("c", 2)
-        self.contribution.setEquation("c*I", ns = {"c" : c} )
-        chiv = self.contribution.residual()
-        self.assertAlmostEqual(dot(yobs, yobs), dot(chiv, chiv))
-
-        # Do this another way
         self.contribution._addParameter(c)
         self.contribution.setEquation("c*I")
         chiv = self.contribution.residual()

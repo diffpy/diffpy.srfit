@@ -26,6 +26,7 @@ of refining the model, using scipy and park, respectively.
 Once you understand this, move on to the intensitycalculator.py example.
 """
 
+
 from functools import partial
 
 import numpy
@@ -91,6 +92,20 @@ def debye(T, m, thetaD):
     y = numpy.array([adps(m, thetaD, x) for x in T])
     return y
 
+# The data
+data = """\
+012.0 0.00244
+050.0 0.00366
+100.0 0.00541
+150.0 0.00779
+200.0 0.01019
+250.0 0.01200
+300.0 0.01408
+350.0 0.01572
+400.0 0.01775
+450.0 0.01946
+500.0 0.02275
+"""
 
 ####### Example Code
 
@@ -127,9 +142,10 @@ def makeModel():
 
     # Load data and add it to the profile. It is our responsibility to get our
     # data into the profile.
-    x, y = numpy.loadtxt("data/PbADPs.dat", unpack=True)
+    xy = numpy.array(data.split(), dtype=float)
+    x = xy[0::2]
+    y = xy[1::2]
     profile.setObservedProfile(x, y)
-
 
     ## The Contribution
     # The Contribution associates the profile with the Debye Calculator. 

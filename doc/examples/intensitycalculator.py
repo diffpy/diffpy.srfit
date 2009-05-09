@@ -173,7 +173,7 @@ def iofq(S, q):
         SS = key[3]
 
         # Note that numpy's sinc(x) = sin(x*pi)/(x*pi)
-        y += mult * sinc(x*D) * exp(-0.5*x*SS)
+        y += mult * sinc(x * D) * exp(-0.5 * SS * deltad * q**2)
 
     # We must multiply by 2 since we only counted j > i pairs.
     y *= 2
@@ -214,7 +214,6 @@ def makeData(strufile, q, datname):
     datname --  The name of the file we're saving to.
 
     """
-
     # Expand the lattice by +/= 5%
     from diffpy.Structure import Structure
     S = Structure()
@@ -226,7 +225,7 @@ def makeData(strufile, q, datname):
     y = iofq(S, q)
 
     # We want to broaden the peaks as well. This simulates instrument effects.
-    sig = 0.2
+    sig = 0.1
     q0 = q[len(q)/2]
     g = numpy.exp(-0.5*((q-q0)/sig)**2)
 
@@ -240,9 +239,9 @@ def makeData(strufile, q, datname):
 
     # Now add uniform noise at +/-2% of the max intensity
     nrange = 0.04*max(y)
-    noise = numpy.zeros_like(q)
+    noise = numpy.empty_like(q)
     for i in xrange(len(q)):
-        noise[i] = (random.random() - 0.5)* nrange
+        noise[i] = (random.random() - 0.5) * nrange
 
     y += noise
 
@@ -297,15 +296,13 @@ def makeModel(strufile, datname):
     # We need a scale factor, a polynomial background, and we want to broaden
     # the peaks.
 
-    # We can define the background as a function and tell the contribution
-    # about it.
-    def bkgd(q, b0, b1, b2, b3, b4, b5, b6, b7, b8, b9):
-        return b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 +\
-                b6*q**6 + b7*q**7 +b8*q**8 + b9*q**9
+    # We will define the background as a string.
+    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 + b6*q**6 +\
+               b7*q**7 +b8*q**8 + b9*q**9"
 
-    contribution.registerFunction(bkgd)
+    contribution.registerStringFunction(bkgdstr, "bkgd")
 
-    # We will create the broadening function in the same way.
+    # We will create the broadening function by registering a python function.
     pi = numpy.pi
     exp = numpy.exp
     def gaussian(q, q0, width):
@@ -338,7 +335,6 @@ def makeModel(strufile, datname):
     model.addVar(contribution.b7, 0)
     model.addVar(contribution.b8, 0)
     model.addVar(contribution.b9, 0)
-
 
     # We also want to adjust the scale and the convolution width
     model.addVar(contribution.scale, 1)

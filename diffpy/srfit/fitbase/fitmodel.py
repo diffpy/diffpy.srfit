@@ -306,7 +306,7 @@ class FitModel(ModelOrganizer):
     def freeVar(self, par, value = None):
         """Free a variable so that it is refined.
 
-        Note that variables are free by default.
+        Variables are free by default.
 
         par     --  A Parameter that has already been added to the FitModel.
         value   --  A new value for the variable. If this is None

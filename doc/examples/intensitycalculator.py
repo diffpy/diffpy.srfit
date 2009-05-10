@@ -33,6 +33,8 @@ from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
 from diffpy.srfit.park import FitnessAdapter
 from diffpy.srfit.structure import StructureParSet
 
+from debyemodel import scipyOptimize, parkOptimize
+
 class IntensityCalculator(Calculator):
     """A class for calculating intensity using the Debye equation.
 
@@ -349,57 +351,8 @@ def makeModel(strufile, datname):
     model.constrain(structure.lattice.b, a)
     model.constrain(structure.lattice.c, a)
 
-    # Lets keeps the lattice constant, scale and broadening width positive.
-    model.confine(model.a, 0, numpy.inf)
-    model.confine(model.scale, 0, numpy.inf)
-    model.confine(model.width, 0, numpy.inf)
-
     # Give the model away so it can be used!
     return model
-
-def scipyOptimize(strufile):
-    """Optimize the model created above using scipy."""
-
-    # Make the data and the model
-    q = numpy.arange(1, 20, 0.05)
-    makeData(strufile, q, "C60.iq")
-
-    model = makeModel(strufile, "C60.iq")
-
-    # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
-    # scipy.
-    from scipy.optimize.minpack import leastsq
-    print "Fit using scipy's LM optimizer"
-    out = leastsq(model.residual, model.getValues(), full_output=1)
-
-    displayResults(model)
-
-    return
-
-def parkOptimize(strufile):
-    """Optimize the model created above using PARK."""
-
-    # Make the data and the model
-    q = numpy.arange(1, 20, 0.05)
-    makeData(strufile, q, "C60.iq")
-
-    model = makeModel(strufile, "C60.iq")
-
-    # We have to turn the model into something that PARK can use. In PARK, a
-    # Fitness object is the equivalent of a SrFit Contribution. However, we
-    # want a very lean interface to any optimizer, so we treat the entire
-    # FitModel as a Fitness object. To do this, we have written a special
-    # FitnessAdapter class in the diffpy.srfit.park package.
-    f = FitnessAdapter(model)
-
-    # Now we can fit this
-    from park.fitting.fit import fit
-    print "Fit using the default PARK optimizer"
-    result = fit([f])
-
-    displayResults(model)
-
-    return
 
 def displayResults(model):
     """Display the results contained within a refined FitModel."""
@@ -441,7 +394,17 @@ def displayResults(model):
 
 if __name__ == "__main__":
 
-    scipyOptimize("data/C60.stru")
-    #parkOptimize("data/C60.stru")
+    # Make the data and the model
+    strufile = "data/C60.stru"
+    q = numpy.arange(1, 20, 0.05)
+    makeData(strufile, q, "C60.iq")
+
+    model = makeModel(strufile, "C60.iq")
+    scipyOptimize(model)
+    displayResults(model)
+
+    model = makeModel(strufile, "C60.iq")
+    parkOptimize(model)
+    displayResults(model)
 
 # End of file

@@ -125,6 +125,9 @@ class Profile(object):
 
         if xmin is None and xmax is None and dx is None:
             self.x = self.xobs
+            self.y = self.yobs
+            self.dy = self.dyobs
+            self._updatePars()
             return
 
         if xmin is None:

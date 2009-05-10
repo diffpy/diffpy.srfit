@@ -77,7 +77,7 @@ class TestFitModel(unittest.TestCase):
 
         # Remove the restraint and variable
         self.model.unrestrain(r1)
-        self.model.delVar(self.contribution.A)
+        self.model.delVar(self.model.A)
         res = self.model.residual([])
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res) )

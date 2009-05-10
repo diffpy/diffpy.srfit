@@ -107,6 +107,8 @@ class Calculator(ModelOrganizer):
                     will store the calculated signal.
 
         """
+        # FIXME - When data parsers are implemented, this should use the
+        # metadata to automatically configure the Calculator.
         if profile is not self.profile:
             self.profile = profile
             self.clicker.click()

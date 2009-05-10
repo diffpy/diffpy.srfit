@@ -177,12 +177,15 @@ class ModelOrganizer(object):
 
         return
 
-    def confine(self, res, lb = -inf, ub = inf):
+    def confine(self, res, lb = -inf, ub = inf, ns = {}):
         """Confine an expression to hard bounds.
 
         res     --  An equation string or Parameter to restrain.
         lb      --  The lower bound on the restraint evaluation (default -inf).
         ub      --  The lower bound on the restraint evaluation (default inf).
+        ns      --  A dictionary of Parameters, indexed by name, that are used
+                    in the eqstr, but not part of the FitModel 
+                    (default {}).
 
         The penalty is infinite if the value of the calculated equation is
         outside the bounds.
@@ -207,8 +210,8 @@ class ModelOrganizer(object):
             eq = Equation(root = res)
             val = res.getValue()
             # Reset the value of the parameter if it is out of bounds.
-            # Optimizers might choke on getting infinte residual right out of
-            # the gate.
+            # Optimizers might choke on getting an infinte residual right out
+            # of the gate.
             if val < lb or val > ub:
                 if lb is not -inf:
                     res.setValue(lb)
@@ -251,10 +254,14 @@ class ModelOrganizer(object):
         return
 
     def _newParameter(self, name, value, check=True):
-        """Add a new parameter that can be used in the equation."""
+        """Add a new parameter that can be used in the equation.
+
+        Returns the parameter.
+
+        """
         p = Parameter(name, value)
         self._addParameter(p, check)
-        return
+        return p
 
     def _removeParameter(self, par):
         """Remove a parameter.

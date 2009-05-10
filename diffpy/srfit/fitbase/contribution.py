@@ -40,8 +40,7 @@ class Contribution(ModelOrganizer):
                         Parameters or the residual components.
     name            --  A name for this Contribution.
     calculator      --  A Calculator instance for generating a signal
-                        (optional). Contributions can share a Calculator
-                        instance. If a calculator is not defined, the equation
+                        (optional). If a calculator is not defined, the equation
                         to refine must be set with the setEquation method.
     profile         --  A Profile that holds the measured (and calcuated)
                         signal.
@@ -105,12 +104,22 @@ class Contribution(ModelOrganizer):
         
 
         """
-        self.profile = profile
-
         # Clear the previous profile information
         self._eqfactory.deRegisterBuilder(self._xname)
         self._eqfactory.deRegisterBuilder(self._yname)
         self._eqfactory.deRegisterBuilder(self._dyname)
+
+        # Stop watching the parameters
+        if self.profile is not None:
+            self.clicker.removeSubject(self.profile.xpar.clicker)
+            self.clicker.removeSubject(self.profile.ypar.clicker)
+            self.clicker.removeSubject(self.profile.dypar.clicker)
+
+        # Set the profile and watch its parameters
+        self.profile = profile
+        self.clicker.addSubject(self.profile.xpar.clicker)
+        self.clicker.addSubject(self.profile.ypar.clicker)
+        self.clicker.addSubject(self.profile.dypar.clicker)
 
         if xname is None:
             xname = self.profile.xpar.name
@@ -127,6 +136,7 @@ class Contribution(ModelOrganizer):
         self._eqfactory.registerArgument(dyname, self.profile.dypar)
 
         if self.calculator is not None:
+            self.calculator.setProfile(profile)
             self.setResidualEquation()
         return
 
@@ -135,7 +145,9 @@ class Contribution(ModelOrganizer):
 
         The Calculator is given a name so that it can be used as part of the
         equation that is used to generate the signal. This can be different
-        from the name of the Calculator for attribute purposes. 
+        from the name of the Calculator for attribute purposes. Each
+        contribution should have its own calculator instance. Those calculators
+        can share Parameters and ParameterSets, however.
         
         Calling setCalculator sets the equation to call the calculator and
         resets the residual.
@@ -157,30 +169,39 @@ class Contribution(ModelOrganizer):
         self._eqfactory.registerGenerator(name, calc)
 
         self.setEquation(name)
+
+        if self.profile is not None:
+            calc.setProfile(self.profile)
         return
 
-    def setEquation(self, eqstr, makepars = True):
+    def setEquation(self, eqstr, makepars = True, ns = {}):
         """Set the refinement equation for the Contribution.
 
         eqstr   --  A string representation of the equation. Any Parameter
                     registered by addParameter or setProfile, or function
-                    registered by setCalculator or registerFunction  can be can
-                    be used in the equation by name.
+                    registered by setCalculator, registerFunction or
+                    registerStringFunction can be can be used in the equation
+                    by name.
         makepars    --  A flag indicating whether missing Parameters can be
                     created by the Factory (default True). If False, then the a
                     ValueError will be raised if there are undefined arguments
                     in the eqstr. 
+        ns      --  A dictionary of Parameters, indexed by name, that are used
+                    in the eqstr, but not part of the FitModel (default {}).
 
         The equation will be usable within setResidualEquation by calling
         "eq()" or "eq". 
         
         Calling setEquation resets the residual equation.
 
+        Raises ValueError if ns uses a name that is already used for a
+        variable.
         Raises ValueError if makepars is false and eqstr depends on a Parameter
-        that is not part of the Contribution.
+        that is not in ns or part of the Contribution.
 
         """
-        self._eq = self.registerStringFunction(eqstr, "eq", makepars)
+        self._eq = self.registerStringFunction(eqstr, "eq", makepars, ns)
+        self._eq.clicker.addSubject(self.clicker)
 
         if self.profile is not None:
             self.setResidualEquation()
@@ -202,10 +223,8 @@ class Contribution(ModelOrganizer):
         ones.
 
         Raises AttributeError if the Profile is not yet defined.
-        Raises ValueError if ns uses a name that is already used for a
-        Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the Contribution and that is not defined in ns.
+        the Contribution.
         """
         if self.profile is None:
             raise AttributeError("Define the profile first")
@@ -242,9 +261,6 @@ class Contribution(ModelOrganizer):
         method.
         
         """
-        # If we have a calculator, make sure it is working on my profile
-        if self.calculator is not None:
-            self.calculator.setProfile(self.profile)
         # Assign the calculated profile
         self.profile.ycalc = self._eq()
         # Note that equations only recompute when their inputs are modified, so
@@ -362,7 +378,7 @@ class Contribution(ModelOrganizer):
 
         return eq
 
-    def registerStringFunction(self, fstr, name, makepars = True):
+    def registerStringFunction(self, fstr, name, makepars = True, ns = {}):
         """Register a string function.
 
         This creates a function useable within setEquation and
@@ -378,7 +394,12 @@ class Contribution(ModelOrganizer):
                         newParameter method.  If makepars is False , then it is
                         necessary that the parameters are already part of this
                         object in order to make the function.
+        ns          --  A dictionary of Parameters, indexed by name, that are
+                        used in fstr, but not part of the FitModel (default
+                        {}).
 
+        Raises ValueError if ns uses a name that is already used for a
+        variable.
         Raises AttributeError if makepars is False and the parameters are not
         part of this object.
 
@@ -399,16 +420,21 @@ class Contribution(ModelOrganizer):
 
         return eq
 
-    def evaluateEquation(self, eqstr):
+    def evaluateEquation(self, eqstr, ns = {}):
         """Evaluate a string equation.
 
         eqstr   --  A string equation to evaluate. The equation is evaluated at
                     the current value of the registered parameters. The
                     equation can be specified as described in the setEquation
                     method.
+        ns      --  A dictionary of Parameters, indexed by name, that are
+                    used in fstr, but not part of the FitModel (default {}).
+
+        Raises ValueError if ns uses a name that is already used for a
+        variable.
 
         """
-        eq = equationFromString(eqstr, self._eqfactory)
+        eq = equationFromString(eqstr, self._eqfactory, ns = {})
         return eq()
 
 

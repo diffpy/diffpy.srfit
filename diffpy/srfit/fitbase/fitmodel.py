@@ -22,7 +22,7 @@ framework.
 from numpy import concatenate, sqrt, inf, dot
 from functools import update_wrapper
 
-from .parameter import Parameter
+from .parameter import Parameter, ParameterProxy
 from .modelorganizer import ModelOrganizer
 
 class FitModel(ModelOrganizer):
@@ -32,7 +32,6 @@ class FitModel(ModelOrganizer):
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and Contributions.
     name            --  A name for this FitModel.
-    _aliasmap       --  A map from Parameters to their aliases.
     _constraintlist --  An ordered list of the constraints from this and all
                         sub-components.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
@@ -65,7 +64,6 @@ class FitModel(ModelOrganizer):
         self._constraintlist = []
         self._restraintlist = []
         self._fixed = []
-        self._aliasmap = {}
         self._weights = []
         self._doprepare = True
         return
@@ -197,134 +195,127 @@ class FitModel(ModelOrganizer):
 
     # Variable manipulation
 
-    def addVar(self, par, value = None, alias = None, fixed = False):
+    def addVar(self, par, value = None, name = None, fixed = False):
         """Add a variable to be refined.
 
         par     --  A Parameter that will be varied during a fit.
         value   --  An initial value for the variable. If this is None
                     (default), then the current value of par will be used.
-        alias   --  A name for this variable. The variable will be able to be
-                    used by this name in restraint and constraint equations.
+        name    --  A name for this variable. If name is None (default), then
+                    the name of the parameter will be used.
         fixed   --  Fix the variable so that it does not vary (default False).
 
-        """
-        self.clicker.addSubject(par.clicker)
+        Raises ValueError if the name of the variable is already taken by
+        another variable or a contribution.
 
+        """
+        name = name or par.name
+        var = ParameterProxy(name, par)
         if value is not None:
-            par.setValue(value)
+            var.setValue(value)
+
+        self._addParameter(var)
 
         if fixed:
-            self._fixed.append(par)
-            self._eqfactory.registerArgument(par.name, par)
-        else:
-            self._addParameter(par)
-
-        # Record the aliases
-        self._aliasmap[par] = []
-        self._aliasmap[par].append(par.name)
-                
-        # Register the parameter aliases with the eqfactory
-        if alias is not None:
-            self._aliasmap[par].append(alias)
-            self._eqfactory.registerArgument(alias, par)
+            self.fixVar(var)
 
         self._doprepare = True
 
         return
 
-    def delVar(self, par):
+    def delVar(self, var):
         """Remove a variable.
 
-        par     --  A Parameter that has already been added to the FitModel.
+        var     --  A variable of the FitModel.
 
-        Raises ValueError if par is not part of the FitModel.
+        Raises ValueError if var is not part of the FitModel.
 
         """
-        if par in self._parameters:
-            self._parameters.remove(par)
-        elif par in self._fixed:
-            self._fixed.remove(par)
+        if var in self._parameters:
+            self._parameters.remove(var)
+        elif var in self._fixed:
+            self._fixed.remove(var)
         else:
-            raise ValueError("'%s' is not part of the FitModel"%par)
+            raise ValueError("'%s' is not part of the FitModel"%var)
 
         # De-register the Parameter with the equation factory
-        self._eqfactory.deRegisterBuilder(par.name)
-        for name in self._aliasmap[par]:
-            self._eqfactory.deRegisterBuilder(name)
+        self._eqfactory.deRegisterBuilder(var.name)
 
-        # Remove this from the alias map and the organizer dictionary
-        del self._aliasmap[par]
-        del self._orgdict[par.name]
-        self.clicker.removeSubject(par.clicker)
+        # Remove this from the organizer dictionary
+        del self._orgdict[var.name]
+        self.clicker.removeSubject(var.clicker)
         
         return
 
     def newVar(self, name, value, fixed = False):
-        """Create a new Parameter that will be varied in the fit.
+        """Create a new variable of the fit.
 
-        This method lets new Parameters be created that can be used in
-        constraint and restraint equations. A Parameter created by this method
-        that is not involved with a restraint or constraint is called an
-        orphan. Orphan Parameters may cause a fit to fail, depending on the
-        optimization routine.
+        This method lets new variables be created that are not tied to a
+        Parameter (orphans).  Orphan Parameters may cause a fit to fail,
+        depending on the optimization routine, and therefore should only be
+        created to be used in contraint or restraint equations.
 
         name    --  The name of the variable. The variable will be able to be
                     used by this name in restraint and constraint equations.
         value   --  An initial value for the variable. 
         fixed   --  Fix the variable so that it does not vary (default False).
 
-        Returns the new Parameter.
+        Returns the new variable (Parameter instance).
 
         """
-        par = Parameter(name, value=value)
-        self.addVar(par, fixed=fixed)
-        return par
+        var = self._newParameter(name, value)
 
-    def fixVar(self, par, value = None):
+        if fixed:
+            self.fixVar(var)
+
+        self._doprepare = True
+        return var
+
+    def fixVar(self, var, value = None):
         """Fix a variable so that it doesn't change.
 
-        par     --  A Parameter that has already been added to the FitModel.
+        var     --  A variable of the FitModel.
         value   --  A new value for the variable. If this is None
                     (default), then the value will not be changed.
 
-        Raises ValueError if par is not part of the FitModel.
+        Raises ValueError if var is not part of the FitModel.
         
         """
-        if par in self._parameters:
-            self._parameters.remove(par)
-            self._fixed.append(par)
-        elif par in self._fixed:
+        if var in self._parameters:
+            self._parameters.remove(var)
+            self._fixed.append(var)
+        elif var in self._fixed:
             pass
         else:
-            raise ValueError("'%s' is not part of the FitModel"%par)
+            raise ValueError("'%s' is not part of the FitModel"%var)
 
         if value is not None:
-            par.setValue(value)
+            var.setValue(value)
 
         return
 
-    def freeVar(self, par, value = None):
+    def freeVar(self, var, value = None):
         """Free a variable so that it is refined.
 
         Variables are free by default.
 
-        par     --  A Parameter that has already been added to the FitModel.
+        var     --  A variable of the FitModel.
         value   --  A new value for the variable. If this is None
                     (default), then the value will not be changed.
 
-        Raises ValueError if par is not part of the FitModel.
+        Raises ValueError if var is not part of the FitModel.
         
         """
-        if par in self._parameters:
+        if var in self._parameters:
             pass
-        elif par in self._fixed:
-            self._fixed.remove(par)
-            self._parameters.append(par)
+        elif var in self._fixed:
+            self._fixed.remove(var)
+            self._parameters.append(var)
         else:
-            raise ValueError("'%s' is not part of the FitModel"%par)
+            raise ValueError("'%s' is not part of the FitModel"%var)
 
         if value is not None:
-            par.setValue(value)
+            var.setValue(value)
 
         return
 
@@ -424,12 +415,15 @@ class FitModel(ModelOrganizer):
         self._doprepare = True
         return res
 
-    def confine(self, res, lb = -inf, ub = inf):
+    def confine(self, res, lb = -inf, ub = inf, ns = {}):
         """Confine an expression to hard bounds.
 
         res     --  An equation string or Parameter to restrain.
         lb      --  The lower bound on the restraint evaluation (default -inf).
         ub      --  The lower bound on the restraint evaluation (default inf).
+        ns      --  A dictionary of Parameters, indexed by name, that are used
+                    in the eqstr, but not part of the FitModel 
+                    (default {}).
 
         The penalty is infinite if the value of the calculated equation is
         outside the bounds.
@@ -437,12 +431,12 @@ class FitModel(ModelOrganizer):
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the ModelOrganizer and that is not defined in ns.
+        the FitModel and that is not defined in ns.
 
         Returns the BoundsRestraint object for use with the 'unrestrain' method.
 
         """
-        res = ModelOrganizer.confine(self, res, lb, ub)
+        res = ModelOrganizer.confine(self, res, lb, ub, ns)
         self._doprepare = True
         return res
 

@@ -23,11 +23,8 @@ The makeModel function shows how to build a FitModel that will fit our model to
 the data. The scipyOptimize and parkOptimize functions show two different ways
 of refining the model, using scipy and park, respectively.
 
-Once you understand this, move on to the intensitycalculator.py example.
+Once you understand this, move on to the debyemodelII.py example.
 """
-
-
-from functools import partial
 
 import numpy
 
@@ -204,27 +201,17 @@ def makeModel():
     model.newVar("tvar", 300)
     model.constrain(contribution.thetaD, "abs(tvar)")
 
-    # While we're at it, let's keep the offset positive. We could do the
-    # constraint method above, but we'll use a bounds restraint in order to
-    # demonstrate the syntax. This restraint will add infinity to model's cost
-    # function if the offset becomes negative. (Any resonable optimizer will
-    # therefore keep offset >= 0).
-    from numpy import inf
-    model.confine(contribution.offset, 0, inf)
-
     # Return the  model. See the scipyOptimize and parkOptimize functions to
     # see how it is used.
     return model
 
-def scipyOptimize():
+def scipyOptimize(model):
     """Optimize the model created above using scipy.
 
     The FitModel we created in makeModel has a 'residual' method that we can be
     minimized using a scipy optimizer. The details are described in the source.
 
     """
-
-    model = makeModel()
 
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
     # scipy. We simply have to give it the function to minimize
@@ -235,15 +222,10 @@ def scipyOptimize():
     print "Fit using scipy's LM optimizer"
     leastsq(model.residual, model.getValues())
 
-
-    # We'll look at the results in another function.
-    displayResults(model)
     return
 
-def parkOptimize():
+def parkOptimize(model):
     """Optimize the model created above using PARK."""
-
-    model = makeModel()
 
     # We have to turn the model into something that PARK can use. In PARK, a
     # Fitness object is the equivalent of a SrFit Contribution. However, we
@@ -256,8 +238,6 @@ def parkOptimize():
     from park.fitting.fit import fit
     print "Fit using the default PARK optimizer"
     result = fit([f])
-
-    displayResults(model)
 
     return
 
@@ -297,8 +277,14 @@ def displayResults(model):
 
 if __name__ == "__main__":
 
-    scipyOptimize()
-    parkOptimize()
+    #model = makeModel()
+    #scipyOptimize(model)
+    #displayResults(model)
+
+    # Start from scratch
+    model = makeModel()
+    parkOptimize(model)
+    displayResults(model)
     print \
 """\nNote that the solutions are equivalent (to several digits). We cannot assess
 the parameter uncertainty without uncertainties on the data points.\

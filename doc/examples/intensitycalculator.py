@@ -49,13 +49,11 @@ class IntensityCalculator(Calculator):
     def __init__(self, name):
         """Define our calculator.
 
-        We need a handle to the diffpy.Structure.Structure object (self.stru).
+        We need a handle to the diffpy.Structure.Structure object (self._stru).
         We will also keep count of how many times the function has been called
         (self.count).
         """
         Calculator.__init__(self, name)
-        # We need a handle to the structure for it for the calculation.
-        self.stru = None
         # Count the calls
         self.count = 0
         return
@@ -72,12 +70,12 @@ class IntensityCalculator(Calculator):
         """
         # Load the structure from file
         from diffpy.Structure import Structure
-        self.stru = Structure()
-        self.stru.read(strufile)
+        stru = Structure()
+        stru.read(strufile)
 
         # Create a custom parameter set designed to interface with
         # diffpy.Structure.Structure objects
-        parset = StructureParSet(self.stru, "structure")
+        parset = StructureParSet(stru, "structure")
         # Put this ParameterSet in the Calculator.
         self.addParameterSet(parset)
         return
@@ -94,7 +92,7 @@ class IntensityCalculator(Calculator):
         """
         self.count += 1
         print self.count
-        return iofq(self.stru, q)
+        return iofq(self.structure.stru, q)
 
 # End class IntensityCalculator
 
@@ -204,42 +202,47 @@ def getXScatteringFactor(el, q):
     except ImportError:
         return 1
 
-def makeData(strufile, q, datname):
+def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc):
     """Make some fake data and save it to file.
 
-    Use the iofq function to make some data. This broadens the peaks, adds
-    noise and a background to the data and saves it to the specified filename.
-    It only generates the data if it does not exist.
+    Make some data to fit. This uses iofq to calculate an intensity curve, and
+    adds to it a background, broadens the peaks, and noise.
 
     strufile--  A filename holding the sample structure
     q       --  The q-range to calculate over.
     datname --  The name of the file we're saving to.
+    scale   --  The scale factor
+    a       --  The lattice constant to use
+    Uiso    --  The thermal factor for all atoms
+    sig     --  The broadening factor
+    bkgc    --  A parameter that gives minor control of the background.
 
     """
-    # Expand the lattice by +/= 5%
     from diffpy.Structure import Structure
     S = Structure()
     S.read(strufile)
-    import random
-    expand = 10*(0.5 - random.random())
-    a = (1 + expand/100) * S.lattice.a
+
+    # Set the lattice parameters
     S.lattice.setLatPar(a, a, a)
+
+    # Set a DW factor
+    for a in S:
+        a.Uisoequiv = Uiso
     y = iofq(S, q)
 
     # We want to broaden the peaks as well. This simulates instrument effects.
-    sig = 0.1
     q0 = q[len(q)/2]
     g = numpy.exp(-0.5*((q-q0)/sig)**2)
-
     y = numpy.convolve(y, g, mode='same')/sum(g)
 
     # Add a polynomial background.
-    bkgd = (q + 1)**2 * (1.5*max(q) - q)**5
+    bkgd = (q + bkgc)**2 * (1.5*max(q) - q)**5
     bkgd *= 0.2 * max(y) / max(bkgd)
 
     y += bkgd
 
     # Now add uniform noise at +/-2% of the max intensity
+    import random
     nrange = 0.04*max(y)
     noise = numpy.empty_like(q)
     for i in xrange(len(q)):
@@ -247,8 +250,8 @@ def makeData(strufile, q, datname):
 
     y += noise
 
-    # Multipy by an arbitrary scale factor
-    y *= random.uniform(1, 15)
+    # Multipy by a scale factor
+    y *= scale
 
     # Calculate the uncertainty (uniform distribution)
     u = numpy.ones_like(q)* nrange / 12**0.5
@@ -288,7 +291,7 @@ def makeModel(strufile, datname):
     # Contribution by its name ("I"), or simply by "calculator".  We also want
     # to tell the contribution to name the x-variable of the profile "q", so we
     # can use it in equations with this name.
-    contribution = Contribution("C60")
+    contribution = Contribution("bucky")
     contribution.setCalculator(calculator)
     contribution.setProfile(profile, xname = "q")
 
@@ -350,6 +353,12 @@ def makeModel(strufile, datname):
     # that.
     model.constrain(structure.lattice.b, a)
     model.constrain(structure.lattice.c, a)
+    # We want to refine the thermal paramters as well. We will add a new
+    # variable that we call "Uiso" and constrain the atomic Uiso values to
+    # this.
+    Uiso = model.newVar("Uiso", 0.01)
+    for atom in structure.atoms:
+        model.constrain(atom.Uiso, Uiso)
 
     # Give the model away so it can be used!
     return model
@@ -362,7 +371,7 @@ def displayResults(model):
     names = model.getNames()
     vals = model.getValues()
 
-    q = model.C60.profile.x
+    q = model.bucky.profile.x
 
     print "Fit using the scipy LM optimizer"
     chi2 = numpy.dot(chiv, chiv)
@@ -374,10 +383,9 @@ def displayResults(model):
         print "%s = %f" % (name, val)
 
     # Plot this for fun.
-    q = model.C60.profile.x
-    I = model.C60.profile.y
-    Icalc = model.C60.profile.ycalc
-    bkgd = model.C60.evaluateEquation("bkgd()")
+    I = model.bucky.profile.y
+    Icalc = model.bucky.profile.ycalc
+    bkgd = model.bucky.evaluateEquation("bkgd()")
     diff = I - Icalc
 
     import pylab
@@ -397,7 +405,7 @@ if __name__ == "__main__":
     # Make the data and the model
     strufile = "data/C60.stru"
     q = numpy.arange(1, 20, 0.05)
-    makeData(strufile, q, "C60.iq")
+    makeData(strufile, q, "C60.iq", 8, 10.068, 0.005, 0.1, 2)
 
     model = makeModel(strufile, "C60.iq")
     scipyOptimize(model)

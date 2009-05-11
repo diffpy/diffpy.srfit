@@ -275,11 +275,13 @@ def displayResults(model):
     pylab.show()
     return
 
+
 if __name__ == "__main__":
 
-    #model = makeModel()
-    #scipyOptimize(model)
-    #displayResults(model)
+
+    model = makeModel()
+    scipyOptimize(model)
+    displayResults(model)
 
     # Start from scratch
     model = makeModel()

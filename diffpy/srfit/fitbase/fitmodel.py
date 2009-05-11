@@ -122,6 +122,14 @@ class FitModel(ModelOrganizer):
 
         return chiv
 
+    def scalarResidual(self, p = []):
+        """A scalar version of the residual.
+
+        See the residual method. This returns dot(chiv, chiv).
+        """
+        chiv = self.residual(p)
+        return dot(chiv, chiv)
+
     def _prepare(self):
         """Prepare for the calculation.
 
@@ -326,7 +334,7 @@ class FitModel(ModelOrganizer):
         as the order in which variables were added.
         
         """
-        return [par.getValue() for par in self._parameters]
+        return map(float, [par.getValue() for par in self._parameters])
 
     def getNames(self):
         """Get the names of the variables in a list.

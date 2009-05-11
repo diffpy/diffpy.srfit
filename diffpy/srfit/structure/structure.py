@@ -188,7 +188,11 @@ class LatticeParSet(ParameterSet):
 # End class LatticeParSet
 
 class StructureParSet(ParameterSet):
-    """A wrapper for diffpy.Structure.Structure."""
+    """A wrapper for diffpy.Structure.Structure.
+
+    atoms   --  The list of atoms.
+    
+    """
 
     def __init__(self, stru, name):
         """Initialize
@@ -198,6 +202,7 @@ class StructureParSet(ParameterSet):
         ParameterSet.__init__(self, name)
         self.stru = stru
         self.addParameterSet(LatticeParSet(stru.lattice))
+        self.atoms = []
 
         cdict = {}
         for a in stru:
@@ -205,7 +210,10 @@ class StructureParSet(ParameterSet):
             i = cdict.get(el, 0)
             aname = "%s%i"%(el,i)
             cdict[el] = i+1
-            self.addParameterSet(AtomParSet(a, aname))
+            atom = AtomParSet(a, aname)
+            self.addParameterSet(atom)
+            self.atoms.append(atom)
+
 
         # other setup
         self.__repr__ = stru.__repr__

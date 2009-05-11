@@ -39,6 +39,7 @@ class Constraint(object):
         """Constrain a Parameter according to an Equation."""
         self.par = par
         self.eq = eq
+        self.update()
         return
 
     def update(self):

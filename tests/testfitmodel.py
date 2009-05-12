@@ -7,7 +7,6 @@ from numpy import linspace, array_equal, pi, sin, dot
 
 from diffpy.srfit.fitbase.fitmodel import FitModel
 from diffpy.srfit.fitbase.contribution import Contribution
-from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
 
@@ -15,8 +14,7 @@ class TestFitModel(unittest.TestCase):
 
     def setUp(self):
         self.model = FitModel("model")
-        # Set up the calculator
-        self.calc = Calculator("calc")
+        self.model.fithook.verbose = 0
 
         # Set up the Profile
         self.profile = Profile()
@@ -26,14 +24,53 @@ class TestFitModel(unittest.TestCase):
 
         # Set up the Contribution
         self.contribution = Contribution("cont")
-        self.contribution._newParameter("A", 1)
-        self.contribution._newParameter("k", 1)
-        self.contribution._newParameter("c", 0)
-        self.contribution.setCalculator(self.calc, "x")
+        self.contribution.setProfile(self.profile)
         self.contribution.setEquation("A*sin(k*x + c)")
-        self.contribution.setProfile(self.profile, yname = "y", dyname = "dy")
+        self.contribution.A.setValue(1)
+        self.contribution.k.setValue(1)
+        self.contribution.c.setValue(0)
 
         self.model.addContribution(self.contribution)
+        return
+
+    def testVars(self):
+        """Test to see if variables are added and removed properly."""
+        model = self.model
+        con = self.contribution
+
+        model.addVar(con.A, 2)
+        model.addVar(con.k, 1)
+        model.addVar(con.c, 0)
+
+        names = model.getNames()
+        self.assertEquals(names, ["A", "k", "c"])
+        values = model.getValues()
+        self.assertEquals(values, [2, 1, 0])
+
+        model.fixVar(model.k)
+        names = model.getNames()
+        self.assertEquals(names, ["A", "c"])
+        values = model.getValues()
+        self.assertEquals(values, [2, 0])
+
+        model.fixAll()
+        names = model.getNames()
+        self.assertEquals(names, [])
+        values = model.getValues()
+        self.assertEquals(values, [])
+
+        # The order is no longer valid
+        model.freeAll()
+        names = model.getNames()
+        self.assertEquals(3, len(names))
+        self.assertTrue("A" in names)
+        self.assertTrue("k" in names)
+        self.assertTrue("c" in names)
+        values = model.getValues()
+        self.assertEquals(3, len(values))
+        self.assertTrue(0 in values)
+        self.assertTrue(1 in values)
+        self.assertTrue(2 in values)
         return
 
     def testResidual(self):

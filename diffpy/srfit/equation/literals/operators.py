@@ -211,6 +211,7 @@ class ConvolutionOperator(Operator):
     This calls numpy.convolve, but divides by the sum of the second argument in
     hopes of preserving the scale of the first argument.
     numpy.conolve(v1, v2, mode = "same")/sum(v2)
+    It then truncates to the length of the first array.
 
     """
 
@@ -222,7 +223,9 @@ class ConvolutionOperator(Operator):
 
         def conv(v1, v2):
             """numpy.conolve(v1, v2, mode = "same")/sum(v2)"""
-            return numpy.convolve(v1, v2, mode="same")/sum(v2)
+            c = numpy.convolve(v1, v2, mode="same")/sum(v2)
+            c.resize((len(v1),))
+            return c
 
         self.operation = conv
         return

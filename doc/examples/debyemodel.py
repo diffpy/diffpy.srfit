@@ -28,7 +28,7 @@ Once you understand this, move on to the debyemodelII.py example.
 
 import numpy
 
-from diffpy.srfit.fitbase import Contribution, FitModel, Profile
+from diffpy.srfit.fitbase import Contribution, FitModel, Profile, FitResults
 from diffpy.srfit.park import FitnessAdapter
 
 # Functions required for calculation of Debye curve. Feel free to skip these,
@@ -241,21 +241,11 @@ def parkOptimize(model):
 
     return
 
-def displayResults(model):
-    """Display the results contained within a refined FitModel."""
+def plotResults(model):
+    """Plot the results contained within a refined FitModel."""
 
-    # For the basic info about the fit, we can use the FitModel directly
-    chiv = model.residual()
-
-    print "Chi^2 = ", numpy.dot(chiv, chiv)
-    # Get the refined variable values, noting that we didn't refine thetaD
-    # directly. If we want uncertainties, we have to go to the optimizer
-    # directly.
     offset, tvar = model.getValues()
 
-    print "tvar =", tvar
-    print "offset =", offset
-    
     # Plot this.
     # Note that since the contribution was given the name "pb", it is
     # accessible from the model with this name. This is a useful way to
@@ -281,16 +271,16 @@ if __name__ == "__main__":
 
     model = makeModel()
     scipyOptimize(model)
-    displayResults(model)
+    res = FitResults(model)
+    res.printResults()
+    plotResults(model)
 
     # Start from scratch
-    model = makeModel()
-    parkOptimize(model)
-    displayResults(model)
-    print \
-"""\nNote that the solutions are equivalent (to several digits). We cannot assess
-the parameter uncertainty without uncertainties on the data points.\
-"""
+    #model = makeModel()
+    #parkOptimize(model)
+    #res = FitResults(model)
+    #res.printResults()
+    #plotResults(model)
 
 
 # End of file

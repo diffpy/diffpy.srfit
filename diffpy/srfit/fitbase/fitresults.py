@@ -12,20 +12,21 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The FitResults and ContributionResult classes for storing results of a fit.
+"""The FitResults and ContributionResults classes for storing results of a fit.
 
 """
 
 import numpy
 
+# FIXME - add restraints??
+
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 
-    
     Attributes
     model       --  The model containing the results.
     cov         --  The covariance matrix from the model.
-    conresults  --  A dictionary of ContributionResult for each contribution,
+    conresults  --  A dictionary of ContributionResults for each contribution,
                     indexed by the contribution name.
     varnames    --  Names of the variables in the model.
     varvals     --  Values of the variables in the model.
@@ -77,20 +78,14 @@ class FitResults(object):
 
         model = self.model
 
-        # Store the fitting arrays and metrics for each contribution.
-        self.conresults = {}
-        for con, weight in zip(model._organizers, model._weights):
-            self.conresults[con.name] = ContributionResult(con, weight)
+        if not model._organizers:
+            return
 
         # Store the variable names and values
         self.varnames = model.getNames()
         self.varvals = model.getValues()
 
-        # Calculate the metrics
-        self.residual = model.scalarResidual()
-        self._calculateMetrics()
-
-        # Store the constraint names and values
+        # Store the constraint information
         self.connames = [con.par.name for con in model._constraintlist]
         self.convals = [con.par.getValue() for con in model._constraintlist]
 
@@ -102,6 +97,16 @@ class FitResults(object):
 
         # Get the constraint uncertainties
         self._calculateConstraintUncertainties()
+
+        # Store the fitting arrays and metrics for each contribution.
+        self.conresults = {}
+        for con, weight in zip(model._organizers, model._weights):
+            self.conresults[con.name] = ContributionResults(con, weight, self)
+
+        # Calculate the metrics
+        self.residual = model.scalarResidual()
+        self._calculateMetrics()
+
         return
 
     def _calculateCovariance(self):
@@ -156,6 +161,7 @@ class FitResults(object):
                 con.update()
                 cond[i] -= con.par.getValue()
                 cond[i] /= 2*h
+                cond[i] = numpy.abs(cond[i])
 
             conr.append(cond)
 
@@ -188,23 +194,208 @@ class FitResults(object):
     def _calculateConstraintUncertainties(self):
         """Calculate the uncertainty on the constrained parameters."""
 
-        # dp = sum_i dp/dvi * unc(vi)
+        # dp = sum_i |dp/dvi| * unc(vi)
         v = numpy.array(self.varunc)
         dp = abs(numpy.dot(self._conjac, v))
         self.conunc = dp.tolist()
         return
 
-    def formatResult(self):
-        """"""
+    def formatResults(self, header = "", footer = "", update = False):
+        """Format the results and return them in a string.
+
+        This function is called by printResults and saveResults. Overloading
+        the formatting here will change all three functions.
+
+        header  --  A header to add to the output (default "")
+        footer  --  A footer to add to the output (default "")
+        update  --  Flag indicating whether to call update() (default False).
+
+        Returns a string containing the formatted results.
+        
+        """
+        lines = []
+        corrmin = 0.25
+
+        # Check to see if the uncertainty values are reliable.
+        certain = True
+        for con in self.conresults.values():
+            if numpy.array_equal(con.dy, numpy.ones_like(con.dy)):
+                certain = False
+                break
+
+        # User-defined header
+        if header:
+            lines.append(header)
+
+        if not certain:
+            l = "Some quantities invalid due to missing profile uncertainty"
+            lines.append("")
+            lines.append(l)
+            lines.append("")
+
+        ## Overall results
+        l = "Overall"
+        if not certain:
+            l += " (Chi2 and Reduced Chi2 invalid)"
+        lines.append(l)
+        lines.append("-"*79)
+        formatstr = "%-14s %-12.8f"
+        lines.append(formatstr%("Residual",self.residual))
+        lines.append(formatstr%("Chi2",self.chi2))
+        lines.append(formatstr%("Reduced Chi2",self.rchi2))
+        lines.append(formatstr%("Rw",self.rw))
+
+        ## Per-contribution results
+        if len(self.conresults) > 1:
+            keys = self.conresults.keys()
+            numericStringSort(keys)
+
+            lines.append("")
+            l = "Contributions"
+            if not certain:
+                l += " (Chi2 and Reduced Chi2 invalid)"
+            lines.append(l)
+            lines.append("-"*79)
+            formatstr = "%-10s %-42.8f"
+            for name in keys:
+                res = self.conresults[name]
+                lines.append("")
+                namestr = name + " (%f)"%res.weight
+                lines.append(namestr)
+                lines.append("-"*len(namestr))
+                lines.append(formatstr%("Residual",res.residual))
+                lines.append(formatstr%("Chi2",res.chi2))
+                lines.append(formatstr%("Rw",res.rw))
+
+        ## The variables
+        lines.append("")
+
+        l = "Variables"
+        if not certain:
+            m = "Uncertainties invalid"
+            l += " (%s)"%m
+        lines.append(l)
+        lines.append("-"*79)
+
+        varnames = self.varnames
+        varvals = self.varvals
+        varunc = self.varunc
+        d = {}
+        for i, name in enumerate(varnames):
+            d[name] = (varvals[i], varunc[i])
+        numericStringSort(varnames)
+        
+        w = max(map(len, varnames))
+        w = str(w+1)
+        # Format the lines
+        formatstr = "%-"+w+"s %- 15f +/- %-15f"
+        for name in varnames:
+            val, unc = d[name]
+            lines.append(formatstr%(name, val, unc))
+
+        ## The constraints
+        if self.connames:
+            lines.append("")
+            l = "Constrained Parameters"
+            if not certain:
+                l += " (Uncertainties invalid)"
+            lines.append(l)
+            lines.append("-"*79)
+
+            w = 0
+            keys = []
+            vals = {}
+            for con in self.conresults.values():
+                for i, loc in enumerate(con.conlocs):
+                    name = ".".join(loc)
+                    w = max(w, len(name))
+                    val = con.convals[i]
+                    unc = con.conunc[i]
+                    keys.append(name)
+                    vals[name] = (val, unc)
+                    
+            numericStringSort(keys)
+            w = str(w+1)
+            formatstr = "%-"+w+"s %- 15f +/- %-15f"
+            for name in keys:
+                val, unc = vals[name]
+                lines.append(formatstr%(name, val, unc))
+
+        ## Variable correlations
+        lines.append("")
+        corint = int(corrmin*100)
+        l = "Variable Correlations greater than %i%%"%corint
+        if not certain:
+            l += " (Correlations invalid)"
+        lines.append(l)
+        lines.append("-"*79)
+        tup = []
+        cornames = []
+        n = len(varnames)
+        for i in xrange(n):
+            for j in xrange(i+1, n):
+                name = "corr(%s, %s)"%(varnames[i], varnames[j])
+                val = (self.cov[i,j]/(self.cov[i,i] * self.cov[j,j])**0.5)
+                if val > corrmin:
+                    cornames.append(name)
+                    tup.append((val, name))
+
+        tup.sort()
+        tup.reverse()
+
+        if cornames:
+            w = max(map(len, cornames))
+            w = str(w + 1)
+            formatstr = "%-"+w+"s %- 8.4f"
+            for val, name in tup:
+                lines.append(formatstr%(name, val))
+        else:
+            lines.append("No correlations greater than %i%%"%corint)
+
+
+        # User-defined footer
+        if footer:
+            lines.append(footer)
+
+        out = "\n".join(lines)
+        return out
+
+    def printResults(self, header = "", footer = "", update = False):
+        """Format and print the results.
+
+        header  --  A header to add to the output (default "")
+        footer  --  A footer to add to the output (default "")
+        update  --  Flag indicating whether to call update() (default False).
+
+        """
+        print self.formatResults(header, footer, update)
         return
 
-    def printResult(self):
-        """"""
+    def saveResults(self, filename, header = "", footer = "", update = False):
+        """Format and save the results.
+
+        filename -  Name of the save file.
+        header  --  A header to add to the output (default "")
+        footer  --  A footer to add to the output (default "")
+        update  --  Flag indicating whether to call update() (default False).
+
+        """
+        # Save the time and user
+        from time import ctime
+        from getpass import getuser
+        myheader = "Results written: " + ctime() + "\n"
+        myheader += "produced by " + getuser() + "\n"
+        header = myheader + header
+
+        res = self.formatResults(header, footer, update)
+        f = file(filename, 'w')
+        f.write(res)
+        f.close()
         return
 
 # End class FitResults
 
-class ContributionResult(object):
+class ContributionResults(object):
     """Class for processing, storing contribution results.
 
     This does not store the contribution.
@@ -222,11 +413,21 @@ class ContributionResult(object):
     chi2        --  The chi2 of the contribution.
     rw          --  The Rw of the contribution.
     weight      --  The weight of the contribution in the model.
+    conlocs     --  The location of the constrained parameters in the
+                    contribution.
+    convals     --  Values of the constrained parameters.
+    conunc      --  Uncertainties in the constraint values.
 
     """
 
-    def __init__(self, con, weight):
-        """Initialize the attributes."""
+    def __init__(self, con, weight, fitres):
+        """Initialize the attributes.
+
+        con     --  The contribution
+        weight  --  The weight of the contribution in the model
+        fitres  --  The FitResults instance to contain this ContributionResults
+        
+        """
         self.x = None
         self.y = None
         self.dy = None
@@ -235,13 +436,21 @@ class ContributionResult(object):
         self.chi2 = 0
         self.rw = 0
         self.weight = 0
-        self._init(con, weight)
+        self.conlocs = []
+        self.convals = []
+        self.conunc = []
+        self._init(con, weight, fitres)
         return
 
-    def _init(self, con, weight):
+    def _init(self, con, weight, fitres):
         """Initialize the attributes, for real."""
         ## Note that the order of these operations are chosen to reduce
         ## computation time.
+
+        if con.profile is None:
+            return
+
+        model = fitres.model
 
         # Store the weight
         self.weight = weight
@@ -258,6 +467,16 @@ class ContributionResult(object):
         
         # The other metrics
         self._calculateMetrics()
+
+        # Find the parameters
+        for i, constraint in enumerate(model._constraintlist):
+            par = constraint.par
+            loc = con._findParameter(par, [])
+            if loc:
+                self.conlocs.append(loc)
+                self.convals.append(fitres.convals[i])
+                self.conunc.append(fitres.conunc[i])
+
         return
 
     def _calculateMetrics(self):
@@ -270,5 +489,23 @@ class ContributionResult(object):
         self.rw = (numpy.dot(num, num) / numpy.dot(y, y))**0.5
         return
 
+
+def numericStringSort(lst):
+    """Sort list of strings inplace according to general numeric value.
+    Each string gets split to string and integer segments to create keys
+    for comparison.  Signs, decimal points and exponents are ignored.
+    
+    lst  -- sorted list of strings
+    
+    No return value to highlight inplace sorting.
+    """
+    import re
+    rx = re.compile(r'(\d+)')
+    keys = [ rx.split(s) for s in lst ]
+    for k in keys:  k[1::2] = [ int(i) for i in k[1::2] ]
+    newlst = zip(keys, lst)
+    newlst.sort()
+    lst[:] = [kv[1] for kv in newlst]
+    return
 
 __id__ = "$Id$"

@@ -30,6 +30,7 @@ import os
 import numpy
 
 from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
+from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.park import FitnessAdapter
 from diffpy.srfit.structure import StructureParSet
 
@@ -91,7 +92,7 @@ class IntensityCalculator(Calculator):
 
         """
         self.count += 1
-        print self.count
+        print "iofq called", self.count
         return iofq(self.structure.stru, q)
 
 # End class IntensityCalculator
@@ -119,8 +120,10 @@ def iofq(S, q):
     # The brute-force calculation is very slow. Thus we optimize a little bit.
 
     # The precision of distance measurements
-    deltad = 1e-5
+    deltad = 1e-6
     dmult = int(1/deltad)
+    deltau = deltad**2
+    umult = int(1/deltau)
 
     pairdict = {}
     elcount = {}
@@ -146,7 +149,7 @@ def iofq(S, q):
 
             # Get the DW factor to the same precision
             ss = S[i].Uisoequiv + S[j].Uisoequiv
-            SS = int(ss*dmult)
+            SS = int(ss*umult)
 
             # Record the multiplicity of this pair
             key = (els[0], els[1], D, SS)
@@ -173,7 +176,7 @@ def iofq(S, q):
         SS = key[3]
 
         # Note that numpy's sinc(x) = sin(x*pi)/(x*pi)
-        y += mult * sinc(x * D) * exp(-0.5 * SS * deltad * q**2)
+        y += mult * sinc(x * D) * exp(-0.5 * SS * deltau * q**2)
 
     # We must multiply by 2 since we only counted j > i pairs.
     y *= 2
@@ -299,10 +302,22 @@ def makeModel(strufile, datname):
     # the Calcultor, and we'll do that from within the Contribution eqation for
     # the sake of instruction. We want to modify the calculator in three ways.
     # We need a scale factor, a polynomial background, and we want to broaden
-    # the peaks.
+    # the peaks. 
+    #
+    # There is added benefit for defining these operations outside of the
+    # IntensityCalculator. By combining the different parts of the calculation
+    # within the contribution equation, the time-consuming iofq calculation is
+    # only performed when a structural parameter is changed. If only
+    # non-structural parameters are changed, such as the background and
+    # broadening parameters, then then previously computed iofq value will be
+    # used to compute the contribution equation.  The benefit in this is
+    # very apparent when refining the model with the LM optimizer, which only
+    # changes two variables at a time in most cases. Note in the refinement
+    # output how many times the residual is calculated, versus how many times
+    # iofq is called when using the scipyOptimize function.
 
     # We will define the background as a string.
-    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 + b6*q**6 +\
+    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 + b6*q**6+\
                b7*q**7 +b8*q**8 + b9*q**9"
 
     contribution.registerStringFunction(bkgdstr, "bkgd")
@@ -311,7 +326,7 @@ def makeModel(strufile, datname):
     pi = numpy.pi
     exp = numpy.exp
     def gaussian(q, q0, width):
-        return 1/(width*(2*pi)**0.5) * exp(-0.5 * ((q-q0)/width)**2)
+        return 1/(2*pi*width**2)**0.5 * exp(-0.5 * ((q-q0)/width)**2)
 
     contribution.registerFunction(gaussian)
     # Center the gaussian
@@ -363,24 +378,13 @@ def makeModel(strufile, datname):
     # Give the model away so it can be used!
     return model
 
-def displayResults(model):
-    """Display the results contained within a refined FitModel."""
+def plotResults(model):
+    """Plot the results contained within a refined FitModel."""
 
-    # For the basic info about the fit, we can use the FitModel directly
-    chiv = model.residual()
     names = model.getNames()
     vals = model.getValues()
 
     q = model.bucky.profile.x
-
-    print "Fit using the scipy LM optimizer"
-    chi2 = numpy.dot(chiv, chiv)
-    rchi2 = chi2 / (len(q) - len(vals))
-    print "Chi^2 =", chi2
-    print "Red. Chi^2 =", rchi2
-    
-    for name, val in zip(names, vals):
-        print "%s = %f" % (name, val)
 
     # Plot this for fun.
     I = model.bucky.profile.y
@@ -409,10 +413,17 @@ if __name__ == "__main__":
 
     model = makeModel(strufile, "C60.iq")
     scipyOptimize(model)
-    displayResults(model)
+    rescount = model.fithook.count
+    calcount = model.bucky.calculator.count
+    footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)
+    res = FitResults(model)
+    res.printResults(footer = footer)
+    plotResults(model)
 
-    model = makeModel(strufile, "C60.iq")
-    parkOptimize(model)
-    displayResults(model)
+    #model = makeModel(strufile, "C60.iq")
+    #parkOptimize(model)
+    #res = FitResults(model)
+    #res.printResults()
+    #plotResults(model)
 
 # End of file

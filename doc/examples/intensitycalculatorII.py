@@ -29,7 +29,7 @@ import os
 
 import numpy
 
-from diffpy.srfit.fitbase import Contribution, FitModel, Profile
+from diffpy.srfit.fitbase import Contribution, FitModel, Profile, FitResults
 from intensitycalculator import IntensityCalculator, scipyOptimize
 from intensitycalculator import iofq, parkOptimize, makeData
 
@@ -167,24 +167,14 @@ def makeModel(strufile, datname1, datname2):
     # Give the model away so it can be used!
     return model
 
-def displayResults(model):
-    """Display the results contained within a refined FitModel."""
+def plotResults(model):
+    """Plot the results contained within a refined FitModel."""
 
     # For the basic info about the fit, we can use the FitModel directly
-    chiv = model.residual()
     names = model.getNames()
     vals = model.getValues()
 
     q = model.bucky1.profile.x
-
-    print "Fit using the scipy LM optimizer"
-    chi2 = numpy.dot(chiv, chiv)
-    rchi2 = chi2 / (len(q) - len(vals))
-    print "Chi^2 =", chi2
-    print "Red. Chi^2 =", rchi2
-    
-    for name, val in zip(names, vals):
-        print "%s = %f" % (name, val)
 
     # Plot this for fun.
     I1 = model.bucky1.profile.y
@@ -229,10 +219,14 @@ if __name__ == "__main__":
 
     model = makeModel(strufile, "C60_1.iq", "C60_2.iq")
     scipyOptimize(model)
-    displayResults(model)
+    res = FitResults(model)
+    res.printResults()
+    plotResults(model)
 
-    model = makeModel(strufile, "C60_1.iq", "C60_1.iq")
-    parkOptimize(model)
-    displayResults(model)
+    #model = makeModel(strufile, "C60_1.iq", "C60_1.iq")
+    #parkOptimize(model)
+    #res = FitResults(model)
+    #res.printResults()
+    #plotResults(model)
 
 # End of file

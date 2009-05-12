@@ -24,6 +24,7 @@ from functools import update_wrapper
 
 from .parameter import Parameter, ParameterProxy
 from .modelorganizer import ModelOrganizer
+from .fithook import FitHook
 
 class FitModel(ModelOrganizer):
     """FitModel class.
@@ -32,6 +33,8 @@ class FitModel(ModelOrganizer):
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and Contributions.
     name            --  A name for this FitModel.
+    fithook         --  An object to be called whenever within the residual
+                        (default FitHook()).
     _constraintlist --  An ordered list of the constraints from this and all
                         sub-components.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
@@ -61,11 +64,28 @@ class FitModel(ModelOrganizer):
     def __init__(self, name = "fit"):
         """Initialization."""
         ModelOrganizer.__init__(self, name)
+        self.fithook = FitHook()
         self._constraintlist = []
         self._restraintlist = []
         self._fixed = []
         self._weights = []
         self._doprepare = True
+        return
+
+    def setFitHook(self, fithook):
+        """Set a hook to be called within the residual method.
+
+        The hook is an object for reportind updates, or doing whatever else. It
+        must have 'precall' and 'postcall' methods, which are called at the
+        start and at the end of the residual calculation. The prehook method
+        must accept a single argument, which is this FitModel object. The
+        posthook method must accept the model and the chiv, vector residual.
+        It must also have a reset method that takes no arguments, which is
+        called whenver the FitModel is prepared for a refinement.
+
+        See the FitHook class for the interface.
+        """
+        self.fithook = fithook
         return
 
     def addContribution(self, con, weight = 1.0):
@@ -100,6 +120,9 @@ class FitModel(ModelOrganizer):
         if self._doprepare:
             self._prepare()
 
+        if self.fithook:
+            self.fithook.precall(self)
+
         # Update the variable parameters.
         for i, val in enumerate(p):
             self._parameters[i].setValue(val)
@@ -119,6 +142,9 @@ class FitModel(ModelOrganizer):
         # Now we must append the restraints
         penalties = [ sqrt(res.penalty(w)) for res in self._restraintlist ]
         chiv = concatenate( [ chiv, penalties ] )
+
+        if self.fithook:
+            self.fithook.postcall(self, chiv)
 
         return chiv
 
@@ -143,6 +169,9 @@ class FitModel(ModelOrganizer):
         updated in a specific order. This will set the proper order.
         """
         # Update constraints and restraints. 
+        if self.fithook:
+            self.fithook.reset()
+
         rset = set(self._restraints)
         cdict = {}
         # We let 'newer' constraints override the others. Constraints defined
@@ -311,6 +340,8 @@ class FitModel(ModelOrganizer):
         value   --  A new value for the variable. If this is None
                     (default), then the value will not be changed.
 
+        This will disturb the order of the variables.
+
         Raises ValueError if var is not part of the FitModel.
         
         """
@@ -327,22 +358,28 @@ class FitModel(ModelOrganizer):
 
         return
 
-    def getValues(self):
-        """Get the current values of the variables in a list.
+    def fixAll(self):
+        """Fix all variables."""
+        for var in self._parameters[:]:
+            self.fixVar(var)
+        return
 
-        The list is ordered the same as the _parameters list, which is the same
-        as the order in which variables were added.
+    def freeAll(self):
+        """Free all variables.
+
+        This will disturb the order of the variables.
         
         """
+        for var in self._fixed[:]:
+            self.freeVar(var)
+        return
+
+    def getValues(self):
+        """Get the current values of the variables in a list."""
         return map(float, [par.getValue() for par in self._parameters])
 
     def getNames(self):
-        """Get the names of the variables in a list.
-
-        The list is ordered the same as the _parameters list, which is the same
-        as the order in which variables were added.
-        
-        """
+        """Get the names of the variables in a list."""
         return [par.name for par in self._parameters]
 
 

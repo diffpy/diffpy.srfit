@@ -335,6 +335,34 @@ class ModelOrganizer(object):
 
         return restraints
 
+    def _findParameter(self, par, loc):
+        """Find the location of a parameter within the organizer
+
+        par     --  The Parameter to locate
+        loc     --  A list containing the current hierarchy of the location.
+                    The name of this ModelOrganizer gets appended to the list,
+                    which gets passed on util the parameter is located. If the
+                    parameter is not located herein, the name of this
+                    ModelOrganizer is not appended.
+
+        """
+        loc.append(self.name)
+
+        loclen = len(loc)
+
+        if par in self._parameters:
+            loc.append(par.name)
+            return loc
+
+        for org in self._organizers:
+            org._findParameter(par, loc)
+
+        if len(loc) == loclen:
+            loc.pop()
+
+        return loc
+
+
 # End ModelOrganizer
 
 def equationFromString(eqstr, factory, ns = {}, buildargs = False):

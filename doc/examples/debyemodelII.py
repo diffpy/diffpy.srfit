@@ -22,7 +22,7 @@ Once you understand this, move on to the intensitycalculator.py example.
 """
 import numpy
 
-from diffpy.srfit.fitbase import FitModel
+from diffpy.srfit.fitbase import FitModel, FitResults
 
 from debyemodel import makeModel, scipyOptimize, parkOptimize
 
@@ -65,22 +65,11 @@ def makeModelII():
 
     return model
 
-def displayResults(model):
+def plotResults(model):
     """Display the results contained within a refined FitModel."""
 
-    # For the basic info about the fit, we can use the FitModel directly
-    chiv = model.residual()
-
-    print "Chi^2 = ", numpy.dot(chiv, chiv)
-    # Get the refined variable values, noting that we didn't refine thetaD
-    # directly. If we want uncertainties, we have to go to the optimizer
-    # directly.
     lowToffset, highToffset, tvar = model.getValues()
 
-    print "tvar =", tvar
-    print "lowToffset =", lowToffset
-    print "highToffset =", highToffset
-    
     # Plot this.
     # We want to extend the fitting range to its full extent so we can get a
     # nice full plot. We need to call the equation for each contribution to
@@ -109,15 +98,15 @@ if __name__ == "__main__":
 
     model = makeModelII()
     scipyOptimize(model)
-    displayResults(model)
+    res = FitResults(model)
+    res.printResults()
+    plotResults(model)
 
-    model = makeModelII()
-    parkOptimize(model)
-    displayResults(model)
-    print \
-"""\nNote that the solutions are equivalent (to several digits). We cannot assess
-the parameter uncertainty without uncertainties on the data points.\
-"""
+    #model = makeModelII()
+    #parkOptimize(model)
+    #res = FitResults(model)
+    #res.printResults()
+    #plotResults(model)
 
 
 # End of file

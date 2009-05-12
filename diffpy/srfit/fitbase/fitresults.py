@@ -18,8 +18,6 @@
 
 import numpy
 
-# FIXME - add restraints??
-
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 
@@ -35,6 +33,7 @@ class FitResults(object):
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
     residual    --  The scalar residual of the model.
+    penalty     --  The penalty to residual from the restraints.
     chi2        --  The chi2 of the model.
     rchi2       --  The reduced chi2 of the model.
     rw          --  The Rw of the model.
@@ -62,6 +61,7 @@ class FitResults(object):
         self.conunc = []
         self.cov = None
         self.residual = 0
+        self.penalty = 0
         self.chi2 = 0
         self.rchi2 = 0
         self.rw = 0
@@ -104,8 +104,15 @@ class FitResults(object):
             self.conresults[con.name] = ContributionResults(con, weight, self)
 
         # Calculate the metrics
-        self.residual = model.scalarResidual()
+        res = model.residual()
+        self.residual = numpy.dot(res, res)
+        w = self.residual / len(model.residual())
         self._calculateMetrics()
+
+        # Calcualte the restraints penalty
+        w = self.residual / len(res)
+        self.penalty = 0.0
+        self.penalty = sum([res.penalty(w) for res in model._restraintlist])
 
         return
 
@@ -241,6 +248,8 @@ class FitResults(object):
         lines.append("-"*79)
         formatstr = "%-14s %-12.8f"
         lines.append(formatstr%("Residual",self.residual))
+        lines.append(formatstr%("Contributions", self.residual - self.penalty))
+        lines.append(formatstr%("Restraints", self.penalty))
         lines.append(formatstr%("Chi2",self.chi2))
         lines.append(formatstr%("Reduced Chi2",self.rchi2))
         lines.append(formatstr%("Rw",self.rw))

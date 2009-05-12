@@ -52,7 +52,7 @@ class FitModel(ModelOrganizer):
     _orgdict        --  A dictionary containing the Parameters and
                         Contributions indexed by name.
     _parameters     --  A list of variable Parameters.
-    _restraintlist  --  A list of restraints form this and all sub-components.
+    _restraintlist  --  A list of restraints from this and all sub-components.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
     _weights        --  The weighing factor for each contribution. This value

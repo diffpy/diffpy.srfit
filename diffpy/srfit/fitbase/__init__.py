@@ -42,5 +42,6 @@ from .contribution import Contribution
 from .fitmodel import FitModel
 from .parameter import Parameter
 from .profile import Profile
+from .fitresults import FitResults
 
 # End of file

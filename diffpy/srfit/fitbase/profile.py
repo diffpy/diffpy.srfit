@@ -26,7 +26,7 @@ epsilon = 1e-8
 
 
 class Profile(object):
-    """One-dimensional data containers.
+    """Observed and calculated profile container.
 
     Attributes
 
@@ -219,7 +219,3 @@ def rebinArray(A, xold, xnew):
     return splev(xnew, finterp, der=0)
 
 __id__ = "$Id$"
-
-if __name__ == "__main__":
-    # Check to see if everything imports correctly
-    pass

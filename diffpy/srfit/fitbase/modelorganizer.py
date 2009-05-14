@@ -26,18 +26,19 @@ from diffpy.srfit.equation import Equation
 
 
 class ModelOrganizer(object):
-    """A mixin base class for organizing pieces of a FitModel.
+    """A base class for organizing pieces of a FitModel.
 
     ModelOrganizers are hierarchical organizations of Parameters, Constraints,
     Restraints and other ModelOrganizers. This class is used throughout the
-    hierarcy of a FitModel.  This mixin class provides attributes and members
-    that help organize these objects at any level of the hierarcy.
+    hierarcy of a FitModel and provides attributes and members that help
+    organize these objects at any level of the hierarcy.
 
     Contained parameters and other ModelOrganizers can be accessed by name as
     attributes in order to facilitate multi-level constraints and restraints.
     These constraints and restraints can be placed at any level and a flattened
-    list of them can be retrieved with the getConstraints and getRestraints
-    methods.
+    list of them can be retrieved with the _getConstraints and _getRestraints
+    methods. Parameters and other organizers can be found within the hierarchy
+    with the _locateParameter method.
 
     Attributes
     clicker         --  A Clicker instance for recording changes in contained
@@ -335,27 +336,36 @@ class ModelOrganizer(object):
 
         return restraints
 
-    def _findParameter(self, par, loc):
-        """Find the location of a parameter within the organizer
+    def _locateChild(self, obj, loc = None):
+        """Find the location of a parameter or organizer within the organizer
 
-        par     --  The Parameter to locate
-        loc     --  A list containing the current hierarchy of the location.
+        obj     --  The Parameter or ModelOrganizer to locate
+        loc     --  A list containing the path to the object. The 
                     The name of this ModelOrganizer gets appended to the list,
                     which gets passed on util the parameter is located. If the
                     parameter is not located herein, the name of this
-                    ModelOrganizer is not appended.
+                    ModelOrganizer is not appended.  This defaults to None, in
+                    which case a new list is created and passed along.
+
+        Returns a list of objects. Each entry in the list is the object
+        containing the next object in the list. The last object is obj, if it
+        can be found, otherwise, the list is empty.
 
         """
-        loc.append(self.name)
+        if loc is None:
+            loc = []
+        loc.append(self)
 
         loclen = len(loc)
 
-        if par in self._parameters:
-            loc.append(par.name)
+        if obj in self._orgdict.itervalues():
+            loc.append(obj)
             return loc
 
         for org in self._organizers:
-            org._findParameter(par, loc)
+            org._locateChild(obj, loc)
+            if len(loc) > loclen:
+                break;
 
         if len(loc) == loclen:
             loc.pop()

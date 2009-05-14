@@ -28,6 +28,7 @@ Methods:
 from diffpy.srfit.version import __version__
 
 from .structure import StructureParSet
+from .cctbxstructure import CCTBXStructureParSet
 
 
 # End of file

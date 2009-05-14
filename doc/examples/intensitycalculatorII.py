@@ -214,8 +214,8 @@ if __name__ == "__main__":
     q = numpy.arange(1, 20, 0.05)
     # Make two different data sets, each from the same structure, but with
     # different noise, broadening and background.
-    makeData(strufile, q, "C60_1.iq", 8, 10.068, 0.005, 0.12, 2)
-    makeData(strufile, q, "C60_2.iq", 8, 10.068, 0.005, 0.003, 0)
+    makeData(strufile, q, "C60_1.iq", 8.1, 100.68, 0.005, 0.12, 2)
+    makeData(strufile, q, "C60_2.iq", 8.8, 100.68, 0.005, 0.003, 0)
 
     model = makeModel(strufile, "C60_1.iq", "C60_2.iq")
     scipyOptimize(model)

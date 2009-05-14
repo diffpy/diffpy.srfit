@@ -106,7 +106,6 @@ class FitResults(object):
         # Calculate the metrics
         res = model.residual()
         self.residual = numpy.dot(res, res)
-        w = self.residual / len(model.residual())
         self._calculateMetrics()
 
         # Calcualte the restraints penalty
@@ -190,6 +189,8 @@ class FitResults(object):
             chi2 += con.weight * con.chi2
             rw += con.weight * con.rw
             numpoints += len(con.x)
+
+        numpoints += len(self.model._restraintlist)
 
         rchi2 = chi2 / (numpoints - len(self.varnames))
 
@@ -316,7 +317,8 @@ class FitResults(object):
             vals = {}
             for con in self.conresults.values():
                 for i, loc in enumerate(con.conlocs):
-                    name = ".".join(loc)
+                    names = [obj.name for obj in loc]
+                    name = ".".join(names)
                     w = max(w, len(name))
                     val = con.convals[i]
                     unc = con.conunc[i]
@@ -423,7 +425,7 @@ class ContributionResults(object):
     rw          --  The Rw of the contribution.
     weight      --  The weight of the contribution in the model.
     conlocs     --  The location of the constrained parameters in the
-                    contribution.
+                    contribution (see the ModelOrganizer._locateChild method).
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
 
@@ -480,7 +482,7 @@ class ContributionResults(object):
         # Find the parameters
         for i, constraint in enumerate(model._constraintlist):
             par = constraint.par
-            loc = con._findParameter(par, [])
+            loc = con._locateChild(par)
             if loc:
                 self.conlocs.append(loc)
                 self.convals.append(fitres.convals[i])

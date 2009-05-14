@@ -268,7 +268,6 @@ def plotResults(model):
 
 if __name__ == "__main__":
 
-
     model = makeModel()
     scipyOptimize(model)
     res = FitResults(model)

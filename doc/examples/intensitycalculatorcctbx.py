@@ -17,32 +17,35 @@
 This is an example of building a FitModel in order to fit theoretical intensity
 data. To understand the basics of FitModels, see the debyemodel.py.
 
-The IntensityCalculator class is an example of a Calculator that can be used by
-a Contribution to help generate a signal.
+The CCTBXIntensityCalculator class is an example of a Calculator that can be
+used by a Contribution to help generate a signal.
 
 The makeModel function shows how to build a FitModel that uses the
-IntensityCalculator.
+CCTBXIntensityCalculator. 
 """
 
 import os
 
 import numpy
 
+from cctbx import xray
+from cctbx import crystal
+from cctbx.array_family import flex
+
 from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.park import FitnessAdapter
-from diffpy.srfit.structure import StructureParSet
+from diffpy.srfit.structure import CCTBXStructureParSet
 
+from intensitycalculator import makeData, getXScatteringFactor
 from debyemodel import scipyOptimize, parkOptimize
 
-class IntensityCalculator(Calculator):
+class CCTBXIntensityCalculator(Calculator):
     """A class for calculating intensity using the Debye equation.
 
     Calculating intensity from a structure is difficult in general. This class
-    takes a diffpy.Structure.Structure object and from that calculates a
-    theoretical intensity signal. Unlike the example in debyemodel.py, the
-    intensity calculator is not simple, so we must define this Calculator to
-    help us interface with a FitModel.
+    takes a cctbx Structure object and from that calculates a
+    theoretical intensity signal.
     
     """
 
@@ -59,22 +62,25 @@ class IntensityCalculator(Calculator):
     def setStructure(self, strufile):
         """Set the structure used in the calculation.
 
-        This will create the refinement parameters using the Structure adapter
-        from diffpy.srfit.structure. Thus, the calculator will have its own
-        parameters, each of which will be a proxy for some part of the
+        This will create the refinement parameters using the CCTBXStructure
+        adapter from diffpy.srfit.structure. Thus, the calculator will have its
+        own parameters, each of which will be a proxy for some part of the
         structure. The parameters will be accessible by name under the
         'structure' attribute of this calculator.
         
         """
         # Load the structure from file
         from diffpy.Structure import Structure
-        stru = Structure()
-        stru.read(strufile)
+        ds = Structure()
+        ds.read(strufile)
 
-        # Create a custom parameter set designed to interface with
-        # diffpy.Structure.Structure objects
-        parset = StructureParSet(stru, "structure")
-        # Put this ParameterSet in the Calculator.
+        # Convert this to a cctbx xray scatterer
+        cs = d2cStructure(ds)
+
+        # Turn this into a parameterset
+        parset = CCTBXStructureParSet(cs, "structure")
+
+        # Use this parameter set for the calculator
         self.addParameterSet(parset)
         return
 
@@ -92,23 +98,54 @@ class IntensityCalculator(Calculator):
         print "iofq called", self.count
         return iofq(self.structure.stru, q)
 
-# End class IntensityCalculator
+# End class CCTBXIntensityCalculator
 
-def iofq(S, q):
+def d2cStructure(ds):
+    """Turn a diffpy.Structure object into a cctbx.xray.structure object.
+
+    This is used to simplify the input of structure files into a cctbx
+    structure.
+    
+    """
+    symm = crystal.symmetry( 
+            unit_cell = ds.lattice.abcABG(),
+            space_group_symbol = 1
+            )
+    scatt = []
+
+    for a in ds:
+        sc = xray.scatterer(
+                label = a.element,
+                site = a.xyz,
+                u = a.Uisoequiv,
+                occupancy = a.occupancy)
+        scatt.append(sc)
+
+    cs = xray.structure(
+            crystal_symmetry = symm,
+            scatterers = flex.xray_scatterer(scatt)
+            )
+
+    return cs
+
+def iofq(cs, q):
     """Calculate I(Q) (X-ray) using the Debye Equation.
 
     I(Q) = 2 sum(i,j) f_i(Q) f_j(Q) sinc(rij Q) exp(-0.5 ssij Q**2)
     (The exponential term is the Debye-Waller factor.)
 
-    S   --  A diffpy.Structure.Structure instance. It is assumed that the
-            structure is that of an isolated scatterer. Periodic boundary
-            conditions are not applied.
+    cs  --  A cctbx.xray.scatterer object (P1 symmetry assumed).
     q   --  The q-points to calculate over.
 
     The calculator uses cctbx for the calculation of the f_i if it is
     available, otherwise f_i = 1.
 
     """
+    # This will give us a distance generator
+    mappings = cs.asu_mappings(buffer_thickness = 0)
+    pairgen = crystal.neighbors_fast_pair_generator(
+            mappings, distance_cutoff = 100)
+
     # The functions we need
     sinc = numpy.sinc
     exp = numpy.exp
@@ -123,35 +160,41 @@ def iofq(S, q):
     umult = int(1/deltau)
 
     pairdict = {}
+    sites = set()
     elcount = {}
-    n = len(S)
-    for i in xrange(n):
+    scatterers = cs.scatterers()
+    n = scatterers.size()
+    for pair in pairgen:
+        i = pair.i_seq
+        j = pair.j_seq
+        d = pair.dist_sq**0.5
 
         # count the number of each element
-        eli = S[i].element
-        m = elcount.get(eli, 0)
-        elcount[eli] = m + 1
+        si = scatterers[i]
+        sj = scatterers[j]
+        eli = si.element_symbol()
+        elj = sj.element_symbol()
 
-        for j in xrange(i+1,n):
+        if i not in sites:
+            m = elcount.get(eli, 0)
+            elcount[eli] = m + 1
+            sites.add(i)
 
-            elj = S[j].element
+        # Get the pair
+        els = [eli, elj]
+        els.sort()
 
-            # Get the pair
-            els = [eli, elj]
-            els.sort()
+        # Get the distance to the desired precision
+        D = int(d*dmult)
 
-            # Get the distance to the desired precision
-            d = S.distance(i, j)
-            D = int(d*dmult)
+        # Get the DW factor to the same precision
+        ss = si.u_iso + sj.u_iso
+        SS = int(ss*umult)
 
-            # Get the DW factor to the same precision
-            ss = S[i].Uisoequiv + S[j].Uisoequiv
-            SS = int(ss*umult)
-
-            # Record the multiplicity of this pair
-            key = (els[0], els[1], D, SS)
-            mult = pairdict.get(key, 0)
-            pairdict[key] = mult + 1
+        # Record the multiplicity of this pair
+        key = (els[0], els[1], D, SS)
+        mult = pairdict.get(key, 0)
+        pairdict[key] = mult + 1
 
     # Now we can calculate IofQ from the pair dictionary. Making the dictionary
     # first reduces the amount of calls to sinc and exp we have to make.
@@ -175,7 +218,6 @@ def iofq(S, q):
         # Note that numpy's sinc(x) = sin(x*pi)/(x*pi)
         y += mult * sinc(x * D) * exp(-0.5 * SS * deltau * q**2)
 
-    # We must multiply by 2 since we only counted j > i pairs.
     y *= 2
 
     # Now we must add in the i == j pairs.
@@ -186,87 +228,12 @@ def iofq(S, q):
 
     return y
 
-def getXScatteringFactor(el, q):
-    """Get the x-ray scattering factor for an element over the q range.
-    
-    If cctbx is not available, f(q) = 1 is used.
-
-    """
-    try:
-        import cctbx.eltbx.xray_scattering as xray
-        wk1995 = xray.wk1995(el)
-        g = wk1995.fetch()
-        # at_stol - at sin(theta)/lambda = Q/(4*pi)
-        f = numpy.asarray( map( g.at_stol, q/(4*numpy.pi) ) )
-        return f
-    except ImportError:
-        return 1
-
-def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc):
-    """Make some fake data and save it to file.
-
-    Make some data to fit. This uses iofq to calculate an intensity curve, and
-    adds to it a background, broadens the peaks, and noise.
-
-    strufile--  A filename holding the sample structure
-    q       --  The q-range to calculate over.
-    datname --  The name of the file we're saving to.
-    scale   --  The scale factor
-    a       --  The lattice constant to use
-    Uiso    --  The thermal factor for all atoms
-    sig     --  The broadening factor
-    bkgc    --  A parameter that gives minor control of the background.
-
-    """
-
-    from diffpy.Structure import Structure
-    S = Structure()
-    S.read(strufile)
-
-    # Set the lattice parameters
-    S.lattice.setLatPar(a, a, a)
-
-    # Set a DW factor
-    for a in S:
-        a.Uisoequiv = Uiso
-    y = iofq(S, q)
-
-    # We want to broaden the peaks as well. This simulates instrument effects.
-    q0 = q[len(q)/2]
-    g = numpy.exp(-0.5*((q-q0)/sig)**2)
-    y = numpy.convolve(y, g, mode='same')/sum(g)
-
-    # Add a polynomial background.
-    bkgd = (q + bkgc)**2 * (1.5*max(q) - q)**5
-    bkgd *= 0.2 * max(y) / max(bkgd)
-
-    y += bkgd
-
-    # Now add uniform noise at +/-2% of the max intensity
-    import random
-    nrange = 0.04*max(y)
-    noise = numpy.empty_like(q)
-    for i in xrange(len(q)):
-        noise[i] = (random.random() - 0.5) * nrange
-
-    y += noise
-
-    # Multipy by a scale factor
-    y *= scale
-
-    # Calculate the uncertainty (uniform distribution)
-    u = numpy.ones_like(q) * nrange / 12**0.5
-
-    # Now save it
-    numpy.savetxt(datname, zip(q, y, u))
-    return
-
 ####### Example Code
 
 def makeModel(strufile, datname):
-    """Create a model that uses the IntensityCalculator.
+    """Create a model that uses the CCTBXIntensityCalculator.
 
-    This will create a Contribution that uses the IntensityCalculator,
+    This will create a Contribution that uses the CCTBXIntensityCalculator,
     associate this with a Profile, and use this to define a FitModel.
 
     """
@@ -280,10 +247,10 @@ def makeModel(strufile, datname):
     profile.setObservedProfile(x, y, u)
 
     ## The Calculator
-    # Create an IntensityCalculator named "I". This will be the name we use to
-    # refer to the calculator from within the Contribution equation.  We also
-    # need to load the model structure we're using.
-    calculator = IntensityCalculator("I")
+    # Create a CCTBXIntensityCalculator named "I". This will be the name we use
+    # to refer to the calculator from within the Contribution equation.  We
+    # also need to load the model structure we're using.
+    calculator = CCTBXIntensityCalculator("I")
     calculator.setStructure(strufile)
     
     ## The Contribution
@@ -303,13 +270,13 @@ def makeModel(strufile, datname):
     # the peaks. 
     #
     # There is added benefit for defining these operations outside of the
-    # IntensityCalculator. By combining the different parts of the calculation
-    # within the contribution equation, the time-consuming iofq calculation is
-    # only performed when a structural parameter is changed. If only
-    # non-structural parameters are changed, such as the background and
+    # CCTBXIntensityCalculator. By combining the different parts of the
+    # calculation within the contribution equation, the time-consuming iofq
+    # calculation is only performed when a structural parameter is changed. If
+    # only non-structural parameters are changed, such as the background and
     # broadening parameters, then then previously computed iofq value will be
-    # used to compute the contribution equation.  The benefit in this is
-    # very apparent when refining the model with the LM optimizer, which only
+    # used to compute the contribution equation.  The benefit in this is very
+    # apparent when refining the model with the LM optimizer, which only
     # changes two variables at a time in most cases. Note in the refinement
     # output how many times the residual is calculated, versus how many times
     # iofq is called when using the scipyOptimize function.
@@ -360,18 +327,18 @@ def makeModel(strufile, datname):
 
     # We can also refine structural parameters. 
     structure = calculator.structure
-    a = structure.lattice.a
+    a = structure.unitcell.a
     model.addVar(a)
     # We want to allow for isotropic expansion, so we'll make constraints for
     # that.
-    model.constrain(structure.lattice.b, a)
-    model.constrain(structure.lattice.c, a)
+    model.constrain(structure.unitcell.b, a)
+    model.constrain(structure.unitcell.c, a)
     # We want to refine the thermal paramters as well. We will add a new
     # variable that we call "Uiso" and constrain the atomic Uiso values to
     # this.
-    Uiso = model.newVar("Uiso", 0.01)
-    for atom in structure.atoms:
-        model.constrain(atom.Uiso, Uiso)
+    uiso = model.newVar("uiso", 0.01)
+    for s in structure.scatterers:
+        model.constrain(s.uiso, uiso)
 
     # Give the model away so it can be used!
     return model

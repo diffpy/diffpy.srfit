@@ -233,6 +233,47 @@ class TestModelOrganizer(unittest.TestCase):
         self.assertEquals(2, len(res))
         return
 
+    def testLocateParameter(self):
+        """Test the AddOrganizer method."""
+        m1 = self.m
+        p1 = Parameter("p1", 1)
+        m1._addParameter(p1)
+
+        m2 = ModelOrganizer("m2")
+        p2 = Parameter("p2", 2)
+        m2._addParameter(p2)
+
+        m1._addOrganizer(m2)
+
+        p3 = Parameter("p3", 3)
+
+        # Locate m2 in m1 (m1.m2)
+        loc = m1._locateChild(m2)
+        self.assertEquals(loc, [m1, m2])
+
+        # Locate p1 (m1.p1)
+        loc = m1._locateChild(p1)
+        self.assertEquals(loc, [m1, p1])
+
+        # Locate p2 in m2 (m2.p2)
+        loc = m2._locateChild(p2)
+        self.assertEquals(loc, [m2, p2])
+
+        # Locate p2 in m1 (m1.m2.p2)
+        loc = m1._locateChild(p2)
+        self.assertEquals(loc, [m1, m2, p2])
+
+        # Locate p3 in m1 (not there)
+        loc = m1._locateChild(p3)
+        self.assertEquals(loc, [])
+
+        # Locate p3 in m2 (not there)
+        loc = m2._locateChild(p3)
+        self.assertEquals(loc, [])
+
+        return
+
+
 if __name__ == "__main__":
 
     unittest.main()

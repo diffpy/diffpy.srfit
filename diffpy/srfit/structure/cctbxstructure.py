@@ -110,6 +110,8 @@ class UnitCellParSet(ParameterSet):
         """
         ParameterSet.__init__(self, "unitcell")
         self.strups = strups
+        self._latpars = list(self.strups.stru.unit_cell().parameters())
+
         self.addParameter(ParameterWrapper(None, "a", self._latgetter(0),
             self._latsetter(0)))
         self.addParameter(ParameterWrapper(None, "b", self._latgetter(1),
@@ -123,45 +125,25 @@ class UnitCellParSet(ParameterSet):
         self.addParameter(ParameterWrapper(None, "gamma", self._latgetter(5),
             self._latsetter(5)))
 
+        
+
         return
 
     def _latgetter(self, i):
 
         def f(dummy):
-            return self.strups.stru.unit_cell().parameters()[i]
+            return self._latpars[i]
 
         return f
 
     def _latsetter(self, i):
 
         def f(dummy, value):
-            pars = list(self.strups.stru.unit_cell().parameters())
-            pars[i] = value
-            self._remakeStructure(tuple(pars))
+            self._latpars[i] = value
+            self.strups._update = True
             return
 
         return f
-
-    def _remakeStructure(self, uc):
-        """Remake the structure with new unit cell parameters."""
-        stru = self.strups.stru
-        sgn = stru.space_group().match_tabulated_settings().number()
-
-        # Create the symmetry object
-        symm = crystal.symmetry(
-                unit_cell = uc,
-                space_group_symbol = sgn
-                )
-
-        # Now the new structure
-        newstru = stru.__class__(
-                crystal_symmetry = symm,
-                scatterers = stru.scatterers()
-                )
-
-        self.strups.stru = newstru
-        return
-
 
 # End class UnitCellParSet
 
@@ -183,6 +165,8 @@ class CCTBXStructureParSet(ParameterSet):
         self.addParameter(UnitCellParSet(self))
         self.scatterers = []
 
+        self._update = False
+
         cdict = {}
         for i, s in enumerate(stru.scatterers()):
             el = s.element_symbol()
@@ -194,6 +178,40 @@ class CCTBXStructureParSet(ParameterSet):
             self.scatterers.append(scatterer)
 
         return
+
+    def update(self):
+        """Update the unit_cell to a change in lattice parameters.
+
+        This remakes the unit cell according to a change in the lattice
+        parameters. Call this function before using the CCTBXStructureParSet.
+        The unit_cell will only be remade if necessary.
+
+        """
+        if not self._update:
+            return
+
+        self._update = False
+        stru = self.stru
+        sgn = stru.space_group().match_tabulated_settings().number()
+
+        # Create the symmetry object
+        symm = crystal.symmetry(
+                unit_cell = self.unitcell._latpars,
+                space_group_symbol = sgn
+                )
+
+        # Now the new structure
+        newstru = stru.__class__(
+                crystal_symmetry = symm,
+                scatterers = stru.scatterers()
+                )
+
+        self.unitcell._latpars = list(newstru.unit_cell().parameters())
+
+        self.stru = newstru
+        return
+
+
 
 # End class StructureParSet
 

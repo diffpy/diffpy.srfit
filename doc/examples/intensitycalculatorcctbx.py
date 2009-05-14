@@ -94,6 +94,11 @@ class CCTBXIntensityCalculator(Calculator):
         structure object.
 
         """
+        # Due to the design of cctbx structure, we have to create a new
+        # unit_cell whenever a lattice parameter changes. By calling the update
+        # function we can avoid remaking the structure multiple times between
+        # uses of the structure.
+        self.structure.update()
         self.count += 1
         print "iofq called", self.count
         return iofq(self.structure.stru, q)

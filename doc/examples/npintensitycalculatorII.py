@@ -30,8 +30,8 @@ import os
 import numpy
 
 from diffpy.srfit.fitbase import Contribution, FitModel, Profile, FitResults
-from intensitycalculator import IntensityCalculator, scipyOptimize
-from intensitycalculator import iofq, parkOptimize, makeData
+from npintensitycalculator import IntensityCalculator, scipyOptimize
+from npintensitycalculator import iofq, parkOptimize, makeData
 
 from debyemodel import scipyOptimize, parkOptimize
 

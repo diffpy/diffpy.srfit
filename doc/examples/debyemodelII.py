@@ -18,7 +18,7 @@ This is an extension of example in debyemodel.py. Here we fit the low and high
 temperature parts of the data simultaneously using the same debye temperature,
 but different offsets.
 
-Once you understand this, move on to the intensitycalculator.py example.
+Once you understand this, move on to the intensitycalculator examples.
 """
 import numpy
 
@@ -30,9 +30,8 @@ def makeModelII():
     """Make the model for our problem.
 
     We will make two models using the makeModel function from debyemodel.py. We
-    will extract the contribution from the second model and use it in the
-    first and fit both contributions simultaneously over different fit ranges,
-    with the same Debye temperature.
+    will extract the contributions from each and fit them simultaneously over
+    different fit ranges, with the same Debye temperature.
 
     """
 
@@ -51,7 +50,8 @@ def makeModelII():
     model.addContribution(lowT)
     model.addContribution(highT)
 
-    # Let's change the fit ranges on our contributions
+    # Let's change the fit ranges on our contributions. We want to fit one of
+    # the contributions at low temperature, and one at high.
     lowT.profile.setCalculationRange(0, 150)
     highT.profile.setCalculationRange(400, 500)
 

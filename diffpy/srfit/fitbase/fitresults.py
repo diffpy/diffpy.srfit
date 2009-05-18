@@ -221,6 +221,9 @@ class FitResults(object):
         Returns a string containing the formatted results.
         
         """
+        if update:
+            self.update()
+
         lines = []
         corrmin = 0.25
 

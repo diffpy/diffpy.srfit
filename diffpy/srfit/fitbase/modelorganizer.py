@@ -47,14 +47,14 @@ class ModelOrganizer(object):
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
+    _organizers     --  A list of ModelOrganizers that this ModelOrganizer
+                        knows about.
     _orgdict        --  A dictionary containing the Parameters and
                         ModelOrganizers indexed by name.
     _parameters     --  A list of parameters that this ModelOrganizer knows
                         about.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
-    _organizers     --  A list of ModelOrganizers that this ModelOrganizer
-                        knows about.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from string

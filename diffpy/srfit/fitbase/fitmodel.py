@@ -55,6 +55,7 @@ class FitModel(ModelOrganizer):
     _restraintlist  --  A list of restraints from this and all sub-components.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
+    _tagdict        --  A dictionary of tags to variables.
     _weights        --  The weighing factor for each contribution. This value
                         is multiplied by the residual of the contribution when
                         determining the overall residual.
@@ -70,6 +71,7 @@ class FitModel(ModelOrganizer):
         self._fixed = []
         self._weights = []
         self._doprepare = True
+        self._tagdict = {}
         return
 
     def setFitHook(self, fithook):
@@ -232,7 +234,8 @@ class FitModel(ModelOrganizer):
 
     # Variable manipulation
 
-    def addVar(self, par, value = None, name = None, fixed = False):
+    def addVar(self, par, value = None, name = None, fixed = False, tag = None,
+            tags = []):
         """Add a variable to be refined.
 
         par     --  A Parameter that will be varied during a fit.
@@ -241,6 +244,10 @@ class FitModel(ModelOrganizer):
         name    --  A name for this variable. If name is None (default), then
                     the name of the parameter will be used.
         fixed   --  Fix the variable so that it does not vary (default False).
+        tag     --  A tag for the variable. This can be used to fix and free
+                    variables by tag (default None).
+        tags    --  A list of tags (default []). Both tag and tags can be
+                    appolied.
 
         Raises ValueError if the name of the variable is already taken by
         another variable or a contribution.
@@ -255,9 +262,23 @@ class FitModel(ModelOrganizer):
 
         if fixed:
             self.fixVar(var)
+          
+        # Deal with tags
+        if tag:
+            self.__tagVar(tag, var)
+
+        for t in tags:
+            self.__tagVar(t, var)
 
         self._doprepare = True
 
+        return
+
+    def __tagVar(self, tag, var):
+        """Private function to tag a variable."""
+        vset = self._tagdict.get(tag, set())
+        vset.add(var)
+        self._tagdict[tag] = vset
         return
 
     def delVar(self, var):
@@ -281,10 +302,14 @@ class FitModel(ModelOrganizer):
         # Remove this from the organizer dictionary
         del self._orgdict[var.name]
         self.clicker.removeSubject(var.clicker)
+
+        # Remove tags
+        for vset in self._tagdict.items():
+            vset.discard(var)
         
         return
 
-    def newVar(self, name, value, fixed = False):
+    def newVar(self, name, value, fixed = False, tag = None, tags = []):
         """Create a new variable of the fit.
 
         This method lets new variables be created that are not tied to a
@@ -296,6 +321,10 @@ class FitModel(ModelOrganizer):
                     used by this name in restraint and constraint equations.
         value   --  An initial value for the variable. 
         fixed   --  Fix the variable so that it does not vary (default False).
+        tag     --  A tag for the variable. This can be used to fix and free
+                    variables by tag (default None).
+        tags    --  A list of tags (default []). Both tag and tags can be
+                    appolied.
 
         Returns the new variable (Parameter instance).
 
@@ -304,6 +333,13 @@ class FitModel(ModelOrganizer):
 
         if fixed:
             self.fixVar(var)
+
+        # Deal with tags
+        if tag:
+            self.__tagVar(tag, var)
+
+        for t in tags:
+            self.__tagVar(t, var)
 
         self._doprepare = True
         return var
@@ -358,20 +394,50 @@ class FitModel(ModelOrganizer):
 
         return
 
-    def fixAll(self):
-        """Fix all variables."""
-        for var in self._parameters[:]:
+    def fixAll(self, *args):
+        """Fix all variables.
+
+        Extra arguments are assumed to be tags. If present, only variables with
+        the given tag will be fixed.
+
+        """
+
+        fixset = set()
+        for tag in args:
+            vset = self._tagdict.get(tag)
+            if vset:
+                fixset.update(vset)
+
+        if not fixset:
+            fixset = self._parameters[:]
+
+        for var in fixset:
             self.fixVar(var)
+
         return
 
-    def freeAll(self):
+    def freeAll(self, *args):
         """Free all variables.
+
+        Extra arguments are assumed to be tags. If present, only variables with
+        the given tag will be fixed.
 
         This will disturb the order of the variables.
         
         """
-        for var in self._fixed[:]:
+
+        freeset = set()
+        for tag in args:
+            vset = self._tagdict.get(tag)
+            if vset:
+                freeset.update(vset)
+
+        if not freeset:
+            freeset = self._fixed[:]
+
+        for var in freeset:
             self.freeVar(var)
+
         return
 
     def getValues(self):

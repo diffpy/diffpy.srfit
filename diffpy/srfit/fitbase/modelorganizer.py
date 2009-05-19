@@ -101,8 +101,12 @@ class ModelOrganizer(object):
         variable.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the FitModel and that is not defined in ns.
+        Raises ValueError if par is marked as constant.
 
         """
+        if par.const:
+            raise ValueError("The parameter '%s' is constant"%par)
+
         if isinstance(con, str):
             eq = equationFromString(con, self._eqfactory, ns)
         else:

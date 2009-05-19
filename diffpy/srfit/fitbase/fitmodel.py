@@ -251,9 +251,14 @@ class FitModel(ModelOrganizer):
 
         Raises ValueError if the name of the variable is already taken by
         another variable or a contribution.
+        Raises ValueError if the parameter is tagged as a const.
 
         """
         name = name or par.name
+
+        if par.const:
+            raise ValueError("The parameter '%s' is constant"%par)
+
         var = ParameterProxy(name, par)
         if value is not None:
             var.setValue(value)

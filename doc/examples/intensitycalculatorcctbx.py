@@ -277,14 +277,13 @@ def makeModel(cs, datname):
     # We also want to adjust the scale
     model.addVar(contribution.scale, 1)
 
-    # We can also refine structural parameters. 
+    # We can also refine structural parameters. Note that structural parameters
+    # are constrained according to the space group. Those can be overridden
+    # here.
     structure = calculator.structure
     a = structure.unitcell.a
     model.addVar(a)
-    # We want to allow for isotropic expansion, so we'll make constraints for
-    # that. This will be done automatically in the future.
-    model.constrain(structure.unitcell.b, a)
-    model.constrain(structure.unitcell.c, a)
+
     # We want to refine the thermal paramters as well. We will add a new
     # variable that we call "uiso" and constrain the atomic uiso values to
     # this.

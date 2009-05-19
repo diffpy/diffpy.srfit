@@ -125,7 +125,7 @@ class UnitCellParSet(ParameterSet):
         self.addParameter(ParameterWrapper(None, "gamma", self._latgetter(5),
             self._latsetter(5)))
 
-        
+        self.constrainSpaceGroup()
 
         return
 
@@ -145,7 +145,152 @@ class UnitCellParSet(ParameterSet):
 
         return f
 
+    def constrainSpaceGroup(self):
+        """Constrain the lattice parameters according to the space group.
+        
+        This forces the lattice parameters to conform to the space group
+        symmetry. The protocol this follows is listed under Crystal Systems
+        below.
+
+        Crystal Systems:
+        Triclinic       --  No constraints.
+        Monoclinic      --  alpha and beta are constrained to 90 unless alpha !=
+                            beta and alpha == gamma, in which case alpha and
+                            gamma are constrained to 90.
+        Orthorhombic    --  alpha, beta and gamma are constrained to 90
+        Tetragonal      --  b is constrained to a and alpha, beta and gamma are
+                            constrained to 90.
+        Trigonal        --  If gamma == 120, then b is constrained to a, alpha
+                            and beta are constrained to 90 and gamma is
+                            constrained to 120.  Otherwise, b and c are
+                            constrained to a, beta and gamma are constrained to
+                            alpha.
+        Hexagonal       --  b is constrained to a, alpha and beta are
+                            constrained to 90 and gamma is constrained to 120.
+        Cubic           --  b and c are constrained to a, and alpha, beta and
+                            gamma are constrained to 90.
+
+        """
+        # First clear any constraints or constant variables in the lattice
+        self._constraints = {}
+        for par in self._parameters:
+            par.setConst(False)
+
+        # Now get the crystal system
+        system = self.strups.stru.space_group().crystal_system()
+        if system == "Undefined":
+            system = "Triclinic"
+
+        constraintMap = {
+          "Triclinic"  : self._constrainTriclinic,
+          "Monoclinic" : self._constrainMonoclinic,
+          "Orthorhombic" : self._constrainOrthorhombic, 
+          "Tetragonal" : self._constrainTetragonal,
+          "Trigonal"   : self._constrainTrigonal,
+          "Hexagonal"  : self._constrainHexagonal,
+          "Cubic"      : self._constrainCubic
+        }
+
+
+        # Note that we don't actuall constrain parameters, as that is
+        # redundant. We will simply mark some parameters as constant if they
+        # are constrained by cctbx.
+
+        constraintMap[system]()
+        return
+
+    def _constrainTriclinic(self):
+        """Make constraints for Triclinic systems.
+
+        This frees the current value of all parameters.
+        """
+        return
+
+    def _constrainMonoclinic(self):
+        """Make constraints for Monoclinic systems.
+        
+        alpha and beta are constrained to 90 unless alpha != beta and alpha ==
+        gamma, in which case alpha and gamma are constrained to 90.
+        """
+        self.alpha.setConst(True, 90.0)
+        beta = self.alpha.getValue()
+        gamma = self.alpha.getValue()
+
+        if 90 != beta and beta == gamma:
+            self.gamma.setConst(True, 90)
+        else:
+            self.beta.setConst(True, 90)
+        return
+
+    def _constrainOrthorhombic(self):
+        """Make constraints for Orthorhombic systems.
+        
+        alpha, beta and gamma are constrained to 90
+        """
+        self.alpha.setConst(True, 90.0)
+        self.beta.setConst(True, 90.0)
+        self.gamma.setConst(True, 90.0)
+        return
+
+    def _constrainTetragonal(self):
+        """Make constraints for Tetragonal systems.
+
+        b is constrained to a and alpha, beta and gamma are constrained to 90.
+        """
+        self.alpha.setConst(True, 90.0)
+        self.beta.setConst(True, 90.0)
+        self.gamma.setConst(True, 90.0)
+        self.constrain(self.b, self.a)
+        return
+
+    def _constrainTrigonal(self):
+        """Make constraints for Trigonal systems.
+
+        If gamma == 120, then b is constrained to a, alpha and beta are
+        constrained to 90 and gamma is constrained to 120. Otherwise, b and c
+        are constrained to a, beta and gamma are constrained to alpha.
+        """
+        if self.gamma.getValue() == 120:
+            self.alpha.setConst(True, 90.0)
+            self.beta.setConst(True, 90.0)
+            self.gamma.setConst(True, 120)
+            self.constrain(self.b, self.a)
+        else:
+            self.constrain(self.b, self.a)
+            self.constrain(self.c, self.a)
+            self.constrain(self.beta, self.alpha)
+            self.constrain(self.gamma, self.alpha)
+        return
+
+    def _constrainHexagonal(self):
+        """Make constraints for Hexagonal systems.
+
+        b is constrained to a, alpha and beta are constrained to 90 and gamma is
+        constrained to 120.
+        """
+        self.constrain(self.b, self.a)
+        self.alpha.setConst(True, 90.0)
+        self.beta.setConst(True, 90.0)
+        self.gamma.setConst(True, 120.0)
+        return
+
+    def _constrainCubic(self):
+        """Make constraints for Cubic systems.
+
+        b and c are constrained to a, alpha, beta and gamma are constrained to
+        90.
+        """
+        self.constrain(self.b, self.a)
+        self.constrain(self.c, self.a)
+        self.alpha.setConst(True, 90.0)
+        self.beta.setConst(True, 90.0)
+        self.gamma.setConst(True, 90.0)
+        return
+
+
 # End class UnitCellParSet
+
+# FIXME - Special positions should be constant.
 
 class CCTBXStructureParSet(ParameterSet):
     """A wrapper for CCTBX structure.
@@ -162,7 +307,7 @@ class CCTBXStructureParSet(ParameterSet):
         """
         ParameterSet.__init__(self, name)
         self.stru = stru
-        self.addParameter(UnitCellParSet(self))
+        self.addParameterSet(UnitCellParSet(self))
         self.scatterers = []
 
         self._update = False
@@ -176,6 +321,7 @@ class CCTBXStructureParSet(ParameterSet):
             scatterer = ScattererParSet(sname, self, i)
             self.addParameterSet(scatterer)
             self.scatterers.append(scatterer)
+
 
         return
 

@@ -44,6 +44,22 @@ class Parameter(Argument):
         Argument.__init__(self, value, name, const)
         return
 
+    def setConst(self, const = True, value = None):
+        """Toggle the Parameter as constant.
+
+        const   --  Flag indicating if the parameter is constant (default
+                    True).
+        value   --  An optional value for the parameter (default None). If this
+                    is not None, then the parameter will get a new value,
+                    constant or otherwise.
+
+        """
+        self.const = bool(const)
+        if value is not None:
+            self.setValue(value)
+
+        return
+
     def __str__(self):
         if self.name:
             return "Parameter(" + self.name + ")"

@@ -166,7 +166,7 @@ class FitResults(object):
             pvals[k] = v + h
             rk = self.model.residual(pvals)
 
-            # The cconstraints derivatives squared
+            # The constraints derivatives
             cond = []
             for con in model._constraintlist:
                 con.update()
@@ -184,12 +184,13 @@ class FitResults(object):
 
             pvals[k] = v
             r.append(rk/(2*h))
-        # Record the constraint derivative matrix
+            
+        # Reset the constrained parameters to their original values
         for con in model._constraintlist:
             con.update()
-        # The matrix of constraint derivatives with respect to variables.
-        # Each row contains a different constraint.
+
         self._dcon = numpy.vstack(conr).T
+
         # return the jacobian
         return numpy.vstack(r).T
 
@@ -214,20 +215,20 @@ class FitResults(object):
 
     def _calculateConstraintUncertainties(self):
         """Calculate the uncertainty on the constrained parameters."""
-        dc = self._dcon
         vu = self.varunc
 
         # sig^2(c) = sum_i sum_j sig(v_i) sig(v_j) (dc/dv_i)(dc/dv_j)
         # sig^2(c) = sum_i sum_j [sig(v_i)(dc/dv_i)][sig(v_j)(dc/dv_j)]
         # sig^2(c) = sum_i sum_j u_i u_j
         self.conunc = []
-        for dci in dc:
+        for dci in self._dcon:
 
             # Create sig(v_i) (dc/dv_i) array.
-            u = vu * dci
+            u = dci * vu
             # The outer product is all possible pairings of u_i and u_j
+            # uu_ij = u_i u_j
             uu = numpy.outer(u, u)
-            # Sum these pairings to get the 
+            # Sum these pairings to get sig^2(c)
             sig2c = sum(uu.flatten())
 
             self.conunc.append(sig2c**0.5)

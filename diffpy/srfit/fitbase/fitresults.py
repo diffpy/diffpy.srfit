@@ -37,6 +37,10 @@ class FitResults(object):
     chi2        --  The chi2 of the model.
     rchi2       --  The reduced chi2 of the model.
     rw          --  The Rw of the model.
+    message     --  Various messages about the results that need to be seen by
+                    the user.
+    _dcon       --  The derivatives of the constraint equations with respect to
+                    the variables. This is used internally.
 
     Each of these attributes, except the model, are created or updated when the
     update method is called.
@@ -65,7 +69,8 @@ class FitResults(object):
         self.chi2 = 0
         self.rchi2 = 0
         self.rw = 0
-        self._conjac = None
+        self._dcon = []
+        self.message = ""
 
         if update:
             self.update()
@@ -121,9 +126,14 @@ class FitResults(object):
         This code borrowed from PARK. It finds the pseudo-inverse of the
         Jacobian using the singular value decomposition.
         """
-        J = self._calculateJacobian()
-        u,s,vh = numpy.linalg.svd(J,0)
-        self.cov = numpy.dot(vh.T.conj()/s**2,vh)
+        try:
+            J = self._calculateJacobian()
+            u,s,vh = numpy.linalg.svd(J,0)
+            self.cov = numpy.dot(vh.T.conj()/s**2,vh)
+        except numpy.linalg.LinAlgError:
+            self.message = "Cannot compute covariance matrix"
+            l = len(self.varvals)
+            self.cov = numpy.zeros((l, l), dtype=float)
         return
 
     def _calculateJacobian(self, step=1e-8):
@@ -147,14 +157,17 @@ class FitResults(object):
 
         # Center point formula: 
         #     df/dv = lim_{h->0} ( f(v+h)-f(v-h) ) / ( 2h )
+        #
+
         r = []
-        # For constraints
+        # The list of constraint derivatives with respect to variables 
         conr = []
         for k,v in enumerate(pvals):
             h = delta[k]
             pvals[k] = v + h
             rk = self.model.residual(pvals)
 
+            # The cconstraints derivatives squared
             cond = []
             for con in model._constraintlist:
                 con.update()
@@ -167,7 +180,6 @@ class FitResults(object):
                 con.update()
                 cond[i] -= con.par.getValue()
                 cond[i] /= 2*h
-                cond[i] = numpy.abs(cond[i])
 
             conr.append(cond)
 
@@ -176,7 +188,9 @@ class FitResults(object):
         # Record the constraint derivative matrix
         for con in model._constraintlist:
             con.update()
-        self._conjac = numpy.vstack(conr).T
+        # The matrix of constraint derivatives with respect to variables.
+        # Each row contains a different constraint.
+        self._dcon = numpy.vstack(conr).T
         # return the jacobian
         return numpy.vstack(r).T
 
@@ -201,11 +215,23 @@ class FitResults(object):
 
     def _calculateConstraintUncertainties(self):
         """Calculate the uncertainty on the constrained parameters."""
+        dc = self._dcon
+        vu = self.varunc
 
-        # dp = sum_i |dp/dvi| * unc(vi)
-        v = numpy.array(self.varunc)
-        dp = abs(numpy.dot(self._conjac, v))
-        self.conunc = dp.tolist()
+        # sig^2(c) = sum_i sum_j sig(v_i) sig(v_j) (dc/dv_i)(dc/dv_j)
+        # sig^2(c) = sum_i sum_j [sig(v_i)(dc/dv_i)][sig(v_j)(dc/dv_j)]
+        # sig^2(c) = sum_i sum_j u_i u_j
+        self.conunc = []
+        for dci in dc:
+
+            # Create sig(v_i) (dc/dv_i) array.
+            u = vu * dci
+            # The outer product is all possible pairings of u_i and u_j
+            uu = numpy.outer(u, u)
+            # Sum these pairings to get the 
+            sig2c = sum(uu.flatten())
+
+            self.conunc.append(sig2c**0.5)
         return
 
     def formatResults(self, header = "", footer = "", update = False):
@@ -237,6 +263,9 @@ class FitResults(object):
         # User-defined header
         if header:
             lines.append(header)
+
+        if self.message:
+            lines.append(self.message)
 
         if not certain:
             l = "Some quantities invalid due to missing profile uncertainty"

@@ -110,7 +110,19 @@ class Calculator(ModelOrganizer):
         # FIXME - When data parsers are implemented, this should use the
         # metadata to automatically configure the Calculator.
         if profile is not self.profile:
+
+            # Stop watching the parameters
+            if self.profile is not None:
+                self.clicker.removeSubject(self.profile.xpar.clicker)
+                self.clicker.removeSubject(self.profile.ypar.clicker)
+                self.clicker.removeSubject(self.profile.dypar.clicker)
+
+            # Set the profile and watch its parameters
             self.profile = profile
+            self.clicker.addSubject(self.profile.xpar.clicker)
+            self.clicker.addSubject(self.profile.ypar.clicker)
+            self.clicker.addSubject(self.profile.dypar.clicker)
+
             self.clicker.click()
         return
 

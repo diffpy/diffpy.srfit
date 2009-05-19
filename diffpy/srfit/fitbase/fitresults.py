@@ -37,8 +37,7 @@ class FitResults(object):
     chi2        --  The chi2 of the model.
     rchi2       --  The reduced chi2 of the model.
     rw          --  The Rw of the model.
-    message     --  Various messages about the results that need to be seen by
-                    the user.
+    messages    --  A list of messages about the results.
     _dcon       --  The derivatives of the constraint equations with respect to
                     the variables. This is used internally.
 
@@ -70,7 +69,7 @@ class FitResults(object):
         self.rchi2 = 0
         self.rw = 0
         self._dcon = []
-        self.message = ""
+        self.messages = []
 
         if update:
             self.update()
@@ -131,7 +130,7 @@ class FitResults(object):
             u,s,vh = numpy.linalg.svd(J,0)
             self.cov = numpy.dot(vh.T.conj()/s**2,vh)
         except numpy.linalg.LinAlgError:
-            self.message = "Cannot compute covariance matrix"
+            self.messages.append("Cannot compute covariance matrix.")
             l = len(self.varvals)
             self.cov = numpy.zeros((l, l), dtype=float)
         return
@@ -264,14 +263,11 @@ class FitResults(object):
         if header:
             lines.append(header)
 
-        if self.message:
-            lines.append(self.message)
-
         if not certain:
             l = "Some quantities invalid due to missing profile uncertainty"
-            lines.append("")
-            lines.append(l)
-            lines.append("")
+            self.messages.append(l)
+
+        lines.extend(self.messages)
 
         ## Overall results
         l = "Overall"

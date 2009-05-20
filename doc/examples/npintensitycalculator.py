@@ -242,20 +242,14 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc):
 
     y += bkgd
 
-    # Now add uniform noise at +/-2% of the max intensity
-    import random
-    nrange = 0.04*max(y)
-    noise = numpy.empty_like(q)
-    for i in xrange(len(q)):
-        noise[i] = (random.random() - 0.5) * nrange
-
-    y += noise
-
     # Multipy by a scale factor
     y *= scale
 
-    # Calculate the uncertainty (uniform distribution)
-    u = numpy.ones_like(q) * nrange / 12**0.5
+    # Calculate the uncertainty 
+    u = y**0.5
+
+    # And apply the noise
+    y = numpy.random.poisson(y)
 
     # Now save it
     numpy.savetxt(datname, zip(q, y, u))

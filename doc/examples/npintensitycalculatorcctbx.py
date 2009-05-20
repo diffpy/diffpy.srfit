@@ -221,13 +221,13 @@ def iofq(cs, q):
         SS = key[3]
 
         # Note that numpy's sinc(x) = sin(x*pi)/(x*pi)
-        y += mult * sinc(x * D) * exp(-0.5 * SS * deltau * q**2)
+        y += fi * fj * mult * sinc(x * D) * exp(-0.5 * SS * deltau * q**2)
 
     y *= 2
 
     # Now we must add in the i == j pairs.
     for el, f in fdict.items():
-        y += f * elcount[el]
+        y += f**2 * elcount[el]
 
     # And that's it!
 

@@ -173,14 +173,14 @@ def iofq(S, q):
         SS = key[3]
 
         # Note that numpy's sinc(x) = sin(x*pi)/(x*pi)
-        y += mult * sinc(x * D) * exp(-0.5 * SS * deltau * q**2)
+        y += fi * fj * mult * sinc(x * D) * exp(-0.5 * SS * deltau * q**2)
 
     # We must multiply by 2 since we only counted j > i pairs.
     y *= 2
 
     # Now we must add in the i == j pairs.
     for el, f in fdict.items():
-        y += f * elcount[el]
+        y += f**2 * elcount[el]
 
     # And that's it!
 
@@ -401,7 +401,7 @@ if __name__ == "__main__":
     # Make the data and the model
     strufile = "data/C60.stru"
     q = numpy.arange(1, 20, 0.05)
-    makeData(strufile, q, "C60.iq", 8, 100.68, 0.005, 0.13, 2)
+    makeData(strufile, q, "C60.iq", 1.0, 100.68, 0.005, 0.13, 2)
 
     model = makeModel(strufile, "C60.iq")
     scipyOptimize(model)

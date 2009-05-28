@@ -108,7 +108,7 @@ class EquationFactory(object):
                     diffpy.srfit.equation.literals.Argument). Setting this will
                     allow the Factory to be used with other than the default
                     Argument type.
-    newargs     --  A list of new arguments created by makeEquation. This is
+    newargs     --  A set of new arguments created by makeEquation. This is
                     redefined whenever makeEquation is called.
     
     """
@@ -132,7 +132,7 @@ class EquationFactory(object):
         self.argclass = argclass
         self.registerConstant("pi", numpy.pi)
         self.registerConstant("e", numpy.e)
-        self.newargs = []
+        self.newargs = set()
         return
 
     def makeEquation(self, eqstr, buildargs = True):
@@ -253,12 +253,12 @@ class EquationFactory(object):
                 ns[opname] = opbuilder
 
         # Make the arguments
-        self.newargs = []
+        self.newargs = set()
         for argname in eqargs:
             if argname not in self.builders:
                 argbuilder = ArgumentBuilder(name = argname)
                 ns[argname] = argbuilder
-                self.newargs.append(argbuilder.literal)
+                self.newargs.add(argbuilder.literal)
 
         return ns
 
@@ -282,18 +282,17 @@ class EquationFactory(object):
         # Scan for argumens and operators. This will be wrong on the first pass
         # since variables like "a" and "x" will appear as operators to the
         # tokenizer.
-        eqargs = {}
-        eqops = {}
+        eqargs = set()
+        eqops = set()
 
         for i, tok in enumerate(tokens):
             if tok[0] in (token.NAME, token.OP):
-                eqops[i] = tok[1]
+                eqops.add(tok[1])
 
         # Scan the tokens for names that are not defined in the module or in
         # self.builders. These will be treated as Arguments that need to be
         # generated.
-        poplist = []
-        for i, tok in eqops.items():
+        for tok in set(eqops):
             # Move genuine varibles to the eqargs dictionary
             if (
                 # Check local namespace
@@ -305,17 +304,14 @@ class EquationFactory(object):
                 # Check ignored characters
                 tok not in EquationFactory.ignore
                 ):
-                eqargs[i] = tok
-                poplist.append(i)
+                eqargs.add(tok)
+                eqops.remove(tok)
             # Discard it if it is is in the ignore or symbol list
             elif tok in EquationFactory.ignore\
                     or tok in EquationFactory.symbols:
-                poplist.append(i)
+                eqops.remove(tok)
 
-        # Discard the tokens that were moved or ignored
-        map(eqops.pop, poplist)
-
-        return eqops.values(), eqargs.values()
+        return eqops, eqargs
 
 # End class EquationFactory
 

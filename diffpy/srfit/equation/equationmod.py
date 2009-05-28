@@ -103,6 +103,8 @@ class Equation(Generator):
             m += "\n".join(validator.errors)
             raise ValueError(m)
 
+        # FIXME argfinder mixes up the order of arguments. This is a problem
+        # for simple functions f(a, b, c), where the order must be known.
         argfinder = ArgFinder(getconsts=False)
         root.identify(argfinder)
         self.args = list(argfinder.args)

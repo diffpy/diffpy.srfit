@@ -18,6 +18,8 @@
 
 import numpy
 
+# FIXME - really small numbers don't print well
+
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 

@@ -176,7 +176,10 @@ class EquationFactory(object):
         Equations are Generators, so they are evaluated in an equation string
         without parentheses.
         """
-        self.registerGenerator(name, eq)
+        # FIXME - the order of the parameters is getting mixed up. This is
+        # probably due to ArgFinder.
+        eqbuilder = wrapEquation(name, eq)
+        self.registerBuilder(name, eqbuilder)
         return
 
     def registerFunction(self, name, func, nin = 2, nout = 1):
@@ -492,9 +495,47 @@ class GeneratorBuilder(EquationBuilder):
         self.literal = gen
         return
 
-    def __call__(self):
-        """Lets a GeneratorBuilder get called like a function."""
-        return self
+# end class GeneratorBuilder
+
+class EqGeneratorBuilder(EquationBuilder):
+    """EquationBuilder wrapper around an Equation.
+
+    Equation builder objects can be composed like a normal function where the
+    arguments can be other EquationBuilder instances or constants.
+
+    Attributes
+    literal     --  The Generator wrapped by this instance.
+    """
+
+    def __init__(self, name, eq):
+        """Wrap the Generator.
+        
+        Arguments
+        eq  --  The Generator instance to be wrapped.
+        """
+        EquationBuilder.__init__(self)
+        self.name = name
+        self.literal = eq
+        return
+
+    def __call__(self, *args):
+        """Call the builder.
+
+        This creates a new builder that will link the arguments in args to the
+        arguments inside of the equation.
+        
+        args    --  Arguments of the operation.
+        """
+        # We need to treat this as an equation. So, we will wrap it as an
+        # OperatorBuilder.
+        nin = len(self.literal.args)
+        if nin != len(args):
+            m = "%i arguments required, %i recieved"%(nin, len(args))
+            raise TypeError(m)
+
+        builder = wrapFunction(self.name, self.literal, nin=nin)
+
+        return builder(*args)
 
 
 # end class GeneratorBuilder
@@ -555,6 +596,14 @@ class OperatorBuilder(EquationBuilder):
             op.operation = self.literal.operation
             newobj.literal = op
 
+        # Do a quick check. This is the only thing we can require, since args
+        # can hold tags for the equation.
+        nin = newobj.literal.nin
+        if nin > len(args):
+            m = "%i arguments required, %i recieved"%(nin, len(args))
+            raise TypeError(m)
+
+
         combine = kw.get("combine", False)
         # Wrap scalar arguments and process tags
         for arg in args[:newobj.literal.nin]:
@@ -564,7 +613,6 @@ class OperatorBuilder(EquationBuilder):
             newobj.literal.addLiteral(arg.literal)
         newobj.literal.addTags(*args[newobj.literal.nin:])
         newobj.literal.setCombine(combine)
-        #print
         return newobj
 
 # end class OperatorBuilder
@@ -579,10 +627,6 @@ def wrapArgument(name, arg):
 def wrapFunction(name, func, nin = 2, nout = 1):
     """Wrap a function in an OperatorBuilder instance.
 
-    This will register the OperatorBuilder instance as an attribute of this
-    module so it can be recognized in an equation string when parsed with the
-    makeEquation method.
-    
     name    --  The name of the funciton
     func    --  A callable python object
     nin     --  The number of input arguments (default 2)
@@ -620,6 +664,20 @@ def wrapGenerator(name, gen):
     gen.name = name
     genbuilder = GeneratorBuilder(gen)
     return genbuilder
+
+def wrapEquation(name, eq):
+    """Wrap a function as an EqGeneratorBuilder.
+
+    Equations can be treated as generators, with no arguments, but they can
+    also be treated as functions and accept arguments.
+
+    name    --  The name of the funciton
+    eq      --  An equation instance.
+
+    Returns the EqGeneratorBuilder instance that wraps the function.
+    """
+    eqbuilder = EqGeneratorBuilder(name, eq)
+    return eqbuilder
 
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module

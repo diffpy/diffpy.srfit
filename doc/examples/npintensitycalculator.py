@@ -381,7 +381,7 @@ def plotResults(model):
     # Plot this for fun.
     I = model.bucky.profile.y
     Icalc = model.bucky.profile.ycalc
-    bkgd = model.bucky.evaluateEquation("bkgd()")
+    bkgd = model.bucky.evaluateEquation("bkgd")
     diff = I - Icalc
 
     import pylab

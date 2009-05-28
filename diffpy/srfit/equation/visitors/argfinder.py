@@ -25,7 +25,7 @@ class ArgFinder(Visitor):
     """ArgFinder extracts Arguments from a Literal tree.
 
     Attributes
-    args    --  The set of collected Arguments (a set, not a list!)
+    args    --  The list of collected Arguments
     getconsts  --  Flag indicating whether to grab constant arguments.
     """
 
@@ -37,19 +37,19 @@ class ArgFinder(Visitor):
                         (default True).
         
         """
-        self.args = set()
+        self.args = []
         self.getconsts = getconsts
         return
 
     def reset(self):
         """Reset the argument set."""
-        self.args = set()
+        self.args = []
         return
 
     def onArgument(self, arg):
         """Process an Argument node."""
         if self.getconsts or not arg.const:
-            self.args.add(arg)
+            self.args.append(arg)
         return
 
     def onOperator(self, op):

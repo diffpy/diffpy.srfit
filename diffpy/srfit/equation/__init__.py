@@ -72,8 +72,7 @@ from .equationmod import Equation
 # Try some optimizations on these classes
 try:
     import psyco
-    psyco.bind(Clicker)
-    psyco.bind(Equation)
+    psyco.profile()
 except ImportError:
     pass
 

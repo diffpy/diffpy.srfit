@@ -33,8 +33,12 @@ class Printer(Visitor):
 
     def __init__(self):
         """Initialize."""
-        self.output = ""
+        self.reset()
         return
+
+    def reset(self):
+        """Reset the out put string."""
+        self.output = ""
 
     def onArgument(self, arg):
         """Process an Argument node.

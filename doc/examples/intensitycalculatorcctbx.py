@@ -312,7 +312,7 @@ def plotResults(model):
     # Plot this for fun.
     I = model.nickel.profile.y
     Icalc = model.nickel.profile.ycalc
-    bkgd = model.nickel.evaluateEquation("bkgd()")
+    bkgd = model.nickel.evaluateEquation("bkgd")
     diff = I - Icalc - 0.1*max(I)
 
     import pylab

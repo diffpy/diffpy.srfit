@@ -168,17 +168,12 @@ def makeModel():
     # function that calls 'debye' that includes an offset, but this will not
     # always be an option. Thus, we will add the offset when we define the
     # equation.  We don't need to specify the parameters to the 'debye'
-    # function since the contribution already knows what they are.  (In fact,
-    # the '()' is optional.)
-    contribution.setEquation("debye()+offset")
-
-    # While we're at it, we should give some initial values to parameters.  We
-    # know the mass of lead, so we'll set that here. Note that we can access
-    # the fitting parameters by name as attributes of the contribution.  We're
-    # varying the other two parameters ('thetaD' and 'offset'), so we'll give
-    # them initial values below. Parameters have a 'setValue' and 'getValue'
-    # method.
-    contribution.m.setValue(207.2)
+    # function since the contribution already knows what they are. However, if
+    # we specify the arguments, we can make adjustments to their input values.
+    # We wish to have the thetaD value in the debye equation to be positive, so
+    # we specify the input as abs(thetaD) in the equation below. Furthermore,
+    # we know 'm', the mass of lead, so we can specify that as well.
+    contribution.setEquation("debye(T, 207.2, abs(thetaD))+offset")
 
     ## The FitModel
     # The FitModel lets us define what we want to fit. It is where we can
@@ -192,14 +187,7 @@ def makeModel():
     # values in the process. This tells the model to vary the offset and to
     # give it an initial value of 0.
     model.addVar(contribution.offset, 0)
-
-    # We will handle thetaD in a convoluted way to demonstrate how to use
-    # constraints. We want thetaD to be positive, so we'll create a new fit
-    # variable named "tvar" and constrain thetaD to be the absolute value of
-    # this variable. In this way thetaD will be be given the value abs(tvar)
-    # whenever tvar is adjusted.
-    model.newVar("tvar", 300)
-    model.constrain(contribution.thetaD, "abs(tvar)")
+    model.addVar(contribution.thetaD, 100)
 
     # Return the  model. See the scipyOptimize and parkOptimize functions to
     # see how it is used.

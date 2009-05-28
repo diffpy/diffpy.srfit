@@ -127,9 +127,6 @@ class Evaluator(Visitor):
         """
         if op.clicker > self._clicker:
 
-            # This evaluates the operator and creates an Argument or Partition
-            # that can be used to get its value.
-            #self._createProxy(op)
             vals = []
             for arg in op.args:
                 arg.identify(self)

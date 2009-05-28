@@ -59,9 +59,9 @@ def makeModelII():
     # freely while keeping the Debye temperatures the same.
     model.addVar(model.lowT.offset, name = "lowToffset")
     model.addVar(model.highT.offset, name = "highToffset")
-    model.newVar("tvar", 300)
-    model.constrain(model.lowT.thetaD, "abs(tvar)")
-    model.constrain(model.highT.thetaD, "abs(tvar)")
+    model.newVar("thetaD", 100)
+    model.constrain(model.lowT.thetaD, "thetaD")
+    model.constrain(model.highT.thetaD, "thetaD")
 
     return model
 
@@ -78,8 +78,8 @@ def plotResults(model):
     model.highT.profile.setCalculationRange()
     T = model.lowT.profile.x
     U = model.lowT.profile.y
-    lowU = model.lowT.evaluateEquation("eq()")
-    highU = model.highT.evaluateEquation("eq()")
+    lowU = model.lowT.evaluateEquation("eq")
+    highU = model.highT.evaluateEquation("eq")
 
     import pylab
     pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")

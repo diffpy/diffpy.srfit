@@ -179,11 +179,11 @@ def plotResults(model):
     # Plot this for fun.
     I1 = model.bucky1.profile.y
     Icalc1 = model.bucky1.profile.ycalc
-    bkgd1 = model.bucky1.evaluateEquation("bkgd()")
+    bkgd1 = model.bucky1.evaluateEquation("bkgd")
     diff1 = I1 - Icalc1
     I2 = model.bucky2.profile.y
     Icalc2 = model.bucky2.profile.ycalc
-    bkgd2 = model.bucky2.evaluateEquation("bkgd()")
+    bkgd2 = model.bucky2.evaluateEquation("bkgd")
     diff2 = I2 - Icalc2
     offset = 1.2*max(I2)
     I1 += offset

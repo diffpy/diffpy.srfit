@@ -189,8 +189,7 @@ class Contribution(ModelOrganizer):
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not part of the FitModel (default {}).
 
-        The equation will be usable within setResidualEquation by calling
-        "eq()" or "eq". 
+        The equation will be usable within setResidualEquation by calling "eq". 
         
         Calling setEquation resets the residual equation.
 
@@ -230,11 +229,11 @@ class Contribution(ModelOrganizer):
             raise AttributeError("Define the profile first")
 
         # Register some convenient residuals
-        chivstr = "(eq() - %s)/%s" % (self._yname, self._dyname)
+        chivstr = "(eq - %s)/%s" % (self._yname, self._dyname)
         chiv = equationFromString(chivstr, self._eqfactory)
         self._eqfactory.registerEquation("chiv", chiv)
 
-        resvstr = "(eq() - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)
+        resvstr = "(eq - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)
         resv = equationFromString(resvstr, self._eqfactory)
         self._eqfactory.registerEquation("resv", resv)
 

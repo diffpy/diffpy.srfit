@@ -95,9 +95,3 @@ from .operators import RemainderOperator
 from .operators import NegationOperator
 from .operators import UFuncOperator
 from .operators import CombineOperator
-
-try:
-    import psyco
-    psyco.bind(Argument)
-except ImportError:
-    pass

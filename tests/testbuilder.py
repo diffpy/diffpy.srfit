@@ -150,6 +150,8 @@ class TestEquationParser(unittest.TestCase):
         self.assertTrue("A" in eq.argdict)
         self.assertTrue(array_equal(eq(), 2*numpy.sin(x)))
 
+        # Check the number of arguments
+        self.assertRaises(TypeError, sin)
 
         # custom function
         def _f(a, b):
@@ -175,7 +177,6 @@ class TestEquationParser(unittest.TestCase):
         f = lambda x, sigma : sqrt(e**(-0.5*(x/sigma)**2))
         self.assertTrue(array_equal(eq(), numpy.sqrt(e**(-0.5*(_x/0.1)**2))))
 
-
         # Equation with partition
         _p1 = literals.Partition("p1")
         v1, v2 = _makeArgs(2)
@@ -188,7 +189,6 @@ class TestEquationParser(unittest.TestCase):
         eq = beq.getEquation()
         self.assertEquals( (2*1+4)+(2*2+4), eq() )
         
-
         # Equation with Generator
         _g1 = literals.Generator("g1")
         _g1.literal = _p1
@@ -196,7 +196,6 @@ class TestEquationParser(unittest.TestCase):
         geq = A*g1 + B
         eq = geq.getEquation()
         self.assertEquals( (2*1+4)+(2*2+4), eq() )
-
 
         # Equation with conditional operator
         add =  builder.add
@@ -208,6 +207,28 @@ class TestEquationParser(unittest.TestCase):
         beq = add(A*p1, B, "tag1")
         eq = beq.getEquation()
         self.assertEquals( (2*1+4)+(2*2+0), eq() )
+
+        # Equation with Equation
+        beq = A + B
+        eq = beq.getEquation()
+        E = builder.wrapEquation("eq", eq)
+        eq2 = (2*E).getEquation()
+        # Make sure these evaulate to the same thing
+        self.assertEquals(eq.args, [A.literal, B.literal])
+        self.assertEquals(2*eq(), eq2())
+        # Pass new arguments to the equation
+        C = builder.ArgumentBuilder(name="C", value = 5)
+        D = builder.ArgumentBuilder(name="D", value = 6)
+        eq3 = (E(C, D)+1).getEquation()
+        self.assertEquals(12, eq3())
+        # Pass old and new arguments to the equation
+        # If things work right, A has been given the value of C in the last
+        # evaluation (5)
+        eq4 = (3*E(A, D)-1).getEquation()
+        self.assertEquals(32, eq4())
+        # Try to pass the wrong number of arguments
+        self.assertRaises(TypeError, E, A)
+        self.assertRaises(TypeError, E, A, B, C)
         
         return
 

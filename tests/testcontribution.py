@@ -61,13 +61,13 @@ class TestContribution(unittest.TestCase):
 
         # Choose a new residual. Note that the calculator can be treated like a
         # function, hence the I() below
-        self.contribution.setEquation("2*I()")
+        self.contribution.setEquation("2*I")
         self.contribution.setResidualEquation("resv")
         chiv = self.contribution.residual()
         self.assertEqual(sum((2*xobs-yobs)**2)/sum(yobs**2), dot(chiv, chiv))
 
         # Make a custom residual.
-        self.contribution.setResidualEquation("abs(eq()-y)**0.5")
+        self.contribution.setResidualEquation("abs(eq-y)**0.5")
         chiv = self.contribution.residual()
         self.assertEqual(sum(abs(2*xobs-yobs)), dot(chiv, chiv))
 

@@ -110,18 +110,26 @@ def speedTest2(mutate = 2):
 
 
     eqstr = """\
-    A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2))\
-    """
+    A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2)) + polyval(list(b1, b2, b3, b4, b5, b6, b7, b8), x)"""
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
     eq.qsig.setValue(qsig)
     eq.sigma1.setValue(sigma)
     eq.sigma2.setValue(sigma)
     eq.A0.setValue(1.0)
+    eq.b1.setValue(0)
+    eq.b2.setValue(1)
+    eq.b3.setValue(2.0)
+    eq.b4.setValue(2.0)
+    eq.b5.setValue(2.0)
+    eq.b6.setValue(2.0)
+    eq.b7.setValue(2.0)
+    eq.b8.setValue(2.0)
 
     from numpy import exp
-    def f(A0, qsig, sigma1, sigma2):
-        return A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2))
+    from numpy import polyval
+    def f(A0, qsig, sigma1, sigma2, b1, b2, b3, b4, b5, b6, b7, b8):
+        return A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2)) + polyval([b8, b7, b6, b5,b4,b3,b2,b1],x)
 
     tnpy = 0
     teq = 0
@@ -157,8 +165,5 @@ def speedTest2(mutate = 2):
 
 if __name__ == "__main__":
 
-    speedTest2(1)
-    speedTest2(2)
-    speedTest2(3)
-    speedTest2(4)
-
+    for i in range(1, 13):
+        speedTest2(i)

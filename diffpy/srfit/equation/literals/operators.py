@@ -49,7 +49,7 @@ class Operator(Literal):
     clicker --  A Clicker instance for recording change in the dependent
                 arguments.
     name    --  A name for this operator. e.g. "add" or "sin"
-    nin     --  Number of inputs
+    nin     --  Number of inputs (negative means this is variable)
     nout    --  Number of outputs
     operation   --  Function that performs the operation. e.g. numpy.add or
     symbol  --  The symbolic representation. e.g. "+" or "sin"
@@ -280,6 +280,67 @@ class CombineOperator(Operator):
         self.nin = 1
         self.operation = lambda x: x
         self._cancombine = True
+        return
+
+class ListOperator(Operator):
+    """Operator that will take parameters and turn them into a list."""
+
+    def __init__(self):
+        """Initialization."""
+        Operator.__init__(self)
+        self.name = "list"
+        self.symbol = "list"
+        self.nin = -1
+
+        def makeList(*args):
+            return list(args)
+
+        self.operation = makeList
+        return
+
+class SetOperator(Operator):
+    """Operator that will take parameters and turn them into a set."""
+
+    def __init__(self):
+        """Initialization."""
+        Operator.__init__(self)
+        self.name = "set"
+        self.symbol = "set"
+        self.nin = -1
+
+        def makeSet(*args):
+            return set(args)
+
+        self.operation = makeSet
+        return
+
+class ArrayOperator(Operator):
+    """Operator that will take parameters and turn them into an array."""
+
+    def __init__(self):
+        """Initialization."""
+        Operator.__init__(self)
+        self.name = "array"
+        self.symbol = "array"
+        self.nin = -1
+
+        def makeArray(*args):
+            return numpy.array(args)
+
+        self.operation = makeArray
+        return
+
+
+class PolyvalOperator(Operator):
+    """Operator for numpy polyval."""
+
+    def __init__(self):
+        """Initialization."""
+        Operator.__init__(self)
+        self.name = "polyval"
+        self.symbol = "polyval"
+        self.nin = 2
+        self.operation = numpy.polyval
         return
 
 # version

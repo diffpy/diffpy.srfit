@@ -79,9 +79,8 @@ class Validator(Visitor):
             # Count the nout of the arguments.
             localnin += self._nin
 
-
         # Check the input/output balance
-        if localnin != op.nin:
+        if op.nin >= 0 and localnin != op.nin:
             m = "'%s' requires %i inputs but receives %i"%(op, op.nin, localnin)
             self.errors.append(m)
 

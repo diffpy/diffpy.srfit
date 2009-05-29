@@ -92,6 +92,8 @@ and the 'f' function would only operate on Partitions Arguments that have a
 # right-side over its arguments. This results in an array of EquationBuilder
 # instances, not an EquationBuilder that contains an array.
 
+_builders = {}
+
 
 import sys
 import numpy
@@ -176,8 +178,6 @@ class EquationFactory(object):
         Equations are Generators, so they are evaluated in an equation string
         without parentheses.
         """
-        # FIXME - the order of the parameters is getting mixed up. This is
-        # probably due to ArgFinder.
         eqbuilder = wrapEquation(name, eq)
         self.registerBuilder(name, eqbuilder)
         return
@@ -252,7 +252,7 @@ class EquationFactory(object):
         # Get the operators, partitions and generators
         for opname in eqops:
             if opname not in self.builders:
-                opbuilder = getattr(sys.modules[__name__], opname)
+                opbuilder = getBuilder(opname)
                 ns[opname] = opbuilder
 
         # Make the arguments
@@ -280,13 +280,15 @@ class EquationFactory(object):
         # token[3] = (erow, ecol) - row and col where the token ends
         # token[4] = line where the token was found
         tokens = tokenize.generate_tokens(interface)
-        tokens = list(tokens)
+        # We have overloaded list and other python types. Thus, we go to the
+        # source.
+        tokens = sys.modules["__builtin__"].list(tokens)
 
         # Scan for argumens and operators. This will be wrong on the first pass
         # since variables like "a" and "x" will appear as operators to the
         # tokenizer.
-        eqargs = set()
-        eqops = set()
+        eqargs = sys.modules["__builtin__"].set()
+        eqops = sys.modules["__builtin__"].set()
 
         for i, tok in enumerate(tokens):
             if tok[0] in (token.NAME, token.OP):
@@ -298,8 +300,8 @@ class EquationFactory(object):
         for tok in set(eqops):
             # Move genuine varibles to the eqargs dictionary
             if (
-                # Check local namespace
-                tok not in dir(sys.modules[__name__]) and
+                # Check module namespace
+                tok not in _builders and
                 # Check custom builders
                 tok not in self.builders and
                 # Check symbols
@@ -332,6 +334,13 @@ class EquationBuilder(object):
         """Initialize."""
         self.literal = None
         return
+
+    def __call__(self, *args):
+        """Raises exception for easier debugging."""
+        m = "%s (%s) cannot accept arguments"%\
+            (self.literal.name, self.__class__.__name__)
+        raise TypeError(m)
+
 
     def getEquation(self):
         """Get the equation built by this object."""
@@ -588,10 +597,13 @@ class OperatorBuilder(EquationBuilder):
         # If the Operator is already specified, then copy its attributes to a
         # new Operator inside of the new OperatorBuilder.
         else:
+            nin = self.literal.nin
+            if nin < 0:
+                nin = len(args)
             op = literals.Operator()
             op.name = self.literal.name
             op.symbol = self.literal.name
-            op.nin = self.literal.nin
+            op.nin = nin
             op.nout = self.literal.nout
             op.operation = self.literal.operation
             newobj.literal = op
@@ -686,7 +698,8 @@ def __wrapNumpyOperators():
     for name in dir(numpy):
         op = getattr(numpy, name)
         if isinstance(op, numpy.ufunc):
-            setattr(sys.modules[__name__], name, OperatorBuilder(name))
+            _builders[name] = OperatorBuilder(name)
+
 __wrapNumpyOperators()
 
 # Register other functions as well
@@ -705,11 +718,14 @@ def __wrapSrFitOperators():
             and opclass is not opmod.UFuncOperator:
 
             op = opclass()
-            setattr(sys.modules[__name__], op.name, 
-                    OperatorBuilder(op.name, op))
+            _builders[op.name] = OperatorBuilder(op.name, op)
 
     return
 __wrapSrFitOperators()
+
+def getBuilder(name):
+    """Get an operator from the global builders dictionary."""
+    return _builders[name]
 
 # version
 __id__ = "$Id$"

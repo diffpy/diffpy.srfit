@@ -138,7 +138,7 @@ class TestEquationParser(unittest.TestCase):
         from numpy import array_equal
 
         # simple equation
-        sin = builder.sin
+        sin = builder.getBuilder("sin")
         a = builder.ArgumentBuilder(name="a", value = 1)
         A = builder.ArgumentBuilder(name="A", value = 2)
         x = numpy.arange(0, numpy.pi, 0.1)
@@ -158,7 +158,6 @@ class TestEquationParser(unittest.TestCase):
             return (a-b)*1.0/(a+b)
 
         f = builder.wrapFunction("f", _f, 2, 1)
-        sin = builder.sin
         a = builder.ArgumentBuilder(name="a", value = 2)
         b = builder.ArgumentBuilder(name="b", value = 1)
 
@@ -167,7 +166,7 @@ class TestEquationParser(unittest.TestCase):
         self.assertEqual(eq(), numpy.sin(_f(2, 1)))
 
         # complex function
-        sqrt = builder.sqrt
+        sqrt = builder.getBuilder("sqrt")
         e = numpy.e
         _x = numpy.arange(0, 1, 0.05)
         x = builder.ArgumentBuilder(name="x", value = _x, const = True)
@@ -198,7 +197,7 @@ class TestEquationParser(unittest.TestCase):
         self.assertEquals( (2*1+4)+(2*2+4), eq() )
 
         # Equation with conditional operator
-        add =  builder.add
+        add =  builder.getBuilder("add")
         _p1 = literals.Partition("p1")
         v1, v2 = _makeArgs(2)
         _p1.addArgument(v1, "tag1")

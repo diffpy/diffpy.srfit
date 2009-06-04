@@ -27,9 +27,4 @@ Methods:
 # package version
 from diffpy.srfit.version import __version__
 
-from .diffpystructure import StructureParSet
-from .cctbxstructure import CCTBXStructureParSet
-from .objcryststructure import ObjCrystParSet
-
-
 # End of file

@@ -175,7 +175,7 @@ class CCTBXStructureParSet(ParameterSet):
         self._update = False
 
         cdict = {}
-        for i, s in enumerate(stru.scatterers()):
+        for s in stru.scatterers():
             el = s.element_symbol()
             i = cdict.get(el, 0)
             sname = "%s%i"%(el,i)

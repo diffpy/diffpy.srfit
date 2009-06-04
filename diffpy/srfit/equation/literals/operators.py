@@ -293,7 +293,7 @@ class ListOperator(Operator):
         self.nin = -1
 
         def makeList(*args):
-            return list(args)
+            return args
 
         self.operation = makeList
         return

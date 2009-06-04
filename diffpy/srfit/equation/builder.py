@@ -282,13 +282,13 @@ class EquationFactory(object):
         tokens = tokenize.generate_tokens(interface)
         # We have overloaded list and other python types. Thus, we go to the
         # source.
-        tokens = sys.modules["__builtin__"].list(tokens)
+        tokens = list(tokens)
 
         # Scan for argumens and operators. This will be wrong on the first pass
         # since variables like "a" and "x" will appear as operators to the
         # tokenizer.
-        eqargs = sys.modules["__builtin__"].set()
-        eqops = sys.modules["__builtin__"].set()
+        eqargs = set()
+        eqops = set()
 
         for i, tok in enumerate(tokens):
             if tok[0] in (token.NAME, token.OP):

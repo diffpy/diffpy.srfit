@@ -28,6 +28,9 @@ class Parameter(Argument):
                 ParameterSet.
     clicker --  A Clicker instance for recording change in the value.
     value   --  The value of the Parameter. Modified with setValue.
+    const   --  A flag indicating whether the Parameter is constant. A constant
+                parameter cannot be made into a variable, nor can it be
+                constrained to something else.
 
     Right now this adds no significant functionality to Argument. It is
     subclassed for future extensibility.
@@ -114,8 +117,8 @@ class ParameterWrapper(Parameter):
                     None (default), it is assumed that an attribute is accessed
                     directly.
         attr    --  The name of the attribute that contains the value of the
-                    parameter. If attr is None (default), then both getter and
-                    setter must be specified.
+                    parameter. If attr is None (default), then either both
+                    getter and setter must be specified.
 
         raises ValueError if exactly one of getter or setter is not None, or if
         getter, setter and attr ar all None.

@@ -376,6 +376,16 @@ class ModelOrganizer(object):
 
         return loc
 
+    def _iterPars(self):
+        """Iterate over parameters."""
+        for par in self._parameters:
+            yield par
+
+        for org in self._organizers:
+            org.iterParameters()
+
+        return
+
 
 # End ModelOrganizer
 

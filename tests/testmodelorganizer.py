@@ -69,7 +69,6 @@ class TestModelOrganizer(unittest.TestCase):
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p1", 2)
-        p3 = Parameter("", 3)
 
         # Check normal insert
         self.m._addParameter(p1)
@@ -77,9 +76,6 @@ class TestModelOrganizer(unittest.TestCase):
 
         # Try to insert another parameter with the same name
         self.assertRaises(ValueError, self.m._addParameter, p2)
-
-        # Try to insert a parameter without a name
-        self.assertRaises(ValueError, self.m._addParameter, p3)
 
         return
 

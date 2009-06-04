@@ -15,35 +15,57 @@
 """Parameter class. 
 
 Parameters encapsulate an adjustable parameter of a Calculator.
+
 """
+# FIXME - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
+# can have more fine control over the construction of FitModels.
+# FIXME - Add tags to parameters so they can be easily retrieved.
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation import Clicker
+
+# FIXME - move this into common.
+import re
+reident = re.compile(r'^[a-zA-Z_]\w*$')
+def isIdentifier(s):
+    """Check to see if a python string is a valid identifier.
+    
+    From http://code.activestate.com/recipes/413487/
+
+    """
+    if reident.match(s) is None: return False
+    return True
 
 class Parameter(Argument):
     """Parameter class.
     
     Attributes
     name    --  A name for this Parameter. Names should be unique within a
-                ParameterSet.
+                ParameterSet and should be valid attribute names.
     clicker --  A Clicker instance for recording change in the value.
     value   --  The value of the Parameter. Modified with setValue.
     const   --  A flag indicating whether the Parameter is constant. A constant
                 parameter cannot be made into a variable, nor can it be
                 constrained to something else.
 
-    Right now this adds no significant functionality to Argument. It is
-    subclassed for future extensibility.
     """
 
     def __init__(self, name, value = 0, const = False):
         """Initialization.
         
-        name    --  The name of this Parameter.
+        name    --  The name of this Parameter (must be a valid attribute
+                    identifier)
         value   --  The initial value of this Parameter (default 0).
         const   --  A flag inticating whether the Parameter is a constant (like
                     pi).
+
+        Raises ValueError if the name contains invalid punctuation letters.
+        
         """
+        # Check that the name is valid
+        if not isIdentifier(name):
+            raise ValueError("Name '%s' is not a valid identifier"%name)
+
         Argument.__init__(self, value, name, const)
         return
 
@@ -117,8 +139,8 @@ class ParameterWrapper(Parameter):
                     None (default), it is assumed that an attribute is accessed
                     directly.
         attr    --  The name of the attribute that contains the value of the
-                    parameter. If attr is None (default), then either both
-                    getter and setter must be specified.
+                    parameter. If attr is None (default), then both getter and
+                    setter must be specified.
 
         raises ValueError if exactly one of getter or setter is not None, or if
         getter, setter and attr ar all None.

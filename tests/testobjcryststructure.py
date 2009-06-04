@@ -1,0 +1,391 @@
+#!/usr/bin/env python
+"""Tests for diffpy.srfit.structure package."""
+
+import unittest
+
+import numpy
+
+from pyobjcryst import Crystal, Molecule, ScatteringPowerAtom
+
+from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
+
+c60xyz = \
+"""
+3.451266498   0.685000000   0.000000000
+3.451266498  -0.685000000   0.000000000
+-3.451266498   0.685000000   0.000000000
+-3.451266498  -0.685000000   0.000000000
+0.685000000   0.000000000   3.451266498
+-0.685000000   0.000000000   3.451266498
+0.685000000   0.000000000  -3.451266498
+-0.685000000   0.000000000  -3.451266498
+0.000000000   3.451266498   0.685000000
+0.000000000   3.451266498  -0.685000000
+0.000000000  -3.451266498   0.685000000
+0.000000000  -3.451266498  -0.685000000
+3.003809890   1.409000000   1.171456608
+3.003809890   1.409000000  -1.171456608
+3.003809890  -1.409000000   1.171456608
+3.003809890  -1.409000000  -1.171456608
+-3.003809890   1.409000000   1.171456608
+-3.003809890   1.409000000  -1.171456608
+-3.003809890  -1.409000000   1.171456608
+-3.003809890  -1.409000000  -1.171456608
+1.409000000   1.171456608   3.003809890
+1.409000000  -1.171456608   3.003809890
+-1.409000000   1.171456608   3.003809890
+-1.409000000  -1.171456608   3.003809890
+1.409000000   1.171456608  -3.003809890
+1.409000000  -1.171456608  -3.003809890
+-1.409000000   1.171456608  -3.003809890
+-1.409000000  -1.171456608  -3.003809890
+1.171456608   3.003809890   1.409000000
+-1.171456608   3.003809890   1.409000000
+1.171456608   3.003809890  -1.409000000
+-1.171456608   3.003809890  -1.409000000
+1.171456608  -3.003809890   1.409000000
+-1.171456608  -3.003809890   1.409000000
+1.171456608  -3.003809890  -1.409000000
+-1.171456608  -3.003809890  -1.409000000
+2.580456608   0.724000000   2.279809890
+2.580456608   0.724000000  -2.279809890
+2.580456608  -0.724000000   2.279809890
+2.580456608  -0.724000000  -2.279809890
+-2.580456608   0.724000000   2.279809890
+-2.580456608   0.724000000  -2.279809890
+-2.580456608  -0.724000000   2.279809890
+-2.580456608  -0.724000000  -2.279809890
+0.724000000   2.279809890   2.580456608
+0.724000000  -2.279809890   2.580456608
+-0.724000000   2.279809890   2.580456608
+-0.724000000  -2.279809890   2.580456608
+0.724000000   2.279809890  -2.580456608
+0.724000000  -2.279809890  -2.580456608
+-0.724000000   2.279809890  -2.580456608
+-0.724000000  -2.279809890  -2.580456608
+2.279809890   2.580456608   0.724000000
+-2.279809890   2.580456608   0.724000000
+2.279809890   2.580456608  -0.724000000
+-2.279809890   2.580456608  -0.724000000
+2.279809890  -2.580456608   0.724000000
+-2.279809890  -2.580456608   0.724000000
+2.279809890  -2.580456608  -0.724000000
+-2.279809890  -2.580456608  -0.724000000
+"""
+
+def makeC60():
+    """Make a crystal containing the C60 molecule using pyobjcryst."""
+    pi = numpy.pi
+    c = Crystal(100, 100, 100, "P1")
+    c.SetName("c60frame")
+    m = Molecule(c, "c60")
+
+    c.AddScatterer(m)
+
+    sp = ScatteringPowerAtom("C", "C")
+    sp.SetBiso(8*pi*pi*0.003)
+    #c.AddScatteringPower(sp)
+
+    for i, l in enumerate(c60xyz.strip().splitlines()):
+        x, y, z = map(float, l.split())
+        m.AddAtom(x, y, z, sp, "C%i"%i)
+
+    return c
+
+
+
+class TestParameterWrapper(unittest.TestCase):
+
+    def setUp(self):
+        self.occryst = makeC60()
+        self.ocmol = self.occryst.GetScatterer("c60")
+        return
+
+    def tearDown(self):
+        del self.occryst
+        del self.ocmol
+        return
+
+    def testObjCrystParSet(self):
+        """Test the structure conversion."""
+
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+
+        self.assertEquals(cryst.name, "bucky")
+
+        def _testCrystal():
+
+            # Test the lattice
+            self.assertEquals(occryst.a, cryst.a.getValue())
+            self.assertEquals(occryst.b, cryst.b.getValue())
+            self.assertEquals(occryst.c, cryst.c.getValue())
+            self.assertEquals(occryst.alpha, cryst.alpha.getValue())
+            self.assertEquals(occryst.beta, cryst.beta.getValue())
+            self.assertEquals(occryst.gamma, cryst.gamma.getValue())
+
+            return
+            
+        def _testMolecule():
+
+            # Test position / occupancy
+            self.assertEquals(ocmol.X, m.x.getValue())
+            self.assertEquals(ocmol.Y, m.y.getValue())
+            self.assertEquals(ocmol.Z, m.z.getValue())
+            self.assertEquals(ocmol.Occupancy, m.occ.getValue())
+
+            # Test orientation
+            self.assertEquals(ocmol.Q0, m.q0.getValue())
+            self.assertEquals(ocmol.Q1, m.q1.getValue())
+            self.assertEquals(ocmol.Q2, m.q2.getValue())
+            self.assertEquals(ocmol.Q3, m.q3.getValue())
+
+            # Check the atoms thoroughly
+            for i in range(len(ocmol)):
+                oca = ocmol[i]
+                ocsp = oca.GetScatteringPower()
+                a = m.atoms[i]
+                self.assertEquals(ocsp.GetSymbol(), a.element)
+                self.assertEquals(oca.X, a.x.getValue())
+                self.assertEquals(oca.Y, a.y.getValue())
+                self.assertEquals(oca.Z, a.z.getValue())
+                self.assertEquals(oca.Occupancy, a.occ.getValue())
+                self.assertEquals(ocsp.Biso, a.biso.getValue())
+            return
+
+
+        _testCrystal()
+        _testMolecule()
+
+        ## Now change some values from ObjCryst 
+        ocmol[0].X *= 1.1
+        ocmol[0].Occupancy *= 1.1
+        ocmol[0].GetScatteringPower().Biso *= 1.1
+        ocmol.Q0 *= 1.1
+        occryst.a *= 1.1
+
+        _testCrystal()
+        _testMolecule()
+
+        ## Now change values from the srfit StructureParSet
+        cryst.c60.C44.x.setValue( 1.1 )
+        cryst.c60.C44.occ.setValue( 1.1 )
+        cryst.c60.C44.biso.setValue( 1.1 )
+        cryst.c60.q3.setValue( 1.1 )
+        cryst.a.setValue(1.1)
+
+        _testCrystal()
+        _testMolecule()
+        return
+
+    def testImplicitBondLengthRestraints(self):
+        """Test the structure with implicit bond lengths."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # Add some bonds to the molecule
+        ocmol.AddBond(ocmol[0], ocmol[5], 3.3, 0.1, 0.1)
+        ocmol.AddBond(ocmol[0], ocmol[7], 3.3, 0.1, 0.1)
+
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+        m.wrapRestraints()
+
+        # make sure that we have some restraints in the molecule
+        self.assertTrue(2, len(m._restraints))
+
+        # make sure these evaluate to whatver we get from objcryst
+        res0, res1 = m._restraints
+        p0 = set([res0.penalty(), res1.penalty()])
+        bonds = ocmol.GetBondList()
+        p1 = set([bonds[0].GetLogLikelihood(), bonds[1].GetLogLikelihood()])
+        self.assertEqual(p0, p1)
+
+        return
+
+    def testImplicitBondAngleRestraints(self):
+        """Test the structure with implicit bond angles."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # Add some bond angles to the molecule
+        ocmol.AddBondAngle(ocmol[0], ocmol[5], ocmol[8], 1.1, 0.1, 0.1)
+        ocmol.AddBondAngle(ocmol[0], ocmol[7], ocmol[44], 1.3, 0.1, 0.1)
+
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+        m.wrapRestraints()
+
+        # make sure that we have some restraints in the molecule
+        self.assertTrue(2, len(m._restraints))
+
+        # make sure these evaluate to whatver we get from objcryst
+        res0, res1 = m._restraints
+        p0 = set([res0.penalty(), res1.penalty()])
+        angles = ocmol.GetBondAngleList()
+        p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
+        self.assertEqual(p0, p1)
+
+        return
+        
+    def testImplicitDihedralAngleRestraints(self):
+        """Test the structure with implicit dihedral angles."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # Add some bond angles to the molecule
+        ocmol.AddDihedralAngle(ocmol[0], ocmol[5], ocmol[8], ocmol[41], 1.1,
+                0.1, 0.1)
+        ocmol.AddDihedralAngle(ocmol[0], ocmol[7], ocmol[44], ocmol[2], 1.3,
+                0.1, 0.1)
+
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+        m.wrapRestraints()
+
+        # make sure that we have some restraints in the molecule
+        self.assertTrue(2, len(m._restraints))
+
+        # make sure these evaluate to whatver we get from objcryst
+        res0, res1 = m._restraints
+        p0 = set([res0.penalty(), res1.penalty()])
+        angles = ocmol.GetDihedralAngleList()
+        p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
+        self.assertEqual(p0, p1)
+
+        return
+
+    def testImplicitStretchModes(self):
+        """Test the molecule with implicit stretch modes."""
+        # Not sure how to make this happen.
+        pass
+
+    def testExplicitBondLengthRestraints(self):
+        """Test the structure with explicit bond lengths."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+
+        # make some bond angle restraints
+        res0 = m.restrainBondLength(m.atoms[0], m.atoms[5], 3.3, 0.1, 0.1)
+        res1 = m.restrainBondLength(m.atoms[0], m.atoms[7], 3.3, 0.1, 0.1)
+
+        # make sure that we have some restraints in the molecule
+        self.assertTrue(2, len(m._restraints))
+
+        # make sure these evaluate to whatver we get from objcryst
+        p0 = set([res0.penalty(), res1.penalty()])
+        bonds = ocmol.GetBondList()
+        p1 = set([bonds[0].GetLogLikelihood(), bonds[1].GetLogLikelihood()])
+        self.assertEqual(p0, p1)
+
+        return
+
+    def testExplicitBondAngleRestraints(self):
+        """Test the structure with explicit bond angles."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+
+        # restrain some bond angles
+        res0 = m.restrainBondAngle(m.atoms[0], m.atoms[5], m.atoms[8], 3.3,
+                0.1, 0.1)
+        res1 = m.restrainBondAngle(m.atoms[0], m.atoms[7], m.atoms[44], 3.3,
+                0.1, 0.1)
+
+        # make sure that we have some restraints in the molecule
+        self.assertTrue(2, len(m._restraints))
+
+        # make sure these evaluate to whatver we get from objcryst
+        p0 = set([res0.penalty(), res1.penalty()])
+        angles = ocmol.GetBondAngleList()
+        p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
+        self.assertEqual(p0, p1)
+
+        return
+        
+    def testExplicitDihedralAngleRestraints(self):
+        """Test the structure with explicit dihedral angles."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+
+        # Restrain some dihedral angles.
+        res0 = m.restrainDihedralAngle(m.atoms[0], m.atoms[5], m.atoms[8],
+                m.atoms[41], 1.1, 0.1, 0.1)
+        res1 = m.restrainDihedralAngle(m.atoms[0], m.atoms[7], m.atoms[44],
+                m.atoms[2], 1.1, 0.1, 0.1)
+
+
+        # make sure that we have some restraints in the molecule
+        self.assertTrue(2, len(m._restraints))
+
+        # make sure these evaluate to whatver we get from objcryst
+        p0 = set([res0.penalty(), res1.penalty()])
+        angles = ocmol.GetDihedralAngleList()
+        p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
+        self.assertEqual(p0, p1)
+
+        return
+
+    def testExplicitBondLengthParameter(self):
+        """Test adding bond length parameters to the molecule."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+
+        a0 = m.atoms[0]
+        a7 = m.atoms[7]
+
+        # Add a parameter
+        p1 = m.addBondLengthParameter("C07", a0, a7)
+
+        xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
+        xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+
+        dd = xyz0 - xyz7
+        d0 = numpy.dot(dd, dd)**0.5
+        self.assertAlmostEquals(d0, p1.getValue(), 6)
+
+        # Change the value 
+        scale = 1.05
+        p1.setValue(scale*d0)
+
+
+        # Verify that it has changed.
+        self.assertEquals(scale*d0, p1.getValue())
+
+        xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
+        xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+
+        dd = xyz0 - xyz7
+        d1 = numpy.dot(dd, dd)**0.5
+
+        self.assertAlmostEquals(scale*d0, d1)
+
+        return
+
+
+
+if __name__ == "__main__":
+
+    unittest.main()
+

@@ -108,9 +108,10 @@ def speedTest2(mutate = 2):
     qsig = 0.01
     sigma = 0.003
 
-
     eqstr = """\
-    A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2)) + polyval(list(b1, b2, b3, b4, b5, b6, b7, b8), x)"""
+    A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2))\
+    + polyval(list(b1, b2, b3, b4, b5, b6, b7, b8), x)\
+    """
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
     eq.qsig.setValue(qsig)
@@ -147,8 +148,10 @@ def speedTest2(mutate = 2):
         n = mutate
         if n == 0:
             n = random.choice(choices)
+        c = choices[:]
         for _j in xrange(n):
-            idx = random.choice(choices)
+            idx = random.choice(c)
+            c.remove(idx)
             args[idx] = random.random()
 
         # Time the different functions with these arguments

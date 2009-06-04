@@ -66,6 +66,18 @@ class ParameterSet(ModelOrganizer):
     # Alias the addOrganizer method to addParameterSet
     addParameterSet = ModelOrganizer._addOrganizer
 
+    def setConst(self, const = True):
+        """Set every parameter within the set to a constant.
+
+        const   --  Flag indicating if the parameter is constant (default
+                    True).
+
+        """
+        for par in self._iterPars():
+            par.setConst(const)
+
+        return
+
 # End class ParameterSet
 
 # version

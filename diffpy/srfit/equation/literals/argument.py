@@ -38,8 +38,8 @@ class Argument(Literal):
         Literal.__init__(self)
         self.name = name
         self.const = const
-        self.value = None
-        self.setValue(value)
+        self.value = value
+        self.clicker.click()
         return
 
     def identify(self, visitor):

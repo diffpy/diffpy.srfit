@@ -120,28 +120,28 @@ class TestParameterWrapper(unittest.TestCase):
         def _testCrystal():
 
             # Test the lattice
-            self.assertEquals(occryst.a, cryst.a.getValue())
-            self.assertEquals(occryst.b, cryst.b.getValue())
-            self.assertEquals(occryst.c, cryst.c.getValue())
-            self.assertEquals(occryst.alpha, cryst.alpha.getValue())
-            self.assertEquals(occryst.beta, cryst.beta.getValue())
-            self.assertEquals(occryst.gamma, cryst.gamma.getValue())
+            self.assertAlmostEquals(occryst.a, cryst.a.getValue())
+            self.assertAlmostEquals(occryst.b, cryst.b.getValue())
+            self.assertAlmostEquals(occryst.c, cryst.c.getValue())
+            self.assertAlmostEquals(occryst.alpha, cryst.alpha.getValue())
+            self.assertAlmostEquals(occryst.beta, cryst.beta.getValue())
+            self.assertAlmostEquals(occryst.gamma, cryst.gamma.getValue())
 
             return
             
         def _testMolecule():
 
             # Test position / occupancy
-            self.assertEquals(ocmol.X, m.x.getValue())
-            self.assertEquals(ocmol.Y, m.y.getValue())
-            self.assertEquals(ocmol.Z, m.z.getValue())
-            self.assertEquals(ocmol.Occupancy, m.occ.getValue())
+            self.assertAlmostEquals(ocmol.X, m.x.getValue())
+            self.assertAlmostEquals(ocmol.Y, m.y.getValue())
+            self.assertAlmostEquals(ocmol.Z, m.z.getValue())
+            self.assertAlmostEquals(ocmol.Occupancy, m.occ.getValue())
 
             # Test orientation
-            self.assertEquals(ocmol.Q0, m.q0.getValue())
-            self.assertEquals(ocmol.Q1, m.q1.getValue())
-            self.assertEquals(ocmol.Q2, m.q2.getValue())
-            self.assertEquals(ocmol.Q3, m.q3.getValue())
+            self.assertAlmostEquals(ocmol.Q0, m.q0.getValue())
+            self.assertAlmostEquals(ocmol.Q1, m.q1.getValue())
+            self.assertAlmostEquals(ocmol.Q2, m.q2.getValue())
+            self.assertAlmostEquals(ocmol.Q3, m.q3.getValue())
 
             # Check the atoms thoroughly
             for i in range(len(ocmol)):
@@ -149,11 +149,11 @@ class TestParameterWrapper(unittest.TestCase):
                 ocsp = oca.GetScatteringPower()
                 a = m.atoms[i]
                 self.assertEquals(ocsp.GetSymbol(), a.element)
-                self.assertEquals(oca.X, a.x.getValue())
-                self.assertEquals(oca.Y, a.y.getValue())
-                self.assertEquals(oca.Z, a.z.getValue())
-                self.assertEquals(oca.Occupancy, a.occ.getValue())
-                self.assertEquals(ocsp.Biso, a.biso.getValue())
+                self.assertAlmostEquals(oca.X, a.x.getValue())
+                self.assertAlmostEquals(oca.Y, a.y.getValue())
+                self.assertAlmostEquals(oca.Z, a.z.getValue())
+                self.assertAlmostEquals(oca.Occupancy, a.occ.getValue())
+                self.assertAlmostEquals(ocsp.Biso, a.biso.getValue())
             return
 
 
@@ -354,36 +354,203 @@ class TestParameterWrapper(unittest.TestCase):
 
         a0 = m.atoms[0]
         a7 = m.atoms[7]
+        a20 = m.atoms[20]
 
         # Add a parameter
         p1 = m.addBondLengthParameter("C07", a0, a7)
+        # Have another atom tag along for the ride
+        p1.addAtoms([a20])
 
         xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
         xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz20 = numpy.array([a20.x.getValue(), a20.y.getValue(),
+            a20.z.getValue()])
 
         dd = xyz0 - xyz7
         d0 = numpy.dot(dd, dd)**0.5
         self.assertAlmostEquals(d0, p1.getValue(), 6)
+        
+        # Record the unit direction of change for later
+        u = dd/d0
 
         # Change the value 
         scale = 1.05
         p1.setValue(scale*d0)
 
-
         # Verify that it has changed.
-        self.assertEquals(scale*d0, p1.getValue())
+        self.assertAlmostEquals(scale*d0, p1.getValue())
 
-        xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
-        xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz0a = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
+        xyz7a = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz20a = numpy.array([a20.x.getValue(), a20.y.getValue(),
+            a20.z.getValue()])
 
-        dd = xyz0 - xyz7
-        d1 = numpy.dot(dd, dd)**0.5
+        dda = xyz0a - xyz7a
+        d1 = numpy.dot(dda, dda)**0.5
 
         self.assertAlmostEquals(scale*d0, d1)
 
+        # Verify that only the second and third atoms have moved.
+
+        self.assertTrue(numpy.array_equal(xyz0, xyz0a))
+
+        xyz7calc = xyz7 + (1-scale)*d0*u
+        for i in range(3):
+            self.assertAlmostEqual(xyz7a[i], xyz7calc[i], 6)
+
+        xyz20calc = xyz20 + (1-scale)*d0*u
+        for i in range(3):
+            self.assertAlmostEqual(xyz20a[i], xyz20calc[i], 6)
+
         return
 
+    def testExplicitBondAngleParameter(self):
+        """Test adding bond angle parameters to the molecule."""
+        occryst = self.occryst
+        ocmol = self.ocmol
 
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+
+        a0 = m.atoms[0]
+        a7 = m.atoms[7]
+        a20 = m.atoms[20]
+        a25 = m.atoms[25]
+
+        xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
+        xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz20 = numpy.array([a20.x.getValue(), a20.y.getValue(),
+            a20.z.getValue()])
+        xyz25 = numpy.array([a25.x.getValue(), a25.y.getValue(),
+            a25.z.getValue()])
+
+
+        v1 = xyz7 - xyz0
+        d1 = numpy.dot(v1, v1)**0.5
+        v2 = xyz7 - xyz20
+        d2 = numpy.dot(v2, v2)**0.5
+
+        angle0 = numpy.arccos(numpy.dot(v1, v2)/(d1*d2))
+
+        # Add a parameter
+        p1 = m.addBondAngleParameter("C0720", a0, a7, a20)
+        # Have another atom tag along for the ride
+        p1.addAtoms([a25])
+
+        self.assertAlmostEqual(angle0, p1.getValue(), 6)
+
+        # Change the value 
+        scale = 1.05
+        p1.setValue(scale*angle0)
+
+        # Verify that it has changed.
+        self.assertAlmostEqual(scale*angle0, p1.getValue(), 6)
+
+        xyz0a = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
+        xyz7a = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz20a = numpy.array([a20.x.getValue(), a20.y.getValue(),
+            a20.z.getValue()])
+        xyz25a = numpy.array([a25.x.getValue(), a25.y.getValue(),
+            a25.z.getValue()])
+
+        v1a = xyz7a - xyz0a
+        d1a = numpy.dot(v1a, v1a)**0.5
+        v2a = xyz7a - xyz20a
+        d2a = numpy.dot(v2a, v2a)**0.5
+
+        angle1 = numpy.arccos(numpy.dot(v1a, v2a)/(d1a*d2a))
+
+        self.assertAlmostEquals(scale*angle0, angle1)
+
+        # Verify that only the last two atoms have moved.
+
+        self.assertTrue(numpy.array_equal(xyz0, xyz0a))
+        self.assertTrue(numpy.array_equal(xyz7, xyz7a))
+        self.assertFalse(numpy.array_equal(xyz20, xyz20a))
+        self.assertFalse(numpy.array_equal(xyz25, xyz25a))
+        
+        return
+
+    def testExplicitDihedralAngleParameter(self):
+        """Test adding dihedral angle parameters to the molecule."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # make our crystal
+        cryst = ObjCrystParSet(occryst, "bucky")
+        m = cryst.c60
+
+        a0 = m.atoms[0]
+        a7 = m.atoms[7]
+        a20 = m.atoms[20]
+        a25 = m.atoms[25]
+        a33 = m.atoms[33]
+
+        xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
+        xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz20 = numpy.array([a20.x.getValue(), a20.y.getValue(),
+            a20.z.getValue()])
+        xyz25 = numpy.array([a25.x.getValue(), a25.y.getValue(),
+            a25.z.getValue()])
+        xyz33 = numpy.array([a33.x.getValue(), a33.y.getValue(),
+            a33.z.getValue()])
+
+
+        v12 = xyz0 - xyz7
+        v23 = xyz7 - xyz20
+        v34 = xyz20 - xyz25
+        v123 = numpy.cross(v12, v23)
+        v234 = numpy.cross(v23, v34)
+
+        d123 = numpy.dot(v123, v123)**0.5
+        d234 = numpy.dot(v234, v234)**0.5
+        angle0 = -numpy.arccos(numpy.dot(v123, v234)/(d123*d234))
+
+        # Add a parameter
+        p1 = m.addDihedralAngleParameter("C072025", a0, a7, a20, a25)
+        # Have another atom tag along for the ride
+        p1.addAtoms([a33])
+
+        self.assertAlmostEqual(angle0, p1.getValue(), 6)
+
+        # Change the value 
+        scale = 1.05
+        p1.setValue(scale*angle0)
+
+        # Verify that it has changed.
+        self.assertAlmostEqual(scale*angle0, p1.getValue(), 6)
+
+        xyz0a = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
+        xyz7a = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz20a = numpy.array([a20.x.getValue(), a20.y.getValue(),
+            a20.z.getValue()])
+        xyz25a = numpy.array([a25.x.getValue(), a25.y.getValue(),
+            a25.z.getValue()])
+        xyz33a = numpy.array([a33.x.getValue(), a33.y.getValue(),
+            a33.z.getValue()])
+
+        v12a = xyz0a - xyz7a
+        v23a = xyz7a - xyz20a
+        v34a = xyz20a - xyz25a
+        v123a = numpy.cross(v12a, v23a)
+        v234a = numpy.cross(v23a, v34a)
+
+        d123a = numpy.dot(v123a, v123a)**0.5
+        d234a = numpy.dot(v234a, v234a)**0.5
+        angle1 = -numpy.arccos(numpy.dot(v123a, v234a)/(d123a*d234a))
+
+        self.assertAlmostEquals(scale*angle0, angle1)
+
+        # Verify that only the last two atoms have moved.
+
+        self.assertTrue(numpy.array_equal(xyz0, xyz0a))
+        self.assertTrue(numpy.array_equal(xyz7, xyz7a))
+        self.assertTrue(numpy.array_equal(xyz20, xyz20a))
+        self.assertFalse(numpy.array_equal(xyz25, xyz25a))
+        self.assertFalse(numpy.array_equal(xyz33, xyz33a))
+        
+        return
 
 if __name__ == "__main__":
 

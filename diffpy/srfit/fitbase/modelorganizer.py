@@ -19,6 +19,7 @@ from numpy import inf
 from .constraint import Constraint
 from .restraint import Restraint, BoundsRestraint
 from .parameter import Parameter
+from .utils import validateName
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.equation import Clicker
@@ -43,7 +44,9 @@ class ModelOrganizer(object):
     Attributes
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and ModelOrganizers.
-    name            --  A name for this organizer.
+    name            --  A name for this organizer. Names should be unique
+                        within a ModelOrganizer and should be valid attribute
+                        names.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
@@ -59,9 +62,12 @@ class ModelOrganizer(object):
                         instance that is used to create constraints and
                         restraints from string
 
+    Raises ValueError if the name is not a valid attribute identifier
+
     """
 
     def __init__(self, name):
+        validateName(name)
         self.name = name
         self.clicker = Clicker()
         self._organizers = []

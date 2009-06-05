@@ -1169,7 +1169,8 @@ class DihedralAngleParameter(StretchModeParameter):
 
         """
         if value is None:
-            value = GetDihedralAngle(atom1.scat, atom2.scat, atom3.scat)
+            value = GetDihedralAngle(atom1.scat, atom2.scat, atom3.scat,
+                    atom4.scat)
 
         self.calclicker = Clicker()
         self.calclicker.click()
@@ -1184,7 +1185,7 @@ class DihedralAngleParameter(StretchModeParameter):
         # Create the stretch mode
         self.mode = mode
         if mode is None:
-            self.mode = StretchModeDihedralAngle(atom2.scat, atom3.scat, None)
+            self.mode = StretchModeTorsion(atom2.scat, atom3.scat, None)
         # We only add the last atom. This is the one that will move
         self.mode.AddAtom(atom4.scat)
 
@@ -1231,7 +1232,7 @@ class DihedralAngleParameter(StretchModeParameter):
         """
         if self.calclicker < self.clicker:
             self.value = GetDihedralAngle(self.atom1.scat, self.atom2.scat,
-                    self.atom3.scat)
+                    self.atom3.scat, self.atom4.scat)
             self.calclicker.click()
 
         return self.value

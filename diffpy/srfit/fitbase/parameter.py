@@ -23,25 +23,14 @@ Parameters encapsulate an adjustable parameter of a Calculator.
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation import Clicker
-
-# FIXME - move this into common.
-import re
-reident = re.compile(r'^[a-zA-Z_]\w*$')
-def isIdentifier(s):
-    """Check to see if a python string is a valid identifier.
-    
-    From http://code.activestate.com/recipes/413487/
-
-    """
-    if reident.match(s) is None: return False
-    return True
+from .utils import validateName
 
 class Parameter(Argument):
     """Parameter class.
     
     Attributes
     name    --  A name for this Parameter. Names should be unique within a
-                ParameterSet and should be valid attribute names.
+                ModelOrganizer and should be valid attribute names.
     clicker --  A Clicker instance for recording change in the value.
     value   --  The value of the Parameter. Modified with setValue.
     const   --  A flag indicating whether the Parameter is constant. A constant
@@ -59,12 +48,10 @@ class Parameter(Argument):
         const   --  A flag inticating whether the Parameter is a constant (like
                     pi).
 
-        Raises ValueError if the name contains invalid punctuation letters.
+        Raises ValueError if the name is not a valid attribute identifier
         
         """
-        # Check that the name is valid
-        if not isIdentifier(name):
-            raise ValueError("Name '%s' is not a valid identifier"%name)
+        validateName(name)
 
         Argument.__init__(self, value, name, const)
         return
@@ -95,6 +82,12 @@ class Parameter(Argument):
 class ParameterProxy(object):
     """A Parameter proxy for another parameter. This allows for the same
     parameter to have multiple names.
+
+    Attributes
+    name    --  A name for this ParameterProxy. Names should be unique within a
+                ModelOrganizer and should be valid attribute names.
+    par     --  The Parameter this is a proxy for.
+
     """
     
     # this will let the proxy register as a real Parameter
@@ -105,7 +98,12 @@ class ParameterProxy(object):
 
         name    --  The name of this ParameterProxy.
         par     --  The Parameter this is a proxy for.
+
+        Raises ValueError if the name is not a valid attribute identifier
+
         """
+        validateName(name)
+
         self.name = name
         self.par = par
         return

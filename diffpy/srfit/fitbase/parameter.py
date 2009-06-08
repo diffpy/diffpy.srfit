@@ -20,6 +20,7 @@ Parameters encapsulate an adjustable parameter of a Calculator.
 # FIXME - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
 # can have more fine control over the construction of FitModels.
 # FIXME - Add tags to parameters so they can be easily retrieved.
+# FIXME - Consider scaling parameters to avoid precision issues in optimizers.
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation import Clicker

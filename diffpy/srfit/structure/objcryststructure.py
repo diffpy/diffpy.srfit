@@ -49,7 +49,8 @@ class ScattererParSet(ParameterSet):
     occupancy   --  Occupancy of the atom on its crystal location (Parameter)
     parent      --  The ParameterSet this belongs to
     
-    Other attributes are inherited from diffpy.srfit.fitbase.parameterset.ParameterSet
+    Other attributes are inherited from
+    diffpy.srfit.fitbase.parameterset.ParameterSet
 
     """
 
@@ -508,6 +509,7 @@ class MolAtomParSet(ScattererParSet):
         # Only wrap this if there is a scattering power
         if sp is not None:
             self.addParameter(ParameterWrapper(sp, "biso", attr = "Biso"))
+
         return
 
     def _getElem(self):
@@ -519,6 +521,10 @@ class MolAtomParSet(ScattererParSet):
             return "dummy"
 
     element = property(_getElem)
+
+    def isDummy(self):
+        """Indicate whether this atom is a dummy atom."""
+        return self.element == "dummy"
 
 # End class MolAtomParSet
 

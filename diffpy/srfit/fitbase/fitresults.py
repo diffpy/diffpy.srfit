@@ -31,6 +31,7 @@ class FitResults(object):
     varnames    --  Names of the variables in the model.
     varvals     --  Values of the variables in the model.
     varunc      --  Uncertainties in the variable values.
+    showcon     --  Show constraint values in the output (default False).
     connames    --  Names of the constrained parameters.
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
@@ -48,12 +49,13 @@ class FitResults(object):
 
     """
 
-    def __init__(self, model, update = True):
+    def __init__(self, model, update = True, showcon = False):
         """Initialize the attributes.
 
         model   --  The model containing the results
         update  --  Flag indicating whether to do an immediate update (default
                     True).
+        showcon --  Show constraint values in the output (default False).
         
         """
         self.model = model
@@ -72,6 +74,8 @@ class FitResults(object):
         self.rw = 0
         self._dcon = []
         self.messages = []
+
+        self.showcon = showcon
 
         if update:
             self.update()
@@ -335,7 +339,7 @@ class FitResults(object):
             lines.append(formatstr%(name, val, unc))
 
         ## The constraints
-        if self.connames:
+        if self.connames and self.showcon:
             lines.append("")
             l = "Constrained Parameters"
             if not certain:

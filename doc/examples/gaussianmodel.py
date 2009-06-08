@@ -12,12 +12,9 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of fitting the Debye model to experimental Debye-Waller factors.
+"""Example of fitting A gaussian to experimental Debye-Waller factors.
 
 This is an example of building a FitModel in order to fit experimental data.
-It is assumed that the function we need cannot be modified by us (although we
-define it below). This will help us demonstrate how to extend a function using
-SrFit.
 
 The makeModel function shows how to build a FitModel that will fit our model to
 the data. The scipyOptimize and parkOptimize functions show two different ways
@@ -30,79 +27,6 @@ import numpy
 
 from diffpy.srfit.fitbase import Contribution, FitModel, Profile, FitResults
 from diffpy.srfit.park import FitnessAdapter
-
-# Functions required for calculation of Debye curve. Feel free to skip these,
-# as we treat them as if existing in some external library that we cannot
-# modify.
-def adps(m,thetaD,T):
-    """Calculates atomic displacement factors within the Debye model
-
-    <u^2> = (3h^2/4 pi^2 m kB thetaD)(phi(thetaD/T)/(ThetaD/T) + 1/4)
-
-    arguments:
-    m -- float -- mass of the ion in atomic mass units (e.g., C = 12)
-    thetaD -- float -- Debye Temperature
-    T -- float -- temperature.
-
-    return:
-    Uiso -- float -- the thermal factor from the Debye model at temp T
-
-    """
-    h = 6.6260755e-34   # Planck's constant. J.s of m^2.kg/s
-    kB = 1.3806503e-23  # Boltzmann's constant. J/K
-    amu = 1.66053886e-27 # Atomic mass unit. kg
-
-    def __phi(x):
-        """evaluates the phi integral needed in Debye calculation
-
-        phi(x) = (1/x) int_0^x xi/(exp(xi)-1) dxi
-
-        arguments:
-        x -- float -- value of thetaD (Debye temperature)/T
-
-        returns:
-        phi -- float -- value of the phi function
-
-        """
-        def __debyeKernel(xi):
-            """function needed by debye calculators
-
-            """
-            y = xi/(numpy.exp(xi)-1)
-            return y
-
-        import scipy.integrate
-
-        int = scipy.integrate.quad(__debyeKernel, 0, x)
-        phi = (1/x) * int[0]
-
-        return phi
-
-
-    m = m * amu
-    u2 = (3*h**2 / (4 * numpy.pi**2 *m *kB *thetaD))*(__phi(thetaD/T)/(thetaD/T) + 1./4.)
-
-    return u2*1e20
-
-def debye(T, m, thetaD):
-    """A wrapped version of 'adps' that can handle an array of T-values."""
-    y = numpy.array([adps(m, thetaD, x) for x in T])
-    return y
-
-# The data
-data = """\
-015.0 0.00334 0.00013
-050.0 0.00508 0.00022
-100.0 0.00830 0.00040
-150.0 0.01252 0.00071
-200.0 0.01792 0.00100
-250.0 0.02304 0.00120
-300.0 0.02737 0.00140
-350.0 0.03085 0.00160
-400.0 0.03484 0.00190
-450.0 0.03774 0.00220
-500.0 0.03946 0.00250
-"""
 
 ####### Example Code
 
@@ -122,10 +46,9 @@ def makeModel():
     Contribution defines the equation and parameters that will be adjusted to
     fit the data. The fitting equation can be defined within a function or
     optionally within the Calculator class. We won't need the Calculator class
-    in this example since the signature of the fitting equation (the 'debye'
-    function) is so simple. The contribution also defines the residual function
-    to optimize for the data/equation pair. This can be modified, but we won't
-    do that here.
+    in this example since the signature of the fitting equationis so simple.
+    The contribution also defines the residual function to optimize for the
+    data/equation pair. This can be modified, but we won't do that here.
 
     Once we define the FitModel, we can send it an optimizer to be optimized.
     See the scipyOptimize and parkOptimize functions.
@@ -139,40 +62,21 @@ def makeModel():
 
     # Load data and add it to the profile. It is our responsibility to get our
     # data into the profile.
-    xydy = numpy.array(data.split(), dtype=float).reshape(-1,3)
-    x, y, dy = numpy.hsplit(xydy, 3)
-    profile.setObservedProfile(x, y, dy)
+    x, y = numpy.loadtxt("data/gaussian.dat", unpack=1)
+    profile.setObservedProfile(x, y)
 
     ## The Contribution
     # The Contribution associates the profile with the Debye Calculator. 
-    contribution = Contribution("pb")
+    contribution = Contribution("g1")
     # Tell the contribution about the Profile. We will need to use the
     # independent variable (the temperature) from the data to calculate the
     # theoretical signal, so give it an informative name ('T') that we can use
     # later.
-    contribution.setProfile(profile, xname="T")
-
-    # We now want to tell the contribution to use the 'debye' function defined
-    # above. The 'registerFunction' method will let us do this. Since we
-    # haven't told it otherwise, 'registerFunction' will extract the name of
-    # the function ('debye') and the names of the arguments ('T', 'm',
-    # 'thetaD'). (Note that we could have given it other names.) Since we named
-    # the x-variable 'T' above, the 'T' in the 'debye' equation will refer  to
-    # this x-variable when it gets called.
-    contribution.registerFunction(debye)
+    contribution.setProfile(profile, xname="x")
 
     # We have a function registered to the contribution, but we have yet to
-    # define the fitting equation. On top of that, we need a vertical offset in
-    # our equation that does not appear in 'debye'.  We could have written a
-    # function that calls 'debye' that includes an offset, but this will not
-    # always be an option. Thus, we will add the offset when we define the
-    # equation.  We don't need to specify the parameters to the 'debye'
-    # function since the contribution already knows what they are. However, if
-    # we specify the arguments, we can make adjustments to their input values.
-    # We wish to have the thetaD value in the debye equation to be positive, so
-    # we specify the input as abs(thetaD) in the equation below. Furthermore,
-    # we know 'm', the mass of lead, so we can specify that as well.
-    contribution.setEquation("debye(T, 207.2, abs(thetaD))+offset")
+    # define the fitting equation.
+    contribution.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
 
     ## The FitModel
     # The FitModel lets us define what we want to fit. It is where we can
@@ -185,11 +89,10 @@ def makeModel():
     # Specify which parameters we want to refine. We can give them initial
     # values in the process. This tells the model to vary the offset and to
     # give it an initial value of 0.
-    model.addVar(contribution.offset, 0)
-    model.addVar(contribution.thetaD, 100)
+    model.addVar(contribution.A, 1)
+    model.addVar(contribution.x0, 5)
+    model.addVar(contribution.sigma, 1)
 
-    # Return the  model. See the scipyOptimize and parkOptimize functions to
-    # see how it is used.
     return model
 
 def scipyOptimize(model):
@@ -231,23 +134,16 @@ def parkOptimize(model):
 def plotResults(model):
     """Plot the results contained within a refined FitModel."""
 
-    offset, tvar = model.getValues()
-
     # Plot this.
     # Note that since the contribution was given the name "pb", it is
     # accessible from the model with this name. This is a useful way to
     # organize multiple contributions to a fit.
-    T = model.pb.profile.x
-    U = model.pb.profile.y
-    Ucalc = model.pb.profile.ycalc
+    x = model.g1.profile.x
+    y = model.g1.profile.y
+    ycalc = model.g1.profile.ycalc
 
     import pylab
-    pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")
-    lbl1 = "$T_d$=%3.1f K, off=%1.5f $\AA^2$"% (abs(tvar),offset)
-    pylab.plot(T,Ucalc,label=lbl1)
-    pylab.xlabel("T (K)")
-    pylab.ylabel("$U_{iso} (\AA^2)$")
-    pylab.legend(loc = (0.0,0.8))
+    pylab.plot(x, y, x, ycalc)
 
     pylab.show()
     return
@@ -255,18 +151,18 @@ def plotResults(model):
 
 if __name__ == "__main__":
 
-    model = makeModel()
-    scipyOptimize(model)
-    res = FitResults(model)
-    res.printResults()
-    plotResults(model)
-
-    # Start from scratch
     #model = makeModel()
-    #parkOptimize(model)
+    #scipyOptimize(model)
     #res = FitResults(model)
     #res.printResults()
     #plotResults(model)
+
+    # Start from scratch
+    model = makeModel()
+    parkOptimize(model)
+    res = FitResults(model)
+    res.printResults()
+    plotResults(model)
 
 
 # End of file

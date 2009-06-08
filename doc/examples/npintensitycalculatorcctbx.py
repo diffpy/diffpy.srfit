@@ -35,7 +35,7 @@ from cctbx.array_family import flex
 from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.park import FitnessAdapter
-from diffpy.srfit.structure import CCTBXStructureParSet
+from diffpy.srfit.structure.cctbxstructure import CCTBXStructureParSet
 
 from npintensitycalculator import makeData, getXScatteringFactor
 from debyemodel import scipyOptimize, parkOptimize

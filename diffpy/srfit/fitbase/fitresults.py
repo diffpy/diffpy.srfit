@@ -91,6 +91,10 @@ class FitResults(object):
         if not model._organizers:
             return
 
+        # Make sure everything is ready for calculation
+        if model._doprepare:
+            model._prepare()
+
         # Store the variable names and values
         self.varnames = model.getNames()
         self.varvals = model.getValues()
@@ -157,7 +161,7 @@ class FitResults(object):
 
         # Make sure the input vector is an array
         pvals = numpy.asarray(self.varvals)
-        # Compute the numeric derivative using the three point formula.
+        # Compute the numeric derivative using the center point formula.
         delta = step * pvals
 
         # Center point formula: 
@@ -166,6 +170,7 @@ class FitResults(object):
 
         r = []
         # The list of constraint derivatives with respect to variables 
+        # The forward difference would be faster, but perhaps not as accurate.
         conr = []
         for k,v in enumerate(pvals):
             h = delta[k]
@@ -325,18 +330,17 @@ class FitResults(object):
         varnames = self.varnames
         varvals = self.varvals
         varunc = self.varunc
-        d = {}
-        for i, name in enumerate(varnames):
-            d[name] = (varvals[i], varunc[i])
-        numericStringSort(varnames)
-        
+        varlines = []
+
         w = max(map(len, varnames))
         w = str(w+1)
         # Format the lines
         formatstr = "%-"+w+"s %- 15f +/- %-15f"
-        for name in varnames:
-            val, unc = d[name]
-            lines.append(formatstr%(name, val, unc))
+        for name, val, unc in zip(varnames, varvals, varunc):
+            varlines.append(formatstr%(name, val, unc))
+
+        varlines.sort()
+        lines.extend(varlines)
 
         ## The constraints
         if self.connames and self.showcon:
@@ -490,7 +494,7 @@ class ContributionResults(object):
 
     def _init(self, con, weight, fitres):
         """Initialize the attributes, for real."""
-        ## Note that the order of these operations are chosen to reduce
+        ## Note that the order of these operations is chosen to reduce
         ## computation time.
 
         if con.profile is None:

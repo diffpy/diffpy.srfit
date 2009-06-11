@@ -48,6 +48,12 @@ class TestFitModel(unittest.TestCase):
         self.assertEquals(values, [2, 1, 0])
 
         model.fixVar(model.k)
+
+        # Try to fix a variable that is not there
+        self.assertRaises(ValueError, model.fixVar, "")
+        self.assertRaises(ValueError, model.fixVar, "k")
+        self.assertRaises(ValueError, model.fixVar, None)
+        self.assertRaises(ValueError, model.fixVar, con.A)
         names = model.getNames()
         self.assertEquals(names, ["A", "c"])
         values = model.getValues()

@@ -170,14 +170,14 @@ class FitModel(ModelOrganizer):
         Constraints can have inter-dependencies that require that they are
         updated in a specific order. This will set the proper order.
         """
-        # Update constraints and restraints. 
+        # Inform the fit hook that we're updating things
         if self.fithook:
             self.fithook.reset()
 
+        # Update constraints and restraints. 
         rset = set(self._restraints)
         cdict = {}
-        # We let 'newer' constraints override the others. Constraints defined
-        # in the fitmodel override all others.
+        # We let constraints closer to the FitModel override all others. 
         for con in self._organizers:
             rset.update( con._getRestraints() )
             constraints = con._getConstraints()
@@ -247,7 +247,9 @@ class FitModel(ModelOrganizer):
         tag     --  A tag for the variable. This can be used to fix and free
                     variables by tag (default None).
         tags    --  A list of tags (default []). Both tag and tags can be
-                    appolied.
+                    applied.
+
+        Returns the variable (ParameterProxy instance).
 
         Raises ValueError if the name of the variable is already taken by
         another variable or a contribution.
@@ -277,7 +279,7 @@ class FitModel(ModelOrganizer):
 
         self._doprepare = True
 
-        return
+        return var
 
     def __tagVar(self, tag, var):
         """Private function to tag a variable."""

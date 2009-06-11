@@ -32,7 +32,8 @@ class FitHook(object):
     verbose --  An integer telling how verbose to be (default 1).
                 0   --  print nothing
                 1   --  print the count during the precall
-                >=2 --  print the residual during the postcall
+                2   --  print the residual during the postcall
+                >=3 --  print the variables during the postcall
 
     """
 
@@ -68,7 +69,7 @@ class FitHook(object):
         chiv    --  The residual vector
         
         """
-        if self.verbose < 2:
+        if self.verbose < 3:
             return
 
         # Get the number of restraints
@@ -86,5 +87,15 @@ class FitHook(object):
         if res:
             print "Contributions:", chi2
             print "Restraints:", res
+
+        if self.verbose >= 3:
+
+            print "Variables"
+
+            vnames = model.getNames()
+            vals = model.getValues()
+
+            for name, val in zip(vnames, vals):
+                print "  %s = %f" % (name, val)
 
 __id__ = "$Id$"

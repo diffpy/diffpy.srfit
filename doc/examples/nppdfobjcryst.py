@@ -493,16 +493,13 @@ def scipyOptimize(model):
 
     """
 
-    # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
-    # scipy. We simply have to give it the function to minimize
-    # (model.residual) and the starting values of the variables
-    # (model.getValues()). We defined offset and tvar as variables, so that is
-    # what will be adjusted by the optimizer.
-    from scipy.optimize.minpack import leastsq
-    print "Fit using scipy's LM optimizer"
-    # We want to make sure that the derivative step size is significant, so we
-    # set that explicitly here.
-    leastsq(model.residual, model.getValues(), epsfcn = 1e-5)
+    # We're going to use the simplex optimizer from scipy. This one takes a bit
+    # longer than the LM algorithm, but it has a larger radius of convergence.
+    # We simply have to give it the function to minimize (model.scalarResidual)
+    # and the starting values of the variables (model.getValues()). 
+    from scipy.optimize import fmin
+    print "Fit using scipy's Simplex optimizer"
+    fmin(model.scalarResidual, model.getValues())
 
     return
 
@@ -511,6 +508,7 @@ if __name__ == "__main__":
     cryst = makeC60()
     # Make the data and the model
     model = makeModel(cryst, "data/C60.gr")
+    model.fithook.verbose = 3
     scipyOptimize(model)
     res = FitResults(model)
     res.printResults()

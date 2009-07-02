@@ -99,10 +99,6 @@ class Calculator(ModelOrganizer):
     def setProfile(self, profile):
         """Assign the profile.
 
-        Since the same Calculator instance can be used by multiple
-        Contributions, this should be called by a contribution before the
-        Calculator is evaluated.
-
         profile --  A Profile that specifies the calculation points and which
                     will store the calculated signal.
 

@@ -88,6 +88,7 @@ class FitModel(ModelOrganizer):
         See the FitHook class for the interface.
         """
         self.fithook = fithook
+        self._doprepare = True
         return
 
     def addContribution(self, con, weight = 1.0):
@@ -117,6 +118,7 @@ class FitModel(ModelOrganizer):
         contribution's residual, plus the value of each restraint. The array
         returned, denoted chiv, is such that 
         dot(chiv, chiv) = chi^2 + restraints.
+
         """
 
         if self._doprepare:
@@ -154,6 +156,7 @@ class FitModel(ModelOrganizer):
         """A scalar version of the residual.
 
         See the residual method. This returns dot(chiv, chiv).
+
         """
         chiv = self.residual(p)
         return dot(chiv, chiv)
@@ -169,15 +172,30 @@ class FitModel(ModelOrganizer):
 
         Constraints can have inter-dependencies that require that they are
         updated in a specific order. This will set the proper order.
+
+        Raises AttributeError if there are variables without a value.
+        Raises AttributeError if there are multiple constraints in the same
+        parameter buried within the contributions to this fit.
+
         """
         # Inform the fit hook that we're updating things
         if self.fithook:
             self.fithook.reset()
 
+        # Check for variable values
+        varvals = self.getValues()
+        if None in varvals:
+            idx = varvals.index(None)
+            name = self.getNames()[idx]
+            m = "Variable '%s' has no initial value"%name
+            raise AttributeError(m)
+
         # Update constraints and restraints. 
         rset = set(self._restraints)
         cdict = {}
-        # We let constraints closer to the FitModel override all others. 
+        # We let constraints closer to the FitModel override all others.
+        # Constraints on the same parameter in different organizers cannot be
+        # resolved without some guesswork, so throw an error instead.
         for con in self._organizers:
             rset.update( con._getRestraints() )
             constraints = con._getConstraints()

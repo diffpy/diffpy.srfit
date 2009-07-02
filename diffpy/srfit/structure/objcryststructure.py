@@ -27,8 +27,7 @@ DihedralAngleParameter
 
 
 from diffpy.srfit.equation import Clicker
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
-from diffpy.srfit.fitbase.parameter import ParameterWrapper
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.fitbase.constraint import Constraint
@@ -803,6 +802,12 @@ class StretchModeParameter(Parameter):
 
     This class relies upon attributes that do not belong to it. Do not
     instantiate this class.
+
+    Required attributes:
+    matoms  --  The set of all mutated AtomParSets
+    molecule    --  The molecule the atoms belong to
+    mode    --  The pyobjcryst.StretchModeBondLength for the bond
+
     """
 
     def setValue(self, val):
@@ -878,9 +883,9 @@ class BondLengthParameter(StretchModeParameter):
     could lead to nonconvergence of a fit. Consider mutating atom2 of a bond
     directly, and via a BondLengthParameter. The two mutations of atom2 may be
     determined independently by the optimizer, in which case the composed
-    mutation will have an unexpected affect on the residual. It is best
+    mutation will have an unexpected effect on the residual. It is best
     practice to either modify atom positions directly, or thorough bond
-    lengths, bond angles and dihedral angles (which are orthogonal).
+    lengths, bond angles and dihedral angles (which are mutually orthogonal).
     
     Note that by making a bond constant it also makes the underlying atoms
     constant. When setting it as nonconstant, each atom is set nonconstant.

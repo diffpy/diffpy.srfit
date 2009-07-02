@@ -38,6 +38,7 @@ visitor for that.
 
 Note that if Literals are added to a tree, a new Evaluator should be used to
 ensure that the change is included in the calculation.
+
 """
 
 from .visitor import Visitor
@@ -45,6 +46,7 @@ from ..literals import Partition
 from ..literals import Argument
 
 from .. import Clicker
+
 
 class Evaluator(Visitor):
     """Evaluator visitor for computing the value of an expression.
@@ -54,8 +56,10 @@ class Evaluator(Visitor):
     _clicker    --  A Clicker that is compared with the Clicker of each Literal
                     in the tree.
     _atroot     --  Flag indicating if we're at the root of the tree.
+
     """
 
+    # FIXME - having parts = True here makes epydoc choke.
     def __init__(self, parts = True):
         """Initialize.
 
@@ -65,7 +69,7 @@ class Evaluator(Visitor):
                     tree, and this slows down the Evaluator. The PartFinder
                     visitor can determine if there are Partitions in an
                     equation, which will let you choose how to set this flag.
-        
+
         """
         self.value = 0
         self._clicker = Clicker()
@@ -77,6 +81,7 @@ class Evaluator(Visitor):
         if not parts:
             self.onOperator = self.onOperatorNoParts
         return
+
 
     def click(self):
         """Click the clicker and reset non-public data."""

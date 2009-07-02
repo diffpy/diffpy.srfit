@@ -139,7 +139,9 @@ class ParameterWrapper(Parameter):
                     directly.
         attr    --  The name of the attribute that contains the value of the
                     parameter. If attr is None (default), then both getter and
-                    setter must be specified.
+                    setter must be specified. If attr takes precedent over
+                    getter and setter.
+
 
         raises ValueError if exactly one of getter or setter is not None, or if
         getter, setter and attr ar all None.
@@ -155,33 +157,19 @@ class ParameterWrapper(Parameter):
         self.setter = setter
         self.attr = attr
 
-        if attr is None:
-            self.getValue = self.getAccessValue
-            self.setValue = self.setAccessValue
-        else:
-            self.getValue = self.getAttrValue
-            self.setValue = self.setAttrValue
+        if attr is not None:
+            self.getter = lambda obj: getattr(obj, self.attr)
+            self.setter = lambda obj, val: setattr(obj, self.attr, val)
 
         value = self.getValue()
         Parameter.__init__(self, name, value)
         return
 
-    def getAttrValue(self):
-        """Get the value of the attribute."""
-        return getattr(self.obj, self.attr)
-
-    def setAttrValue(self, value):
-        """Set the value of the attribute."""
-        if value != self.getValue():
-            setattr(self.obj, self.attr, value)
-            self.clicker.click()
-        return
-
-    def getAccessValue(self):
+    def getValue(self):
         """Get the value from the accessor."""
         return self.getter(self.obj)
 
-    def setAccessValue(self, value):
+    def setValue(self, value):
         """Set the value from the accessor."""
         if value != self.getValue():
             self.setter(self.obj, value)

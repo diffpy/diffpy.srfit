@@ -135,9 +135,12 @@ class Contribution(ModelOrganizer):
         self._dyname = dyname
         self._eqfactory.registerArgument(dyname, self.profile.dypar)
 
+        # If we have a calculator, set its profile as well, and assign the
+        # default residual equation.
         if self.calculator is not None:
             self.calculator.setProfile(profile)
             self.setResidualEquation()
+
         return
 
     def setCalculator(self, calc, name = None):
@@ -168,8 +171,10 @@ class Contribution(ModelOrganizer):
         # Register the calculator with the equation factory
         self._eqfactory.registerGenerator(name, calc)
 
+        # Set the default fitting equation, which is just the calculator
         self.setEquation(name)
 
+        # If we have a profile already, let the calculator know about it.
         if self.profile is not None:
             calc.setProfile(self.profile)
         return

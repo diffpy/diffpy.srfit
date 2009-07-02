@@ -131,7 +131,6 @@ def makeModel():
     See the scipyOptimize and parkOptimize functions.
     
     """
-
         
     ## The Profile
     # Create a Profile to hold the experimental and calculated signal.
@@ -157,7 +156,7 @@ def makeModel():
     # haven't told it otherwise, 'registerFunction' will extract the name of
     # the function ('debye') and the names of the arguments ('T', 'm',
     # 'thetaD'). (Note that we could have given it other names.) Since we named
-    # the x-variable 'T' above, the 'T' in the 'debye' equation will refer  to
+    # the x-variable 'T' above, the 'T' in the 'debye' equation will refer to
     # this x-variable when it gets called.
     contribution.registerFunction(debye)
 
@@ -172,7 +171,7 @@ def makeModel():
     # We wish to have the thetaD value in the debye equation to be positive, so
     # we specify the input as abs(thetaD) in the equation below. Furthermore,
     # we know 'm', the mass of lead, so we can specify that as well.
-    contribution.setEquation("debye(T, 207.2, abs(thetaD))+offset")
+    contribution.setEquation("debye(T, 207.2, abs(thetaD)) + offset")
 
     ## The FitModel
     # The FitModel lets us define what we want to fit. It is where we can
@@ -184,8 +183,11 @@ def makeModel():
 
     # Specify which parameters we want to refine. We can give them initial
     # values in the process. This tells the model to vary the offset and to
-    # give it an initial value of 0.
+    # give it an initial value of 0. Note that the variable names are those we
+    # used in setEquation above. Once defined, variables become attributes of
+    # the model.
     model.addVar(contribution.offset, 0)
+    # We also vary the Debye temperature.
     model.addVar(contribution.thetaD, 100)
 
     # Return the  model. See the scipyOptimize and parkOptimize functions to

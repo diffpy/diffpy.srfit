@@ -18,7 +18,7 @@ These classes turn an Assembly object (from diffpy.srfit.fitbase) into a Fit
 object from PARK.
 
 """
-from diffpy.srfit.fitbase import Parameter
+from diffpy.srfit.fitbase.parameter import Parameter
 import park
 
 class ParkParameterProxy(park.Parameter):

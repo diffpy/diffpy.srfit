@@ -172,9 +172,8 @@ def fofq(cryst, q, delta2):
 
     # The brute-force calculation is very slow. Thus we optimize a little bit.
 
-    # The precision of distance measurements. We choose this somewhat
-    # arbitrarily. Note, however that
-    deltad = 1e-6
+    # The precision of distance measurements.
+    deltad = 1e-10
     dmult = int(1/deltad)
     deltau = deltad**2
     umult = int(1/deltau)
@@ -186,6 +185,7 @@ def fofq(cryst, q, delta2):
 
     scl = cryst.GetScatteringComponentList()
     n = len(scl)
+
 
     for i in xrange(n):
 
@@ -270,7 +270,7 @@ def fofq(cryst, q, delta2):
 
         # Add in the contribution
         y += fi * fj * mult * sin(q * d) / d *\
-                exp(-0.5 * SS * deltau * BtoU * q**2)
+                exp(-0.5 * (SS * deltau) * BtoU * q**2)
 
 
     # We must multiply by 2 since we only counted j > i pairs.
@@ -296,7 +296,7 @@ def getXScatteringFactor(el, q):
         f = numpy.asarray( map( g.at_stol, q/(4*numpy.pi) ) )
         return f
     except ImportError:
-        return 1
+        return 1.0
 
 
 c60xyz = \
@@ -468,7 +468,7 @@ def makeModel(cryst, datname):
         model.constrain(par, radius)
 
     # We also want to adjust the scale and qdamp
-    model.addVar(contribution.scale, 1e4)
+    model.addVar(contribution.scale, 1.3e4)
     model.addVar(contribution.qdamp, 0.1)
 
     # Give the model away so it can be used!
@@ -525,6 +525,7 @@ if __name__ == "__main__":
     model.fithook.verbose = 3
     
     # Optimize
+    from gaussianmodel import scipyOptimize
     scipyOptimize(model)
 
     # Print results

@@ -31,6 +31,7 @@ from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
+from gaussianmodel import scipyOptimize
 
 class PDFCalculator(Calculator):
     """A class for calculating the PDF for an isolated scatterer.
@@ -498,24 +499,6 @@ def plotResults(model):
     pylab.show()
     return
 
-def scipyOptimize(model):
-    """Optimize the model created above using scipy.
-
-    The FitModel we created in makeModel has a 'scalarResidual' method that we
-    can be minimized using scalar scipy optimizer.
-
-    """
-
-    # We're going to use the simplex optimizer from scipy. This one takes a bit
-    # longer than the LM algorithm, but it has a larger radius of convergence.
-    # We simply have to give it the function to minimize (model.scalarResidual)
-    # and the starting values of the variables (model.getValues()). 
-    from scipy.optimize import fmin
-    print "Fit using scipy's Simplex optimizer"
-    fmin(model.scalarResidual, model.getValues())
-
-    return
-
 if __name__ == "__main__":
 
     cryst = makeC60()
@@ -525,7 +508,6 @@ if __name__ == "__main__":
     model.fithook.verbose = 3
     
     # Optimize
-    from gaussianmodel import scipyOptimize
     scipyOptimize(model)
 
     # Print results

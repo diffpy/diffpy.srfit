@@ -14,14 +14,15 @@
 ########################################################################
 """Example of using Calculators in FitModels.
 
-This is an example of building a FitModel in order to fit theoretical intensity
-data. To understand the basics of FitModels, see the debyemodel.py.
+This is an example of building a Calculator and using it in a FitModel in order
+to fit theoretical intensity data.
 
 The IntensityCalculator class is an example of a Calculator that can be used by
 a Contribution to help generate a signal.
 
 The makeModel function shows how to build a FitModel that uses the
 IntensityCalculator.
+
 """
 
 import os
@@ -33,16 +34,22 @@ from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.park import FitnessAdapter
 from diffpy.srfit.structure.diffpystructure import StructureParSet
 
-from debyemodel import scipyOptimize, parkOptimize
+from gaussianmodel import scipyOptimize, parkOptimize
 
 class IntensityCalculator(Calculator):
     """A class for calculating intensity using the Debye equation.
 
     Calculating intensity from a structure is difficult in general. This class
     takes a diffpy.Structure.Structure object and from that calculates a
-    theoretical intensity signal. Unlike the example in debyemodel.py, the
+    theoretical intensity signal. Unlike the example in gaussianmodel.py, the
     intensity calculator is not simple, so we must define this Calculator to
     help us interface with a FitModel.
+
+    The purpose of a Calculator is to
+    1) provide a function that calculates a profile signal
+    2) organize the Parameters required for the calculation
+
+    This calculator wraps the 'iofq' function defined below.
     
     """
 
@@ -50,6 +57,7 @@ class IntensityCalculator(Calculator):
         """Define our calculator.
 
         Keep count of how many times the function has been called (self.count).
+
         """
         Calculator.__init__(self, name)
         # Count the calls
@@ -59,11 +67,29 @@ class IntensityCalculator(Calculator):
     def setStructure(self, strufile):
         """Set the structure used in the calculation.
 
-        This will create the refinement parameters using the Structure adapter
-        from diffpy.srfit.structure. Thus, the calculator will have its own
-        parameters, each of which will be a proxy for some part of the
-        structure. The parameters will be accessible by name under the
-        'structure' attribute of this calculator.
+        This will create the refinement Parameters using the Structure adapter
+        from diffpy.srfit.structure. The created Parameters are proxies for
+        attributes of the Structure object that can be interfaced within SrFit.
+        The Parameters will be accessible by name under the 'structure'
+        attribute of this calculator, and are organized hierarchically:
+        structure
+          - lattice
+          - atom1 (the name depends on the element)
+            - x
+            - y
+            - z
+            - occ
+            - U11
+            - U22
+            - U33
+            - U12
+            - U13
+            - U23
+            - Uiso
+          - ...
+          - atomN
+
+        See the makeModel code to see how these Parameters are accessed.
         
         """
         # Load the structure from file
@@ -71,8 +97,10 @@ class IntensityCalculator(Calculator):
         stru = Structure()
         stru.read(strufile)
 
-        # Create a custom parameter set designed to interface with
-        # diffpy.Structure.Structure objects
+        # Create a ParameterSet designed to interface with
+        # diffpy.Structure.Structure objects that organizes the Parameter
+        # hierarchy. Note that the StructureParSet holds a handle to the loaded
+        # structure that we use in the __call__ method below.
         parset = StructureParSet(stru, "structure")
         # Put this ParameterSet in the Calculator.
         self.addParameterSet(parset)
@@ -202,7 +230,7 @@ def getXScatteringFactor(el, q):
     except ImportError:
         return 1
 
-def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc):
+def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
     """Make some fake data and save it to file.
 
     Make some data to fit. This uses iofq to calculate an intensity curve, and
@@ -216,6 +244,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc):
     Uiso    --  The thermal factor for all atoms
     sig     --  The broadening factor
     bkgc    --  A parameter that gives minor control of the background.
+    nl      --  Noise level (0, inf), default 1, larger -> less noise.
 
     """
 
@@ -246,10 +275,11 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc):
     y *= scale
 
     # Calculate the uncertainty 
-    u = y**0.5
+    u = (y/nl)**0.5
 
     # And apply the noise
-    y = numpy.random.poisson(y)
+    if nl > 0:
+        y = numpy.random.poisson(y*nl) / nl
 
     # Now save it
     numpy.savetxt(datname, zip(q, y, u))
@@ -302,41 +332,46 @@ def makeModel(strufile, datname):
     # only performed when a structural parameter is changed. If only
     # non-structural parameters are changed, such as the background and
     # broadening parameters, then then previously computed iofq value will be
-    # used to compute the contribution equation.  The benefit in this is
-    # very apparent when refining the model with the LM optimizer, which only
-    # changes two variables at a time in most cases. Note in the refinement
+    # used to compute the contribution equation.  The benefit in this is very
+    # apparent when refining the model with the LM optimizer, which only
+    # changes two variables at a time most of the time. Note in the refinement
     # output how many times the residual is calculated, versus how many times
     # iofq is called when using the scipyOptimize function.
 
     # We will define the background as a string.
-    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 + b6*q**6+\
-               b7*q**7 +b8*q**8 + b9*q**9"
 
+    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 + b6*q**6 +\
+               b7*q**7 + b8*q**8 + b9*q**9"
+
+    # This creates a callable equation within the Contribution, and turns
+    # the polynomial coefficients into Parameters.
     contribution.registerStringFunction(bkgdstr, "bkgd")
 
-    # We will create the broadening function by registering a python function.
+    # We will create the broadening function that we need by creating a
+    # python function and registering it with the Contribution.
     pi = numpy.pi
     exp = numpy.exp
     def gaussian(q, q0, width):
         return 1/(2*pi*width**2)**0.5 * exp(-0.5 * ((q-q0)/width)**2)
 
+    # This registers the python function and extracts the name and creates
+    # Parameters from the arguments.
     contribution.registerFunction(gaussian)
-    # Center the gaussian
+
+    # Center the Gaussian.
     contribution.q0.setValue(x[len(x)/2])
 
     # Now we can incorporate the scale and bkgd into our calculation. We also
-    # convolve the signal with the gaussian to broaden it.
+    # convolve the signal with the gaussian to broaden it. Recall that we don't
+    # need to supply arguments to the registered functions unless we want to
+    # make changes to their input values.
     contribution.setEquation("scale * convolve(I, gaussian) + bkgd")
 
-    # Make a FitModel where we can create variables, constraints and
-    # restraints. If we had multiple profiles to fit simultaneously, the
-    # contribution from each could be added to the model.
+    # Make the FitModel and add the Contribution.
     model = FitModel()
     model.addContribution(contribution)
 
-    # Specify which parameters we want to refine. We can give them initial
-    # values in the process. We want to refine the background variables that we
-    # just defined in the contribution.
+    # Specify which parameters we want to refine.
     model.addVar(contribution.b0, 0)
     model.addVar(contribution.b1, 0)
     model.addVar(contribution.b2, 0)
@@ -352,17 +387,21 @@ def makeModel(strufile, datname):
     model.addVar(contribution.scale, 1)
     model.addVar(contribution.width, 0.1)
 
-    # We can also refine structural parameters. 
+    # We can also refine structural parameters. Here we extract the 'structure'
+    # ParameterSet from the intensity calculator and use the parameters like we
+    # would any others.
     structure = calculator.structure
+
+    # We want to allow for isotropic expansion, so we'll constrain the lattice
+    # parameters to the same value.
     a = structure.lattice.a
     model.addVar(a)
-    # We want to allow for isotropic expansion, so we'll make constraints for
-    # that.
     model.constrain(structure.lattice.b, a)
     model.constrain(structure.lattice.c, a)
     # We want to refine the thermal paramters as well. We will add a new
     # variable that we call "Uiso" and constrain the atomic Uiso values to
-    # this.
+    # this. The structure ParameterSet has an 'atoms' list that we can use to
+    # make this easier.
     Uiso = model.newVar("Uiso", 0.01)
     for atom in structure.atoms:
         model.constrain(atom.Uiso, Uiso)
@@ -373,12 +412,12 @@ def makeModel(strufile, datname):
 def plotResults(model):
     """Plot the results contained within a refined FitModel."""
 
+    # All this should be pretty familiar by now.
     names = model.getNames()
     vals = model.getValues()
 
     q = model.bucky.profile.x
 
-    # Plot this for fun.
     I = model.bucky.profile.y
     Icalc = model.bucky.profile.ycalc
     bkgd = model.bucky.evaluateEquation("bkgd")
@@ -403,19 +442,23 @@ if __name__ == "__main__":
     q = numpy.arange(1, 20, 0.05)
     makeData(strufile, q, "C60.iq", 1.0, 100.68, 0.005, 0.13, 2)
 
+    # Make the model
     model = makeModel(strufile, "C60.iq")
+
+    # Optimize
     scipyOptimize(model)
+    #parkOptimize(model)
+
+    # Generate and print the FitResults
+    res = FitResults(model)
+    # Get the number of calls to the residual function from the FitModel, and
+    # the number of calls to 'iofq' from the IntensityCalculator.
     rescount = model.fithook.count
     calcount = model.bucky.calculator.count
     footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)
-    res = FitResults(model)
     res.printResults(footer = footer)
-    plotResults(model)
 
-    #model = makeModel(strufile, "C60.iq")
-    #parkOptimize(model)
-    #res = FitResults(model)
-    #res.printResults()
-    #plotResults(model)
+    # Plot!
+    plotResults(model)
 
 # End of file

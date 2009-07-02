@@ -20,16 +20,16 @@ define it below). This will help us demonstrate how to extend a function using
 SrFit.
 
 The makeModel function shows how to build a FitModel that will fit our model to
-the data. The scipyOptimize and parkOptimize functions show two different ways
-of refining the model, using scipy and park, respectively.
+the data. 
 
-Once you understand this, move on to the debyemodelII.py example.
 """
 
 import numpy
 
 from diffpy.srfit.fitbase import Contribution, FitModel, Profile, FitResults
 from diffpy.srfit.park import FitnessAdapter
+
+from gaussianmodel import scipyOptimize, parkOptimize
 
 # Functions required for calculation of Debye curve. Feel free to skip these,
 # as we treat them as if existing in some external library that we cannot
@@ -80,7 +80,8 @@ def adps(m,thetaD,T):
 
 
     m = m * amu
-    u2 = (3*h**2 / (4 * numpy.pi**2 *m *kB *thetaD))*(__phi(thetaD/T)/(thetaD/T) + 1./4.)
+    u2 = (3*h**2 / (4 * numpy.pi**2 *m *kB *thetaD))*\
+            (__phi(thetaD/T)/(thetaD/T) + 1./4.)
 
     return u2*1e20
 
@@ -151,26 +152,28 @@ def makeModel():
     # later.
     contribution.setProfile(profile, xname="T")
 
-    # We now want to tell the contribution to use the 'debye' function defined
-    # above. The 'registerFunction' method will let us do this. Since we
-    # haven't told it otherwise, 'registerFunction' will extract the name of
-    # the function ('debye') and the names of the arguments ('T', 'm',
-    # 'thetaD'). (Note that we could have given it other names.) Since we named
-    # the x-variable 'T' above, the 'T' in the 'debye' equation will refer to
-    # this x-variable when it gets called.
+    # We now need to create the fitting equation.  We tell the contribution to
+    # use the 'debye' function defined above. The 'registerFunction' method
+    # will let us do this. Since we haven't told it otherwise,
+    # 'registerFunction' will extract the name of the function ('debye') and
+    # the names of the arguments ('T', 'm', 'thetaD'). These arguments will
+    # become Parameters of the Contribution. (Note that we could have given it
+    # other names.) Since we named the x-variable 'T' above, the 'T' in the
+    # 'debye' equation will refer to this x-variable when it gets called.
     contribution.registerFunction(debye)
 
-    # We have a function registered to the contribution, but we have yet to
-    # define the fitting equation. On top of that, we need a vertical offset in
-    # our equation that does not appear in 'debye'.  We could have written a
-    # function that calls 'debye' that includes an offset, but this will not
-    # always be an option. Thus, we will add the offset when we define the
-    # equation.  We don't need to specify the parameters to the 'debye'
-    # function since the contribution already knows what they are. However, if
-    # we specify the arguments, we can make adjustments to their input values.
-    # We wish to have the thetaD value in the debye equation to be positive, so
-    # we specify the input as abs(thetaD) in the equation below. Furthermore,
-    # we know 'm', the mass of lead, so we can specify that as well.
+    # Now we can create the fitting equation. We want to extend the 'debye'
+    # equation by adding a vertical offset. We could wrap 'debye' in a new
+    # function with an offset, and register that instead of 'debye', but what
+    # we do here is easier. 
+    #
+    # When we set the fitting equation, we do not need to specify the
+    # Parameters to the 'debye' function since the Contribution already knows
+    # what they are. However, if we specify the arguments, we can make
+    # adjustments to their input values.  We wish to have the thetaD value in
+    # the debye equation to be positive, so we specify the input as abs(thetaD)
+    # in the equation below.  Furthermore, we know 'm', the mass of lead, so we
+    # can specify that as well.
     contribution.setEquation("debye(T, 207.2, abs(thetaD)) + offset")
 
     ## The FitModel
@@ -181,54 +184,22 @@ def makeModel():
     model = FitModel()
     model.addContribution(contribution)
 
-    # Specify which parameters we want to refine. We can give them initial
-    # values in the process. This tells the model to vary the offset and to
-    # give it an initial value of 0. Note that the variable names are those we
-    # used in setEquation above. Once defined, variables become attributes of
-    # the model.
+    # Specify which Parameters we want to refine.
     model.addVar(contribution.offset, 0)
     # We also vary the Debye temperature.
     model.addVar(contribution.thetaD, 100)
 
+    # We would like to 'suggest' to the model that the offset should remain
+    # positive. We will do this with a soft contraint, or restraint. Here we
+    # restrain the offset variable to between 0 and infinity. We tell the model
+    # that we want to scale the penalty for breaking the restraint by the
+    # point-average chi^2 value so that the restraint is significant throughout
+    # the fit.
+    model.restrain(model.offset, 0, numpy.inf, scaled = True)
+
     # Return the  model. See the scipyOptimize and parkOptimize functions to
     # see how it is used.
     return model
-
-def scipyOptimize(model):
-    """Optimize the model created above using scipy.
-
-    The FitModel we created in makeModel has a 'residual' method that we can be
-    minimized using a scipy optimizer. The details are described in the source.
-
-    """
-
-    # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
-    # scipy. We simply have to give it the function to minimize
-    # (model.residual) and the starting values of the variables
-    # (model.getValues()). We defined offset and tvar as variables, so that is
-    # what will be adjusted by the optimizer.
-    from scipy.optimize.minpack import leastsq
-    print "Fit using scipy's LM optimizer"
-    leastsq(model.residual, model.getValues())
-
-    return
-
-def parkOptimize(model):
-    """Optimize the model created above using PARK."""
-
-    # We have to turn the model into something that PARK can use. In PARK, a
-    # Fitness object is the equivalent of a SrFit Contribution. However, we
-    # want to use the varibles, constraints and restraints, defined in our
-    # FitModel, so we will turn it into a Fitness object. To do this, we have
-    # written a special FitnessAdapter class in the diffpy.srfit.park package.
-    f = FitnessAdapter(model)
-
-    # Now we can fit this using park.
-    from park.fitting.fit import fit
-    print "Fit using the default PARK optimizer"
-    result = fit([f])
-
-    return
 
 def plotResults(model):
     """Plot the results contained within a refined FitModel."""
@@ -257,18 +228,20 @@ def plotResults(model):
 
 if __name__ == "__main__":
 
+    # Create the model
     model = makeModel()
+
+    # Refine using the optimizer of your choice
     scipyOptimize(model)
-    res = FitResults(model)
-    res.printResults()
-    plotResults(model)
-
-    # Start from scratch
-    #model = makeModel()
     #parkOptimize(model)
-    #res = FitResults(model)
-    #res.printResults()
-    #plotResults(model)
 
+    # Get the results.
+    res = FitResults(model)
+
+    # Print the results
+    res.printResults()
+
+    # Plot the results
+    plotResults(model)
 
 # End of file

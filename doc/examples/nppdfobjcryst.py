@@ -14,8 +14,7 @@
 ########################################################################
 """Example of using Calculators in FitModels.
 
-This is an example of building a FitModel in order to fit PDF data.  To
-understand the basics of FitModels, see the debyemodel.py.
+This is an example of building a FitModel in order to fit PDF data.
 
 The PDFCalculator class is an example of a Calculator that can be used by a
 Contribution to help generate a signal. It uses the ObjCrystParSet to hold
@@ -23,6 +22,7 @@ crystal and molecular information from a pyobjcryst Crystal.
 
 The makeModel function shows how to build a FitModel that uses the
 PDFCalculator.
+
 """
 
 import numpy
@@ -36,23 +36,27 @@ from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 class PDFCalculator(Calculator):
     """A class for calculating the PDF for an isolated scatterer.
 
+    This is another example of using a Calculator class with a ParameterSet
+    adapter to refine a structure model to data using a FitModel.
+    
     """
 
     def __init__(self, name):
-        """Define our calculator.
+        """Initialize our calculator.
 
-        Keep count of how many times the function has been called (self.count).
+        Here we add a calculator-level Parameter called 'delta2' that
+        describes the vibrational correlation between atoms. We also add some
+        metadata required by the calculator.
+        
         """
         Calculator.__init__(self, name)
-        # Count the calls
-        self.count = 0
 
         # Add any non-structural parameters here
         self.newParameter("delta2", 0)
 
         # Non-Parameters that are needed by the calculator.
-        self.qmin = 1
-        self.qmax = 20
+        self.meta["qmin"] = 1
+        self.meta["qmax"] = 20
         return
 
     def setCrystal(self, cryst):
@@ -66,7 +70,7 @@ class PDFCalculator(Calculator):
         
         """
 
-        # Create a custom parameter set designed to interface with
+        # Create a custom ParameterSet designed to interface with
         # pyobjcryst.Crystal
         parset = ObjCrystParSet(cryst, "crystal")
         # Put this ParameterSet in the Calculator.
@@ -83,9 +87,9 @@ class PDFCalculator(Calculator):
         structure object.
 
         """
-        self.count += 1
-        return pdf(self.crystal.cryst, r, self.delta2.getValue(), self.qmin,
-                self.qmax)
+        qmin = self.meta["qmin"]
+        qmax = self.meta["qmax"]
+        return pdf(self.crystal.cryst, r, self.delta2.getValue(), qmin, qmax)
 
 # End class PDFCalculator
 
@@ -285,12 +289,15 @@ def getXScatteringFactor(el, q):
     If cctbx is not available, f(q) = 1 is used.
 
     """
-    import cctbx.eltbx.xray_scattering as xray
-    wk1995 = xray.wk1995(el)
-    g = wk1995.fetch()
-    # at_stol - at sin(theta)/lambda = Q/(4*pi)
-    f = numpy.asarray( map( g.at_stol, q/(4*numpy.pi) ) )
-    return f
+    try:
+        import cctbx.eltbx.xray_scattering as xray
+        wk1995 = xray.wk1995(el)
+        g = wk1995.fetch()
+        # at_stol - at sin(theta)/lambda = Q/(4*pi)
+        f = numpy.asarray( map( g.at_stol, q/(4*numpy.pi) ) )
+        return f
+    except ImportError:
+        return 1
 
 
 c60xyz = \
@@ -406,15 +413,16 @@ def makeModel(cryst, datname):
     # need to load the model structure we're using.
     calculator = PDFCalculator("G")
     calculator.setCrystal(cryst)
-    calculator.qmin = 0.68
-    calculator.qmax = 22
+    # These are metadata needed by the calculator
+    calculator.meta["qmin"] = 0.68
+    calculator.meta["qmax"] = 22
     
     ## The Contribution
     # Create a Contribution, that will associate the Profile with the
     # Calculator.  The calculator will be accessible as an attribute of the
-    # Contribution by its name ("pdf"), or simply by "calculator".  We also
-    # want to tell the contribution to name the x-variable of the profile "r",
-    # so we can use it in equations with this name.
+    # Contribution by its name ("G"), or simply by "calculator".  We also want
+    # to tell the contribution to name the x-variable of the profile "r", so we
+    # can use it in equations with this name.
     contribution = Contribution("bucky")
     contribution.setCalculator(calculator)
     contribution.setProfile(profile, xname = "r")
@@ -445,12 +453,18 @@ def makeModel(cryst, datname):
     model.addVar(calculator.delta2, 2)
 
     # We need to let the molecule expand. If we were modeling it as a crystal,
-    # we could let the unit cell expand. Molecules, however, have different
-    # modeling options, so we have to be clever. We will constrain the distance
-    # from each atom to a dummy center atom which was created with the crystal.
+    # we could let the unit cell expand. For instruction purposes, we use a
+    # Molecule to model C60, and molecules have different modeling options than
+    # crystals. To make the molecule expand from a central point, we will
+    # constrain the distance from each atom to a dummy center atom that was
+    # created with the crystal, and allow that distance to vary. (We could also
+    # let the nearest-neighbor bond lengths vary, but this is much more
+    # difficult to set up.)
     center = c60.center
     radius = model.newVar("radius", 3.5)
     for i, atom in enumerate(c60.atoms[1:]):
+        # This creates a parameter that moves atoms according to the bond
+        # length. Note that each parameter needs a unique name.
         par = c60.addBondLengthParameter("rad%i"%i, center, atom)
         model.constrain(par, radius)
 
@@ -488,8 +502,8 @@ def plotResults(model):
 def scipyOptimize(model):
     """Optimize the model created above using scipy.
 
-    The FitModel we created in makeModel has a 'residual' method that we can be
-    minimized using a scipy optimizer. The details are described in the source.
+    The FitModel we created in makeModel has a 'scalarResidual' method that we
+    can be minimized using scalar scipy optimizer.
 
     """
 
@@ -508,10 +522,17 @@ if __name__ == "__main__":
     cryst = makeC60()
     # Make the data and the model
     model = makeModel(cryst, "data/C60.gr")
+    # Tell the fithook that we want very verbose output.
     model.fithook.verbose = 3
+    
+    # Optimize
     scipyOptimize(model)
+
+    # Print results
     res = FitResults(model)
     res.printResults()
+
+    # Plot results
     plotResults(model)
 
 # End of file

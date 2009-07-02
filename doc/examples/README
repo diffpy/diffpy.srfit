@@ -1,1 +1,35 @@
-Start with the debyemodel.py module. You'll be instructed from there.
+These examples are to help model builders and users create and configure
+optimizations using SrFit. Read through the examples and modify them to learn
+how to use SrFit.
+
+Here is an overview of the examples. It is recommended that you work through
+them in the order listed below.
+
+NOTE: To use PARK in the examples, you must install the 'pak' branch PARK
+separately.
+
+Basic:
+
+* gaussianmodel.py
+    Introductory model building and configuration.
+
+* debyemodel.py
+    Introductory model building and configuration.
+
+* debyemodelII.py
+    Simultaneously optimize multiple contributions and data.
+
+Advanced:
+
+* npintensitycalculator.py
+    Use diffpy.Structure to build a nanoparticle intensity calculator, and use
+    this to refine a structure to simulated data.
+
+* npintensitycalculatorII.py
+    Use the calculator built in npintensitycalculator.py to simultaneously
+    refine a model to two data sets.
+
+* nppdfobjcryst.py
+    Create a nanoparticle PDF calculator using pyobjcryst and refine the C60
+    structure to simulated data.
+

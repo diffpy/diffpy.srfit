@@ -18,7 +18,6 @@ This is an extension of example in debyemodel.py. Here we fit the low and high
 temperature parts of the data simultaneously using the same debye temperature,
 but different offsets.
 
-Once you understand this, move on to the intensitycalculator examples.
 """
 import numpy
 
@@ -27,38 +26,48 @@ from diffpy.srfit.fitbase import FitModel, FitResults
 from debyemodel import makeModel, scipyOptimize, parkOptimize
 
 def makeModelII():
-    """Make the model for our problem.
+    """Make a model for fitting low and high temperature regions.
 
-    We will make two models using the makeModel function from debyemodel.py. We
-    will extract the contributions from each and fit them simultaneously over
-    different fit ranges, with the same Debye temperature.
+    We will fit the low and high temperature parts of Debye curve
+    simultaneously with the same Debye temperature, but different offsets.
 
+    We will make two FitModels using the makeModel function from debyemodel.py
+    and extract the configured Contribution from each. We will use different
+    fitting ranges for each Contribution and constrain the Debye temperature in
+    each Contribution to be the same.
+    
     """
 
-    # We'll throw these away. We just want the contributions that are
+    # We'll throw these away. We just want the Contributions that are
     # configured within the models.
     m1 = makeModel()
     m2 = makeModel()
+    # These are the Contributions (we named them "pb" in the debyemodel
+    # example).
     lowT = m1.pb
     highT = m2.pb
-    # Let's rename the contributions
+    # Let's rename the contributions to something more meaningful for this
+    # example.
     lowT.name = "lowT"
     highT.name = "highT"
 
-    # Now create a fresh model to work with
+    # Now create a fresh model to work with and add to it the two
+    # Contributions.
     model = FitModel()
     model.addContribution(lowT)
     model.addContribution(highT)
 
-    # Let's change the fit ranges on our contributions. We want to fit one of
-    # the contributions at low temperature, and one at high.
+    # Change the fit ranges of the contributions. We want to fit one of the
+    # contributions at low temperature, and one at high.
     lowT.profile.setCalculationRange(0, 150)
     highT.profile.setCalculationRange(400, 500)
 
-    # Now the constraints. We want to let the offset from each model vary
-    # freely while keeping the Debye temperatures the same.
+    # Vary the offset from each contribution separately, while keeping the
+    # Debye temperatures the same.
     model.addVar(model.lowT.offset, name = "lowToffset")
     model.addVar(model.highT.offset, name = "highToffset")
+    # We create a new variable and use the model's "constrain" method to
+    # associate the Debye temperature parameters with that variable.
     model.newVar("thetaD", 100)
     model.constrain(model.lowT.thetaD, "thetaD")
     model.constrain(model.highT.thetaD, "thetaD")
@@ -68,23 +77,29 @@ def makeModelII():
 def plotResults(model):
     """Display the results contained within a refined FitModel."""
 
-    lowToffset, highToffset, tvar = model.getValues()
+    # The variable values are returned in the order in which the variables were
+    # added to the FitModel.
+    lowToffset, highToffset, thetaD = model.getValues()
 
-    # Plot this.
     # We want to extend the fitting range to its full extent so we can get a
-    # nice full plot. We need to call the equation for each contribution to
-    # update the range of the calculated profile.
+    # nice full plot.
     model.lowT.profile.setCalculationRange()
     model.highT.profile.setCalculationRange()
     T = model.lowT.profile.x
     U = model.lowT.profile.y
+    # We can use a Contribution's 'evaluateEquation' method to evaluate
+    # expressions involving the Parameters and other aspects of the
+    # Contribution. Here we evaluate the fitting equation, which is always
+    # accessed using the name "eq". We access it this way (rather than through
+    # the Profile's ycalc attribute) because we changed the calculation range
+    # above, and we therefore need to recalculate the profile.
     lowU = model.lowT.evaluateEquation("eq")
     highU = model.highT.evaluateEquation("eq")
 
     import pylab
     pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")
-    lbl1 = "$T_d$=%3.1f K, lowToff=%1.5f $\AA^2$"% (abs(tvar),lowToffset)
-    lbl2 = "$T_d$=%3.1f K, highToff=%1.5f $\AA^2$"% (abs(tvar),highToffset)
+    lbl1 = "$T_d$=%3.1f K, lowToff=%1.5f $\AA^2$"% (abs(thetaD),lowToffset)
+    lbl2 = "$T_d$=%3.1f K, highToff=%1.5f $\AA^2$"% (abs(thetaD),highToffset)
     pylab.plot(T,lowU,label=lbl1)
     pylab.plot(T,highU,label=lbl2)
     pylab.xlabel("T (K)")
@@ -96,17 +111,20 @@ def plotResults(model):
 
 if __name__ == "__main__":
 
+    # Create the model
     model = makeModelII()
+
+    # Refine using the optimizer of your choice
     scipyOptimize(model)
-    res = FitResults(model)
-    res.printResults()
-    plotResults(model)
-
-    #model = makeModelII()
     #parkOptimize(model)
-    #res = FitResults(model)
-    #res.printResults()
-    #plotResults(model)
 
+    # Get the results in a FitResults object.
+    res = FitResults(model)
+
+    # Print the results
+    res.printResults()
+
+    # Plot the results
+    plotResults(model)
 
 # End of file

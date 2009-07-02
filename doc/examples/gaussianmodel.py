@@ -12,44 +12,30 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of fitting A gaussian to experimental Debye-Waller factors.
+"""Example of fitting a gaussian to simulated data.
 
 This is an example of building a FitModel in order to fit experimental data.
 
-The makeModel function shows how to build a FitModel that will fit our model to
-the data. The scipyOptimize and parkOptimize functions show two different ways
-of refining the model, using scipy and park, respectively.
+The makeModel function shows how to build a FitModel, which describes what we
+want to fit, and how to fit it. The scipyOptimize and parkOptimize functions
+show two different ways of refining the model, using scipy and PARK,
+respectively.
 
-Once you understand this, move on to the debyemodelII.py example.
 """
 
 import numpy
 
 from diffpy.srfit.fitbase import Contribution, FitModel, Profile, FitResults
-from diffpy.srfit.park import FitnessAdapter
 
 ####### Example Code
 
 def makeModel():
-    """Make the model for our problem.
+    """Make a FitModel for fitting a Gaussian curve to data.
 
     Our model will be defined within a FitModel instance. The job of a FitModel
-    is to collect and associate all the data, the fitting equations, fitting
-    variables, constraints and restrations. We will demonstrate each of these
-    within the code. 
-
-    Data is held within a Profile object. The Profile is simply a container
-    that holds the data, and the theoretical profile once it has been
-    calculated.
-
-    Data is associated with a fitting equation within a Contribution. The
-    Contribution defines the equation and parameters that will be adjusted to
-    fit the data. The fitting equation can be defined within a function or
-    optionally within the Calculator class. We won't need the Calculator class
-    in this example since the signature of the fitting equationis so simple.
-    The contribution also defines the residual function to optimize for the
-    data/equation pair. This can be modified, but we won't do that here.
-
+    is to collect and associate the fitting equations, data, fitting
+    variables, constraints and restraints, which collectively define a fit.
+    
     Once we define the FitModel, we can send it an optimizer to be optimized.
     See the scipyOptimize and parkOptimize functions.
     
@@ -61,37 +47,64 @@ def makeModel():
     profile = Profile()
 
     # Load data and add it to the profile. It is our responsibility to get our
-    # data into the profile.
+    # data into the profile. Here we read the data from file.
     x, y = numpy.loadtxt("data/gaussian.dat", unpack=1)
     profile.setObservedProfile(x, y)
 
     ## The Contribution
-    # The Contribution associates the profile with the Debye Calculator. 
+    # The Contribution associates the Profile with a fitting equation. The
+    # Contribution also stores the parameters of the fitting equation. We give
+    # our Contribution then name "g1". We will be able to access the
+    # Contribution by that name within the FitModel.
     contribution = Contribution("g1")
-    # Tell the contribution about the Profile. We will need to use the
-    # independent variable (the temperature) from the data to calculate the
-    # theoretical signal, so give it an informative name ('T') that we can use
-    # later.
+    # Tell the Contribution about the Profile. The Contribution will give us
+    # access to the data held within the Profile. Here, we can tell it what
+    # name we want to use for the independent variable. We tell it to use the
+    # name "x".
     contribution.setProfile(profile, xname="x")
 
-    # We have a function registered to the contribution, but we have yet to
-    # define the fitting equation.
+    # Now we need to create a fitting equation. We do that by writing out the
+    # equation as a string. The contribution will turn this into a callable
+    # function internally. In the process, it extracts all the parameters from
+    # the equation (A, x, x0, sigma) and turns them into Parameter objects
+    # internally. These objects can be accessed as attributes of the
+    # contribution.  Since we told the contribution that our independent
+    # variable is named "x", this value will be substituted into the fitting
+    # equation whenever it is called.
     contribution.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
+
+    # To demonstrate how these parameters are used, we will give "A" an initial
+    # value. Note that Parameters are not numbers, but are containers for
+    # numbers. To change the value of a parameter, use its 'setValue' method.
+    # To get its value, use the 'getValue' method. Parameters also have a
+    # 'name' attribute.
+    contribution.A.setValue(1.0)
 
     ## The FitModel
     # The FitModel lets us define what we want to fit. It is where we can
-    # create variables, constraints and restraints. If we had multiple profiles
-    # to fit simultaneously, the contribution from each could be added to the
-    # model.
+    # create variables, constraints and restraints.
     model = FitModel()
+
+    # Here we tell the FitModel to use our Contribution. When the FitModel
+    # calculates its residual function, it will call on the Contribution to do
+    # part of the work.
     model.addContribution(contribution)
 
-    # Specify which parameters we want to refine. We can give them initial
-    # values in the process. This tells the model to vary the offset and to
-    # give it an initial value of 0.
-    model.addVar(contribution.A, 1)
+    # Specify which Parameters we want to vary in the fit.  This will add
+    # Parameters to the FitModel that directly modify the Parameters of the
+    # Contribution. We refer to the FitModel's Parameters as variables.
+    # 
+    # Here we create a variable for the 'A' Parameter from our fit equation.
+    # The resulting variable will be named 'A' as well, but it will be accessed
+    # via the FitModel.
+    model.addVar(contribution.A)
+    # Here we create the variable for 'x0' and give it an initial value of 5.
     model.addVar(contribution.x0, 5)
-    model.addVar(contribution.sigma, 1)
+    # Here we create a variable named 'sig', which is tied to the 'sigma'
+    # Parameter of our Contribution. We give it an initial value through the
+    # model.
+    model.addVar(contribution.sigma, name = "sig")
+    model.sig.setValue(1)
 
     return model
 
@@ -106,8 +119,7 @@ def scipyOptimize(model):
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
     # scipy. We simply have to give it the function to minimize
     # (model.residual) and the starting values of the variables
-    # (model.getValues()). We defined offset and tvar as variables, so that is
-    # what will be adjusted by the optimizer.
+    # (model.getValues()).
     from scipy.optimize.minpack import leastsq
     print "Fit using scipy's LM optimizer"
     leastsq(model.residual, model.getValues())
@@ -115,7 +127,11 @@ def scipyOptimize(model):
     return
 
 def parkOptimize(model):
-    """Optimize the model created above using PARK."""
+    """Optimize the model created above using PARK.
+    
+    This requires the 'pak' branch of PARK to be installed on your system.
+    """
+    from diffpy.srfit.park import FitnessAdapter
 
     # We have to turn the model into something that PARK can use. In PARK, a
     # Fitness object is the equivalent of a SrFit Contribution. However, we
@@ -131,19 +147,31 @@ def parkOptimize(model):
 
     return
 
+
 def plotResults(model):
     """Plot the results contained within a refined FitModel."""
 
     # Plot this.
-    # Note that since the contribution was given the name "pb", it is
-    # accessible from the model with this name. This is a useful way to
-    # organize multiple contributions to a fit.
+
+    # We can access the data and fit profile through the Profile we created
+    # above. We get to it through our Contribution, which we named "g1".
+    #
+    # The independent variable. This is always named "x"; the name we gave it
+    # when we added the Profile to the Contribution was for the purpose of
+    # writing the fit equation.
     x = model.g1.profile.x
+    # The observed profile that we loaded earlier.
     y = model.g1.profile.y
+    # The calculated profile.
     ycalc = model.g1.profile.ycalc
 
+    # This stuff is specific to pylab from the matplotlib distribution.
     import pylab
-    pylab.plot(x, y, x, ycalc)
+    pylab.plot(x, y, 'b.', label = "observed Gaussian")
+    pylab.plot(x, ycalc, 'g-', label = "calculated Gaussian")
+    pylab.legend(loc = (0.0,0.8))
+    pylab.xlabel("x")
+    pylab.ylabel("y")
 
     pylab.show()
     return
@@ -151,17 +179,24 @@ def plotResults(model):
 
 if __name__ == "__main__":
 
-    #model = makeModel()
-    #scipyOptimize(model)
-    #res = FitResults(model)
-    #res.printResults()
-    #plotResults(model)
-
-    # Start from scratch
+    # Create the model
     model = makeModel()
-    parkOptimize(model)
+
+    # Refine using the optimizer of your choice
+    scipyOptimize(model)
+    #parkOptimize(model)
+
+    # Get the results in a FitResults object. The FitResults object stores the
+    # current state of the model, and uses it to calculate useful statistics
+    # about the fit.  If you later modify the model, the FitResults object will
+    # hold the model values from when it was created. You can tell it to update
+    # its values by calling its 'update' method.
     res = FitResults(model)
+
+    # Print the results
     res.printResults()
+
+    # Plot the results
     plotResults(model)
 
 

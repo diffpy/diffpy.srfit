@@ -29,7 +29,6 @@ import numpy
 
 from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
 from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.park import FitnessAdapter
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
 

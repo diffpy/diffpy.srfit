@@ -27,7 +27,6 @@ the data.
 import numpy
 
 from diffpy.srfit.fitbase import Contribution, FitModel, Profile, FitResults
-from diffpy.srfit.park import FitnessAdapter
 
 from gaussianmodel import scipyOptimize, parkOptimize
 

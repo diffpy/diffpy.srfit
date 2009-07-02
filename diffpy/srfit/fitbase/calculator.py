@@ -37,6 +37,7 @@ class Calculator(ModelOrganizer):
     name            --  A name for this organizer.
     profile         --  A Profile instance that contains the calculation range
                         and will contain the calculated profile.
+    meta            --  A dictionary of metadata needed by the calculator.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
@@ -60,6 +61,7 @@ class Calculator(ModelOrganizer):
         self.profile = None
         self.literal = Parameter(name)
         self.args = []
+        self.meta = {}
         return
 
     # Make some methods public that were protected

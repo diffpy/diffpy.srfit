@@ -123,8 +123,7 @@ class FitResults(object):
         self._calculateMetrics()
 
         # Calcualte the restraints penalty
-        w = self.residual / len(res)
-        self.penalty = 0.0
+        w = self.chi2 / len(res)
         self.penalty = sum([res.penalty(w) for res in model._restraintlist])
 
         return

@@ -98,7 +98,7 @@ class FitModel(ModelOrganizer):
         self._doprepare = True
         return
 
-    def setWeight(con, weight):
+    def setWeight(self, con, weight):
         """Set the weight of a contribution."""
         idx = self._organizers.index(con)
         self._weights[idx] = weight
@@ -184,10 +184,21 @@ class FitModel(ModelOrganizer):
 
         # Check for variable values
         varvals = self.getValues()
-        if None in varvals:
-            idx = varvals.index(None)
-            name = self.getNames()[idx]
-            m = "Variable '%s' has no initial value"%name
+        names = self.getNames()
+        m = ""
+        badvars = []
+        for idx, val in enumerate(self.getValues()):
+            if val is not None: continue
+            badvars.append( "'%s'"%names[idx] )
+
+        if len(badvars) == 1:
+            m = "Variable %s needs an initial value" % badvars[0]
+        elif len(badvars) > 0:
+            s1 = ",".join(badvars[:-1])
+            s2 = badvars[-1]
+            m = "Variables %s and %s need initial values" % (s1, s2)
+
+        if m:
             raise AttributeError(m)
 
         # Update constraints and restraints. 
@@ -467,7 +478,7 @@ class FitModel(ModelOrganizer):
 
     def getValues(self):
         """Get the current values of the variables in a list."""
-        return map(float, [par.getValue() for par in self._parameters])
+        return [par.getValue() for par in self._parameters]
 
     def getNames(self):
         """Get the names of the variables in a list."""

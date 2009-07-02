@@ -84,6 +84,7 @@ class Restraint(object):
         val = self.eq()
         penalty = self.prefactor *\
                 max(0, self.lb - val, val - self.ub) ** self.power
+
         if self.scaled:
             penalty *= w
 

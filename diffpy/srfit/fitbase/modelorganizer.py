@@ -173,7 +173,7 @@ class ModelOrganizer(object):
 
         # Make and store the constraint
         res = Restraint()
-        res.restrain(eq, lb, ub, prefactor, power)
+        res.restrain(eq, lb, ub, prefactor, power, scaled)
         self._restraints.add(res)
 
         return res

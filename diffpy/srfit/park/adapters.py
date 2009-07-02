@@ -12,10 +12,16 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Adapter classes between SrFit and PARK.
+"""Adapter classes for translating a srfit FitModel to a PARK Fitness.
 
-These classes turn an Assembly object (from diffpy.srfit.fitbase) into a Fit
-object from PARK.
+The FitnessAdapter class adapts a FitModel object (from diffpy.srfit.fitbase)
+to a Fitness object (from the 'pak' branch of PARK). This will allow for
+FitModels to be refined using PARK optimizers and services.
+
+The adaptation exposes residual from the
+FitModel as the residuals function in the Fitness. Variables in the FitModel
+are exposes as a parameters in the Fitness using the ParkParameterProxy
+class.
 
 """
 from diffpy.srfit.fitbase.parameter import Parameter
@@ -67,33 +73,11 @@ class FitnessAdapter(park.Fitness):
             self.__parameterset.append(parkpar)
             self._parmap[par] = parkpar
 
-        # We can map bounds on variables to park bounds.
-        self.mapBounds()
         return
 
     def _parameterset(self):
         return self.__parameterset
     parameterset = property(_parameterset)
-
-    def mapBounds(self):
-        """Look for BoundRestraints and use them to set bounds on variables.
-
-        This will speed up some of parks optimizers by explicitly setting
-        bounds on variables.
-        
-        """
-        from diffpy.srfit.fitbase.restraint import BoundsRestraint
-        for res in self._fitmodel._restraints:
-
-            if not isinstance(res, BoundsRestraint):
-                pass
-
-            # Check to see if this bounds restraint on a fitting parameter.
-            if res.eq.root in self._fitmodel._parameters:
-                parkpar = self._parmap[res.eq.root]
-                parkpar.range = (res.lb, res.ub)
-
-        return
 
     def derivs(self):
         """Parameters with analytic derivatives.

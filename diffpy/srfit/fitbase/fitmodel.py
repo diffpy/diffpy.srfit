@@ -14,9 +14,16 @@
 ########################################################################
 """FitModel class. 
 
-FitModels organize Contributions, Restraints and Constraints. The main purpose
-of a FitModel is to serve as an error calculator for an exernal fitting
-framework.
+FitModels organize Contributions, Parameters, Restraints and Constraints to
+create a model of the system you wish to optimize. From the client's
+perspective, the FitModel is a residual calculator. The residual method does
+the work of updating variable values, which get propagated to the Parameters of
+the underlying Contributions via the varibles, Restraints and Constraints. As a
+result, this class can be used without subclassing.
+
+See the examples in the documentation for how to create an optimization problem
+using FitModel.
+
 """
 
 from numpy import concatenate, sqrt, inf, dot
@@ -167,15 +174,15 @@ class FitModel(ModelOrganizer):
         This will prepare the data attributes to be used in the residual
         calculation.
 
-        It updates the constraints and restraints with those of its
+        This updates the local constraints and restraints with those of the
         contributions.
 
         Constraints can have inter-dependencies that require that they are
         updated in a specific order. This will set the proper order.
 
         Raises AttributeError if there are variables without a value.
-        Raises AttributeError if there are multiple constraints in the same
-        parameter buried within the contributions to this fit.
+        Raises AttributeError if there are multiple constraints on the same
+        parameter defined in different places within the model hierarchy.
 
         """
         # Inform the fit hook that we're updating things
@@ -282,7 +289,7 @@ class FitModel(ModelOrganizer):
 
         Raises ValueError if the name of the variable is already taken by
         another variable or a contribution.
-        Raises ValueError if the parameter is tagged as a const.
+        Raises ValueError if par is constant.
 
         """
         name = name or par.name
@@ -349,9 +356,9 @@ class FitModel(ModelOrganizer):
         """Create a new variable of the fit.
 
         This method lets new variables be created that are not tied to a
-        Parameter (orphans).  Orphan Parameters may cause a fit to fail,
-        depending on the optimization routine, and therefore should only be
-        created to be used in contraint or restraint equations.
+        Parameter.  Orphan Parameters may cause a fit to fail, depending on the
+        optimization routine, and therefore should only be created to be used
+        in contraint or restraint equations.
 
         name    --  The name of the variable. The variable will be able to be
                     used by this name in restraint and constraint equations.
@@ -522,6 +529,7 @@ class FitModel(ModelOrganizer):
 
         This removes any constraints on a parameter, including built-in
         constraints.
+
         """
         ModelOrganizer.unconstrain(self, par)
         self._doprepare = True
@@ -591,6 +599,7 @@ class FitModel(ModelOrganizer):
         """Remove a restraint from the FitModel.
         
         res     --  A Restraint returned from the 'restrain' method.
+
         """
         ModelOrganizer.unrestrain(self, res)
         self._doprepare = True

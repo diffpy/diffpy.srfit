@@ -14,13 +14,13 @@
 
 """Classes that wrap structure containers with Parameters and ParameterSets.
 
-Packages:
-
 Modules:
-
-Classes:
-
-Methods:
+    cctbxstructure      --  Home to adapters for cctbx structure objects. See
+                            the module documentation for more details.
+    diffpystructure     --  Home to adapters for the diffpy.Structure objects.
+                            See the module documentation for more details.
+    objcryststructure   --  Home to adapters for pyobjcryst structure objects.
+                            See the module documentation for more details.
 
 """
 

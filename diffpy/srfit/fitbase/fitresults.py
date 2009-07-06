@@ -14,6 +14,10 @@
 ########################################################################
 """The FitResults and ContributionResults classes for storing results of a fit.
 
+The FitResults class is used to display the current state of a FitModel. It
+stores the state, and uses it to calculate useful statistics, which can be
+displayed on screen or saved to file.
+
 """
 
 import numpy
@@ -133,6 +137,7 @@ class FitResults(object):
 
         This code borrowed from PARK. It finds the pseudo-inverse of the
         Jacobian using the singular value decomposition.
+
         """
         try:
             J = self._calculateJacobian()
@@ -155,6 +160,7 @@ class FitResults(object):
 
         Numeric derivatives are calculated based on step, where step is the
         portion of variable value. E.g. step = dv/v.
+
         """
         model = self.model
 
@@ -541,12 +547,14 @@ class ContributionResults(object):
 
 def numericStringSort(lst):
     """Sort list of strings inplace according to general numeric value.
+
     Each string gets split to string and integer segments to create keys
     for comparison.  Signs, decimal points and exponents are ignored.
     
     lst  -- sorted list of strings
     
     No return value to highlight inplace sorting.
+
     """
     import re
     rx = re.compile(r'(\d+)')

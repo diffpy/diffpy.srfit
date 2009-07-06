@@ -14,6 +14,14 @@
 ########################################################################
 """The FitHook class for inspecting the progress of a FitModel refinement.
 
+FitHooks are called by a FitModel during various times of the residual is
+evaluation. The default FitHook simply counts the number of times the residual
+is called, and reports that number every time the residual is calculated.
+Depending on the verbosity, it will also report the residual and the current
+variable values.
+
+Custom FitHooks can be added to a FitModel with the FitModel.setFitHook method.
+
 """
 
 import numpy

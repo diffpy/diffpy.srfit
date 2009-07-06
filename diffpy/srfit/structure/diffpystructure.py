@@ -1,22 +1,16 @@
 #!/usr/bin/env python
-"""Wrappers for interfacing a diffpy.Structure.Structure as a ParameterSet
-with the same hierarchy.
+"""Wrappers for interfacing a diffpy.Structure.Structure with SrFit.
 
-A diffpy.Structure.Structure object is meant to be passed to a Strucure object
-from this module, which can then be used as a ParameterSet. Any change to the
-lattice or existing atoms will be registered with the Structure. Changes in the
-number of atoms will not be recognized. Thus, the diffpy.Structure.Structure
-object should be fully configured before passing it to Structure.
+A diffpy.Structure.Structure object is meant to be passed to a StrucureParSet
+object from this module, which can then be used as a ParameterSet. Any change
+to the lattice or existing atoms will be registered with the Structure. Changes
+in the number of atoms will not be recognized. Thus, the
+diffpy.Structure.Structure object should be fully configured before passing it
+to Structure.
 
-StructureParSet --  Name required. Contains a Lattice ParameterSet and several
-                    AtomParSet parameter sets.
-LatticeParSet   --  Named "lattice". Contains Parameters "a", "b", "c",
-                    "alpha", "beta", "gamma".
-AtomParSet      --  Named "%s%i" % (element, number). Contains Parameters "x",
-                    "y", "z", "occupancy", "B11", "B22", "B33", "B12", "B23",
-                    "B13", "B11", "B22", "B33", "B12", "B23", "B13". The
-                    asymmetric parameters also have proxies with inverted
-                    indices.  Other Attributes: element
+StructureParSet --  Wrapper for diffpy.Structure.Structure
+LatticeParSet   --  Wrapper for diffpy.Structure.Lattice
+AtomParSet      --  Wrapper for diffpy.Structure.Atom
 
 """
 __id__ = "$Id$"
@@ -49,28 +43,21 @@ class AtomParSet(ParameterSet):
     This class derives from ParameterSet.
 
     Attributes:
-    x (y, z)    --  Atom position in crystal coordinates (Parameter)
-    occupancy   --  Occupancy of the atom on its crystal location (Parameter)
-    U11         --  Anisotropic displacement factor for atom (Parameter)
-    U22         
-    U33 
-    U12         --  Same as U21
-    U21         --  Same as U12
-    U23         --  Same as U32
-    U32         --  Same as U23
-    U13         --  Same as U13
-    U31         --  Same as U31
-    Uiso        --  Isotropic ADP. May be computed from Uij.
-    B11         --  Anisotropic displacement factor for atom, (8 pi**2 U)  (Parameter)
-    B22         
-    B33 
-    B12         --  Same as B21
-    B21         --  Same as B12
-    B23         --  Same as B32
-    B32         --  Same as B23
-    B13         --  Same as B13
-    B31         --  Same as B31
-    Biso        --  Isotropic ADP. May be computed from Uij.
+    x (y, z)    --  Atom position in crystal coordinates (ParameterWrapper)
+    occupancy   --  Occupancy of the atom on its crystal location
+                    (ParameterWrapper)
+    occ         --  Proxy for occupancy (ParameterProxy).
+    U11, U22, U33, U12, U21, U23, U32, U13, U31
+                --  Anisotropic displacement factor for atom (ParameterWrapper
+                    or ParameterProxy). Note that the Uij and Uji parameters
+                    are the same.
+    Uiso        --  Isotropic ADP (ParameterWrapper).
+    B11, B22, B33, B12, B21, B23, B32, B13, B31
+                --  Anisotropic displacement factor for atom (ParameterWrapper
+                    or ParameterProxy). Note that the Bij and Bji parameters
+                    are the same. (Bij = 8*pi**2*Uij)
+    Biso        --  Isotropic ADP (ParameterWrapper).
+    element     --  The element name.
     
     """
 
@@ -78,6 +65,7 @@ class AtomParSet(ParameterSet):
         """Initialize
 
         atom    --  A diffpy.Structure.Atom instance
+
         """
         ParameterSet.__init__(self, name)
         self.atom = atom
@@ -89,7 +77,9 @@ class AtomParSet(ParameterSet):
             _xyzsetter(1)))
         self.addParameter(ParameterWrapper(a, "z", _xyzgetter(2),
             _xyzsetter(2)))
-        self.addParameter(ParameterWrapper(a, "occupancy", attr = "occupancy"))
+        occupancy = self.addParameter(ParameterWrapper(a, "occupancy", attr =
+            "occupancy"))
+        self.addParameter(ParameterProxy("occ", occupancy))
         # U
         self.addParameter(ParameterWrapper(a, "U11", attr = "U11"))
         self.addParameter(ParameterWrapper(a, "U22", attr = "U22"))
@@ -158,12 +148,19 @@ def _latsetter(par):
 
 
 class LatticeParSet(ParameterSet):
-    """A wrapper for diffpy.Structure.Lattice."""
+    """A wrapper for diffpy.Structure.Lattice.
+
+    Attributes
+    name    --  Always "lattice"
+    a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterWrapper).
+    
+    """
 
     def __init__(self, lattice):
         """Initialize
 
         lattice --  A diffpy.Structure.Lattice instance
+
         """
         ParameterSet.__init__(self, "lattice")
         self.lattice = lattice
@@ -198,6 +195,7 @@ class StructureParSet(ParameterSet):
         """Initialize
 
         stru    --  A diffpy.Structure.Lattice instance
+
         """
         ParameterSet.__init__(self, name)
         self.stru = stru

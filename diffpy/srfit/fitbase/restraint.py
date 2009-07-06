@@ -14,9 +14,11 @@
 ########################################################################
 """Restraints class. 
 
-Restraints are used by a FitModel to organize restraint equations. Restraints
-store an Equation, bounds on its value, and the form of the penalty function
-for breaking a restraint.
+Restraints are used by ModelOrganizers to organize restraint equations.
+Restraints store an Equation, bounds on its value, and the form of the penalty
+function for breaking a restraint. This penalty is added to the residual
+equation calculated by a FitModel.
+
 """
 
 from numpy import inf

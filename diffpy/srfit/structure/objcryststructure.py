@@ -4,10 +4,10 @@
 This will adapt a pyobjcryst.Crystal into the ParameterSet interface. The
 following classes are adapted.
 
-pyobjcryst.Crystal  ->  ObjCrystParSet
-pyobjcryst.Atom     ->  AtomParSet
-pyobjcryst.Molecule ->  MoleculeParSet
-pyobjcryst.MolAtom  ->  MolAtomParSet
+ObjCrystParSet  --  Wrapper for pyobjcryst.Crystal 
+AtomParSet      --  Wrapper for pyobjcryst.Atom    
+MoleculeParSet  --  Wrapper for pyobjcryst.Molecule
+MolAtomParSet   --  Wrapper for pyobjcryst.MolAtom 
 
 Related to the adaptation of Molecule and MolAtom, there are adaptors for
 specifying molecule restraints.
@@ -22,9 +22,7 @@ BondLengthParameter
 BondAngleParameter
 DihedralAngleParameter
 
-
 """
-
 
 from diffpy.srfit.equation import Clicker
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
@@ -44,8 +42,9 @@ class ScattererParSet(ParameterSet):
     (MolAtom).
 
     Attributes:
-    x (y, z)    --  Atom position in crystal coordinates (Parameter)
-    occupancy   --  Occupancy of the atom on its crystal location (Parameter)
+    x (y, z)    --  Atom position in crystal coordinates (ParameterWraper)
+    occupancy   --  Occupancy of the atom on its crystal location
+                    (ParameterWraper)
     parent      --  The ParameterSet this belongs to
     
     Other attributes are inherited from
@@ -81,13 +80,15 @@ class AtomParSet(ScattererParSet):
     This class derives from ParameterSet.
 
     Attributes:
-    x (y, z)    --  Atom position in crystal coordinates (Parameter)
-    occupancy   --  Occupancy of the atom on its crystal location (Parameter)
+    x (y, z)    --  Atom position in crystal coordinates (ParameterWrapper)
+    occupancy   --  Occupancy of the atom on its crystal location
+                    (ParameterWrapper)
     parent      --  The ObjCrystParSet this belongs to
-    biso        --  Isotropic scattering factor (Parameter).
+    biso        --  Isotropic scattering factor (ParameterWrapper).
     element     --  Non-refinable name of the element.
     
-    Other attributes are inherited from diffpy.srfit.fitbase.parameterset.ParameterSet
+    Other attributes are inherited from
+    diffpy.srfit.fitbase.parameterset.ParameterSet
 
     """
 
@@ -120,10 +121,10 @@ class MoleculeParSet(ScattererParSet):
     This class derives from ParameterSet.
 
     Attributes:
-    x (y, z)    --  Molecule position in crystal coordinates (Parameter)
+    x (y, z)    --  Molecule position in crystal coordinates (ParameterWrapper)
     occupancy   --  Occupancy of the molecule on its crystal location
-                    (Parameter)
-    q0, q1, q2, q3  --  Orientational quaternion parameters (Parameter)
+                    (ParameterWrapper)
+    q0, q1, q2, q3  --  Orientational quaternion parameters (ParameterWrapper)
     parent      --  The ObjCrystParSet this belongs to
     atoms       --  A list of contained MolAtomParSets.
     
@@ -483,14 +484,16 @@ class MolAtomParSet(ScattererParSet):
     from Scatterer, but the relevant interface is the same within pyobjcryst.
 
     Attributes:
-    x (y, z)    --  Atom position in crystal coordinates (Parameter)
-    occupancy   --  Occupancy of the atom on its crystal location (Parameter)
+    x (y, z)    --  Atom position in crystal coordinates (ParameterWrapper)
+    occupancy   --  Occupancy of the atom on its crystal location
+                    (ParameterWrapper)
     parent      --  The ObjCrystParSet this belongs to
-    biso        --  Isotropic scattering factor (Parameter). This does not
-                    exist for dummy atoms.
+    biso        --  Isotropic scattering factor (ParameterWrapper). This does
+                    not exist for dummy atoms.
     element     --  Non-refinable name of the element.
     
-    Other attributes are inherited from diffpy.srfit.fitbase.parameterset.ParameterSet
+    Other attributes are inherited from
+    diffpy.srfit.fitbase.parameterset.ParameterSet
 
     """
 
@@ -523,7 +526,7 @@ class MolAtomParSet(ScattererParSet):
 
     def isDummy(self):
         """Indicate whether this atom is a dummy atom."""
-        return self.element == "dummy"
+        return self.scat.IsDummy()
 
 # End class MolAtomParSet
 
@@ -531,9 +534,9 @@ class ObjCrystParSet(ParameterSet):
     """A wrapper for ObjCryst Crystal instance.
 
     Attributes:
-    scatterers   --  The list of aggregated ScattererParSets (either AtomParSet
+    scatterers  --  The list of aggregated ScattererParSets (either AtomParSet
                     or MoleculeParSet).
-    a, b, c, alpha, beta, gamma --  Lattice parameters (Parameter)
+    a, b, c, alpha, beta, gamma --  Lattice parameters (ParameterWrapper)
 
     Other attributes are inherited from
     diffpy.srfit.fitbase.parameterset.ParameterSet
@@ -652,7 +655,7 @@ class BondLengthRestraint(MoleculeRestraint):
     length  --  The length of the bond (Angstroms)
     sigma   --  The uncertainty of the bond length (Angstroms)
     delta   --  The width of the bond (Angstroms)
-    res     --  The pyobjcryst Molecule restraint (MolAtomParSet)
+    res     --  The pyobjcryst BondLength restraint
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)
@@ -700,7 +703,7 @@ class BondAngleRestraint(MoleculeRestraint):
     angle   --  The bond angle (radians)
     sigma   --  The uncertainty of the bond angle (radians)
     delta   --  The width of the bond angle (radians)
-    res     --  The pyobjcryst Molecule restraint
+    res     --  The pyobjcryst BondAngle restraint
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)
@@ -753,7 +756,7 @@ class DihedralAngleRestraint(MoleculeRestraint):
     angle   --  The dihedral angle (radians)
     sigma   --  The uncertainty of the dihedral angle (radians)
     delta   --  The width of the dihedral angle (radians)
-    res     --  The pyobjcryst Molecule restraint
+    res     --  The pyobjcryst DihedralAngle restraint
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)

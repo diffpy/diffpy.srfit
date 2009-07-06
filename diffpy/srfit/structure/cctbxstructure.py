@@ -1,25 +1,22 @@
 #!/usr/bin/env python
-"""Wrappers for interfacing a diffpy.Structure.Structure as a ParameterSet
-with the same hierarchy.
+"""Wrappers for interfacing cctbx crystal with SrFit.
 
-A diffpy.Structure.Structure object is meant to be passed to a Strucure object
-from this module, which can then be used as a ParameterSet. Any change to the
-lattice or existing atoms will be registered with the Structure. Changes in the
-number of atoms will not be recognized. Thus, the diffpy.Structure.Structure
-object should be fully configured before passing it to Structure.
+This wraps a cctbx.crystal as a ParameterSet with a similar hierarchy, which
+can then be used within a FitModel. Note that all manipulations to the
+cctbx.crystal should be done before wrapping. Changes made to the cctbx.crystal
+object after wrapping may not be reflected within the wrapper, which can have
+unpredictable results during a structure refinement.
 
-CCTBXStructureParSet    --  Name required. Contains a  UnitParameterSet and
-                    several ScattererParSet parameter sets.
-UnitCellParSet  --  Named "unitcell". Contains Parameters "a", "b", "c",
-                    "alpha", "beta", "gamma".
-ScattererParSet --  Named "%s%i" % (element, number). Contains Parameters "x",
-                    "y", "z", "occupancy", "uiso".
+Classes:
+
+CCTBXStructureParSet    --  Wrapper for cctbx.crystal
+UnitCellParSet  --  Wrapper for the unit cell of cctbx.crystal
+ScattererParSet --  Wrapper for cctbx.xray.scatterer
 
 """
 __id__ = "$Id$"
 
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
-from diffpy.srfit.fitbase.parameter import ParameterWrapper
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 
 from cctbx import crystal
@@ -30,9 +27,13 @@ class ScattererParSet(ParameterSet):
     This class derives from ParameterSet.
 
     Attributes:
-    x (y, z)    --  Atom position in crystal coordinates (Parameter)
-    occupancy   --  Occupancy of the atom on its crystal location (Parameter)
-    uiso        --  Isotropic scattering factor.
+    name        --  Name of the scatterer. The name is always of the form
+                    "%s%i" % (element, number), where the number is the running
+                    index of that element type (starting at 0).
+    x (y, z)    --  Atom position in crystal coordinates (ParameterWrapper)
+    occupancy   --  Occupancy of the atom on its crystal location
+                    (ParameterWrapper)
+    uiso        --  Isotropic scattering factor (ParameterWrapper).
     
     """
 
@@ -60,6 +61,8 @@ class ScattererParSet(ParameterSet):
         self.addParameter(ParameterWrapper(None, "uiso", self._getuiso,
             self._setuiso))
         return
+
+    # Getters and setters
 
     def _xyzgetter(self, i):
 
@@ -100,12 +103,19 @@ class ScattererParSet(ParameterSet):
 # End class ScattererParSet
 
 class UnitCellParSet(ParameterSet):
-    """A wrapper for cctbx unit_cell object."""
+    """A wrapper for cctbx unit_cell object.
+    
+    Attributes:
+    name    --  Always "unitcell".
+    a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterWrapper).
+    
+    """
 
     def __init__(self, strups):
         """Initialize
 
         strups  --  The CCTBXStructureParSet that contains the cctbx structure
+                    and the unit cell we're wrapper.
 
         """
         ParameterSet.__init__(self, "unitcell")
@@ -157,7 +167,8 @@ class UnitCellParSet(ParameterSet):
 class CCTBXStructureParSet(ParameterSet):
     """A wrapper for CCTBX structure.
 
-    scatterers   --  The list of ScattererParSets.
+    scatterers  --  The list of ScattererParSets.
+    unitcell    --  The UnitCellParSet for the structure.
     
     """
 
@@ -166,6 +177,7 @@ class CCTBXStructureParSet(ParameterSet):
 
         stru    --  A CCTBX structure instance.
         name    --  A name for this
+
         """
         ParameterSet.__init__(self, name)
         self.stru = stru

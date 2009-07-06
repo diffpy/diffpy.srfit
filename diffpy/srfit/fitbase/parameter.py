@@ -12,9 +12,14 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Parameter class. 
+"""Parameter classes.
 
-Parameters encapsulate an adjustable parameter of a Calculator.
+Parameters encapsulate an adjustable parameter of a Calculator. There are three
+varieties of Parameter here.
+Parameter           --  Base parameter class.
+ParameterWrapper    --  Wrap attributes or methods of an object as a Parameter.
+ParameterProxy      --  A proxy for another Parameter, but with a different
+                        name.
 
 """
 # FIXME - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
@@ -81,8 +86,9 @@ class Parameter(Argument):
 # End class Parameter
 
 class ParameterProxy(object):
-    """A Parameter proxy for another parameter. This allows for the same
-    parameter to have multiple names.
+    """A Parameter proxy for another parameter. 
+    
+    This allows for the same parameter to have multiple names.
 
     Attributes
     name    --  A name for this ParameterProxy. Names should be unique within a
@@ -121,6 +127,7 @@ class ParameterWrapper(Parameter):
     This class wraps an object as a Paramter. The getValue and setValue methods
     of Parameter directly modify the appropriate attribute of the paramter-like
     object.
+
     """
 
     def __init__(self, obj, name, getter = None, setter = None, attr = None):
@@ -134,23 +141,23 @@ class ParameterWrapper(Parameter):
                     is assumed that an attribute is accessed directly.
         setter  --  The unbound function that can be used to modify the
                     attribute containing the paramter value. setter(obj, value)
-                    should set the attribute to the passed value. If getter is
+                    should set the attribute to the passed value. If setter is
                     None (default), it is assumed that an attribute is accessed
                     directly.
         attr    --  The name of the attribute that contains the value of the
                     parameter. If attr is None (default), then both getter and
-                    setter must be specified. If attr takes precedent over
-                    getter and setter.
+                    setter must be specified. attr takes precedent over getter
+                    and setter.
 
 
         raises ValueError if exactly one of getter or setter is not None, or if
         getter, setter and attr ar all None.
+
         """
         if getter is None and setter is None and attr is None:
             raise ValueError("Specify attribute access")
         if [getter, setter].count(None) == 1:
             raise ValueError("Specify both getter and setter")
-
 
         self.obj = obj
         self.getter = getter
@@ -166,14 +173,15 @@ class ParameterWrapper(Parameter):
         return
 
     def getValue(self):
-        """Get the value from the accessor."""
+        """Get the value of the Parameter."""
         return self.getter(self.obj)
 
     def setValue(self, value):
-        """Set the value from the accessor."""
+        """Set the value of the Parameter."""
         if value != self.getValue():
             self.setter(self.obj, value)
             self.clicker.click()
+
         return
                     
 # End class ParameterWrapper

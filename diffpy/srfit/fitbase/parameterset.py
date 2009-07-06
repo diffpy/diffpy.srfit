@@ -15,7 +15,9 @@
 """ParameterSet class. 
 
 ParameterSets organize Parameters, Constraints, Restraints and other
-ParameterSets.
+ParameterSets. They provide attribute-access of other ParameterSets and
+embedded Parameters.
+
 """
 
 from .modelorganizer import ModelOrganizer
@@ -57,6 +59,7 @@ class ParameterSet(ModelOrganizer):
         """Initialize.
 
         name    --  The name of this ParameterSet.
+
         """
         ModelOrganizer.__init__(self, name)
         return

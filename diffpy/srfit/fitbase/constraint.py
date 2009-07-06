@@ -14,10 +14,11 @@
 ########################################################################
 """Constraint class. 
 
-Constraints are used by a FitModel (and elsewhere) to organize constraint
-equations. They store a Parameter object and an Equation object that is used to
-compute its value. Constraint contains methods to aid in the creation of this
-association.
+Constraints are used by a FitModel (and other ModelOrganizers) to organize
+constraint equations. They store a Parameter object and an Equation object that
+is used to compute its value. The Constraint.constrain method is used to create
+this association.
+
 """
 
 class Constraint(object):
@@ -27,6 +28,7 @@ class Constraint(object):
     par     --  A Parameter that is the subject of the constraint.
     eq      --  An equation whose evaluation is used to set the value of the
                 constraint.
+
     """
 
     def __init__(self):

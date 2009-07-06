@@ -174,7 +174,7 @@ def fofq(cryst, q, delta2):
     # The brute-force calculation is very slow. Thus we optimize a little bit.
 
     # The precision of distance measurements.
-    deltad = 1e-10
+    deltad = 1e-6
     dmult = int(1/deltad)
     deltau = deltad**2
     umult = int(1/deltau)

@@ -14,8 +14,33 @@
 ########################################################################
 """The Calculator class for generating a profile.
 
-The Calculator has the interface of a diffpy.srfit.equation.literals.Generator
-so that it can be used within a diffpy.srfit.equation.Equation.
+Calculators encapsulate the evaluation and required Parameters and
+ParameterSets of a profile calculator.  The Calculator class can be associated
+with a Contribution to help calculate a profile.  It implements the
+diffpy.srfit.equation.literals.Generator interface so that it can be used
+within a diffpy.srfit.equation.Equation.
+
+To define a Calculator, one must implement the required Parameters and
+ParameterSets as well as overload the __call__ method with the calculation. A
+very simple example is
+> class Gaussian(Calculator):
+>
+>    def __init__(self):
+>        # Initialize and give this a name
+>        Calculator.__init__(self, "g")
+>        # Add amplitude, center and width parameters
+>        self.newParameter("amp", 0)
+>        self.newParameter("center", 0)
+>        self.newParameter("width", 0)
+>       
+>    def __call__(self, x):
+>        a = self.amp.getValue()
+>        x0 = self.center.getValue()
+>        w = self.width.getValue()
+>        return a * exp(-0.5*((x-x0)/w)**2)
+
+More examples can be found in the example directory of the documentation.
+
 
 """
 
@@ -75,6 +100,8 @@ class Calculator(ModelOrganizer):
     def __call__(self, x):
         """Evaluate the profile.
 
+        This method must be overloaded.
+
         This method only takes the independent variables to calculate over. The
         values of the calculator Parameters should be changed directly. 
 
@@ -130,7 +157,7 @@ class Calculator(ModelOrganizer):
     def generate(self, clicker):
         """Generate the signal and store it in the literal attribute.
 
-        This method conforms to the Generator interface. It does not need to be
+        This method is part of the Generator interface. It does not need to be
         overloaded. By default it creates a Parameter to store the results.
 
         clicker --  A Clicker instance for decision making. The clicker is
@@ -148,7 +175,7 @@ class Calculator(ModelOrganizer):
     def identify(self, visitor):
         """Identify this to a visitor.
 
-        This method conforms to the Generator interface. This does not need to
+        This method is part of the Generator interface. This does not need to
         be overloaded.
 
         """
@@ -157,7 +184,3 @@ class Calculator(ModelOrganizer):
 
 
 __id__ = "$Id$"
-
-if __name__ == "__main__":
-    # Check to see if everything imports correctly
-    pass

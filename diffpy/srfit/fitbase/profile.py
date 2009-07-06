@@ -14,6 +14,11 @@
 ########################################################################
 """The Profile class containing the physical and calculated data.
 
+Profile holds the arrays representing an observed profile, a selected subset of
+the observed profile and a calculated profile. Profiles are used by Calculators
+to store a calculated signal, and by Contributions to help calculate a residual
+equation.
+
 """
 
 import numpy
@@ -73,6 +78,7 @@ class Profile(object):
 
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
+
         """
         if len(yobs) != len(xobs):
             raise ValueError("xobs and yobs are different lengths")
@@ -166,7 +172,7 @@ class Profile(object):
         return
 
     def setCalculationPoints(self, x):
-        """Set the calculation range with an array.
+        """Set the calculation points.
 
         Arguments
         x   --  A non-empty numpy array containing the calculation points. If

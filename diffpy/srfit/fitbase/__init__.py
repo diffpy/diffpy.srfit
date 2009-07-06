@@ -84,4 +84,5 @@ from .fitmodel import FitModel
 from .profile import Profile
 from .fitresults import FitResults
 
+__id__ = "$Id$"
 # End of file

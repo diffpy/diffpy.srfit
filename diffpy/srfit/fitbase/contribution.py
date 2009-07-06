@@ -14,17 +14,19 @@
 ########################################################################
 """Contribution class. 
 
-Contributions organize an Equation and Calculator that calculate the signal,
-and a Profile that holds the signal.
+Contributions are generate a residual function for a FitModel. A Contribution
+associates an Equation for generating a signal, optionally a Calculator that
+helps in this, and a Profile that holds the observed and calculated signals.  
+
+See the examples in the documention for how to use a Contribution.
+
 """
 
 from numpy import concatenate, sqrt, inf, dot
 
 from diffpy.srfit.equation import Equation
-from diffpy.srfit.equation.literals import Generator
 from diffpy.srfit.equation.builder import EquationFactory
 
-from .parameter import Parameter
 from .modelorganizer import ModelOrganizer, equationFromString
 
 
@@ -32,8 +34,8 @@ class Contribution(ModelOrganizer):
     """Contribution class.
 
     Contributions organize an Equation that calculates the signal, and a
-    Profile that holds the signal. Contraints and Restraints can be created as
-    part of a Contribution.
+    Profile that holds the signal. A Calculator can be used as well.
+    Contraints and Restraints can be created as part of a Contribution.
 
     Attributes
     clicker         --  A Clicker instance for recording changes in the
@@ -85,13 +87,13 @@ class Contribution(ModelOrganizer):
     def setProfile(self, profile, xname = None, yname = None, dyname = None):
         """Assign the profile for this contribution.
 
-        This resets the current residual.
+        This resets the current residual (see setResidualEquation).
         
-        profile --  A Profile that specifies the calculation points and which
+        profile --  A Profile that specifies the calculation points and that
                     will store the calculated signal.
         xname   --  The name of the independent variable from the Profile. If
                     this is None (default), then the name specified by the
-                    Profile for this parametere will be used.  This variable is
+                    Profile for this parameter will be used.  This variable is
                     usable within the Equation with the specified name.
         yname   --  The name of the observed profile.  If this is None
                     (default), then the name specified by the Profile for this
@@ -101,7 +103,6 @@ class Contribution(ModelOrganizer):
                     this is None (default), then the name specified by the
                     Profile for this parametere will be used.  This variable is
                     usable within the Equation with the specified name.
-        
 
         """
         # Clear the previous profile information
@@ -140,20 +141,19 @@ class Contribution(ModelOrganizer):
         if self.calculator is not None:
             self.calculator.setProfile(profile)
             self.setResidualEquation()
-
         return
 
     def setCalculator(self, calc, name = None):
         """Set the Calculator to be used by this Contribution.
 
         The Calculator is given a name so that it can be used as part of the
-        equation that is used to generate the signal. This can be different
-        from the name of the Calculator for attribute purposes. Each
-        contribution should have its own calculator instance. Those calculators
-        can share Parameters and ParameterSets, however.
+        profile equation (see setEquation). This can be different from the name
+        of the Calculator used for attribute access. Each contribution should
+        have its own calculator instance. Those calculators can share
+        Parameters and ParameterSets, however.
         
-        Calling setCalculator sets the equation to call the calculator and
-        resets the residual.
+        Calling setCalculator sets the profile equation to call the calculator
+        and resets the residual equation (see setResidualEquation).
 
         calc    --  A Calculator instance
         name    --  A name for the calculator. If name is None (default), then
@@ -180,7 +180,12 @@ class Contribution(ModelOrganizer):
         return
 
     def setEquation(self, eqstr, makepars = True, ns = {}):
-        """Set the refinement equation for the Contribution.
+        """Set the profile equation for the Contribution.
+
+        This sets the equation that will be used when generating the residual
+        for this Contribution.  The equation will be usable within
+        setResidualEquation as "eq", and it takes no arguments.  Calling
+        setEquation resets the residual equation.
 
         eqstr   --  A string representation of the equation. Any Parameter
                     registered by addParameter or setProfile, or function
@@ -193,11 +198,7 @@ class Contribution(ModelOrganizer):
                     in the eqstr. 
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not part of the FitModel (default {}).
-
-        The equation will be usable within setResidualEquation by calling "eq". 
         
-        Calling setEquation resets the residual equation.
-
         Raises ValueError if ns uses a name that is already used for a
         variable.
         Raises ValueError if makepars is false and eqstr depends on a Parameter
@@ -215,8 +216,7 @@ class Contribution(ModelOrganizer):
         """Set the residual equation for the Contribution.
 
         eqstr   --  A string representation of the residual. If eqstr is None
-                    (default), then the chi2 residual will be used (see the
-                    residual method.)
+                    (default), then the chi2 residual will be used.
 
         Two residuals are preset for convenience, "chiv" and "resv".
         chiv is defined such that dot(chiv, chiv) = chi^2.
@@ -229,6 +229,7 @@ class Contribution(ModelOrganizer):
         Raises AttributeError if the Profile is not yet defined.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the Contribution.
+
         """
         if self.profile is None:
             raise AttributeError("Define the profile first")
@@ -259,7 +260,7 @@ class Contribution(ModelOrganizer):
 
         The residual is by default an array chiv:
         chiv = (eq() - self.profile.y) / self.profile.dy
-        The value that is optimized is dot(residual, residual).
+        The value that is optimized is dot(chiv, chiv).
 
         The residual equation can be changed with the setResidualEquation
         method.

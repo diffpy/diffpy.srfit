@@ -12,8 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Utility functions usable by all of fitbase.
-"""
+"""Utility functions usable by all of fitbase."""
 
 import re
 reident = re.compile(r'^[a-zA-Z_]\w*$')
@@ -37,3 +36,5 @@ def validateName(name):
     if not isIdentifier(name):
         raise ValueError("Name '%s' is not a valid identifier"%name)
     return
+
+__id__ = "$Id$"

@@ -12,7 +12,13 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The ModelOrganizer class."""
+"""The ModelOrganizer class and equationFromString method.
+
+ModelOrganizer is the base class for various classes within the FitModel
+hierarchy. equationFromString creates an Equation instance from a string. It
+checks for specific conditions on the string, as defined in the method.
+
+"""
 
 from numpy import inf
 
@@ -39,7 +45,7 @@ class ModelOrganizer(object):
     These constraints and restraints can be placed at any level and a flattened
     list of them can be retrieved with the _getConstraints and _getRestraints
     methods. Parameters and other organizers can be found within the hierarchy
-    with the _locateParameter method.
+    with the _locateChild method.
 
     Attributes
     clicker         --  A Clicker instance for recording changes in contained
@@ -130,6 +136,7 @@ class ModelOrganizer(object):
         par     --  The Parameter to unconstrain.
 
         This removes any constraints on a parameter.
+
         """
         if par in self._constraints:
             del self._constraints[par]
@@ -177,16 +184,6 @@ class ModelOrganizer(object):
         self._restraints.add(res)
 
         return res
-
-    def unrestrain(self, res):
-        """Remove a Restraint or BoundsRestraint from the ModelOrganizer.
-        
-        res     --  A Restraint returned from the 'restrain' method.
-        """
-        if res in self._restraints:
-            self._restraints.remove(res)
-
-        return
 
     def confine(self, res, lb = -inf, ub = inf, ns = {}):
         """Confine an expression to hard bounds.
@@ -237,6 +234,17 @@ class ModelOrganizer(object):
         self._restraints.add(res)
         return res
 
+    def unrestrain(self, res):
+        """Remove a Restraint or BoundsRestraint from the ModelOrganizer.
+        
+        res     --  A Restraint returned from the 'restrain' method.
+
+        """
+        if res in self._restraints:
+            self._restraints.remove(res)
+
+        return
+
     def _addParameter(self, par, check=True):
         """Store a Parameter.
 
@@ -278,6 +286,7 @@ class ModelOrganizer(object):
         """Remove a parameter.
         
         raises ValueError if par is not part of the ModelOrganizer.
+
         """
         if par not in self._parameters:
             m = "'%s' is not part of the %s" % (par, self.__class__.__name__)
@@ -317,6 +326,7 @@ class ModelOrganizer(object):
         """Remove an organizer.
         
         raises ValueError if organizer is not part of the ModelOrganizer.
+
         """
         if org not in self._organizers:
             m = "'%s' is not part of the %s" % (org, self.__class__.__name__)
@@ -433,3 +443,4 @@ def equationFromString(eqstr, factory, ns = {}, buildargs = False):
 
     return eq
 
+__id__ = "$Id$"

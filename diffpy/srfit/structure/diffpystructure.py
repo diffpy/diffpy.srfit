@@ -77,8 +77,8 @@ class AtomParSet(ParameterSet):
             _xyzsetter(1)))
         self.addParameter(ParameterWrapper(a, "z", _xyzgetter(2),
             _xyzsetter(2)))
-        occupancy = self.addParameter(ParameterWrapper(a, "occupancy", attr =
-            "occupancy"))
+        occupancy = ParameterWrapper(a, "occupancy", attr = "occupancy")
+        self.addParameter(occupancy)
         self.addParameter(ParameterProxy("occ", occupancy))
         # U
         self.addParameter(ParameterWrapper(a, "U11", attr = "U11"))

@@ -24,6 +24,10 @@ DihedralAngleParameter
 
 """
 
+# Make sure we get the proper version of pyobjcryst
+import pkg_resources
+pkg_resources.require("pyobjcryst==0.1a1.dev-r3441")
+
 from diffpy.srfit.equation import Clicker
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
 from diffpy.srfit.fitbase.parameterset import ParameterSet

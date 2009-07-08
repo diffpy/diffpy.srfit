@@ -24,19 +24,15 @@ DihedralAngleParameter
 
 """
 
-# Make sure we get the proper version of pyobjcryst
-import pkg_resources
-pkg_resources.require("pyobjcryst==0.1a1.dev-r3441")
-
 from diffpy.srfit.equation import Clicker
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.fitbase.constraint import Constraint
 
-from pyobjcryst import GetBondLength, GetBondAngle, GetDihedralAngle
-from pyobjcryst import StretchModeBondLength, StretchModeBondAngle
-from pyobjcryst import StretchModeTorsion
+from pyobjcryst.molecule import GetBondLength, GetBondAngle, GetDihedralAngle
+from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
+from pyobjcryst.molecule import StretchModeTorsion
 
 class ScattererParSet(ParameterSet):
     """A base wrapper for an Objcryst Scatterer.

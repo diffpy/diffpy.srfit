@@ -7,7 +7,9 @@ import numpy
 
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
-from pyobjcryst import Crystal, Molecule, ScatteringPowerAtom
+from pyobjcryst.crystal import Crystal 
+from pyobjcryst.molecule import Molecule
+from pyobjcryst.scatteringpower import ScatteringPowerAtom
 
 c60xyz = \
 """

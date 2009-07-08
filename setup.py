@@ -21,7 +21,7 @@ dist = setup(
         entry_points = {},
         install_requires = [
             'diffpy.Structure',
-            'pyobjcryst==0.1a1.dev-r3441',
+            'pyobjcryst>=0.1a1.dev-r3455',
             ],
         dependency_links = [
             # REMOVE dev.danse.us for a public release.

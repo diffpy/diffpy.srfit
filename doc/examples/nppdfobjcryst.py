@@ -367,7 +367,9 @@ c60xyz = \
 def makeC60():
     """Make the C60 molecule using pyobjcryst."""
 
-    from pyobjcryst import Crystal, Molecule, ScatteringPowerAtom
+    from pyobjcryst.crystal import Crystal
+    from pyobjcryst.molecule import Molecule
+    from pyobjcryst.scatteringpower import ScatteringPowerAtom
 
     pi = numpy.pi
     c = Crystal(100, 100, 100, "P1")

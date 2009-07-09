@@ -91,6 +91,176 @@ class ModelOrganizer(object):
             raise AttributeError(name)
         return arg
 
+    def registerFunction(self, f, name = None, argnames = None, 
+            makepars = True):
+        """Register a function so it can be used within equation strings.
+
+        This creates a function with this class that can be used within string
+        equations.  The resulting equation does not require the arguments to be
+        passed in the equation string, as this will be handled automatically.
+
+        f           --  The callable to register. If this is an Equation
+                        instance, then all that needs to be provied is a name.
+        name        --  The name of the function to be used in equations. If
+                        this is None (default), the method will try to
+                        determine the name of the function automatically.
+        argnames    --  The names of the arguments to f (list or None). 
+                        If this is None, then the argument names will be
+                        extracted from the function.
+        makepars    --  Flag indicating whether to make parameters from the
+                        argnames if they don't already appear in this object
+                        (default True). Parameters created in this way are
+                        added using the _newParameter method.  If makepars is
+                        False , then it is necessary that the parameters are
+                        already part of this object in order to make the
+                        function.
+
+        Note that name and argnames can be extracted from regular python
+        functions (of type 'function'), bound class methods and callable
+        classes.
+
+        Raises TypeError if name or argnames cannot be automatically
+        extracted.
+        Raises TypeError if an automatically extracted name is '<lambda>'.
+        Raises AttributeError if makepars is False and the parameters are not
+        part of this object.
+        Raises ValueError if f is an Equation object and name is None.
+
+        Returns the callable Equation object.
+
+        """
+
+        if isinstance(f, Equation):
+            if name is None:
+                m = "Equation must be given a name"
+                raise ValueError(m)
+            self._eqfactory.registerEquation(name, f)
+            return f
+
+        # Extract the name and argnames if necessary
+        if name is None or argnames is None:
+
+            import inspect
+
+            func_code = None
+
+            # This will let us offset the argument list to eliminate 'self'
+            offset = 0
+
+            # check regular functions
+            if inspect.isfunction(f):
+                func_code = f.func_code
+            # check class method
+            elif inspect.ismethod(f):
+                    func_code = f.im_func.func_code
+                    offset = 1
+            # check functor
+            elif hasattr(f, "__call__") and hasattr(f.__call__, 'im_func'):
+                    func_code = f.__call__.im_func.func_code
+                    offset = 1
+            else:
+                m = "Cannot extract name or argnames"
+                raise TypeError(m)
+
+            # Extract the name
+            if name is None:
+                name = func_code.co_name
+                if name == '<lambda>':
+                    m = "You must supply a name name for a lambda function"
+                    raise TypeError(m)
+
+            # Extract the arguments
+            if argnames is None:
+                argnames = list(func_code.co_varnames)
+                argnames = argnames[offset:func_code.co_argcount]
+
+        if makepars:
+            for pname in argnames:
+                if pname not in self._eqfactory.builders:
+                    self._newParameter(pname, 0)
+
+        # In order to make the function callable without plugging in the
+        # arguments, we will build an Equation instance and register it. We'll
+        # build it in another EquationFactory so we don't clutter up our
+        # namespace.
+        factory = EquationFactory()
+
+        for pname in argnames:
+            par = self._eqfactory.builders.get(pname)
+            if par is None:
+                m = "Function requires unspecified parameters (%s)."%pname
+                raise AttributeError(m)
+
+            factory.registerBuilder(pname, par)
+
+        factory.registerFunction(name, f, len(argnames))
+
+        argstr = ",".join(argnames)
+        eq = equationFromString("%s(%s)"%(name,argstr), factory)
+
+        self._eqfactory.registerEquation(name, eq)
+
+        return eq
+
+    def registerStringFunction(self, fstr, name, makepars = True, ns = {}):
+        """Register a string function.
+
+        This creates a function with this class that can be used within string
+        equations.  The resulting equation does not require the arguments to be
+        passed in the function string, as this will be handled automatically.
+
+        fstr        --  A string equation to register.
+        name        --  The name of the function to be used in equations. 
+        makepars    --  Flag indicating whether to make parameters from the
+                        arguments of fstr if they don't already appear in this
+                        object (default True). Parameters created in this way
+                        are added to the contribution using the _newParameter
+                        method.  If makepars is False , then it is necessary
+                        that the parameters are already part of this object in
+                        order to make the function.
+        ns          --  A dictionary of Parameters, indexed by name, that are
+                        used in fstr, but not part of the FitModel (default
+                        {}).
+
+        Raises ValueError if ns uses a name that is already used for a
+        variable.
+        Raises AttributeError if makepars is False and the parameters are not
+        part of this object.
+
+        Returns the callable Equation object.
+
+        """
+
+        # Build the equation instance.
+        eq = equationFromString(fstr, self._eqfactory, buildargs =
+                makepars)
+
+        # Register any new parameters
+        for par in self._eqfactory.newargs:
+            self._addParameter(par)
+
+        # Register the equation by name
+        self._eqfactory.registerEquation(name, eq)
+
+        return eq
+
+    def evaluateEquation(self, eqstr, ns = {}):
+        """Evaluate a string equation.
+
+        eqstr   --  A string equation to evaluate. The equation is evaluated at
+                    the current value of the registered parameters. The
+                    equation can be specified as described in the setEquation
+                    method.
+        ns      --  A dictionary of Parameters, indexed by name, that are
+                    used in fstr, but not part of the FitModel (default {}).
+
+        Raises ValueError if ns uses a name that is already used for a
+        variable.
+
+        """
+        eq = equationFromString(eqstr, self._eqfactory, ns = {})
+        return eq()
+
     def constrain(self, par, con, ns = {}):
         """Constrain a parameter to an equation.
 

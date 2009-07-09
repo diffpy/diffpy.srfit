@@ -50,15 +50,15 @@ class ScattererParSet(ParameterSet):
         self.idx = idx
 
         # x, y, z, occupancy
-        self.addParameter(ParameterWrapper(None, "x", self._xyzgetter(0),
+        self.addParameter(ParameterWrapper("x", None, self._xyzgetter(0),
             self._xyzsetter(0)))
-        self.addParameter(ParameterWrapper(None, "y", self._xyzgetter(1),
+        self.addParameter(ParameterWrapper("y", None, self._xyzgetter(1),
             self._xyzsetter(1)))
-        self.addParameter(ParameterWrapper(None, "z", self._xyzgetter(2),
+        self.addParameter(ParameterWrapper("z", None, self._xyzgetter(2),
             self._xyzsetter(2)))
-        self.addParameter(ParameterWrapper(None, "occupancy", self._getocc,
+        self.addParameter(ParameterWrapper("occupancy", None, self._getocc,
             self._setocc))
-        self.addParameter(ParameterWrapper(None, "uiso", self._getuiso,
+        self.addParameter(ParameterWrapper("uiso", None, self._getuiso,
             self._setuiso))
         return
 
@@ -122,17 +122,17 @@ class UnitCellParSet(ParameterSet):
         self.strups = strups
         self._latpars = list(self.strups.stru.unit_cell().parameters())
 
-        self.addParameter(ParameterWrapper(None, "a", self._latgetter(0),
+        self.addParameter(ParameterWrapper("a", None, self._latgetter(0),
             self._latsetter(0)))
-        self.addParameter(ParameterWrapper(None, "b", self._latgetter(1),
+        self.addParameter(ParameterWrapper("b", None, self._latgetter(1),
             self._latsetter(1)))
-        self.addParameter(ParameterWrapper(None, "c", self._latgetter(2),
+        self.addParameter(ParameterWrapper("c", None, self._latgetter(2),
             self._latsetter(2)))
-        self.addParameter(ParameterWrapper(None, "alpha", self._latgetter(3),
+        self.addParameter(ParameterWrapper("alpha", None, self._latgetter(3),
             self._latsetter(3)))
-        self.addParameter(ParameterWrapper(None, "beta", self._latgetter(4),
+        self.addParameter(ParameterWrapper("beta", None, self._latgetter(4),
             self._latsetter(4)))
-        self.addParameter(ParameterWrapper(None, "gamma", self._latgetter(5),
+        self.addParameter(ParameterWrapper("gamma", None, self._latgetter(5),
             self._latsetter(5)))
 
         from .sgconstraints import constrainSpaceGroup

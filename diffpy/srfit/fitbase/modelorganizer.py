@@ -81,7 +81,7 @@ class ModelOrganizer(object):
         self._constraints = {}
         self._restraints = set()
         self._orgdict = {}
-        self._eqfactory = EquationFactory(argclass = Parameter)
+        self._eqfactory = EquationFactory()
         return
 
     def __getattr__(self, name):
@@ -186,12 +186,12 @@ class ModelOrganizer(object):
         factory = EquationFactory()
 
         for pname in argnames:
-            par = self._eqfactory.builders.get(pname)
-            if par is None:
+            parbuilder = self._eqfactory.builders.get(pname)
+            if parbuilder is None:
                 m = "Function requires unspecified parameters (%s)."%pname
                 raise AttributeError(m)
 
-            factory.registerBuilder(pname, par)
+            factory.registerBuilder(pname, parbuilder)
 
         factory.registerFunction(name, f, len(argnames))
 
@@ -232,10 +232,10 @@ class ModelOrganizer(object):
         """
 
         # Build the equation instance.
-        eq = equationFromString(fstr, self._eqfactory, buildargs =
-                makepars)
+        eq = equationFromString(fstr, self._eqfactory, buildargs = makepars)
 
-        # Register any new parameters
+        # Register any new Parameters. Note that these are ParameterReferences,
+        # so we must create an actual Parameter to register.
         for par in self._eqfactory.newargs:
             self._addParameter(par)
 
@@ -436,6 +436,7 @@ class ModelOrganizer(object):
             if message:
                 raise ValueError(message)
 
+        
         self._orgdict[par.name] = par
         self._parameters.append(par)
         self._eqfactory.registerArgument(par.name, par)
@@ -575,13 +576,13 @@ class ModelOrganizer(object):
 
 # End ModelOrganizer
 
-def equationFromString(eqstr, factory, ns = {}, buildargs = False):
+def equationFromString(eqstr, factory, ns = {}, buildargs = False,
+        argclass = Parameter, argkw = {}):
     """Make an equation from a string.
 
-    eqstr   --  A string representation of the equation. The
-                equation must consist of numpy operators and
-                "known" Parameters. Parameters are known if they are in 
-                ns, or already defined in the factory.
+    eqstr   --  A string representation of the equation. The equation must
+                consist of numpy operators and "known" Parameters. Parameters
+                are known if they are in ns, or already defined in the factory.
     factory --  An EquationFactory instance.
     ns      --  A dictionary of Parameters indexed by name that are used
                 in the eqstr but not already defined in the factory 
@@ -589,6 +590,11 @@ def equationFromString(eqstr, factory, ns = {}, buildargs = False):
     buildargs   --  A flag indicating whether missing Parameters can be created
                 by the Factory (default False). If False, then the a ValueError
                 will be raised if there are undefined arguments in the eqstr. 
+    argclass    --  Class to use when creating new Arguments (default
+                Parameter). The class constructor must accept the 'name' key
+                word.
+    argkw   --  Key word dictionary to pass to the argclass constructor
+                (default {}).
 
     Raises ValueError if ns uses a name that is already defined in the factory.
     Raises ValueError if the equation has undefined parameters.
@@ -605,7 +611,7 @@ def equationFromString(eqstr, factory, ns = {}, buildargs = False):
     for name, arg in ns.items():
         factory.registerArgument(name, arg)
 
-    eq = factory.makeEquation(eqstr, buildargs)
+    eq = factory.makeEquation(eqstr, buildargs, argclass, argkw)
 
     # Clean the ns parameters
     for name in ns:

@@ -71,24 +71,24 @@ class AtomParSet(ParameterSet):
         self.atom = atom
         a = atom
         # x, y, z, occupancy
-        self.addParameter(ParameterWrapper(a, "x", _xyzgetter(0),
+        self.addParameter(ParameterWrapper("x", a, _xyzgetter(0),
             _xyzsetter(0)))
-        self.addParameter(ParameterWrapper(a, "y", _xyzgetter(1),
+        self.addParameter(ParameterWrapper("y", a, _xyzgetter(1),
             _xyzsetter(1)))
-        self.addParameter(ParameterWrapper(a, "z", _xyzgetter(2),
+        self.addParameter(ParameterWrapper("z", a, _xyzgetter(2),
             _xyzsetter(2)))
-        occupancy = ParameterWrapper(a, "occupancy", attr = "occupancy")
+        occupancy = ParameterWrapper("occupancy", a, attr = "occupancy")
         self.addParameter(occupancy)
         self.addParameter(ParameterProxy("occ", occupancy))
         # U
-        self.addParameter(ParameterWrapper(a, "U11", attr = "U11"))
-        self.addParameter(ParameterWrapper(a, "U22", attr = "U22"))
-        self.addParameter(ParameterWrapper(a, "U33", attr = "U33"))
-        U12 = ParameterWrapper(a, "U12", attr = "U12")
+        self.addParameter(ParameterWrapper("U11", a, attr = "U11"))
+        self.addParameter(ParameterWrapper("U22", a, attr = "U22"))
+        self.addParameter(ParameterWrapper("U33", a, attr = "U33"))
+        U12 = ParameterWrapper("U12", a, attr = "U12")
         U21 = ParameterProxy("U21", U12)
-        U13 = ParameterWrapper(a, "U13", attr = "U13")
+        U13 = ParameterWrapper("U13", a, attr = "U13")
         U31 = ParameterProxy("U31", U13)
-        U23 = ParameterWrapper(a, "U23", attr = "U23")
+        U23 = ParameterWrapper("U23", a, attr = "U23")
         U32 = ParameterProxy("U32", U23)
         self.addParameter(U12)
         self.addParameter(U21)
@@ -96,16 +96,16 @@ class AtomParSet(ParameterSet):
         self.addParameter(U31)
         self.addParameter(U23)
         self.addParameter(U32)
-        self.addParameter(ParameterWrapper(a, "Uiso", attr = "Uisoequiv"))
+        self.addParameter(ParameterWrapper("Uiso", a, attr = "Uisoequiv"))
         # B
-        self.addParameter(ParameterWrapper(a, "B11", attr = "B11"))
-        self.addParameter(ParameterWrapper(a, "B22", attr = "B22"))
-        self.addParameter(ParameterWrapper(a, "B33", attr = "B33"))
-        B12 = ParameterWrapper(a, "B12", attr = "B12")
+        self.addParameter(ParameterWrapper("B11", a, attr = "B11"))
+        self.addParameter(ParameterWrapper("B22", a, attr = "B22"))
+        self.addParameter(ParameterWrapper("B33", a, attr = "B33"))
+        B12 = ParameterWrapper("B12", a, attr = "B12")
         B21 = ParameterProxy("B21", B12)
-        B13 = ParameterWrapper(a, "B13", attr = "B13")
+        B13 = ParameterWrapper("B13", a, attr = "B13")
         B31 = ParameterProxy("B31", B13)
-        B23 = ParameterWrapper(a, "B23", attr = "B23")
+        B23 = ParameterWrapper("B23", a, attr = "B23")
         B32 = ParameterProxy("B32", B23)
         self.addParameter(B12)
         self.addParameter(B21)
@@ -113,7 +113,7 @@ class AtomParSet(ParameterSet):
         self.addParameter(B31)
         self.addParameter(B23)
         self.addParameter(B32)
-        self.addParameter(ParameterWrapper(a, "Biso", attr = "Bisoequiv"))
+        self.addParameter(ParameterWrapper("Biso", a, attr = "Bisoequiv"))
 
         # Other setup
         self.__repr__ = a.__repr__
@@ -165,17 +165,17 @@ class LatticeParSet(ParameterSet):
         ParameterSet.__init__(self, "lattice")
         self.lattice = lattice
         l = lattice
-        self.addParameter(ParameterWrapper(l, "a", _latgetter("a"),
+        self.addParameter(ParameterWrapper("a", l, _latgetter("a"),
             _latsetter("a")))
-        self.addParameter(ParameterWrapper(l, "b", _latgetter("b"),
+        self.addParameter(ParameterWrapper("b", l, _latgetter("b"),
             _latsetter("b")))
-        self.addParameter(ParameterWrapper(l, "c", _latgetter("c"),
+        self.addParameter(ParameterWrapper("c", l, _latgetter("c"),
             _latsetter("c")))
-        self.addParameter(ParameterWrapper(l, "alpha", _latgetter("alpha"),
+        self.addParameter(ParameterWrapper("alpha", l, _latgetter("alpha"),
             _latsetter("alpha")))
-        self.addParameter(ParameterWrapper(l, "beta", _latgetter("beta"),
+        self.addParameter(ParameterWrapper("beta", l, _latgetter("beta"),
             _latsetter("beta")))
-        self.addParameter(ParameterWrapper(l, "gamma", _latgetter("gamma"),
+        self.addParameter(ParameterWrapper("gamma", l, _latgetter("gamma"),
             _latsetter("gamma")))
 
         # Other setup

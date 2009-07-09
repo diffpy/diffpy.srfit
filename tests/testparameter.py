@@ -62,7 +62,7 @@ class TestParameterWrapper(unittest.TestCase):
         l = Parameter("l", 3.14)
 
         # Try Accessor adaptation
-        la = ParameterWrapper(l, "l", getter = Parameter.getValue, setter =
+        la = ParameterWrapper("l", l, getter = Parameter.getValue, setter =
                 Parameter.setValue)
 
         self.assertEqual(l.name, la.name)
@@ -77,7 +77,7 @@ class TestParameterWrapper(unittest.TestCase):
         self.assertEqual(l.getValue(), la.getValue())
 
         # Try Attribute adaptation
-        la = ParameterWrapper(l, "l", attr = "value")
+        la = ParameterWrapper("l", l, attr = "value")
 
         self.assertEqual(l.name, la.name)
         self.assertEqual("value", la.attr)
@@ -92,7 +92,6 @@ class TestParameterWrapper(unittest.TestCase):
         self.assertEqual(l.getValue(), la.getValue())
 
         return
-
 
 if __name__ == "__main__":
 

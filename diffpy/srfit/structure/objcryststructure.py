@@ -65,10 +65,10 @@ class ScattererParSet(ParameterSet):
         self.parent = parent
 
         # x, y, z, occupancy
-        self.addParameter(ParameterWrapper(self.scat, "x", attr = "X"))
-        self.addParameter(ParameterWrapper(self.scat, "y", attr = "Y"))
-        self.addParameter(ParameterWrapper(self.scat, "z", attr = "Z"))
-        self.addParameter(ParameterWrapper(self.scat, "occ", attr =
+        self.addParameter(ParameterWrapper("x", self.scat, attr = "X"))
+        self.addParameter(ParameterWrapper("y", self.scat, attr = "Y"))
+        self.addParameter(ParameterWrapper("z", self.scat, attr = "Z"))
+        self.addParameter(ParameterWrapper("occ", self.scat, attr =
             "Occupancy"))
         return
 
@@ -104,7 +104,7 @@ class AtomParSet(ScattererParSet):
         sp = atom.GetScatteringPower()
 
         # The Biso parameter
-        self.addParameter(ParameterWrapper(sp, "biso", attr = "Biso"))
+        self.addParameter(ParameterWrapper("biso", sp, attr = "Biso"))
         return
 
     def _getElem(self):
@@ -144,10 +144,10 @@ class MoleculeParSet(ScattererParSet):
         ScattererParSet.__init__(self, name, molecule, parent)
 
         # Add orientiation quaternion
-        self.addParameter(ParameterWrapper(self.scat, "q0", attr = "Q0"))
-        self.addParameter(ParameterWrapper(self.scat, "q1", attr = "Q1"))
-        self.addParameter(ParameterWrapper(self.scat, "q2", attr = "Q2"))
-        self.addParameter(ParameterWrapper(self.scat, "q3", attr = "Q3"))
+        self.addParameter(ParameterWrapper("q0", self.scat, attr = "Q0"))
+        self.addParameter(ParameterWrapper("q1", self.scat, attr = "Q1"))
+        self.addParameter(ParameterWrapper("q2", self.scat, attr = "Q2"))
+        self.addParameter(ParameterWrapper("q3", self.scat, attr = "Q3"))
 
         # Wrap the MolAtoms within the molecule
         self.atoms = []
@@ -510,7 +510,7 @@ class MolAtomParSet(ScattererParSet):
 
         # Only wrap this if there is a scattering power
         if sp is not None:
-            self.addParameter(ParameterWrapper(sp, "biso", attr = "Biso"))
+            self.addParameter(ParameterWrapper("biso", sp, attr = "Biso"))
 
         return
 
@@ -553,14 +553,14 @@ class ObjCrystParSet(ParameterSet):
         ParameterSet.__init__(self, name)
         self.cryst = cryst
 
-        self.addParameter(ParameterWrapper(self.cryst, "a", attr = "a"))
-        self.addParameter(ParameterWrapper(self.cryst, "b", attr = "b"))
-        self.addParameter(ParameterWrapper(self.cryst, "c", attr = "c"))
-        self.addParameter(ParameterWrapper(self.cryst, "alpha", 
-            attr = "alpha"))
-        self.addParameter(ParameterWrapper(self.cryst, "beta", attr = "beta"))
-        self.addParameter(ParameterWrapper(self.cryst, "gamma",
-            attr = "gamma"))
+        self.addParameter(ParameterWrapper("a", self.cryst, attr = "a"))
+        self.addParameter(ParameterWrapper("b", self.cryst, attr = "b"))
+        self.addParameter(ParameterWrapper("c", self.cryst, attr = "c"))
+        self.addParameter(ParameterWrapper("alpha", self.cryst, attr =
+            "alpha"))
+        self.addParameter(ParameterWrapper("beta", self.cryst, attr = "beta"))
+        self.addParameter(ParameterWrapper("gamma", self.cryst, attr =
+            "gamma"))
 
         # Constrain the lattice before we go any further.
         sgmap = {}

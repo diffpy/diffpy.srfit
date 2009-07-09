@@ -115,9 +115,9 @@ class ParameterProxy(object):
         self.par = par
         return
 
-    def __getattr__(self, name):
+    def __getattr__(self, attrname):
         """Redirect accessors and attributes to the reference Parameter."""
-        return getattr(self.par, name)
+        return getattr(self.par, attrname)
 
 # End class ParameterProxy
 
@@ -130,11 +130,11 @@ class ParameterWrapper(Parameter):
 
     """
 
-    def __init__(self, obj, name, getter = None, setter = None, attr = None):
+    def __init__(self, name, obj, getter = None, setter = None, attr = None):
         """Wrap an object as a Parameter.
 
+        name    --  The name of this Parameter.
         obj     --  The object to be wrapped.
-        name    --  The name of the object.
         getter  --  The unbound function that can be used to access the
                     attribute containing the paramter value. getter(obj) should
                     return the Paramter value.  If getter is None (default), it

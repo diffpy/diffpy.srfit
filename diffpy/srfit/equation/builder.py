@@ -85,6 +85,7 @@ could be replaced by
 > eq = beq.makeEquation()
 and the 'f' function would only operate on Partitions Arguments that have a
 "tag1" tag.
+
 """
 
 # NOTE - the builder cannot handle numpy arrays on the left of a binary
@@ -106,10 +107,6 @@ class EquationFactory(object):
 
     builders    --  A dictionary of EquationBuilders registered with the
                     factory, indexed by name.
-    argclass    --  The class used to create new Arguments (default
-                    diffpy.srfit.equation.literals.Argument). Setting this will
-                    allow the Factory to be used with other than the default
-                    Argument type.
     newargs     --  A set of new arguments created by makeEquation. This is
                     redefined whenever makeEquation is called.
     
@@ -118,51 +115,52 @@ class EquationFactory(object):
     symbols = ("+", "-", "*", "/", "**", "%")
     ignore = ("(", ",", ")")
 
-    def __init__(self, argclass = literals.Argument, builders = {}):
+    def __init__(self, builders = {}):
         """Initialize.
 
         This registers "pi" and "e" as constants within the factory.
 
-        argclass    --  The class used to create new Arguments (default
-                        diffpy.srfit.equation.literals.Argument). The class
-                        must have "name" and "value" arguments in its
-                        constructor.
         builders    --  A dictionary of builders to start out with (default
                         {}).
+
         """
         self.builders = dict(builders)
-        self.argclass = argclass
         self.registerConstant("pi", numpy.pi)
         self.registerConstant("e", numpy.e)
         self.newargs = set()
         return
 
-    def makeEquation(self, eqstr, buildargs = True):
+    def makeEquation(self, eqstr, buildargs = True, argclass =
+            literals.Argument, argkw = {}):
         """Make an equation from an equation string.
 
         Arguments
-        eqstr   --  An equation in string form using standard python syntax.
-                    The equation string can use any function registered literal
-                    or function, including numpy ufuncs that are automatically
-                    registered.
+        eqstr       --  An equation in string form using standard python
+                        syntax.  The equation string can use any function
+                        registered literal or function, including numpy ufuncs
+                        that are automatically registered.
         buildargs   --  A flag indicating whether missing arguments can be
-                    created by the Factory (default True). If False, then the a
-                    ValueError will be raised if there are undefined arguments
-                    in the eqstr. Built arguments will by of the type contained
-                    in the argclass attribute.
+                        created by the Factory (default True). If False, then
+                        the a ValueError will be raised if there are undefined
+                        arguments in the eqstr. Built arguments will be of type
+                        argclass.
+        argclass    --  Class to use when creating new Arguments (default
+                        diffpy.srfit.equation.literals.Argument). The class
+                        constructor must accept the 'name' key word.
+        argkw       --  Key word dictionary to pass to the argclass constructor
+                        (default {}).
 
         Returns an Equation instance representing the equation string.
+
         """
-        ns = self._makeNamespace(eqstr, buildargs)
+        ns, args = self._makeNamespace(eqstr, buildargs, argclass, argkw)
+        self.newargs = args
         beq = eval(eqstr, ns)
         return beq.getEquation()
 
     def registerConstant(self, name, value):
-        """Register a named constant with the factory.
-
-        Built constants will be self.argclass instances.
-        """
-        arg = self.argclass(name=name, value=value, const=True)
+        """Register a named constant with the factory."""
+        arg = literals.Argument(name=name, value=value, const=True)
         self.registerArgument(name, arg)
         return
 
@@ -177,6 +175,7 @@ class EquationFactory(object):
 
         Equations are Generators, so they are evaluated in an equation string
         without parentheses.
+
         """
         eqbuilder = wrapEquation(name, eq)
         self.registerBuilder(name, eqbuilder)
@@ -222,16 +221,20 @@ class EquationFactory(object):
             del self.builders[name]
         return
 
-    def _makeNamespace(self, eqstr, buildargs):
+    def _makeNamespace(self, eqstr, buildargs, argclass, argkw):
         """Create an evaluation namespace from an equation string.
         
         Arguments
-        eqstr   --  An equation in string as specified in the makeEquation
-                    method.
+        eqstr       --  An equation in string as specified in the makeEquation
+                        method.
         buildargs   --  A flag indicating whether missing arguments can be
-                    created by the Factory. If False, then the a ValueError
-                    will be raised if there are undefined arguments in the
-                    eqstr.
+                        created by the Factory. If False, then the a ValueError
+                        will be raised if there are undefined arguments in the
+                        eqstr.
+        argclass    --  Class to use when creating new Arguments. The class
+                        constructor must accept the 'name' key word.
+        argkw       --  Key word dictionary to pass to the argclass
+                        constructor.
 
         Returns a dictionary of the name, EquationBuilder pairs.
 
@@ -256,14 +259,15 @@ class EquationFactory(object):
                 ns[opname] = opbuilder
 
         # Make the arguments
-        self.newargs = set()
+        newargs = set()
         for argname in eqargs:
             if argname not in self.builders:
-                argbuilder = ArgumentBuilder(name = argname)
+                arg = argclass(name = argname, **argkw)
+                argbuilder = ArgumentBuilder(name = argname, arg = arg)
                 ns[argname] = argbuilder
-                self.newargs.add(argbuilder.literal)
+                newargs.add(arg)
 
-        return ns
+        return ns, newargs
 
     def _getOpsAndArgs(self, eqstr):
         """Get the Operator and Argument names from an equation."""
@@ -328,6 +332,7 @@ class EquationBuilder(object):
 
     Attributes
     literal     --  The root of the Equation being built by this instance.
+
     """
 
     def __init__(self):
@@ -354,6 +359,7 @@ class EquationBuilder(object):
 
         onright --  Indicates that the operator was passed on the right side
                     (defualt false).
+
         """
         # Create the Operator
         op = OperatorClass()
@@ -438,6 +444,7 @@ class ArgumentBuilder(EquationBuilder):
 
     Attributes
     literal     --  The Argument wrapped by this instance.
+
     """
 
     def __init__(self, value = None, name = None, const = False, arg = None):
@@ -451,6 +458,7 @@ class ArgumentBuilder(EquationBuilder):
         arg     --  A pre-defined Argument to use. If this is None (default),
                     then a new Argument will be created from value, name and
                     const.
+
         """
         EquationBuilder.__init__(self)
         if arg is None:
@@ -470,6 +478,7 @@ class PartitionBuilder(EquationBuilder):
 
     Attributes
     literal     --  The Partition wrapped by this instance.
+
     """
 
     def __init__(self, part):
@@ -477,6 +486,7 @@ class PartitionBuilder(EquationBuilder):
         
         Arguments
         part    --  The Partition instance to be wrapped.
+
         """
         EquationBuilder.__init__(self)
         self.literal = part
@@ -492,6 +502,7 @@ class GeneratorBuilder(EquationBuilder):
 
     Attributes
     literal     --  The Generator wrapped by this instance.
+
     """
 
     def __init__(self, gen):
@@ -499,6 +510,7 @@ class GeneratorBuilder(EquationBuilder):
         
         Arguments
         gen --  The Generator instance to be wrapped.
+
         """
         EquationBuilder.__init__(self)
         self.literal = gen
@@ -514,6 +526,7 @@ class EqGeneratorBuilder(EquationBuilder):
 
     Attributes
     literal     --  The Generator wrapped by this instance.
+
     """
 
     def __init__(self, name, eq):
@@ -521,6 +534,7 @@ class EqGeneratorBuilder(EquationBuilder):
         
         Arguments
         eq  --  The Generator instance to be wrapped.
+
         """
         EquationBuilder.__init__(self)
         self.name = name
@@ -534,6 +548,7 @@ class EqGeneratorBuilder(EquationBuilder):
         arguments inside of the equation.
         
         args    --  Arguments of the operation.
+
         """
         # We need to treat this as an equation. So, we will wrap it as an
         # OperatorBuilder.
@@ -558,6 +573,7 @@ class OperatorBuilder(EquationBuilder):
     Attributes
     literal     --  The Operator wrapped by this instance.
     name        --  The name of the operator to be wrapped
+
     """
 
     def __init__(self, name, op = None):
@@ -569,6 +585,7 @@ class OperatorBuilder(EquationBuilder):
                     operator (default None). Otherwise, the name is assumed to
                     be that of a numpy ufunc, which is used to specify the
                     Operator.
+
         """
         EquationBuilder.__init__(self)
         self.name = name
@@ -585,6 +602,7 @@ class OperatorBuilder(EquationBuilder):
         kw      --  Key-word arguments. If "combine" appears and is True, the
                     operation is allowed to combine any partitions it
                     encounters after the operation.
+
         """
         newobj = OperatorBuilder(self.name)
 
@@ -645,6 +663,7 @@ def wrapFunction(name, func, nin = 2, nout = 1):
     nout    --  The number of return values (default 1)
 
     Returns the OperatorBuilder instance that wraps the function.
+
     """
     op = literals.Operator()
     op.name = name
@@ -663,6 +682,7 @@ def wrapPartition(name, part):
     """Wrap a Partition as a builder.
 
     Returns the wrapped Partition.
+
     """
     part.name = name
     partbuilder = PartitionBuilder(part)
@@ -672,6 +692,7 @@ def wrapGenerator(name, gen):
     """Wrap a Generator as a builder.
     
     Returns the wrapped Generator.
+
     """
     gen.name = name
     genbuilder = GeneratorBuilder(gen)
@@ -687,6 +708,7 @@ def wrapEquation(name, eq):
     eq      --  An equation instance.
 
     Returns the EqGeneratorBuilder instance that wraps the function.
+
     """
     eqbuilder = EqGeneratorBuilder(name, eq)
     return eqbuilder
@@ -694,6 +716,7 @@ def wrapEquation(name, eq):
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module
     namespace.
+
     """
     for name in dir(numpy):
         op = getattr(numpy, name)
@@ -707,6 +730,7 @@ def __wrapSrFitOperators():
     """Export all non-base operators from the
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
     instances in the module namespace.
+
     """
     import inspect
     opmod = literals.operators

@@ -45,7 +45,7 @@ class Parameter(Argument):
 
     """
 
-    def __init__(self, name, value = 0, const = False):
+    def __init__(self, name, value = None, const = False):
         """Initialization.
         
         name    --  The name of this Parameter (must be a valid attribute

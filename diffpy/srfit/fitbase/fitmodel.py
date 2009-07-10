@@ -86,13 +86,14 @@ class FitModel(ModelOrganizer):
 
         The hook is an object for reportind updates, or doing whatever else. It
         must have 'precall' and 'postcall' methods, which are called at the
-        start and at the end of the residual calculation. The prehook method
+        start and at the end of the residual calculation. The precall method
         must accept a single argument, which is this FitModel object. The
-        posthook method must accept the model and the chiv, vector residual.
+        postcall method must accept the model and the chiv, vector residual.
         It must also have a reset method that takes no arguments, which is
         called whenver the FitModel is prepared for a refinement.
 
         See the FitHook class for the interface.
+
         """
         self.fithook = fithook
         self._doprepare = True

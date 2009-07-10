@@ -57,14 +57,19 @@ class Profile(object):
         self.xobs = None
         self.yobs = None
         self.dyobs = None
-        self.y = None
-        self.dy = None
-        self.x = None
         self.ycalc = None
         self.xpar = Parameter("x")
         self.ypar = Parameter("y")
         self.dypar = Parameter("dy")
         return
+
+    # We want x, y and dy to stay in-sync with xpar, ypar and dypar
+    x = property( lambda self : self.xpar.getValue(),
+                  lambda self, val : self.xpar.setValue(val) )
+    y = property( lambda self : self.ypar.getValue(),
+                  lambda self, val : self.ypar.setValue(val) )
+    dy = property( lambda self : self.dypar.getValue(),
+                   lambda self, val : self.dypar.setValue(val) )
 
     def setObservedProfile(self, xobs, yobs, dyobs = None):
         """Set the observed profile.
@@ -133,7 +138,6 @@ class Profile(object):
             self.x = self.xobs
             self.y = self.yobs
             self.dy = self.dyobs
-            self._updatePars()
             return
 
         if xmin is None:
@@ -168,7 +172,6 @@ class Profile(object):
         else:
             self.setCalculationPoints(numpy.arange(xmin, xmax+0.5*dx, dx))
 
-        self._updatePars()
         return
 
     def setCalculationPoints(self, x):
@@ -194,14 +197,6 @@ class Profile(object):
             # introduces (more) correlation between the data points.
             self.dy = rebinArray(self.dyobs, self.xobs, self.x)
 
-        self._updatePars()
-        return
-
-    def _updatePars(self):
-        """Update the paramters holding the observed arrays."""
-        self.xpar.setValue(self.x)
-        self.ypar.setValue(self.y)
-        self.dypar.setValue(self.dy)
         return
 
 # End class Profile

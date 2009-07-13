@@ -14,27 +14,27 @@
 ########################################################################
 """Example of fitting the Debye model to experimental Debye-Waller factors.
 
-This is an example of building a FitModel in order to fit experimental data.
+This is an example of building a FitRecipe in order to fit experimental data.
 It is assumed that the function we need cannot be modified by us (although we
 define it below). This will help us demonstrate how to extend a function using
 SrFit.
 
-The makeModel function shows how to build a FitModel that will fit our model to
+The makeRecipe function shows how to build a FitRecipe that will fit our recipe to
 the data. 
 
 """
 
 import numpy
 
-from diffpy.srfit.fitbase import Contribution, FitModel, Profile, FitResults
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 
-from gaussianmodel import scipyOptimize, parkOptimize
+from gaussianrecipe import scipyOptimize, parkOptimize
 
 # Functions required for calculation of Debye curve. Feel free to skip these,
 # as we treat them as if existing in some external library that we cannot
 # modify.
 def adps(m,thetaD,T):
-    """Calculates atomic displacement factors within the Debye model
+    """Calculates atomic displacement factors within the Debye recipe
 
     <u^2> = (3h^2/4 pi^2 m kB thetaD)(phi(thetaD/T)/(ThetaD/T) + 1/4)
 
@@ -44,7 +44,7 @@ def adps(m,thetaD,T):
     T -- float -- temperature.
 
     return:
-    Uiso -- float -- the thermal factor from the Debye model at temp T
+    Uiso -- float -- the thermal factor from the Debye recipe at temp T
 
     """
     h = 6.6260755e-34   # Planck's constant. J.s of m^2.kg/s
@@ -106,29 +106,27 @@ data = """\
 
 ####### Example Code
 
-def makeModel():
-    """Make the model for our problem.
+def makeRecipe():
+    """Make the recipe for the fit.
 
-    Our model will be defined within a FitModel instance. The job of a FitModel
-    is to collect and associate all the data, the fitting equations, fitting
-    variables, constraints and restrations. We will demonstrate each of these
-    within the code. 
+    The instructions for what we want to refine, and how to refine it will be
+    defined within a FitRecipe instance. The job of a FitRecipe is to collect
+    and associate all the data, the fitting equations, fitting variables,
+    constraints and restrations. We will demonstrate each of these within the
+    code. 
 
     Data is held within a Profile object. The Profile is simply a container
     that holds the data, and the theoretical profile once it has been
     calculated.
 
-    Data is associated with a fitting equation within a Contribution. The
-    Contribution defines the equation and parameters that will be adjusted to
-    fit the data. The fitting equation can be defined within a function or
+    Data is associated with a fitting equation within a FitContribution. The
+    FitContribution defines the equation and parameters that will be adjusted
+    to fit the data. The fitting equation can be defined within a function or
     optionally within the Calculator class. We won't need the Calculator class
     in this example since the signature of the fitting equation (the 'debye'
-    function) is so simple. The contribution also defines the residual function
-    to optimize for the data/equation pair. This can be modified, but we won't
-    do that here.
-
-    Once we define the FitModel, we can send it an optimizer to be optimized.
-    See the scipyOptimize and parkOptimize functions.
+    function) is so simple. The FitContribution also defines the residual
+    function to optimize for the data/equation pair. This can be modified, but
+    we won't do that here.
     
     """
         
@@ -142,23 +140,23 @@ def makeModel():
     x, y, dy = numpy.hsplit(xydy, 3)
     profile.setObservedProfile(x, y, dy)
 
-    ## The Contribution
-    # The Contribution associates the profile with the Debye Calculator. 
-    contribution = Contribution("pb")
+    ## The FitContribution
+    # The FitContribution associates the profile with the Debye Calculator. 
+    contribution = FitContribution("pb")
     # Tell the contribution about the Profile. We will need to use the
     # independent variable (the temperature) from the data to calculate the
     # theoretical signal, so give it an informative name ('T') that we can use
     # later.
     contribution.setProfile(profile, xname="T")
 
-    # We now need to create the fitting equation.  We tell the contribution to
-    # use the 'debye' function defined above. The 'registerFunction' method
+    # We now need to create the fitting equation.  We tell the FitContribution
+    # to use the 'debye' function defined above. The 'registerFunction' method
     # will let us do this. Since we haven't told it otherwise,
     # 'registerFunction' will extract the name of the function ('debye') and
     # the names of the arguments ('T', 'm', 'thetaD'). These arguments will
-    # become Parameters of the Contribution. (Note that we could have given it
-    # other names.) Since we named the x-variable 'T' above, the 'T' in the
-    # 'debye' equation will refer to this x-variable when it gets called.
+    # become Parameters of the FitContribution. Since we named the x-variable
+    # 'T' above, the 'T' in the 'debye' equation will refer to this x-variable
+    # when it gets called.
     contribution.registerFunction(debye)
 
     # Now we can create the fitting equation. We want to extend the 'debye'
@@ -167,51 +165,49 @@ def makeModel():
     # we do here is easier. 
     #
     # When we set the fitting equation, we do not need to specify the
-    # Parameters to the 'debye' function since the Contribution already knows
-    # what they are. However, if we specify the arguments, we can make
+    # Parameters to the 'debye' function since the FitContribution already
+    # knows what they are. If we choose to specify the arguments, we can make
     # adjustments to their input values.  We wish to have the thetaD value in
     # the debye equation to be positive, so we specify the input as abs(thetaD)
     # in the equation below.  Furthermore, we know 'm', the mass of lead, so we
     # can specify that as well.
     contribution.setEquation("debye(T, 207.2, abs(thetaD)) + offset")
 
-    ## The FitModel
-    # The FitModel lets us define what we want to fit. It is where we can
+    ## The FitRecipe
+    # The FitRecipe lets us define what we want to fit. It is where we can
     # create variables, constraints and restraints. If we had multiple profiles
     # to fit simultaneously, the contribution from each could be added to the
-    # model.
-    model = FitModel()
-    model.addContribution(contribution)
+    # recipe.
+    recipe = FitRecipe()
+    recipe.addContribution(contribution)
 
     # Specify which Parameters we want to refine.
-    model.addVar(contribution.offset, 0)
+    recipe.addVar(contribution.offset, 0)
     # We also vary the Debye temperature.
-    model.addVar(contribution.thetaD, 100)
+    recipe.addVar(contribution.thetaD, 100)
 
-    # We would like to 'suggest' to the model that the offset should remain
-    # positive. We will do this with a soft contraint, or restraint. Here we
-    # restrain the offset variable to between 0 and infinity. We tell the model
-    # that we want to scale the penalty for breaking the restraint by the
-    # point-average chi^2 value so that the restraint is significant throughout
-    # the fit.
-    model.restrain(model.offset, 0, numpy.inf, scaled = True)
+    # We would like to 'suggest' that the offset should remain positive. We
+    # will do this with a soft contraint, or restraint. Here we restrain the
+    # offset variable to between 0 and infinity. We tell the recipe that we
+    # want to scale the penalty for breaking the restraint by the point-average
+    # chi^2 value so that the restraint is significant throughout the fit.
+    recipe.restrain(recipe.offset, 0, numpy.inf, scaled = True)
 
-    # Return the  model. See the scipyOptimize and parkOptimize functions to
-    # see how it is used.
-    return model
+    # We're done setting up the recipe. We can now do other things with it.
+    return recipe
 
-def plotResults(model):
-    """Plot the results contained within a refined FitModel."""
+def plotResults(recipe):
+    """Plot the results contained within a refined FitRecipe."""
 
-    offset, tvar = model.getValues()
+    offset, tvar = recipe.getValues()
 
     # Plot this.
     # Note that since the contribution was given the name "pb", it is
-    # accessible from the model with this name. This is a useful way to
+    # accessible from the recipe with this name. This is a useful way to
     # organize multiple contributions to a fit.
-    T = model.pb.profile.x
-    U = model.pb.profile.y
-    Ucalc = model.pb.profile.ycalc
+    T = recipe.pb.profile.x
+    U = recipe.pb.profile.y
+    Ucalc = recipe.pb.profile.ycalc
 
     import pylab
     pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")
@@ -227,20 +223,20 @@ def plotResults(model):
 
 if __name__ == "__main__":
 
-    # Create the model
-    model = makeModel()
+    # Create the recipe
+    recipe = makeRecipe()
 
     # Refine using the optimizer of your choice
-    scipyOptimize(model)
-    #parkOptimize(model)
+    scipyOptimize(recipe)
+    #parkOptimize(recipe)
 
     # Get the results.
-    res = FitResults(model)
+    res = FitResults(recipe)
 
     # Print the results
     res.printResults()
 
     # Plot the results
-    plotResults(model)
+    plotResults(recipe)
 
 # End of file

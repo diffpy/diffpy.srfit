@@ -16,7 +16,7 @@
 
 Profile holds the arrays representing an observed profile, a selected subset of
 the observed profile and a calculated profile. Profiles are used by Calculators
-to store a calculated signal, and by Contributions to help calculate a residual
+to store a calculated signal, and by FitContributions to help calculate a residual
 equation.
 
 """

@@ -14,7 +14,7 @@
 ########################################################################
 """The FitResults and ContributionResults classes for storing results of a fit.
 
-The FitResults class is used to display the current state of a FitModel. It
+The FitResults class is used to display the current state of a FitRecipe. It
 stores the state, and uses it to calculate useful statistics, which can be
 displayed on screen or saved to file.
 
@@ -28,41 +28,41 @@ class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 
     Attributes
-    model       --  The model containing the results.
-    cov         --  The covariance matrix from the model.
-    conresults  --  A dictionary of ContributionResults for each contribution,
-                    indexed by the contribution name.
-    varnames    --  Names of the variables in the model.
-    varvals     --  Values of the variables in the model.
+    recipe       --  The recipe containing the results.
+    cov         --  The covariance matrix from the recipe.
+    conresults  --  A dictionary of ContributionResults for each fitcontribution,
+                    indexed by the fitcontribution name.
+    varnames    --  Names of the variables in the recipe.
+    varvals     --  Values of the variables in the recipe.
     varunc      --  Uncertainties in the variable values.
     showcon     --  Show constraint values in the output (default False).
     connames    --  Names of the constrained parameters.
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
-    residual    --  The scalar residual of the model.
+    residual    --  The scalar residual of the recipe.
     penalty     --  The penalty to residual from the restraints.
-    chi2        --  The chi2 of the model.
-    rchi2       --  The reduced chi2 of the model.
-    rw          --  The Rw of the model.
+    chi2        --  The chi2 of the recipe.
+    rchi2       --  The reduced chi2 of the recipe.
+    rw          --  The Rw of the recipe.
     messages    --  A list of messages about the results.
     _dcon       --  The derivatives of the constraint equations with respect to
                     the variables. This is used internally.
 
-    Each of these attributes, except the model, are created or updated when the
+    Each of these attributes, except the recipe, are created or updated when the
     update method is called.
 
     """
 
-    def __init__(self, model, update = True, showcon = False):
+    def __init__(self, recipe, update = True, showcon = False):
         """Initialize the attributes.
 
-        model   --  The model containing the results
+        recipe   --  The recipe containing the results
         update  --  Flag indicating whether to do an immediate update (default
                     True).
         showcon --  Show constraint values in the output (default False).
         
         """
-        self.model = model
+        self.recipe = recipe
         self.conresults = {}
         self.varnames = []
         self.varvals = []
@@ -86,26 +86,26 @@ class FitResults(object):
         return
 
     def update(self):
-        """Update the results according to the current state of the model."""
+        """Update the results according to the current state of the recipe."""
         ## Note that the order of these operations are chosen to reduce
         ## computation time.
 
-        model = self.model
+        recipe = self.recipe
 
-        if not model._organizers:
+        if not recipe._organizers:
             return
 
         # Make sure everything is ready for calculation
-        if model._doprepare:
-            model._prepare()
+        if recipe._doprepare:
+            recipe._prepare()
 
         # Store the variable names and values
-        self.varnames = model.getNames()
-        self.varvals = model.getValues()
+        self.varnames = recipe.getNames()
+        self.varvals = recipe.getValues()
 
         # Store the constraint information
-        self.connames = [con.par.name for con in model._constraintlist]
-        self.convals = [con.par.getValue() for con in model._constraintlist]
+        self.connames = [con.par.name for con in recipe._constraintlist]
+        self.convals = [con.par.getValue() for con in recipe._constraintlist]
 
         # Calculate the covariance
         self._calculateCovariance()
@@ -116,19 +116,19 @@ class FitResults(object):
         # Get the constraint uncertainties
         self._calculateConstraintUncertainties()
 
-        # Store the fitting arrays and metrics for each contribution.
+        # Store the fitting arrays and metrics for each fitcontribution.
         self.conresults = {}
-        for con, weight in zip(model._organizers, model._weights):
+        for con, weight in zip(recipe._organizers, recipe._weights):
             self.conresults[con.name] = ContributionResults(con, weight, self)
 
         # Calculate the metrics
-        res = model.residual()
+        res = recipe.residual()
         self.residual = numpy.dot(res, res)
         self._calculateMetrics()
 
         # Calcualte the restraints penalty
         w = self.chi2 / len(res)
-        self.penalty = sum([res.penalty(w) for res in model._restraintlist])
+        self.penalty = sum([res.penalty(w) for res in recipe._restraintlist])
 
         return
 
@@ -162,7 +162,7 @@ class FitResults(object):
         portion of variable value. E.g. step = dv/v.
 
         """
-        model = self.model
+        recipe = self.recipe
 
         # Make sure the input vector is an array
         pvals = numpy.asarray(self.varvals)
@@ -180,18 +180,18 @@ class FitResults(object):
         for k,v in enumerate(pvals):
             h = delta[k]
             pvals[k] = v + h
-            rk = self.model.residual(pvals)
+            rk = self.recipe.residual(pvals)
 
             # The constraints derivatives
             cond = []
-            for con in model._constraintlist:
+            for con in recipe._constraintlist:
                 con.update()
                 cond.append(con.par.getValue())
 
             pvals[k] = v - h
-            rk -= self.model.residual(pvals)
+            rk -= self.recipe.residual(pvals)
 
-            for i, con in enumerate(model._constraintlist):
+            for i, con in enumerate(recipe._constraintlist):
                 con.update()
                 cond[i] -= con.par.getValue()
                 cond[i] /= 2*h
@@ -202,7 +202,7 @@ class FitResults(object):
             r.append(rk/(2*h))
             
         # Reset the constrained parameters to their original values
-        for con in model._constraintlist:
+        for con in recipe._constraintlist:
             con.update()
 
         self._dcon = numpy.vstack(conr).T
@@ -211,7 +211,7 @@ class FitResults(object):
         return numpy.vstack(r).T
 
     def _calculateMetrics(self):
-        """Calculate chi2, rchi2 and Rw for the model."""
+        """Calculate chi2, rchi2 and Rw for the recipe."""
         chi2 = 0
         rw = 0
         numpoints = 0
@@ -220,7 +220,7 @@ class FitResults(object):
             rw += con.weight * con.rw
             numpoints += len(con.x)
 
-        numpoints += len(self.model._restraintlist)
+        numpoints += len(self.recipe._restraintlist)
 
         rchi2 = chi2 / (numpoints - len(self.varnames))
 
@@ -294,19 +294,19 @@ class FitResults(object):
         lines.append("-"*79)
         formatstr = "%-14s %-12.8f"
         lines.append(formatstr%("Residual",self.residual))
-        lines.append(formatstr%("Contributions", self.residual - self.penalty))
+        lines.append(formatstr%("FitContributions", self.residual - self.penalty))
         lines.append(formatstr%("Restraints", self.penalty))
         lines.append(formatstr%("Chi2",self.chi2))
         lines.append(formatstr%("Reduced Chi2",self.rchi2))
         lines.append(formatstr%("Rw",self.rw))
 
-        ## Per-contribution results
+        ## Per-fitcontribution results
         if len(self.conresults) > 1:
             keys = self.conresults.keys()
             numericStringSort(keys)
 
             lines.append("")
-            l = "Contributions"
+            l = "FitContributions"
             if not certain:
                 l += " (Chi2 and Reduced Chi2 invalid)"
             lines.append(l)
@@ -451,25 +451,25 @@ class FitResults(object):
 # End class FitResults
 
 class ContributionResults(object):
-    """Class for processing, storing contribution results.
+    """Class for processing, storing fitcontribution results.
 
-    This does not store the contribution.
+    This does not store the fitcontribution.
     
     Attributes
-    y       --  The contribution's profile over the calculation range (default
+    y       --  The fitcontribution's profile over the calculation range (default
                 None).
-    dy      --  The uncertainty in the contribution's profile over the
+    dy      --  The uncertainty in the fitcontribution's profile over the
                 calculation range (default None).
     x       --  A numpy array of the calculated independent variable for the
-                contribution (default None).
-    ycalc   --  A numpy array of the calculated signal for the contribution
+                fitcontribution (default None).
+    ycalc   --  A numpy array of the calculated signal for the fitcontribution
                 (default None).
-    residual    --  The scalar residual of the contribution.
-    chi2        --  The chi2 of the contribution.
-    rw          --  The Rw of the contribution.
-    weight      --  The weight of the contribution in the model.
+    residual    --  The scalar residual of the fitcontribution.
+    chi2        --  The chi2 of the fitcontribution.
+    rw          --  The Rw of the fitcontribution.
+    weight      --  The weight of the fitcontribution in the recipe.
     conlocs     --  The location of the constrained parameters in the
-                    contribution (see the ModelOrganizer._locateChild method).
+                    fitcontribution (see the RecipeOrganizer._locateChild method).
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
 
@@ -478,8 +478,8 @@ class ContributionResults(object):
     def __init__(self, con, weight, fitres):
         """Initialize the attributes.
 
-        con     --  The contribution
-        weight  --  The weight of the contribution in the model
+        con     --  The fitcontribution
+        weight  --  The weight of the fitcontribution in the recipe
         fitres  --  The FitResults instance to contain this ContributionResults
         
         """
@@ -505,7 +505,7 @@ class ContributionResults(object):
         if con.profile is None:
             return
 
-        model = fitres.model
+        recipe = fitres.recipe
 
         # Store the weight
         self.weight = weight
@@ -524,7 +524,7 @@ class ContributionResults(object):
         self._calculateMetrics()
 
         # Find the parameters
-        for i, constraint in enumerate(model._constraintlist):
+        for i, constraint in enumerate(recipe._constraintlist):
             par = constraint.par
             loc = con._locateChild(par)
             if loc:
@@ -535,7 +535,7 @@ class ContributionResults(object):
         return
 
     def _calculateMetrics(self):
-        """Calculte chi2 and Rw of the model."""
+        """Calculte chi2 and Rw of the recipe."""
         # We take absolute values in case the signal is complex
         num = numpy.abs(self.y - self.ycalc)
         y = numpy.abs(self.y)

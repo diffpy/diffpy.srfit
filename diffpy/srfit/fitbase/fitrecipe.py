@@ -12,17 +12,17 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""FitModel class. 
+"""FitRecipe class. 
 
-FitModels organize Contributions, Parameters, Restraints and Constraints to
-create a model of the system you wish to optimize. From the client's
-perspective, the FitModel is a residual calculator. The residual method does
+FitRecipes organize FitContributions, Parameters, Restraints and Constraints to
+create a recipe of the system you wish to optimize. From the client's
+perspective, the FitRecipe is a residual calculator. The residual method does
 the work of updating variable values, which get propagated to the Parameters of
-the underlying Contributions via the varibles, Restraints and Constraints. As a
+the underlying FitContributions via the varibles, Restraints and Constraints. As a
 result, this class can be used without subclassing.
 
 See the examples in the documentation for how to create an optimization problem
-using FitModel.
+using FitRecipe.
 
 """
 
@@ -30,16 +30,16 @@ from numpy import concatenate, sqrt, inf, dot
 from functools import update_wrapper
 
 from .parameter import Parameter, ParameterProxy
-from .modelorganizer import ModelOrganizer
+from .recipeorganizer import RecipeOrganizer
 from .fithook import FitHook
 
-class FitModel(ModelOrganizer):
-    """FitModel class.
+class FitRecipe(RecipeOrganizer):
+    """FitRecipe class.
 
     Attributes
     clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and Contributions.
-    name            --  A name for this FitModel.
+                        Parameters and FitContributions.
+    name            --  A name for this FitRecipe.
     fithook         --  An object to be called whenever within the residual
                         (default FitHook()).
     _constraintlist --  An ordered list of the constraints from this and all
@@ -53,25 +53,25 @@ class FitModel(ModelOrganizer):
                         instance that is used to create constraints and
                         restraints from strings.
     _fixed          --  A list of Parameters that are fixed, but still managed
-                        by the FitModel.
-    _organizers     --  A list of Contributions to the model. Modified by the
+                        by the FitRecipe.
+    _organizers     --  A list of FitContributions to the recipe. Modified by the
                         addContribution method.
     _orgdict        --  A dictionary containing the Parameters and
-                        Contributions indexed by name.
+                        FitContributions indexed by name.
     _parameters     --  A list of variable Parameters.
     _restraintlist  --  A list of restraints from this and all sub-components.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
     _tagdict        --  A dictionary of tags to variables.
-    _weights        --  The weighing factor for each contribution. This value
-                        is multiplied by the residual of the contribution when
+    _weights        --  The weighing factor for each fitcontribution. This value
+                        is multiplied by the residual of the fitcontribution when
                         determining the overall residual.
 
     """
 
     def __init__(self, name = "fit"):
         """Initialization."""
-        ModelOrganizer.__init__(self, name)
+        RecipeOrganizer.__init__(self, name)
         self.fithook = FitHook()
         self._constraintlist = []
         self._restraintlist = []
@@ -87,10 +87,10 @@ class FitModel(ModelOrganizer):
         The hook is an object for reportind updates, or doing whatever else. It
         must have 'precall' and 'postcall' methods, which are called at the
         start and at the end of the residual calculation. The precall method
-        must accept a single argument, which is this FitModel object. The
-        postcall method must accept the model and the chiv, vector residual.
+        must accept a single argument, which is this FitRecipe object. The
+        postcall method must accept the recipe and the chiv, vector residual.
         It must also have a reset method that takes no arguments, which is
-        called whenver the FitModel is prepared for a refinement.
+        called whenver the FitRecipe is prepared for a refinement.
 
         See the FitHook class for the interface.
 
@@ -100,14 +100,14 @@ class FitModel(ModelOrganizer):
         return
 
     def addContribution(self, con, weight = 1.0):
-        """Add a contribution to the FitModel."""
+        """Add a fitcontribution to the FitRecipe."""
         self._addOrganizer(con, check=True)
         self._weights.append(weight)
         self._doprepare = True
         return
 
     def setWeight(self, con, weight):
-        """Set the weight of a contribution."""
+        """Set the weight of a fitcontribution."""
         idx = self._organizers.index(con)
         self._weights[idx] = weight
         return
@@ -123,7 +123,7 @@ class FitModel(ModelOrganizer):
                 function is skipped.
 
         The residual is by default the weighted concatenation of each 
-        contribution's residual, plus the value of each restraint. The array
+        fitcontribution's residual, plus the value of each restraint. The array
         returned, denoted chiv, is such that 
         dot(chiv, chiv) = chi^2 + restraints.
 
@@ -183,7 +183,7 @@ class FitModel(ModelOrganizer):
 
         Raises AttributeError if there are variables without a value.
         Raises AttributeError if there are multiple constraints on the same
-        parameter defined in different places within the model hierarchy.
+        parameter defined in different places within the recipe hierarchy.
 
         """
         # Inform the fit hook that we're updating things
@@ -212,7 +212,7 @@ class FitModel(ModelOrganizer):
         # Update constraints and restraints. 
         rset = set(self._restraints)
         cdict = {}
-        # We let constraints closer to the FitModel override all others.
+        # We let constraints closer to the FitRecipe override all others.
         # Constraints on the same parameter in different organizers cannot be
         # resolved without some guesswork, so throw an error instead.
         for con in self._organizers:
@@ -289,7 +289,7 @@ class FitModel(ModelOrganizer):
         Returns the variable (ParameterProxy instance).
 
         Raises ValueError if the name of the variable is already taken by
-        another variable or a contribution.
+        another variable or a fitcontribution.
         Raises ValueError if par is constant.
 
         """
@@ -328,9 +328,9 @@ class FitModel(ModelOrganizer):
     def delVar(self, var):
         """Remove a variable.
 
-        var     --  A variable of the FitModel.
+        var     --  A variable of the FitRecipe.
 
-        Raises ValueError if var is not part of the FitModel.
+        Raises ValueError if var is not part of the FitRecipe.
 
         """
         if var in self._parameters:
@@ -338,7 +338,7 @@ class FitModel(ModelOrganizer):
         elif var in self._fixed:
             self._fixed.remove(var)
         else:
-            raise ValueError("'%s' is not part of the FitModel"%var)
+            raise ValueError("'%s' is not part of the FitRecipe"%var)
 
         # De-register the Parameter with the equation factory
         self._eqfactory.deRegisterBuilder(var.name)
@@ -391,11 +391,11 @@ class FitModel(ModelOrganizer):
     def fixVar(self, var, value = None):
         """Fix a variable so that it doesn't change.
 
-        var     --  A variable of the FitModel.
+        var     --  A variable of the FitRecipe.
         value   --  A new value for the variable. If this is None
                     (default), then the value will not be changed.
 
-        Raises ValueError if var is not part of the FitModel.
+        Raises ValueError if var is not part of the FitRecipe.
         
         """
         if var in self._parameters:
@@ -404,7 +404,7 @@ class FitModel(ModelOrganizer):
         elif var in self._fixed:
             pass
         else:
-            raise ValueError("'%s' is not part of the FitModel"%var)
+            raise ValueError("'%s' is not part of the FitRecipe"%var)
 
         if value is not None:
             var.setValue(value)
@@ -416,13 +416,13 @@ class FitModel(ModelOrganizer):
 
         Variables are free by default.
 
-        var     --  A variable of the FitModel.
+        var     --  A variable of the FitRecipe.
         value   --  A new value for the variable. If this is None
                     (default), then the value will not be changed.
 
         This will disturb the order of the variables.
 
-        Raises ValueError if var is not part of the FitModel.
+        Raises ValueError if var is not part of the FitRecipe.
         
         """
         if var in self._parameters:
@@ -431,7 +431,7 @@ class FitModel(ModelOrganizer):
             self._fixed.remove(var)
             self._parameters.append(var)
         else:
-            raise ValueError("'%s' is not part of the FitModel"%var)
+            raise ValueError("'%s' is not part of the FitRecipe"%var)
 
         if value is not None:
             var.setValue(value)
@@ -508,18 +508,18 @@ class FitModel(ModelOrganizer):
                     parameter to constrain to.  A constraint equation must
                     consist of numpy operators and "known" Parameters.
                     Parameters are known if they are in the ns argument, or if
-                    they have been added to this FitModel with the 'add' or
+                    they have been added to this FitRecipe with the 'add' or
                     'new' methods.
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel (default {}).
+                    in the eqstr, but not part of the FitRecipe (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitModel and that is not defined in ns.
+        the FitRecipe and that is not defined in ns.
 
         """
-        ModelOrganizer.constrain(self, par, con, ns)
+        RecipeOrganizer.constrain(self, par, con, ns)
         self._doprepare = True
         return
 
@@ -532,7 +532,7 @@ class FitModel(ModelOrganizer):
         constraints.
 
         """
-        ModelOrganizer.unconstrain(self, par)
+        RecipeOrganizer.unconstrain(self, par)
         self._doprepare = True
         return
 
@@ -550,7 +550,7 @@ class FitModel(ModelOrganizer):
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False).
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel 
+                    in the eqstr, but not part of the FitRecipe 
                     (default {}).
 
         The penalty is calculated as 
@@ -561,12 +561,12 @@ class FitModel(ModelOrganizer):
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitModel and that is not defined in ns.
+        the FitRecipe and that is not defined in ns.
 
         Returns the Restraint selfect for use with the 'unrestrain' method.
 
         """
-        res = ModelOrganizer.restrain(self, res, lb, ub, prefactor, power,
+        res = RecipeOrganizer.restrain(self, res, lb, ub, prefactor, power,
                 scaled, ns)
         self._doprepare = True
         return res
@@ -578,7 +578,7 @@ class FitModel(ModelOrganizer):
         lb      --  The lower bound on the restraint evaluation (default -inf).
         ub      --  The lower bound on the restraint evaluation (default inf).
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel 
+                    in the eqstr, but not part of the FitRecipe 
                     (default {}).
 
         The penalty is infinite if the value of the calculated equation is
@@ -587,22 +587,22 @@ class FitModel(ModelOrganizer):
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitModel and that is not defined in ns.
+        the FitRecipe and that is not defined in ns.
 
         Returns the BoundsRestraint object for use with the 'unrestrain' method.
 
         """
-        res = ModelOrganizer.confine(self, res, lb, ub, ns)
+        res = RecipeOrganizer.confine(self, res, lb, ub, ns)
         self._doprepare = True
         return res
 
     def unrestrain(self, res):
-        """Remove a restraint from the FitModel.
+        """Remove a restraint from the FitRecipe.
         
         res     --  A Restraint returned from the 'restrain' method.
 
         """
-        ModelOrganizer.unrestrain(self, res)
+        RecipeOrganizer.unrestrain(self, res)
         self._doprepare = True
         return
 

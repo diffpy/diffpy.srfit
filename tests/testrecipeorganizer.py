@@ -3,8 +3,8 @@
 
 import unittest
 
-from diffpy.srfit.fitbase.modelorganizer import ModelOrganizer
-from diffpy.srfit.fitbase.modelorganizer import equationFromString
+from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.equation.builder import EquationFactory
 
@@ -58,10 +58,10 @@ class TestEquationFromString(unittest.TestCase):
         return
 
 
-class TestModelOrganizer(unittest.TestCase):
+class TestRecipeOrganizer(unittest.TestCase):
 
     def setUp(self):
-        self.m = ModelOrganizer("test")
+        self.m = RecipeOrganizer("test")
         return
 
     def testAddParameter(self):
@@ -81,7 +81,7 @@ class TestModelOrganizer(unittest.TestCase):
 
     def testAddOrganizer(self):
         """Test the AddOrganizer method."""
-        m2 = ModelOrganizer("m2")
+        m2 = RecipeOrganizer("m2")
         p1 = Parameter("m2", 1)
 
         self.m._addOrganizer(m2)
@@ -98,7 +98,7 @@ class TestModelOrganizer(unittest.TestCase):
 
     def testClickers(self):
         """Test make sure that objects are observed by the organizer."""
-        m2 = ModelOrganizer("m2")
+        m2 = RecipeOrganizer("m2")
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 1)
         m2._addParameter(p1)
@@ -181,7 +181,7 @@ class TestModelOrganizer(unittest.TestCase):
 
     def testGetConstraints(self):
         """Test the _getConstraints method."""
-        m2 = ModelOrganizer("m2")
+        m2 = RecipeOrganizer("m2")
         self.m._addOrganizer(m2)
 
         p1 = Parameter("p1", 1)
@@ -206,7 +206,7 @@ class TestModelOrganizer(unittest.TestCase):
 
     def testGetRestraints(self):
         """Test the _getRestraints method."""
-        m2 = ModelOrganizer("m2")
+        m2 = RecipeOrganizer("m2")
         self.m._addOrganizer(m2)
 
         p1 = Parameter("p1", 1)
@@ -235,7 +235,7 @@ class TestModelOrganizer(unittest.TestCase):
         p1 = Parameter("p1", 1)
         m1._addParameter(p1)
 
-        m2 = ModelOrganizer("m2")
+        m2 = RecipeOrganizer("m2")
         p2 = Parameter("p2", 2)
         m2._addParameter(p2)
 

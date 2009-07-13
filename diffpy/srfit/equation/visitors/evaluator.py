@@ -30,8 +30,8 @@ For example
 > equation.identify(evaluator)
 > value = evaluator.value
 > # Do something with value ...
-> # Click evaluator clicker
-> evaluator.clicker.click()
+> # Click evaluator
+> evaluator.click()
 
 Evaluator does not check of the validity of the expression. See the Validator
 visitor for that.

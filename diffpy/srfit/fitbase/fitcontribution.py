@@ -12,13 +12,13 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Contribution class. 
+"""FitContribution class. 
 
-Contributions are generate a residual function for a FitModel. A Contribution
+FitContributions are generate a residual function for a FitRecipe. A FitContribution
 associates an Equation for generating a signal, optionally a Calculator that
 helps in this, and a Profile that holds the observed and calculated signals.  
 
-See the examples in the documention for how to use a Contribution.
+See the examples in the documention for how to use a FitContribution.
 
 """
 
@@ -27,7 +27,7 @@ from numpy import concatenate, sqrt, inf, dot
 from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
 
-from .modelorganizer import ModelOrganizer, equationFromString
+from .recipeorganizer import RecipeOrganizer, equationFromString
 
 # FIXME - Adding parameters to the EquationFactory does not update existing
 # equations. This is an issue when one might register a function before data is
@@ -35,17 +35,17 @@ from .modelorganizer import ModelOrganizer, equationFromString
 # use parameters that are loaded after its creation.
 
 
-class Contribution(ModelOrganizer):
-    """Contribution class.
+class FitContribution(RecipeOrganizer):
+    """FitContribution class.
 
-    Contributions organize an Equation that calculates the signal, and a
+    FitContributions organize an Equation that calculates the signal, and a
     Profile that holds the signal. A Calculator can be used as well.
-    Contraints and Restraints can be created as part of a Contribution.
+    Contraints and Restraints can be created as part of a FitContribution.
 
     Attributes
     clicker         --  A Clicker instance for recording changes in the
                         Parameters or the residual components.
-    name            --  A name for this Contribution.
+    name            --  A name for this FitContribution.
     calculator      --  A Calculator instance for generating a signal
                         (optional). If a calculator is not defined, the equation
                         to refine must be set with the setEquation method.
@@ -55,7 +55,7 @@ class Contribution(ModelOrganizer):
                         Parameter. Constraints can be added using the
                         'constrain' method.
 
-    _eq             --  The Contribution equation that will be optimized.
+    _eq             --  The FitContribution equation that will be optimized.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from strings.
@@ -73,7 +73,7 @@ class Contribution(ModelOrganizer):
 
     def __init__(self, name):
         """Initialization."""
-        ModelOrganizer.__init__(self, name)
+        RecipeOrganizer.__init__(self, name)
         self._eq = None
         self._reseq = None
         self.profile = None
@@ -85,12 +85,12 @@ class Contribution(ModelOrganizer):
         return
     
     # Make some methods public that were protected
-    addParameter = ModelOrganizer._addParameter
-    newParameter = ModelOrganizer._newParameter
-    removeParameter = ModelOrganizer._removeParameter
+    addParameter = RecipeOrganizer._addParameter
+    newParameter = RecipeOrganizer._newParameter
+    removeParameter = RecipeOrganizer._removeParameter
 
     def setProfile(self, profile, xname = None, yname = None, dyname = None):
-        """Assign the profile for this contribution.
+        """Assign the profile for this fitcontribution.
 
         This resets the current residual (see setResidualEquation).
         
@@ -149,11 +149,11 @@ class Contribution(ModelOrganizer):
         return
 
     def setCalculator(self, calc, name = None):
-        """Set the Calculator to be used by this Contribution.
+        """Set the Calculator to be used by this FitContribution.
 
         The Calculator is given a name so that it can be used as part of the
         profile equation (see setEquation). This can be different from the name
-        of the Calculator used for attribute access. Each contribution should
+        of the Calculator used for attribute access. Each fitcontribution should
         have its own calculator instance. Those calculators can share
         Parameters and ParameterSets, however.
         
@@ -170,7 +170,7 @@ class Contribution(ModelOrganizer):
         if name is None:
             name = calc.name
 
-        # Let the ModelOrganizer structure know of the calculator
+        # Let the RecipeOrganizer structure know of the calculator
         self._addOrganizer(calc)
 
         # Register the calculator with the equation factory
@@ -185,10 +185,10 @@ class Contribution(ModelOrganizer):
         return
 
     def setEquation(self, eqstr, makepars = True, ns = {}):
-        """Set the profile equation for the Contribution.
+        """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual
-        for this Contribution.  The equation will be usable within
+        for this FitContribution.  The equation will be usable within
         setResidualEquation as "eq", and it takes no arguments.  Calling
         setEquation resets the residual equation.
 
@@ -202,12 +202,12 @@ class Contribution(ModelOrganizer):
                     ValueError will be raised if there are undefined arguments
                     in the eqstr. 
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel (default {}).
+                    in the eqstr, but not part of the FitRecipe (default {}).
         
         Raises ValueError if ns uses a name that is already used for a
         variable.
         Raises ValueError if makepars is false and eqstr depends on a Parameter
-        that is not in ns or part of the Contribution.
+        that is not in ns or part of the FitContribution.
 
         """
         self._eq = self.registerStringFunction(eqstr, "eq", makepars, ns)
@@ -218,7 +218,7 @@ class Contribution(ModelOrganizer):
         return
 
     def setResidualEquation(self, eqstr = None):
-        """Set the residual equation for the Contribution.
+        """Set the residual equation for the FitContribution.
 
         eqstr   --  A string representation of the residual. If eqstr is None
                     (default), then the chi2 residual will be used.
@@ -233,7 +233,7 @@ class Contribution(ModelOrganizer):
 
         Raises AttributeError if the Profile is not yet defined.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the Contribution.
+        the FitContribution.
 
         """
         if self.profile is None:
@@ -257,11 +257,11 @@ class Contribution(ModelOrganizer):
         return
 
     def residual(self):
-        """Calculate the residual for this contribution.
+        """Calculate the residual for this fitcontribution.
 
         When this method is called, it is assumed that all parameters have been
-        assigned their most current values by the FitModel. This will be the
-        case when being called as part of a FitModel refinement.
+        assigned their most current values by the FitRecipe. This will be the
+        case when being called as part of a FitRecipe refinement.
 
         The residual is by default an array chiv:
         chiv = (eq() - self.profile.y) / self.profile.dy

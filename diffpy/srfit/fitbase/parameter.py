@@ -23,7 +23,7 @@ ParameterProxy      --  A proxy for another Parameter, but with a different
 
 """
 # FIXME - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
-# can have more fine control over the construction of FitModels.
+# can have more fine control over the construction of FitRecipes.
 # FIXME - Add tags to parameters so they can be easily retrieved.
 # FIXME - Consider scaling parameters to avoid precision issues in optimizers.
 
@@ -36,7 +36,7 @@ class Parameter(Argument):
     
     Attributes
     name    --  A name for this Parameter. Names should be unique within a
-                ModelOrganizer and should be valid attribute names.
+                RecipeOrganizer and should be valid attribute names.
     clicker --  A Clicker instance for recording change in the value.
     value   --  The value of the Parameter. Modified with setValue.
     const   --  A flag indicating whether the Parameter is constant. A constant
@@ -92,7 +92,7 @@ class ParameterProxy(object):
 
     Attributes
     name    --  A name for this ParameterProxy. Names should be unique within a
-                ModelOrganizer and should be valid attribute names.
+                RecipeOrganizer and should be valid attribute names.
     par     --  The Parameter this is a proxy for.
 
     """

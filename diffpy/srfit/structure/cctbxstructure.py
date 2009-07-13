@@ -2,7 +2,7 @@
 """Wrappers for interfacing cctbx crystal with SrFit.
 
 This wraps a cctbx.crystal as a ParameterSet with a similar hierarchy, which
-can then be used within a FitModel. Note that all manipulations to the
+can then be used within a FitRecipe. Note that all manipulations to the
 cctbx.crystal should be done before wrapping. Changes made to the cctbx.crystal
 object after wrapping may not be reflected within the wrapper, which can have
 unpredictable results during a structure refinement.

@@ -5,16 +5,16 @@ import unittest
 
 from numpy import linspace, array_equal, pi, sin, dot
 
-from diffpy.srfit.fitbase.fitmodel import FitModel
-from diffpy.srfit.fitbase.contribution import Contribution
+from diffpy.srfit.fitbase.fitrecipe import FitRecipe
+from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
 
-class TestFitModel(unittest.TestCase):
+class TestFitRecipe(unittest.TestCase):
 
     def setUp(self):
-        self.model = FitModel("model")
-        self.model.fithook.verbose = 0
+        self.recipe = FitRecipe("recipe")
+        self.recipe.fithook.verbose = 0
 
         # Set up the Profile
         self.profile = Profile()
@@ -22,57 +22,57 @@ class TestFitModel(unittest.TestCase):
         y = sin(x)
         self.profile.setObservedProfile(x, y)
 
-        # Set up the Contribution
-        self.contribution = Contribution("cont")
-        self.contribution.setProfile(self.profile)
-        self.contribution.setEquation("A*sin(k*x + c)")
-        self.contribution.A.setValue(1)
-        self.contribution.k.setValue(1)
-        self.contribution.c.setValue(0)
+        # Set up the FitContribution
+        self.fitcontribution = FitContribution("cont")
+        self.fitcontribution.setProfile(self.profile)
+        self.fitcontribution.setEquation("A*sin(k*x + c)")
+        self.fitcontribution.A.setValue(1)
+        self.fitcontribution.k.setValue(1)
+        self.fitcontribution.c.setValue(0)
 
-        self.model.addContribution(self.contribution)
+        self.recipe.addContribution(self.fitcontribution)
         return
 
     def testVars(self):
         """Test to see if variables are added and removed properly."""
-        model = self.model
-        con = self.contribution
+        recipe = self.recipe
+        con = self.fitcontribution
 
-        model.addVar(con.A, 2)
-        model.addVar(con.k, 1)
-        model.addVar(con.c, 0)
+        recipe.addVar(con.A, 2)
+        recipe.addVar(con.k, 1)
+        recipe.addVar(con.c, 0)
 
-        names = model.getNames()
+        names = recipe.getNames()
         self.assertEquals(names, ["A", "k", "c"])
-        values = model.getValues()
+        values = recipe.getValues()
         self.assertEquals(values, [2, 1, 0])
 
-        model.fixVar(model.k)
+        recipe.fixVar(recipe.k)
 
         # Try to fix a variable that is not there
-        self.assertRaises(ValueError, model.fixVar, "")
-        self.assertRaises(ValueError, model.fixVar, "k")
-        self.assertRaises(ValueError, model.fixVar, None)
-        self.assertRaises(ValueError, model.fixVar, con.A)
-        names = model.getNames()
+        self.assertRaises(ValueError, recipe.fixVar, "")
+        self.assertRaises(ValueError, recipe.fixVar, "k")
+        self.assertRaises(ValueError, recipe.fixVar, None)
+        self.assertRaises(ValueError, recipe.fixVar, con.A)
+        names = recipe.getNames()
         self.assertEquals(names, ["A", "c"])
-        values = model.getValues()
+        values = recipe.getValues()
         self.assertEquals(values, [2, 0])
 
-        model.fixAll()
-        names = model.getNames()
+        recipe.fixAll()
+        names = recipe.getNames()
         self.assertEquals(names, [])
-        values = model.getValues()
+        values = recipe.getValues()
         self.assertEquals(values, [])
 
         # The order is no longer valid
-        model.freeAll()
-        names = model.getNames()
+        recipe.freeAll()
+        names = recipe.getNames()
         self.assertEquals(3, len(names))
         self.assertTrue("A" in names)
         self.assertTrue("k" in names)
         self.assertTrue("c" in names)
-        values = model.getValues()
+        values = recipe.getValues()
         self.assertEquals(3, len(values))
         self.assertTrue(0 in values)
         self.assertTrue(1 in values)
@@ -83,89 +83,89 @@ class TestFitModel(unittest.TestCase):
         """Test the residual and everything that can change it."""
 
         # With thing set up as they are, the residual should be 0
-        res = self.model.residual()
+        res = self.recipe.residual()
         self.assertAlmostEquals(0, dot(res, res))
 
         # Change the c value to 1 so that the equation evaluates as sin(x+1)
         x = self.profile.x
         y = sin(x+1)
-        self.model.cont.c.setValue(1)
-        res = self.model.residual()
+        self.recipe.cont.c.setValue(1)
+        res = self.recipe.residual()
         self.assertTrue( array_equal(y-self.profile.y, res) )
 
         # Try some constraints
         # Make c = 2*A
-        self.model.addVar(self.model.cont.A)
-        self.model.constrain(self.contribution.c, "2*A")
+        self.recipe.addVar(self.recipe.cont.A)
+        self.recipe.constrain(self.fitcontribution.c, "2*A")
         # This should evaluate to sin(x+2)
         x = self.profile.x
         y = sin(x+2)
-        res = self.model.residual([self.model.cont.A.getValue()])
+        res = self.recipe.residual([self.recipe.cont.A.getValue()])
         self.assertTrue( array_equal(y-self.profile.y, res) )
 
         # Now try some restraints. We want c to be exactly zero. It should give
         # a penalty of (c-0)**2, which is 4 in this case
-        r1 = self.model.restrain(self.contribution.c, 0, 0, 1, 2)
-        res = self.model.residual([self.model.cont.A.getValue()])
+        r1 = self.recipe.restrain(self.fitcontribution.c, 0, 0, 1, 2)
+        res = self.recipe.residual([self.recipe.cont.A.getValue()])
         chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
         self.assertAlmostEqual(chi2, dot(res, res) )
 
         # Clear the constraint and restore the value of c to 0. This should
         # give us chi2 = 0 again.
-        self.model.unconstrain(self.contribution.c)
-        self.contribution.c.setValue(0)
-        res = self.model.residual([self.model.cont.A.getValue()])
+        self.recipe.unconstrain(self.fitcontribution.c)
+        self.fitcontribution.c.setValue(0)
+        res = self.recipe.residual([self.recipe.cont.A.getValue()])
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res) )
 
         # Remove the restraint and variable
-        self.model.unrestrain(r1)
-        self.model.delVar(self.model.A)
-        res = self.model.residual([])
+        self.recipe.unrestrain(r1)
+        self.recipe.delVar(self.recipe.A)
+        res = self.recipe.residual([])
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res) )
 
-        # Add constraints at the contribution level. This would normally be
-        # done before handing the contribution to a FitModel, so we must call
+        # Add constraints at the fitcontribution level. This would normally be
+        # done before handing the fitcontribution to a FitRecipe, so we must call
         # _prepare() manually.
-        self.contribution.constrain(self.contribution.c, "2*A")
-        self.model._prepare()
+        self.fitcontribution.constrain(self.fitcontribution.c, "2*A")
+        self.recipe._prepare()
         # This should evaluate to sin(x+2)
         x = self.profile.x
         y = sin(x+2)
-        res = self.model.residual([])
+        res = self.recipe.residual([])
         self.assertTrue( array_equal(y-self.profile.y, res) )
 
-        # Add a restraint at the contribution level. This would normally be
-        # done before handing the contribution to a FitModel, so we must call
+        # Add a restraint at the fitcontribution level. This would normally be
+        # done before handing the fitcontribution to a FitRecipe, so we must call
         # _prepare() manually.
-        r1 = self.contribution.restrain(self.contribution.c, 0, 0, 1, 2)
-        self.model._prepare()
+        r1 = self.fitcontribution.restrain(self.fitcontribution.c, 0, 0, 1, 2)
+        self.recipe._prepare()
         # The chi2 is the same as above, plus 4
-        res = self.model.residual([])
+        res = self.recipe.residual([])
         x = self.profile.x
         y = sin(x+2)
         chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
         self.assertAlmostEqual(chi2, dot(res, res) )
 
         # Remove those
-        self.contribution.unrestrain(r1)
-        self.contribution.unconstrain(self.contribution.c)
-        self.contribution.c.setValue(0)
-        self.model._prepare()
-        res = self.model.residual([])
+        self.fitcontribution.unrestrain(r1)
+        self.fitcontribution.unconstrain(self.fitcontribution.c)
+        self.fitcontribution.c.setValue(0)
+        self.recipe._prepare()
+        res = self.recipe.residual([])
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res) )
 
         # Now try to use the observed profile inside of the equation
         # Set the equation equal to the data
-        self.contribution.setEquation("y")
-        res = self.model.residual([])
+        self.fitcontribution.setEquation("y")
+        res = self.recipe.residual([])
         self.assertAlmostEquals(0, dot(res, res))
 
         # Now add the uncertainty. This should give dy/dy = 1 for the residual
-        self.contribution.setEquation("y+dy")
-        res = self.model.residual([])
+        self.fitcontribution.setEquation("y+dy")
+        res = self.recipe.residual([])
         self.assertAlmostEquals(len(res), dot(res, res))
 
         return

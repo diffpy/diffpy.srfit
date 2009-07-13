@@ -12,26 +12,26 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The FitHook class for inspecting the progress of a FitModel refinement.
+"""The FitHook class for inspecting the progress of a FitRecipe refinement.
 
-FitHooks are called by a FitModel during various times of the residual is
+FitHooks are called by a FitRecipe during various times of the residual is
 evaluation. The default FitHook simply counts the number of times the residual
 is called, and reports that number every time the residual is calculated.
 Depending on the verbosity, it will also report the residual and the current
 variable values.
 
-Custom FitHooks can be added to a FitModel with the FitModel.setFitHook method.
+Custom FitHooks can be added to a FitRecipe with the FitRecipe.setFitHook method.
 
 """
 
 import numpy
 
 class FitHook(object):
-    """Base class for inspecting the progress of a FitModel refinement.
+    """Base class for inspecting the progress of a FitRecipe refinement.
 
-    Can serve as a fithook for the FitModel class (see FitModel.setFitHook
+    Can serve as a fithook for the FitRecipe class (see FitRecipe.setFitHook
     method.) The methods in this class are called during the preparation of the
-    FitModel for refinement, and during the residual call. See the class
+    FitRecipe for refinement, and during the residual call. See the class
     methods for a description of their purpose.
 
     Attributes
@@ -54,15 +54,15 @@ class FitHook(object):
     def reset(self):
         """Reset the hook data.
 
-        This is called whenever FitModel._prepare is called.
+        This is called whenever FitRecipe._prepare is called.
         """
         self.count = 0
         return
 
-    def precall(self, model):
-        """This is called within FitModel.residual, before the calculation.
+    def precall(self, recipe):
+        """This is called within FitRecipe.residual, before the calculation.
 
-        model   --  The FitModel instance
+        recipe   --  The FitRecipe instance
         
         """
         self.count += 1
@@ -70,10 +70,10 @@ class FitHook(object):
             print self.count
         return
 
-    def postcall(self, model, chiv):
-        """This is called within FitModel.residual, after the calculation.
+    def postcall(self, recipe, chiv):
+        """This is called within FitRecipe.residual, after the calculation.
 
-        model   --  The FitModel instance
+        recipe   --  The FitRecipe instance
         chiv    --  The residual vector
         
         """
@@ -81,7 +81,7 @@ class FitHook(object):
             return
 
         # Get the number of restraints
-        numres = len(model._restraintlist)
+        numres = len(recipe._restraintlist)
         chi2tot = numpy.dot(chiv, chiv)
         chi2 = 0
         res = 0
@@ -93,15 +93,15 @@ class FitHook(object):
 
         print "Residual:", chi2tot
         if res:
-            print "Contributions:", chi2
+            print "FitContributions:", chi2
             print "Restraints:", res
 
         if self.verbose >= 3:
 
             print "Variables"
 
-            vnames = model.getNames()
-            vals = model.getValues()
+            vnames = recipe.getNames()
+            vals = recipe.getValues()
 
             for name, val in zip(vnames, vals):
                 print "  %s = %f" % (name, val)

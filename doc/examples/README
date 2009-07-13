@@ -1,4 +1,4 @@
-These examples are to help model builders and users create and configure
+These examples are to help recipe builders and users create and configure
 optimizations using SrFit. Read through the examples and modify them to learn
 how to use SrFit.
 
@@ -10,11 +10,11 @@ separately.
 
 Basic:
 
-* gaussianmodel.py
-    Introductory model building and configuration.
+* gaussian.py
+    Introductory recipe building and configuration.
 
 * debyemodel.py
-    Introductory model building and configuration.
+    Introductory recipe building and configuration.
 
 * debyemodelII.py
     Simultaneously optimize multiple contributions and data.
@@ -27,7 +27,7 @@ Advanced:
 
 * npintensitycalculatorII.py
     Use the calculator built in npintensitycalculator.py to simultaneously
-    refine a model to two data sets.
+    refine a recipe to two data sets.
 
 * nppdfobjcryst.py
     Create a nanoparticle PDF calculator using pyobjcryst and refine the C60

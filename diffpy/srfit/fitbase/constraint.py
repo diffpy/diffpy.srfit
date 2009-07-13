@@ -14,7 +14,7 @@
 ########################################################################
 """Constraint class. 
 
-Constraints are used by a FitModel (and other ModelOrganizers) to organize
+Constraints are used by a FitRecipe (and other RecipeOrganizers) to organize
 constraint equations. They store a Parameter object and an Equation object that
 is used to compute its value. The Constraint.constrain method is used to create
 this association.

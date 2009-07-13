@@ -12,15 +12,15 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of using Calculators in FitModels.
+"""Example of using Calculators in FitContributions.
 
-This is an example of building a Calculator and using it in a FitModel in order
-to fit theoretical intensity data.
+This is an example of building a Calculator and using it in a FitContribution
+in order to fit theoretical intensity data.
 
 The IntensityCalculator class is an example of a Calculator that can be used by
-a Contribution to help generate a signal.
+a FitContribution to help generate a signal.
 
-The makeModel function shows how to build a FitModel that uses the
+The makeRecipe function shows how to build a FitRecipe that uses the
 IntensityCalculator.
 
 """
@@ -29,20 +29,20 @@ import os
 
 import numpy
 
-from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
+from diffpy.srfit.fitbase import Calculator, FitContribution, FitRecipe, Profile
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.diffpystructure import StructureParSet
 
-from gaussianmodel import scipyOptimize, parkOptimize
+from gaussianrecipe import scipyOptimize, parkOptimize
 
 class IntensityCalculator(Calculator):
     """A class for calculating intensity using the Debye equation.
 
     Calculating intensity from a structure is difficult in general. This class
-    takes a diffpy.Structure.Structure object and from that calculates a
-    theoretical intensity signal. Unlike the example in gaussianmodel.py, the
+    takes a diffpy.Structure.Structure instance and from that calculates a
+    theoretical intensity signal. Unlike the example in gaussianrecipe.py, the
     intensity calculator is not simple, so we must define this Calculator to
-    help us interface with a FitModel.
+    help us interface with a FitRecipe.
 
     The purpose of a Calculator is to
     1) provide a function that calculates a profile signal
@@ -66,11 +66,12 @@ class IntensityCalculator(Calculator):
     def setStructure(self, strufile):
         """Set the structure used in the calculation.
 
-        This will create the refinement Parameters using the Structure adapter
-        from diffpy.srfit.structure. The created Parameters are proxies for
-        attributes of the Structure object that can be interfaced within SrFit.
-        The Parameters will be accessible by name under the 'structure'
+        This will create the refinement Parameters using the StructureParSet
+        adapter from diffpy.srfit.structure. The created Parameters are proxies
+        for attributes of the Structure instance that can be interfaced within
+        SrFit.  The Parameters will be accessible by name under the 'structure'
         attribute of this calculator, and are organized hierarchically:
+
         structure
           - lattice
           - atom1 (the name depends on the element)
@@ -88,7 +89,10 @@ class IntensityCalculator(Calculator):
           - ...
           - atomN
 
-        See the makeModel code to see how these Parameters are accessed.
+        The diffpy.Structure.Structure instance is held within the
+        StructureParSet as the stru attribute.
+
+        See the makeRecipe code to see how these Parameters are accessed.
         
         """
         # Load the structure from file
@@ -100,19 +104,24 @@ class IntensityCalculator(Calculator):
         # diffpy.Structure.Structure objects that organizes the Parameter
         # hierarchy. Note that the StructureParSet holds a handle to the loaded
         # structure that we use in the __call__ method below.
+        #
+        # We pass the diffpy.Structure.Structure instance, and give the
+        # StructureParSet the name "structure".
         parset = StructureParSet(stru, "structure")
+
         # Put this ParameterSet in the Calculator.
         self.addParameterSet(parset)
+
         return
 
     def __call__(self, q):
         """Calculate the intensity.
 
-        This Calculator will be used in a contribution equation that will be
+        This Calculator will be used in a FitContribution that will be
         optimized to fit some data.  By the time this function is evaluated,
-        the structure has been updated by the optimizer via the ParameterSet
-        defined in setStructure. Thus, we need only call iofq with the internal
-        structure object.
+        the diffpy.Structure.Structure instance has been updated by the
+        optimizer via the StructureParSet defined in setStructure. Thus, we
+        need only call iofq with the internal structure object.
 
         """
         self.count += 1
@@ -286,11 +295,11 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
 
 ####### Example Code
 
-def makeModel(strufile, datname):
-    """Create a model that uses the IntensityCalculator.
+def makeRecipe(strufile, datname):
+    """Create a recipe that uses the IntensityCalculator.
 
-    This will create a Contribution that uses the IntensityCalculator,
-    associate this with a Profile, and use this to define a FitModel.
+    This will create a FitContribution that uses the IntensityCalculator,
+    associate this with a Profile, and use this to define a FitRecipe.
 
     """
 
@@ -304,50 +313,50 @@ def makeModel(strufile, datname):
 
     ## The Calculator
     # Create an IntensityCalculator named "I". This will be the name we use to
-    # refer to the calculator from within the Contribution equation.  We also
-    # need to load the model structure we're using.
+    # refer to the calculator from within the FitContribution equation.  We
+    # also need to load the model structure we're using.
     calculator = IntensityCalculator("I")
     calculator.setStructure(strufile)
     
-    ## The Contribution
-    # Create a Contribution, that will associate the Profile with the
+    ## The FitContribution
+    # Create a FitContribution, that will associate the Profile with the
     # Calculator.  The calculator will be accessible as an attribute of the
-    # Contribution by its name ("I"), or simply by "calculator".  We also want
-    # to tell the contribution to name the x-variable of the profile "q", so we
-    # can use it in equations with this name.
-    contribution = Contribution("bucky")
+    # FitContribution by its name ("I"), or simply by "calculator".  We also
+    # want to tell the FitContribution to name the x-variable of the profile
+    # "q", so we can use it in equations with this name.
+    contribution = FitContribution("bucky")
     contribution.setCalculator(calculator)
     contribution.setProfile(profile, xname = "q")
 
-    # Now we're ready to define the contribution equation. We need to modify
-    # the Calcultor, and we'll do that from within the Contribution eqation for
-    # the sake of instruction. We want to modify the calculator in three ways.
-    # We need a scale factor, a polynomial background, and we want to broaden
-    # the peaks. 
+    # Now we're ready to define the fitting equation for the FitContribution.
+    # We need to modify the intensity calculation, and we'll do that from
+    # within the fitting equation for the sake of instruction. We want to
+    # modify the calculation in three ways.  We want to scale it, add a
+    # polynomial background, and broaden the peaks. 
     #
     # There is added benefit for defining these operations outside of the
     # IntensityCalculator. By combining the different parts of the calculation
-    # within the contribution equation, the time-consuming iofq calculation is
-    # only performed when a structural parameter is changed. If only
-    # non-structural parameters are changed, such as the background and
-    # broadening parameters, then then previously computed iofq value will be
-    # used to compute the contribution equation.  The benefit in this is very
-    # apparent when refining the model with the LM optimizer, which only
-    # changes two variables at a time most of the time. Note in the refinement
-    # output how many times the residual is calculated, versus how many times
-    # iofq is called when using the scipyOptimize function.
+    # within the fitting equation, the time-consuming iofq calculation is only
+    # performed when a structural Parameter is changed. If only non-structural
+    # parameters are changed, such as the background and broadening Parameters,
+    # then then previously computed iofq value will be used to compute the
+    # contribution equation.  The benefit in this is very apparent when
+    # refining the recipe with the LM optimizer, which only changes two
+    # variables at a time most of the time. Note in the refinement output how
+    # many times the residual is calculated, versus how many times iofq is
+    # called when using the scipyOptimize function.
 
     # We will define the background as a string.
 
     bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 + b6*q**6 +\
                b7*q**7 + b8*q**8 + b9*q**9"
 
-    # This creates a callable equation within the Contribution, and turns
-    # the polynomial coefficients into Parameters.
+    # This creates a callable equation named "bkgd" within the FitContribution,
+    # and turns the polynomial coefficients into Parameters.
     contribution.registerStringFunction(bkgdstr, "bkgd")
 
     # We will create the broadening function that we need by creating a
-    # python function and registering it with the Contribution.
+    # python function and registering it with the FitContribution.
     pi = numpy.pi
     exp = numpy.exp
     def gaussian(q, q0, width):
@@ -366,60 +375,62 @@ def makeModel(strufile, datname):
     # make changes to their input values.
     contribution.setEquation("scale * convolve(I, gaussian) + bkgd")
 
-    # Make the FitModel and add the Contribution.
-    model = FitModel()
-    model.addContribution(contribution)
+    # Make the FitRecipe and add the FitContribution.
+    recipe = FitRecipe()
+    recipe.addContribution(contribution)
 
     # Specify which parameters we want to refine.
-    model.addVar(contribution.b0, 0)
-    model.addVar(contribution.b1, 0)
-    model.addVar(contribution.b2, 0)
-    model.addVar(contribution.b3, 0)
-    model.addVar(contribution.b4, 0)
-    model.addVar(contribution.b5, 0)
-    model.addVar(contribution.b6, 0)
-    model.addVar(contribution.b7, 0)
-    model.addVar(contribution.b8, 0)
-    model.addVar(contribution.b9, 0)
+    recipe.addVar(contribution.b0, 0)
+    recipe.addVar(contribution.b1, 0)
+    recipe.addVar(contribution.b2, 0)
+    recipe.addVar(contribution.b3, 0)
+    recipe.addVar(contribution.b4, 0)
+    recipe.addVar(contribution.b5, 0)
+    recipe.addVar(contribution.b6, 0)
+    recipe.addVar(contribution.b7, 0)
+    recipe.addVar(contribution.b8, 0)
+    recipe.addVar(contribution.b9, 0)
 
     # We also want to adjust the scale and the convolution width
-    model.addVar(contribution.scale, 1)
-    model.addVar(contribution.width, 0.1)
+    recipe.addVar(contribution.scale, 1)
+    recipe.addVar(contribution.width, 0.1)
 
-    # We can also refine structural parameters. Here we extract the 'structure'
-    # ParameterSet from the intensity calculator and use the parameters like we
-    # would any others.
+    # We can also refine structural parameters. Here we extract the
+    # StructureParSet from the intensity calculator and use the parameters like
+    # we would any others.
     structure = calculator.structure
 
     # We want to allow for isotropic expansion, so we'll constrain the lattice
-    # parameters to the same value.
+    # parameters to the same value (the lattice is cubic). Note that we
+    # constrain to the "a" Parameter directly. In previous examples, we
+    # constrained to a Variable by name. This has the same effect.
     a = structure.lattice.a
-    model.addVar(a)
-    model.constrain(structure.lattice.b, a)
-    model.constrain(structure.lattice.c, a)
+    recipe.addVar(a)
+    recipe.constrain(structure.lattice.b, a)
+    recipe.constrain(structure.lattice.c, a)
     # We want to refine the thermal paramters as well. We will add a new
-    # variable that we call "Uiso" and constrain the atomic Uiso values to
-    # this. The structure ParameterSet has an 'atoms' list that we can use to
-    # make this easier.
-    Uiso = model.newVar("Uiso", 0.01)
+    # Variable that we call "Uiso" and constrain the atomic Uiso values to
+    # this. The StructureParSet has an 'atoms' list that we can use to make
+    # this easier.
+    Uiso = recipe.newVar("Uiso", 0.01)
     for atom in structure.atoms:
-        model.constrain(atom.Uiso, Uiso)
+        recipe.constrain(atom.Uiso, Uiso)
 
-    # Give the model away so it can be used!
-    return model
+    # Give the recipe away so it can be used!
+    return recipe
 
-def plotResults(model):
-    """Plot the results contained within a refined FitModel."""
+def plotResults(recipe):
+    """Plot the results contained within a refined FitRecipe."""
 
     # All this should be pretty familiar by now.
-    names = model.getNames()
-    vals = model.getValues()
+    names = recipe.getNames()
+    vals = recipe.getValues()
 
-    q = model.bucky.profile.x
+    q = recipe.bucky.profile.x
 
-    I = model.bucky.profile.y
-    Icalc = model.bucky.profile.ycalc
-    bkgd = model.bucky.evaluateEquation("bkgd")
+    I = recipe.bucky.profile.y
+    Icalc = recipe.bucky.profile.ycalc
+    bkgd = recipe.bucky.evaluateEquation("bkgd")
     diff = I - Icalc
 
     import pylab
@@ -436,28 +447,30 @@ def plotResults(model):
 
 if __name__ == "__main__":
 
-    # Make the data and the model
+    # Make the data and the recipe
     strufile = "data/C60.stru"
     q = numpy.arange(1, 20, 0.05)
     makeData(strufile, q, "C60.iq", 1.0, 100.68, 0.005, 0.13, 2)
 
-    # Make the model
-    model = makeModel(strufile, "C60.iq")
+    # Make the recipe
+    recipe = makeRecipe(strufile, "C60.iq")
 
     # Optimize
-    scipyOptimize(model)
-    #parkOptimize(model)
+    scipyOptimize(recipe)
+    #parkOptimize(recipe)
 
     # Generate and print the FitResults
-    res = FitResults(model)
-    # Get the number of calls to the residual function from the FitModel, and
-    # the number of calls to 'iofq' from the IntensityCalculator.
-    rescount = model.fithook.count
-    calcount = model.bucky.calculator.count
+    res = FitResults(recipe)
+    # We want to see how much speed-up we get from bringing the scale and
+    # background outside of the intensity calculator.  Get the number of calls
+    # to the residual function from the FitRecipe, and the number of calls to
+    # 'iofq' from the IntensityCalculator.
+    rescount = recipe.fithook.count
+    calcount = recipe.bucky.calculator.count
     footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)
     res.printResults(footer = footer)
 
     # Plot!
-    plotResults(model)
+    plotResults(recipe)
 
 # End of file

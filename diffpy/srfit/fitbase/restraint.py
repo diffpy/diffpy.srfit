@@ -14,10 +14,10 @@
 ########################################################################
 """Restraints class. 
 
-Restraints are used by ModelOrganizers to organize restraint equations.
+Restraints are used by RecipeOrganizers to organize restraint equations.
 Restraints store an Equation, bounds on its value, and the form of the penalty
 function for breaking a restraint. This penalty is added to the residual
-equation calculated by a FitModel.
+equation calculated by a FitRecipe.
 
 """
 

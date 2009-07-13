@@ -16,7 +16,7 @@
 
 Calculators encapsulate the evaluation and required Parameters and
 ParameterSets of a profile calculator.  The Calculator class can be associated
-with a Contribution to help calculate a profile.  It implements the
+with a FitContribution to help calculate a profile.  It implements the
 diffpy.srfit.equation.literals.Generator interface so that it can be used
 within a diffpy.srfit.equation.Equation.
 
@@ -48,15 +48,15 @@ from numpy import array, asarray
 
 from .parameter import Parameter
 
-from .modelorganizer import ModelOrganizer
+from .recipeorganizer import RecipeOrganizer
 
-class Calculator(ModelOrganizer):
+class Calculator(RecipeOrganizer):
     """Base class for profile calculators.
 
     Attributes
     args            --  List needed by Generator interface.
     clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and ModelOrganizers.
+                        Parameters and RecipeOrganizers.
     literal         --  This is literal created or modified by the generate
                         method (by default, a Parameter)
     name            --  A name for this organizer.
@@ -67,12 +67,12 @@ class Calculator(ModelOrganizer):
                         Parameter. Constraints can be added using the
                         'constrain' method.
     _orgdict        --  A dictionary containing the Parameters and
-                        ModelOrganizers indexed by name.
-    _parameters     --  A list of parameters that this ModelOrganizer knows
+                        RecipeOrganizers indexed by name.
+    _parameters     --  A list of parameters that this RecipeOrganizer knows
                         about.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
-    _organizers     --  A list of ModelOrganizers that this ModelOrganizer
+    _organizers     --  A list of RecipeOrganizers that this RecipeOrganizer
                         knows about.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
@@ -82,7 +82,7 @@ class Calculator(ModelOrganizer):
 
     def __init__(self, name):
         """Initialize the attributes."""
-        ModelOrganizer.__init__(self, name)
+        RecipeOrganizer.__init__(self, name)
         self.profile = None
         self.literal = Parameter(name)
         self.args = []
@@ -90,11 +90,11 @@ class Calculator(ModelOrganizer):
         return
 
     # Make some methods public that were protected
-    addParameter = ModelOrganizer._addParameter
-    newParameter = ModelOrganizer._newParameter
-    removeParameter = ModelOrganizer._removeParameter
-    addParameterSet = ModelOrganizer._addOrganizer
-    removeParameterSet = ModelOrganizer._removeOrganizer
+    addParameter = RecipeOrganizer._addParameter
+    newParameter = RecipeOrganizer._newParameter
+    removeParameter = RecipeOrganizer._removeParameter
+    addParameterSet = RecipeOrganizer._addOrganizer
+    removeParameterSet = RecipeOrganizer._removeOrganizer
 
     # Overload me!
     def __call__(self, x):

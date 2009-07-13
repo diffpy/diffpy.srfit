@@ -12,9 +12,9 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The ModelOrganizer class and equationFromString method.
+"""The RecipeOrganizer class and equationFromString method.
 
-ModelOrganizer is the base class for various classes within the FitModel
+RecipeOrganizer is the base class for various classes within the FitRecipe
 hierarchy. equationFromString creates an Equation instance from a string. It
 checks for specific conditions on the string, as defined in the method.
 
@@ -32,15 +32,15 @@ from diffpy.srfit.equation import Clicker
 from diffpy.srfit.equation import Equation
 
 
-class ModelOrganizer(object):
-    """A base class for organizing pieces of a FitModel.
+class RecipeOrganizer(object):
+    """A base class for organizing pieces of a FitRecipe.
 
-    ModelOrganizers are hierarchical organizations of Parameters, Constraints,
-    Restraints and other ModelOrganizers. This class is used throughout the
-    hierarcy of a FitModel and provides attributes and members that help
+    RecipeOrganizers are hierarchical organizations of Parameters, Constraints,
+    Restraints and other RecipeOrganizers. This class is used throughout the
+    hierarcy of a FitRecipe and provides attributes and members that help
     organize these objects at any level of the hierarcy.
 
-    Contained parameters and other ModelOrganizers can be accessed by name as
+    Contained parameters and other RecipeOrganizers can be accessed by name as
     attributes in order to facilitate multi-level constraints and restraints.
     These constraints and restraints can be placed at any level and a flattened
     list of them can be retrieved with the _getConstraints and _getRestraints
@@ -49,18 +49,18 @@ class ModelOrganizer(object):
 
     Attributes
     clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and ModelOrganizers.
+                        Parameters and RecipeOrganizers.
     name            --  A name for this organizer. Names should be unique
-                        within a ModelOrganizer and should be valid attribute
+                        within a RecipeOrganizer and should be valid attribute
                         names.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-    _organizers     --  A list of ModelOrganizers that this ModelOrganizer
+    _organizers     --  A list of RecipeOrganizers that this RecipeOrganizer
                         knows about.
     _orgdict        --  A dictionary containing the Parameters and
-                        ModelOrganizers indexed by name.
-    _parameters     --  A list of parameters that this ModelOrganizer knows
+                        RecipeOrganizers indexed by name.
+    _parameters     --  A list of parameters that this RecipeOrganizer knows
                         about.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
@@ -214,12 +214,12 @@ class ModelOrganizer(object):
         makepars    --  Flag indicating whether to make parameters from the
                         arguments of fstr if they don't already appear in this
                         object (default True). Parameters created in this way
-                        are added to the contribution using the _newParameter
+                        are added to the fitcontribution using the _newParameter
                         method.  If makepars is False , then it is necessary
                         that the parameters are already part of this object in
                         order to make the function.
         ns          --  A dictionary of Parameters, indexed by name, that are
-                        used in fstr, but not part of the FitModel (default
+                        used in fstr, but not part of the FitRecipe (default
                         {}).
 
         Raises ValueError if ns uses a name that is already used for a
@@ -252,7 +252,7 @@ class ModelOrganizer(object):
                     equation can be specified as described in the setEquation
                     method.
         ns      --  A dictionary of Parameters, indexed by name, that are
-                    used in fstr, but not part of the FitModel (default {}).
+                    used in fstr, but not part of the FitRecipe (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -274,15 +274,15 @@ class ModelOrganizer(object):
                     parameter to constrain to.  A constraint equation must
                     consist of numpy operators and "known" Parameters.
                     Parameters are known if they are in the ns argument, or if
-                    they have been added to this FitModel with the 'add' or
+                    they have been added to this FitRecipe with the 'add' or
                     'new' methods.
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel (default {}).
+                    in the eqstr, but not part of the FitRecipe (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitModel and that is not defined in ns.
+        the FitRecipe and that is not defined in ns.
         Raises ValueError if par is marked as constant.
 
         """
@@ -326,7 +326,7 @@ class ModelOrganizer(object):
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False).
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the ModelOrganizer 
+                    in the eqstr, but not part of the RecipeOrganizer 
                     (default {}).
 
         The penalty is calculated as 
@@ -337,7 +337,7 @@ class ModelOrganizer(object):
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the ModelOrganizer and that is not defined in ns.
+        the RecipeOrganizer and that is not defined in ns.
 
         Returns the Restraint object for use with the 'unrestrain' method.
 
@@ -362,7 +362,7 @@ class ModelOrganizer(object):
         lb      --  The lower bound on the restraint evaluation (default -inf).
         ub      --  The lower bound on the restraint evaluation (default inf).
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitModel 
+                    in the eqstr, but not part of the FitRecipe 
                     (default {}).
 
         The penalty is infinite if the value of the calculated equation is
@@ -371,7 +371,7 @@ class ModelOrganizer(object):
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the ModelOrganizer and that is not defined in ns.
+        the RecipeOrganizer and that is not defined in ns.
         Raises ValueError if lb == ub.
 
         Returns the BoundsRestraint object for use with the 'unrestrain' method.
@@ -405,7 +405,7 @@ class ModelOrganizer(object):
         return res
 
     def unrestrain(self, res):
-        """Remove a Restraint or BoundsRestraint from the ModelOrganizer.
+        """Remove a Restraint or BoundsRestraint from the RecipeOrganizer.
         
         res     --  A Restraint returned from the 'restrain' method.
 
@@ -422,7 +422,7 @@ class ModelOrganizer(object):
 
         par     --  The Parameter to be stored.
         check   --  If True (default), an ValueError is raised if the parameter
-                    has an invalid name, or if a Parameter or ModelOrganizer of
+                    has an invalid name, or if a Parameter or RecipeOrganizer of
                     that name has already been inserted.
 
         """
@@ -456,7 +456,7 @@ class ModelOrganizer(object):
     def _removeParameter(self, par):
         """Remove a parameter.
         
-        raises ValueError if par is not part of the ModelOrganizer.
+        raises ValueError if par is not part of the RecipeOrganizer.
 
         """
         if par not in self._parameters:
@@ -470,18 +470,18 @@ class ModelOrganizer(object):
         return
 
     def _addOrganizer(self, org, check=True):
-        """Store a ModelOrganizer.
+        """Store a RecipeOrganizer.
 
-        org     --  The ModelOrganizer to be stored.
+        org     --  The RecipeOrganizer to be stored.
         check   --  If True (default), an ValueError is raised if the
-                    ModelOrganizer has an invalid name, or if a Parameter or
-                    ModelOrganizer of that name has already been inserted.
+                    RecipeOrganizer has an invalid name, or if a Parameter or
+                    RecipeOrganizer of that name has already been inserted.
 
         """
         if check:
             message = ""
             if not org.name:
-                message = "ModelOrganizer has no name"%org
+                message = "RecipeOrganizer has no name"%org
             elif org.name in self._orgdict:
                 message = "Object with name '%s' already exists"%org.name
 
@@ -496,7 +496,7 @@ class ModelOrganizer(object):
     def _removeOrganizer(self, org):
         """Remove an organizer.
         
-        raises ValueError if organizer is not part of the ModelOrganizer.
+        raises ValueError if organizer is not part of the RecipeOrganizer.
 
         """
         if org not in self._organizers:
@@ -530,12 +530,12 @@ class ModelOrganizer(object):
     def _locateChild(self, obj, loc = None):
         """Find the location of a parameter or organizer within the organizer
 
-        obj     --  The Parameter or ModelOrganizer to locate
+        obj     --  The Parameter or RecipeOrganizer to locate
         loc     --  A list containing the path to the object. The 
-                    The name of this ModelOrganizer gets appended to the list,
+                    The name of this RecipeOrganizer gets appended to the list,
                     which gets passed on util the parameter is located. If the
                     parameter is not located herein, the name of this
-                    ModelOrganizer is not appended.  This defaults to None, in
+                    RecipeOrganizer is not appended.  This defaults to None, in
                     which case a new list is created and passed along.
 
         Returns a list of objects. Each entry in the list is the object
@@ -574,7 +574,7 @@ class ModelOrganizer(object):
         return
 
 
-# End ModelOrganizer
+# End RecipeOrganizer
 
 def equationFromString(eqstr, factory, ns = {}, buildargs = False,
         argclass = Parameter, argkw = {}):

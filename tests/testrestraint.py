@@ -4,7 +4,7 @@
 import unittest
 
 from diffpy.srfit.fitbase.restraint import Restraint, BoundsRestraint
-from diffpy.srfit.fitbase.modelorganizer import equationFromString
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.equation.builder import EquationFactory
 

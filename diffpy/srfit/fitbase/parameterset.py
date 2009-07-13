@@ -20,9 +20,9 @@ embedded Parameters.
 
 """
 
-from .modelorganizer import ModelOrganizer
+from .recipeorganizer import RecipeOrganizer
 
-class ParameterSet(ModelOrganizer):
+class ParameterSet(RecipeOrganizer):
     """Class for organizing Parameters and other ParameterSets.
 
     ParameterSets are hierarchical organizations of Parameters, Constraints,
@@ -36,14 +36,14 @@ class ParameterSet(ModelOrganizer):
 
     Attributes
     clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and ModelOrganizers.
+                        Parameters and RecipeOrganizers.
     name            --  A name for this organizer.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
     _orgdict        --  A dictionary containing the Parameters and
-                        ModelOrganizers indexed by name.
-    _parameters     --  A list of parameters that this ModelOrganizer knows
+                        RecipeOrganizers indexed by name.
+    _parameters     --  A list of parameters that this RecipeOrganizer knows
                         about.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
@@ -61,13 +61,13 @@ class ParameterSet(ModelOrganizer):
         name    --  The name of this ParameterSet.
 
         """
-        ModelOrganizer.__init__(self, name)
+        RecipeOrganizer.__init__(self, name)
         return
 
     # Alias the _addParameter to addParameter
-    addParameter = ModelOrganizer._addParameter
+    addParameter = RecipeOrganizer._addParameter
     # Alias the addOrganizer method to addParameterSet
-    addParameterSet = ModelOrganizer._addOrganizer
+    addParameterSet = RecipeOrganizer._addOrganizer
 
     def setConst(self, const = True):
         """Set every parameter within the set to a constant.

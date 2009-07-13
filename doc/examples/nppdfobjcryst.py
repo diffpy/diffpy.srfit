@@ -12,32 +12,32 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of using Calculators in FitModels.
+"""Example of using more complex Calculators.
 
-This is an example of building a FitModel in order to fit PDF data.
+This is an example of using a more complex Calculator in a FitContribution.
 
 The PDFCalculator class is an example of a Calculator that can be used by a
-Contribution to help generate a signal. It uses the ObjCrystParSet to hold
+FitContribution to help generate a signal. It uses the ObjCrystParSet to hold
 crystal and molecular information from a pyobjcryst Crystal.
 
-The makeModel function shows how to build a FitModel that uses the
+The makeRecipe function shows how to build a FitRecipe that uses the
 PDFCalculator.
 
 """
 
 import numpy
 
-from diffpy.srfit.fitbase import Calculator, Contribution, FitModel, Profile
+from diffpy.srfit.fitbase import Calculator, FitContribution, FitRecipe, Profile
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
-from gaussianmodel import scipyOptimize
+from gaussianrecipe import scipyOptimize
 
 class PDFCalculator(Calculator):
     """A class for calculating the PDF for an isolated scatterer.
 
     This is another example of using a Calculator class with a ParameterSet
-    adapter to refine a structure model to data using a FitModel.
+    adapter to refine a structure recipe to data using a FitRecipe.
     
     """
 
@@ -80,11 +80,11 @@ class PDFCalculator(Calculator):
     def __call__(self, r):
         """Calculate the PDF.
 
-        This Calculator will be used in a contribution equation that will be
-        optimized to fit some data.  By the time this function is evaluated,
-        the crystal has been updated by the optimizer via the ObjCrystParSet
-        created in setCrystal. Thus, we need only call pdf with the internal
-        structure object.
+        This Calculator will be used in a fit equation that will be optimized
+        to fit some data.  By the time this function is evaluated, the crystal
+        has been updated by the optimizer via the ObjCrystParSet created in
+        setCrystal. Thus, we need only call pdf with the internal structure
+        object.
 
         """
         qmin = self.meta["qmin"]
@@ -153,13 +153,13 @@ def fofq(cryst, q, delta2):
     """Calculate F(Q) (X-ray) using the Debye Equation.
 
     F(Q) = 2/(N<f>^2) 
-           sum(i != j) f_i(Q) f_j(Q) sin(rij Q)/rij exp(-0.5 ssij Q**2)
+           sum(i, j > i) f_i(Q) f_j(Q) sin(rij Q)/rij exp(-0.5 ssij Q**2)
     (The exponential term is the Debye-Waller factor.)
 
     cryst   --  A pyobjcryst.Crystal instance. It is assumed that the structure
                 is that of an isolated scatterer. Periodic boundary conditions
                 are not applied.
-    q   --  The q-points to calculate over.
+    q       --  The q-points to calculate over.
     delta2  --  The correlation term in the Debye-Waller factor.
 
     The calculator uses cctbx for the calculation of the f_i if it is
@@ -269,7 +269,7 @@ def fofq(cryst, q, delta2):
 
         d = D * deltad
 
-        # Add in the contribution
+        # Add in the fitcontribution
         y += fi * fj * mult * sin(q * d) / d *\
                 exp(-0.5 * (SS * deltau) * BtoU * q**2)
 
@@ -384,6 +384,7 @@ def makeC60():
     # Create a dummy atom at the center.
     m.AddAtom(0, 0, 0, None, "center")
 
+    # Add the other atoms. They will be named C0, C1, ..., C59.
     for i, l in enumerate(c60xyz.strip().splitlines()):
         x, y, z = map(float, l.split())
         m.AddAtom(x, y, z, sp, "C%i"%i)
@@ -392,11 +393,11 @@ def makeC60():
 
 ####### Example Code
 
-def makeModel(cryst, datname):
-    """Create a model that uses the PDFCalculator.
+def makeRecipe(cryst, datname):
+    """Create a recipe that uses the PDFCalculator.
 
-    This will create a Contribution that uses the PDFCalculator,
-    associate this with a Profile, and use this to define a FitModel.
+    This will create a FitContribution that uses the PDFCalculator,
+    associate this with a Profile, and use this to define a FitRecipe.
 
     """
 
@@ -410,85 +411,88 @@ def makeModel(cryst, datname):
     profile.setCalculationRange(xmin=1.6, xmax=8)
 
     ## The Calculator
-    # Create an PDFCalculator named "G". This will be the name we use to
-    # refer to the calculator from within the Contribution equation.  We also
-    # need to load the model structure we're using.
+    # Create an PDFCalculator named "G". This will be the name we use to refer
+    # to the calculator from within the FitContribution equation.  We also need
+    # to load the pyobjcryst Crystal we're using.
     calculator = PDFCalculator("G")
     calculator.setCrystal(cryst)
     # These are metadata needed by the calculator
     calculator.meta["qmin"] = 0.68
     calculator.meta["qmax"] = 22
     
-    ## The Contribution
-    # Create a Contribution, that will associate the Profile with the
-    # Calculator.  The calculator will be accessible as an attribute of the
-    # Contribution by its name ("G"), or simply by "calculator".  We also want
-    # to tell the contribution to name the x-variable of the profile "r", so we
-    # can use it in equations with this name.
-    contribution = Contribution("bucky")
+    ## The FitContribution
+    # Create a FitContribution that will associate the Profile with the
+    # Calculator.  The Calculator will be accessible as an attribute of the
+    # FitContribution by its name ("G"), or simply by "calculator".  We also
+    # want to tell the FitContribution to name the x-variable of the profile
+    # "r" so we can use it in equations with this name.
+    contribution = FitContribution("bucky")
     contribution.setCalculator(calculator)
     contribution.setProfile(profile, xname = "r")
 
-    # Now we're ready to define the contribution equation. We need to modify
-    # the Calcultor, and we'll do that from within the Contribution eqation for
-    # the sake of instruction. 
-    # We need a scale factor.
+    # Now we're ready to define the FitContribution equation. We need to modify
+    # the Calcultor, and we'll do that from within the FitContribution equation
+    # for the sake of instruction. Here we add a peak dampening factor and a
+    # scale factor.
     contribution.setEquation("scale * exp(-0.5 * (qdamp * r)**2) * G")
 
-    # Make a FitModel where we can create variables, constraints and
+    # Make a FitRecipe where we can create variables, constraints and
     # restraints. If we had multiple profiles to fit simultaneously, the
-    # contribution from each could be added to the model.
-    model = FitModel()
-    model.addContribution(contribution)
+    # contribution from each could be added to the recipe.
+    recipe = FitRecipe()
+    recipe.addContribution(contribution)
 
-    # Specify which parameters we want to refine. 
-
-    # First, the isotropic thermal displacement factor
+    # Specify which parameters we want to refine. We'll be using the
+    # MoleculeParSet within the calculator's ObjCrystParSet directly, so let's
+    # get a handle to it. See the diffpy.srfit.structure.objcryststructure
+    # module for more information about the ObjCrystParSet hierarchy.
     c60 = calculator.crystal.c60
-    biso = model.newVar("biso", 0.25)
+
+    # First, the isotropic thermal displacement factor.
+    biso = recipe.newVar("biso", 0.25)
     for atom in c60.atoms:
         # We have to check for reference atoms. Dummy atoms have no biso
         if not atom.isDummy():
-            model.constrain(atom.biso, biso)
+            recipe.constrain(atom.biso, biso)
 
     # And the correlation term
-    model.addVar(calculator.delta2, 2)
+    recipe.addVar(calculator.delta2, 2)
 
     # We need to let the molecule expand. If we were modeling it as a crystal,
     # we could let the unit cell expand. For instruction purposes, we use a
     # Molecule to model C60, and molecules have different modeling options than
     # crystals. To make the molecule expand from a central point, we will
     # constrain the distance from each atom to a dummy center atom that was
-    # created with the crystal, and allow that distance to vary. (We could also
-    # let the nearest-neighbor bond lengths vary, but this is much more
-    # difficult to set up.)
+    # created with the molecule, and allow that distance to vary. (We could
+    # also let the nearest-neighbor bond lengths vary, but that would be much
+    # more difficult to set up.)
     center = c60.center
-    radius = model.newVar("radius", 3.5)
+    radius = recipe.newVar("radius", 3.5)
     for i, atom in enumerate(c60.atoms[1:]):
-        # This creates a parameter that moves atoms according to the bond
-        # length. Note that each parameter needs a unique name.
+        # This creates a Parameter that moves atoms according to the bond
+        # length. Note that each Parameter needs a unique name.
         par = c60.addBondLengthParameter("rad%i"%i, center, atom)
-        model.constrain(par, radius)
+        recipe.constrain(par, radius)
 
     # We also want to adjust the scale and qdamp
-    model.addVar(contribution.scale, 1.3e4)
-    model.addVar(contribution.qdamp, 0.1)
+    recipe.addVar(contribution.scale, 1.3e4)
+    recipe.addVar(contribution.qdamp, 0.1)
 
-    # Give the model away so it can be used!
-    return model
+    # Give the recipe away so it can be used!
+    return recipe
 
-def plotResults(model):
-    """Plot the results contained within a refined FitModel."""
+def plotResults(recipe):
+    """Plot the results contained within a refined FitRecipe."""
 
-    names = model.getNames()
-    vals = model.getValues()
+    names = recipe.getNames()
+    vals = recipe.getValues()
 
-    r = model.bucky.profile.x
+    r = recipe.bucky.profile.x
 
     # Plot this.
-    G = model.bucky.profile.y
-    Gcalc = model.bucky.profile.ycalc
-    diff = G - Gcalc - 10 * model.scale.getValue()
+    G = recipe.bucky.profile.y
+    Gcalc = recipe.bucky.profile.ycalc
+    diff = G - Gcalc - 10 * recipe.scale.getValue()
 
     import pylab
     pylab.plot(r,G,'ob',label="G(r) Data")
@@ -504,19 +508,19 @@ def plotResults(model):
 if __name__ == "__main__":
 
     cryst = makeC60()
-    # Make the data and the model
-    model = makeModel(cryst, "data/C60.gr")
+    # Make the data and the recipe
+    recipe = makeRecipe(cryst, "data/C60.gr")
     # Tell the fithook that we want very verbose output.
-    model.fithook.verbose = 3
+    recipe.fithook.verbose = 3
     
     # Optimize
-    scipyOptimize(model)
+    scipyOptimize(recipe)
 
     # Print results
-    res = FitResults(model)
+    res = FitResults(recipe)
     res.printResults()
 
     # Plot results
-    plotResults(model)
+    plotResults(recipe)
 
 # End of file

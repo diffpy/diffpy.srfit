@@ -530,81 +530,6 @@ class MolAtomParSet(ScattererParSet):
 
 # End class MolAtomParSet
 
-class ObjCrystParSet(ParameterSet):
-    """A wrapper for ObjCryst Crystal instance.
-
-    Attributes:
-    scatterers  --  The list of aggregated ScattererParSets (either AtomParSet
-                    or MoleculeParSet).
-    a, b, c, alpha, beta, gamma --  Lattice parameters (ParameterWrapper)
-
-    Other attributes are inherited from
-    diffpy.srfit.fitbase.parameterset.ParameterSet
-    
-    """
-
-    def __init__(self, cryst, name):
-        """Initialize
-
-        cryst   --  An pyobjcryst.Crystal instance.
-        name    --  A name for this ParameterSet
-
-        """
-        ParameterSet.__init__(self, name)
-        self.cryst = cryst
-
-        self.addParameter(ParameterWrapper("a", self.cryst, attr = "a"))
-        self.addParameter(ParameterWrapper("b", self.cryst, attr = "b"))
-        self.addParameter(ParameterWrapper("c", self.cryst, attr = "c"))
-        self.addParameter(ParameterWrapper("alpha", self.cryst, attr =
-            "alpha"))
-        self.addParameter(ParameterWrapper("beta", self.cryst, attr = "beta"))
-        self.addParameter(ParameterWrapper("gamma", self.cryst, attr =
-            "gamma"))
-
-        # Constrain the lattice before we go any further.
-        sgmap = {}
-        sgnum = self.cryst.GetSpaceGroup().GetSpaceGroupNumber()
-        from diffpy.Structure import SpaceGroups
-        sg = SpaceGroups.GetSpaceGroup(sgnum)
-        system = sg.crystal_system
-        if not system:
-            system = "Triclinic"
-        system = system.title()
-        from .sgconstraints import constrainSpaceGroup
-        constrainSpaceGroup(self, system)
-
-        # Now we must loop over the scatterers and create parameter sets from
-        # them.
-        self.scatterers = []
-        snames = []
-
-        for j in range(self.cryst.GetNbScatterer()):
-            s = self.cryst.GetScatt(j)
-            name = s.GetName()
-            if not name:
-                raise AttributeError("Each Scatterer must have a name")
-            if name in snames:
-                raise AttributeError("MolAtom name '%s' is duplicated"%name)
-
-            # Now create the proper object
-            cname = s.GetClassName()
-            if cname == "Atom":
-                parset = AtomParSet(name, s, self)
-            elif cname == "Molecule":
-                parset = MoleculeParSet(name, s, self)
-            else:
-                raise AttributeError("Unrecognized scatterer '%s'"%cname)
-
-            self.addParameterSet(parset)
-            self.scatterers.append(parset)
-            snames.append(name)
-
-
-        return
-
-# End class ObjCrystParSet
-
 class MoleculeRestraint(object):
     """Base class for adapting pyobjcryst Molecule restraints to srfit.
 
@@ -829,13 +754,9 @@ class StretchModeParameter(Parameter):
         delta = val - curval
         self.mode.Stretch(delta)
 
-        self.value = val
-
         # Click everything that has changed
         self.click()
-        # We just set the value of the parameter, so we don't have to
-        # recalculate until something underneath changes.
-        self.calclicker.click()
+
         return
 
     def addAtoms(self, atomlist):
@@ -1252,5 +1173,81 @@ class DihedralAngleParameter(StretchModeParameter):
         return self.value
 
 # End class DihedralAngleParameter
+
+class ObjCrystParSet(ParameterSet):
+    """A wrapper for ObjCryst Crystal instance.
+
+    Attributes:
+    scatterers  --  The list of aggregated ScattererParSets (either AtomParSet
+                    or MoleculeParSet).
+    a, b, c, alpha, beta, gamma --  Lattice parameters (ParameterWrapper)
+
+    Other attributes are inherited from
+    diffpy.srfit.fitbase.parameterset.ParameterSet
+    
+    """
+
+    def __init__(self, cryst, name):
+        """Initialize
+
+        cryst   --  An pyobjcryst.Crystal instance.
+        name    --  A name for this ParameterSet
+
+        """
+        ParameterSet.__init__(self, name)
+        self.cryst = cryst
+
+        self.addParameter(ParameterWrapper("a", self.cryst, attr = "a"))
+        self.addParameter(ParameterWrapper("b", self.cryst, attr = "b"))
+        self.addParameter(ParameterWrapper("c", self.cryst, attr = "c"))
+        self.addParameter(ParameterWrapper("alpha", self.cryst, attr =
+            "alpha"))
+        self.addParameter(ParameterWrapper("beta", self.cryst, attr = "beta"))
+        self.addParameter(ParameterWrapper("gamma", self.cryst, attr =
+            "gamma"))
+
+        # Constrain the lattice before we go any further.
+        sgmap = {}
+        sgnum = self.cryst.GetSpaceGroup().GetSpaceGroupNumber()
+        from diffpy.Structure import SpaceGroups
+        sg = SpaceGroups.GetSpaceGroup(sgnum)
+        system = sg.crystal_system
+        if not system:
+            system = "Triclinic"
+        system = system.title()
+        from .sgconstraints import constrainSpaceGroup
+        constrainSpaceGroup(self, system)
+
+        # Now we must loop over the scatterers and create parameter sets from
+        # them.
+        self.scatterers = []
+        snames = []
+
+        for j in range(self.cryst.GetNbScatterer()):
+            s = self.cryst.GetScatt(j)
+            name = s.GetName()
+            if not name:
+                raise AttributeError("Each Scatterer must have a name")
+            if name in snames:
+                raise AttributeError("MolAtom name '%s' is duplicated"%name)
+
+            # Now create the proper object
+            cname = s.GetClassName()
+            if cname == "Atom":
+                parset = AtomParSet(name, s, self)
+            elif cname == "Molecule":
+                parset = MoleculeParSet(name, s, self)
+            else:
+                raise AttributeError("Unrecognized scatterer '%s'"%cname)
+
+            self.addParameterSet(parset)
+            self.scatterers.append(parset)
+            snames.append(name)
+
+
+        return
+
+# End class ObjCrystParSet
+
 
 __id__ = "$Id$"

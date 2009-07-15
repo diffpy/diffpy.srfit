@@ -82,7 +82,6 @@ class Evaluator(Visitor):
             self.onOperator = self.onOperatorNoParts
         return
 
-
     def click(self):
         """Click the clicker and reset non-public data."""
         self._atroot = True

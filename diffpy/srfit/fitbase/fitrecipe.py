@@ -18,8 +18,8 @@ FitRecipes organize FitContributions, Parameters, Restraints and Constraints to
 create a recipe of the system you wish to optimize. From the client's
 perspective, the FitRecipe is a residual calculator. The residual method does
 the work of updating variable values, which get propagated to the Parameters of
-the underlying FitContributions via the varibles, Restraints and Constraints. As a
-result, this class can be used without subclassing.
+the underlying FitContributions via the varibles, Restraints and Constraints.
+As a result, this class can be used without subclassing.
 
 See the examples in the documentation for how to create an optimization problem
 using FitRecipe.
@@ -54,8 +54,8 @@ class FitRecipe(RecipeOrganizer):
                         restraints from strings.
     _fixed          --  A list of Parameters that are fixed, but still managed
                         by the FitRecipe.
-    _organizers     --  A list of FitContributions to the recipe. Modified by the
-                        addContribution method.
+    _organizers     --  A list of FitContributions to the recipe. Modified by
+                        the addContribution method.
     _orgdict        --  A dictionary containing the Parameters and
                         FitContributions indexed by name.
     _parameters     --  A list of variable Parameters.
@@ -64,8 +64,8 @@ class FitRecipe(RecipeOrganizer):
                         'restrain' or 'confine' methods.
     _tagdict        --  A dictionary of tags to variables.
     _weights        --  The weighing factor for each fitcontribution. This value
-                        is multiplied by the residual of the fitcontribution when
-                        determining the overall residual.
+                        is multiplied by the residual of the fitcontribution
+                        when determining the overall residual.
 
     """
 
@@ -186,11 +186,45 @@ class FitRecipe(RecipeOrganizer):
         parameter defined in different places within the recipe hierarchy.
 
         """
+
         # Inform the fit hook that we're updating things
         if self.fithook:
             self.fithook.reset()
 
-        # Check for variable values
+        # Check Profiles
+        self.__verifyProfiles()
+
+        # Check Variables
+        self.__verifyVariables()
+
+        # Update constraints and restraints. 
+        self.__collectConstraintsAndRestraints()
+
+        # We're done here
+        self._doprepare = False
+        return
+
+
+    def __verifyProfiles(self):
+        """Verify that each FitContribution has a Profile."""
+        # Check for profile values
+        for con in self._organizers:
+            if hasattr(con, "profile"): 
+                if con.profile is None:
+                    m = "FitContribution '%s' does not have a Profile"%con.name
+                    raise AttributeError(m)
+                if con.profile.x is None or\
+                    con.profile.y is None or\
+                    con.profile.dy is None:
+
+                     m = "Profile for '%s' is missing data"%con.name
+                     raise AttributeError(m)
+
+        return
+
+    def __verifyVariables(self):
+        """Verify that all Variables have values."""
+
         varvals = self.getValues()
         names = self.getNames()
         m = ""
@@ -209,7 +243,10 @@ class FitRecipe(RecipeOrganizer):
         if m:
             raise AttributeError(m)
 
-        # Update constraints and restraints. 
+        return
+
+    def __collectConstraintsAndRestraints(self):
+        """Collect the Constraints and Restraints from subobjects."""
         rset = set(self._restraints)
         cdict = {}
         # We let constraints closer to the FitRecipe override all others.
@@ -266,8 +303,8 @@ class FitRecipe(RecipeOrganizer):
 
         self._constraintlist.sort(cmp)
 
-        self._doprepare = False
         return
+
 
     # Variable manipulation
 

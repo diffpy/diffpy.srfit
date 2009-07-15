@@ -20,6 +20,7 @@ Parameter           --  Base parameter class.
 ParameterWrapper    --  Wrap attributes or methods of an object as a Parameter.
 ParameterProxy      --  A proxy for another Parameter, but with a different
                         name.
+Variable            --  Alias for ParameterProxy.
 
 """
 # FIXME - Add onConstrain, onRestrain, onVary so that adaptors to Parameters

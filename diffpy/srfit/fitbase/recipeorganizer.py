@@ -67,6 +67,8 @@ class RecipeOrganizer(object):
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from string
+    _equations      --  Equation instances built with the _eqfactory
+                        (dictionary).
 
     Raises ValueError if the name is not a valid attribute identifier
 
@@ -82,6 +84,7 @@ class RecipeOrganizer(object):
         self._restraints = set()
         self._orgdict = {}
         self._eqfactory = EquationFactory()
+        self._equations = {}
         return
 
     def __getattr__(self, name):
@@ -134,7 +137,8 @@ class RecipeOrganizer(object):
             if name is None:
                 m = "Equation must be given a name"
                 raise ValueError(m)
-            self._eqfactory.registerEquation(name, f)
+
+            self._swapAndRegister(name, f)
             return f
 
         # Extract the name and argnames if necessary
@@ -198,7 +202,7 @@ class RecipeOrganizer(object):
         argstr = ",".join(argnames)
         eq = equationFromString("%s(%s)"%(name,argstr), factory)
 
-        self._eqfactory.registerEquation(name, eq)
+        self._swapAndRegister(name, eq)
 
         return eq
 
@@ -239,8 +243,8 @@ class RecipeOrganizer(object):
         for par in self._eqfactory.newargs:
             self._addParameter(par)
 
-        # Register the equation by name
-        self._eqfactory.registerEquation(name, eq)
+        # Register the equation by name and do any necessary swapping.
+        self._swapAndRegister(name, eq)
 
         return eq
 
@@ -294,10 +298,14 @@ class RecipeOrganizer(object):
         else:
             eq = Equation(root = con)
 
+
         # Make and store the constraint
         con = Constraint()
         con.constrain(par, eq)
         self._constraints[par] = con
+
+        # Store this equation for future swapping
+        self._equations[repr(con)] = eq
         return
 
     def unconstrain(self, par):
@@ -309,6 +317,8 @@ class RecipeOrganizer(object):
 
         """
         if par in self._constraints:
+            con = self._constraints[par]
+            del self._equations[repr(con)]
             del self._constraints[par]
         return
 
@@ -352,6 +362,8 @@ class RecipeOrganizer(object):
         res = Restraint()
         res.restrain(eq, lb, ub, prefactor, power, scaled)
         self._restraints.add(res)
+
+        self._equations[repr(res)] = eq
 
         return res
 
@@ -402,6 +414,8 @@ class RecipeOrganizer(object):
         res = BoundsRestraint()
         res.confine(eq, lb, ub)
         self._restraints.add(res)
+
+        self._equations[repr(res)] = eq
         return res
 
     def unrestrain(self, res):
@@ -411,6 +425,7 @@ class RecipeOrganizer(object):
 
         """
         if res in self._restraints:
+            del self._equations[repr(res)]
             self._restraints.remove(res)
 
         return
@@ -421,26 +436,36 @@ class RecipeOrganizer(object):
         Parameters added in this way are registered with the _eqfactory.
 
         par     --  The Parameter to be stored.
-        check   --  If True (default), an ValueError is raised if the parameter
-                    has an invalid name, or if a Parameter or RecipeOrganizer of
-                    that name has already been inserted.
+        check   --  If True (default), a ValueError is raised a Parameter or
+                    RecipeOrganizer of the specified name has already been
+                    inserted.
+
+        Raises ValueError if the Parameter has no name.
 
         """
+        
+        message = ""
+        if not par.name:
+            message = "Parameter has no name"%par
+
         if check:
-            message = ""
-            if not par.name:
-                message = "Parameter has no name"%par
-            elif par.name in self._orgdict:
+            if par.name in self._orgdict:
                 message = "Object with name '%s' already exists"%par.name
 
-            if message:
-                raise ValueError(message)
+        if message:
+            raise ValueError(message)
 
+        # Swap parameters
+        oldpar = self._orgdict.get(par.name)
+        if oldpar:
+            self._swapEquationObject(oldpar, par)
+            self._removeParameter(oldpar)
         
         self._orgdict[par.name] = par
         self._parameters.append(par)
         self._eqfactory.registerArgument(par.name, par)
         self.clicker.addSubject(par.clicker)
+
         return
 
     def _newParameter(self, name, value, check=True):
@@ -573,6 +598,35 @@ class RecipeOrganizer(object):
 
         return
 
+    def _swapEquationObject(self, oldobj, newobj):
+        """Swap all instances of an Equation object for another.
+
+        This method is used to curate Equations belonging to this object. If
+        one overloads an object that can appear in an Equation, it is the
+        responsibility of this method to replace all instances of the original
+        object with the new object.
+
+        Note that this method is likely to be slow if many Equations are
+        registered.
+        
+        """
+        for eq in self._equations.values():
+            eq.swap(oldobj, newobj)
+        return
+
+    def _swapAndRegister(self, name, newobj):
+        """Swap and register an equation.
+
+        This registers an equation, and performs any swapping necessary with
+        the new equation.
+        
+        """
+        self._eqfactory.registerEquation(name, newobj)
+        oldobj = self._equations.get(name)
+        if oldobj is not None:
+            self._swapEquationObject(oldobj, newobj)
+        self._equations[name] = newobj
+        return
 
 # End RecipeOrganizer
 

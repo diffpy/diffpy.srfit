@@ -28,12 +28,7 @@ from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
 
 from .recipeorganizer import RecipeOrganizer, equationFromString
-
-# FIXME - Adding parameters to the EquationFactory does not update existing
-# equations. This is an issue when one might register a function before data is
-# loaded. The Equation object resulting from that function needs to be able to
-# use parameters that are loaded after its creation.
-
+from .parameter import ParameterProxy
 
 class FitContribution(RecipeOrganizer):
     """FitContribution class.
@@ -110,22 +105,17 @@ class FitContribution(RecipeOrganizer):
                     usable within the Equation with the specified name.
 
         """
-        # Clear the previous profile information
-        self._eqfactory.deRegisterBuilder(self._xname)
-        self._eqfactory.deRegisterBuilder(self._yname)
-        self._eqfactory.deRegisterBuilder(self._dyname)
+        seteq = self.profile is None
 
-        # Stop watching the parameters
+        # Clear previously watched parameters
         if self.profile is not None:
-            self.clicker.removeSubject(self.profile.xpar.clicker)
-            self.clicker.removeSubject(self.profile.ypar.clicker)
-            self.clicker.removeSubject(self.profile.dypar.clicker)
+            self.removeParameter(self._orgdict[self._xname])
+            self.removeParameter(self._orgdict[self._yname])
+            self.removeParameter(self._orgdict[self._dyname])
 
-        # Set the profile and watch its parameters
+        # Set the profile and add its parameters to this organizer.
+
         self.profile = profile
-        self.clicker.addSubject(self.profile.xpar.clicker)
-        self.clicker.addSubject(self.profile.ypar.clicker)
-        self.clicker.addSubject(self.profile.dypar.clicker)
 
         if xname is None:
             xname = self.profile.xpar.name
@@ -135,17 +125,25 @@ class FitContribution(RecipeOrganizer):
             dyname = self.profile.dypar.name
 
         self._xname = xname
-        self._eqfactory.registerArgument(xname, self.profile.xpar)
         self._yname = yname
-        self._eqfactory.registerArgument(yname, self.profile.ypar)
         self._dyname = dyname
-        self._eqfactory.registerArgument(dyname, self.profile.dypar)
+
+        xpar = ParameterProxy(self._xname, self.profile.xpar)
+        ypar = ParameterProxy(self._yname, self.profile.ypar)
+        dypar = ParameterProxy(self._dyname, self.profile.dypar)
+        self.addParameter(xpar, check=False)
+        self.addParameter(ypar, check=False)
+        self.addParameter(dypar, check=False)
 
         # If we have a calculator, set its profile as well, and assign the
-        # default residual equation.
+        # default residual equation if we're setting the profile for the first
+        # time.
         if self.calculator is not None:
             self.calculator.setProfile(profile)
+
+        if self._eq is not None and seteq:
             self.setResidualEquation()
+
         return
 
     def setCalculator(self, calc, name = None):
@@ -210,10 +208,11 @@ class FitContribution(RecipeOrganizer):
         that is not in ns or part of the FitContribution.
 
         """
+        seteq = self._eq is None
         self._eq = self.registerStringFunction(eqstr, "eq", makepars, ns)
         self._eq.clicker.addSubject(self.clicker)
 
-        if self.profile is not None:
+        if seteq and self.profile is not None:
             self.setResidualEquation()
         return
 
@@ -225,7 +224,7 @@ class FitContribution(RecipeOrganizer):
 
         Two residuals are preset for convenience, "chiv" and "resv".
         chiv is defined such that dot(chiv, chiv) = chi^2.
-        resv is defined such that dot(resv, resv) = Rw.
+        resv is defined such that dot(resv, resv) = Rw^2.
         You can call on these in your residual equation. Note that the quantity
         that will be optimized is the summed square of the residual equation.
         Keep that in mind when defining a new residual or using the built-in
@@ -237,16 +236,16 @@ class FitContribution(RecipeOrganizer):
 
         """
         if self.profile is None:
-            raise AttributeError("Define the profile first")
+            raise AttributeError("Assign the Profile first")
 
         # Register some convenient residuals
         chivstr = "(eq - %s)/%s" % (self._yname, self._dyname)
         chiv = equationFromString(chivstr, self._eqfactory)
-        self._eqfactory.registerEquation("chiv", chiv)
+        self._swapAndRegister("chiv", chiv)
 
         resvstr = "(eq - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)
         resv = equationFromString(resvstr, self._eqfactory)
-        self._eqfactory.registerEquation("resv", resv)
+        self._swapAndRegister("resv", resv)
 
         # Now set the residual to one of these or create a new one
         if eqstr is None:

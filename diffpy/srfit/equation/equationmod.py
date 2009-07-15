@@ -41,8 +41,10 @@ from .visitors import Evaluator
 from .visitors import Validator
 from .visitors import ArgFinder
 from .visitors import PartFinder
+from .visitors import Swapper
 from .literals import Generator
 from .literals import Argument
+from .literals import Operator
 
 class Equation(Generator):
     """Class for holding and evaluating a Literal tree.
@@ -144,6 +146,39 @@ class Equation(Generator):
         self.root.identify(self.evaluator)
         self.evaluator.click()
         return self.evaluator.value
+
+    def swap(self, oldlit, newlit):
+        """Swap out one Literal in the equation for another one.
+
+        oldlit  --  A Literal to be swapped out
+        newlit  --  A Literal to be swapped in
+
+        Rules:
+        Argument    --  All instances of oldlit replaced with newlit (even
+                        within Generators and Partitions)
+        Generator   --  All instances of oldlit replaced with newlit
+        Operator    --  All instances of oldlit replaced with newlit, Literals
+                        of oldlit added to newlit
+        Partition   --  All instances of oldlit replaced with newlit
+
+        Raises TypeError of oldlit and newlit are incompatible
+
+        """
+
+        swapper = Swapper(oldlit, newlit)
+        # We can't swap out the root node, so we'll put our root inside of an
+        # identity operator.
+        identity = Operator("identity", operation = lambda x: x, nin = 1)
+        identity.addLiteral(self.root)
+        identity.identify(swapper)
+
+        # Now remove the root from the identity operator
+        identity.clicker.removeSubject(self.root.clicker)
+
+        # Now reset the root so we can find the arguments properly
+        self.setRoot(self.root)
+
+        return
 
     # for the Generator interface
     def generate(self, clicker):

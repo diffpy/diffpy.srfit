@@ -31,6 +31,8 @@ evaluator   --  Contains the Evaluator class (see below). The module
                 documentation contains more information about Evaluators.
 printer     --  Contains the Printer class (see below). The module
                 documentation contains more information about Printers.
+swapper     --  Contains the Swapper class (see below). The module
+                documentation contains more information about Swappers.
 validiator  --  Contains the Validator class (see below). The module
                 documentation contains more information about Validators.
 visitor     --  Contains the Visitor base class. The module documentation
@@ -42,6 +44,7 @@ Evaluator   --  Evaluates a Literal tree.
 PartFinder  --  PartFinder extracts partitions from a Literal tree.
 Printer     --  A not-so-pretty-printer for an Argument tree. Used primarily
                 for debugging.
+Swapper     --  Class for swapping Literals that appear in a Literal tree.
 Validator   --  Used to validate a Literal tree.
 
 """
@@ -54,6 +57,7 @@ from .printer import Printer
 from .partfinder import PartFinder
 from .evaluator import Evaluator
 from .validator import Validator
+from .swapper import Swapper
 
 # Try to optimize
 try:

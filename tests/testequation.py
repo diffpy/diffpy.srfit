@@ -62,6 +62,10 @@ class TestEquation(unittest.TestCase):
         self.assertEqual(50, eq(v2=0)) # 50 = 2.5*(2+3)*(4-0)
         self.assertEqual(30, eq(v3=1)) # 30 = 2.5*(2+1)*(4-0)
         self.assertEqual(0, eq(v4=0)) # 20 = 2.5*(2+1)*(0-0)
+
+        # Try some swapping
+        eq.swap(v4, v1)
+        self.assertEqual(15, eq()) # 15 = 2.5*(2+1)*(2-0)
         return
 
 if __name__ == "__main__":

@@ -789,6 +789,8 @@ class StretchModeParameter(Parameter):
         self.molecule.x.clicker.click()
         self.molecule.y.clicker.click()
         self.molecule.z.clicker.click()
+
+        self.clicker.click()
         return
 
 # End class StretchModeParameter

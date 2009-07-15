@@ -31,7 +31,7 @@ from diffpy.srfit.fitbase import Calculator, FitContribution, FitRecipe, Profile
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
-from gaussianrecipe import scipyOptimize
+from gaussianrecipe import scipyOptimize, parkOptimize
 
 class PDFCalculator(Calculator):
     """A class for calculating the PDF for an isolated scatterer.
@@ -472,7 +472,7 @@ def makeRecipe(cryst, datname):
         # This creates a Parameter that moves atoms according to the bond
         # length. Note that each Parameter needs a unique name.
         par = c60.addBondLengthParameter("rad%i"%i, center, atom)
-        recipe.constrain(par, radius)
+        recipe.constrain(par, "abs(radius)")
 
     # We also want to adjust the scale and qdamp
     recipe.addVar(contribution.scale, 1.3e4)
@@ -515,6 +515,7 @@ if __name__ == "__main__":
     
     # Optimize
     scipyOptimize(recipe)
+    #parkOptimize(recipe)
 
     # Print results
     res = FitResults(recipe)

@@ -696,6 +696,32 @@ class TestArgFinder(unittest.TestCase):
 
         return
 
+    def testGenerator(self):
+        """Test with a generator."""
+        v1, v2, v3 = _makeArgs(3)
+
+        class TestGenerator(literals.Generator):
+
+            def __init__(self):
+                literals.Generator.__init__(self, "threepeak")
+
+                self.addLiteral(v1)
+                self.addLiteral(v2)
+                self.addLiteral(v3)
+                return
+
+        gen1 = TestGenerator()
+
+        argfinder = visitors.ArgFinder()
+        gen1.identify(argfinder)
+        args = argfinder.args
+
+        self.assertEquals(3, len(args))
+        self.assertEquals(args, [v1, v2, v3])
+
+        return
+
+
     def testSimplePartition(self):
         """Test an equation with a partition."""
         p1 = literals.Partition("p1")
@@ -721,6 +747,133 @@ class TestArgFinder(unittest.TestCase):
         self.assertTrue(v1 in args)
         self.assertTrue(v2 in args)
         self.assertTrue(v3 in args)
+        return
+
+    def testArg(self):
+        """Test just an Argument equation."""
+        # Make some variables
+        v1 = _makeArgs(1)[0]
+
+        argfinder = visitors.ArgFinder()
+        v1.identify(argfinder)
+        args = argfinder.args
+
+        self.assertEquals(1, len(args))
+        self.assertTrue(args[0] is v1)
+        return
+
+class TestSwapper(unittest.TestCase):
+
+    def testSimpleFunction(self):
+        """Test a simple function."""
+
+        # Make some variables
+        v1, v2, v3, v4, v5 = _makeArgs(5)
+
+        # Make some operations
+        mult = literals.MultiplicationOperator()
+        plus = literals.AdditionOperator()
+        minus = literals.SubtractionOperator()
+
+        # Create the equation (v1+v3)*(v4-v2)
+        plus.addLiteral(v1)
+        plus.addLiteral(v3)
+        minus.addLiteral(v4)
+        minus.addLiteral(v2)
+        mult.addLiteral(plus)
+        mult.addLiteral(minus)
+
+        # Set the values of the variables.
+        # The equation should evaluate to (1+3)*(4-2) = 8
+        v1.setValue(1)
+        v2.setValue(2)
+        v3.setValue(3)
+        v4.setValue(4)
+        v5.setValue(5)
+
+        # Evaluate
+        evaluator = visitors.Evaluator()
+        mult.identify(evaluator)
+        self.assertEquals(8, evaluator.value)
+
+        # Now swap an argument
+        v2.clicker.click
+        swapper = visitors.Swapper(v2, v5)
+        mult.identify(swapper)
+
+        # Check clickers
+        self.assertTrue(v5.clicker > v2.clicker)
+
+        # now get the args
+        argfinder = visitors.ArgFinder()
+        mult.identify(argfinder)
+        args = argfinder.args
+        self.assertEqual(4, len(args))
+        self.assertTrue(v1 in args)
+        self.assertTrue(v2 not in args)
+        self.assertTrue(v3 in args)
+        self.assertTrue(v4 in args)
+        self.assertTrue(v5 in args)
+
+        # Re-evaluate (1+3)*(4-5) = -4
+        evaluator = visitors.Evaluator()
+        mult.identify(evaluator)
+        self.assertEquals(-4, evaluator.value)
+
+        # Swap out the "-" operator
+        plus2 = literals.AdditionOperator()
+        swapper = visitors.Swapper(minus, plus2)
+        mult.identify(swapper)
+
+        # Re-evaluate (1+3)*(4+5) = 36
+        evaluator = visitors.Evaluator()
+        mult.identify(evaluator)
+        self.assertEquals(36, evaluator.value)
+
+
+        # Test bad swap
+        self.assertRaises(TypeError, visitors.Swapper, v4, plus2)
+        return
+
+    def testGenerator(self):
+        """Test swapping out a Generator."""
+        v1, v2, v3, v4 = _makeArgs(4)
+
+        class TestGenerator(literals.Generator):
+
+            def __init__(self, arg):
+                literals.Generator.__init__(self, "threepeak")
+
+                self.addLiteral(arg)
+                return
+
+        gen1 = TestGenerator(v1)
+        gen2 = TestGenerator(v2)
+        mult = literals.MultiplicationOperator()
+        mult.addLiteral(v3)
+        mult.addLiteral(gen1)
+
+        # Try to swap out the argument in the generator (not allowed).
+        swapper = visitors.Swapper(v1, v4)
+        mult.identify(swapper)
+
+        argfinder = visitors.ArgFinder()
+        mult.identify(argfinder)
+        args = argfinder.args
+        self.assertTrue(v1 in args)
+        self.assertTrue(v4 not in args)
+
+        # Swap out the generator
+        swapper = visitors.Swapper(gen1, gen2)
+        mult.identify(swapper)
+
+        argfinder = visitors.ArgFinder()
+        mult.identify(argfinder)
+        args = argfinder.args
+        self.assertTrue(v1 not in args)
+        self.assertTrue(v4 not in args)
+        self.assertTrue(v2 in args)
+
         return
 
 if __name__ == "__main__":

@@ -35,7 +35,12 @@ Example
 > eq() # uses last assignment of a and b, returns 0
 
 See the class documentation for more information.
+
 """
+
+# IDEA - Evaluate the branch-weight at every node when the root is added. Use
+# this to break the evaluation into smaller problems that can be run in
+# parallel.
 
 from .visitors import Evaluator
 from .visitors import Validator
@@ -174,6 +179,9 @@ class Equation(Generator):
 
         # Now remove the root from the identity operator
         identity.clicker.removeSubject(self.root.clicker)
+
+        # Remove the new root, if there is one
+        identity.clicker.removeSubject(newlit.clicker)
 
         # Now reset the root so we can find the arguments properly
         self.setRoot(self.root)

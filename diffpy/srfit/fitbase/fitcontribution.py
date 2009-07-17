@@ -14,9 +14,10 @@
 ########################################################################
 """FitContribution class. 
 
-FitContributions are generate a residual function for a FitRecipe. A FitContribution
-associates an Equation for generating a signal, optionally a Calculator that
-helps in this, and a Profile that holds the observed and calculated signals.  
+FitContributions are generate a residual function for a FitRecipe. A
+FitContribution associates an Equation for generating a signal, optionally one
+or more Calculators that help in this, and a Profile that holds the observed
+and calculated signals.  
 
 See the examples in the documention for how to use a FitContribution.
 
@@ -34,22 +35,20 @@ class FitContribution(RecipeOrganizer):
     """FitContribution class.
 
     FitContributions organize an Equation that calculates the signal, and a
-    Profile that holds the signal. A Calculator can be used as well.
-    Contraints and Restraints can be created as part of a FitContribution.
+    Profile that holds the signal. Calculators can be used as well.  Contraints
+    and Restraints can be created as part of a FitContribution.
 
     Attributes
     clicker         --  A Clicker instance for recording changes in the
                         Parameters or the residual components.
     name            --  A name for this FitContribution.
-    calculator      --  A Calculator instance for generating a signal
-                        (optional). If a calculator is not defined, the equation
-                        to refine must be set with the setEquation method.
     profile         --  A Profile that holds the measured (and calcuated)
                         signal.
+    _calculators    --  A dictionry of Calculators that can be used by the
+                        FitContribution.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-
     _eq             --  The FitContribution equation that will be optimized.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
@@ -72,8 +71,7 @@ class FitContribution(RecipeOrganizer):
         self._eq = None
         self._reseq = None
         self.profile = None
-        self.calculator = None
-        self._calcname = None
+        self._calculators = {}
         self._xname = None
         self._yname = None
         self._dyname = None
@@ -138,48 +136,53 @@ class FitContribution(RecipeOrganizer):
         # If we have a calculator, set its profile as well, and assign the
         # default residual equation if we're setting the profile for the first
         # time.
-        if self.calculator is not None:
-            self.calculator.setProfile(profile)
+        for calc in self._calculators.values():
+            calc.setProfile(profile)
 
         if self._eq is not None and seteq:
             self.setResidualEquation()
 
         return
 
-    def setCalculator(self, calc, name = None):
-        """Set the Calculator to be used by this FitContribution.
+    def addCalculator(self, calc, name = None):
+        """Add a Calculator to be used by this FitContribution.
 
         The Calculator is given a name so that it can be used as part of the
         profile equation (see setEquation). This can be different from the name
-        of the Calculator used for attribute access. Each fitcontribution should
-        have its own calculator instance. Those calculators can share
+        of the Calculator used for attribute access. FitContributions should
+        not share calculators instance. Different Calculators can share
         Parameters and ParameterSets, however.
         
-        Calling setCalculator sets the profile equation to call the calculator
-        and resets the residual equation (see setResidualEquation).
+        Calling addCalculator sets the profile equation to call the calculator
+        and if there is not a profile equation already.
 
         calc    --  A Calculator instance
         name    --  A name for the calculator. If name is None (default), then
                     the Calculator's name attribute will be used.
 
         """
-        self.calculator = calc
-
         if name is None:
             name = calc.name
 
         # Let the RecipeOrganizer structure know of the calculator
         self._addOrganizer(calc)
 
-        # Register the calculator with the equation factory
+        # Register the calculator with the equation factory and perform any
+        # swaps that might be necessary.
         self._eqfactory.registerGenerator(name, calc)
+        oldcalc = self._calculators.get(calc.name)
+        if oldcalc is not None:
+            self._swapEquationObject(oldcalc, calc)
+        self._calculators[calc.name] = calc
 
-        # Set the default fitting equation, which is just the calculator
-        self.setEquation(name)
+        # Set the default fitting equation if there is not one.
+        if self._eq is None:
+            self.setEquation(name)
 
         # If we have a profile already, let the calculator know about it.
         if self.profile is not None:
             calc.setProfile(self.profile)
+
         return
 
     def setEquation(self, eqstr, makepars = True, ns = {}):

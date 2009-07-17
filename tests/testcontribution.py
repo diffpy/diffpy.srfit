@@ -23,7 +23,7 @@ class TestContribution(unittest.TestCase):
         """Test the residual, which requires all other methods."""
 
         # Add the calculator and profile
-        self.fitcontribution.setCalculator(self.calc, "I")
+        self.fitcontribution.addCalculator(self.calc, "I")
         self.fitcontribution.setProfile(self.profile)
 
         # Let's create some data

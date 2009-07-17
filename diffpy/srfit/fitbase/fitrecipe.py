@@ -27,7 +27,6 @@ using FitRecipe.
 """
 
 from numpy import concatenate, sqrt, inf, dot
-from functools import update_wrapper
 
 from .parameter import Parameter, ParameterProxy
 from .recipeorganizer import RecipeOrganizer

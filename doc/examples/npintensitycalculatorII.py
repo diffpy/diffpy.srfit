@@ -77,10 +77,10 @@ def makeRecipe(strufile, datname1, datname2):
     # Create the FitContributions. Note that the "q" in each of the FitContributions
     # refers to that FitContributions' Profile.
     contribution1 = FitContribution("bucky1")
-    contribution1.setCalculator(calculator1)
+    contribution1.addCalculator(calculator1)
     contribution1.setProfile(profile1, xname = "q")
     contribution2 = FitContribution("bucky2")
-    contribution2.setCalculator(calculator2)
+    contribution2.addCalculator(calculator2)
     contribution2.setProfile(profile2, xname = "q")
 
     # Now we're ready to define the fitting equation for each FitContribution.

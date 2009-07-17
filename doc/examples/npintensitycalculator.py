@@ -325,7 +325,7 @@ def makeRecipe(strufile, datname):
     # want to tell the FitContribution to name the x-variable of the profile
     # "q", so we can use it in equations with this name.
     contribution = FitContribution("bucky")
-    contribution.setCalculator(calculator)
+    contribution.addCalculator(calculator)
     contribution.setProfile(profile, xname = "q")
 
     # Now we're ready to define the fitting equation for the FitContribution.
@@ -466,7 +466,7 @@ if __name__ == "__main__":
     # to the residual function from the FitRecipe, and the number of calls to
     # 'iofq' from the IntensityCalculator.
     rescount = recipe.fithook.count
-    calcount = recipe.bucky.calculator.count
+    calcount = recipe.bucky.I.count
     footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)
     res.printResults(footer = footer)
 

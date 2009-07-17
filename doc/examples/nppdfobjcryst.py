@@ -427,7 +427,7 @@ def makeRecipe(cryst, datname):
     # want to tell the FitContribution to name the x-variable of the profile
     # "r" so we can use it in equations with this name.
     contribution = FitContribution("bucky")
-    contribution.setCalculator(calculator)
+    contribution.addCalculator(calculator)
     contribution.setProfile(profile, xname = "r")
 
     # Now we're ready to define the FitContribution equation. We need to modify

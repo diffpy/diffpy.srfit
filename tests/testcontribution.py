@@ -6,7 +6,7 @@ import unittest
 from numpy import arange, dot
 
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
-from diffpy.srfit.fitbase.calculator import Calculator
+from diffpy.srfit.fitbase.calculator import ProfileCalculator
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
 
@@ -14,7 +14,7 @@ from diffpy.srfit.fitbase.parameter import Parameter
 class TestContribution(unittest.TestCase):
 
     def setUp(self):
-        self.calc = Calculator("test")
+        self.calc = ProfileCalculator("test")
         self.profile = Profile()
         self.fitcontribution = FitContribution("test")
         return

@@ -12,13 +12,14 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of using more complex Calculators.
+"""Example of using more complex ProfileCalculators.
 
-This is an example of using a more complex Calculator in a FitContribution.
+This is an example of using a more complex ProfileCalculator in a
+FitContribution.
 
-The PDFCalculator class is an example of a Calculator that can be used by a
-FitContribution to help generate a signal. It uses the ObjCrystParSet to hold
-crystal and molecular information from a pyobjcryst Crystal.
+The PDFCalculator class is an example of a ProfileCalculator that can be used
+by a FitContribution to help generate a signal. It uses the ObjCrystParSet to
+hold crystal and molecular information from a pyobjcryst Crystal.
 
 The makeRecipe function shows how to build a FitRecipe that uses the
 PDFCalculator.
@@ -27,17 +28,19 @@ PDFCalculator.
 
 import numpy
 
-from diffpy.srfit.fitbase import Calculator, FitContribution, FitRecipe, Profile
+from diffpy.srfit.fitbase import ProfileCalculator, Profile
+from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
 from gaussianrecipe import scipyOptimize, parkOptimize
 
-class PDFCalculator(Calculator):
+class PDFCalculator(ProfileCalculator):
     """A class for calculating the PDF for an isolated scatterer.
 
-    This is another example of using a Calculator class with a ParameterSet
-    adapter to refine a structure recipe to data using a FitRecipe.
+    This is another example of using a ProfileCalculator class with a
+    ParameterSet adapter to refine a structure recipe to data using a
+    FitRecipe.
     
     """
 
@@ -49,7 +52,7 @@ class PDFCalculator(Calculator):
         metadata required by the calculator.
         
         """
-        Calculator.__init__(self, name)
+        ProfileCalculator.__init__(self, name)
 
         # Add any non-structural parameters here
         self.newParameter("delta2", 0)
@@ -73,18 +76,18 @@ class PDFCalculator(Calculator):
         # Create a custom ParameterSet designed to interface with
         # pyobjcryst.Crystal
         parset = ObjCrystParSet(cryst, "crystal")
-        # Put this ParameterSet in the Calculator.
+        # Put this ParameterSet in the ProfileCalculator.
         self.addParameterSet(parset)
         return
 
     def __call__(self, r):
         """Calculate the PDF.
 
-        This Calculator will be used in a fit equation that will be optimized
-        to fit some data.  By the time this function is evaluated, the crystal
-        has been updated by the optimizer via the ObjCrystParSet created in
-        setCrystal. Thus, we need only call pdf with the internal structure
-        object.
+        This ProfileCalculator will be used in a fit equation that will be
+        optimized to fit some data.  By the time this function is evaluated,
+        the crystal has been updated by the optimizer via the ObjCrystParSet
+        created in setCrystal. Thus, we need only call pdf with the internal
+        structure object.
 
         """
         qmin = self.meta["qmin"]
@@ -410,7 +413,7 @@ def makeRecipe(cryst, datname):
     profile.setObservedProfile(x, y, dy)
     profile.setCalculationRange(xmin=1.6, xmax=8)
 
-    ## The Calculator
+    ## The ProfileCalculator
     # Create an PDFCalculator named "G". This will be the name we use to refer
     # to the calculator from within the FitContribution equation.  We also need
     # to load the pyobjcryst Crystal we're using.
@@ -422,10 +425,10 @@ def makeRecipe(cryst, datname):
     
     ## The FitContribution
     # Create a FitContribution that will associate the Profile with the
-    # Calculator.  The Calculator will be accessible as an attribute of the
-    # FitContribution by its name ("G"), or simply by "calculator".  We also
-    # want to tell the FitContribution to name the x-variable of the profile
-    # "r" so we can use it in equations with this name.
+    # ProfileCalculator.  The ProfileCalculator will be accessible as an
+    # attribute of the FitContribution by its name ("G").  We also want to tell
+    # the FitContribution to name the x-variable of the profile "r" so we can
+    # use it in equations with this name.
     contribution = FitContribution("bucky")
     contribution.addCalculator(calculator)
     contribution.setProfile(profile, xname = "r")

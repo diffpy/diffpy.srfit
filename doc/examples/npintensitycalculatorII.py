@@ -61,13 +61,13 @@ def makeRecipe(strufile, datname1, datname2):
     x, y, u = numpy.loadtxt(datname2, unpack=True)
     profile2.setObservedProfile(x, y, u)
 
-    ## The Calculators
+    ## The ProfileCalculators
     # Create two IntensityCalculators named "I". There will not be a name
     # conflict, since the name is only meaningful within the FitContribution
-    # that holds the Calculator.  Load the structure into one and make sure
-    # that the second calculator is using the same StructureParSet.  This will
-    # assure that both Calculators are using the exact same Parameters, and
-    # therefore the same structural information.
+    # that holds the ProfileCalculator.  Load the structure into one and make
+    # sure that the second ProfileCalculator is using the same StructureParSet.
+    # This will assure that both ProfileCalculators are using the exact same
+    # Parameters, and therefore the same structural information.
     calculator1 = IntensityCalculator("I")
     calculator1.setStructure(strufile)
     calculator2 = IntensityCalculator("I")

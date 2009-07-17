@@ -5,15 +5,15 @@ import unittest
 
 from numpy import arange, array_equal
 
-from diffpy.srfit.fitbase.calculator import Calculator
+from diffpy.srfit.fitbase.calculator import ProfileCalculator
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.equation import Clicker
 
 
-class TestCalculator(unittest.TestCase):
+class TestProfileCalculator(unittest.TestCase):
 
     def setUp(self):
-        self.calc = Calculator("test")
+        self.calc = ProfileCalculator("test")
         self.profile = Profile()
         x = arange(0, 10, 0.1)
         self.profile.setCalculationPoints(x)

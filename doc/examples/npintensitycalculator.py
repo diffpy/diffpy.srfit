@@ -12,13 +12,13 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of using Calculators in FitContributions.
+"""Example of using ProfileCalculators in FitContributions.
 
-This is an example of building a Calculator and using it in a FitContribution
-in order to fit theoretical intensity data.
+This is an example of building a ProfileCalculator and using it in a
+FitContribution in order to fit theoretical intensity data.
 
-The IntensityCalculator class is an example of a Calculator that can be used by
-a FitContribution to help generate a signal.
+The IntensityCalculator class is an example of a ProfileCalculator that can be
+used by a FitContribution to help generate a signal.
 
 The makeRecipe function shows how to build a FitRecipe that uses the
 IntensityCalculator.
@@ -29,22 +29,23 @@ import os
 
 import numpy
 
-from diffpy.srfit.fitbase import Calculator, FitContribution, FitRecipe, Profile
+from diffpy.srfit.fitbase import ProfileCalculator, Profile
+from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.diffpystructure import StructureParSet
 
 from gaussianrecipe import scipyOptimize, parkOptimize
 
-class IntensityCalculator(Calculator):
+class IntensityCalculator(ProfileCalculator):
     """A class for calculating intensity using the Debye equation.
 
     Calculating intensity from a structure is difficult in general. This class
     takes a diffpy.Structure.Structure instance and from that calculates a
     theoretical intensity signal. Unlike the example in gaussianrecipe.py, the
-    intensity calculator is not simple, so we must define this Calculator to
-    help us interface with a FitRecipe.
+    intensity calculator is not simple, so we must define this
+    ProfileCalculator to help us interface with a FitRecipe.
 
-    The purpose of a Calculator is to
+    The purpose of a ProfileCalculator is to
     1) provide a function that calculates a profile signal
     2) organize the Parameters required for the calculation
 
@@ -58,7 +59,7 @@ class IntensityCalculator(Calculator):
         Keep count of how many times the function has been called (self.count).
 
         """
-        Calculator.__init__(self, name)
+        ProfileCalculator.__init__(self, name)
         # Count the calls
         self.count = 0
         return
@@ -109,7 +110,7 @@ class IntensityCalculator(Calculator):
         # StructureParSet the name "structure".
         parset = StructureParSet(stru, "structure")
 
-        # Put this ParameterSet in the Calculator.
+        # Put this ParameterSet in the ProfileCalculator.
         self.addParameterSet(parset)
 
         return
@@ -117,7 +118,7 @@ class IntensityCalculator(Calculator):
     def __call__(self, q):
         """Calculate the intensity.
 
-        This Calculator will be used in a FitContribution that will be
+        This ProfileCalculator will be used in a FitContribution that will be
         optimized to fit some data.  By the time this function is evaluated,
         the diffpy.Structure.Structure instance has been updated by the
         optimizer via the StructureParSet defined in setStructure. Thus, we
@@ -311,7 +312,7 @@ def makeRecipe(strufile, datname):
     x, y, u = numpy.loadtxt(datname, unpack=True)
     profile.setObservedProfile(x, y, u)
 
-    ## The Calculator
+    ## The ProfileCalculator
     # Create an IntensityCalculator named "I". This will be the name we use to
     # refer to the calculator from within the FitContribution equation.  We
     # also need to load the model structure we're using.
@@ -320,10 +321,10 @@ def makeRecipe(strufile, datname):
     
     ## The FitContribution
     # Create a FitContribution, that will associate the Profile with the
-    # Calculator.  The calculator will be accessible as an attribute of the
-    # FitContribution by its name ("I"), or simply by "calculator".  We also
-    # want to tell the FitContribution to name the x-variable of the profile
-    # "q", so we can use it in equations with this name.
+    # ProfileCalculator.  The ProfileCalculator will be accessible as an
+    # attribute of the FitContribution by its name ("I").  We also want to tell
+    # the FitContribution to name the x-variable of the profile "q", so we can
+    # use it in equations with this name.
     contribution = FitContribution("bucky")
     contribution.addCalculator(calculator)
     contribution.setProfile(profile, xname = "q")

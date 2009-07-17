@@ -12,22 +12,22 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The Calculator class for generating a profile.
+"""The ProfileCalculator class for generating a profile.
 
-Calculators encapsulate the evaluation and required Parameters and
-ParameterSets of a profile calculator.  The Calculator class can be associated
-with a FitContribution to help calculate a profile.  It implements the
-diffpy.srfit.equation.literals.Generator interface so that it can be used
+ProfileCalculators encapsulate the evaluation and required Parameters and
+ParameterSets of a profile calculator.  The ProfileCalculator class can be
+associated with a FitContribution to help calculate a profile.  It implements
+the diffpy.srfit.equation.literals.Generator interface so that it can be used
 within a diffpy.srfit.equation.Equation.
 
-To define a Calculator, one must implement the required Parameters and
+To define a ProfileCalculator, one must implement the required Parameters and
 ParameterSets as well as overload the __call__ method with the calculation. A
 very simple example is
-> class Gaussian(Calculator):
+> class Gaussian(ProfileCalculator):
 >
 >    def __init__(self):
 >        # Initialize and give this a name
->        Calculator.__init__(self, "g")
+>        ProfileCalculator.__init__(self, "g")
 >        # Add amplitude, center and width parameters
 >        self.newParameter("amp", 0)
 >        self.newParameter("center", 0)
@@ -41,7 +41,6 @@ very simple example is
 
 More examples can be found in the example directory of the documentation.
 
-
 """
 
 from numpy import array, asarray
@@ -50,7 +49,7 @@ from .parameter import Parameter
 
 from .recipeorganizer import RecipeOrganizer
 
-class Calculator(RecipeOrganizer):
+class ProfileCalculator(RecipeOrganizer):
     """Base class for profile calculators.
 
     Attributes
@@ -133,7 +132,7 @@ class Calculator(RecipeOrganizer):
 
         """
         # FIXME - When data parsers are implemented, this should use the
-        # metadata to automatically configure the Calculator.
+        # metadata to automatically configure the ProfileCalculator.
         if profile is not self.profile:
 
             # Stop watching the parameters
@@ -151,7 +150,7 @@ class Calculator(RecipeOrganizer):
             self.clicker.click()
         return
 
-    # Generator methods. These are used when the Calculator is called from
+    # Generator methods. These are used when the ProfileCalculator is called from
     # within an equation.
 
     def generate(self, clicker):
@@ -162,7 +161,7 @@ class Calculator(RecipeOrganizer):
 
         clicker --  A Clicker instance for decision making. The clicker is
                     sent by the Evaluator class to indicate its state. If the
-                    clicker is greater than or equal to the Calculator's
+                    clicker is greater than or equal to the ProfileCalculator's
                     clicker, or that of the calculation arrays, then the
                     profile should be re-evaluated.
 
@@ -182,5 +181,6 @@ class Calculator(RecipeOrganizer):
         visitor.onGenerator(self)
         return
 
+# End class calculator
 
 __id__ = "$Id$"

@@ -169,7 +169,7 @@ class FitContribution(RecipeOrganizer):
 
         # Register the calculator with the equation factory and perform any
         # swaps that might be necessary.
-        self._eqfactory.registerGenerator(name, calc)
+        self._eqfactory.registerEquation(name, calc)
         oldcalc = self._calculators.get(calc.name)
         if oldcalc is not None:
             self._swapEquationObject(oldcalc, calc)

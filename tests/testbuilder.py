@@ -57,6 +57,9 @@ class TestEquationParser(unittest.TestCase):
         f = lambda A, x, B, C: A*sin(0.5*x)+divide(B,C)
         self.assertTrue(array_equal(eq(), f(A,x,B,C)))
 
+        # Make sure that the arguments of eq are listed in the order in which
+        # they appear in the equations.
+        self.assertEquals(eq.args, [eq.A, eq.x, eq.B, eq.C])
 
         # Vector equation
         eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
@@ -67,6 +70,7 @@ class TestEquationParser(unittest.TestCase):
         f = lambda x, sigma : sqrt(e**(-0.5*(x/sigma)**2))
         self.assertTrue(array_equal(eq(), f(x,sigma)))
 
+        self.assertEquals(eq.args, [eq.x, eq.sigma])
 
         # Equation with constants
         factory.registerConstant("x", x)
@@ -75,6 +79,7 @@ class TestEquationParser(unittest.TestCase):
         self.assertTrue("x" not in eq.argdict)
         self.assertTrue(array_equal(eq(sigma=sigma), f(x,sigma)))
 
+        self.assertEquals(eq.args, [eq.sigma])
 
         # Equation with user-defined functions
         factory.registerFunction("myfunc", eq, 1)
@@ -82,6 +87,7 @@ class TestEquationParser(unittest.TestCase):
         self.assertTrue(array_equal(eq2(c=2, sigma=sigma), 2*f(x,sigma)))
         self.assertTrue("sigma" in eq2.argdict)
         self.assertTrue("c" in eq2.argdict)
+        self.assertEquals(eq2.args, [eq2.c, eq2.sigma])
 
         # Equation with partition
         p1 = literals.Partition("p1")
@@ -149,6 +155,8 @@ class TestEquationParser(unittest.TestCase):
         self.assertTrue("a" in eq.argdict)
         self.assertTrue("A" in eq.argdict)
         self.assertTrue(array_equal(eq(), 2*numpy.sin(x)))
+
+        self.assertEquals(eq.args, [eq.A, eq.a])
 
         # Check the number of arguments
         self.assertRaises(TypeError, sin)

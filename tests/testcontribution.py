@@ -6,7 +6,7 @@ import unittest
 from numpy import arange, dot
 
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
-from diffpy.srfit.fitbase.calculator import ProfileCalculator
+from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
 
@@ -14,7 +14,7 @@ from diffpy.srfit.fitbase.parameter import Parameter
 class TestContribution(unittest.TestCase):
 
     def setUp(self):
-        self.calc = ProfileCalculator("test")
+        self.calc = ProfileGenerator("test")
         self.profile = Profile()
         self.fitcontribution = FitContribution("test")
         return
@@ -23,7 +23,7 @@ class TestContribution(unittest.TestCase):
         """Test the residual, which requires all other methods."""
 
         # Add the calculator and profile
-        self.fitcontribution.addCalculator(self.calc, "I")
+        self.fitcontribution.addProfileGenerator(self.calc, "I")
         self.fitcontribution.setProfile(self.profile)
 
         # Let's create some data

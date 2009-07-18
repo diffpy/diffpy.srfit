@@ -562,7 +562,7 @@ class EqGeneratorBuilder(EquationBuilder):
         return builder(*args)
 
 
-# end class GeneratorBuilder
+# end class EqGeneratorBuilder
 
 class OperatorBuilder(EquationBuilder):
     """EquationBuilder wrapper around an Operator literal.

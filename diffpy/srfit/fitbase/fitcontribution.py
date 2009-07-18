@@ -16,8 +16,8 @@
 
 FitContributions are generate a residual function for a FitRecipe. A
 FitContribution associates an Equation for generating a signal, optionally one
-or more Calculators that help in this, and a Profile that holds the observed
-and calculated signals.  
+or more ProfileGenerators or Calculators that help in this, and a Profile that
+holds the observed and calculated signals.  
 
 See the examples in the documention for how to use a FitContribution.
 
@@ -35,8 +35,9 @@ class FitContribution(RecipeOrganizer):
     """FitContribution class.
 
     FitContributions organize an Equation that calculates the signal, and a
-    Profile that holds the signal. Calculators can be used as well.  Contraints
-    and Restraints can be created as part of a FitContribution.
+    Profile that holds the signal. ProfileGenerators and Calculators can be
+    used as well.  Contraints and Restraints can be created as part of a
+    FitContribution.
 
     Attributes
     clicker         --  A Clicker instance for recording changes in the
@@ -144,35 +145,33 @@ class FitContribution(RecipeOrganizer):
 
         return
 
-    def addCalculator(self, calc, name = None):
-        """Add a Calculator to be used by this FitContribution.
+    def addProfileGenerator(self, calc, name = None):
+        """Add a ProfileGenerator to be used by this FitContribution.
 
-        The Calculator is given a name so that it can be used as part of the
-        profile equation (see setEquation). This can be different from the name
-        of the Calculator used for attribute access. FitContributions should
-        not share calculators instance. Different Calculators can share
-        Parameters and ParameterSets, however.
+        The ProfileGenerator is given a name so that it can be used as part of
+        the profile equation (see setEquation). This can be different from the
+        name of the ProfileGenerator used for attribute access.
+        FitContributions should not share calculators instance. Different
+        ProfileGenerators can share Parameters and ParameterSets, however.
         
-        Calling addCalculator sets the profile equation to call the calculator
-        and if there is not a profile equation already.
+        Calling addProfileGenerator sets the profile equation to call the
+        calculator and if there is not a profile equation already.
 
-        calc    --  A Calculator instance
+        calc    --  A ProfileGenerator instance
         name    --  A name for the calculator. If name is None (default), then
-                    the Calculator's name attribute will be used.
+                    the ProfileGenerator's name attribute will be used.
 
         """
         if name is None:
             name = calc.name
 
-        # Let the RecipeOrganizer structure know of the calculator
-        self._addOrganizer(calc)
-
         # Register the calculator with the equation factory and perform any
         # swaps that might be necessary.
-        self._eqfactory.registerEquation(name, calc)
-        oldcalc = self._calculators.get(calc.name)
+        self._eqfactory.registerGenerator(name, calc)
+        oldcalc = self._orgdict.get(calc.name)
         if oldcalc is not None:
             self._swapEquationObject(oldcalc, calc)
+        self._addOrganizer(calc)
         self._calculators[calc.name] = calc
 
         # Set the default fitting equation if there is not one.

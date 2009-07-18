@@ -31,7 +31,6 @@ from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.equation import Clicker
 from diffpy.srfit.equation import Equation
 
-
 class RecipeOrganizer(object):
     """A base class for organizing pieces of a FitRecipe.
 
@@ -93,6 +92,35 @@ class RecipeOrganizer(object):
         if arg is None:
             raise AttributeError(name)
         return arg
+
+    def registerCalculator(self, f, argnames = None, makepars = True):
+        """Register a Calculator so it can be used within equation strings.
+
+        A Calculator is an elaborate function that can organize parameters.
+        This creates a function with this class that can be used within string
+        equations.  The resulting equation does not require the arguments to be
+        passed in the equation string, as this will be handled automatically.
+
+        f           --  The Calculator to register.
+        argnames    --  The names of the arguments to f (list or None). 
+                        If this is None, then the argument names will be
+                        extracted from the Calculator.
+        makepars    --  Flag indicating whether to make parameters from the
+                        argnames if they don't already appear in this object
+                        (default True). Parameters created in this way are
+                        added using the _newParameter method.  If makepars is
+                        False , then it is necessary that the parameters are
+                        already part of this object in order to make the
+                        function.
+
+        Raises TypeError if argnames cannot be automatically extracted.
+        Raises AttributeError if makepars is False and the parameters are not
+        part of this object.
+
+        """
+        self._addOrganizer(f)
+        self.registerFunction(f, f.name, argnames, makepars)
+        return
 
     def registerFunction(self, f, name = None, argnames = None, 
             makepars = True):
@@ -457,7 +485,7 @@ class RecipeOrganizer(object):
 
         # Swap parameters
         oldpar = self._orgdict.get(par.name)
-        if oldpar:
+        if oldpar is not None:
             self._swapEquationObject(oldpar, par)
             self._removeParameter(oldpar)
         

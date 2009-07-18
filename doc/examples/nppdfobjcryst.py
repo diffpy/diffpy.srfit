@@ -12,78 +12,78 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of using more complex ProfileCalculators.
+"""Example of using more complex ProfileGenerators.
 
-This is an example of using a more complex ProfileCalculator in a
+This is an example of using a more complex ProfileGenerator in a
 FitContribution.
 
-The PDFCalculator class is an example of a ProfileCalculator that can be used
-by a FitContribution to help generate a signal. It uses the ObjCrystParSet to
-hold crystal and molecular information from a pyobjcryst Crystal.
+The PDFGenerator class is an example of a ProfileGenerator that can be used by
+a FitContribution to help generate a signal. It uses the ObjCrystParSet to hold
+crystal and molecular information from a pyobjcryst Crystal.
 
 The makeRecipe function shows how to build a FitRecipe that uses the
-PDFCalculator.
+PDFGenerator.
 
 """
 
 import numpy
 
-from diffpy.srfit.fitbase import ProfileCalculator, Profile
+from diffpy.srfit.fitbase import ProfileGenerator, Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
 from gaussianrecipe import scipyOptimize, parkOptimize
 
-class PDFCalculator(ProfileCalculator):
+class PDFGenerator(ProfileGenerator):
     """A class for calculating the PDF for an isolated scatterer.
 
-    This is another example of using a ProfileCalculator class with a
+    This is another example of using a ProfileGenerator class with a
     ParameterSet adapter to refine a structure recipe to data using a
     FitRecipe.
     
     """
 
     def __init__(self, name):
-        """Initialize our calculator.
+        """Initialize our generator.
 
-        Here we add a calculator-level Parameter called 'delta2' that
-        describes the vibrational correlation between atoms. We also add some
-        metadata required by the calculator.
+        Here we add a generator-level Parameter called 'delta2' that describes
+        the vibrational correlation between atoms. We also add some metadata
+        required by the generator.
         
         """
-        ProfileCalculator.__init__(self, name)
+        ProfileGenerator.__init__(self, name)
 
         # Add any non-structural parameters here
         self.newParameter("delta2", 0)
 
-        # Non-Parameters that are needed by the calculator.
+        # Non-Parameters that are needed by the generator.
         self.meta["qmin"] = 1
         self.meta["qmax"] = 20
         return
 
     def setCrystal(self, cryst):
-        """Set the pyobjcryst.Crystal instance for the calculator.
+        """Set the pyobjcryst.Crystal instance for the generator.
 
         This converts the Crystal to a ObjCrystParSet that is used to organize
-        the fitting parameters for the calculator.  The calculator will have
-        its own parameters, each of which will be a proxy for some part of the
+        the fitting parameters for the generator.  The generator will have its
+        own parameters, each of which will be a proxy for some part of the
         crystal. The parameters will be accessible by name under the 'crystal'
-        attribute of this calculator.
+        attribute of this generator.
         
         """
 
         # Create a custom ParameterSet designed to interface with
         # pyobjcryst.Crystal
         parset = ObjCrystParSet(cryst, "crystal")
-        # Put this ParameterSet in the ProfileCalculator.
+        # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
         return
 
     def __call__(self, r):
         """Calculate the PDF.
 
-        This ProfileCalculator will be used in a fit equation that will be
+        This ProfileGenerator will be used in a fit equation that will be
         optimized to fit some data.  By the time this function is evaluated,
         the crystal has been updated by the optimizer via the ObjCrystParSet
         created in setCrystal. Thus, we need only call pdf with the internal
@@ -94,7 +94,7 @@ class PDFCalculator(ProfileCalculator):
         qmax = self.meta["qmax"]
         return pdf(self.crystal.cryst, r, self.delta2.getValue(), qmin, qmax)
 
-# End class PDFCalculator
+# End class PDFGenerator
 
 def pdf(cryst, r, delta2 = 0, qmin = 1, qmax = 20):
     """Calculate the PDF from a diffpy.Structure
@@ -165,7 +165,7 @@ def fofq(cryst, q, delta2):
     q       --  The q-points to calculate over.
     delta2  --  The correlation term in the Debye-Waller factor.
 
-    The calculator uses cctbx for the calculation of the f_i if it is
+    The generator uses cctbx for the calculation of the f_i if it is
     available, otherwise f_i = 1.
 
     """
@@ -397,10 +397,10 @@ def makeC60():
 ####### Example Code
 
 def makeRecipe(cryst, datname):
-    """Create a recipe that uses the PDFCalculator.
+    """Create a recipe that uses the PDFGenerator.
 
-    This will create a FitContribution that uses the PDFCalculator,
-    associate this with a Profile, and use this to define a FitRecipe.
+    This will create a FitContribution that uses the PDFGenerator, associate
+    this with a Profile, and use this to define a FitRecipe.
 
     """
 
@@ -413,24 +413,24 @@ def makeRecipe(cryst, datname):
     profile.setObservedProfile(x, y, dy)
     profile.setCalculationRange(xmin=1.6, xmax=8)
 
-    ## The ProfileCalculator
-    # Create an PDFCalculator named "G". This will be the name we use to refer
-    # to the calculator from within the FitContribution equation.  We also need
+    ## The ProfileGenerator
+    # Create an PDFGenerator named "G". This will be the name we use to refer
+    # to the generator from within the FitContribution equation.  We also need
     # to load the pyobjcryst Crystal we're using.
-    calculator = PDFCalculator("G")
-    calculator.setCrystal(cryst)
-    # These are metadata needed by the calculator
-    calculator.meta["qmin"] = 0.68
-    calculator.meta["qmax"] = 22
+    generator = PDFGenerator("G")
+    generator.setCrystal(cryst)
+    # These are metadata needed by the generator
+    generator.meta["qmin"] = 0.68
+    generator.meta["qmax"] = 22
     
     ## The FitContribution
     # Create a FitContribution that will associate the Profile with the
-    # ProfileCalculator.  The ProfileCalculator will be accessible as an
+    # ProfileGenerator.  The ProfileGenerator will be accessible as an
     # attribute of the FitContribution by its name ("G").  We also want to tell
     # the FitContribution to name the x-variable of the profile "r" so we can
     # use it in equations with this name.
     contribution = FitContribution("bucky")
-    contribution.addCalculator(calculator)
+    contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname = "r")
 
     # Now we're ready to define the FitContribution equation. We need to modify
@@ -446,10 +446,10 @@ def makeRecipe(cryst, datname):
     recipe.addContribution(contribution)
 
     # Specify which parameters we want to refine. We'll be using the
-    # MoleculeParSet within the calculator's ObjCrystParSet directly, so let's
+    # MoleculeParSet within the generator's ObjCrystParSet directly, so let's
     # get a handle to it. See the diffpy.srfit.structure.objcryststructure
     # module for more information about the ObjCrystParSet hierarchy.
-    c60 = calculator.crystal.c60
+    c60 = generator.crystal.c60
 
     # First, the isotropic thermal displacement factor.
     biso = recipe.newVar("biso", 0.25)
@@ -459,7 +459,7 @@ def makeRecipe(cryst, datname):
             recipe.constrain(atom.biso, biso)
 
     # And the correlation term
-    recipe.addVar(calculator.delta2, 2)
+    recipe.addVar(generator.delta2, 2)
 
     # We need to let the molecule expand. If we were modeling it as a crystal,
     # we could let the unit cell expand. For instruction purposes, we use a

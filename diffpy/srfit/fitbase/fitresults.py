@@ -294,7 +294,7 @@ class FitResults(object):
         lines.append("-"*79)
         formatstr = "%-14s %-12.8f"
         lines.append(formatstr%("Residual",self.residual))
-        lines.append(formatstr%("FitContributions", self.residual - self.penalty))
+        lines.append(formatstr%("Contributions", self.residual - self.penalty))
         lines.append(formatstr%("Restraints", self.penalty))
         lines.append(formatstr%("Chi2",self.chi2))
         lines.append(formatstr%("Reduced Chi2",self.rchi2))
@@ -306,7 +306,7 @@ class FitResults(object):
             numericStringSort(keys)
 
             lines.append("")
-            l = "FitContributions"
+            l = "Contributions"
             if not certain:
                 l += " (Chi2 and Reduced Chi2 invalid)"
             lines.append(l)

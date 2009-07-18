@@ -24,7 +24,7 @@ can create a fitting problem using the FitContribution, Profile and FitRecipe
 classes.
 
 Modules:
-    calculator      --  Home to ProfileCalculator class (see below).
+    calculator      --  Home to Calculator class (see below).
     constraint      --  Home to Constraint class. Constraints are used by
                         FitRecipe to associate Parameters and variables of a
                         fit.
@@ -32,17 +32,18 @@ Modules:
     fithook         --  Home to FitHook class. The FitHook is used by the
                         FitRecipe to display information or otherwise operate on
                         the recipe during a running fit.
-    fitrecipe        --  Home to FitRecipe class (see below).
+    fitrecipe       --  Home to FitRecipe class (see below).
     fitresults      --  Home to FitResults class (see below).
-    recipeorganizer  --  Home to RecipeOrganizer class. This is the base class
-                        for other classes that organize Parameters,
-                        Constraints, Restraints and other RecipeOrganizers.
     parameter       --  Home to Parameter classes. Parameters encapsulate
                         the name, value and other properties of an equation
                         parameter.
     parameterset    --  Home to ParameterSet class. ParameterSets organize
                         Parameters and other ParameterSets within a FitRecipe.
     profile         --  Home to Profile class (see below).
+    profilegenerator    --  Home to ProfileGenerator class (see below.)
+    recipeorganizer --  Home to RecipeOrganizer class. This is the base class
+                        for other classes that organize Parameters,
+                        Constraints, Restraints and other RecipeOrganizers.
     restraint       --  Home to the Restraint class. Restraints are used by the
                         FitRecipe to coerce variables within a specified range
                         of values during a fit.
@@ -50,6 +51,9 @@ Modules:
                         package.
 
 Classes:
+
+    Calculator      --  A class that can be used with a FitContribution (or any
+                        RecipyOrganizer) to help define a calculation.
     FitContribution --  FitContributions organize Calculators and Profiles and
                         use them to calculate a residual function for a
                         FitRecipe.
@@ -59,31 +63,32 @@ Classes:
                         function for the system. Parameters from the various
                         FitContributions can be turned into or constrained to
                         fitting variables.
-    Profile         --  Class for holding observed and calculated profiles.
-                        Profiles are used by ProfileCalculators to provide the
-                        set of evaluation points, and by FitContributions to
-                        calculate a residual.
-    ProfileCalculator   --  Base class for forward calculators. This class is
-                        used by a FitContribution to produce a residual
-                        function to be compared with data.  It can be used on
-                        its own for the organziation of calculation parameters
-                        and evaluation of a profile function.
     FitResults      --  FitResults interrogate a FitRecipe and stores all
                         relavent fitting results, such as the goodness of fit,
                         variables and constraint values. It estimates
                         uncertainties based on these values and can display
                         this information on screen or save it to a file.
+    Profile         --  Class for holding observed and calculated profiles.
+                        Profiles are used by ProfileGenerators to provide the
+                        set of evaluation points, and by FitContributions to
+                        calculate a residual.
+    ProfileGenerator   --  Base class for profile generators. This class is
+                        used by a FitContribution to produce a residual
+                        function to be compared with data.  It can be used on
+                        its own for the organziation of calculation parameters
+                        and evaluation of a profile function.
 
 """
 
 # package version
 from diffpy.srfit.version import __version__
 
-from .calculator import ProfileCalculator
+from .calculator import Calculator
 from .fitcontribution import FitContribution
 from .fitrecipe import FitRecipe
 from .fitresults import FitResults
 from .profile import Profile
+from .profilegenerator import ProfileGenerator
 
 __id__ = "$Id$"
 # End of file

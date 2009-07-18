@@ -19,8 +19,8 @@ It is assumed that the function we need cannot be modified by us (although we
 define it below). This will help us demonstrate how to extend a function using
 SrFit.
 
-The makeRecipe function shows how to build a FitRecipe that will fit our recipe to
-the data. 
+The makeRecipe function shows how to build a FitRecipe that will fit our recipe
+to the data. 
 
 """
 
@@ -122,11 +122,11 @@ def makeRecipe():
     Data is associated with a fitting equation within a FitContribution. The
     FitContribution defines the equation and parameters that will be adjusted
     to fit the data. The fitting equation can be defined within a function or
-    optionally within the Calculator class. We won't need the Calculator class
-    in this example since the signature of the fitting equation (the 'debye'
-    function) is so simple. The FitContribution also defines the residual
-    function to optimize for the data/equation pair. This can be modified, but
-    we won't do that here.
+    optionally within the ProfileGenerator class. We won't need the
+    ProfileGenerator class in this example since the signature of the fitting
+    equation (the 'debye' function) is so simple. The FitContribution also
+    defines the residual function to optimize for the data/equation pair. This
+    can be modified, but we won't do that here.
     
     """
         
@@ -141,7 +141,7 @@ def makeRecipe():
     profile.setObservedProfile(x, y, dy)
 
     ## The FitContribution
-    # The FitContribution associates the profile with the Debye Calculator. 
+    # The FitContribution associates the profile with the Debye function. 
     contribution = FitContribution("pb")
     # Tell the contribution about the Profile. We will need to use the
     # independent variable (the temperature) from the data to calculate the

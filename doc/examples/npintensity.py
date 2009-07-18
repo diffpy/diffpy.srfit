@@ -12,16 +12,16 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of using ProfileCalculators in FitContributions.
+"""Example of using ProfileGenerators in FitContributions.
 
-This is an example of building a ProfileCalculator and using it in a
+This is an example of building a ProfileGenerator and using it in a
 FitContribution in order to fit theoretical intensity data.
 
-The IntensityCalculator class is an example of a ProfileCalculator that can be
+The IntensityGenerator class is an example of a ProfileGenerator that can be
 used by a FitContribution to help generate a signal.
 
 The makeRecipe function shows how to build a FitRecipe that uses the
-IntensityCalculator.
+IntensityGenerator.
 
 """
 
@@ -29,37 +29,37 @@ import os
 
 import numpy
 
-from diffpy.srfit.fitbase import ProfileCalculator, Profile
+from diffpy.srfit.fitbase import ProfileGenerator, Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.diffpystructure import StructureParSet
 
 from gaussianrecipe import scipyOptimize, parkOptimize
 
-class IntensityCalculator(ProfileCalculator):
+class IntensityGenerator(ProfileGenerator):
     """A class for calculating intensity using the Debye equation.
 
     Calculating intensity from a structure is difficult in general. This class
-    takes a diffpy.Structure.Structure instance and from that calculates a
+    takes a diffpy.Structure.Structure instance and from that generates a
     theoretical intensity signal. Unlike the example in gaussianrecipe.py, the
-    intensity calculator is not simple, so we must define this
-    ProfileCalculator to help us interface with a FitRecipe.
+    intensity generator is not simple, so we must define this ProfileGenerator
+    to help us interface with a FitRecipe.
 
-    The purpose of a ProfileCalculator is to
-    1) provide a function that calculates a profile signal
+    The purpose of a ProfileGenerator is to
+    1) provide a function that generates a profile signal
     2) organize the Parameters required for the calculation
 
-    This calculator wraps the 'iofq' function defined below.
+    This generator wraps the 'iofq' function defined below.
     
     """
 
     def __init__(self, name):
-        """Define our calculator.
+        """Define our generator.
 
         Keep count of how many times the function has been called (self.count).
 
         """
-        ProfileCalculator.__init__(self, name)
+        ProfileGenerator.__init__(self, name)
         # Count the calls
         self.count = 0
         return
@@ -71,7 +71,7 @@ class IntensityCalculator(ProfileCalculator):
         adapter from diffpy.srfit.structure. The created Parameters are proxies
         for attributes of the Structure instance that can be interfaced within
         SrFit.  The Parameters will be accessible by name under the 'structure'
-        attribute of this calculator, and are organized hierarchically:
+        attribute of this generator, and are organized hierarchically:
 
         structure
           - lattice
@@ -110,7 +110,7 @@ class IntensityCalculator(ProfileCalculator):
         # StructureParSet the name "structure".
         parset = StructureParSet(stru, "structure")
 
-        # Put this ParameterSet in the ProfileCalculator.
+        # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
 
         return
@@ -118,7 +118,7 @@ class IntensityCalculator(ProfileCalculator):
     def __call__(self, q):
         """Calculate the intensity.
 
-        This ProfileCalculator will be used in a FitContribution that will be
+        This ProfileGenerator will be used in a FitContribution that will be
         optimized to fit some data.  By the time this function is evaluated,
         the diffpy.Structure.Structure instance has been updated by the
         optimizer via the StructureParSet defined in setStructure. Thus, we
@@ -129,7 +129,7 @@ class IntensityCalculator(ProfileCalculator):
         print "iofq called", self.count
         return iofq(self.structure.stru, q)
 
-# End class IntensityCalculator
+# End class IntensityGenerator
 
 def iofq(S, q):
     """Calculate I(Q) (X-ray) using the Debye Equation.
@@ -142,8 +142,8 @@ def iofq(S, q):
             conditions are not applied.
     q   --  The q-points to calculate over.
 
-    The calculator uses cctbx for the calculation of the f_i if it is
-    available, otherwise f_i = 1.
+    This uses cctbx for the calculation of the f_i if it is available,
+    otherwise f_i = 1.
 
     """
     # The functions we need
@@ -297,9 +297,9 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
 ####### Example Code
 
 def makeRecipe(strufile, datname):
-    """Create a recipe that uses the IntensityCalculator.
+    """Create a recipe that uses the IntensityGenerator.
 
-    This will create a FitContribution that uses the IntensityCalculator,
+    This will create a FitContribution that uses the IntensityGenerator,
     associate this with a Profile, and use this to define a FitRecipe.
 
     """
@@ -312,21 +312,21 @@ def makeRecipe(strufile, datname):
     x, y, u = numpy.loadtxt(datname, unpack=True)
     profile.setObservedProfile(x, y, u)
 
-    ## The ProfileCalculator
-    # Create an IntensityCalculator named "I". This will be the name we use to
-    # refer to the calculator from within the FitContribution equation.  We
-    # also need to load the model structure we're using.
-    calculator = IntensityCalculator("I")
-    calculator.setStructure(strufile)
+    ## The ProfileGenerator
+    # Create an IntensityGenerator named "I". This will be the name we use to
+    # refer to the generator from within the FitContribution equation.  We also
+    # need to load the model structure we're using.
+    generator = IntensityGenerator("I")
+    generator.setStructure(strufile)
     
     ## The FitContribution
     # Create a FitContribution, that will associate the Profile with the
-    # ProfileCalculator.  The ProfileCalculator will be accessible as an
+    # ProfileGenerator.  The ProfileGenerator will be accessible as an
     # attribute of the FitContribution by its name ("I").  We also want to tell
     # the FitContribution to name the x-variable of the profile "q", so we can
     # use it in equations with this name.
     contribution = FitContribution("bucky")
-    contribution.addCalculator(calculator)
+    contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname = "q")
 
     # Now we're ready to define the fitting equation for the FitContribution.
@@ -336,7 +336,7 @@ def makeRecipe(strufile, datname):
     # polynomial background, and broaden the peaks. 
     #
     # There is added benefit for defining these operations outside of the
-    # IntensityCalculator. By combining the different parts of the calculation
+    # IntensityGenerator. By combining the different parts of the calculation
     # within the fitting equation, the time-consuming iofq calculation is only
     # performed when a structural Parameter is changed. If only non-structural
     # parameters are changed, such as the background and broadening Parameters,
@@ -356,8 +356,8 @@ def makeRecipe(strufile, datname):
     # and turns the polynomial coefficients into Parameters.
     contribution.registerStringFunction(bkgdstr, "bkgd")
 
-    # We will create the broadening function that we need by creating a
-    # python function and registering it with the FitContribution.
+    # We will create the broadening function that we need by creating a python
+    # function and registering it with the FitContribution.
     pi = numpy.pi
     exp = numpy.exp
     def gaussian(q, q0, width):
@@ -397,9 +397,9 @@ def makeRecipe(strufile, datname):
     recipe.addVar(contribution.width, 0.1)
 
     # We can also refine structural parameters. Here we extract the
-    # StructureParSet from the intensity calculator and use the parameters like
+    # StructureParSet from the intensity generator and use the parameters like
     # we would any others.
-    structure = calculator.structure
+    structure = generator.structure
 
     # We want to allow for isotropic expansion, so we'll constrain the lattice
     # parameters to the same value (the lattice is cubic). Note that we
@@ -463,9 +463,9 @@ if __name__ == "__main__":
     # Generate and print the FitResults
     res = FitResults(recipe)
     # We want to see how much speed-up we get from bringing the scale and
-    # background outside of the intensity calculator.  Get the number of calls
+    # background outside of the intensity generator.  Get the number of calls
     # to the residual function from the FitRecipe, and the number of calls to
-    # 'iofq' from the IntensityCalculator.
+    # 'iofq' from the IntensityGenerator.
     rescount = recipe.fithook.count
     calcount = recipe.bucky.I.count
     footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)

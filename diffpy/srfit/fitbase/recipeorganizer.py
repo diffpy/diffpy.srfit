@@ -230,6 +230,8 @@ class RecipeOrganizer(object):
         argstr = ",".join(argnames)
         eq = equationFromString("%s(%s)"%(name,argstr), factory)
 
+        eq.name = name
+
         self._swapAndRegister(name, eq)
 
         return eq
@@ -266,10 +268,11 @@ class RecipeOrganizer(object):
         # Build the equation instance.
         eq = equationFromString(fstr, self._eqfactory, buildargs = makepars)
 
-        # Register any new Parameters. Note that these are ParameterReferences,
-        # so we must create an actual Parameter to register.
+        # Register any new Parameters.
         for par in self._eqfactory.newargs:
             self._addParameter(par)
+
+        eq.name = name
 
         # Register the equation by name and do any necessary swapping.
         self._swapAndRegister(name, eq)
@@ -651,9 +654,9 @@ class RecipeOrganizer(object):
         """
         self._eqfactory.registerEquation(name, newobj)
         oldobj = self._equations.get(name)
+        self._equations[name] = newobj
         if oldobj is not None:
             self._swapEquationObject(oldobj, newobj)
-        self._equations[name] = newobj
         return
 
 # End RecipeOrganizer

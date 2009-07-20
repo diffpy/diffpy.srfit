@@ -169,10 +169,10 @@ class FitContribution(RecipeOrganizer):
         # swaps that might be necessary.
         self._eqfactory.registerGenerator(name, calc)
         oldcalc = self._orgdict.get(calc.name)
+        self._calculators[calc.name] = calc
         if oldcalc is not None:
             self._swapEquationObject(oldcalc, calc)
         self._addOrganizer(calc)
-        self._calculators[calc.name] = calc
 
         # Set the default fitting equation if there is not one.
         if self._eq is None:

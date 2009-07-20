@@ -22,6 +22,7 @@ can be updated with the 'generate' method of the Generator. Generators are
 treated as leaf nodes (like Arguments and Partitions) of a Literal tree. They
 can be dependent on other Literals to update their clicker, but those details
 are up to classes that inherit from Generator.
+
 """
 
 from .literal import Literal
@@ -38,9 +39,10 @@ class Generator(Literal):
     name    --  A name for this Generator.
     clicker --  A Clicker instance for recording change in the Generator.
     literal --  The literal modified by the generate method (default None).
+
     """ 
 
-    def __init__(self, name = ""):
+    def __init__(self, name = "", nin=0, nout=1):
         """Initialization."""
         Literal.__init__(self)
         self.name = name

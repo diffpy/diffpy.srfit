@@ -85,12 +85,15 @@ class Swapper(Visitor):
         for literal in op.args:
             literal.identify(self)
 
+
         # If we've been told to swap out a child, then we must do it in-place.
         if self._swap:
 
-            idx = op.args.index(self.oldlit)
-            op.args[idx] = self.newlit
-            op.clicker.addSubject(self.newlit.clicker)
+            while self.oldlit in op.args:
+                idx = op.args.index(self.oldlit)
+
+                op.args[idx] = self.newlit
+                op.clicker.addSubject(self.newlit.clicker)
 
             self.newlit.clicker.click()
             self._swap = False
@@ -101,10 +104,16 @@ class Swapper(Visitor):
 
             self._swap = True
 
-            for literal in op.args:
-                self.newlit.addLiteral(literal)
+            if op.args != self.newlit.args:
+                for literal in op.args:
+                    self.newlit.addLiteral(literal)
 
 
+        # We also see if the operation itself needs to be swapped. This is in
+        # case a Generator is being used as an operation in an Operator.
+        if op.operation is self.oldlit:
+            op.operation = self.newlit
+            op.clicker.click()
 
         return
 
@@ -151,7 +160,6 @@ class Swapper(Visitor):
         old Generator will not be transferred to a new one.
 
         """
-
         # Swap out children in the new generator
         if gen is self.oldlit:
 

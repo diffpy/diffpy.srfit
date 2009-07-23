@@ -584,6 +584,7 @@ class BondLengthRestraint(MoleculeRestraint):
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)
+
     """
 
     def __init__(self, atom1, atom2, length, sigma, delta, scaled = False):
@@ -632,6 +633,7 @@ class BondAngleRestraint(MoleculeRestraint):
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)
+
     """
 
     def __init__(self, atom1, atom2, atom3, angle, sigma, delta, scaled =
@@ -685,6 +687,7 @@ class DihedralAngleRestraint(MoleculeRestraint):
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)
+
     """
 
     def __init__(self, atom1, atom2, atom3, atom4, angle, sigma, delta, scaled

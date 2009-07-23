@@ -13,11 +13,14 @@
 ########################################################################
 
 
-"""Tools for structure analysis from diffraction data.
+"""Utitiles used throughout SrFit.
 
 """
 
 # package version
 from diffpy.srfit.version import __version__
+
+from .utilmod import hasinterface
+from .utilmod import verifyinterface
 
 # End of file

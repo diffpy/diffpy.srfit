@@ -73,12 +73,14 @@ class Equation(Generator):
     name        --  A name for this Equation.
     clicker     --  A Clicker instance for recording change in the Generator.
     literal     --  An Argument to store the value of te
+
     """
 
     def __init__(self, root=None):
         """Initialize.
 
         root    --  The root node of the Literal tree (optional)
+
         """
         Generator.__init__(self)
         self.evaluator = None
@@ -102,6 +104,7 @@ class Equation(Generator):
 
         Raises:
         ValueError if errors are found in the Literal tree.
+
         """
         validator = Validator()
         root.identify(validator)
@@ -132,6 +135,7 @@ class Equation(Generator):
 
         Raises
         ValueError when a passed argument cannot be found
+
         """
         # Process args
         for idx, val in enumerate(args):
@@ -198,6 +202,7 @@ class Equation(Generator):
                     make that decision.
 
         This stores the value of the equation in the literal attribute.
+
         """
         self.literal.setValue( self() )
         return

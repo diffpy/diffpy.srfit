@@ -21,15 +21,17 @@ vistior.
 Literals have two data attributes: 
 name    --  The name of the literal as it would appear in an equation.
 clicker --  Records changes in the state of the Literal.
-The clicker is used by the Evaluator visitor. See that class for a more detailed
-description.
+The clicker is used by the Evaluator visitor. See that class for a more
+detailed description.
 
-Note that even though an equation hierarchy is designed according to the visitor
-pattern, the primary purpose of the hierarchy is to flexibly and efficiently
-evaluate equations. To make this work without overly complex machinery, some of
-the information needed by the Evaluator visitor is stored in the data objects.
+Note that even though an equation hierarchy is designed according to the
+visitor pattern, the primary purpose of the hierarchy is to flexibly and
+efficiently evaluate equations. To make this work without overly complex
+machinery, some of the information needed by the Evaluator visitor is stored in
+the data objects.
 
 The clicker is described in the diffpy.equation.clicker module.
+
 """
 
 from .. import Clicker
@@ -40,7 +42,12 @@ class Literal(object):
     Attributes
     name    --  A name for this Literal (default None).
     clicker --  A Clicker instance for recording change in the value
+
     """ 
+
+    # Required attributes - used for type checking
+    name = None
+    clicker = None
 
     def __init__(self):
         """Initialization."""

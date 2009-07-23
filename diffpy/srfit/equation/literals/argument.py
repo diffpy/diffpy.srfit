@@ -16,6 +16,7 @@
 
 Arguments are the leaves of an equation tree, in essense a variable or a
 constant.
+
 """
 
 from .literal import Literal
@@ -31,7 +32,12 @@ class Argument(Literal):
     const   --  A flag indicating whether this is considered a constant.
                 Constants may be given special treatment by the Visitors.
     value   --  The value of the Argument. Modified with setValue.
+
     """
+
+    # Required attributes - used for type checking
+    const = None
+    value = None
 
     def __init__(self, value = None, name = None, const = False):
         """Initialization."""
@@ -51,6 +57,7 @@ class Argument(Literal):
         """Set the value of the argument to something.
 
         This will click the clicker.
+
         """
         # This faster than using numpy.array_equiv.
         # The most common case is that of comparing scalars so we check that
@@ -71,6 +78,7 @@ class Argument(Literal):
 
         For the sake of easy subclassing, use this rather than the value
         attribute.
+
         """
         return self.value
 

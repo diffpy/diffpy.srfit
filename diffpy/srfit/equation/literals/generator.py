@@ -42,7 +42,11 @@ class Generator(Literal):
 
     """ 
 
-    def __init__(self, name = "", nin=0, nout=1):
+    # Required attributes - used for type checking
+    args = None
+    literal = None
+
+    def __init__(self, name = ""):
         """Initialization."""
         Literal.__init__(self)
         self.name = name
@@ -70,6 +74,7 @@ class Generator(Literal):
                     make that decision.
 
         By default this method does nothing.
+
         """
         return
 

@@ -45,12 +45,14 @@ global counters for use in different types of comparisons. Since the global
 counter of a clicker is tied to its class, Clickers can only be meaningfully
 compared with clickers with the same class. Thus, one should not inherit from
 Clicker and expect the subclasses to interoperate.
+
 """
 
 def clickerFactory():
     """A factory for creating Clicker classes.
 
     Returns Clicker class
+
     """
 
     class Clicker(object):
@@ -92,6 +94,7 @@ def clickerFactory():
             """Remove an observer.
 
             This has no effect when the passed Clicker is not an observer.
+
             """
             self._observers.discard(other)
             return
@@ -100,6 +103,7 @@ def clickerFactory():
             """Remove a subject.
 
             This has no effect when the passed Clicker is not a subject.
+
             """
             other.removeObserver(self)
             return
@@ -116,6 +120,7 @@ def clickerFactory():
             """Click this Clicker and all of its observers.
 
             Observers will be given the same state as this clicker.
+
             """
             self.__class__._numclicks += 1
             self.update()
@@ -126,6 +131,7 @@ def clickerFactory():
 
             This sets the local state to the global state and updates all
             observers.
+
             """
             self._state = self.__class__._numclicks
             for clicker in self._observers:

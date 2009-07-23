@@ -32,6 +32,7 @@ Operators have a 'setCombine' method that will tell an Evaluator whether a
 Partition can be combined after the operation. By default they cannot. The
 CombineOperator will combine a Partition but leave other literals unchanged.
 See the Partition module for combination rules.
+
 """
 
 from .literal import Literal
@@ -58,7 +59,18 @@ class Operator(Literal):
     _cancombine --  Indicates whether this operator can combine a Partition.
     _proxy      --  The Argument, Partition or value that this Operator results
                     in (used by the Evaluator).
+
     """
+
+    # Required attributes - used for type checking
+    args = None
+    nin = None
+    nout = None
+    operation = None
+    symbol = None
+    _tags = None
+    _cancombine = None
+    _proxy = None
 
     def __init__(self, name = None, symbol = None, operation = None,
             nin = 2, nout = 1, tags = []):
@@ -86,6 +98,7 @@ class Operator(Literal):
 
         Note that order of operation matters. The first literal added is the
         leftmost argument. The last is the rightmost.
+
         """
         self.args.append(literal)
         self.clicker.addSubject(literal.clicker)
@@ -97,6 +110,7 @@ class Operator(Literal):
         By default, operators cannot combine Partitions.
 
         combine --  combine flag (default True)
+
         """
         if combine != self._cancombine:
             self._cancombine = combine
@@ -257,6 +271,7 @@ class UFuncOperator(Operator):
 
         Arguments
         op  --  A numpy ufunc
+
         """
         Operator.__init__(self)
         self.name = op.__name__
@@ -270,6 +285,7 @@ class CombineOperator(Operator):
     """Operator for combining Partitions.
 
     This acts as the identity function (f(x) = x) to non-Partition literals.
+
     """
 
     def __init__(self):

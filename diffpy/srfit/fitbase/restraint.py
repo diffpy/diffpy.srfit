@@ -42,6 +42,7 @@ class Restraint(object):
     prefactor * max(0, lb - val, val - ub) ** power
     and val is the value of the calculated equation.  This is multipled by the
     average chi^2 if scaled is True.
+
     """
 
     def __init__(self):
@@ -67,6 +68,7 @@ class Restraint(object):
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False).
+
         """
         self.eq = eq
         self.lb = lb
@@ -107,6 +109,7 @@ class BoundsRestraint(object):
     ub      --  The lower bound on the restraint evaluation (default inf).
 
     The penalty infinite if the value of the equation is outside the bounds.
+
     """
 
     def __init__(self):
@@ -123,6 +126,7 @@ class BoundsRestraint(object):
                     restraint bounds.
         lb      --  The lower bound on the restraint evaluation (default -inf).
         ub      --  The lower bound on the restraint evaluation (default inf).
+
         """
         self.eq = eq
         self.lb = lb

@@ -28,6 +28,7 @@ the Partition in the Literal tree gets the first opportunity to combine it.
 The exception to this rule is when two or more Partitions must act as
 arguments in the same Operator. In this case, each of these Partitions 
 will be combined before the operation. 
+
 """
 
 from .literal import Literal
@@ -44,6 +45,7 @@ class Partition(Literal):
     args    --  List of Arguments, modfied by the 'addArgument' method. 
     tags    --  Set of tags from all arguments.
     tagmap  --  A map of tags to lists of Argument indicies from self.args.
+
     """ 
 
     def __init__(self, name = ""):
@@ -67,6 +69,7 @@ class Partition(Literal):
 
         arg     --  Instance of Argument.
         All remaining method arguments are interpreted as tags.
+
         """
         self.args.append(arg)
         # This will say "here I am" to the Evaluator visitor, that only acts if
@@ -89,6 +92,7 @@ class Partition(Literal):
         values  --  List of values to operate on.
 
         Returns the combined values
+
         """
         return sum(vals)
 

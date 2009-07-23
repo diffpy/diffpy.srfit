@@ -65,13 +65,18 @@ class Calculator(RecipeOrganizer):
     addParameterSet = RecipeOrganizer._addOrganizer
     removeParameterSet = RecipeOrganizer._removeOrganizer
 
+    def __init__(self, name):
+        RecipeOrganizer.__init__(self, name)
+        self.meta = {}
+        return
+
     # Overload me!
     def __call__(self, *args):
         """Calculate something.
 
         This method must be overloaded. When overloading, you should specify
-        the arguments explicitly, or this can be done when adding the
-        Calculator to a RecipeOrganizer.
+        the arguments explicitly, otherwise the parameters must be specified
+        when adding the Calculator to a RecipeOrganizer.
 
         """
         return 0

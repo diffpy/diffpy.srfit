@@ -40,14 +40,7 @@ class Swapper(Visitor):
         newlit  --  The literal to be placed into the literal tree. See the
                     class for how the replacement takes place.
 
-        Raises TypeError if the new literal does not have an interface that is
-        compatible with the old one.
-
         """
-
-        for attrname in dir(oldlit):
-            if not hasattr(newlit, attrname):
-                raise TypeError("New and old Literal are not compatible")
 
         self.newlit = newlit
         self.oldlit = oldlit

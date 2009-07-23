@@ -55,6 +55,7 @@ class FitHook(object):
         """Reset the hook data.
 
         This is called whenever FitRecipe._prepare is called.
+
         """
         self.count = 0
         return

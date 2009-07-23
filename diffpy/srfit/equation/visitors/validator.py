@@ -19,12 +19,22 @@ validity of each equation as much as possible without evaluating it. It
 collects errors in a list.
 
 The Validator checks that the input count of each Operator is equal to the
-output count of its arguments.
+output count of its arguments. It also checks that each object has the proper
+interface.
+
 """
 
 from .visitor import Visitor
 
 from .. import Clicker
+from ..literals import Argument
+from ..literals import Generator
+from ..literals import Operator
+from ..literals import Partition
+
+from diffpy.srfit.util import hasinterface
+
+msg = "'%s' does not have the interface required by '%s'"
 
 class Validator(Visitor):
     """Validator error for checking validity of an equation tree.
@@ -33,6 +43,7 @@ class Validator(Visitor):
     errors  --  List of strings describing errors.
     _nin    --  Variable for counting the number input arguments for an
                 operator.
+
     """
 
     def __init__(self):
@@ -50,12 +61,21 @@ class Validator(Visitor):
         """Process an Argument node.
 
         No assumption is made about the argument type.
+
         """
+        if not hasinterface(arg, Argument):
+            m = msg%(arg, Argument.__name__)
+            self.errors.append(m)
         self._nin = 1
         return
 
     def onOperator(self, op):
         """Process an Operator node."""
+
+        if not hasinterface(op, Operator):
+            m = msg%(op, Operator.__name__)
+            self.errors.append(m)
+
         # Can only process single-valued functions
         if op.nout != 1:
             m = "'%s' is not single-valued (nout != 1)"%op
@@ -89,11 +109,21 @@ class Validator(Visitor):
 
     def onPartition(self, part):
         """Process a Partition node."""
+
+        if not hasinterface(part, Partition):
+            m = msg%(part, Partition.__name__)
+            self.errors.append(m)
+
         self._nin = 1
         return
 
     def onGenerator(self, gen):
         """Process a Generator node."""
+
+        if not hasinterface(gen, Generator):
+            m = msg%(gen, Generator.__name__)
+            self.errors.append(m)
+
         self._nin = 1
         return
 

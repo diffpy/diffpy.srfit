@@ -212,6 +212,7 @@ def rebinArray(A, xold, xnew):
     This uses cubic spline interpolation.
     
     Returns: A new array over the new sampling array.
+
     """
     if numpy.array_equal(xold, xnew):
         return A

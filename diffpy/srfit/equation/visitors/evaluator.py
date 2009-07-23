@@ -112,6 +112,7 @@ class Evaluator(Visitor):
         """Process an Operator node.
 
         This version checks for and propagates partitions.
+
         """
         if op.clicker > self._clicker:
 
@@ -128,6 +129,7 @@ class Evaluator(Visitor):
         """Process an Operator node.
 
         This version is used if parts=False in the initilization.
+
         """
         if op.clicker > self._clicker:
 
@@ -157,6 +159,7 @@ class Evaluator(Visitor):
         * Otherwise it will be Argument-like.
 
         Returns a new Literal
+
         """
 
         # This tells us whether we can combine after the operation and
@@ -211,6 +214,7 @@ class Evaluator(Visitor):
         necessary for the operation without managing the attributes themselves.
         This makes the code much cleaner and logically encapsulated. Think of
         this class as an "operator helper" rather than an "evaluator helper".
+
         """
 
         def __init__(self):
@@ -318,6 +322,7 @@ class Evaluator(Visitor):
     class _PseudoPartition(Partition):
         """A partition-like object that can be used to hold the output of an
         operated partition.
+
         """
 
         def _prepare(self):
@@ -325,6 +330,7 @@ class Evaluator(Visitor):
 
             The _partvals list is set by the onOperator method, so this method
             does nothing.
+
             """
             return
 

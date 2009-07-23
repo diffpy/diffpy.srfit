@@ -64,6 +64,7 @@ class FitContribution(RecipeOrganizer):
     _yname          --  The name of of the observed profile (default None). 
     _dyname         --  The name of of the uncertainty in the observed profile
                         (default None).
+
     """
 
     def __init__(self, name):

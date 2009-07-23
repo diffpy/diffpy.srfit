@@ -29,6 +29,7 @@ class PartFinder(Visitor):
 
     Attributes
     parts   --  A list of Partitions from the tree.
+
     """
 
     def __init__(self):

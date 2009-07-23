@@ -30,8 +30,8 @@ class FitResults(object):
     Attributes
     recipe       --  The recipe containing the results.
     cov         --  The covariance matrix from the recipe.
-    conresults  --  A dictionary of ContributionResults for each fitcontribution,
-                    indexed by the fitcontribution name.
+    conresults  --  A dictionary of ContributionResults for each
+                    FitContribution, indexed by the FitContribution name.
     varnames    --  Names of the variables in the recipe.
     varvals     --  Values of the variables in the recipe.
     varunc      --  Uncertainties in the variable values.
@@ -116,7 +116,7 @@ class FitResults(object):
         # Get the constraint uncertainties
         self._calculateConstraintUncertainties()
 
-        # Store the fitting arrays and metrics for each fitcontribution.
+        # Store the fitting arrays and metrics for each FitContribution.
         self.conresults = {}
         for con, weight in zip(recipe._organizers, recipe._weights):
             self.conresults[con.name] = ContributionResults(con, weight, self)
@@ -300,7 +300,7 @@ class FitResults(object):
         lines.append(formatstr%("Reduced Chi2",self.rchi2))
         lines.append(formatstr%("Rw",self.rw))
 
-        ## Per-fitcontribution results
+        ## Per-FitContribution results
         if len(self.conresults) > 1:
             keys = self.conresults.keys()
             numericStringSort(keys)
@@ -451,25 +451,26 @@ class FitResults(object):
 # End class FitResults
 
 class ContributionResults(object):
-    """Class for processing, storing fitcontribution results.
+    """Class for processing, storing FitContribution results.
 
-    This does not store the fitcontribution.
+    This does not store the FitContribution.
     
     Attributes
-    y       --  The fitcontribution's profile over the calculation range (default
-                None).
-    dy      --  The uncertainty in the fitcontribution's profile over the
+    y       --  The FitContribution's profile over the calculation range
+                (default None).
+    dy      --  The uncertainty in the FitContribution's profile over the
                 calculation range (default None).
     x       --  A numpy array of the calculated independent variable for the
-                fitcontribution (default None).
-    ycalc   --  A numpy array of the calculated signal for the fitcontribution
+                FitContribution (default None).
+    ycalc   --  A numpy array of the calculated signal for the FitContribution
                 (default None).
-    residual    --  The scalar residual of the fitcontribution.
-    chi2        --  The chi2 of the fitcontribution.
-    rw          --  The Rw of the fitcontribution.
-    weight      --  The weight of the fitcontribution in the recipe.
+    residual    --  The scalar residual of the FitContribution.
+    chi2        --  The chi2 of the FitContribution.
+    rw          --  The Rw of the FitContribution.
+    weight      --  The weight of the FitContribution in the recipe.
     conlocs     --  The location of the constrained parameters in the
-                    fitcontribution (see the RecipeOrganizer._locateChild method).
+                    FitContribution (see the RecipeOrganizer._locateChild
+                    method).  
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
 
@@ -478,8 +479,8 @@ class ContributionResults(object):
     def __init__(self, con, weight, fitres):
         """Initialize the attributes.
 
-        con     --  The fitcontribution
-        weight  --  The weight of the fitcontribution in the recipe
+        con     --  The FitContribution
+        weight  --  The weight of the FitContribution in the recipe
         fitres  --  The FitResults instance to contain this ContributionResults
         
         """

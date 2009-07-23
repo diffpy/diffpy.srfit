@@ -183,6 +183,10 @@ class ProfileGenerator(RecipeOrganizer):
         visitor.onGenerator(self)
         return
 
+    def addLiteral(self, literal):
+        """Required for Generator interface."""
+        raise AttributeError("'addLiteral' not used by this class")
+
 # End class calculator
 
 __id__ = "$Id$"

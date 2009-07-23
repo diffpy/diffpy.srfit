@@ -830,9 +830,6 @@ class TestSwapper(unittest.TestCase):
         mult.identify(evaluator)
         self.assertEquals(36, evaluator.value)
 
-
-        # Test bad swap
-        self.assertRaises(TypeError, visitors.Swapper, v4, plus2)
         return
 
     def testGenerator(self):

@@ -83,6 +83,7 @@ class FitnessAdapter(park.Fitness):
         """Parameters with analytic derivatives.
         
         Does nothing as of now.
+
         """
         return
         # The FitRecipe residual requires input paramters

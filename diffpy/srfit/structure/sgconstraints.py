@@ -50,6 +50,7 @@ def _constrainTriclinic(lattice):
     """Make constraints for Triclinic systems.
 
     This frees the current value of all parameters.
+
     """
     return
 
@@ -58,6 +59,7 @@ def _constrainMonoclinic(lattice):
     
     alpha and beta are constrained to 90 unless alpha != beta and alpha ==
     gamma, in which case alpha and gamma are constrained to 90.
+
     """
     lattice.alpha.setConst(True, 90.0)
     beta = lattice.beta.getValue()
@@ -73,6 +75,7 @@ def _constrainOrthorhombic(lattice):
     """Make constraints for Orthorhombic systems.
     
     alpha, beta and gamma are constrained to 90
+
     """
     lattice.alpha.setConst(True, 90.0)
     lattice.beta.setConst(True, 90.0)
@@ -83,6 +86,7 @@ def _constrainTetragonal(lattice):
     """Make constraints for Tetragonal systems.
 
     b is constrained to a and alpha, beta and gamma are constrained to 90.
+
     """
     lattice.alpha.setConst(True, 90.0)
     lattice.beta.setConst(True, 90.0)
@@ -96,6 +100,7 @@ def _constrainTrigonal(lattice):
     If gamma == 120, then b is constrained to a, alpha and beta are
     constrained to 90 and gamma is constrained to 120. Otherwise, b and c
     are constrained to a, beta and gamma are constrained to alpha.
+
     """
     if lattice.gamma.getValue() == 120:
         lattice.constrain(lattice.b, lattice.a)
@@ -114,6 +119,7 @@ def _constrainHexagonal(lattice):
 
     b is constrained to a, alpha and beta are constrained to 90 and gamma is
     constrained to 120.
+
     """
     lattice.constrain(lattice.b, lattice.a)
     lattice.alpha.setConst(True, 90.0)
@@ -126,6 +132,7 @@ def _constrainCubic(lattice):
 
     b and c are constrained to a, alpha, beta and gamma are constrained to
     90.
+
     """
     lattice.constrain(lattice.b, lattice.a)
     lattice.constrain(lattice.c, lattice.a)

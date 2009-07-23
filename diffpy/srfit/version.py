@@ -14,6 +14,7 @@
 
 
 """Definition of __version__ and __date__ for diffpy.srfit .
+
 """
 
 # module version

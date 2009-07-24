@@ -19,11 +19,12 @@ constant.
 
 """
 
+from .abcs import ArgumentABC
 from .literal import Literal
 
 import numpy
 
-class Argument(Literal):
+class Argument(Literal, ArgumentABC):
     """Argument class.
     
     Attributes
@@ -35,7 +36,6 @@ class Argument(Literal):
 
     """
 
-    # Required attributes - used for type checking
     const = None
     value = None
 

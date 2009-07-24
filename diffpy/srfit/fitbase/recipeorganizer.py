@@ -25,7 +25,7 @@ from numpy import inf
 from .constraint import Constraint
 from .restraint import Restraint, BoundsRestraint
 from .parameter import Parameter
-from .utils import validateName
+from diffpy.srfit.util import validateName
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.equation import Clicker

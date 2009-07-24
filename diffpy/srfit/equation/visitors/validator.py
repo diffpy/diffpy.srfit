@@ -27,12 +27,8 @@ interface.
 from .visitor import Visitor
 
 from .. import Clicker
-from ..literals import Argument
-from ..literals import Generator
-from ..literals import Operator
-from ..literals import Partition
-
-from diffpy.srfit.util import hasinterface
+from ..literals.abcs import ArgumentABC, GeneratorABC
+from ..literals.abcs import OperatorABC, PartitionABC
 
 msg = "'%s' does not have the interface required by '%s'"
 
@@ -63,8 +59,8 @@ class Validator(Visitor):
         No assumption is made about the argument type.
 
         """
-        if not hasinterface(arg, Argument):
-            m = msg%(arg, Argument.__name__)
+        if not isinstance(arg, ArgumentABC):
+            m = msg%(arg, ArgumentABC.__name__)
             self.errors.append(m)
         self._nin = 1
         return
@@ -72,8 +68,8 @@ class Validator(Visitor):
     def onOperator(self, op):
         """Process an Operator node."""
 
-        if not hasinterface(op, Operator):
-            m = msg%(op, Operator.__name__)
+        if not isinstance(op, OperatorABC):
+            m = msg%(op, OperatorABC.__name__)
             self.errors.append(m)
 
         # Can only process single-valued functions
@@ -110,8 +106,8 @@ class Validator(Visitor):
     def onPartition(self, part):
         """Process a Partition node."""
 
-        if not hasinterface(part, Partition):
-            m = msg%(part, Partition.__name__)
+        if not isinstance(part, PartitionABC):
+            m = msg%(part, PartitionABC.__name__)
             self.errors.append(m)
 
         self._nin = 1
@@ -120,8 +116,8 @@ class Validator(Visitor):
     def onGenerator(self, gen):
         """Process a Generator node."""
 
-        if not hasinterface(gen, Generator):
-            m = msg%(gen, Generator.__name__)
+        if not isinstance(gen, GeneratorABC):
+            m = msg%(gen, GeneratorABC.__name__)
             self.errors.append(m)
 
         self._nin = 1

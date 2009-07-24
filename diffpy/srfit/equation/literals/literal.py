@@ -34,9 +34,11 @@ The clicker is described in the diffpy.equation.clicker module.
 
 """
 
+from .abcs import LiteralABC
+
 from .. import Clicker
 
-class Literal(object):
+class Literal(LiteralABC):
     """Abstract class for equation pieces, such as operators and arguments.
 
     Attributes
@@ -45,7 +47,6 @@ class Literal(object):
 
     """ 
 
-    # Required attributes - used for type checking
     name = None
     clicker = None
 

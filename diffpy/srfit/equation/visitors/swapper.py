@@ -18,7 +18,10 @@
 
 from .visitor import Visitor
 
-from .. import Clicker
+from ..literals import Argument
+from ..literals import Generator
+from ..literals import Operator
+from ..literals import Partition
 
 class Swapper(Visitor):
     """Swapper for swapping out one literal for another in a literal tree.

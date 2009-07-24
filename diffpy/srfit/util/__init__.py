@@ -20,7 +20,7 @@
 # package version
 from diffpy.srfit.version import __version__
 
-from .utilmod import hasinterface
-from .utilmod import verifyinterface
+from .nameutils import isIdentifier
+from .nameutils import validateName
 
 # End of file

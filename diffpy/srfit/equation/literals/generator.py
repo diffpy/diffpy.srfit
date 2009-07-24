@@ -25,11 +25,12 @@ are up to classes that inherit from Generator.
 
 """
 
+from .abcs import GeneratorABC
 from .literal import Literal
 
 import numpy
 
-class Generator(Literal):
+class Generator(Literal, GeneratorABC):
     """Abstract class for Generator objects.
     
     Attributes

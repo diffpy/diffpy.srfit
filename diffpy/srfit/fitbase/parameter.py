@@ -29,8 +29,9 @@ Variable            --  Alias for ParameterProxy.
 # FIXME - Consider scaling parameters to avoid precision issues in optimizers.
 
 from diffpy.srfit.equation.literals import Argument
+from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.equation import Clicker
-from .utils import validateName
+from diffpy.srfit.util import validateName
 
 class Parameter(Argument):
     """Parameter class.
@@ -121,6 +122,9 @@ class ParameterProxy(object):
         return getattr(self.par, attrname)
 
 # End class ParameterProxy
+
+# Make sure that this is registered as an Argument class
+ArgumentABC.register(ParameterProxy)
 
 class ParameterWrapper(Parameter):
     """An adapter for parameter-like objects.

@@ -35,10 +35,13 @@ See the Partition module for combination rules.
 
 """
 
+
+from .abcs import OperatorABC
 from .literal import Literal
+
 import numpy
 
-class Operator(Literal):
+class Operator(Literal, OperatorABC):
     """Class for holding a general operator.
 
     This holds a general operator and records its function, arguments, name and

@@ -187,6 +187,10 @@ class ProfileGenerator(RecipeOrganizer):
         """Required for Generator interface."""
         raise AttributeError("'addLiteral' not used by this class")
 
-# End class calculator
+# End class ProfileGenerator
+
+# Make sure this class is registered as a Generator.
+from diffpy.srfit.equation.literals.abcs import GeneratorABC
+GeneratorABC.register(ProfileGenerator)
 
 __id__ = "$Id$"

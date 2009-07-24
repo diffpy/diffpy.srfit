@@ -31,11 +31,12 @@ will be combined before the operation.
 
 """
 
+from .abcs import PartitionABC
 from .literal import Literal
 
 import numpy
 
-class Partition(Literal):
+class Partition(Literal, PartitionABC):
     """Abstract class for Argument partitions.
     
     Attributes
@@ -47,6 +48,11 @@ class Partition(Literal):
     tagmap  --  A map of tags to lists of Argument indicies from self.args.
 
     """ 
+
+    args = None
+    tags = None
+    tagmap = None
+    _partvals = None
 
     def __init__(self, name = ""):
         """Initialization."""
@@ -100,7 +106,6 @@ class Partition(Literal):
         """Called by the Evaluator visitor to fill the _partvals list."""
         self._partvals = [arg.value for arg in self.args]
         return
-
 
     def __str__(self):
         if self.name:

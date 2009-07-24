@@ -27,8 +27,7 @@ interface.
 from .visitor import Visitor
 
 from .. import Clicker
-from ..literals.abcs import ArgumentABC, GeneratorABC
-from ..literals.abcs import OperatorABC, PartitionABC
+from diffpy.srfit.equation.literals.abcs import *
 
 msg = "'%s' does not have the interface required by '%s'"
 

@@ -28,7 +28,7 @@ class ParameterSet(RecipeOrganizer):
     ParameterSets are hierarchical organizations of Parameters, Constraints,
     Restraints and other ParameterSets. 
 
-    Contained parameters and other ParameterSets can be accessed by name as
+    Contained Parameters and other ParameterSets can be accessed by name as
     attributes in order to facilitate multi-level constraints and restraints.
     These constraints and restraints can be placed at any level and a flattened
     list of them can be retrieved with the getConstraints and getRestraints
@@ -38,17 +38,14 @@ class ParameterSet(RecipeOrganizer):
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and RecipeOrganizers.
     name            --  A name for this organizer.
+    _calculators    --  A managed dictionary of Calculators, indexed by name.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-    _orgdict        --  A dictionary containing the Parameters and
-                        RecipeOrganizers indexed by name.
-    _parameters     --  A list of parameters that this RecipeOrganizer knows
-                        about.
+    _parameters     --  A managed OrderedDict of parameters.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
-    _organizers     --  A list of ParameterSets that this ParameterSet knows
-                        about.
+    _parsets        --  A managed dictionary of ParameterSets.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from string
@@ -62,12 +59,37 @@ class ParameterSet(RecipeOrganizer):
 
         """
         RecipeOrganizer.__init__(self, name)
+
+        self._parsets = {}
+        self._manage(self._parsets)
         return
 
-    # Alias the _addParameter to addParameter
+    # Alias Parameter accessors.
     addParameter = RecipeOrganizer._addParameter
-    # Alias the addOrganizer method to addParameterSet
-    addParameterSet = RecipeOrganizer._addOrganizer
+    newParameter = RecipeOrganizer._newParameter
+    removeParameter = RecipeOrganizer._removeParameter
+
+    def addParameterSet(self, parset):
+        """Add a ParameterSet to the hierarchy.
+
+        parset  --  The ParameterSet to be stored.
+
+        Raises ValueError if the ParameterSet has no name.  
+        Raises ValueError if the ParameterSet has the same name as some other
+        managed object.
+        """
+        self._addObject(parset, self._parsets, True)
+        return
+
+    def removeParameterSet(self, parset):
+        """Remove a ParameterSet from the hierarchy.
+
+        Raises ValueError if parset is not managed by this object.
+
+        """
+        self._removeObject(parset, self._parsets)
+        return
+
 
     def setConst(self, const = True):
         """Set every parameter within the set to a constant.

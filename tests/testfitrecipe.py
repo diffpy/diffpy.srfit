@@ -49,11 +49,6 @@ class TestFitRecipe(unittest.TestCase):
 
         recipe.fixVar(recipe.k)
 
-        # Try to fix a variable that is not there
-        self.assertRaises(ValueError, recipe.fixVar, "")
-        self.assertRaises(ValueError, recipe.fixVar, "k")
-        self.assertRaises(ValueError, recipe.fixVar, None)
-        self.assertRaises(ValueError, recipe.fixVar, con.A)
         names = recipe.getNames()
         self.assertEquals(names, ["A", "c"])
         values = recipe.getValues()

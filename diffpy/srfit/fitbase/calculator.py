@@ -15,11 +15,11 @@
 """The Calculator for Parameter-aware functions.
 
 Calculator is a functor class for producing a signal from embedded Parameters.
-Calculators can store Parameters and ParameterSets, Constraints and
-Restraints. Also, the __call__ function can be overloaded to accept external
-arguments. This is useful when chaining together pieces of a forward
-calculation within a FitContribution. A Calculator can be added to another
-RecipeOrganizer with the 'registerCalculator' method.
+Calculators can store Parameters and ParameterSets, Constraints and Restraints.
+Also, the __call__ function can be overloaded to accept external arguments.
+This is useful when chaining together pieces of a forward calculation within a
+FitContribution. A Calculator can be added to another RecipeOrganizer with the
+'registerCalculator' method.
 
 """
 
@@ -27,46 +27,34 @@ from numpy import array, asarray
 
 from .parameter import Parameter
 
-from .recipeorganizer import RecipeOrganizer
+from .parameterset import ParameterSet
 
-class Calculator(RecipeOrganizer):
+class Calculator(ParameterSet):
     """Base class for calculators.
 
     A Calculator organizes Parameters and has a __call__ method that can
     calculate a generic signal.
 
     Attributes
-    args            --  List needed by Generator interface.
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and RecipeOrganizers.
     name            --  A name for this organizer.
     meta            --  A dictionary of metadata needed by the calculator.
+    _calculators    --  A managed dictionary of Calculators, indexed by name.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-    _orgdict        --  A dictionary containing the Parameters and
-                        RecipeOrganizers indexed by name.
-    _parameters     --  A list of parameters that this RecipeOrganizer knows
-                        about.
+    _parameters     --  A managed OrderedDict of contained Parameters.
+    _parsets        --  A managed dictionary of ParameterSets.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
-    _organizers     --  A list of RecipeOrganizers that this RecipeOrganizer
-                        knows about.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from string
+                        instance that is used create Equations from string.
 
     """
 
-    # Make some methods public that were protected
-    addParameter = RecipeOrganizer._addParameter
-    newParameter = RecipeOrganizer._newParameter
-    removeParameter = RecipeOrganizer._removeParameter
-    addParameterSet = RecipeOrganizer._addOrganizer
-    removeParameterSet = RecipeOrganizer._removeOrganizer
-
     def __init__(self, name):
-        RecipeOrganizer.__init__(self, name)
+        ParameterSet.__init__(self, name)
         self.meta = {}
         return
 

@@ -12,64 +12,56 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The RecipeOrganizer class and equationFromString method.
+"""The RecipeContainer, RecipeOrganizer class and equationFromString method.
 
-RecipeOrganizer is the base class for various classes within the FitRecipe
-hierarchy. equationFromString creates an Equation instance from a string. It
-checks for specific conditions on the string, as defined in the method.
+RecipeContainer is the base class for organizing Parameters, and other
+RecipeContainers.  hierarchy. RecipeOrganizer is an extended RecipeContainers,
+that incorporates Equations, Constraints and Restraints.  equationFromString
+creates an Equation instance from a string. It checks for specific conditions
+on the string, as defined in the method.
 
 """
+
+# FIXME - parameter swapping is a bit of a problem because a parameter swapped
+# within and EquationFactory and set of equations will not be swapped within
+# Variables and ParameterProxies. If swapping is to be allowed, then each of
+# the swapping objects should remain private, and only proxies should be passed
+# outside of the class in which they reside. If any object calls for a
+# Parameter to be swapped, it will swap all proxies to that object. If a
+# Parameter is deleted, then it gets deleted everywhere. Look into weak
+# references to make this work.
 
 from numpy import inf
 
 from .constraint import Constraint
 from .restraint import Restraint, BoundsRestraint
 from .parameter import Parameter
-from diffpy.srfit.util import validateName
 
+from diffpy.srfit.util import validateName
+from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.equation import Clicker
 from diffpy.srfit.equation import Equation
 
-class RecipeOrganizer(object):
-    """A base class for organizing pieces of a FitRecipe.
 
-    RecipeOrganizers are hierarchical organizations of Parameters, Constraints,
-    Restraints and other RecipeOrganizers. This class is used throughout the
-    hierarcy of a FitRecipe and provides attributes and members that help
-    organize these objects at any level of the hierarcy.
 
-    Contained parameters and other RecipeOrganizers can be accessed by name as
-    attributes in order to facilitate multi-level constraints and restraints.
-    These constraints and restraints can be placed at any level and a flattened
-    list of them can be retrieved with the _getConstraints and _getRestraints
-    methods. Parameters and other organizers can be found within the hierarchy
-    with the _locateChild method.
+class RecipeContainer(object):
+    """Base class for organizing pieces of a FitRecipe.
+
+    RecipeContainers are hierarchical organizations of Parameters and other
+    RecipeContainers. This class provides attribute-access to these contained
+    objects.  Parameters and other RecipeContainers can be found within the
+    hierarchy with the _locateManagedObject method.
 
     Attributes
-    clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and RecipeOrganizers.
-    name            --  A name for this organizer. Names should be unique
-                        within a RecipeOrganizer and should be valid attribute
+    clicker         --  A Clicker for recording changes in contained Parameters
+                        and RecipeContainers
+    name            --  A name for this RecipeContainer. Names should be unique
+                        within a RecipeContainer and should be valid attribute
                         names.
-    _constraints    --  A dictionary of Constraints, indexed by the constrained
-                        Parameter. Constraints can be added using the
-                        'constrain' method.
-    _organizers     --  A list of RecipeOrganizers that this RecipeOrganizer
-                        knows about.
-    _orgdict        --  A dictionary containing the Parameters and
-                        RecipeOrganizers indexed by name.
-    _parameters     --  A list of parameters that this RecipeOrganizer knows
-                        about.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from string
-    _equations      --  Equation instances built with the _eqfactory
-                        (dictionary).
-
-    Raises ValueError if the name is not a valid attribute identifier
+    _parameters     --  A managed OrderedDict of contained Parameters.
+    ___managed      --  A list of managed dictionaries. This is used for
+                        attribute access, addition and removal.
 
     """
 
@@ -77,26 +69,237 @@ class RecipeOrganizer(object):
         validateName(name)
         self.name = name
         self.clicker = Clicker()
-        self._organizers = []
-        self._parameters = []
-        self._constraints = {}
-        self._restraints = set()
-        self._orgdict = {}
-        self._eqfactory = EquationFactory()
-        self._equations = {}
+        self._parameters = OrderedDict()
+
+        self.__managed = []
+        self._manage(self._parameters)
+
         return
+
+    def _manage(self, d):
+        """Manage a dictionary of objects.
+
+        This adds the dictionary to the __managed list. Dictionaries in
+        __managed are used for attribute access, addition, and removal.
+
+        """
+        self.__managed.append(d)
+        return
+
+    def _getManaged(self):
+        """Get the managed dictionaries."""
+        return self.__managed
 
     def __getattr__(self, name):
         """Gives access to the contained objects as attributes."""
-        arg = self._orgdict.get(name)
+        arg = self.get(name)
         if arg is None:
             raise AttributeError(name)
         return arg
 
+    def get(self, name, default = None):
+        """Get a managed object."""
+        for d in self._getManaged():
+            arg = d.get(name)
+            if arg is not None:
+                return arg
+
+        return default
+
+    def _addObject(self, obj, d, check = True):
+        """Add an object to a managed dictionary.
+
+        obj     --  The object to be stored.
+        d       --  The managed dictionary to store the object in.
+        check   --  If True (default), a ValueError is raised an object of the
+                    given name already exists in container.
+
+        Raises ValueError if the object has no name.
+        Raises ValueError if the object has the same name as some other managed
+        object.
+
+        """
+
+        # Check name
+        if not obj.name:
+            message = "%s has no name" % par.__class__.__name__
+            raise ValueError(message)
+
+        # Check for extant object in d with same name
+        oldobj = d.get(obj.name)
+        if check and oldobj is not None:
+            message = "%s with name '%s' already exists"%\
+                    (obj.__class__.__name__, obj.name)
+            raise ValueError(message)
+
+        # Check for object with same name in other dictionary.
+        if oldobj is None and self.get(obj.name) is not None:
+            message = "Non-%s with name '%s' already exists"%\
+                    (obj.__class__.__name__, obj.name)
+            raise ValueError(message)
+
+        # Detach the old Parameter, if there is one
+        if oldobj is not None:
+            self.clicker.removeSubject(oldobj.clicker)
+
+        # Add the object
+        d[obj.name] = obj
+
+        # Attach the object to the Clicker
+        self.clicker.addSubject(obj.clicker)
+
+        return
+
+    def _removeObject(self, obj, d):
+        """Remove an object from a managed dictionary.
+        
+        Raises ValueError if obj is not part of the dictionary.
+
+        """
+        if obj not in d.values():
+            m = "'%s' is not part of the %s" % (obj, self.__class__.__name__)
+            raise ValueError(m)
+
+        del d[obj.name]
+        self.clicker.removeSubject(obj.clicker)
+
+        return
+
+    def _locateManagedObject(self, obj):
+        """Find the location a managed object within the hierarchy.
+
+        obj     --  The object to find.
+
+        Returns a list of objects. Each entry in the list is the object
+        containing the next object in the list. The last object is obj, if it
+        can be found, otherwise, the list is empty.
+
+        """
+        loc = [self]
+
+        for d in self._getManaged():
+            # Check locally for the object
+            if obj in d.values():
+                loc.append(obj)
+                return loc
+
+            # Enter the object if we can
+            for container in d.values():
+                if hasattr(container, "_locateManagedObject"):
+                    subloc = container._locateManagedObject(obj)
+                    if subloc:
+                        return loc + subloc
+
+        return []
+
+    def _iterPars(self):
+        """Iterate over Parameters."""
+
+        for par in self._parameters.values():
+            yield par
+
+        for d in self._getManaged():
+            for container in d.values():
+                if hasattr(container, "_iterPars"):
+                    container._iterPars()
+
+        return
+
+# End class RecipeContainer
+
+class RecipeOrganizer(RecipeContainer):
+    """Extended base class for organizing pieces of a FitRecipe.
+
+    This class extends RecipeContainer by organizing Constraints and
+    Restraints, as well as Equations that can be used in Constraint and
+    Restraint equations.  These Constraints and Restraints can be placed at any
+    level and a flattened list of them can be retrieved with the
+    _getConstraints and _getRestraints methods. 
+
+    Attributes
+    clicker         --  A Clicker instance for recording changes in contained
+                        Parameters and RecipeOrganizers.
+    name            --  A name for this organizer. Names should be unique
+                        within a RecipeOrganizer and should be valid attribute
+                        names.
+    _calculators    --  A managed dictionary of Calculators, indexed by name.
+    _constraints    --  A dictionary of Constraints, indexed by the constrained
+                        Parameter. Constraints can be added using the
+                        'constrain' method.
+    _parameters     --  A managed OrderedDict of contained Parameters.
+    _restraints     --  A set of Restraints. Restraints can be added using the
+                        'restrain' or 'confine' methods.
+    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
+                        instance that is used create Equations from string.
+
+    Raises ValueError if the name is not a valid attribute identifier
+
+    """
+
+    def __init__(self, name):
+        RecipeContainer.__init__(self, name)
+        self._constraints = {}
+        self._restraints = set()
+        self._eqfactory = EquationFactory()
+        self._calculators = {}
+
+        self._manage(self._calculators)
+        return
+
+    # Parameter management
+
+    def _newParameter(self, name, value, check=True):
+        """Add a new Parameter to the container.
+
+        This creates a new Parameter and adds it to the container using the
+        _addParameter method.
+
+        Returns the Parameter.
+
+        """
+        p = Parameter(name, value)
+        self._addParameter(p, check)
+        return p
+
+    def _addParameter(self, par, check=True):
+        """Store a Parameter.
+
+        Parameters added in this way are registered with the _eqfactory.
+
+        par     --  The Parameter to be stored.
+        check   --  If True (default), a ValueError is raised a Parameter of
+                    the specified name has already been inserted.
+
+        Raises ValueError if the Parameter has no name.
+        Raises ValueError if the Parameter has the same name as a contained
+        RecipeContainer.
+
+        """
+
+        # Store the Parameter
+        RecipeContainer._addObject(self, par, self._parameters, check)
+
+        # Register the Parameter
+        self._eqfactory.registerArgument(par.name, par)
+        return
+
+    def _removeParameter(self, par):
+        """Remove a parameter.
+
+        This de-registers the Parameter with the _eqfactory. The Parameter will
+        remain part of built equations.
+        
+        Raises ValueError if par is not part of the RecipeContainer.
+
+        """
+        self._removeObject(par, self._parameters)
+        self._eqfactory.deRegisterBuilder(par.name)
+        return
+
     def registerCalculator(self, f, argnames = None, makepars = True):
         """Register a Calculator so it can be used within equation strings.
 
-        A Calculator is an elaborate function that can organize parameters.
+        A Calculator is an elaborate function that can organize Parameters.
         This creates a function with this class that can be used within string
         equations.  The resulting equation does not require the arguments to be
         passed in the equation string, as this will be handled automatically.
@@ -116,9 +319,11 @@ class RecipeOrganizer(object):
         Raises TypeError if argnames cannot be automatically extracted.
         Raises AttributeError if makepars is False and the parameters are not
         part of this object.
+        Raises ValueError if the calculator's name is already in use by a
+        managed object or an Equation object.
 
         """
-        self._addOrganizer(f)
+        self._addObject(f, self._calculators)
         self.registerFunction(f, f.name, argnames, makepars)
         return
 
@@ -156,6 +361,8 @@ class RecipeOrganizer(object):
         Raises AttributeError if makepars is False and the parameters are not
         part of this object.
         Raises ValueError if f is an Equation object and name is None.
+        Raises ValueError if the function name is already in use by an Equation
+        object.
 
         Returns the callable Equation object.
 
@@ -166,7 +373,7 @@ class RecipeOrganizer(object):
                 m = "Equation must be given a name"
                 raise ValueError(m)
 
-            self._swapAndRegister(name, f)
+            self._registerEquation(name, f)
             return f
 
         # Extract the name and argnames if necessary
@@ -206,6 +413,12 @@ class RecipeOrganizer(object):
                 argnames = list(func_code.co_varnames)
                 argnames = argnames[offset:func_code.co_argcount]
 
+        # Verify the name 
+        if name in self._eqfactory.builders:
+            m = "Equation object named '%s' already exists"%name
+            raise ValueError(m)
+
+        # Make missing Parameters, if requested
         if makepars:
             for pname in argnames:
                 if pname not in self._eqfactory.builders:
@@ -215,7 +428,7 @@ class RecipeOrganizer(object):
         # arguments, we will build an Equation instance and register it. We'll
         # build it in another EquationFactory so we don't clutter up our
         # namespace.
-        factory = EquationFactory()
+        tempfactory = EquationFactory()
 
         for pname in argnames:
             parbuilder = self._eqfactory.builders.get(pname)
@@ -223,16 +436,16 @@ class RecipeOrganizer(object):
                 m = "Function requires unspecified parameters (%s)."%pname
                 raise AttributeError(m)
 
-            factory.registerBuilder(pname, parbuilder)
+            tempfactory.registerBuilder(pname, parbuilder)
 
-        factory.registerFunction(name, f, len(argnames))
+        tempfactory.registerFunction(name, f, len(argnames))
 
         argstr = ",".join(argnames)
-        eq = equationFromString("%s(%s)"%(name,argstr), factory)
+        eq = equationFromString("%s(%s)"%(name,argstr), tempfactory)
 
         eq.name = name
 
-        self._swapAndRegister(name, eq)
+        self._registerEquation(name, eq)
 
         return eq
 
@@ -260,6 +473,8 @@ class RecipeOrganizer(object):
         variable.
         Raises AttributeError if makepars is False and the parameters are not
         part of this object.
+        Raises ValueError if the function name is already in use by an Equation
+        object.
 
         Returns the callable Equation object.
 
@@ -268,14 +483,16 @@ class RecipeOrganizer(object):
         # Build the equation instance.
         eq = equationFromString(fstr, self._eqfactory, buildargs = makepars)
 
+        eq.name = name
+
+        # Register the equation
+        self._registerEquation(name, eq)
+
+        # FIXME - this will have to be changed when proper swapping is
+        # implemented.
         # Register any new Parameters.
         for par in self._eqfactory.newargs:
             self._addParameter(par)
-
-        eq.name = name
-
-        # Register the equation by name and do any necessary swapping.
-        self._swapAndRegister(name, eq)
 
         return eq
 
@@ -300,19 +517,17 @@ class RecipeOrganizer(object):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time. The
-        most recent constraint override all other user-defined constraints.
+        most recent constraint overrides all other user-defined constraints.
         Built-in constraints override all other constraints.
 
-        par     --  The Parameter to constrain. It does not need to be a
-                    variable.
+        par     --  The Parameter to constrain.
         con     --  A string representation of the constraint equation or a
-                    parameter to constrain to.  A constraint equation must
+                    Parameter to constrain to.  A constraint equation must
                     consist of numpy operators and "known" Parameters.
                     Parameters are known if they are in the ns argument, or if
-                    they have been added to this FitRecipe with the 'add' or
-                    'new' methods.
+                    they are managed by this object.
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitRecipe (default {}).
+                    in the eqstr, but not part of this object (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -335,8 +550,6 @@ class RecipeOrganizer(object):
         con.constrain(par, eq)
         self._constraints[par] = con
 
-        # Store this equation for future swapping
-        self._equations[repr(con)] = eq
         return
 
     def unconstrain(self, par):
@@ -348,8 +561,6 @@ class RecipeOrganizer(object):
 
         """
         if par in self._constraints:
-            con = self._constraints[par]
-            del self._equations[repr(con)]
             del self._constraints[par]
         return
 
@@ -394,59 +605,6 @@ class RecipeOrganizer(object):
         res.restrain(eq, lb, ub, prefactor, power, scaled)
         self._restraints.add(res)
 
-        self._equations[repr(res)] = eq
-
-        return res
-
-    def confine(self, res, lb = -inf, ub = inf, ns = {}):
-        """Confine an expression to hard bounds.
-
-        res     --  An equation string or Parameter to restrain.
-        lb      --  The lower bound on the restraint evaluation (default -inf).
-        ub      --  The lower bound on the restraint evaluation (default inf).
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitRecipe 
-                    (default {}).
-
-        The penalty is infinite if the value of the calculated equation is
-        outside the bounds.
-
-        Raises ValueError if ns uses a name that is already used for a
-        Parameter.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the RecipeOrganizer and that is not defined in ns.
-        Raises ValueError if lb == ub.
-
-        Returns the BoundsRestraint object for use with the 'unrestrain' method.
-
-        """
-
-        if lb == ub:
-            m = "Bounds must be different"
-            raise ValueError(m)
-
-        if isinstance(res, str):
-            eq = equationFromString(res, self._eqfactory, ns)
-        else:
-            eq = Equation(root = res)
-            val = res.getValue()
-            # Reset the value of the parameter if it is out of bounds.
-            # Optimizers might choke on getting an infinte residual right out
-            # of the gate.
-            if val < lb or val > ub:
-                if lb is not -inf:
-                    res.setValue(lb)
-                elif ub is not inf:
-                    res.setValue(ub)
-                else:
-                    res.setValue(0)
-
-        # Make and store the constraint
-        res = BoundsRestraint()
-        res.confine(eq, lb, ub)
-        self._restraints.add(res)
-
-        self._equations[repr(res)] = eq
         return res
 
     def unrestrain(self, res):
@@ -456,120 +614,19 @@ class RecipeOrganizer(object):
 
         """
         if res in self._restraints:
-            del self._equations[repr(res)]
             self._restraints.remove(res)
 
         return
 
-    def _addParameter(self, par, check=True):
-        """Store a Parameter.
-
-        Parameters added in this way are registered with the _eqfactory.
-
-        par     --  The Parameter to be stored.
-        check   --  If True (default), a ValueError is raised a Parameter or
-                    RecipeOrganizer of the specified name has already been
-                    inserted.
-
-        Raises ValueError if the Parameter has no name.
-
-        """
-        
-        message = ""
-        if not par.name:
-            message = "Parameter has no name"%par
-
-        if check:
-            if par.name in self._orgdict:
-                message = "Object with name '%s' already exists"%par.name
-
-        if message:
-            raise ValueError(message)
-
-        # Swap parameters
-        oldpar = self._orgdict.get(par.name)
-        if oldpar is not None:
-            self._swapEquationObject(oldpar, par)
-            self._removeParameter(oldpar)
-        
-        self._orgdict[par.name] = par
-        self._parameters.append(par)
-        self._eqfactory.registerArgument(par.name, par)
-        self.clicker.addSubject(par.clicker)
-
-        return
-
-    def _newParameter(self, name, value, check=True):
-        """Add a new parameter that can be used in the equation.
-
-        Returns the parameter.
-
-        """
-        p = Parameter(name, value)
-        self._addParameter(p, check)
-        return p
-
-    def _removeParameter(self, par):
-        """Remove a parameter.
-        
-        raises ValueError if par is not part of the RecipeOrganizer.
-
-        """
-        if par not in self._parameters:
-            m = "'%s' is not part of the %s" % (par, self.__class__.__name__)
-            raise ValueError(m)
-
-        self._parameters.remove(par)
-        del self._orgdict[par.name]
-        self._eqfactory.deRegisterBuilder(par.name)
-        self.clicker.removeSubject(par.clicker)
-        return
-
-    def _addOrganizer(self, org, check=True):
-        """Store a RecipeOrganizer.
-
-        org     --  The RecipeOrganizer to be stored.
-        check   --  If True (default), an ValueError is raised if the
-                    RecipeOrganizer has an invalid name, or if a Parameter or
-                    RecipeOrganizer of that name has already been inserted.
-
-        """
-        if check:
-            message = ""
-            if not org.name:
-                message = "RecipeOrganizer has no name"%org
-            elif org.name in self._orgdict:
-                message = "Object with name '%s' already exists"%org.name
-
-            if message:
-                raise ValueError(message)
-
-        self._orgdict[org.name] = org
-        self._organizers.append(org)
-        self.clicker.addSubject(org.clicker)
-        return
-
-    def _removeOrganizer(self, org):
-        """Remove an organizer.
-        
-        raises ValueError if organizer is not part of the RecipeOrganizer.
-
-        """
-        if org not in self._organizers:
-            m = "'%s' is not part of the %s" % (org, self.__class__.__name__)
-            raise ValueError(m)
-
-        self._organizers.remove(org)
-        del self._orgdict[org.name]
-        self.clicker.removeSubject(org.clicker)
-
-        return
-
     def _getConstraints(self):
-        """Get the Constraints for this and embedded ParameterSets."""
+        """Get the Constraints for this and managed sub-objects."""
+
         constraints = {}
-        for org in self._organizers:
-            constraints.update( org._getConstraints() )
+        for d in self._getManaged():
+            for container in d.values():
+                if hasattr(container, "_getConstraints"):
+                    constraints.update( container._getConstraints() )
+
         # Update with local constraints last. These override the others.
         constraints.update(self._constraints)
 
@@ -578,85 +635,25 @@ class RecipeOrganizer(object):
     def _getRestraints(self):
         """Get the Restraints for this and embedded ParameterSets."""
         restraints = set(self._restraints)
-        for org in self._organizers:
-            restraints.update( org._getRestraints() )
+        for d in self._getManaged():
+            for container in d.values():
+                if hasattr(container, "_getRestraints"):
+                    restraints.update( container._getRestraints() )
 
         return restraints
 
-    def _locateChild(self, obj, loc = None):
-        """Find the location of a parameter or organizer within the organizer
+    def _registerEquation(self, name, newobj, check = True):
+        """Register an Equation with the _eqfactory
 
-        obj     --  The Parameter or RecipeOrganizer to locate
-        loc     --  A list containing the path to the object. The 
-                    The name of this RecipeOrganizer gets appended to the list,
-                    which gets passed on util the parameter is located. If the
-                    parameter is not located herein, the name of this
-                    RecipeOrganizer is not appended.  This defaults to None, in
-                    which case a new list is created and passed along.
-
-        Returns a list of objects. Each entry in the list is the object
-        containing the next object in the list. The last object is obj, if it
-        can be found, otherwise, the list is empty.
-
-        """
-        if loc is None:
-            loc = []
-        loc.append(self)
-
-        loclen = len(loc)
-
-        if obj in self._orgdict.itervalues():
-            loc.append(obj)
-            return loc
-
-        for org in self._organizers:
-            org._locateChild(obj, loc)
-            if len(loc) > loclen:
-                break;
-
-        if len(loc) == loclen:
-            loc.pop()
-
-        return loc
-
-    def _iterPars(self):
-        """Iterate over parameters."""
-        for par in self._parameters:
-            yield par
-
-        for org in self._organizers:
-            org.iterParameters()
-
-        return
-
-    def _swapEquationObject(self, oldobj, newobj):
-        """Swap all instances of an Equation object for another.
-
-        This method is used to curate Equations belonging to this object. If
-        one overloads an object that can appear in an Equation, it is the
-        responsibility of this method to replace all instances of the original
-        object with the new object.
-
-        Note that this method is likely to be slow if many Equations are
-        registered.
+        If check is True this raises ValueError if _eqfactory already has a
+        builder of the given name.
         
         """
-        for eq in self._equations.values():
-            eq.swap(oldobj, newobj)
-        return
+        if check and name in self._eqfactory.builders:
+            m = "Equation object named '%s' already exists"%name
+            raise ValueError(m)
 
-    def _swapAndRegister(self, name, newobj):
-        """Swap and register an equation.
-
-        This registers an equation, and performs any swapping necessary with
-        the new equation.
-        
-        """
         self._eqfactory.registerEquation(name, newobj)
-        oldobj = self._equations.get(name)
-        self._equations[name] = newobj
-        if oldobj is not None:
-            self._swapEquationObject(oldobj, newobj)
         return
 
 # End RecipeOrganizer

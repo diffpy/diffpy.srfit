@@ -28,10 +28,11 @@ from numpy import concatenate, sqrt, inf, dot
 from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
 
-from .recipeorganizer import RecipeOrganizer, equationFromString
+from .parameterset import ParameterSet
+from .recipeorganizer import equationFromString
 from .parameter import ParameterProxy
 
-class FitContribution(RecipeOrganizer):
+class FitContribution(ParameterSet):
     """FitContribution class.
 
     FitContributions organize an Equation that calculates the signal, and a
@@ -45,47 +46,46 @@ class FitContribution(RecipeOrganizer):
     name            --  A name for this FitContribution.
     profile         --  A Profile that holds the measured (and calcuated)
                         signal.
-    _calculators    --  A dictionry of Calculators that can be used by the
-                        FitContribution.
+    _calculators    --  A managed dictionary of Calculators, indexed by name.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-    _eq             --  The FitContribution equation that will be optimized.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from strings.
-    _organizers     --  A reference to the Calcualtor's _organizers attribute.
-    _orgdict        --  A reference to the Calculator's _orgdict attribute.
-    _parameters     --  A reference to the Calculator's _parameters attribute.
+    _generators     --  A managed dictionary of ProfileGenerators.
+    _parameters     --  A managed OrderedDict of parameters.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
+    _parsets        --  A managed dictionary of ParameterSets.
+    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
+                        instance that is used to create constraints and
+                        restraints from string
+    _eq             --  The FitContribution equation that will be optimized.
     _xname          --  The name of of the independent variable from the
                         profile (default None). 
     _yname          --  The name of of the observed profile (default None). 
     _dyname         --  The name of of the uncertainty in the observed profile
                         (default None).
+    _resstr         --  The residual equation in string form.
 
     """
 
     def __init__(self, name):
         """Initialization."""
-        RecipeOrganizer.__init__(self, name)
+        ParameterSet.__init__(self, name)
         self._eq = None
         self._reseq = None
         self.profile = None
-        self._calculators = {}
         self._xname = None
         self._yname = None
         self._dyname = None
+
+        self._reseqstr = ""
+
+        self._generators = {}
+        self._manage(self._generators)
         return
     
-    # Make some methods public that were protected
-    addParameter = RecipeOrganizer._addParameter
-    newParameter = RecipeOrganizer._newParameter
-    removeParameter = RecipeOrganizer._removeParameter
-
     def setProfile(self, profile, xname = None, yname = None, dyname = None):
-        """Assign the profile for this fitcontribution.
+        """Assign the Profile for this fitcontribution.
 
         This resets the current residual (see setResidualEquation).
         
@@ -95,11 +95,11 @@ class FitContribution(RecipeOrganizer):
                     this is None (default), then the name specified by the
                     Profile for this parameter will be used.  This variable is
                     usable within the Equation with the specified name.
-        yname   --  The name of the observed profile.  If this is None
+        yname   --  The name of the observed Profile.  If this is None
                     (default), then the name specified by the Profile for this
                     parametere will be used.  This variable is usable within
                     the Equation with the specified name.
-        dyname  --  The name of the uncertainty in the observed profile. If
+        dyname  --  The name of the uncertainty in the observed Profile. If
                     this is None (default), then the name specified by the
                     Profile for this parametere will be used.  This variable is
                     usable within the Equation with the specified name.
@@ -113,7 +113,7 @@ class FitContribution(RecipeOrganizer):
             self.removeParameter(self._orgdict[self._yname])
             self.removeParameter(self._orgdict[self._dyname])
 
-        # Set the profile and add its parameters to this organizer.
+        # Set the Profile and add its parameters to this organizer.
 
         self.profile = profile
 
@@ -131,22 +131,22 @@ class FitContribution(RecipeOrganizer):
         xpar = ParameterProxy(self._xname, self.profile.xpar)
         ypar = ParameterProxy(self._yname, self.profile.ypar)
         dypar = ParameterProxy(self._dyname, self.profile.dypar)
-        self.addParameter(xpar, check=False)
-        self.addParameter(ypar, check=False)
-        self.addParameter(dypar, check=False)
+        self.addParameter(xpar)
+        self.addParameter(ypar)
+        self.addParameter(dypar)
 
-        # If we have a calculator, set its profile as well, and assign the
-        # default residual equation if we're setting the profile for the first
-        # time.
-        for calc in self._calculators.values():
-            calc.setProfile(profile)
+        # If we have a ProfileGenerator, set its Profile as well, and assign
+        # the default residual equation if we're setting the Profile for the
+        # first time.
+        for gen in self._generators.values():
+            gen.setProfile(profile)
 
         if self._eq is not None and seteq:
             self.setResidualEquation()
 
         return
 
-    def addProfileGenerator(self, calc, name = None):
+    def addProfileGenerator(self, gen, name = None):
         """Add a ProfileGenerator to be used by this FitContribution.
 
         The ProfileGenerator is given a name so that it can be used as part of
@@ -158,28 +158,26 @@ class FitContribution(RecipeOrganizer):
         Calling addProfileGenerator sets the profile equation to call the
         calculator and if there is not a profile equation already.
 
-        calc    --  A ProfileGenerator instance
+        gen     --  A ProfileGenerator instance
         name    --  A name for the calculator. If name is None (default), then
                     the ProfileGenerator's name attribute will be used.
 
+        Raises ValueError if the ProfileGenerator has no name.
+        Raises ValueError if the ProfileGenerator has the same name as some
+        other managed object.
         """
         if name is None:
-            name = calc.name
+            name = gen.name
 
-        # Register the calculator with the equation factory and perform any
-        # swaps that might be necessary.
-        self._eqfactory.registerGenerator(name, calc)
-        oldcalc = self._orgdict.get(calc.name)
-        self._calculators[calc.name] = calc
-        if oldcalc is not None:
-            self._swapEquationObject(oldcalc, calc)
-        self._addOrganizer(calc)
+        # Register the calculator with the equation factory
+        self._eqfactory.registerGenerator(name, gen)
+        self._addObject(gen, self._generators, True)
 
         # Set the default fitting equation if there is not one.
         if self._eq is None:
             self.setEquation(name)
 
-        # If we have a profile already, let the calculator know about it.
+        # If we have a Profile already, let the ProfileGenerator know about it.
         if self.profile is not None:
             calc.setProfile(self.profile)
 
@@ -211,11 +209,22 @@ class FitContribution(RecipeOrganizer):
         that is not in ns or part of the FitContribution.
 
         """
-        seteq = self._eq is None
-        self._eq = self.registerStringFunction(eqstr, "eq", makepars, ns)
+
+        # Build the equation instance.
+        eq = equationFromString(eqstr, self._eqfactory, buildargs = makepars)
+        eq.name = "eq"
+        # Register the equation
+        self._registerEquation(eq.name, eq, check = False)
+        # FIXME - this will have to be changed when proper swapping is
+        # implemented.
+        # Register any new Parameters.
+        for par in self._eqfactory.newargs:
+            self._addParameter(par)
+
+        self._eq = eq
         self._eq.clicker.addSubject(self.clicker)
 
-        if seteq and self.profile is not None:
+        if self.profile is not None:
             self.setResidualEquation()
         return
 
@@ -223,7 +232,9 @@ class FitContribution(RecipeOrganizer):
         """Set the residual equation for the FitContribution.
 
         eqstr   --  A string representation of the residual. If eqstr is None
-                    (default), then the chi2 residual will be used.
+                    (default), then the previous residual equation will be
+                    used, or the chi2 residual will be used if that does not
+                    exist.
 
         Two residuals are preset for convenience, "chiv" and "resv".
         chiv is defined such that dot(chiv, chiv) = chi^2.
@@ -241,20 +252,21 @@ class FitContribution(RecipeOrganizer):
         if self.profile is None:
             raise AttributeError("Assign the Profile first")
 
-        # Register some convenient residuals
+
         chivstr = "(eq - %s)/%s" % (self._yname, self._dyname)
-        chiv = equationFromString(chivstr, self._eqfactory)
-        self._swapAndRegister("chiv", chiv)
-
         resvstr = "(eq - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)
-        resv = equationFromString(resvstr, self._eqfactory)
-        self._swapAndRegister("resv", resv)
 
-        # Now set the residual to one of these or create a new one
-        if eqstr is None:
-            self._reseq = chiv
-        else:
-            self._reseq = equationFromString(eqstr, self._eqfactory)
+        # Get the equation string if it is not defined
+        if eqstr == "chiv":
+            eqstr = chivstr
+        elif eqstr == "resv":
+            eqstr = resvstr
+        elif eqstr is None:
+            eqstr = self._reseqstr or chivstr
+
+        self._reseqstr = eqstr
+
+        self._reseq = equationFromString(eqstr, self._eqfactory)
 
         return
 

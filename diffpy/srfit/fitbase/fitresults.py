@@ -92,7 +92,7 @@ class FitResults(object):
 
         recipe = self.recipe
 
-        if not recipe._organizers:
+        if not recipe._contributions:
             return
 
         # Make sure everything is ready for calculation
@@ -118,7 +118,7 @@ class FitResults(object):
 
         # Store the fitting arrays and metrics for each FitContribution.
         self.conresults = {}
-        for con, weight in zip(recipe._organizers, recipe._weights):
+        for con, weight in zip(recipe._contributions.values(), recipe._weights):
             self.conresults[con.name] = ContributionResults(con, weight, self)
 
         # Calculate the metrics
@@ -469,8 +469,8 @@ class ContributionResults(object):
     rw          --  The Rw of the FitContribution.
     weight      --  The weight of the FitContribution in the recipe.
     conlocs     --  The location of the constrained parameters in the
-                    FitContribution (see the RecipeOrganizer._locateChild
-                    method).  
+                    FitContribution (see the
+                    RecipeContainer._locateManagedObject method).  
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
 
@@ -527,7 +527,7 @@ class ContributionResults(object):
         # Find the parameters
         for i, constraint in enumerate(recipe._constraintlist):
             par = constraint.par
-            loc = con._locateChild(par)
+            loc = con._locateManagedObject(par)
             if loc:
                 self.conlocs.append(loc)
                 self.convals.append(fitres.convals[i])

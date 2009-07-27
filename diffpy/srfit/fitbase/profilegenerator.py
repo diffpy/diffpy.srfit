@@ -46,10 +46,9 @@ More examples can be found in the example directory of the documentation.
 from numpy import array, asarray
 
 from .parameter import Parameter
+from .parameterset import ParameterSet
 
-from .recipeorganizer import RecipeOrganizer
-
-class ProfileGenerator(RecipeOrganizer):
+class ProfileGenerator(ParameterSet):
     """Base class for profile generators.
 
     A ProfileGenerator organizes Parameters and has a __call__ method that can
@@ -65,38 +64,27 @@ class ProfileGenerator(RecipeOrganizer):
     profile         --  A Profile instance that contains the calculation range
                         and will contain the generated profile.
     meta            --  A dictionary of metadata needed by the generator.
+    _calculators    --  A managed dictionary of Calculators, indexed by name.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-    _orgdict        --  A dictionary containing the Parameters and
-                        RecipeOrganizers indexed by name.
-    _parameters     --  A list of parameters that this RecipeOrganizer knows
-                        about.
+    _parameters     --  A managed OrderedDict of contained Parameters.
+    _parsets        --  A managed dictionary of ParameterSets.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
-    _organizers     --  A list of RecipeOrganizers that this RecipeOrganizer
-                        knows about.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from string
+                        instance that is used create Equations from string.
 
     """
 
     def __init__(self, name):
         """Initialize the attributes."""
-        RecipeOrganizer.__init__(self, name)
+        ParameterSet.__init__(self, name)
         self.profile = None
         self.literal = Parameter(name)
         self.args = []
         self.meta = {}
         return
-
-    # Make some methods public that were protected
-    addParameter = RecipeOrganizer._addParameter
-    newParameter = RecipeOrganizer._newParameter
-    removeParameter = RecipeOrganizer._removeParameter
-    addParameterSet = RecipeOrganizer._addOrganizer
-    removeParameterSet = RecipeOrganizer._removeOrganizer
 
     # Overload me!
     def __call__(self, x):

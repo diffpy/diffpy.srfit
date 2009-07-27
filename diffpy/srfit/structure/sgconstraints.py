@@ -39,7 +39,7 @@ def constrainSpaceGroup(lattice, system):
     """
     # First clear any constraints or constant variables in the lattice
     lattice._constraints = {}
-    for par in lattice._parameters:
+    for par in lattice._parameters.values():
         par.setConst(False)
 
     f = _constraintMap[system]

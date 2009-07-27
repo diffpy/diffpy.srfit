@@ -3,6 +3,7 @@
 
 import unittest
 
+from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.calculator import Calculator
@@ -58,66 +59,177 @@ class TestEquationFromString(unittest.TestCase):
 
         return
 
+class TestRecipeContainer(unittest.TestCase):
+
+    def setUp(self):
+        self.m = RecipeContainer("test")
+
+        # Add another managed dictionary
+        self.m._containers = {}
+        self.m._manage(self.m._containers)
+        return
+
+    def testClickers(self):
+        """Test make sure that objects are observed by the organizer."""
+        m = self.m
+
+        m2 = RecipeContainer("m2")
+        p1 = Parameter("p1", 1)
+        p2 = Parameter("p2", 1)
+        m2._addObject(p1, m2._parameters)
+        m._addObject(m2, m._containers)
+        m._addObject(p2, m._parameters)
+
+        self.assertTrue(m.clicker >= p1.clicker)
+        self.assertTrue(m.clicker >= m2.clicker)
+
+        p1.setValue(1.234)
+        self.assertTrue(m.clicker >= p1.clicker)
+        self.assertTrue(m.clicker >= m2.clicker)
+
+        p2.setValue(5.678)
+        self.assertTrue(m.clicker >= p2.clicker)
+        self.assertTrue(m.clicker > m2.clicker)
+
+        return
+
+    def testLocateManagedObject(self):
+        """Test the locateManagedObject method."""
+        m1 = self.m
+        p1 = Parameter("p1", 1)
+        m1._addObject(p1, m1._parameters)
+
+        m2 = RecipeContainer("m2")
+        p2 = Parameter("p2", 2)
+        m2._addObject(p2, m2._parameters)
+
+        m1._addObject(m2, m1._containers)
+
+        p3 = Parameter("p3", 3)
+
+        # Locate m2 in m1 (m1.m2)
+        loc = m1._locateManagedObject(m2)
+        self.assertEquals(loc, [m1, m2])
+
+        # Locate p1 (m1.p1)
+        loc = m1._locateManagedObject(p1)
+        self.assertEquals(loc, [m1, p1])
+
+        # Locate p2 in m2 (m2.p2)
+        loc = m2._locateManagedObject(p2)
+        self.assertEquals(loc, [m2, p2])
+
+        # Locate p2 in m1 (m1.m2.p2)
+        loc = m1._locateManagedObject(p2)
+        self.assertEquals(loc, [m1, m2, p2])
+
+        # Locate p3 in m1 (not there)
+        loc = m1._locateManagedObject(p3)
+        self.assertEquals(loc, [])
+
+        # Locate p3 in m2 (not there)
+        loc = m2._locateManagedObject(p3)
+        self.assertEquals(loc, [])
+
+        return
 
 class TestRecipeOrganizer(unittest.TestCase):
 
     def setUp(self):
         self.m = RecipeOrganizer("test")
+
+        # Add a managed container so we can do more in-depth tests.
+        self.m._containers = {}
+        self.m._manage(self.m._containers)
+        return
+
+    def testNewParameter(self):
+        """Test the addParameter method."""
+
+        m = self.m
+
+        p1 = Parameter("p1", 1)
+        m._addParameter(p1)
+
+        # Test duplication of Parameters
+        self.assertRaises(ValueError, m._newParameter, "p1", 0)
+
+        # Add a new Parameter
+        p2 = m._newParameter("p2", 0)
+        self.assertTrue(p2 is m.p2)
+
+        self.assertTrue(p2.clicker >= m.clicker)
         return
 
     def testAddParameter(self):
-        """Test the AddParameter method."""
+        """Test the addParameter method."""
+
+        m = self.m
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p1", 2)
 
         # Check normal insert
-        self.m._addParameter(p1)
-        self.assertTrue(self.m.p1 is p1)
+        m._addParameter(p1)
+        self.assertTrue(m.p1 is p1)
+        self.assertTrue(p1.name in m._eqfactory.builders)
 
         # Try to insert another parameter with the same name
-        self.assertRaises(ValueError, self.m._addParameter, p2)
+        self.assertRaises(ValueError, m._addParameter, p2)
+
+        # Now allow this
+        m._addParameter(p2, check=False)
+        self.assertTrue(m.p1 is p2)
+        self.assertTrue(p1.name in m._eqfactory.builders)
+
+        # Try to insert a Parameter when a RecipeContainer with the same name
+        # is already inside.
+        c = RecipeContainer("test")
+        m._addObject(c, m._containers)
+
+        p3 = Parameter("test", 0)
+        self.assertRaises(ValueError, m._addParameter, p3)
+
+        p4 = Parameter("xyz", 0)
+        m._addParameter(p4)
+
+        # Check order
+        self.assertEquals(m._parameters.keys(), ["p1", "xyz"])
+        self.assertEquals(m._parameters.values(), [p2, p4])
 
         return
 
-    def testAddOrganizer(self):
-        """Test the AddOrganizer method."""
-        m2 = RecipeOrganizer("m2")
-        p1 = Parameter("m2", 1)
+    def testRemoveParameter(self):
+        """Test removeParameter method."""
 
-        self.m._addOrganizer(m2)
-        self.assertTrue(self.m.m2 is m2)
+        m = self.m
 
-        self.assertRaises(ValueError, self.m._addOrganizer, p1)
-
-        p1.name = "p1"
-        m2._addParameter(p1)
-
-        self.assertTrue(self.m.m2.p1 is p1)
-
-        return
-
-    def testClickers(self):
-        """Test make sure that objects are observed by the organizer."""
-        m2 = RecipeOrganizer("m2")
         p1 = Parameter("p1", 1)
-        p2 = Parameter("p2", 1)
-        m2._addParameter(p1)
-        self.m._addOrganizer(m2)
-        self.m._addParameter(p2)
+        p2 = Parameter("p1", 2)
 
-        self.assertTrue(self.m.clicker >= p1.clicker)
-        self.assertTrue(self.m.clicker >= m2.clicker)
+        m._addParameter(p1)
 
-        p1.setValue(1.234)
-        self.assertTrue(self.m.clicker >= p1.clicker)
-        self.assertTrue(self.m.clicker >= m2.clicker)
+        # Check for bad remove
+        self.assertRaises(ValueError, m._removeParameter, p2)
 
-        p2.setValue(5.678)
-        self.assertTrue(self.m.clicker >= p2.clicker)
-        self.assertTrue(self.m.clicker > m2.clicker)
+        # Remove p1
+        m._removeParameter(p1)
+        self.assertTrue(p1.name not in m._eqfactory.builders)
 
+        p1.clicker.click()
+        self.assertTrue( p1.clicker > m.clicker)
+
+        # Try to remove it again
+        self.assertRaises(ValueError, m._removeParameter, p1)
+
+        # Try to remove a RecipeContainer
+        c = RecipeContainer("test")
+        self.assertRaises(ValueError, m._removeParameter, c)
         return
+
+
+
+
 
     def testConstrain(self):
         """Test the constrain method."""
@@ -183,18 +295,20 @@ class TestRecipeOrganizer(unittest.TestCase):
     def testGetConstraints(self):
         """Test the _getConstraints method."""
         m2 = RecipeOrganizer("m2")
-        self.m._addOrganizer(m2)
+        self.m._organizers = {}
+        self.m._manage(self.m._organizers)
+        self.m._addObject(m2, self.m._organizers)
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
         p3 = Parameter("p3", 3)
         p4 = Parameter("p4", 4)
 
-        self.m._eqfactory.registerArgument("p1", p1)
-        self.m._eqfactory.registerArgument("p2", p2)
+        self.m._addParameter(p1)
+        self.m._addParameter(p2)
 
-        m2._eqfactory.registerArgument("p3", p3)
-        m2._eqfactory.registerArgument("p4", p4)
+        m2._addParameter(p3)
+        m2._addParameter(p4)
 
         self.m.constrain(p1, "p2")
         m2.constrain(p3, "p4")
@@ -208,18 +322,20 @@ class TestRecipeOrganizer(unittest.TestCase):
     def testGetRestraints(self):
         """Test the _getRestraints method."""
         m2 = RecipeOrganizer("m2")
-        self.m._addOrganizer(m2)
+        self.m._organizers = {}
+        self.m._manage(self.m._organizers)
+        self.m._addObject(m2, self.m._organizers)
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
         p3 = Parameter("p3", 3)
         p4 = Parameter("p4", 4)
 
-        self.m._eqfactory.registerArgument("p1", p1)
-        self.m._eqfactory.registerArgument("p2", p2)
+        self.m._addParameter(p1)
+        self.m._addParameter(p2)
 
-        m2._eqfactory.registerArgument("p3", p3)
-        m2._eqfactory.registerArgument("p4", p4)
+        m2._addParameter(p3)
+        m2._addParameter(p4)
 
         r1 = self.m.restrain("p1 + p2")
         r2 = m2.restrain("2*p3 + p4")
@@ -228,46 +344,6 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertTrue(r1 in res)
         self.assertTrue(r2 in res)
         self.assertEquals(2, len(res))
-        return
-
-    def testLocateParameter(self):
-        """Test the AddOrganizer method."""
-        m1 = self.m
-        p1 = Parameter("p1", 1)
-        m1._addParameter(p1)
-
-        m2 = RecipeOrganizer("m2")
-        p2 = Parameter("p2", 2)
-        m2._addParameter(p2)
-
-        m1._addOrganizer(m2)
-
-        p3 = Parameter("p3", 3)
-
-        # Locate m2 in m1 (m1.m2)
-        loc = m1._locateChild(m2)
-        self.assertEquals(loc, [m1, m2])
-
-        # Locate p1 (m1.p1)
-        loc = m1._locateChild(p1)
-        self.assertEquals(loc, [m1, p1])
-
-        # Locate p2 in m2 (m2.p2)
-        loc = m2._locateChild(p2)
-        self.assertEquals(loc, [m2, p2])
-
-        # Locate p2 in m1 (m1.m2.p2)
-        loc = m1._locateChild(p2)
-        self.assertEquals(loc, [m1, m2, p2])
-
-        # Locate p3 in m1 (not there)
-        loc = m1._locateChild(p3)
-        self.assertEquals(loc, [])
-
-        # Locate p3 in m2 (not there)
-        loc = m2._locateChild(p3)
-        self.assertEquals(loc, [])
-
         return
 
     def testRegisterCalculator(self):
@@ -306,9 +382,11 @@ class TestRecipeOrganizer(unittest.TestCase):
         eq = self.m.registerStringFunction("g/x - 1", "pdf")
         self.assertTrue(numpy.array_equal(g(x)/x - 1, eq()))
 
-        # Now swap out what g is
-        g2 = self.m.registerStringFunction("x", "g")
-        self.assertTrue(numpy.array_equal(numpy.zeros_like(x), eq()))
+        # Make sure we can't overwrite "g"
+        self.assertRaises(ValueError, self.m.registerStringFunction, "x", "g")
+
+        g2 = GCalc("g")
+        self.assertRaises(ValueError, self.m.registerCalculator, g2)
 
         return
 
@@ -333,9 +411,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         eq2 = self.m.registerStringFunction("g/x - 1", "pdf")
         self.assertTrue(numpy.array_equal(eq(x)/x - 1, eq2()))
 
-        # Now swap out what g is
-        g2 = self.m.registerStringFunction("x", "g")
-        self.assertTrue(numpy.array_equal(numpy.zeros_like(x), eq2()))
+        # Make sure we can't swap out "g"
+        self.assertRaises(ValueError, self.m.registerStringFunction, "x", "g")
         return
 
     def testRegisterStringFunction(self):
@@ -372,16 +449,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEquals(18.0, eq4())
 
         # Replace eq1 with some other equation
-        eq1b = self.m.registerStringFunction("x + 3", "eq1")
-
-        # Make sure that instances of eq1 are replaced in eq2, eq3 and eq4.
-        # x
-        self.assertEquals(3, eq2())
-        # y
-        self.assertEquals(3, eq3())
-        # 2*y
-        self.assertEquals(6, eq4())
-
+        self.assertRaises(ValueError, self.m.registerStringFunction, "x", 
+                "eq1")
         return
         
 

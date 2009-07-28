@@ -68,7 +68,7 @@ class FitnessAdapter(park.Fitness):
         self._parmap = {}
         # Make a parameter set and add the variables from the FitRecipe
         self.__parameterset = park.ParameterSet()
-        for par in fitrecipe._parameters:
+        for par in fitrecipe._parameters.values():
             parkpar = ParkParameterProxy(par)
             self.__parameterset.append(parkpar)
             self._parmap[par] = parkpar

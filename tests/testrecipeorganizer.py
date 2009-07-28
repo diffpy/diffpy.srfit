@@ -5,6 +5,7 @@ import unittest
 
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
+from diffpy.srfit.fitbase.recipeorganizer import ConfigurationClicker
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.parameter import Parameter
@@ -67,18 +68,30 @@ class TestRecipeContainer(unittest.TestCase):
         # Add another managed dictionary
         self.m._containers = {}
         self.m._manage(self.m._containers)
+
         return
 
     def testClickers(self):
         """Test make sure that objects are observed by the organizer."""
         m = self.m
 
+        ref = ConfigurationClicker()
+
         m2 = RecipeContainer("m2")
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 1)
         m2._addObject(p1, m2._parameters)
+        self.assertTrue(m2._confclicker > ref)
+        ref.click()
+        self.assertTrue(m2._confclicker < ref)
         m._addObject(m2, m._containers)
+        self.assertTrue(m._confclicker > ref)
+        ref.click()
+        self.assertTrue(m._confclicker < ref)
         m._addObject(p2, m._parameters)
+        self.assertTrue(m._confclicker > ref)
+        ref.click()
+        self.assertTrue(m._confclicker < ref)
 
         self.assertTrue(m.clicker >= p1.clicker)
         self.assertTrue(m.clicker >= m2.clicker)

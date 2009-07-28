@@ -32,7 +32,7 @@ from numpy import concatenate, sqrt, inf, dot
 
 from diffpy.srfit.util.ordereddict import OrderedDict
 from .parameter import ParameterProxy
-from .recipeorganizer import RecipeOrganizer
+from .recipeorganizer import RecipeOrganizer, ConfigurationClicker
 from .fithook import FitHook
 
 class FitRecipe(RecipeOrganizer):
@@ -45,6 +45,9 @@ class FitRecipe(RecipeOrganizer):
     fithook         --  An object to be called whenever within the residual
                         (default FitHook()) that can pass information out of
                         the system during a refinement.
+    _confclicker    --  A ConfigurationConfigurationClicker for recording
+                        configuration changes, esp.  additions and removal of
+                        managed objects.
     _constraintlist --  An ordered list of the constraints from this and all
                         sub-components.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
@@ -59,8 +62,6 @@ class FitRecipe(RecipeOrganizer):
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from string
-    _doprepare      --  A flag indicating that the the attributes need to be
-                        prepared for calculation.
     _fixed          --  A set of parameters that are not actually varied.
     _restraintlist  --  A list of restraints from this and all sub-components.
     _restraints     --  A set of Restraints. Restraints can be added using the
@@ -69,6 +70,8 @@ class FitRecipe(RecipeOrganizer):
     _weights        --  List of weighing factors for each FitContribution. The
                         weights are multiplied by the residual of the
                         FitContribution when determining the overall residual.
+    _refclicker     --  A ConfigurationClicker for reference against
+                        configuration changes.
 
     """
 
@@ -80,10 +83,11 @@ class FitRecipe(RecipeOrganizer):
         self._restraintlist = []
 
         self._weights = []
-        self._doprepare = True
         self._tagdict = {}
 
         self._fixed = set()
+
+        self._refclicker = ConfigurationClicker()
 
         self._contributions = OrderedDict()
         self._manage(self._contributions)
@@ -105,7 +109,10 @@ class FitRecipe(RecipeOrganizer):
 
         """
         self.fithook = fithook
-        self._doprepare = True
+
+        # Click this so that _prepare gets called, which will initialize the
+        # fit hook.
+        self._confclicker.click()
         return
 
     def addContribution(self, con, weight = 1.0):
@@ -120,7 +127,6 @@ class FitRecipe(RecipeOrganizer):
         """
         self._addObject(con, self._contributions, True)
         self._weights.append(weight)
-        self._doprepare = True
         return
 
     def setWeight(self, con, weight):
@@ -146,8 +152,8 @@ class FitRecipe(RecipeOrganizer):
 
         """
 
-        if self._doprepare:
-            self._prepare()
+        # Prepare, if necessary
+        self._prepare()
 
         if self.fithook:
             self.fithook.precall(self)
@@ -186,7 +192,7 @@ class FitRecipe(RecipeOrganizer):
         return dot(chiv, chiv)
 
     def _prepare(self):
-        """Prepare for the calculation.
+        """Prepare for the residual calculation, if necessary.
 
         This will prepare the data attributes to be used in the residual
         calculation.
@@ -203,6 +209,11 @@ class FitRecipe(RecipeOrganizer):
 
         """
 
+        # Only prepare if the configuration has changed within the recipe
+        # hierarchy.
+        if self._confclicker < self._refclicker:
+            return
+
         # Inform the fit hook that we're updating things
         if self.fithook:
             self.fithook.reset()
@@ -217,9 +228,8 @@ class FitRecipe(RecipeOrganizer):
         self.__collectConstraintsAndRestraints()
 
         # We're done here
-        self._doprepare = False
+        self._refclicker.click()
         return
-
 
     def __verifyProfiles(self):
         """Verify that each FitContribution has a Profile."""
@@ -361,8 +371,6 @@ class FitRecipe(RecipeOrganizer):
         # Deal with tags
         self.__applyTags(var, tag, tags)
 
-        self._doprepare = True
-
         return var
 
     def __applyTags(self, var, tag, tags):
@@ -435,7 +443,6 @@ class FitRecipe(RecipeOrganizer):
         # Deal with tags
         self.__applyTags(var, tag, tags)
 
-        self._doprepare = True
         return var
 
     def fixVar(self, var, value = None):
@@ -527,132 +534,6 @@ class FitRecipe(RecipeOrganizer):
         for var, pval in zip(vars, p):
             var.setValue(pval)
         return
-
-
-    # These must set _doprepare = True
-
-    def constrain(self, par, con, ns = {}):
-        """Constrain a parameter to an equation.
-
-        Note that only one constraint can exist on a Parameter at a time. The
-        most recent constraint override all other user-defined constraints.
-        Built-in constraints override all other constraints.
-
-        par     --  The Parameter to constrain. It does not need to be a
-                    variable.
-        con     --  A string representation of the constraint equation or a
-                    parameter to constrain to.  A constraint equation must
-                    consist of numpy operators and "known" Parameters.
-                    Parameters are known if they are in the ns argument, or if
-                    they have been added to this FitRecipe with the 'add' or
-                    'new' methods.
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitRecipe (default {}).
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitRecipe and that is not defined in ns.
-
-        """
-        RecipeOrganizer.constrain(self, par, con, ns)
-        self._doprepare = True
-        return
-
-    def unconstrain(self, par):
-        """Unconstrain a Parameter.
-
-        par     --  The Parameter to unconstrain.
-
-        This removes any constraints on a parameter, including built-in
-        constraints.
-
-        """
-        RecipeOrganizer.unconstrain(self, par)
-        self._doprepare = True
-        return
-
-    def restrain(self, res, lb = -inf, ub = inf, prefactor = 1, power = 2,  
-            scaled = False, ns = {}):
-        """Restrain an expression to specified bounds
-
-        res     --  An equation string or Parameter to restrain.
-        lb      --  The lower bound on the restraint evaluation (default -inf).
-        ub      --  The lower bound on the restraint evaluation (default inf).
-        prefactor   --  A multiplicative prefactor for the restraint 
-                        (default 1).
-        power   --  The power of the penalty (default 2).
-        scaled  --  A flag indicating if the restraint is scaled (multiplied)
-                    by the unrestrained point-average chi^2 (chi^2/numpoints)
-                    (default False).
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitRecipe 
-                    (default {}).
-
-        The penalty is calculated as 
-        prefactor * max(0, lb - val, val - ub) ** power
-        and val is the value of the calculated equation. This is multipled by
-        the average chi^2 if scaled is True.
-
-        Raises ValueError if ns uses a name that is already used for a
-        Parameter.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitRecipe and that is not defined in ns.
-
-        Returns the Restraint selfect for use with the 'unrestrain' method.
-
-        """
-        res = RecipeOrganizer.restrain(self, res, lb, ub, prefactor, power,
-                scaled, ns)
-        self._doprepare = True
-        return res
-
-    def confine(self, res, lb = -inf, ub = inf, ns = {}):
-        """Confine an expression to hard bounds.
-
-        res     --  An equation string or Parameter to restrain.
-        lb      --  The lower bound on the restraint evaluation (default -inf).
-        ub      --  The lower bound on the restraint evaluation (default inf).
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitRecipe 
-                    (default {}).
-
-        The penalty is infinite if the value of the calculated equation is
-        outside the bounds.
-
-        Raises ValueError if ns uses a name that is already used for a
-        Parameter.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitRecipe and that is not defined in ns.
-
-        Returns the BoundsRestraint object for use with the 'unrestrain' method.
-
-        """
-        res = RecipeOrganizer.confine(self, res, lb, ub, ns)
-        self._doprepare = True
-        return res
-
-    def unrestrain(self, res):
-        """Remove a restraint from the FitRecipe.
-        
-        res     --  A Restraint returned from the 'restrain' method.
-
-        """
-        RecipeOrganizer.unrestrain(self, res)
-        self._doprepare = True
-        return
-
-# Decorator to apply _doprepare = True
-def setprepare(f):
-
-    def _f(self, *args, **kw):
-        self._doprepare = True
-        return f(self, *args, **kw)
-
-    _f.__doc__ = f.__doc__
-
-    return _f
-
 
 
 # version

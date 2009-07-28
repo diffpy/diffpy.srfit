@@ -42,8 +42,10 @@ from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.equation import Clicker
 from diffpy.srfit.equation import Equation
+from diffpy.srfit.equation.clicker import clickerFactory
 
-
+# Create a different type of clicker for configurational changes.
+ConfigurationClicker = clickerFactory()
 
 class RecipeContainer(object):
     """Base class for organizing pieces of a FitRecipe.
@@ -54,8 +56,11 @@ class RecipeContainer(object):
     hierarchy with the _locateManagedObject method.
 
     Attributes
-    clicker         --  A Clicker for recording changes in contained Parameters
-                        and RecipeContainers
+    clicker         --  A Clicker instance for recording changes in contained
+                        Parameters and RecipeOrganizers.
+    _confclicker    --  A ConfigurationClicker for recording configuration
+                        changes, esp.  additions and removal of managed
+                        objects.
     name            --  A name for this RecipeContainer. Names should be unique
                         within a RecipeContainer and should be valid attribute
                         names.
@@ -69,6 +74,7 @@ class RecipeContainer(object):
         validateName(name)
         self.name = name
         self.clicker = Clicker()
+        self._confclicker = ConfigurationClicker()
         self._parameters = OrderedDict()
 
         self.__managed = []
@@ -138,15 +144,22 @@ class RecipeContainer(object):
                     (obj.__class__.__name__, obj.name)
             raise ValueError(message)
 
-        # Detach the old Parameter, if there is one
+        # Detach the old object, if there is one
         if oldobj is not None:
             self.clicker.removeSubject(oldobj.clicker)
+            if hasattr(oldobj, "_confclicker"):
+                self._confclicker.removeSubject(oldobj._confclicker)
 
         # Add the object
         d[obj.name] = obj
 
         # Attach the object to the Clicker
         self.clicker.addSubject(obj.clicker)
+        if hasattr(obj, "_confclicker"):
+            self._confclicker.addSubject(obj._confclicker)
+
+        # Our configuration changed
+        self._confclicker.click()
 
         return
 
@@ -162,6 +175,11 @@ class RecipeContainer(object):
 
         del d[obj.name]
         self.clicker.removeSubject(obj.clicker)
+        if hasattr(obj, "_confclicker"):
+            self._confclicker.removeSubject(obj._confclicker)
+
+        # Our configuration changed
+        self._confclicker.click()
 
         return
 
@@ -222,6 +240,9 @@ class RecipeOrganizer(RecipeContainer):
     name            --  A name for this organizer. Names should be unique
                         within a RecipeOrganizer and should be valid attribute
                         names.
+    _confclicker    --  A ConfigurationClicker for recording configuration
+                        changes, esp.  additions and removal of managed
+                        objects.
     _calculators    --  A managed dictionary of Calculators, indexed by name.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
@@ -261,7 +282,7 @@ class RecipeOrganizer(RecipeContainer):
         self._addParameter(p, check)
         return p
 
-    def _addParameter(self, par, check=True):
+    def _addParameter(self, par, name = None, check=True):
         """Store a Parameter.
 
         Parameters added in this way are registered with the _eqfactory.
@@ -323,7 +344,7 @@ class RecipeOrganizer(RecipeContainer):
         managed object or an Equation object.
 
         """
-        self._addObject(f, self._calculators)
+        self._addObject(f, self._calculators, True)
         self.registerFunction(f, f.name, argnames, makepars)
         return
 
@@ -550,6 +571,9 @@ class RecipeOrganizer(RecipeContainer):
         con.constrain(par, eq)
         self._constraints[par] = con
 
+        # Our configuration changed
+        self._confclicker.click()
+
         return
 
     def unconstrain(self, par):
@@ -562,6 +586,10 @@ class RecipeOrganizer(RecipeContainer):
         """
         if par in self._constraints:
             del self._constraints[par]
+
+        # Our configuration changed
+        self._confclicker.click()
+
         return
 
     def restrain(self, res, lb = -inf, ub = inf, prefactor = 1, power = 2,  
@@ -605,6 +633,9 @@ class RecipeOrganizer(RecipeContainer):
         res.restrain(eq, lb, ub, prefactor, power, scaled)
         self._restraints.add(res)
 
+        # Our configuration changed
+        self._confclicker.click()
+
         return res
 
     def unrestrain(self, res):
@@ -615,6 +646,9 @@ class RecipeOrganizer(RecipeContainer):
         """
         if res in self._restraints:
             self._restraints.remove(res)
+
+        # Our configuration changed
+        self._confclicker.click()
 
         return
 

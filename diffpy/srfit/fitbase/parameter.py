@@ -97,9 +97,7 @@ class ParameterProxy(object):
     par     --  The Parameter this is a proxy for.
 
     """
-    
-    # this will let the proxy register as a real Parameter
-    __class__ = Parameter
+
 
     def __init__(self, name, par):
         """Initialization.

@@ -46,6 +46,9 @@ class FitContribution(ParameterSet):
     name            --  A name for this FitContribution.
     profile         --  A Profile that holds the measured (and calcuated)
                         signal.
+    _confclicker    --  A ConfigurationClicker for recording configuration
+                        changes, esp.  additions and removal of managed
+                        objects.
     _calculators    --  A managed dictionary of Calculators, indexed by name.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the

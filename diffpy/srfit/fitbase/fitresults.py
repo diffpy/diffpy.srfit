@@ -96,8 +96,7 @@ class FitResults(object):
             return
 
         # Make sure everything is ready for calculation
-        if recipe._doprepare:
-            recipe._prepare()
+        recipe._prepare()
 
         # Store the variable names and values
         self.varnames = recipe.getNames()

@@ -37,8 +37,6 @@ builder     --  The builder module contains classes and methods that aid in the
                 construction of Equations. There are options for creating an
                 Equation from a string, or from EquationBuilder objects.  See
                 the module documentation for a discription of these tools.
-clicker     --  The clicker module defines the Clicker class and
-                clickerFactory method (see below).
 equationmod --  The equationmod module contains the Equation class (see below).
 
 Classes:
@@ -47,24 +45,19 @@ Clicker     --  The Clicker class records the change of state in another
                 several Visitor classes. These classes use clickers to
                 determine if a computed value needs to be updated on subsequent
                 evaluations. More information about the use of Clickers can be
-                found in the clicker module documentation.
+                found in the diffpy.srfit.util.clicker module documentation.
 Equation    --  Equations encapsulate a Literal tree and an Evaluator that can
                 walk the tree and evaluate its value.  Equations check the
                 validity of a Literal and give attribute-like access to the
                 Arguments of the literal tree. Examples of Equation use can be
                 found in the Equation module documentation.
 
-Methods:
-clickerFactory --   Creates a new Clicker class. Clickers created from
-                    different classes cannot be compared. 
-
 """
 
 # package version
 from diffpy.srfit.version import __version__
 
-from .clicker import clickerFactory
-
+from diffpy.srfit.util.clicker import clickerFactory
 Clicker = clickerFactory()
 
 from .equationmod import Equation

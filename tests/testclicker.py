@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Tests for refinableobj module."""
 
-from diffpy.srfit.equation.clicker import clickerFactory
+from diffpy.srfit.util.clicker import clickerFactory
 import unittest
 
 

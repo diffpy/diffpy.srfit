@@ -12,13 +12,15 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The RecipeContainer, RecipeOrganizer class and equationFromString method.
+"""Base classes and tools for constructing a FitRecipe.
 
 RecipeContainer is the base class for organizing Parameters, and other
-RecipeContainers.  hierarchy. RecipeOrganizer is an extended RecipeContainers,
-that incorporates Equations, Constraints and Restraints.  equationFromString
-creates an Equation instance from a string. It checks for specific conditions
-on the string, as defined in the method.
+RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that
+incorporates Equations, Constraints and Restraints.  equationFromString creates
+an Equation instance from a string. It checks for specific conditions on the
+string, as defined in the method. The ConfigurationClicker is a special Clicker
+class for recording configurational changes in a RecipeContainer, such as the
+addition and removal of managed objects.
 
 """
 
@@ -32,17 +34,18 @@ on the string, as defined in the method.
 # references to make this work.
 
 from numpy import inf
+from itertools import chain, ifilter
 
 from .constraint import Constraint
 from .restraint import Restraint, BoundsRestraint
 from .parameter import Parameter
 
-from diffpy.srfit.util import validateName
-from diffpy.srfit.util.ordereddict import OrderedDict
-from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.equation import Clicker
 from diffpy.srfit.equation import Equation
-from diffpy.srfit.equation.clicker import clickerFactory
+from diffpy.srfit.equation.builder import EquationFactory
+from diffpy.srfit.util.clicker import clickerFactory
+from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.util.ordereddict import OrderedDict
 
 # Create a different type of clicker for configurational changes.
 ConfigurationClicker = clickerFactory()
@@ -55,15 +58,23 @@ class RecipeContainer(object):
     objects.  Parameters and other RecipeContainers can be found within the
     hierarchy with the _locateManagedObject method.
 
+    A RecipeContainer can manage dictionaries for that store various objects.
+    These dictionaries can be added to the RecipeContainer using the _manage
+    method. RecipeContainer methods that add, remove or retrieve objects will
+    work with any managed dictionary. This makes it easy to add new types of
+    objects to be contained by a RecipeContainer. By default, the
+    RecipeContainer is configured to manage an OrderedDict of Parameter
+    objects.
+
     Attributes
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and RecipeOrganizers.
-    _confclicker    --  A ConfigurationClicker for recording configuration
-                        changes, esp.  additions and removal of managed
-                        objects.
     name            --  A name for this RecipeContainer. Names should be unique
                         within a RecipeContainer and should be valid attribute
                         names.
+    _confclicker    --  A ConfigurationClicker for recording configuration
+                        changes, esp.  additions and removal of managed
+                        objects.
     _parameters     --  A managed OrderedDict of contained Parameters.
     ___managed      --  A list of managed dictionaries. This is used for
                         attribute access, addition and removal.
@@ -92,9 +103,24 @@ class RecipeContainer(object):
         self.__managed.append(d)
         return
 
-    def _getManaged(self):
-        """Get the managed dictionaries."""
-        return self.__managed
+    def _iterManaged(self):
+        """Get iterator over managed objects."""
+        return chain(*[d.values() for d in self.__managed])
+
+    def _iterPars(self):
+        """Iterate over Parameters, including embedded ones."""
+
+        for par in self._parameters.itervalues():
+            yield par
+
+        # Iterate over objects within the managed dictionaries.
+        managed = self.__managed[:]
+        managed.remove(self._parameters)
+        f = lambda m : hasattr(m, "_iterPars")
+        for m in ifilter(f, chain(*managed)):
+            m._iterPars()
+
+        return
 
     def __getattr__(self, name):
         """Gives access to the contained objects as attributes."""
@@ -105,7 +131,7 @@ class RecipeContainer(object):
 
     def get(self, name, default = None):
         """Get a managed object."""
-        for d in self._getManaged():
+        for d in self.__managed:
             arg = d.get(name)
             if arg is not None:
                 return arg
@@ -118,7 +144,7 @@ class RecipeContainer(object):
         obj     --  The object to be stored.
         d       --  The managed dictionary to store the object in.
         check   --  If True (default), a ValueError is raised an object of the
-                    given name already exists in container.
+                    given name already exists.
 
         Raises ValueError if the object has no name.
         Raises ValueError if the object has the same name as some other managed
@@ -188,40 +214,27 @@ class RecipeContainer(object):
 
         obj     --  The object to find.
 
-        Returns a list of objects. Each entry in the list is the object
-        containing the next object in the list. The last object is obj, if it
-        can be found, otherwise, the list is empty.
+        Returns a list of objects. Each entry in the list contains the next
+        entry. The last object is obj, if it can be found, otherwise, the list
+        is empty.
 
         """
         loc = [self]
 
-        for d in self._getManaged():
+        for m in self._iterManaged():
+
             # Check locally for the object
-            if obj in d.values():
+            if m is obj:
                 loc.append(obj)
                 return loc
 
-            # Enter the object if we can
-            for container in d.values():
-                if hasattr(container, "_locateManagedObject"):
-                    subloc = container._locateManagedObject(obj)
-                    if subloc:
-                        return loc + subloc
+            if hasattr(m, "_locateManagedObject"):
+
+                subloc = m._locateManagedObject(obj)
+                if subloc:
+                    return loc + subloc
 
         return []
-
-    def _iterPars(self):
-        """Iterate over Parameters."""
-
-        for par in self._parameters.values():
-            yield par
-
-        for d in self._getManaged():
-            for container in d.values():
-                if hasattr(container, "_iterPars"):
-                    container._iterPars()
-
-        return
 
 # End class RecipeContainer
 
@@ -656,10 +669,9 @@ class RecipeOrganizer(RecipeContainer):
         """Get the Constraints for this and managed sub-objects."""
 
         constraints = {}
-        for d in self._getManaged():
-            for container in d.values():
-                if hasattr(container, "_getConstraints"):
-                    constraints.update( container._getConstraints() )
+        f = lambda m : hasattr(m, "_getConstraints")
+        for m in ifilter(f, self._iterManaged()):
+            constraints.update( m._getConstraints() )
 
         # Update with local constraints last. These override the others.
         constraints.update(self._constraints)
@@ -669,10 +681,9 @@ class RecipeOrganizer(RecipeContainer):
     def _getRestraints(self):
         """Get the Restraints for this and embedded ParameterSets."""
         restraints = set(self._restraints)
-        for d in self._getManaged():
-            for container in d.values():
-                if hasattr(container, "_getRestraints"):
-                    restraints.update( container._getRestraints() )
+        f = lambda m : hasattr(m, "_getRestraints")
+        for m in ifilter(f, self._iterManaged()):
+            restraints.update( m._getRestraints() )
 
         return restraints
 

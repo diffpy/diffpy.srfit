@@ -24,15 +24,16 @@ DihedralAngleParameter
 
 """
 
-from diffpy.srfit.equation import Clicker
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
-from diffpy.srfit.fitbase.parameterset import ParameterSet
-from diffpy.srfit.fitbase.restraint import Restraint
-from diffpy.srfit.fitbase.constraint import Constraint
-
 from pyobjcryst.molecule import GetBondLength, GetBondAngle, GetDihedralAngle
 from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
 from pyobjcryst.molecule import StretchModeTorsion
+
+from diffpy.srfit.fitbase.constraint import Constraint
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
+from diffpy.srfit.fitbase.parameterset import ParameterSet
+from diffpy.srfit.fitbase.restraint import Restraint
+from diffpy.srfit.util.clicker import Clicker
+
 
 class ScattererParSet(ParameterSet):
     """A base wrapper for an Objcryst Scatterer.

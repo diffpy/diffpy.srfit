@@ -27,7 +27,13 @@ dist = setup(
             # REMOVE dev.danse.us for a public release.
             'http://dev.danse.us/packages/',
             "http://www.diffpy.org/packages/",
+            'http://openalea.gforge.inria.fr/pi',
         ],
+
+        # Stuff for building extensions
+        setup_requires = ['scons', 'openalea.deploy'],
+        bin_dirs = { 'diffpy/srfit/util' : 'diffpy/srfit/util' },
+        scons_scripts=['SConstruct'],
 
         author = "Simon J.L. Billinge",
         author_email = "sb2896@columbia.edu",

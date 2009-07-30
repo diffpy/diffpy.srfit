@@ -23,7 +23,7 @@ Printer is mostly
 
 from .visitor import Visitor
 
-from .. import Clicker
+from diffpy.srfit.util.clicker import Clicker
 
 class Printer(Visitor):
     """Printer for printing a Literal tree.

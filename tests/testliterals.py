@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 """Tests for refinableobj module."""
 
-import diffpy.srfit.equation.literals as literals
-import diffpy.srfit.equation as equation
 import unittest
+
+from diffpy.srfit.util.clicker import Clicker
+import diffpy.srfit.equation as equation
+import diffpy.srfit.equation.literals as literals
 
 
 class TestArgument(unittest.TestCase):
@@ -11,7 +13,7 @@ class TestArgument(unittest.TestCase):
     def testSetValue(self):
         """Test initialization."""
         l = literals.Argument()
-        c1 = equation.Clicker()
+        c1 = Clicker()
 
         l.setValue(3.14)
         self.assertAlmostEqual(l.getValue(), 3.14)

@@ -45,7 +45,7 @@ from .visitor import Visitor
 from ..literals import Partition
 from ..literals import Argument
 
-from .. import Clicker
+from diffpy.srfit.util.clicker import Clicker
 
 
 class Evaluator(Visitor):

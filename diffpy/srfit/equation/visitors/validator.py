@@ -26,7 +26,7 @@ interface.
 
 from .visitor import Visitor
 
-from .. import Clicker
+from diffpy.srfit.util.clicker import Clicker
 from diffpy.srfit.equation.literals.abcs import *
 
 msg = "'%s' does not have the interface required by '%s'"

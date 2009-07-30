@@ -38,7 +38,7 @@ class ParameterSet(RecipeOrganizer):
     clicker         --  A Clicker instance for recording changes in contained
                         Parameters and RecipeOrganizers.
     name            --  A name for this organizer.
-    _confclicker    --  A ConfigurationClicker for recording configuration
+    _confclicker    --  A Clicker for recording configuration
                         changes, esp.  additions and removal of managed
                         objects.
     _calculators    --  A managed dictionary of Calculators, indexed by name.

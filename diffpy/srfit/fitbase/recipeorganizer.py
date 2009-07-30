@@ -18,9 +18,7 @@ RecipeContainer is the base class for organizing Parameters, and other
 RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that
 incorporates Equations, Constraints and Restraints.  equationFromString creates
 an Equation instance from a string. It checks for specific conditions on the
-string, as defined in the method. The ConfigurationClicker is a special Clicker
-class for recording configurational changes in a RecipeContainer, such as the
-addition and removal of managed objects.
+string, as defined in the method. 
 
 """
 
@@ -40,15 +38,11 @@ from .constraint import Constraint
 from .restraint import Restraint, BoundsRestraint
 from .parameter import Parameter
 
-from diffpy.srfit.equation import Clicker
+from diffpy.srfit.util.clicker import Clicker
 from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
-from diffpy.srfit.util.clicker import clickerFactory
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.ordereddict import OrderedDict
-
-# Create a different type of clicker for configurational changes.
-ConfigurationClicker = clickerFactory()
 
 class RecipeContainer(object):
     """Base class for organizing pieces of a FitRecipe.
@@ -72,9 +66,8 @@ class RecipeContainer(object):
     name            --  A name for this RecipeContainer. Names should be unique
                         within a RecipeContainer and should be valid attribute
                         names.
-    _confclicker    --  A ConfigurationClicker for recording configuration
-                        changes, esp.  additions and removal of managed
-                        objects.
+    _confclicker    --  A Clicker for recording configuration changes, esp.
+                        additions and removal of managed objects.
     _parameters     --  A managed OrderedDict of contained Parameters.
     ___managed      --  A list of managed dictionaries. This is used for
                         attribute access, addition and removal.
@@ -85,7 +78,7 @@ class RecipeContainer(object):
         validateName(name)
         self.name = name
         self.clicker = Clicker()
-        self._confclicker = ConfigurationClicker()
+        self._confclicker = Clicker()
         self._parameters = OrderedDict()
 
         self.__managed = []
@@ -253,7 +246,7 @@ class RecipeOrganizer(RecipeContainer):
     name            --  A name for this organizer. Names should be unique
                         within a RecipeOrganizer and should be valid attribute
                         names.
-    _confclicker    --  A ConfigurationClicker for recording configuration
+    _confclicker    --  A Clicker for recording configuration
                         changes, esp.  additions and removal of managed
                         objects.
     _calculators    --  A managed dictionary of Calculators, indexed by name.

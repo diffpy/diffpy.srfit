@@ -18,6 +18,7 @@ class TestEquation(unittest.TestCase):
         c.name = "c"
         c.const = True
 
+
         # Make some operations
         mult = literals.MultiplicationOperator()
         mult2 = literals.MultiplicationOperator()

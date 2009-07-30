@@ -40,7 +40,7 @@ class Calculator(ParameterSet):
                         Parameters and RecipeOrganizers.
     name            --  A name for this organizer.
     meta            --  A dictionary of metadata needed by the calculator.
-    _confclicker    --  A ConfigurationClicker for recording configuration
+    _confclicker    --  A Clicker for recording configuration
                         changes, esp.  additions and removal of managed objects.
     _calculators    --  A managed dictionary of Calculators, indexed by name.
     _constraints    --  A dictionary of Constraints, indexed by the constrained

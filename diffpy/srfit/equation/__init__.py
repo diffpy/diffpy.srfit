@@ -40,12 +40,6 @@ builder     --  The builder module contains classes and methods that aid in the
 equationmod --  The equationmod module contains the Equation class (see below).
 
 Classes:
-Clicker     --  The Clicker class records the change of state in another
-                object. Clicker is used by the Literal classes, as well as
-                several Visitor classes. These classes use clickers to
-                determine if a computed value needs to be updated on subsequent
-                evaluations. More information about the use of Clickers can be
-                found in the diffpy.srfit.util.clicker module documentation.
 Equation    --  Equations encapsulate a Literal tree and an Evaluator that can
                 walk the tree and evaluate its value.  Equations check the
                 validity of a Literal and give attribute-like access to the
@@ -56,9 +50,6 @@ Equation    --  Equations encapsulate a Literal tree and an Evaluator that can
 
 # package version
 from diffpy.srfit.version import __version__
-
-from diffpy.srfit.util.clicker import clickerFactory
-Clicker = clickerFactory()
 
 from .equationmod import Equation
 

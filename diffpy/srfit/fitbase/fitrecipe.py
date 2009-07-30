@@ -32,7 +32,7 @@ from numpy import concatenate, sqrt, inf, dot
 
 from diffpy.srfit.util.ordereddict import OrderedDict
 from .parameter import ParameterProxy
-from .recipeorganizer import RecipeOrganizer, ConfigurationClicker
+from .recipeorganizer import RecipeOrganizer, Clicker
 from .fithook import FitHook
 
 class FitRecipe(RecipeOrganizer):
@@ -45,7 +45,7 @@ class FitRecipe(RecipeOrganizer):
     fithook         --  An object to be called whenever within the residual
                         (default FitHook()) that can pass information out of
                         the system during a refinement.
-    _confclicker    --  A ConfigurationConfigurationClicker for recording
+    _confclicker    --  A Clicker for recording
                         configuration changes, esp.  additions and removal of
                         managed objects.
     _constraintlist --  An ordered list of the constraints from this and all
@@ -70,7 +70,7 @@ class FitRecipe(RecipeOrganizer):
     _weights        --  List of weighing factors for each FitContribution. The
                         weights are multiplied by the residual of the
                         FitContribution when determining the overall residual.
-    _refclicker     --  A ConfigurationClicker for reference against
+    _refclicker     --  A Clicker for reference against
                         configuration changes.
 
     """
@@ -87,7 +87,7 @@ class FitRecipe(RecipeOrganizer):
 
         self._fixed = set()
 
-        self._refclicker = ConfigurationClicker()
+        self._refclicker = Clicker()
 
         self._contributions = OrderedDict()
         self._manage(self._contributions)
@@ -285,13 +285,15 @@ class FitRecipe(RecipeOrganizer):
                         pars.pop()
                 raise AttributeError(m)
             cdict.update(constraints)
+
         # Update with local constraints last
         cdict.update(self._constraints)
 
+        # The order of the restraint list does not matter
+        self._restraintlist = list(rset)
+
         # Reorder the constraints. Constraints are ordered such that a given
         # constraint is placed before its dependencies.
-
-        self._restraintlist = list(rset)
         self._constraintlist = cdict.values()
 
         # Create a depth-1 map of the constraint dependencies

@@ -3,13 +3,13 @@
 
 import unittest
 
-from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
-from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
-from diffpy.srfit.fitbase.recipeorganizer import ConfigurationClicker
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.equation.builder import EquationFactory
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
+from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
+from diffpy.srfit.util.clicker import Clicker
 
 import numpy
 
@@ -75,7 +75,7 @@ class TestRecipeContainer(unittest.TestCase):
         """Test make sure that objects are observed by the organizer."""
         m = self.m
 
-        ref = ConfigurationClicker()
+        ref = Clicker()
 
         m2 = RecipeContainer("m2")
         p1 = Parameter("p1", 1)

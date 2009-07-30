@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Tests for refinableobj module."""
 
-from diffpy.srfit.util.clicker import clickerFactory
+from diffpy.srfit.util.clicker import Clicker
 import unittest
 
 
@@ -9,7 +9,6 @@ class TestClicker(unittest.TestCase):
 
     def testClicker(self):
         """Test all aspects of the Clicker."""
-        Clicker = clickerFactory()
 
         c1 = Clicker()
         c2 = Clicker()

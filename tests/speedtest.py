@@ -109,7 +109,7 @@ def speedTest2(mutate = 2):
     sigma = 0.003
 
     eqstr = """\
-    A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2))\
+    A0*exp(-(x*qsig)**2)*(exp(-((x-1.0)/sigma1)**2)+exp(-((x-2.0)/sigma2)**2))\
     + polyval(list(b1, b2, b3, b4, b5, b6, b7, b8), x)\
     """
     factory.registerConstant("x", x)
@@ -130,7 +130,7 @@ def speedTest2(mutate = 2):
     from numpy import exp
     from numpy import polyval
     def f(A0, qsig, sigma1, sigma2, b1, b2, b3, b4, b5, b6, b7, b8):
-        return A0*exp((x*qsig)**2)*(exp(((x-1.0)/sigma1)**2)+exp(((x-2.0)/sigma2)**2)) + polyval([b8, b7, b6, b5,b4,b3,b2,b1],x)
+        return A0*exp(-(x*qsig)**2)*(exp(-((x-1.0)/sigma1)**2)+exp(-((x-2.0)/sigma2)**2)) + polyval([b8, b7, b6, b5,b4,b3,b2,b1],x)
 
     tnpy = 0
     teq = 0
@@ -166,7 +166,79 @@ def speedTest2(mutate = 2):
 
     return
 
+def weightedTest(mutate = 2):
+    """Show the benefits of a properly balanced equation tree."""
+
+    from diffpy.srfit.equation.builder import EquationFactory
+    factory = EquationFactory()
+
+    x = numpy.arange(0, 10, 0.001)
+    qsig = 0.01
+    sigma = 0.003
+
+    eqstr = """\
+    ((b1 + b2*x) + (b3*x**2 + b4*x**3)) + ((b5*x**4 + b6*x**5) + (b7*x**6 + b8*x**7))\
+    """
+    eqstr = """\
+    b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
+    """
+    factory.registerConstant("x", x)
+    eq = factory.makeEquation(eqstr)
+
+    eq.b1.setValue(0)
+    eq.b2.setValue(1)
+    eq.b3.setValue(2.0)
+    eq.b4.setValue(2.0)
+    eq.b5.setValue(2.0)
+    eq.b6.setValue(2.0)
+    eq.b7.setValue(2.0)
+    eq.b8.setValue(2.0)
+
+    #scale = visitors.NodeWeigher()
+    #eq.root.identify(scale)
+    #print scale.output
+
+    from numpy import polyval
+    def f(b1, b2, b3, b4, b5, b6, b7, b8):
+        return polyval([b8, b7, b6, b5,b4,b3,b2,b1],x)
+
+    tnpy = 0
+    teq = 0
+    import random
+    # Randomly change variables
+    numargs = len(eq.args)
+    choices = range(numargs)
+    args = [0.1]*numargs
+
+    # The call-loop
+    random.seed()
+    numcalls = 1000
+    for _i in xrange(numcalls):
+        # Mutate values
+        n = mutate
+        if n == 0:
+            n = random.choice(choices)
+        c = choices[:]
+        for _j in xrange(n):
+            idx = random.choice(c)
+            c.remove(idx)
+            args[idx] = random.random()
+
+        #print args
+
+        # Time the different functions with these arguments
+        teq += timeFunction(eq, *args)
+        tnpy += timeFunction(f, *args)
+
+    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
+            mutate)
+    print "numpy: ", tnpy/numcalls
+    print "equation: ", teq/numcalls
+    print "ratio: ", teq/tnpy
+
+
 if __name__ == "__main__":
 
-    for i in range(1, 13):
-        speedTest2(i)
+    for i in range(1, 9):
+        #speedTest2(i)
+        weightedTest(i)

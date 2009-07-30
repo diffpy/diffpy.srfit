@@ -29,7 +29,7 @@ ParameterProxy      --  A proxy for another Parameter, but with a different
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
-from diffpy.srfit.equation import Clicker
+from diffpy.srfit.util.clicker import Clicker
 from diffpy.srfit.util.nameutils import validateName
 
 class Parameter(Argument):

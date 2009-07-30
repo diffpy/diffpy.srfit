@@ -22,7 +22,6 @@ equation calculated by a FitRecipe.
 """
 
 from numpy import inf
-from diffpy.srfit.equation import Clicker 
 
 class Restraint(object):
     """Restraint class.

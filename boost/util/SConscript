@@ -1,0 +1,25 @@
+env = DefaultEnvironment()
+
+# Make sure we use the proper python build options
+env.ParseConfig("python-config --includes")
+env.ParseConfig("python-config --ldflags")
+
+env.Append(CPPFLAGS = "-O3 -funroll-loops ")
+
+# Get rid of the lib prefix
+env["SHLIBPREFIX"]=""
+
+# Make correct suffix
+import os
+if os.name == 'nt':
+    env['SHLIBSUFFIX']='.pyd'
+else: 
+    env['SHLIBSUFFIX']='.so'
+
+# Append objcryst libraries and required boost library
+env.Append(LIBS = ["boost_python"])
+
+# Create the wrapper and put it in its place
+wrapper = env.LoadableModule("../../diffpy/srfit/util/_clicker", "clicker_ext.cpp")
+
+Alias("build", wrapper)

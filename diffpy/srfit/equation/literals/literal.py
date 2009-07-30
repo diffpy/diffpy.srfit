@@ -36,7 +36,7 @@ The clicker is described in the diffpy.equation.clicker module.
 
 from .abcs import LiteralABC
 
-from .. import Clicker
+from diffpy.srfit.util.clicker import Clicker
 
 class Literal(LiteralABC):
     """Abstract class for equation pieces, such as operators and arguments.

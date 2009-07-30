@@ -7,7 +7,7 @@ from numpy import arange, array_equal
 
 from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.equation import Clicker
+from diffpy.srfit.util.clicker import Clicker
 
 
 class TestProfileGenerator(unittest.TestCase):

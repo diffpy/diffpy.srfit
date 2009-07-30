@@ -24,7 +24,7 @@ equation.
 import numpy
 
 from .parameter import Parameter
-from diffpy.srfit.equation import Clicker
+from diffpy.srfit.util.clicker import Clicker
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8

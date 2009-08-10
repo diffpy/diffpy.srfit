@@ -177,9 +177,6 @@ def weightedTest(mutate = 2):
     sigma = 0.003
 
     eqstr = """\
-    ((b1 + b2*x) + (b3*x**2 + b4*x**3)) + ((b5*x**4 + b6*x**5) + (b7*x**6 + b8*x**7))\
-    """
-    eqstr = """\
     b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
     """
     factory.registerConstant("x", x)
@@ -236,9 +233,69 @@ def weightedTest(mutate = 2):
     print "equation: ", teq/numcalls
     print "ratio: ", teq/tnpy
 
+    return
+
+def profileTest():
+
+    factory = EquationFactory()
+
+    x = numpy.arange(0, 10, 0.001)
+    qsig = 0.01
+    sigma = 0.003
+
+    eqstr = """\
+    b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
+    """
+    factory.registerConstant("x", x)
+    eq = factory.makeEquation(eqstr)
+
+    eq.b1.setValue(0)
+    eq.b2.setValue(1)
+    eq.b3.setValue(2.0)
+    eq.b4.setValue(2.0)
+    eq.b5.setValue(2.0)
+    eq.b6.setValue(2.0)
+    eq.b7.setValue(2.0)
+    eq.b8.setValue(2.0)
+
+    mutate = 5
+    numargs = len(eq.args)
+    choices = range(numargs)
+    args = [0.1]*numargs
+
+    # The call-loop
+    random.seed()
+    numcalls = 1000
+    for _i in xrange(numcalls):
+        # Mutate values
+        n = mutate
+        if n == 0:
+            n = random.choice(choices)
+        c = choices[:]
+        for _j in xrange(n):
+            idx = random.choice(c)
+            c.remove(idx)
+            args[idx] = random.random()
+
+        eq(*args)
+
+    return
 
 if __name__ == "__main__":
 
+    """
+    for i in range(1, 13):
+        speedTest2(i)
     for i in range(1, 9):
-        #speedTest2(i)
         weightedTest(i)
+    """
+    from diffpy.srfit.equation.builder import EquationFactory
+    import random
+    import cProfile
+    cProfile.run('profileTest()', 'prof')
+    import pstats
+    p = pstats.Stats('prof')
+    p.strip_dirs()
+    p.sort_stats('time')
+    p.print_stats(10)
+    profileTest()

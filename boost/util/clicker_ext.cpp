@@ -110,7 +110,7 @@ class Clicker
     }
 
     /// Compare the local state of two Clickers
-    int __cmp__(Clicker* other)
+    inline int __cmp__(Clicker* other)
     {
         assert(other != NULL);
         return this->state - other->state;

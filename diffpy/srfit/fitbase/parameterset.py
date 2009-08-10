@@ -80,6 +80,7 @@ class ParameterSet(RecipeOrganizer):
         Raises ValueError if the ParameterSet has no name.  
         Raises ValueError if the ParameterSet has the same name as some other
         managed object.
+
         """
         self._addObject(parset, self._parsets, True)
         return
@@ -92,7 +93,6 @@ class ParameterSet(RecipeOrganizer):
         """
         self._removeObject(parset, self._parsets)
         return
-
 
     def setConst(self, const = True):
         """Set every parameter within the set to a constant.

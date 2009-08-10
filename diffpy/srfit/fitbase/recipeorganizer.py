@@ -69,7 +69,7 @@ class RecipeContainer(object):
     _confclicker    --  A Clicker for recording configuration changes, esp.
                         additions and removal of managed objects.
     _parameters     --  A managed OrderedDict of contained Parameters.
-    ___managed      --  A list of managed dictionaries. This is used for
+    __managed       --  A list of managed dictionaries. This is used for
                         attribute access, addition and removal.
 
     """
@@ -98,7 +98,7 @@ class RecipeContainer(object):
 
     def _iterManaged(self):
         """Get iterator over managed objects."""
-        return chain(*[d.values() for d in self.__managed])
+        return chain(*(d.values() for d in self.__managed))
 
     def _iterPars(self):
         """Iterate over Parameters, including embedded ones."""
@@ -214,6 +214,10 @@ class RecipeContainer(object):
         """
         loc = [self]
 
+        # This handles the case that an object is asked to locate itself.
+        if obj is self:
+            return loc
+
         for m in self._iterManaged():
 
             # Check locally for the object
@@ -221,6 +225,7 @@ class RecipeContainer(object):
                 loc.append(obj)
                 return loc
 
+            # Check within managed objects
             if hasattr(m, "_locateManagedObject"):
 
                 subloc = m._locateManagedObject(obj)

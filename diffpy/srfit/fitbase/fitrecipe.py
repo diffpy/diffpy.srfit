@@ -57,6 +57,7 @@ class FitRecipe(RecipeOrganizer):
     _contributions  --  A managed OrderedDict of FitContributions.
     _parameters     --  A managed OrderedDict of parameters (in this case the
                         parameters are varied).
+    _parsets        --  A managed dictionary of ParameterSets.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
@@ -89,8 +90,12 @@ class FitRecipe(RecipeOrganizer):
 
         self._refclicker = Clicker()
 
+        self._parsets = {}
+        self._manage(self._parsets)
+
         self._contributions = OrderedDict()
         self._manage(self._contributions)
+
         return
 
     def setFitHook(self, fithook):
@@ -134,6 +139,29 @@ class FitRecipe(RecipeOrganizer):
         idx = self._contributions.values().index(con)
         self._weights[idx] = weight
         return
+
+    def addParameterSet(self, parset):
+        """Add a ParameterSet to the hierarchy.
+
+        parset  --  The ParameterSet to be stored.
+
+        Raises ValueError if the ParameterSet has no name.  
+        Raises ValueError if the ParameterSet has the same name as some other
+        managed object.
+
+        """
+        self._addObject(parset, self._parsets, True)
+        return
+
+    def removeParameterSet(self, parset):
+        """Remove a ParameterSet from the hierarchy.
+
+        Raises ValueError if parset is not managed by this object.
+
+        """
+        self._removeObject(parset, self._parsets)
+        return
+
 
     def residual(self, p = []):
         """Calculate the residual to be optimized.

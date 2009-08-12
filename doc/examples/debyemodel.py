@@ -34,7 +34,7 @@ from gaussianrecipe import scipyOptimize, parkOptimize
 # as we treat them as if existing in some external library that we cannot
 # modify.
 def adps(m,thetaD,T):
-    """Calculates atomic displacement factors within the Debye recipe
+    """Calculates atomic displacement factors within the Debye model
 
     <u^2> = (3h^2/4 pi^2 m kB thetaD)(phi(thetaD/T)/(ThetaD/T) + 1/4)
 

@@ -32,7 +32,8 @@ dist = setup(
 
         # Stuff for building extensions
         setup_requires = ['scons', 'openalea.deploy'],
-        bin_dirs = { 'diffpy/srfit/util' : 'diffpy/srfit/util' },
+        package_data = {'' : ['_clicker.so'],},
+        zip_safe = False,
         scons_scripts=['SConstruct'],
 
         author = "Simon J.L. Billinge",

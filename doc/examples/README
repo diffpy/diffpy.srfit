@@ -27,7 +27,7 @@ Advanced:
 
 * npintensitycalculatorII.py
     Use the calculator built in npintensitycalculator.py to simultaneously
-    refine a recipe to two data sets.
+    refine a structure to two data sets.
 
 * nppdfobjcryst.py
     Create a nanoparticle PDF calculator using pyobjcryst and refine the C60

@@ -35,7 +35,7 @@ def makeRecipe():
     The instructions for what we want to refine, and how to refine it will be
     defined within a FitRecipe instance. The job of a FitRecipe is to collect
     and associate all the data, the fitting equations, fitting variables,
-    constraints and restrations. We will demonstrate each of these within the
+    constraints and restraints. We will demonstrate each of these within the
     code. 
     
     Once we define the FitRecipe, we can send it an optimizer to be optimized.

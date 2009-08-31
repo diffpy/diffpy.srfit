@@ -101,7 +101,7 @@ class ParameterSet(RecipeOrganizer):
                     True).
 
         """
-        for par in self._iterPars():
+        for par in self.iterPars():
             par.setConst(const)
 
         return

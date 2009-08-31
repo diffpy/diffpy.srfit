@@ -33,6 +33,7 @@ string, as defined in the method.
 
 from numpy import inf
 from itertools import chain, ifilter
+import re
 
 from .constraint import Constraint
 from .restraint import Restraint, BoundsRestraint
@@ -100,18 +101,23 @@ class RecipeContainer(object):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
-    def _iterPars(self):
-        """Iterate over Parameters, including embedded ones."""
+    def iterPars(self, name = "."):
+        """Iterate over Parameters, including embedded ones.
+        
+        name    --  Select parameters with this name (a regular expression,
+                    default ".").
 
+        """
         for par in self._parameters.itervalues():
-            yield par
+            if re.match(name, par.name):
+                yield par
 
         # Iterate over objects within the managed dictionaries.
         managed = self.__managed[:]
         managed.remove(self._parameters)
-        f = lambda m : hasattr(m, "_iterPars")
+        f = lambda m : hasattr(m, "iterPars")
         for m in ifilter(f, chain(*managed)):
-            m._iterPars()
+            m.iterPars(name = name)
 
         return
 

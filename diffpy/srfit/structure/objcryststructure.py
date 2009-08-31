@@ -429,11 +429,11 @@ class MoleculeParSet(ScattererParSet):
         This creates a BondAngleParameter to the molecule that can be adjusted
         during the fit.
 
-        name    --  The name of the bond length parameter
+        name    --  The name of the bond angle parameter
         atom1   --  The first atom (AtomParSet) in the bond angle
         atom2   --  The second (central) atom (AtomParSet) in the bond angle
         atom3   --  The third (mutated) atom (AtomParSet) in the bond angle
-        value   --  An initial value for the bond length. If this is None
+        value   --  An initial value for the bond angle. If this is None
                     (default), then the current bond angle between the atoms
                     will be used.
         const   --  A flag indicating whether the Parameter is constant
@@ -454,14 +454,14 @@ class MoleculeParSet(ScattererParSet):
         This creates a DihedralAngleParameter to the molecule that can be
         adjusted during the fit.
 
-        name    --  The name of the bond length parameter
+        name    --  The name of the dihedral angle parameter
         atom1   --  The first atom (AtomParSet) in the dihderal angle
         atom2   --  The second (central) atom (AtomParSet) in the dihderal
                     angle
         atom3   --  The third (central) atom (AtomParSet) in the dihderal angle
         atom4   --  The fourth (mutated) atom (AtomParSet) in the dihderal
                     angle
-        value   --  An initial value for the bond length. If this is None
+        value   --  An initial value for the dihedral angle. If this is None
                     (default), then the current dihedral angle between atoms
                     will be used.
         const   --  A flag indicating whether the Parameter is constant

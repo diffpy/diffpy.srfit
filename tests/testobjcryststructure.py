@@ -294,7 +294,12 @@ class TestParameterWrapper(unittest.TestCase):
         return
 
     def testExplicitBondAngleRestraints(self):
-        """Test the structure with explicit bond angles."""
+        """Test the structure with explicit bond angles.
+
+        Note that this cannot work with co-linear points as the direction of
+        rotation cannot be defined in this case.
+        
+        """
         occryst = self.occryst
         ocmol = self.ocmol
 

@@ -249,8 +249,8 @@ class FitRecipe(RecipeOrganizer):
         # Check Profiles
         self.__verifyProfiles()
 
-        # Check variables
-        self.__verifyVariables()
+        # Check parameters
+        self.__verifyParameters()
 
         # Update constraints and restraints. 
         self.__collectConstraintsAndRestraints()
@@ -275,22 +275,29 @@ class FitRecipe(RecipeOrganizer):
 
         return
 
-    def __verifyVariables(self):
-        """Verify that all variables have values."""
+    def __verifyParameters(self):
+        """Verify that all Parameters have values."""
 
         names = self.getNames()
         m = ""
-        badvars = []
-        for idx, val in enumerate(self.getValues()):
-            if val is not None: continue
-            badvars.append( "'%s'"%names[idx] )
+        badpars = []
+        for par in self.iterPars():
+            if par.getValue() is None:
+                badpars.append(par)
 
-        if len(badvars) == 1:
-            m = "variable %s needs an initial value" % badvars[0]
-        elif len(badvars) > 0:
-            s1 = ",".join(badvars[:-1])
-            s2 = badvars[-1]
-            m = "variables %s and %s need initial values" % (s1, s2)
+        # Get the bad names
+        badnames = []
+        for par in badpars:
+            objlist = self._locateManagedObject(par)
+            names = [obj.name for obj in objlist]
+            badnames.append( ".".join(names) )
+
+        if len(badnames) == 1:
+            m = "%s needs an initial value" % badnames[0]
+        elif len(badnames) > 0:
+            s1 = ",".join(badnames[:-1])
+            s2 = badnames[-1]
+            m = "%s and %s need initial values" % (s1, s2)
 
         if m:
             raise AttributeError(m)

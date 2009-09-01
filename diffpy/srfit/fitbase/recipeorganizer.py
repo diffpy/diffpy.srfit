@@ -115,9 +115,13 @@ class RecipeContainer(object):
         # Iterate over objects within the managed dictionaries.
         managed = self.__managed[:]
         managed.remove(self._parameters)
-        f = lambda m : hasattr(m, "iterPars")
-        for m in ifilter(f, chain(*managed)):
-            m.iterPars(name = name)
+        for m in managed:
+            for obj in m.values():
+                if hasattr(obj, "iterPars"):
+                    for par in obj.iterPars(name = name):
+                        yield par
+                else:
+                    break
 
         return
 

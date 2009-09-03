@@ -33,7 +33,7 @@ string, as defined in the method.
 
 from numpy import inf
 from itertools import chain, ifilter
-from fnmatch import fnmatchcase
+import re
 
 from .constraint import Constraint
 from .restraint import Restraint, BoundsRestraint
@@ -101,17 +101,16 @@ class RecipeContainer(object):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
-    def iterPars(self, name = "*", recurse = True):
+    def iterPars(self, name = ".", recurse = True):
         """Iterate over Parameters.
         
-        name    --  Select parameters with this name (wildcard match,
-                    default "*"). See the fnmatch python module for matching
-                    syntax.
+        name    --  Select parameters with this name (regular expression,
+                    default "."). 
         recurse --  Recurse into managed objects (default True)
 
         """
         for par in self._parameters.itervalues():
-            if fnmatchcase(name, par.name):
+            if re.match(name, par.name):
                 yield par
 
         if not recurse:

@@ -15,7 +15,7 @@ import fix_setuptools_chmod
 import glob
 
 clickermodule = Extension('diffpy.srfit.util._clicker', 
-        glob.glob("boost/util/*.cpp"),
+        glob.glob("extensions/util/*.cpp"),
         libraries = ["boost_python"],
         )
 

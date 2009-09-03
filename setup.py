@@ -10,7 +10,14 @@ Scripts:    (none yet)
 """
 
 from setuptools import setup, find_packages
+from setuptools import Extension
 import fix_setuptools_chmod
+import glob
+
+clickermodule = Extension('diffpy.srfit.util._clicker', 
+        glob.glob("boost/util/*.cpp"),
+        libraries = ["boost_python"],
+        )
 
 # define distribution
 dist = setup(
@@ -29,15 +36,15 @@ dist = setup(
             "http://www.diffpy.org/packages/",
         ],
 
+        # The extensions
+        ext_modules = [clickermodule],
+
         # Stuff for building extensions
-        setup_requires = ['danse.deploy'],
-        package_data = {'' : ['_clicker.so'],},
         zip_safe = False,
-        scons_scripts=['SConstruct'],
 
         author = "Simon J.L. Billinge",
         author_email = "sb2896@columbia.edu",
-        maintainer = 'Chris Farrow',
+        maintainer = 'Christopher L. Farrow',
         maintainer_email = 'clf2121@columbia.edu',
         description = "SrFit - Structure refinement from diffraction data",
         license = "BSD",

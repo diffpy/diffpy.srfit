@@ -27,11 +27,10 @@ dist = setup(
             # REMOVE dev.danse.us for a public release.
             'http://dev.danse.us/packages/',
             "http://www.diffpy.org/packages/",
-            'http://openalea.gforge.inria.fr/pi',
         ],
 
         # Stuff for building extensions
-        setup_requires = ['scons', 'openalea.deploy'],
+        setup_requires = ['danse.deploy'],
         package_data = {'' : ['_clicker.so'],},
         zip_safe = False,
         scons_scripts=['SConstruct'],

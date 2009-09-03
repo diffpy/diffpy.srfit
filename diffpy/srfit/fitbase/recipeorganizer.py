@@ -101,16 +101,20 @@ class RecipeContainer(object):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
-    def iterPars(self, name = "."):
-        """Iterate over Parameters, including embedded ones.
+    def iterPars(self, name = ".", recurse = True):
+        """Iterate over Parameters.
         
         name    --  Select parameters with this name (a regular expression,
                     default ".").
+        recurse --  Recurse into managed objects (default True)
 
         """
         for par in self._parameters.itervalues():
             if re.match(name, par.name):
                 yield par
+
+        if not recurse:
+            return
 
         # Iterate over objects within the managed dictionaries.
         managed = self.__managed[:]

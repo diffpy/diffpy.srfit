@@ -45,9 +45,8 @@ class FitRecipe(RecipeOrganizer):
     fithook         --  An object to be called whenever within the residual
                         (default FitHook()) that can pass information out of
                         the system during a refinement.
-    _confclicker    --  A Clicker for recording
-                        configuration changes, esp.  additions and removal of
-                        managed objects.
+    _confclicker    --  A Clicker for recording configuration changes, esp.
+                        additions and removal of managed objects.
     _constraintlist --  An ordered list of the constraints from this and all
                         sub-components.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
@@ -278,8 +277,7 @@ class FitRecipe(RecipeOrganizer):
     def __verifyParameters(self):
         """Verify that all Parameters have values."""
 
-        names = self.getNames()
-        m = ""
+        # Get all parameters with a value of None
         badpars = []
         for par in self.iterPars():
             if par.getValue() is None:
@@ -292,6 +290,8 @@ class FitRecipe(RecipeOrganizer):
             names = [obj.name for obj in objlist]
             badnames.append( ".".join(names) )
 
+        # Construct an error message, if necessary
+        m = ""
         if len(badnames) == 1:
             m = "%s needs an initial value" % badnames[0]
         elif len(badnames) > 0:
@@ -308,20 +308,27 @@ class FitRecipe(RecipeOrganizer):
         """Collect the Constraints and Restraints from subobjects."""
         rset = set(self._restraints)
         cdict = {}
+
         # We let constraints closer to the FitRecipe override all others.
         # Constraints on the same parameter in different organizers cannot be
         # resolved without some guesswork, so throw an error instead.
-        for con in self._contributions.values():
-            rset.update( con._getRestraints() )
-            constraints = con._getConstraints()
+
+        def __checkOverlap(cdict, constraints):
             pars = set(cdict.keys()).intersection( constraints.keys() )
             if pars:
                 m = "There are multiple internal constraints on '%s'"%\
                         pars.pop()
                 raise AttributeError(m)
+            return
+
+        for org in self._contributions.values() + self._parsets.values():
+            rset.update( org._getRestraints() )
+            constraints = org._getConstraints()
+            __checkOverlap(cdict, constraints)
             cdict.update(constraints)
 
         # Update with local constraints last
+        __checkOverlap(cdict, self._constraints)
         cdict.update(self._constraints)
 
         # The order of the restraint list does not matter
@@ -485,11 +492,19 @@ class FitRecipe(RecipeOrganizer):
     def fixVar(self, var, value = None):
         """Fix a variable so that it doesn't change.
 
-        var     --  A variable of the FitRecipe.
+        var     --  A variable of the FitRecipe, or the name of a variable.
         value   --  A new value for the variable. If this is None
                     (default), then the value will not be changed.
 
+        Raises ValueError if var is not part of the FitRecipe.
+
         """
+        if isinstance(var, str):
+            var = self._parameters.get(var)
+
+        if var not in self._parameters.values():
+            raise ValueError("Passed variable is not part of the FitRecipe")
+
         self._fixed.add(var)
 
         if value is not None:
@@ -502,11 +517,19 @@ class FitRecipe(RecipeOrganizer):
 
         Variables are free by default.
 
-        var     --  A variable of the FitRecipe.
+        var     --  A variable of the FitRecipe, or the name of a variable.
         value   --  A new value for the variable. If this is None
                     (default), then the value will not be changed.
 
+        Raises ValueError if var is not part of the FitRecipe.
+
         """
+        if isinstance(var, str):
+            var = self._parameters.get(var)
+
+        if var not in self._parameters.values():
+            raise ValueError("Passed variable is not part of the FitRecipe")
+
         self._fixed.discard(var)
 
         if value is not None:
@@ -547,7 +570,7 @@ class FitRecipe(RecipeOrganizer):
 
         return
 
-    def __getTagSet(self, *tags):
+    def __getTagSet(self, tags):
         """Get all variables with the given tags."""
         tagset = set()
         for tag in tags:

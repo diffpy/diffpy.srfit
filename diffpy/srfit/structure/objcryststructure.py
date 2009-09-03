@@ -772,6 +772,8 @@ class StretchModeParameter(Parameter):
         in response to a change in a bond property.
 
         """
+        if not hasattr(atomlist, "__iter__"):
+            atomlist = [atomlist]
         # Record the added atoms in the Parameter
         self.matoms.update(atomlist)
         for a in atomlist:

@@ -349,7 +349,7 @@ def makeRecipe(strufile, datname):
 
     # We will define the background as a string.
 
-    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q*5 + b6*q**6 +\
+    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
                b7*q**7 + b8*q**8 + b9*q**9"
 
     # This creates a callable equation named "bkgd" within the FitContribution,

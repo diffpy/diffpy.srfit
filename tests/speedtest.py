@@ -166,6 +166,79 @@ def speedTest2(mutate = 2):
 
     return
 
+def speedTest3(mutate = 2):
+    """Test wrt sympy.
+
+    Results - sympy is 10 to 24 times faster without using arrays (ouch!).
+            - diffpy.srfit.equation is always faster when using arrays (yay!).
+
+    """
+
+    from diffpy.srfit.equation.builder import EquationFactory
+    factory = EquationFactory()
+
+    x = numpy.arange(0, 20, 0.05)
+    qsig = 0.01
+    sigma = 0.003
+
+    eqstr = """\
+    A0*exp(-(x*qsig)**2)*(exp(-((x-1.0)/sigma1)**2)+exp(-((x-2.0)/sigma2)**2))\
+    + b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
+    """
+    factory.registerConstant("x", x)
+    eq = factory.makeEquation(eqstr)
+    eq.qsig.setValue(qsig)
+    eq.sigma1.setValue(sigma)
+    eq.sigma2.setValue(sigma)
+    eq.A0.setValue(1.0)
+    eq.b1.setValue(0)
+    eq.b2.setValue(1)
+    eq.b3.setValue(2.0)
+    eq.b4.setValue(2.0)
+    eq.b5.setValue(2.0)
+    eq.b6.setValue(2.0)
+    eq.b7.setValue(2.0)
+    eq.b8.setValue(2.0)
+
+    from sympy import var, exp, lambdify
+    A0, qsig, sigma1, sigma2, b1, b2, b3, b4, b5, b6, b7, b8, xx = vars = var("A0 qsig sigma1 sigma2 b1 b2 b3 b4 b5 b6 b7 b8 xx")
+    f = lambdify(vars, A0*exp(-(xx*qsig)**2)*(exp(-((xx-1.0)/sigma1)**2)+exp(-((xx-2.0)/sigma2)**2)) + b1 + b2*xx + b3*xx**2 + b4*xx**3 + b5*xx**4 + b6*xx**5 + b7*xx**6 + b8*xx**7, "numpy")
+
+    tnpy = 0
+    teq = 0
+    import random
+    # Randomly change variables
+    numargs = len(eq.args)
+    choices = range(numargs)
+    args = [1.0]*(len(eq.args))
+    args.append(x)
+
+    # The call-loop
+    random.seed()
+    numcalls = 1000
+    for _i in xrange(numcalls):
+        # Mutate values
+        n = mutate
+        if n == 0:
+            n = random.choice(choices)
+        c = choices[:]
+        for _j in xrange(n):
+            idx = random.choice(c)
+            c.remove(idx)
+            args[idx] = random.random()
+
+        # Time the different functions with these arguments
+        teq += timeFunction(eq, *(args[:-2]))
+        tnpy += timeFunction(f, *args)
+
+    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
+            mutate)
+    print "sympy: ", tnpy/numcalls
+    print "equation: ", teq/numcalls
+    print "ratio: ", teq/tnpy
+
+    return
+
 def weightedTest(mutate = 2):
     """Show the benefits of a properly balanced equation tree."""
 
@@ -283,11 +356,12 @@ def profileTest():
 
 if __name__ == "__main__":
 
-    """
     for i in range(1, 13):
-        speedTest2(i)
+        speedTest3(i)
+    """
     for i in range(1, 9):
         weightedTest(i)
+    """
     """
     from diffpy.srfit.equation.builder import EquationFactory
     import random
@@ -299,3 +373,4 @@ if __name__ == "__main__":
     p.sort_stats('time')
     p.print_stats(10)
     profileTest()
+    """

@@ -8,9 +8,9 @@ in the number of atoms will not be recognized. Thus, the
 diffpy.Structure.Structure object should be fully configured before passing it
 to Structure.
 
-StructureParSet --  Wrapper for diffpy.Structure.Structure
-LatticeParSet   --  Wrapper for diffpy.Structure.Lattice
-AtomParSet      --  Wrapper for diffpy.Structure.Atom
+StructureParSet --  Adapter for diffpy.Structure.Structure
+LatticeParSet   --  Adapter for diffpy.Structure.Lattice
+AtomParSet      --  Adapter for diffpy.Structure.Atom
 
 """
 __id__ = "$Id$"
@@ -40,9 +40,14 @@ def _xyzsetter(i):
 class AtomParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Atom.
 
-    This class derives from ParameterSet.
+    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
+    this class for base attributes.
 
     Attributes:
+    atom        --  The diffpy.Structure.Atom this is adapting
+    element     --  The element name (property).
+
+    Managed Parameters:
     x (y, z)    --  Atom position in crystal coordinates (ParameterWrapper)
     occupancy   --  Occupancy of the atom on its crystal location
                     (ParameterWrapper)
@@ -57,7 +62,6 @@ class AtomParSet(ParameterSet):
                     or ParameterProxy). Note that the Bij and Bji parameters
                     are the same. (Bij = 8*pi**2*Uij)
     Biso        --  Isotropic ADP (ParameterWrapper).
-    element     --  The element name.
     
     """
 
@@ -150,8 +154,14 @@ def _latsetter(par):
 class LatticeParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Lattice.
 
+    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
+    this class for base attributes.
+
     Attributes
+    lattice --  The diffpy.Structure.Lattice this is adapting
     name    --  Always "lattice"
+
+    Managed Parameters:
     a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterWrapper).
     
     """
@@ -187,14 +197,26 @@ class LatticeParSet(ParameterSet):
 class StructureParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Structure.
 
-    atoms   --  The list of atoms.
+    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
+    this class for base attributes.
+
+    Attributes:
+    atoms   --  The list of AtomParSets, provided for convenience.
+    stru    --  The diffpy.Structure.Structure this is adapting
+
+    Managed ParameterSets:
+    lattice     --  The managed LatticeParSet
+    <el><idx>   --  A managed AtomParSets. <el> is the atomic element and <idx>
+                    is the index of that element in the structure, starting
+                    from zero. Thus, for nickel in P1 symmetry, the managed
+                    AtomParSets will be named "Ni0", "Ni1", "Ni2" and "Ni3".
     
     """
 
     def __init__(self, stru, name):
         """Initialize
 
-        stru    --  A diffpy.Structure.Lattice instance
+        stru    --  A diffpy.Structure.Structure instance
 
         """
         ParameterSet.__init__(self, name)

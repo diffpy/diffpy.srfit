@@ -175,7 +175,6 @@ def plotResults(recipe):
     pylab.show()
     return
 
-
 if __name__ == "__main__":
 
     # Create the recipe

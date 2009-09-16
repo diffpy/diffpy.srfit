@@ -170,7 +170,8 @@ def speedTest3(mutate = 2):
     """Test wrt sympy.
 
     Results - sympy is 10 to 24 times faster without using arrays (ouch!).
-            - diffpy.srfit.equation is always faster when using arrays (yay!).
+            - diffpy.srfit.equation is slightly slower when using arrays, but
+              not considerably worse than versus numpy alone.
 
     """
 
@@ -183,7 +184,7 @@ def speedTest3(mutate = 2):
 
     eqstr = """\
     A0*exp(-(x*qsig)**2)*(exp(-((x-1.0)/sigma1)**2)+exp(-((x-2.0)/sigma2)**2))\
-    + b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
+    + polyval(list(b1, b2, b3, b4, b5, b6, b7, b8), x)\
     """
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
@@ -201,8 +202,9 @@ def speedTest3(mutate = 2):
     eq.b8.setValue(2.0)
 
     from sympy import var, exp, lambdify
+    from numpy import polyval
     A0, qsig, sigma1, sigma2, b1, b2, b3, b4, b5, b6, b7, b8, xx = vars = var("A0 qsig sigma1 sigma2 b1 b2 b3 b4 b5 b6 b7 b8 xx")
-    f = lambdify(vars, A0*exp(-(xx*qsig)**2)*(exp(-((xx-1.0)/sigma1)**2)+exp(-((xx-2.0)/sigma2)**2)) + b1 + b2*xx + b3*xx**2 + b4*xx**3 + b5*xx**4 + b6*xx**5 + b7*xx**6 + b8*xx**7, "numpy")
+    f = lambdify(vars, A0*exp(-(xx*qsig)**2)*(exp(-((xx-1.0)/sigma1)**2)+exp(-((xx-2.0)/sigma2)**2)) + polyval([b1, b2, b3, b4, b5, b6, b7, b8], xx), "numpy")
 
     tnpy = 0
     teq = 0
@@ -228,7 +230,69 @@ def speedTest3(mutate = 2):
             args[idx] = random.random()
 
         # Time the different functions with these arguments
-        teq += timeFunction(eq, *(args[:-2]))
+        teq += timeFunction(eq, *(args[:-1]))
+        tnpy += timeFunction(f, *args)
+
+    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
+            mutate)
+    print "sympy: ", tnpy/numcalls
+    print "equation: ", teq/numcalls
+    print "ratio: ", teq/tnpy
+
+    return
+
+def speedTest4(mutate = 2):
+    """Test wrt sympy.
+
+    Results - sympy is 10 to 24 times faster without using arrays (ouch!).
+            - diffpy.srfit.equation is slightly slower when using arrays, but
+              not considerably worse than versus numpy alone.
+
+    """
+
+    from diffpy.srfit.equation.builder import EquationFactory
+    factory = EquationFactory()
+
+    x = numpy.arange(0, 20, 0.05)
+    qsig = 0.01
+    sigma = 0.003
+
+    eqstr = """\
+    b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
+    """
+    factory.registerConstant("x", x)
+    eq = factory.makeEquation(eqstr)
+
+    from sympy import var, exp, lambdify
+    from numpy import polyval
+    b1, b2, b3, b4, b5, b6, b7, b8, xx = vars = var("b1 b2 b3 b4 b5 b6 b7 b8 xx")
+    f = lambdify(vars, polyval([b1, b2, b3, b4, b5, b6, b7, b8], xx), "numpy")
+
+    tnpy = 0
+    teq = 0
+    import random
+    # Randomly change variables
+    numargs = len(eq.args)
+    choices = range(numargs)
+    args = [1.0]*(len(eq.args))
+    args.append(x)
+
+    # The call-loop
+    random.seed()
+    numcalls = 1000
+    for _i in xrange(numcalls):
+        # Mutate values
+        n = mutate
+        if n == 0:
+            n = random.choice(choices)
+        c = choices[:]
+        for _j in xrange(n):
+            idx = random.choice(c)
+            c.remove(idx)
+            args[idx] = random.random()
+
+        # Time the different functions with these arguments
+        teq += timeFunction(eq, *(args[:-1]))
         tnpy += timeFunction(f, *args)
 
     print "Average call time (%i calls, %i mutations/call):" % (numcalls,

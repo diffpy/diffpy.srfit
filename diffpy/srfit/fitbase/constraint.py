@@ -63,6 +63,13 @@ class Constraint(object):
         self.update()
         return
 
+    def unconstrain(self):
+        """Clear the constraint."""
+        self.par.constrained = False
+        self.par = None
+        self.eq = None
+        return
+
     def update(self):
         """Update the parameter according to the equation."""
         # This will be evaluated quickly thanks to the Equation class.

@@ -611,6 +611,7 @@ class RecipeOrganizer(RecipeContainer):
         """
         if par in self._constraints:
             del self._constraints[par]
+            par.constrained = False
 
         # Our configuration changed
         self._confclicker.click()

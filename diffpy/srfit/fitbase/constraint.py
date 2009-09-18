@@ -23,6 +23,9 @@ this association.
 
 class Constraint(object):
     """Constraint class.
+
+    Constraints are designed to be stored in only one place. (The holder of the
+    constraint owns it).
     
     Attributes
     par     --  A Parameter that is the subject of the constraint.
@@ -38,7 +41,23 @@ class Constraint(object):
         return
 
     def constrain(self, par, eq):
-        """Constrain a Parameter according to an Equation."""
+        """Constrain a Parameter according to an Equation.
+
+        The parameter will be set constant once it is constrained. This will
+        keep it from being constrained multiple times.
+        
+        Raises a ValueError if par is const.
+
+        """
+
+        if par.const:
+            raise ValueError("The parameter '%s' is constant"%par)
+
+        if par.constrained:
+            raise ValueError("The parameter '%s' is already constrained"%par)
+
+        par.constrained = True
+
         self.par = par
         self.eq = eq
         self.update()

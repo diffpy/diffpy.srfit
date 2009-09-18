@@ -27,6 +27,16 @@ class TestConstraint(unittest.TestCase):
         eq = equationFromString("2*p2", factory)
         c.constrain(p1, eq)
 
+        self.assertTrue(p1.constrained)
+        self.assertFalse(p2.constrained)
+
+        eq2 = equationFromString("2*p2+1", factory)
+        c2 = Constraint()
+        self.assertRaises(ValueError, c2.constrain, p1, eq2)
+        p2.setConst()
+        eq3 = equationFromString("p1", factory)
+        self.assertRaises(ValueError, c2.constrain, p2, eq3)
+
         p2.setValue(2.5)
         c.update()
         self.assertEquals(5.0, p1.getValue())

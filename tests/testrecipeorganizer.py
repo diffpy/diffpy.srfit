@@ -253,9 +253,11 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m._eqfactory.registerArgument("p1", p1)
         self.m._eqfactory.registerArgument("p2", p2)
 
+        self.assertFalse(p1.constrained)
         self.assertEquals(0, len(self.m._constraints))
         self.m.constrain(p1, "2*p2")
 
+        self.assertTrue(p1.constrained)
         self.assertTrue(p1 in self.m._constraints)
         self.assertEquals(1, len(self.m._constraints))
 
@@ -269,6 +271,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Remove the constraint
         self.m.unconstrain(p1)
+        self.assertFalse(p1.constrained)
         self.assertEquals(0, len(self.m._constraints))
 
         # Try an straight constraint

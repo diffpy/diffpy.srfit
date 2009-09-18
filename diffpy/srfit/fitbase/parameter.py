@@ -54,6 +54,8 @@ class Parameter(Argument):
         value   --  The initial value of this Parameter (default 0).
         const   --  A flag inticating whether the Parameter is a constant (like
                     pi).
+        constrained --  A flag indicating if the Parameter is constrained
+                        (default False).
 
         Raises ValueError if the name is not a valid attribute identifier
         
@@ -61,6 +63,8 @@ class Parameter(Argument):
         validateName(name)
 
         Argument.__init__(self, value, name, const)
+
+        self.constrained = False
         return
 
     def setConst(self, const = True, value = None):

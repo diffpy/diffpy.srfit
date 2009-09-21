@@ -606,16 +606,23 @@ class RecipeOrganizer(RecipeContainer):
 
         par     --  The Parameter to unconstrain.
 
-        This removes any constraints on a parameter.
+        This removes any constraints on a Parameter. This does nothing if the
+        Parameter is not constrained.
 
         """
         if par in self._constraints:
             self._constraints[par].unconstrain()
             del self._constraints[par]
 
-        # Our configuration changed
-        self._confclicker.click()
+            # Our configuration changed
+            self._confclicker.click()
 
+        return
+
+    def clearConstraints(self):
+        """Clear all constraints."""
+        for par in self._parameters:
+            self.unconstrain(par)
         return
 
     def restrain(self, res, lb = -inf, ub = inf, prefactor = 1, power = 2,  
@@ -673,10 +680,17 @@ class RecipeOrganizer(RecipeContainer):
         if res in self._restraints:
             self._restraints.remove(res)
 
-        # Our configuration changed
-        self._confclicker.click()
+            # Our configuration changed
+            self._confclicker.click()
 
         return
+
+    def clearRestraints(self):
+        """Clear all constraints."""
+        for res in self._restraints:
+            self.unrestrain(res)
+        return
+
 
     def _getConstraints(self):
         """Get the Constraints for this and managed sub-objects."""

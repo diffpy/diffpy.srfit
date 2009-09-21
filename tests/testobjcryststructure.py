@@ -8,6 +8,7 @@ import numpy
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
 from pyobjcryst.crystal import Crystal 
+from pyobjcryst.atom import Atom 
 from pyobjcryst.molecule import Molecule
 from pyobjcryst.scatteringpower import ScatteringPowerAtom
 
@@ -94,6 +95,97 @@ def makeC60():
 
     return c
 
+def makeLaMnO3():
+    pi = numpy.pi
+    # It appears that ObjCryst only supports standard symbols
+    crystal = Crystal(5.486341, 5.619215, 7.628206, "P b n m")
+    crystal.SetName("LaMnO3")
+    # La1
+    sp = ScatteringPowerAtom("La1", "La")
+    sp.SetBiso(8*pi*pi*0.003)
+    atom = Atom(0.996096, 0.0321494, 0.25, "La1", sp)
+    crystal.AddScatteringPower(sp)
+    crystal.AddScatterer(atom)
+    # Mn1
+    sp = ScatteringPowerAtom("Mn1", "Mn")
+    sp.SetBiso(8*pi*pi*0.003)
+    atom = Atom(0, 0.5, 0, "Mn1", sp)
+    crystal.AddScatteringPower(sp)
+    crystal.AddScatterer(atom)
+    # O1
+    sp = ScatteringPowerAtom("O1", "O")
+    sp.SetBiso(8*pi*pi*0.003)
+    atom = Atom(0.0595746, 0.496164, 0.25, "O1", sp)
+    crystal.AddScatteringPower(sp)
+    crystal.AddScatterer(atom)
+    # O2
+    sp = ScatteringPowerAtom("O2", "O")
+    sp.SetBiso(8*pi*pi*0.003)
+    atom = Atom(0.720052, 0.289387, 0.0311126, "O2", sp)
+    crystal.AddScatteringPower(sp)
+    crystal.AddScatterer(atom)
+
+    return crystal
+
+class TestSGConstraints(unittest.TestCase):
+
+    def setUp(self):
+        self.occryst = makeLaMnO3()
+        return
+
+    def tearDown(self):
+        del self.occryst
+        return
+
+    def testSymmetryConstraints(self):
+        """Make sure that all Parameters are constrained properly."""
+        pi = numpy.pi
+
+        occryst = self.occryst
+
+        stru = ObjCrystParSet(occryst, occryst.GetName())
+
+        # Check the orthorhombic lattice
+        l = stru.getLattice()
+        self.assertTrue( l.alpha.const )
+        self.assertTrue( l.beta.const )
+        self.assertTrue( l.gamma.const )
+        self.assertEquals(pi/2, l.alpha.getValue())
+        self.assertEquals(pi/2, l.beta.getValue())
+        self.assertEquals(pi/2, l.gamma.getValue())
+
+        self.assertFalse( l.a.const )
+        self.assertFalse( l.b.const )
+        self.assertFalse( l.c.const )
+        self.assertEquals(0, len(l._constraints))
+
+        # Now to the sites
+        sites = stru.getSites()
+        la = sites[0]
+        self.assertFalse(la.x.const)
+        self.assertFalse(la.y.const)
+        self.assertTrue(la.z.const)
+        self.assertEquals(0, len(la._constraints))
+
+        mn = sites[1]
+        self.assertTrue(mn.x.const)
+        self.assertTrue(mn.y.const)
+        self.assertTrue(mn.z.const)
+        self.assertEquals(0, len(mn._constraints))
+
+        o1 = sites[2]
+        self.assertFalse(o1.x.const)
+        self.assertFalse(o1.y.const)
+        self.assertTrue(o1.z.const)
+        self.assertEquals(0, len(o1._constraints))
+
+        o2 = sites[3]
+        self.assertFalse(o2.x.const)
+        self.assertFalse(o2.y.const)
+        self.assertFalse(o2.z.const)
+        self.assertEquals(0, len(o2._constraints))
+
+        return
 
 
 class TestParameterWrapper(unittest.TestCase):

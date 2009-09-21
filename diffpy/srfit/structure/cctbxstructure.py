@@ -207,11 +207,11 @@ class CCTBXStructureParSet(BaseStructure):
             self.scatterers.append(scatterer)
 
         # Constrain the lattice
-        from .sgconstraints import constrainSpaceGroup
-        system = self.stru.space_group().crystal_system()
-        if system == "Undefined":
-            system = "Triclinic"
-        constrainSpaceGroup(self, system)
+        from diffpy.srfit.structure.sgconstraints import constrainSpaceGroup
+        sg = self.stru.space_group()
+        t = sg.type()
+        symbol = t.lookup_symbol()
+        constrainSpaceGroup(self, symbol)
 
         return
 

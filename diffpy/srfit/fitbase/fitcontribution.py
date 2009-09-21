@@ -14,7 +14,7 @@
 ########################################################################
 """FitContribution class. 
 
-FitContributions are generate a residual function for a FitRecipe. A
+FitContributions generate a residual function for a FitRecipe. A
 FitContribution associates an Equation for generating a signal, optionally one
 or more ProfileGenerators or Calculators that help in this, and a Profile that
 holds the observed and calculated signals.  
@@ -97,17 +97,23 @@ class FitContribution(ParameterSet):
         xname   --  The name of the independent variable from the Profile. If
                     this is None (default), then the name specified by the
                     Profile for this parameter will be used.  This variable is
-                    usable within the Equation with the specified name.
+                    usable within string equations with the specified name.
         yname   --  The name of the observed Profile.  If this is None
                     (default), then the name specified by the Profile for this
-                    parametere will be used.  This variable is usable within
-                    the Equation with the specified name.
+                    parameter will be used.  This variable is usable within
+                    string equations with the specified name.
         dyname  --  The name of the uncertainty in the observed Profile. If
                     this is None (default), then the name specified by the
-                    Profile for this parametere will be used.  This variable is
-                    usable within the Equation with the specified name.
+                    Profile for this parameter will be used.  This variable is
+                    usable within string equations with the specified name.
+
+        Raises ValueError if non-Profile Parameters with names conflicting with
+        the Profile Parameters already exist.
 
         """
+        # FIXME - Should this only be callable once? The resetting of
+        # configuration suggests that one should just start a new configuration
+        # in a new FitContribution, with the new Profile.
         seteq = self.profile is None
 
         # Clear previously watched parameters

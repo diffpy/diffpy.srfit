@@ -98,7 +98,6 @@ def constrainSpaceGroup(stru, sg):
     # Now make a list of the positions and check for constraints
     for site in stru.getSites():
 
-
         # Get the postion
         xyz = [site.x.getValue(), site.y.getValue(), site.z.getValue()]
 
@@ -106,8 +105,10 @@ def constrainSpaceGroup(stru, sg):
         g = GeneratorSite(sg, xyz)
         f = g.positionFormula(xyz, xyzsymbols=("x","y","z"))
 
+
         # Extract the constraint equation from the formula
         for parname, formula in f.items():
+
 
             # Check to see if this parameter is free
             if parname == formula:

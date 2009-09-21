@@ -159,7 +159,7 @@ class TestSGConstraints(unittest.TestCase):
         self.assertFalse( l.c.const )
         self.assertEquals(0, len(l._constraints))
 
-        # Now to the sites
+        # Now make sure the sites are constrained properly
         sites = stru.getSites()
         la = sites[0]
         self.assertFalse(la.x.const)
@@ -184,6 +184,16 @@ class TestSGConstraints(unittest.TestCase):
         self.assertFalse(o2.y.const)
         self.assertFalse(o2.z.const)
         self.assertEquals(0, len(o2._constraints))
+
+        # Make sure we can't constrain these
+        self.assertRaises(ValueError, mn.constrain, mn.x, "y")
+        self.assertRaises(ValueError, mn.constrain, mn.y, "z")
+        self.assertRaises(ValueError, mn.constrain, mn.z, "x")
+
+        # Nor can we make them into variables
+        from diffpy.srfit.fitbase.fitrecipe import FitRecipe
+        f = FitRecipe()
+        self.assertRaises(ValueError, f.addVar, mn.x)
 
         return
 

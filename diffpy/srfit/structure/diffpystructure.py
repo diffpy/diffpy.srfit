@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+########################################################################
+#
+# diffpy.srfit      by DANSE Diffraction group
+#                   Simon J. L. Billinge
+#                   (c) 2009 Trustees of the Columbia University
+#                   in the City of New York.  All rights reserved.
+#
+# File coded by:    Chris Farrow
+#
+# See AUTHORS.txt for a list of people who contributed.
+# See LICENSE.txt for license information.
+#
+########################################################################
 """Wrappers for interfacing a diffpy.Structure.Structure with SrFit.
 
 A diffpy.Structure.Structure object is meant to be passed to a StrucureParSet
@@ -18,7 +31,7 @@ __id__ = "$Id$"
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 from diffpy.srfit.fitbase.parameter import ParameterWrapper
 from diffpy.srfit.fitbase.parameterset import ParameterSet
-
+from diffpy.srfit.structure.basestructure import BaseStructure
 
 # Accessor for xyz of atoms
 def _xyzgetter(i):
@@ -194,7 +207,7 @@ class LatticeParSet(ParameterSet):
 
 # End class LatticeParSet
 
-class StructureParSet(ParameterSet):
+class StructureParSet(BaseStructure):
     """A wrapper for diffpy.Structure.Structure.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
@@ -238,6 +251,25 @@ class StructureParSet(ParameterSet):
         # other setup
         self.__repr__ = stru.__repr__
         return
+
+    def getLattice(self):
+        """Get the ParameterSet containing the lattice Parameters."""
+        return self.lattice
+
+    @classmethod
+    def canAdapt(self, stru):
+        """Return whether the structure can be adapted by this class."""
+        from diffpy.Structure import Structure
+        return isinstance(stru, Structure)
+
+    def getSites(self):
+        """Get a list of ParameterSets that represents the sites.
+
+        The site positions must be accessible from the list entries via the
+        names "x", "y", and "z".
+
+        """
+        return self.atoms
 
 # End class StructureParSet
 

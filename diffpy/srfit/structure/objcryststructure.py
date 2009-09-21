@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+########################################################################
+#
+# diffpy.srfit      by DANSE Diffraction group
+#                   Simon J. L. Billinge
+#                   (c) 2009 Trustees of the Columbia University
+#                   in the City of New York.  All rights reserved.
+#
+# File coded by:    Chris Farrow
+#
+# See AUTHORS.txt for a list of people who contributed.
+# See LICENSE.txt for license information.
+#
+########################################################################
 """Wrappers for adapting pyobjcryst.crystal.Crystal to a srfit ParameterSet.
 
 This will adapt a pyobjcryst.Crystal into the ParameterSet interface. The
@@ -33,6 +46,7 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.util.clicker import Clicker
+from diffpy.srfit.structure.basestructure import BaseStructure
 
 class ScattererParSet(ParameterSet):
     """A base adaptor for an Objcryst Scatterer.
@@ -1170,7 +1184,7 @@ class DihedralAngleParameter(StretchModeParameter):
 
 # End class DihedralAngleParameter
 
-class ObjCrystParSet(ParameterSet):
+class ObjCrystParSet(BaseStructure):
     """A adaptor for pyobjcryst.crystal.Crystal instance.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
@@ -1210,18 +1224,6 @@ class ObjCrystParSet(ParameterSet):
         self.addParameter(ParameterWrapper("gamma", self.stru, attr =
             "gamma"))
 
-        # Constrain the lattice before we go any further.
-        sgmap = {}
-        sgnum = self.stru.GetSpaceGroup().GetSpaceGroupNumber()
-        from diffpy.Structure import SpaceGroups
-        sg = SpaceGroups.GetSpaceGroup(sgnum)
-        system = sg.crystal_system
-        if not system:
-            system = "Triclinic"
-        system = system.title()
-        from .sgconstraints import constrainSpaceGroup
-        constrainSpaceGroup(self, system)
-
         # Now we must loop over the scatterers and create parameter sets from
         # them.
         self.scatterers = []
@@ -1248,7 +1250,32 @@ class ObjCrystParSet(ParameterSet):
             self.scatterers.append(parset)
             snames.append(name)
 
+        # Constrain parameters to the space group
+        sgnum = self.stru.GetSpaceGroup().GetSpaceGroupNumber()
+        from .sgconstraints import constrainSpaceGroup
+        constrainSpaceGroup(self, sgnum)
+
         return
+
+    @classmethod
+    def canAdapt(self, stru):
+        """Return whether the structure can be adapted by this class."""
+        from pyobjcryst.crystal import Crystal
+        return isinstance(stru, Crystal)
+
+    def getLattice(self):
+        """Get the ParameterSet containing the lattice Parameters."""
+        return self
+
+    def getSites(self):
+        """Get a list of ParameterSets that represents the sites.
+
+        The site positions must be accessible from the list entries via the
+        names "x", "y", and "z".
+
+        """
+        return self.scatterers
+
 
 # End class ObjCrystParSet
 

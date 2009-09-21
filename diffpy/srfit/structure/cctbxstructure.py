@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+########################################################################
+#
+# diffpy.srfit      by DANSE Diffraction group
+#                   Simon J. L. Billinge
+#                   (c) 2009 Trustees of the Columbia University
+#                   in the City of New York.  All rights reserved.
+#
+# File coded by:    Chris Farrow
+#
+# See AUTHORS.txt for a list of people who contributed.
+# See LICENSE.txt for license information.
+#
+########################################################################
 """Wrappers for interfacing cctbx crystal with SrFit.
 
 This wraps a cctbx.crystal as a ParameterSet with a similar hierarchy, which
@@ -18,6 +31,7 @@ __id__ = "$Id$"
 
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
 from diffpy.srfit.fitbase.parameterset import ParameterSet
+from diffpy.srfit.structure.basestructure import BaseStructure
 
 from cctbx import crystal
 
@@ -135,12 +149,6 @@ class UnitCellParSet(ParameterSet):
         self.addParameter(ParameterWrapper("gamma", None, self._latgetter(5),
             self._latsetter(5)))
 
-        from .sgconstraints import constrainSpaceGroup
-        system = self.strups.stru.space_group().crystal_system()
-        if system == "Undefined":
-            system = "Triclinic"
-        constrainSpaceGroup(self, system)
-
         return
 
     def _latgetter(self, i):
@@ -164,9 +172,11 @@ class UnitCellParSet(ParameterSet):
 
 # FIXME - Special positions should be constant.
 
-class CCTBXStructureParSet(ParameterSet):
+class CCTBXStructureParSet(BaseStructure):
     """A wrapper for CCTBX structure.
 
+    Attributes:
+    stru        --  The adapted cctbx structure object.
     scatterers  --  The list of ScattererParSets.
     unitcell    --  The UnitCellParSet for the structure.
     
@@ -196,6 +206,12 @@ class CCTBXStructureParSet(ParameterSet):
             self.addParameterSet(scatterer)
             self.scatterers.append(scatterer)
 
+        # Constrain the lattice
+        from .sgconstraints import constrainSpaceGroup
+        system = self.stru.space_group().crystal_system()
+        if system == "Undefined":
+            system = "Triclinic"
+        constrainSpaceGroup(self, system)
 
         return
 
@@ -231,6 +247,23 @@ class CCTBXStructureParSet(ParameterSet):
         self.stru = newstru
         return
 
+    @classmethod
+    def canAdapt(self, stru):
+        """Return whether the structure can be adapted by this class."""
+        return isinstance(stru, crystal)
+
+    def getLattice(self):
+        """Get the ParameterSet containing the lattice Parameters."""
+        return self.unitcell
+
+    def getSites(self):
+        """Get a list of ParameterSets that represents the sites.
+
+        The site positions must be accessible from the list entries via the
+        names "x", "y", and "z".
+
+        """
+        return self.scatterers
 
 
 # End class StructureParSet

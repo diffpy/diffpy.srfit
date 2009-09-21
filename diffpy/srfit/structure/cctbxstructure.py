@@ -208,9 +208,7 @@ class CCTBXStructureParSet(BaseStructure):
 
         # Constrain the lattice
         from diffpy.srfit.structure.sgconstraints import constrainSpaceGroup
-        sg = self.stru.space_group()
-        t = sg.type()
-        symbol = t.lookup_symbol()
+        symbol = self.getSpaceGroup()
         constrainSpaceGroup(self, symbol)
 
         return
@@ -264,6 +262,13 @@ class CCTBXStructureParSet(BaseStructure):
 
         """
         return self.scatterers
+
+    def getSpaceGroup(self):
+        """Get the HM space group symbol for the structure."""
+        sg = self.stru.space_group()
+        t = sg.type()
+        return t.lookup_symbol()
+
 
 
 # End class StructureParSet

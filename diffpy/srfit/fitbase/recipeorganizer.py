@@ -22,15 +22,6 @@ string, as defined in the method.
 
 """
 
-# FIXME - parameter swapping is a bit of a problem because a parameter swapped
-# within and EquationFactory and set of equations will not be swapped within
-# Variables and ParameterProxies. If swapping is to be allowed, then each of
-# the swapping objects should remain private, and only proxies should be passed
-# outside of the class in which they reside. If any object calls for a
-# Parameter to be swapped, it will swap all proxies to that object. If a
-# Parameter is deleted, then it gets deleted everywhere. Look into weak
-# references to make this work.
-
 from numpy import inf
 from itertools import chain, ifilter
 import re

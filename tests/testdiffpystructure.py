@@ -8,7 +8,6 @@ import numpy
 from diffpy.Structure import Atom, Lattice, Structure
 from diffpy.srfit.structure.diffpystructure import StructureParSet
 
-
 class TestParameterWrapper(unittest.TestCase):
 
     def testStructureParSet(self):

@@ -53,3 +53,7 @@ class BaseStructure(ParameterSet):
         """
         raise NotImplementedError("The must be overloaded")
 
+    def getSpaceGroup(self):
+        """Get the HM space group symbol for the structure."""
+        raise NotImplementedError("The must be overloaded")
+

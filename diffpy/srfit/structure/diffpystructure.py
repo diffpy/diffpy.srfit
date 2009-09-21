@@ -247,7 +247,6 @@ class StructureParSet(BaseStructure):
             self.addParameterSet(atom)
             self.atoms.append(atom)
 
-
         # other setup
         self.__repr__ = stru.__repr__
         return
@@ -270,6 +269,11 @@ class StructureParSet(BaseStructure):
 
         """
         return self.atoms
+
+    def getSpaceGroup(self):
+        """Get the HM space group symbol for the structure."""
+        return "P 1"
+
 
 # End class StructureParSet
 

@@ -1251,7 +1251,7 @@ class ObjCrystParSet(BaseStructure):
             snames.append(name)
 
         # Constrain parameters to the space group
-        sgname = self.stru.GetSpaceGroup().GetName()
+        sgname = self.getSpaceGroup()
         from diffpy.srfit.structure.sgconstraints import constrainSpaceGroup
         constrainSpaceGroup(self, sgname)
 
@@ -1275,6 +1275,10 @@ class ObjCrystParSet(BaseStructure):
 
         """
         return self.scatterers
+
+    def getSpaceGroup(self):
+        """Get the HM space group symbol for the structure."""
+        return self.stru.GetSpaceGroup().GetName()
 
 
 # End class ObjCrystParSet

@@ -17,11 +17,164 @@
 __id__ = "$Id$"
 
 
+import numpy
+
 from diffpy.Structure import SpaceGroups
-from diffpy.Structure.SymmetryUtilities import GeneratorSite
+from diffpy.Structure.SymmetryUtilities import GeneratorSite, stdUsymbols
+from diffpy.Structure.SymmetryUtilities import SymmetryConstraints
+
+def constrainAsSpaceGroup(stru, sg, sites = None, sgoffset = [0, 0, 0],
+        constrainadps = False, adpsymbols = stdUsymbols):
+    """Constrain structure parameters according to a given space group.
+
+    This works as constrainSpaceGroup, but it is assumed that the structure has
+    been expanded to a P1 cell. Passed sites are explicitly constrained to the
+    specified space group.
+
+    Arguments:
+    stru    --  A BaseStructure object.
+    sg      --  The space group number or symbol (compatible with
+                diffpy.Structure.SpaceGroups.GetSpaceGroup.
+    sgoffset--  Optional offset for sg origin (default [0, 0, 0]).
+    sites   --  The site ParameterSets to constrain. If sites is None
+                (default), then all sites from stru will be constrained. It is
+                assumed that the sites have Parameters for the ADPs named
+                according to the adpsymbols.
+    constrainadps   --  Flag indicating whether to constrain the ADPs.
+    adpsymbols  --  A list of the ADP names. By default this is equal to
+                diffpy.Structure.SymmetryUtilities.stdUsymbols. The names must
+                be given in the same order as stdUsymbols.
+
+    Parameters for the free sites are created at the structure ParameterSet
+    level.  The site constraints are applied at the level of each site
+    ParameterSet.  This will erase any constraints or constants on the passed
+    sites before setting the space group constraints. ADP constraints will not
+    be wiped unless constrainadps is True.
+
+    Returns xyznames and uijnames, where these are the names of the new x, y, z
+    parameters are in xyznames and the names of the new Uij parameters are in
+    uijnames.
+
+    Raises ValueError if stru is not in P1 symmetry.
+    Raises ValueError if constrainadps is True, but the adpsymbols are not
+    found in sites.
+
+    """
+    # FIXME - default name of constrained parameters are kind of crappy.
+    sg = SpaceGroups.GetSpaceGroup(sg)
+
+    if sites is None:
+        sites = stru.getSites()
+
+    strusg = SpaceGroups.GetSpaceGroup( stru.getSpaceGroup() )
+    if strusg != SpaceGroups.sg1:
+        raise ValueError("Structure is not in 'P1' symmetry")
+
+    ## Constrain sites
+
+    # Remove any prior constraints or constants. We do this explicitly in case
+    # the site ParameterSet contains more than just the site information.
+    positions =  []
+    for site in sites:
+
+        for par in [site.x, site.y, site.z]:
+            site.unconstrain(par)
+            par.setConst(False)
+
+        positions.append([site.x.getValue(), site.y.getValue(),
+            site.z.getValue()])
+
+    Uijs = None
+    if constrainadps:
+        idxtoij = [(0,0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2)]
+        Uijs = []
+        for site in sites:
+            Uij = numpy.matrix(numpy.zeros((3,3)), dtype=float)
+            for idx, pname in enumerate(adpsymbols):
+                par = site.get(pname)
+                site.unconstrain(par)
+                par.setConst(False)
+                i, j = idxtoij[idx]
+                Uij[i,j] = Uij[j,i] = par.getValue()
+
+            Uijs.append(Uij)
+
+    g = SymmetryConstraints(sg, positions, Uijs, sgoffset)
+
+    # Start by creating the position Parameters
+    xyznames = []
+    for name, val in g.pospars:
+        # We want new names
+        name = name[:1] + "_sg" + name[1:]
+        xyznames.append(name)
+        par = stru.get(name)
+        if par is None:
+            par = stru.newParameter(name, val)
+        else:
+            par.setValue(val)
+
+    formulas = g.positionFormulas(xyznames)
+
+    for site, f in zip(sites, formulas):
+
+        # Extract the constraint equation from the formula
+        for parname, formula in f.items():
+
+            # Check to see if this parameter is free
+            if parname == formula:
+                continue
+
+            par = site.get(parname)
+
+            # Check to see if it is a constant
+            fval = _getFloat(formula)
+            if fval is not None:
+                par.setConst()
+                continue
+
+            # If we got here, then we have a constraint equation
+            site.constrain(par, formula, ns = stru._parameters )
+
+    symbolmap = dict(zip(stdUsymbols, adpsymbols))
+    # Now constrain ADPs
+    uijnames = []
+    for name, val in g.Upars:
+        base = name[:3]
+        pre = symbolmap[base]
+        name = pre + "_sg" + name[3:]
+        uijnames.append(name)
+        par = stru.get(name)
+        if par is None:
+            par = stru.newParameter(name, val)
+        else:
+            par.setValue(val)
+
+    formulas = g.UFormulas(uijnames)
+
+    for site, f in zip(sites, formulas):
+
+        # Extract the constraint equation from the formula
+        for parname, formula in f.items():
+
+            # Check to see if this parameter is free
+            if parname == formula:
+                continue
+
+            par = site.get(parname)
+
+            # Check to see if it is a constant
+            fval = _getFloat(formula)
+            if fval is not None:
+                par.setConst()
+                continue
+
+            # If we got here, then we have a constraint equation
+            site.constrain(par, formula, ns = stru._parameters )
+
+    return (xyznames, uijnames)
 
 def constrainSpaceGroup(stru, sg):
-    """Constrain the Parameters according to its space group.
+    """Constrain structure Parameters according to its space group.
 
     This forces the lattice parameters to conform to the space group symmetry.
     The protocol this follows is listed under Crystal Systems below. It also
@@ -89,12 +242,6 @@ def constrainSpaceGroup(stru, sg):
     if sg == SpaceGroups.sg1:
         return
 
-    def _getFloat(formula):
-        try:
-            return float(formula)
-        except ValueError:
-            return None
-
     # Now make a list of the positions and check for constraints
     for site in stru.getSites():
 
@@ -105,23 +252,23 @@ def constrainSpaceGroup(stru, sg):
         g = GeneratorSite(sg, xyz)
         f = g.positionFormula(xyz, xyzsymbols=("x","y","z"))
 
-
         # Extract the constraint equation from the formula
         for parname, formula in f.items():
-
 
             # Check to see if this parameter is free
             if parname == formula:
                 continue
 
+            par = site.get(parname)
+
             # Check to see if it is a constant
             fval = _getFloat(formula)
             if fval is not None:
-                site.get(parname).setConst()
+                par.setConst()
                 continue
 
             # If we got here, then we have a constraint equation
-            site.constrain(parname, formula)
+            site.constrain(par, formula)
 
     return
 
@@ -321,4 +468,13 @@ def applySymmetryConstraints(spacegroup, indices, posflag, Uijflag,
     self.initial.pdffit["spcgr"] = spacegroup.short_name
     self.initial.pdffit["sgoffset"] = list(sgoffset)
     return
+
+
+def _getFloat(formula):
+    """Get a float from a formula string, or None if this is not possible."""
+    try:
+        return float(formula)
+    except ValueError:
+        return None
+
 

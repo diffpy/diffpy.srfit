@@ -1,0 +1,245 @@
+#!/usr/bin/env python
+########################################################################
+#
+# diffpy.srfit      by DANSE Diffraction group
+#                   Simon J. L. Billinge
+#                   (c) 2008 Trustees of the Columbia University
+#                   in the City of New York.  All rights reserved.
+#
+# File coded by:    Chris Farrow
+#
+# See AUTHORS.txt for a list of people who contributed.
+# See LICENSE.txt for license information.
+#
+########################################################################
+"""PDF profile generator.
+
+"""
+
+
+import numpy
+
+from diffpy.srfit.fitbase import ProfileGenerator
+from diffpy.srfit.fitbase.parameter import ParameterWrapper
+from diffpy.srfit.structure import struToParameterSet
+from diffpy.srreal.pdf_ext import PDFCalculator
+
+# FIXME - Parameter creation will have to be smarter once deeper calculator
+# configuration is enabled.
+
+__all__ = ["PDFGenerator"]
+
+def _makeGetter(name):
+    return lambda obj: obj._getDoubleAttr(name)
+
+def _makeSetter(name):
+    return lambda obj, val: obj._setDoubleAttr(name, val)
+
+def _makePDFFitGetter(name):
+    return lambda obj: obj[name]
+
+def _makePDFFitSetter(name):
+    return lambda obj, val: obj.__setitem__(name, val)
+
+class PDFGenerator(ProfileGenerator):
+    """A class for calculating the PDF from a single crystal structure.
+
+    This works with diffpy.Structure.Structure and pyobjcryst.crystal.Crystal
+    instances. Note that the managed Parameters are not created until the
+    structure is added.
+
+    Attributes:
+    _calc   --  PDFCalculator instance for calculating the PDF
+    _phase  --  The structure ParameterSets used to calculate the profile.
+    _lastr  --  The last value of r over which the PDF was calculated. This is
+                used to configure the calculator when r changes.
+
+    Managed Parameters:
+    scale   --  Scale factor
+    delta1  --  Linear peak broadening term
+    delta2  --  Quadratic peak broadening term
+    qbroad  --  Resolution peak broadening term
+    qdamp   --  Resolution peak dampening term
+
+    Managed ParameterSets:
+    The structure ParameterSet used to calculate the profile is named by the
+    user.
+
+    """
+
+    def __init__(self, name = "pdf"):
+        """Initialize our generator.
+        
+        """
+        ProfileGenerator.__init__(self, name)
+
+        self._calc = PDFCalculator()
+        self.setScatteringType("N")
+        self.setQmax(0.0)
+
+        self._phase = None
+
+        self.meta = {}
+
+        # The last value of r we evaluated over
+        self._lastr = None
+
+        return
+
+    def setScatteringType(self, type = "X"):
+        """Set the scattering type.
+        
+        type    --   "X" for x-ray or "N" for neutron
+
+        Raises ValueError if type is not "X" or "N"
+
+        """
+        type = type.upper()
+        if type not in ("X", "N"):
+            raise ValueError("Unknown scattering type '%s'"%type)
+
+        self.meta["stype"] = type
+
+        self._calc.setScatteringFactorTable(type)
+
+        return
+    
+    def getScatteringType(self):
+        """Get the scattering type. See 'setScatteringType'."""
+        return self._calc.getRadiationType()
+
+    def setQmax(self, qmax):
+        """Set the qmax value."""
+        self._calc._setDoubleAttr("qmax", qmax)
+        self.meta["qmax"] = qmax
+        return
+
+    def getQmax(self):
+        """Get the qmax value."""
+        self._calc._getDoubleAttr("qmax")
+        return
+
+    def setQmin(self, qmin):
+        """Set the qmin value.
+
+        This has no effect on the crystal PDF.
+        
+        """
+        self._calc._setDoubleAttr("qmin", qmin)
+        self.meta["qmin"] = qmin
+        return
+
+    def getQmin(self):
+        """Get the qmin value."""
+        self._calc._getDoubleAttr("qmin")
+        return
+
+    def setPhase(self, stru, name = None):
+        """Add a phase to the calculated structure.
+
+        This creates a StructureParSet or ObjCrystParSet that adapts stru to a
+        ParameterSet interface. See those classes (located in
+        diffpy.srfit.structure) for how they are used. The resulting
+        ParameterSet will be managed by this generator.
+
+        stru    --  diffpy.Structure.Structure or pyobjcryst.crystal.Crystal
+                    instance
+        name    --  A name to give the structure. If name is None (default),
+                    then the name will be set as "phase".
+
+        """
+
+        if name is None:
+            name = "phase"
+
+        parset = struToParameterSet(stru, name)
+
+        self._phase = parset
+
+        # Check if the structure is a diffpy.Structure.PDFFitStructure
+        # instance.
+        from diffpy.Structure import Structure
+        if isinstance(stru, Structure) and hasattr(stru, "pdffit"):
+            self.__wrapPDFFitPars()
+        else:
+            self.__wrapPars()
+
+        # Put this ParameterSet in the ProfileGenerator.
+        self.addParameterSet(parset)
+        return
+
+    def __wrapPars(self):
+        """Wrap the Parameters.
+
+        This wraps the parameters provided by the PDFCalculator as SrFit
+        Parameters.
+
+        """
+        parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
+
+        for pname in parnames:
+            getter = _makeGetter(pname)
+            setter = _makeSetter(pname)
+            self.addParameter(
+                ParameterWrapper(pname, self._calc, getter, setter)
+                )
+        return
+
+    def __wrapPDFFitPars(self):
+        """Wrap the Parameters in a pdffit-aware structure.
+
+        This wraps the parameters provided in a pdffit-aware diffpy.Structure
+        object. The DiffpyStructureAdapter (customPQConfig) looks to the
+        structure for the parameter values, so we must modify them at that
+        level, rather than at the PDFCalculator level. This is an inconsistency
+        that should probably be fixed.
+
+        """
+        pdfparnames = ['delta1', 'delta2', 'scale']
+
+        for pname in pdfparnames:
+            getter = _makePDFFitGetter(pname)
+            setter = _makePDFFitSetter(pname)
+            self.addParameter(
+                ParameterWrapper(pname, self._phase.stru.pdffit, getter,
+                    setter)
+                )
+
+        parnames = ['qbroad', 'qdamp']
+        for pname in parnames:
+            getter = _makeGetter(pname)
+            setter = _makeSetter(pname)
+            self.addParameter(
+                ParameterWrapper(pname, self._calc, getter, setter)
+                )
+
+        return
+
+
+    def __prepare(self, r):
+        """Prepare the calculator when a new r-value is passed."""
+        self._lastr = r
+        self._calc._setDoubleAttr('rstep', r[1] - r[0])
+        self._calc._setDoubleAttr('rmin', r[0])
+        precision = self._calc._getDoubleAttr("peakprecision")
+        self._calc._setDoubleAttr('rmax', r[-1] + precision)
+        return
+
+    def __call__(self, r):
+        """Calculate the PDF.
+
+        This ProfileGenerator will be used in a fit equation that will be
+        optimized to fit some data.  By the time this function is evaluated,
+        the crystal has been updated by the optimizer via the ObjCrystParSet
+        created in setCrystal. Thus, we need only call pdf with the internal
+        structure object.
+
+        """
+        if r is not self._lastr:
+            self.__prepare(r)
+
+        self._calc.eval(self._phase.stru)
+
+        return self._calc.getPDF()
+
+# End class PDFGenerator

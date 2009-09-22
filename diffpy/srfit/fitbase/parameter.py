@@ -22,10 +22,10 @@ ParameterProxy      --  A proxy for another Parameter, but with a different
                         name.
 
 """
-# FIXME - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
+# IDEA - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
 # can have more fine control over the construction of FitRecipes.
-# FIXME - Add tags to parameters so they can be easily retrieved.
-# FIXME - Consider scaling parameters to avoid precision issues in optimizers.
+# IDEA - Add tags to parameters so they can be easily retrieved.
+# IDEA - Consider scaling parameters to avoid precision issues in optimizers.
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
@@ -143,8 +143,8 @@ class ParameterWrapper(Parameter):
         obj     --  The object to be wrapped.
         getter  --  The unbound function that can be used to access the
                     attribute containing the paramter value. getter(obj) should
-                    return the Paramter value.  If getter is None (default), it
-                    is assumed that an attribute is accessed directly.
+                    return the Parameter value.  If getter is None (default),
+                    it is assumed that an attribute is accessed directly.
         setter  --  The unbound function that can be used to modify the
                     attribute containing the paramter value. setter(obj, value)
                     should set the attribute to the passed value. If setter is

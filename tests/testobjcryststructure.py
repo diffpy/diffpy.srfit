@@ -154,7 +154,7 @@ class TestParameterWrapper(unittest.TestCase):
                 self.assertAlmostEquals(oca.Y, a.y.getValue())
                 self.assertAlmostEquals(oca.Z, a.z.getValue())
                 self.assertAlmostEquals(oca.Occupancy, a.occ.getValue())
-                self.assertAlmostEquals(ocsp.Biso, a.biso.getValue())
+                self.assertAlmostEquals(ocsp.Biso, a.Biso.getValue())
             return
 
 
@@ -174,7 +174,7 @@ class TestParameterWrapper(unittest.TestCase):
         ## Now change values from the srfit StructureParSet
         cryst.c60.C44.x.setValue( 1.1 )
         cryst.c60.C44.occ.setValue( 1.1 )
-        cryst.c60.C44.biso.setValue( 1.1 )
+        cryst.c60.C44.Biso.setValue( 1.1 )
         cryst.c60.q3.setValue( 1.1 )
         cryst.a.setValue(1.1)
 

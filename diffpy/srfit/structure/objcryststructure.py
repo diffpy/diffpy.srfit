@@ -103,7 +103,7 @@ class AtomParSet(ScattererParSet):
     x, y, z     --  Atom position in crystal coordinates (ParameterWrapper)
     occupancy   --  Occupancy of the atom on its crystal location
                     (ParameterWrapper)
-    biso        --  Isotropic scattering factor (ParameterWrapper).
+    Biso        --  Isotropic scattering factor (ParameterWrapper).
     
     """
 
@@ -119,7 +119,7 @@ class AtomParSet(ScattererParSet):
         sp = atom.GetScatteringPower()
 
         # The Biso parameter
-        self.addParameter(ParameterWrapper("biso", sp, attr = "Biso"))
+        self.addParameter(ParameterWrapper("Biso", sp, attr = "Biso"))
         return
 
     def _getElem(self):
@@ -510,7 +510,7 @@ class MolAtomParSet(ScattererParSet):
     x, y, z     --  Atom position in crystal coordinates (ParameterWrapper)
     occupancy   --  Occupancy of the atom on its crystal location
                     (ParameterWrapper)
-    biso        --  Isotropic scattering factor (ParameterWrapper). This does
+    Biso        --  Isotropic scattering factor (ParameterWrapper). This does
                     not exist for dummy atoms. See the 'isDummy' method.
     
     """
@@ -528,7 +528,7 @@ class MolAtomParSet(ScattererParSet):
 
         # Only wrap this if there is a scattering power
         if sp is not None:
-            self.addParameter(ParameterWrapper("biso", sp, attr = "Biso"))
+            self.addParameter(ParameterWrapper("Biso", sp, attr = "Biso"))
 
         return
 

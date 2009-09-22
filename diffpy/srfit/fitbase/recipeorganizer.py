@@ -325,6 +325,9 @@ class RecipeOrganizer(RecipeContainer):
 
         This de-registers the Parameter with the _eqfactory. The Parameter will
         remain part of built equations.
+
+        Note that constraints and restraints involving the Parameter are not
+        modified.
         
         Raises ValueError if par is not part of the RecipeContainer.
 
@@ -553,9 +556,7 @@ class RecipeOrganizer(RecipeContainer):
     def constrain(self, par, con, ns = {}):
         """Constrain a parameter to an equation.
 
-        Note that only one constraint can exist on a Parameter at a time. The
-        most recent constraint overrides all other user-defined constraints.
-        Built-in constraints override all other constraints.
+        Note that only one constraint can exist on a Parameter at a time.
 
         par     --  The Parameter to constrain.
         con     --  A string representation of the constraint equation or a

@@ -94,7 +94,7 @@ def makeRecipe(datname):
     # We don't need to constrain 'b' and 'c', this is already done for us,
     # consistent with the space group of the crystal.
 
-    Biso = recipe.newVar("Biso", 0.01)
+    Biso = recipe.newVar("Biso")
     for scatterer in phase.getScatterers():
         recipe.constrain(scatterer.Biso, Biso)
 

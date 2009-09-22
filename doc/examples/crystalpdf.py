@@ -84,7 +84,7 @@ def makeRecipe(strufile, datname):
     # We want to refine the thermal paramters as well. We will add a new
     # Variable that we call "Uiso" and constrain the atomic Uiso values to
     # this.
-    Uiso = recipe.newVar("Uiso", 0.01)
+    Uiso = recipe.newVar("Uiso")
     for scatterer in phase.getScatterers():
         recipe.constrain(scatterer.Uiso, Uiso)
 

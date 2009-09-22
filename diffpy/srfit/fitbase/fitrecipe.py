@@ -161,7 +161,6 @@ class FitRecipe(RecipeOrganizer):
         self._removeObject(parset, self._parsets)
         return
 
-
     def residual(self, p = []):
         """Calculate the residual to be optimized.
 
@@ -448,6 +447,9 @@ class FitRecipe(RecipeOrganizer):
     def delVar(self, var):
         """Remove a variable.
 
+        Note that constraints and restraints involving the variable are not
+        modified.
+
         var     --  A variable of the FitRecipe.
 
         Raises ValueError if var is not part of the FitRecipe.
@@ -463,7 +465,7 @@ class FitRecipe(RecipeOrganizer):
         
         return
 
-    def newVar(self, name, value, fixed = False, tag = None, tags = []):
+    def newVar(self, name, value = None, fixed = False, tag = None, tags = []):
         """Create a new variable of the fit.
 
         This method lets new variables be created that are not tied to a
@@ -473,8 +475,12 @@ class FitRecipe(RecipeOrganizer):
 
         name    --  The name of the variable. The variable will be able to be
                     used by this name in restraint and constraint equations.
-        value   --  An initial value for the variable. 
+        value   --  An initial value for the variable. If this is None
+                    (default), then the variable will be given the value of the
+                    first non-None-valued Parameter constrained to it. If this
+                    fails, an error will be thrown when 'residual' is called.
         fixed   --  Fix the variable so that it does not vary (default False).
+                    The variable will still be managed by the FitRecipe.
         tag     --  A tag for the variable. This can be used to fix and free
                     variables by tag (default None).
         tags    --  A list of tags (default []). Both tag and tags can be
@@ -495,6 +501,8 @@ class FitRecipe(RecipeOrganizer):
 
     def fixVar(self, var, value = None):
         """Fix a variable so that it doesn't change.
+
+        The variable will still be managed by the FitRecipe.
 
         var     --  A variable of the FitRecipe, or the name of a variable.
         value   --  A new value for the variable. If this is None
@@ -572,6 +580,43 @@ class FitRecipe(RecipeOrganizer):
         else:
             self._fixed.clear()
 
+        return
+
+    def constrain(self, par, con, ns = {}):
+        """Constrain a parameter to an equation.
+
+        Note that only one constraint can exist on a Parameter at a time.
+
+        This is overloaded to set the value of con if it represents a variable
+        and its current value is None.
+
+        par     --  The Parameter to constrain.
+        con     --  A string representation of the constraint equation or a
+                    Parameter to constrain to.  A constraint equation must
+                    consist of numpy operators and "known" Parameters.
+                    Parameters are known if they are in the ns argument, or if
+                    they are managed by this object.
+        ns      --  A dictionary of Parameters, indexed by name, that are used
+                    in the eqstr, but not part of this object (default {}).
+
+        Raises ValueError if ns uses a name that is already used for a
+        variable.
+        Raises ValueError if eqstr depends on a Parameter that is not part of
+        the FitRecipe and that is not defined in ns.
+        Raises ValueError if par is marked as constant.
+
+        """
+        if con in self._parameters.keys():
+            con = self.get(con)
+
+        if par.const:
+            raise ValueError("The parameter '%s' is constant"%par)
+
+        if con in self._parameters.values() and con.getValue() is None:
+            val = par.getValue()
+            con.setValue(val)
+
+        RecipeOrganizer.constrain(self, par, con, ns)
         return
 
     def __getTagSet(self, tags):

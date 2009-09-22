@@ -41,11 +41,19 @@ class TestFitRecipe(unittest.TestCase):
         recipe.addVar(con.A, 2)
         recipe.addVar(con.k, 1)
         recipe.addVar(con.c, 0)
+        recipe.newVar("B")
 
         names = recipe.getNames()
-        self.assertEquals(names, ["A", "k", "c"])
+        self.assertEquals(names, ["A", "k", "c", "B"])
         values = recipe.getValues()
-        self.assertEquals(values, [2, 1, 0])
+        self.assertEquals(values, [2, 1, 0, None])
+
+        # Constrain a parameter to the B-variable to give it a value
+        p = Parameter("Bpar", -1)
+        recipe.constrain(p, recipe.B)
+        values = recipe.getValues()
+        self.assertEquals(values, [2, 1, 0, -1])
+        recipe.delVar(recipe.B)
 
         recipe.fixVar(recipe.k)
 

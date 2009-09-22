@@ -158,9 +158,10 @@ def makeRecipe(strufile, datname1, datname2):
     recipe.constrain(structure.lattice.c, a)
     # We want to refine the thermal paramters as well. We will add a new
     # variable that we call "Uiso" and constrain the atomic Uiso values to
-    # this.
-    Uiso = recipe.newVar("Uiso", 0.004)
-    for atom in structure.atoms:
+    # this. Note that we don't give Uiso an initial value. The initial value
+    # will be inferred from the following constraints.
+    Uiso = recipe.newVar("Uiso")
+    for atom in structure.getScatterers():
         recipe.constrain(atom.Uiso, Uiso)
 
     # Give the recipe away so it can be used!

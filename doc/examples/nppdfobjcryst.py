@@ -452,7 +452,7 @@ def makeRecipe(cryst, datname):
     c60 = generator.crystal.c60
 
     # First, the isotropic thermal displacement factor.
-    Biso = recipe.newVar("Biso", 0.25)
+    Biso = recipe.newVar("Biso")
     for atom in c60.atoms:
         # We have to check for reference atoms. Dummy atoms have no Biso
         if not atom.isDummy():

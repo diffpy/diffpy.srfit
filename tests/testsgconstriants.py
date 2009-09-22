@@ -80,27 +80,27 @@ class TestSGConstraints(unittest.TestCase):
         self.assertFalse( l.c.const )
         self.assertEquals(0, len(l._constraints))
 
-        # Now make sure the sites are constrained properly
-        sites = stru.getSites()
-        la = sites[0]
+        # Now make sure the scatterers are constrained properly
+        scatterers = stru.getScatterers()
+        la = scatterers[0]
         self.assertFalse(la.x.const)
         self.assertFalse(la.y.const)
         self.assertTrue(la.z.const)
         self.assertEquals(0, len(la._constraints))
 
-        mn = sites[1]
+        mn = scatterers[1]
         self.assertTrue(mn.x.const)
         self.assertTrue(mn.y.const)
         self.assertTrue(mn.z.const)
         self.assertEquals(0, len(mn._constraints))
 
-        o1 = sites[2]
+        o1 = scatterers[2]
         self.assertFalse(o1.x.const)
         self.assertFalse(o1.y.const)
         self.assertTrue(o1.z.const)
         self.assertEquals(0, len(o1._constraints))
 
-        o2 = sites[3]
+        o2 = scatterers[3]
         self.assertFalse(o2.x.const)
         self.assertFalse(o2.y.const)
         self.assertFalse(o2.z.const)
@@ -126,7 +126,7 @@ class TestSGConstraints(unittest.TestCase):
         parset = StructureParSet(stru, "LaMnO3")
 
         xyznames, uijnames = constrainAsSpaceGroup(parset, "P b n m",
-                sites = parset.getSites()[::2],
+                scatterers = parset.getScatterers()[::2],
                 constrainadps = True)
 
         # Make sure that the new parameters were created
@@ -135,32 +135,33 @@ class TestSGConstraints(unittest.TestCase):
             self.assertNotEquals(None, parset.get(pname).getValue() )
 
         # Test the unconstrained atoms
-        for site in parset.getSites()[1::2]:
-            self.assertFalse(site.x.const)
-            self.assertFalse(site.y.const)
-            self.assertFalse(site.z.const)
-            self.assertFalse(site.U11.const)
-            self.assertFalse(site.U22.const)
-            self.assertFalse(site.U33.const)
-            self.assertFalse(site.U12.const)
-            self.assertFalse(site.U13.const)
-            self.assertFalse(site.U23.const)
-            self.assertEquals(0, len(site._constraints))
+        for scatterer in parset.getScatterers()[1::2]:
+            self.assertFalse(scatterer.x.const)
+            self.assertFalse(scatterer.y.const)
+            self.assertFalse(scatterer.z.const)
+            self.assertFalse(scatterer.U11.const)
+            self.assertFalse(scatterer.U22.const)
+            self.assertFalse(scatterer.U33.const)
+            self.assertFalse(scatterer.U12.const)
+            self.assertFalse(scatterer.U13.const)
+            self.assertFalse(scatterer.U23.const)
+            self.assertEquals(0, len(scatterer._constraints))
 
         # Test the constrained atoms. We only test the existence of constraints
         # rather than the constraints themselves. These are tested in the
         # diffpy.Structure package.
-        for site in parset.getSites()[::2]:
+        for scatterer in parset.getScatterers()[::2]:
 
-            self.assertTrue(site.x.const or site.y.const or site.z.const or
-                    site.x.constrained or site.y.constrained or
-                    site.z.constrained)
+            self.assertTrue(scatterer.x.const or scatterer.y.const or
+                    scatterer.z.const or scatterer.x.constrained or
+                    scatterer.y.constrained or scatterer.z.constrained)
 
-            self.assertTrue(site.U11.const or site.U22.const or site.U33.const
-                    or site.U12.const or site.U13.const or site.U23.const or
-                    site.U11.constrained or site.U22.constrained or
-                    site.U33.constrained or site.U12.constrained or
-                    site.U13.constrained or site.U23.constrained)
+            self.assertTrue(scatterer.U11.const or scatterer.U22.const or
+                    scatterer.U33.const or scatterer.U12.const or
+                    scatterer.U13.const or scatterer.U23.const or
+                    scatterer.U11.constrained or scatterer.U22.constrained or
+                    scatterer.U33.constrained or scatterer.U12.constrained or
+                    scatterer.U13.constrained or scatterer.U23.constrained)
 
         return
 lamno3stru =\

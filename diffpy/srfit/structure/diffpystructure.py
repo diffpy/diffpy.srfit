@@ -261,11 +261,13 @@ class StructureParSet(BaseStructure):
         from diffpy.Structure import Structure
         return isinstance(stru, Structure)
 
-    def getSites(self):
-        """Get a list of ParameterSets that represents the sites.
+    def getScatterers(self):
+        """Get a list of ParameterSets that represents the scatterers.
 
         The site positions must be accessible from the list entries via the
-        names "x", "y", and "z".
+        names "x", "y", and "z". The ADPs must be accessible as well, but the
+        name and nature of the ADPs (U-factors, B-factors, isotropic,
+        anisotropic) depends on the adapted structure.
 
         """
         return self.atoms

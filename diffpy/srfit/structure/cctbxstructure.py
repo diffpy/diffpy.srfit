@@ -47,7 +47,7 @@ class ScattererParSet(ParameterSet):
     x (y, z)    --  Atom position in crystal coordinates (ParameterWrapper)
     occupancy   --  Occupancy of the atom on its crystal location
                     (ParameterWrapper)
-    uiso        --  Isotropic scattering factor (ParameterWrapper).
+    Uiso        --  Isotropic scattering factor (ParameterWrapper).
     
     """
 
@@ -72,7 +72,7 @@ class ScattererParSet(ParameterSet):
             self._xyzsetter(2)))
         self.addParameter(ParameterWrapper("occupancy", None, self._getocc,
             self._setocc))
-        self.addParameter(ParameterWrapper("uiso", None, self._getuiso,
+        self.addParameter(ParameterWrapper("Uiso", None, self._getuiso,
             self._setuiso))
         return
 
@@ -254,11 +254,13 @@ class CCTBXStructureParSet(BaseStructure):
         """Get the ParameterSet containing the lattice Parameters."""
         return self.unitcell
 
-    def getSites(self):
-        """Get a list of ParameterSets that represents the sites.
+    def getScatterers(self):
+        """Get a list of ParameterSets that represents the scatterers.
 
         The site positions must be accessible from the list entries via the
-        names "x", "y", and "z".
+        names "x", "y", and "z". The ADPs must be accessible as well, but the
+        name and nature of the ADPs (U-factors, B-factors, isotropic,
+        anisotropic) depends on the adapted structure.
 
         """
         return self.scatterers

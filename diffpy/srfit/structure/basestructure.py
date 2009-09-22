@@ -44,11 +44,13 @@ class BaseStructure(ParameterSet):
         """
         raise NotImplementedError("The must be overloaded")
 
-    def getSites(self):
-        """Get a list of ParameterSets that represents the sites.
+    def getScatterers(self):
+        """Get a list of ParameterSets that represents the scatterers.
 
         The site positions must be accessible from the list entries via the
-        names "x", "y", and "z".
+        names "x", "y", and "z". The ADPs must be accessible as well, but the
+        name and nature of the ADPs (U-factors, B-factors, isotropic,
+        anisotropic) depends on the adapted structure.
 
         """
         raise NotImplementedError("The must be overloaded")
@@ -56,4 +58,5 @@ class BaseStructure(ParameterSet):
     def getSpaceGroup(self):
         """Get the HM space group symbol for the structure."""
         raise NotImplementedError("The must be overloaded")
+
 

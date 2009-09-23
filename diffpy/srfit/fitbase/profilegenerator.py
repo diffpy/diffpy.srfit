@@ -109,7 +109,7 @@ class ProfileGenerator(ParameterSet):
         should be changed directly. The independent variable to calculate over
         is defined in the profile attribute.
 
-        This method calculates the profile and stores it in profile.y.
+        This method calculates the profile and stores it in profile.ycalc.
 
         """
         y = self.__call__(self.profile.x)

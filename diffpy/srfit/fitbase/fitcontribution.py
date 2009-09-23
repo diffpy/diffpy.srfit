@@ -210,7 +210,7 @@ class FitContribution(ParameterSet):
                     ValueError will be raised if there are undefined arguments
                     in the eqstr. 
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the FitRecipe (default {}).
+                    in the eqstr, but not registered (default {}).
         
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -220,7 +220,8 @@ class FitContribution(ParameterSet):
         """
 
         # Build the equation instance.
-        eq = equationFromString(eqstr, self._eqfactory, buildargs = makepars)
+        eq = equationFromString(eqstr, self._eqfactory, buildargs = makepars,
+                ns = ns)
         eq.name = "eq"
         # Register the equation
         self._registerEquation(eq.name, eq, check = False)

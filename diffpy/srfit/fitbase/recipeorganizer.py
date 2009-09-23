@@ -509,11 +509,11 @@ class RecipeOrganizer(RecipeContainer):
                         used in fstr, but not part of the FitRecipe (default
                         {}).
 
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
-        Raises AttributeError if makepars is False and the parameters are not
+        Raises ValueError if ns uses a name that is already used for another
+        managed object.
+        Raises AttributeError if makepars is False and the Parameters are not
         part of this object.
-        Raises ValueError if the function name is already in use by an Equation
+        Raises ValueError if the function name is the name of another managed
         object.
 
         Returns the callable Equation object.
@@ -521,7 +521,8 @@ class RecipeOrganizer(RecipeContainer):
         """
 
         # Build the equation instance.
-        eq = equationFromString(fstr, self._eqfactory, buildargs = makepars)
+        eq = equationFromString(fstr, self._eqfactory, ns = ns, buildargs =
+                makepars)
 
         eq.name = name
 
@@ -540,9 +541,7 @@ class RecipeOrganizer(RecipeContainer):
         """Evaluate a string equation.
 
         eqstr   --  A string equation to evaluate. The equation is evaluated at
-                    the current value of the registered parameters. The
-                    equation can be specified as described in the setEquation
-                    method.
+                    the current value of the registered Parameters.
         ns      --  A dictionary of Parameters, indexed by name, that are
                     used in fstr, but not part of the FitRecipe (default {}).
 
@@ -550,7 +549,7 @@ class RecipeOrganizer(RecipeContainer):
         variable.
 
         """
-        eq = equationFromString(eqstr, self._eqfactory, ns = {})
+        eq = equationFromString(eqstr, self._eqfactory, ns)
         return eq()
 
     def constrain(self, par, con, ns = {}):

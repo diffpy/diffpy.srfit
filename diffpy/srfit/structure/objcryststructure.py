@@ -43,6 +43,7 @@ from pyobjcryst.molecule import StretchModeTorsion
 
 from diffpy.srfit.fitbase.constraint import Constraint
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
+from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.util.clicker import Clicker
@@ -104,6 +105,10 @@ class AtomParSet(ScattererParSet):
     occupancy   --  Occupancy of the atom on its crystal location
                     (ParameterWrapper)
     Biso        --  Isotropic scattering factor (ParameterWrapper).
+    B11, B22, B33, B12, B21, B23, B32, B13, B31
+                --  Anisotropic displacement factor for scatterer
+                (ParameterWrapper or ParameterProxy). Note that the Bij and Bji
+                parameters are the same.
     
     """
 
@@ -118,8 +123,23 @@ class AtomParSet(ScattererParSet):
         ScattererParSet.__init__(self, name, atom, parent)
         sp = atom.GetScatteringPower()
 
-        # The Biso parameter
+        # The B-parameters
         self.addParameter(ParameterWrapper("Biso", sp, attr = "Biso"))
+        self.addParameter(ParameterWrapper("B11", sp, attr = "B11"))
+        self.addParameter(ParameterWrapper("B22", sp, attr = "B22"))
+        self.addParameter(ParameterWrapper("B33", sp, attr = "B33"))
+        B12 = ParameterWrapper("B12", sp, attr = "B12")
+        B21 = ParameterProxy("B21", B12)
+        B13 = ParameterWrapper("B13", sp, attr = "B13")
+        B31 = ParameterProxy("B31", B13)
+        B23 = ParameterWrapper("B23", sp, attr = "B23")
+        B32 = ParameterProxy("B32", B23)
+        self.addParameter(B12)
+        self.addParameter(B21)
+        self.addParameter(B13)
+        self.addParameter(B31)
+        self.addParameter(B23)
+        self.addParameter(B32)
         return
 
     def _getElem(self):
@@ -512,6 +532,10 @@ class MolAtomParSet(ScattererParSet):
                     (ParameterWrapper)
     Biso        --  Isotropic scattering factor (ParameterWrapper). This does
                     not exist for dummy atoms. See the 'isDummy' method.
+    B11, B22, B33, B12, B21, B23, B32, B13, B31
+                --  Anisotropic displacement factor for scatterer
+                (ParameterWrapper or ParameterProxy). Note that the Bij and Bji
+                parameters are the same.
     
     """
 
@@ -529,6 +553,21 @@ class MolAtomParSet(ScattererParSet):
         # Only wrap this if there is a scattering power
         if sp is not None:
             self.addParameter(ParameterWrapper("Biso", sp, attr = "Biso"))
+            self.addParameter(ParameterWrapper("B11", sp, attr = "B11"))
+            self.addParameter(ParameterWrapper("B22", sp, attr = "B22"))
+            self.addParameter(ParameterWrapper("B33", sp, attr = "B33"))
+            B12 = ParameterWrapper("B12", sp, attr = "B12")
+            B21 = ParameterProxy("B21", B12)
+            B13 = ParameterWrapper("B13", sp, attr = "B13")
+            B31 = ParameterProxy("B31", B13)
+            B23 = ParameterWrapper("B23", sp, attr = "B23")
+            B32 = ParameterProxy("B32", B23)
+            self.addParameter(B12)
+            self.addParameter(B21)
+            self.addParameter(B13)
+            self.addParameter(B31)
+            self.addParameter(B23)
+            self.addParameter(B32)
 
         return
 

@@ -61,6 +61,7 @@ def makeRecipe(strufile, datname):
     stru = Structure()
     stru.read(strufile)
     generator.setPhase(stru)
+    generator.setQmax(40.0)
     
     ## The FitContribution
     contribution = FitContribution("nickel")

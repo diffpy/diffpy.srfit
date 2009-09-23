@@ -44,7 +44,8 @@ from gaussianrecipe import scipyOptimize, parkOptimize
 def makeNi():
 
     sp = ScatteringPowerAtom("Ni", "Ni")
-    sp.SetBiso(1)
+    sp.Biso = 8*numpy.pi**2*0.003
+    #sp.B11 = sp.B22 = sp.B33 = 8*numpy.pi**2*0.003
     atom = Atom(0, 0, 0, "Ni", sp)
 
     crystal = Crystal(3.52, 3.52, 3.52, "225")
@@ -74,6 +75,7 @@ def makeRecipe(datname):
     generator = PDFGenerator("G")
     stru = makeNi()
     generator.setPhase(stru)
+    generator.setQmax(40.0)
     
     ## The FitContribution
     contribution = FitContribution("nickel")

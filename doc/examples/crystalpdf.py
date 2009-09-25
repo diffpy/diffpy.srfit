@@ -30,17 +30,16 @@ import os
 import numpy
 
 from diffpy.Structure import Structure
-from diffpy.srfit.pdf import PDFGenerator
+from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.structure.diffpystructure import StructureParSet
 
 from gaussianrecipe import scipyOptimize, parkOptimize
 
 ####### Example Code
 
-def makeRecipe(strufile, datname):
+def makeRecipe(ciffile, datname):
     """Create a recipe that uses the IntensityGenerator.
 
     This will create a FitContribution that uses the IntensityGenerator,
@@ -52,14 +51,15 @@ def makeRecipe(strufile, datname):
     profile = Profile()
 
     # Load data and add it to the profile
-    x, y, junk, u = numpy.loadtxt(datname, unpack=True)
-    profile.setObservedProfile(x, y, u)
-    profile.setCalculationRange(0, 20, 0.05)
+    parser = PDFParser()
+    parser.parseFile(datname)
+    profile.loadParsedData(parser)
+    profile.setCalculationRange(xmax = 20)
 
     ## The ProfileGenerator
     generator = PDFGenerator("G")
     stru = Structure()
-    stru.read(strufile)
+    stru.read(ciffile)
     generator.setPhase(stru)
     generator.setQmax(40.0)
     
@@ -85,7 +85,7 @@ def makeRecipe(strufile, datname):
     # We want to refine the thermal paramters as well. We will add a new
     # Variable that we call "Uiso" and constrain the atomic Uiso values to
     # this.
-    Uiso = recipe.newVar("Uiso")
+    Uiso = recipe.newVar("Uiso", 0.005)
     for scatterer in phase.getScatterers():
         recipe.constrain(scatterer.Uiso, Uiso)
 
@@ -119,11 +119,11 @@ def plotResults(recipe):
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    strufile = "data/ni.stru"
-    data = "data/ni.dat"
+    ciffile = "data/ni.cif"
+    data = "data/ni-q27r100-neutron.gr"
 
     # Make the recipe
-    recipe = makeRecipe(strufile, data)
+    recipe = makeRecipe(ciffile, data)
 
     # Optimize
     scipyOptimize(recipe)

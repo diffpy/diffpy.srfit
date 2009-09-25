@@ -29,33 +29,19 @@ import os
 
 import numpy
 
-from pyobjcryst.crystal import Crystal
-from pyobjcryst.atom import Atom
-from pyobjcryst.scatteringpower import ScatteringPowerAtom
+from pyobjcryst.crystal import CreateCrystalFromCIF
 
-from diffpy.srfit.pdf import PDFGenerator
+from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.structure.diffpystructure import StructureParSet
 
 from gaussianrecipe import scipyOptimize, parkOptimize
-
-def makeNi():
-
-    sp = ScatteringPowerAtom("Ni", "Ni")
-    sp.Biso = 8*numpy.pi**2*0.003
-    #sp.B11 = sp.B22 = sp.B33 = 8*numpy.pi**2*0.003
-    atom = Atom(0, 0, 0, "Ni", sp)
-
-    crystal = Crystal(3.52, 3.52, 3.52, "225")
-    crystal.AddScatterer(atom)
-
-    return crystal
+from crystalpdf import plotResults
 
 ####### Example Code
 
-def makeRecipe(datname):
+def makeRecipe(ciffile, datname):
     """Create a recipe that uses the IntensityGenerator.
 
     This will create a FitContribution that uses the IntensityGenerator,
@@ -67,13 +53,14 @@ def makeRecipe(datname):
     profile = Profile()
 
     # Load data and add it to the profile
-    x, y, junk, u = numpy.loadtxt(datname, unpack=True)
-    profile.setObservedProfile(x, y, u)
-    profile.setCalculationRange(0, 20, 0.05)
+    parser = PDFParser()
+    parser.parseFile(datname)
+    profile.loadParsedData(parser)
+    profile.setCalculationRange(xmax = 20)
 
     ## The ProfileGenerator
     generator = PDFGenerator("G")
-    stru = makeNi()
+    stru = CreateCrystalFromCIF(file(ciffile))
     generator.setPhase(stru)
     generator.setQmax(40.0)
     
@@ -96,44 +83,21 @@ def makeRecipe(datname):
     # We don't need to constrain 'b' and 'c', this is already done for us,
     # consistent with the space group of the crystal.
 
-    Biso = recipe.newVar("Biso")
+    Biso = recipe.newVar("Biso", 0.5)
     for scatterer in phase.getScatterers():
         recipe.constrain(scatterer.Biso, Biso)
 
     # Give the recipe away so it can be used!
     return recipe
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-
-    # All this should be pretty familiar by now.
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
-    r = recipe.nickel.profile.x
-
-    g = recipe.nickel.profile.y
-    gcalc = recipe.nickel.profile.ycalc
-    diff = g - gcalc - 0.5 * max(g)
-
-    import pylab
-    pylab.plot(r,g,'bo',label="G(r) Data")
-    pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,diff,'g-',label="G(r) diff")
-    pylab.xlabel("$r (\AA)$")
-    pylab.ylabel("$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
-
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    data = "data/ni.dat"
+    ciffile = "data/ni.cif"
+    data = "data/ni-q27r100-neutron.gr"
 
     # Make the recipe
-    recipe = makeRecipe(data)
+    recipe = makeRecipe(ciffile, data)
 
     # Optimize
     scipyOptimize(recipe)

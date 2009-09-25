@@ -86,6 +86,30 @@ class PDFGenerator(ProfileGenerator):
 
         return
 
+    def processMetaData(self):
+        """Process the metadata once it gets set."""
+        stype = self.meta.get("stype")
+        if stype is not None:
+            self.setScatteringType(stype)
+
+        qmax = self.meta.get("qmax")
+        if qmax is not None:
+            self.setQmax(qmax)
+
+        parnames = ['delta1', 'delta2', 'qbroad', 'qdamp']
+
+        for name in parnames:
+            val = self.meta.get(name)
+            if val is not None:
+                par = self.get(njuame)
+                par.setValue(val)
+
+        scale = self.meta.get('dscale')
+        if scale is not None:
+            self.scale.setValue(scale)
+
+        return
+
     def setScatteringType(self, type = "X"):
         """Set the scattering type.
         

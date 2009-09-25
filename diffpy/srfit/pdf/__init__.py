@@ -18,6 +18,7 @@
 """
 
 from pdfgenerator import PDFGenerator
+from pdfparser import PDFParser
 
 # package version
 from diffpy.srfit.version import __version__

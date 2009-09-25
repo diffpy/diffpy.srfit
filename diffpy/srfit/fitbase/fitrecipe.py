@@ -28,7 +28,7 @@ using FitRecipe.
 
 """
 
-from numpy import concatenate, sqrt, inf, dot
+from numpy import concatenate, sqrt, dot
 
 from diffpy.srfit.util.ordereddict import OrderedDict
 from .parameter import ParameterProxy

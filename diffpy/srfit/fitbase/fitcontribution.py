@@ -23,11 +23,6 @@ See the examples in the documention for how to use a FitContribution.
 
 """
 
-from numpy import concatenate, sqrt, inf, dot
-
-from diffpy.srfit.equation import Equation
-from diffpy.srfit.equation.builder import EquationFactory
-
 from .parameterset import ParameterSet
 from .recipeorganizer import equationFromString
 from .parameter import ParameterProxy

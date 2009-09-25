@@ -16,8 +16,8 @@
 
 Profile holds the arrays representing an observed profile, a selected subset of
 the observed profile and a calculated profile. Profiles are used by Calculators
-to store a calculated signal, and by FitContributions to help calculate a residual
-equation.
+to store a calculated signal, and by FitContributions to help calculate a
+residual equation.
 
 """
 
@@ -49,6 +49,8 @@ class Profile(object):
     xpar    --  A Parameter that stores x (named "x").
     ypar    --  A Parameter that stores y (named "y").
     dypar   --  A Parameter that stores dy (named "dy").
+    meta    --  A dictionary of metadata. This is only set if provided by a
+                parser.
 
     """
 
@@ -70,6 +72,17 @@ class Profile(object):
                   lambda self, val : self.ypar.setValue(val) )
     dy = property( lambda self : self.dypar.getValue(),
                    lambda self, val : self.dypar.setValue(val) )
+
+    def loadParsedData(self, parser):
+        """Load parsed data from a ProfileParser.
+
+        This sets the xobs, yobs, dyobs arrays as well as the metadata.
+
+        """
+        x, y, junk, dy = parser.getData()
+        self.meta = dict(parser.getMetaData())
+        self.setObservedProfile(x, y, dy)
+        return
 
     def setObservedProfile(self, xobs, yobs, dyobs = None):
         """Set the observed profile.

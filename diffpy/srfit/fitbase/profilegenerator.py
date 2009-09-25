@@ -124,8 +124,6 @@ class ProfileGenerator(ParameterSet):
                     will store the calculated signal.
 
         """
-        # FIXME - When data parsers are implemented, this should use the
-        # metadata to automatically configure the ProfileGenerator.
         if profile is not self.profile:
 
             # Stop watching the parameters
@@ -141,6 +139,18 @@ class ProfileGenerator(ParameterSet):
             self.clicker.addSubject(self.profile.dypar.clicker)
 
             self.clicker.click()
+
+            self.meta.update( profile.meta )
+
+            self.processMetaData()
+        return
+
+    def processMetaData(self):
+        """Process the metadata.
+
+        This can be used to configure a ProfileGenerator upon a change in the
+        metadata. This method gets called whenever the Profile is set.
+        """
         return
 
     # Generator methods. These are used when the ProfileGenerator is called from

@@ -63,6 +63,7 @@ class Profile(object):
         self.xpar = Parameter("x")
         self.ypar = Parameter("y")
         self.dypar = Parameter("dy")
+        self.meta = {}
         return
 
     # We want x, y and dy to stay in-sync with xpar, ypar and dypar

@@ -98,7 +98,7 @@ def constrainAsSpaceGroup(stru, sg, scatterers = None, sgoffset = [0, 0, 0],
 
             Uijs.append(Uij)
 
-    g = SymmetryConstraints(sg, positions, Uijs, sgoffset)
+    g = SymmetryConstraints(sg, positions, Uijs, sgoffset=sgoffset)
 
     # Start by creating the position Parameters
     xyznames = []
@@ -172,7 +172,7 @@ def constrainAsSpaceGroup(stru, sg, scatterers = None, sgoffset = [0, 0, 0],
 
     return (xyznames, uijnames)
 
-def constrainSpaceGroup(stru, sg):
+def constrainSpaceGroup(stru, sg, sgoffset = [0, 0, 0]):
     """Constrain structure Parameters according to its space group.
 
     This forces the lattice parameters to conform to the space group symmetry.
@@ -183,6 +183,7 @@ def constrainSpaceGroup(stru, sg):
     stru    --  A BaseStructure object.
     sg      --  The space group number or symbol (compatible with
                 diffpy.Structure.SpaceGroups.GetSpaceGroup.
+    sgoffset--  Optional offset for sg origin (default [0, 0, 0]).
 
     The lattice constraints are applied as following.
     
@@ -209,6 +210,7 @@ def constrainSpaceGroup(stru, sg):
 
     """
     sg = SpaceGroups.GetSpaceGroup(sg)
+    print sg
 
     ## Constrain the lattice
     # First clear any constraints or constant variables in the lattice
@@ -225,7 +227,6 @@ def constrainSpaceGroup(stru, sg):
 
     f = _constraintMap[system]
     f(lattice)
-
 
     ## Constrain related positions
 
@@ -250,8 +251,9 @@ def constrainSpaceGroup(stru, sg):
                 scatterer.z.getValue()]
 
         # Get a formula for this scatterer
-        g = GeneratorSite(sg, xyz)
+        g = GeneratorSite(sg, xyz, sgoffset=sgoffset)
         f = g.positionFormula(xyz, xyzsymbols=("x","y","z"))
+        print f
 
         # Extract the constraint equation from the formula
         for parname, formula in f.items():

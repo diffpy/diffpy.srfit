@@ -1319,7 +1319,13 @@ class ObjCrystParSet(BaseStructure):
 
     def getSpaceGroup(self):
         """Get the HM space group symbol for the structure."""
-        return self.stru.GetSpaceGroup().GetName()
+        sg = self.stru.GetSpaceGroup().GetName()
+        extn = self.stru.GetSpaceGroup().GetExtension()
+        extnstr = ":%s"%extn
+        if sg.endswith(extnstr):
+            sg = sg[:-len(extnstr)]
+        return sg
+
 
 
 # End class ObjCrystParSet

@@ -16,7 +16,6 @@
 
 """
 
-
 import numpy
 
 from diffpy.srfit.fitbase import ProfileGenerator
@@ -26,6 +25,9 @@ from diffpy.srreal.pdf_ext import PDFCalculator
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
+# FIXME - Need to decouple the non-structural parameters from the
+# diffpy.Structure object, otherwise, we can't share the structural
+# ParameterSet between different Generators.
 
 __all__ = ["PDFGenerator"]
 
@@ -158,7 +160,7 @@ class PDFGenerator(ProfileGenerator):
         self._calc._getDoubleAttr("qmin")
         return
 
-    def setPhase(self, stru, name = None):
+    def setPhase(self, stru = None, name = None, parset = None):
         """Add a phase to the calculated structure.
 
         This creates a StructureParSet or ObjCrystParSet that adapts stru to a
@@ -167,16 +169,27 @@ class PDFGenerator(ProfileGenerator):
         ParameterSet will be managed by this generator.
 
         stru    --  diffpy.Structure.Structure or pyobjcryst.crystal.Crystal
-                    instance
+                    instance. Default None.
         name    --  A name to give the structure. If name is None (default),
                     then the name will be set as "phase".
+        parset  --  A ParameterSet that hoolds the structural information. This
+                    can be used to share the phase between multiple
+                    PDFGenerators, and have the changes in one reflect in
+                    another. If both stru and parset are specified, only parset
+                    is used. Default None. 
+
+        Raises ValueError if neither stru nor parset is specified.
 
         """
 
         if name is None:
             name = "phase"
 
-        parset = struToParameterSet(stru, name)
+        if stru is None and parset is None:
+            raise ValueError("One of stru or parset must be specified")
+
+        if parset is None:
+            parset = struToParameterSet(stru, name)
 
         self._phase = parset
 

@@ -172,7 +172,7 @@ def constrainAsSpaceGroup(stru, sg, scatterers = None, sgoffset = [0, 0, 0],
 
     return (xyznames, uijnames)
 
-def constrainSpaceGroup(stru, sg, sgoffset = [0, 0, 0]):
+def constrainSpaceGroup(stru, sg):
     """Constrain structure Parameters according to its space group.
 
     This forces the lattice parameters to conform to the space group symmetry.
@@ -183,7 +183,6 @@ def constrainSpaceGroup(stru, sg, sgoffset = [0, 0, 0]):
     stru    --  A BaseStructure object.
     sg      --  The space group number or symbol (compatible with
                 diffpy.Structure.SpaceGroups.GetSpaceGroup.
-    sgoffset--  Optional offset for sg origin (default [0, 0, 0]).
 
     The lattice constraints are applied as following.
     
@@ -250,7 +249,7 @@ def constrainSpaceGroup(stru, sg, sgoffset = [0, 0, 0]):
                 scatterer.z.getValue()]
 
         # Get a formula for this scatterer
-        g = GeneratorSite(sg, xyz, sgoffset=sgoffset)
+        g = GeneratorSite(sg, xyz)
         f = g.positionFormula(xyz, xyzsymbols=("x","y","z"))
 
         # Extract the constraint equation from the formula

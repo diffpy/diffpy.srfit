@@ -210,7 +210,6 @@ def constrainSpaceGroup(stru, sg, sgoffset = [0, 0, 0]):
 
     """
     sg = SpaceGroups.GetSpaceGroup(sg)
-    print sg
 
     ## Constrain the lattice
     # First clear any constraints or constant variables in the lattice
@@ -253,7 +252,6 @@ def constrainSpaceGroup(stru, sg, sgoffset = [0, 0, 0]):
         # Get a formula for this scatterer
         g = GeneratorSite(sg, xyz, sgoffset=sgoffset)
         f = g.positionFormula(xyz, xyzsymbols=("x","y","z"))
-        print f
 
         # Extract the constraint equation from the formula
         for parname, formula in f.items():

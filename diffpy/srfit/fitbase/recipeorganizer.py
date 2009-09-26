@@ -27,7 +27,7 @@ from itertools import chain, ifilter
 import re
 
 from .constraint import Constraint
-from .restraint import Restraint, BoundsRestraint
+from .restraint import Restraint
 from .parameter import Parameter
 
 from diffpy.srfit.util.clicker import Clicker
@@ -663,7 +663,7 @@ class RecipeOrganizer(RecipeContainer):
         return res
 
     def unrestrain(self, res):
-        """Remove a Restraint or BoundsRestraint from the RecipeOrganizer.
+        """Remove a Restraint from the RecipeOrganizer.
         
         res     --  A Restraint returned from the 'restrain' method.
 

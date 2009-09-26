@@ -308,26 +308,9 @@ class FitRecipe(RecipeOrganizer):
         rset = set(self._restraints)
         cdict = {}
 
-        # We let constraints closer to the FitRecipe override all others.
-        # Constraints on the same parameter in different organizers cannot be
-        # resolved without some guesswork, so throw an error instead.
-
-        def __checkOverlap(cdict, constraints):
-            pars = set(cdict.keys()).intersection( constraints.keys() )
-            if pars:
-                m = "There are multiple internal constraints on '%s'"%\
-                        pars.pop()
-                raise AttributeError(m)
-            return
-
         for org in self._contributions.values() + self._parsets.values():
             rset.update( org._getRestraints() )
-            constraints = org._getConstraints()
-            __checkOverlap(cdict, constraints)
-            cdict.update(constraints)
-
-        # Update with local constraints last
-        __checkOverlap(cdict, self._constraints)
+            cdict.update( org._getConstraints() )
         cdict.update(self._constraints)
 
         # The order of the restraint list does not matter

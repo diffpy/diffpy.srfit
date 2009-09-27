@@ -215,10 +215,10 @@ class PDFGenerator(ProfileGenerator):
         parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
 
         for pname in parnames:
-            getter = _makeGetter(pname)
-            setter = _makeSetter(pname)
+            getter = self._calc.__class__._getDoubleAttr
+            setter = self._calc.__class__._setDoubleAttr
             self.addParameter(
-                ParameterWrapper(pname, self._calc, getter, setter)
+                ParameterWrapper(pname, self._calc, getter, setter, pname)
                 )
         return
 

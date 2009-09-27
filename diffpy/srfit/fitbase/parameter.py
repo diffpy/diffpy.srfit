@@ -144,16 +144,18 @@ class ParameterWrapper(Parameter):
         getter  --  The unbound function that can be used to access the
                     attribute containing the paramter value. getter(obj) should
                     return the Parameter value.  If getter is None (default),
-                    it is assumed that an attribute is accessed directly.
+                    it is assumed that an attribute is accessed directly. If
+                    attr is also specified, then the Parameter value will be
+                    accessed via getter(obj, attr).
         setter  --  The unbound function that can be used to modify the
                     attribute containing the paramter value. setter(obj, value)
                     should set the attribute to the passed value. If setter is
                     None (default), it is assumed that an attribute is accessed
-                    directly.
+                    directly. If attr is also specified, then the Parameter
+                    value will be set via setter(obj, attr, value).
         attr    --  The name of the attribute that contains the value of the
                     parameter. If attr is None (default), then both getter and
-                    setter must be specified. attr takes precedent over getter
-                    and setter.
+                    setter must be specified.
 
 
         raises ValueError if exactly one of getter or setter is not None, or if
@@ -171,8 +173,15 @@ class ParameterWrapper(Parameter):
         self.attr = attr
 
         if attr is not None:
-            self.getter = lambda obj: getattr(obj, self.attr)
-            self.setter = lambda obj, val: setattr(obj, self.attr, val)
+            if getter is None:
+                self.getter = lambda obj: getattr(obj, self.attr)
+            else:
+                self.getter = lambda obj: getter(obj, self.attr)
+
+            if setter is None:
+                self.setter = lambda obj, val: setattr(obj, self.attr, val)
+            else:
+                self.setter = lambda obj, val: setter(obj, self.attr, val)
 
         value = self.getValue()
         Parameter.__init__(self, name, value)

@@ -29,6 +29,8 @@ using namespace boost::python;
 
 namespace {
 
+typedef unsigned long long state_type;
+
 class Clicker
 {
 
@@ -153,15 +155,15 @@ class Clicker
 
 
     /* data members */
-    static unsigned long long numclicks;
-    unsigned long long state;
+    static state_type numclicks;
+    state_type state;
 
     std::set<Clicker*> observers;
     std::set<Clicker*>::iterator it;
 
 };
 
-unsigned long long Clicker::numclicks = 0;
+state_type Clicker::numclicks = 0;
 
 
 // FlatClicker - This clicker class avoids walking the network during update.
@@ -179,8 +181,6 @@ class FlatClicker
     /// Do not expose
     void addObserverDown(FlatClicker* other)
     {
-        assert(other != NULL);
-
         observers.insert(other);
 
         // Pass the observer on to subjects
@@ -193,29 +193,23 @@ class FlatClicker
     }
 
     /// Add a FlatClicker that observes this one.
-    void addObserver(FlatClicker* other)
+    void addObserver(FlatClicker& other)
     {
-        if( other == NULL )
-        {
-            PyErr_SetString(PyExc_ValueError, "Cannot add null clicker");
-            throw_error_already_set();
-        }
-
         // Make sure we don't create loops
-        if( other == this ||
-            other->observers.find(this) != other->observers.end())
+        if( &other == this ||
+            other.observers.find(this) != other.observers.end())
         {
             PyErr_SetString(PyExc_ValueError, "Cannot create loop");
             throw_error_already_set();
         }
 
         // Add the new observer and pass it down.
-        addObserverDown(other);
+        addObserverDown(&other);
         // Make we are a direct subject of the observer.
-        other->subjects.insert(this);
+        other.subjects.insert(this);
         // Add other's observers as well
         std::set<FlatClicker*>::iterator it;
-        for(it = other->observers.begin(); it != other->observers.end(); ++it)
+        for(it = other.observers.begin(); it != other.observers.end(); ++it)
         {
             addObserverDown(*it);
         }
@@ -223,31 +217,24 @@ class FlatClicker
     }
 
     /// Add a FlatClicker to observe
-    void addSubject(FlatClicker* other)
+    void addSubject(FlatClicker& other)
     {
-        if( other == NULL )
-        {
-            PyErr_SetString(PyExc_ValueError, "Cannot add null clicker");
-            throw_error_already_set();
-        }
-        other->addObserver(this);
+        other.addObserver(*this);
     }
 
     /// Remove the clicker as an observer all the way down the tree.
     /// Does not remove the clicker at the top level.
     /// Do not expose
-    void removeObserverDown(FlatClicker* other)
+    void removeObserverDown(FlatClicker& other)
     {
-        assert(other != NULL);
-
         // If we're one of other's direct subject's, then we don't want to
-        // break the link. We only break the link if requested of us directly.
-        if( other->subjects.find(this) != other->subjects.end() )
+        // break the link. We only break the link in removeObserver.
+        if( other.subjects.find(this) != other.subjects.end() )
         {
             return;
         }
 
-        observers.erase( other );
+        observers.erase( &other );
 
         std::set<FlatClicker*>::iterator it;
         for(it=subjects.begin(); it!=subjects.end(); ++it)
@@ -259,59 +246,33 @@ class FlatClicker
     /// Remove an observer
     ///
     /// This has no effect when the passed FlatClicker is not an observer
-    void removeObserver(FlatClicker* other)
+    void removeObserver(FlatClicker& other)
     {
-        if( other == NULL )
+        if(observers.find(&other) != observers.end())
         {
-            PyErr_SetString(PyExc_ValueError, "Cannot remove null clicker");
-            throw_error_already_set();
-        }
-
-        if(observers.find(other) != observers.end())
-        {
-            observers.erase( other );
-            other->subjects.erase(this);
-
-            for(it=subjects.begin(); it!=subjects.end(); ++it)
-            {
-                (*it)->removeObserverDown(other);
-            }
+            other.subjects.erase(this);
+            removeObserverDown(other);
         }
     }
 
     /// Remove a subject
     ///
     /// This has no effect when the passed FlatClicker is not an observer
-    void removeSubject(FlatClicker* other)
+    void removeSubject(FlatClicker& other)
     {
-        if( other == NULL )
-        {
-            PyErr_SetString(PyExc_ValueError, "Cannot remove null clicker");
-            throw_error_already_set();
-        }
-        other->removeObserver(this);
+        other.removeObserver(*this);
     }
 
     /// Indicate if the passed FlatClicker is a direct observer of this FlatClicker
-    bool hasObserver(FlatClicker* other)
+    bool hasObserver(FlatClicker& other)
     {
-        if( other == NULL )
-        {
-            PyErr_SetString(PyExc_ValueError, "Cannot verify null clicker");
-            throw_error_already_set();
-        }
-        return other->hasSubject(this);
+        return other.hasSubject(*this);
     }
 
     /// Indicate if the passed FlatClicker is observed by this FlatClicker
-    bool hasSubject(FlatClicker* other)
+    bool hasSubject(FlatClicker& other)
     {
-        if( other == NULL )
-        {
-            PyErr_SetString(PyExc_ValueError, "Cannot verify null clicker");
-            throw_error_already_set();
-        }
-        return subjects.end() != subjects.find(other);
+        return subjects.end() != subjects.find(&other);
     }
 
     /// Increment the FlatClicker global state, and update
@@ -350,8 +311,8 @@ class FlatClicker
 
 
     /* data members */
-    static unsigned long long numclicks;
-    unsigned long long state;
+    static state_type numclicks;
+    state_type state;
 
     // All observers, throughout the whole network
     std::set<FlatClicker*> observers;
@@ -361,7 +322,7 @@ class FlatClicker
 
 };
 
-unsigned long long FlatClicker::numclicks = 0;
+state_type FlatClicker::numclicks = 0;
 
 // Doc-strings
 

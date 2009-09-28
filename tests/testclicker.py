@@ -88,9 +88,6 @@ class TestClicker(unittest.TestCase):
         self.assertRaises(ValueError, observer.addObserver, c2)
         self.assertRaises(ValueError, c1.addObserver, c1)
 
-        # Try to add None
-        self.assertRaises(ValueError, observer.addObserver, None)
-
         # Click c2
         c2.click()
         self.assertTrue( c2 == observer)

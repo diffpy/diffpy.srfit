@@ -14,6 +14,12 @@
 ########################################################################
 """PDF profile generator.
 
+The PDFGenerator class can take a diffpy.Structure of
+pyobjcryst.crystal.Crystal object and calculate the crystal PDF from it. The
+passed structure object is wrapped in a StructureParameter set, which makes its
+attributes refinable. See the class definition for more details and the
+examples for its use.
+
 """
 
 import numpy
@@ -30,18 +36,6 @@ from diffpy.srreal.pdf_ext import PDFCalculator
 # ParameterSet between different Generators.
 
 __all__ = ["PDFGenerator"]
-
-def _makeGetter(name):
-    return lambda obj: obj._getDoubleAttr(name)
-
-def _makeSetter(name):
-    return lambda obj, val: obj._setDoubleAttr(name, val)
-
-def _makePDFFitGetter(name):
-    return lambda obj: obj[name]
-
-def _makePDFFitSetter(name):
-    return lambda obj, val: obj.__setitem__(name, val)
 
 class PDFGenerator(ProfileGenerator):
     """A class for calculating the PDF from a single crystal structure.
@@ -70,7 +64,7 @@ class PDFGenerator(ProfileGenerator):
     """
 
     def __init__(self, name = "pdf"):
-        """Initialize our generator.
+        """Initialize the generator.
         
         """
         ProfileGenerator.__init__(self, name)
@@ -235,17 +229,17 @@ class PDFGenerator(ProfileGenerator):
         pdfparnames = ['delta1', 'delta2', 'scale']
 
         for pname in pdfparnames:
-            getter = _makePDFFitGetter(pname)
-            setter = _makePDFFitSetter(pname)
+            getter = dict.__getitem__
+            setter = dict.__setitem__
             self.addParameter(
                 ParameterWrapper(pname, self._phase.stru.pdffit, getter,
-                    setter)
+                    setter, pname)
                 )
 
         parnames = ['qbroad', 'qdamp']
         for pname in parnames:
-            getter = _makeGetter(pname)
-            setter = _makeSetter(pname)
+            getter = self._calc.__class__._getDoubleAttr
+            setter = self._calc.__class__._setDoubleAttr
             self.addParameter(
                 ParameterWrapper(pname, self._calc, getter, setter)
                 )
@@ -255,6 +249,7 @@ class PDFGenerator(ProfileGenerator):
 
     def __prepare(self, r):
         """Prepare the calculator when a new r-value is passed."""
+        # TODO - Should we handle non-uniform data?
         self._lastr = r
         self._calc._setDoubleAttr('rstep', r[1] - r[0])
         self._calc._setDoubleAttr('rmin', r[0])

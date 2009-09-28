@@ -41,7 +41,7 @@ loops in the observation structure.
 
 """
 
-from _clicker import Clicker
+from _clicker import FlatClicker as Clicker
 
 # version
 __id__ = "$Id$"

@@ -78,6 +78,9 @@ Classes:
                         its own for the organziation of calculation parameters
                         and evaluation of a profile function.
 
+Various code and design taken from Paul Kienzle's PARK package.
+http://www.reflectometry.org/danse/park.html
+
 """
 
 # package version

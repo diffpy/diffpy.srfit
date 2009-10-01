@@ -298,7 +298,7 @@ class RecipeOrganizer(RecipeContainer):
         self._addParameter(p, check)
         return p
 
-    def _addParameter(self, par, name = None, check=True):
+    def _addParameter(self, par, check=True):
         """Store a Parameter.
 
         Parameters added in this way are registered with the _eqfactory.

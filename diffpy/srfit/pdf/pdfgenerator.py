@@ -97,7 +97,7 @@ class PDFGenerator(ProfileGenerator):
         for name in parnames:
             val = self.meta.get(name)
             if val is not None:
-                par = self.get(njuame)
+                par = self.get(name)
                 par.setValue(val)
 
         scale = self.meta.get('dscale')

@@ -183,7 +183,8 @@ class FitContribution(ParameterSet):
 
         # If we have a Profile already, let the ProfileGenerator know about it.
         if self.profile is not None:
-            calc.setProfile(self.profile)
+            for gen in self._generators.values():
+                gen.setProfile(self.profile)
 
         return
 

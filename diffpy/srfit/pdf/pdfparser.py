@@ -55,7 +55,7 @@ class PDFParser(ProfileParser):
     qdamp       --  Resolution damping factor (float)
     qbroad      --  Resolution broadening factor (float)
     spdiameter  --  Nanoparticle diameter (float)
-    dscale      --  Data scale (float)
+    scale       --  Data scale (float)
     temperature --  Temperature (float)
     doping      --  Doping (float)
 
@@ -132,7 +132,7 @@ class PDFParser(ProfileParser):
         regexp = r"\bdscale *= *(%(f)s)\b" % rx
         res = re.search(regexp, header, re.I)
         if res:
-            meta["dscale"] = float(res.groups()[0])
+            meta["scale"] = float(res.groups()[0])
         # temperature
         regexp = r"\b(?:temp|temperature|T)\ *=\ *(%(f)s)\b" % rx
         res = re.search(regexp, header)

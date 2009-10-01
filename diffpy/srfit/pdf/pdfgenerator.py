@@ -58,8 +58,21 @@ class PDFGenerator(ProfileGenerator):
     qdamp   --  Resolution peak dampening term
 
     Managed ParameterSets:
-    The structure ParameterSet used to calculate the profile is named by the
-    user.
+    The structure ParameterSet (BaseStructure instance) used to calculate the
+    profile is named by the user.
+
+    Usable Metadata:
+    stype   --  The scattering type "X" for x-ray, "N" for neutron (see
+                'setScatteringType').
+    qmax    --  The maximum scattering vector used to generate the PDF (see
+                setQmax).
+    scale   --  See Managed Parameters.
+    delta1  --  See Managed Parameters.
+    delta2  --  See Managed Parameters.
+    qbroad  --  See Managed Parameters.
+    qdamp   --  See Managed Parameters.
+
+
 
     """
 
@@ -100,7 +113,7 @@ class PDFGenerator(ProfileGenerator):
                 par = self.get(name)
                 par.setValue(val)
 
-        scale = self.meta.get('dscale')
+        scale = self.meta.get('scale')
         if scale is not None:
             self.scale.setValue(scale)
 

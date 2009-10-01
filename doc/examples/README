@@ -33,3 +33,18 @@ Advanced:
     Create a nanoparticle PDF calculator using pyobjcryst and refine the C60
     structure to simulated data.
 
+PDF Refinement:
+
+* crystalpdf.py
+    Use diffpy.Structure to model a crystal structure with PDF data using
+    automatic explicit space group constraints.
+
+* crystalpdfobjcryst.py
+    Use pyobjcryst to model a crystal structure with PDF data using automatic
+    implicit space group constraints.
+
+* crystalpdftwophase.py
+    Model a two-phase structure to PDF data.
+
+* crystalpdftwodata.py
+    Model x-ray and neutron data sets simultaneously to the same structure.

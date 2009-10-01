@@ -97,6 +97,7 @@ class PDFGenerator(ProfileGenerator):
 
     def processMetaData(self):
         """Process the metadata once it gets set."""
+        ProfileGenerator.processMetaData(self)
         stype = self.meta.get("stype")
         if stype is not None:
             self.setScatteringType(stype)

@@ -28,7 +28,7 @@ class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 
     Attributes
-    recipe       --  The recipe containing the results.
+    recipe      --  The recipe containing the results.
     cov         --  The covariance matrix from the recipe.
     conresults  --  A dictionary of ContributionResults for each
                     FitContribution, indexed by the FitContribution name.

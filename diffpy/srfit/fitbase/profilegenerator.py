@@ -77,7 +77,6 @@ class ProfileGenerator(ParameterSet):
                         'restrain' or 'confine' methods.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used create Equations from string.
-
     """
 
     def __init__(self, name):
@@ -140,9 +139,9 @@ class ProfileGenerator(ParameterSet):
 
             self.clicker.click()
 
-            self.meta.update( profile.meta )
-
-            self.processMetaData()
+        # Process the metadata even if the profile is the same. The metadata
+        # may have changed.
+        self.processMetaData()
         return
 
     def processMetaData(self):
@@ -151,6 +150,7 @@ class ProfileGenerator(ParameterSet):
         This can be used to configure a ProfileGenerator upon a change in the
         metadata. This method gets called whenever the Profile is set.
         """
+        self.meta.update( self.profile.meta )
         return
 
     # Generator methods. These are used when the ProfileGenerator is called from

@@ -28,7 +28,7 @@ from diffpy.srfit.fitbase.parameter import Parameter
 __all__ = ["constrainAsSpaceGroup", "SpaceGroupParameters"]
 
 def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None, sgoffset = [0, 0, 0],
-        constrainlat = True, constrainadps = False, adpsymbols = stdUsymbols):
+        constrainlat = True, constrainadps = True, adpsymbols = stdUsymbols):
         """Constrain the structure to the space group.
 
         This applies space group constriants to a StructureParSet with P1
@@ -36,21 +36,21 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None, sgoffset = [0, 0, 
         specified space group. The ADPs and lattice may be constrained as well.
 
         Arguments:
-        phase   --  A BaseStructure object.
+        phase       --  A BaseStructure object.
         sgsymbol    --  The space group number or symbol (compatible with
-                    diffpy.Structure.SpaceGroups.GetSpaceGroup.
+                        diffpy.Structure.SpaceGroups.GetSpaceGroup.
         sgoffset    --  Optional offset for sg origin (default [0, 0, 0]).
-        scatterers  --  The scatterer ParameterSets to constrain. If scatterers is
-                    None (default), then all scatterers accessible from
-                    phase.getScatterers will be constrained.
+        scatterers  --  The scatterer ParameterSets to constrain. If scatterers
+                        is None (default), then all scatterers accessible from
+                        phase.getScatterers will be constrained.
         constrainlat    --  Flag indicating whether to constrain the lattice
-                    (default True).
-        constrainadps   --  Flag indicating whether to constrain the ADPs (default
-                    False).
+                        (default True).
+        constrainadps   --  Flag indicating whether to constrain the ADPs
+                        (default True).
         adpsymbols  --  A list of the ADP names. By default this is equal to
-                    diffpy.Structure.SymmetryUtilities.stdUsymbols (U11, U22,
-                    etc.). The names must be given in the same order as
-                    stdUsymbols.
+                        diffpy.Structure.SymmetryUtilities.stdUsymbols (U11,
+                        U22, etc.). The names must be given in the same order
+                        as stdUsymbols.
 
         New Parameters that are used in constraints are created within a
         SpaceGroupParameters object, which is returned from this function.

@@ -103,8 +103,8 @@ class FitResults(object):
         self.varvals = recipe.getValues()
 
         # Store the constraint information
-        self.connames = [con.par.name for con in recipe._constraintlist]
-        self.convals = [con.par.getValue() for con in recipe._constraintlist]
+        self.connames = [con.par.name for con in recipe._oconstraints]
+        self.convals = [con.par.getValue() for con in recipe._oconstraints]
 
         # Calculate the covariance
         self._calculateCovariance()
@@ -183,14 +183,14 @@ class FitResults(object):
 
             # The constraints derivatives
             cond = []
-            for con in recipe._constraintlist:
+            for con in recipe._oconstraints:
                 con.update()
                 cond.append(con.par.getValue())
 
             pvals[k] = v - h
             rk -= self.recipe.residual(pvals)
 
-            for i, con in enumerate(recipe._constraintlist):
+            for i, con in enumerate(recipe._oconstraints):
                 con.update()
                 cond[i] -= con.par.getValue()
                 cond[i] /= 2*h
@@ -201,7 +201,7 @@ class FitResults(object):
             r.append(rk/(2*h))
             
         # Reset the constrained parameters to their original values
-        for con in recipe._constraintlist:
+        for con in recipe._oconstraints:
             con.update()
 
         self._dcon = numpy.vstack(conr).T
@@ -524,7 +524,7 @@ class ContributionResults(object):
         self._calculateMetrics()
 
         # Find the parameters
-        for i, constraint in enumerate(recipe._constraintlist):
+        for i, constraint in enumerate(recipe._oconstraints):
             par = constraint.par
             loc = con._locateManagedObject(par)
             if loc:

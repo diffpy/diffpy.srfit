@@ -98,13 +98,25 @@ class TestFitRecipe(unittest.TestCase):
 
         # Try some constraints
         # Make c = 2*A
-        self.recipe.addVar(self.recipe.cont.A)
-        self.recipe.constrain(self.fitcontribution.c, "2*A")
+        par = self.recipe.newVar("Avar")
+        self.assertEquals(None, par.getValue())
+        self.recipe.constrain(self.recipe.cont.A, par)
+        self.assertEquals(self.recipe.cont.A.getValue(), par.getValue())
+        # c is constrained to a constrained parameter.
+        self.recipe.constrain(self.fitcontribution.c, "2*A", 
+                {"A": self.recipe.cont.A})
         # This should evaluate to sin(x+2)
         x = self.profile.x
         y = sin(x+2)
         res = self.recipe.residual([self.recipe.cont.A.getValue()])
         self.assertTrue( array_equal(y-self.profile.y, res) )
+
+        # Make sure that the constraints are sorted correctly.
+        acon = self.recipe._constraints[self.recipe.cont.A]
+        ccon = self.recipe._constraints[self.fitcontribution.c]
+        cidx = self.recipe._oconstraints.index(ccon)
+        aidx = self.recipe._oconstraints.index(acon)
+        self.assertTrue(aidx < cidx)
 
         # Now try some restraints. We want c to be exactly zero. It should give
         # a penalty of (c-0)**2, which is 4 in this case
@@ -123,7 +135,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Remove the restraint and variable
         self.recipe.unrestrain(r1)
-        self.recipe.delVar(self.recipe.A)
+        self.recipe.delVar(self.recipe.Avar)
         res = self.recipe.residual([])
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res) )
@@ -172,7 +184,6 @@ class TestFitRecipe(unittest.TestCase):
         self.assertAlmostEquals(len(res), dot(res, res))
 
         return
-
 
 if __name__ == "__main__":
 

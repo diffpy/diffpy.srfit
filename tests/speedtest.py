@@ -421,7 +421,7 @@ def profileTest():
 if __name__ == "__main__":
 
     for i in range(1, 13):
-        speedTest3(i)
+        speedTest2(i)
     """
     for i in range(1, 9):
         weightedTest(i)

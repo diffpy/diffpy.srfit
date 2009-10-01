@@ -47,13 +47,13 @@ class FitRecipe(RecipeOrganizer):
                         the system during a refinement.
     _confclicker    --  A Clicker for recording configuration changes, esp.
                         additions and removal of managed objects.
-    _constraintlist --  An ordered list of the constraints from this and all
-                        sub-components.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
     _calculators    --  A managed dictionary of Calculators.
     _contributions  --  A managed OrderedDict of FitContributions.
+    _oconstraints   --  An ordered list of the constraints from this and all
+                        sub-components.
     _parameters     --  A managed OrderedDict of parameters (in this case the
                         parameters are varied).
     _parsets        --  A managed dictionary of ParameterSets.
@@ -79,7 +79,7 @@ class FitRecipe(RecipeOrganizer):
         """Initialization."""
         RecipeOrganizer.__init__(self, name)
         self.fithook = FitHook()
-        self._constraintlist = []
+        self._oconstraints = []
         self._restraintlist = []
 
         self._weights = []
@@ -189,7 +189,7 @@ class FitRecipe(RecipeOrganizer):
 
         # Update the constraints. These are ordered such that the list only
         # needs to be cycled once.
-        for con in self._constraintlist:
+        for con in self._oconstraints:
             con.update()
 
         # Calculate the bare chiv
@@ -318,16 +318,16 @@ class FitRecipe(RecipeOrganizer):
 
         # Reorder the constraints. Constraints are ordered such that a given
         # constraint is placed before its dependencies.
-        self._constraintlist = cdict.values()
+        self._oconstraints = cdict.values()
 
         # Create a depth-1 map of the constraint dependencies
         depmap = {}
-        for con in self._constraintlist:
+        for con in self._oconstraints:
             depmap[con] = set()
             # Now check the constraint's equation for constrained arguments
             for arg in con.eq.args:
-                if arg in self._constraintlist:
-                    depmap[con].add( arg )
+                if arg in cdict:
+                    depmap[con].add( cdict[arg] )
 
         # Turn the dependency map into multi-level map.
         def _extendDeps(con):
@@ -340,18 +340,24 @@ class FitRecipe(RecipeOrganizer):
         for con in depmap:
             depmap[con] = _extendDeps(con)
 
-        # Now sort the constraints based on the dependency map
+        # Now sort the constraints based on the dependency map.
         def cmp(x, y):
-            # If y is a dependency of x, then y must come first
-            if y in depmap[x]:
+            # x == y if neither of them have dependencies
+            if not depmap[x] and not depmap[y]:
+                return 0
+            # x > y if y is a dependency of x
+            # x > y if y has no dependencies
+            if y in depmap[x] or not depmap[y]:
                 return 1
-            # If x is a dependency of y, then x must come first
-            if x in depmap[y]:
+            # x < y if x is a dependency of y
+            # x < y if x has no dependencies
+            if x in depmap[y] or not depmap[x]:
                 return -1
-            # Otherwise, these are equivalant
+            # If there are dependencies, but there is no relationship, the
+            # constraints are equivalent
             return 0
 
-        self._constraintlist.sort(cmp)
+        self._oconstraints.sort(cmp)
 
         return
 
@@ -589,6 +595,14 @@ class FitRecipe(RecipeOrganizer):
         Raises ValueError if par is marked as constant.
 
         """
+        if isinstance(par, str):
+            name = par
+            par = self.get(name)
+            if par is None:
+                par = ns.get(name)
+            if par is None:
+                raise ValueError("The parameter '%s' cannot be found"%name)
+
         if con in self._parameters.keys():
             con = self.get(con)
 

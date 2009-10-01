@@ -125,14 +125,14 @@ class TestSGConstraints(unittest.TestCase):
         stru = makeLaMnO3_P1()
         parset = StructureParSet(stru, "LaMnO3")
 
-        xyznames, uijnames = constrainAsSpaceGroup(parset, "P b n m",
+        sgpars = constrainAsSpaceGroup(parset, "P b n m",
                 scatterers = parset.getScatterers()[::2],
                 constrainadps = True)
 
         # Make sure that the new parameters were created
-        for pname in xyznames + uijnames:
-            self.assertNotEquals(None, parset.get(pname) )
-            self.assertNotEquals(None, parset.get(pname).getValue() )
+        for par in sgpars.iterPars():
+            self.assertNotEquals(None, par)
+            self.assertNotEquals(None, par.getValue() )
 
         # Test the unconstrained atoms
         for scatterer in parset.getScatterers()[1::2]:

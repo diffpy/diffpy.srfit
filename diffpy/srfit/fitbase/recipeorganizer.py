@@ -557,7 +557,7 @@ class RecipeOrganizer(RecipeContainer):
 
         Note that only one constraint can exist on a Parameter at a time.
 
-        par     --  The Parameter to constrain.
+        par     --  The name of a Parameter or a Parameter to constrain.
         con     --  A string representation of the constraint equation or a
                     Parameter to constrain to.  A constraint equation must
                     consist of numpy operators and "known" Parameters.
@@ -568,11 +568,21 @@ class RecipeOrganizer(RecipeContainer):
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
+        Raises ValueError if par is a string but not part of this object or in
+        ns.
         Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitRecipe and that is not defined in ns.
+        this object and that is not defined in ns.
         Raises ValueError if par is marked as constant.
 
         """
+        if isinstance(par, str):
+            name = par
+            par = self.get(name)
+            if par is None:
+                par = ns.get(name)
+            if par is None:
+                raise ValueError("The parameter '%s' cannot be found"%name)
+
         if par.const:
             raise ValueError("The parameter '%s' is constant"%par)
 
@@ -609,6 +619,16 @@ class RecipeOrganizer(RecipeContainer):
             self._confclicker.click()
 
         return
+
+    def getConstrainedPars(self, recurse = False):
+        """Get a list of constrained managed Parameters in this object.
+
+        recurse --  Recurse into managed objects and retrive their constrained
+                    Parameters as well (default False).
+
+        """
+        const = self._getConstraints(recurse)
+        return const.keys()
 
     def clearConstraints(self):
         """Clear all constraints."""
@@ -682,26 +702,36 @@ class RecipeOrganizer(RecipeContainer):
             self.unrestrain(res)
         return
 
+    def _getConstraints(self, recurse = True):
+        """Get the Constraints for this and managed sub-objects.
 
-    def _getConstraints(self):
-        """Get the Constraints for this and managed sub-objects."""
+        This returns a {Parameter : Constraint} dictionary.
+
+        """
 
         constraints = {}
-        f = lambda m : hasattr(m, "_getConstraints")
-        for m in ifilter(f, self._iterManaged()):
-            constraints.update( m._getConstraints() )
+
+        if recurse:
+            f = lambda m : hasattr(m, "_getConstraints")
+            for m in ifilter(f, self._iterManaged()):
+                constraints.update( m._getConstraints(recurse) )
 
         # Update with local constraints last. These override the others.
         constraints.update(self._constraints)
 
         return constraints
 
-    def _getRestraints(self):
-        """Get the Restraints for this and embedded ParameterSets."""
+    def _getRestraints(self, recurse = True):
+        """Get the Restraints for this and embedded ParameterSets.
+        
+        This returns a set of Restraint objects.
+
+        """
         restraints = set(self._restraints)
-        f = lambda m : hasattr(m, "_getRestraints")
-        for m in ifilter(f, self._iterManaged()):
-            restraints.update( m._getRestraints() )
+        if recurse:
+            f = lambda m : hasattr(m, "_getRestraints")
+            for m in ifilter(f, self._iterManaged()):
+                restraints.update( m._getRestraints(recurse) )
 
         return restraints
 

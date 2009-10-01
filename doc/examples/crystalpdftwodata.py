@@ -156,9 +156,9 @@ def plotResults(recipe):
 
     import pylab
     pylab.subplot(2, 1, 1)
-    pylab.plot(xr,40+xg,'bo',label="G(r) x-ray Data")
-    pylab.plot(xr,40+xgcalc,'r-',label="G(r) x-ray Fit")
-    pylab.plot(xr,40+xdiff,'g-',label="G(r) x-ray diff")
+    pylab.plot(xr,xg,'bo',label="G(r) x-ray Data")
+    pylab.plot(xr,xgcalc,'r-',label="G(r) x-ray Fit")
+    pylab.plot(xr,xdiff,'g-',label="G(r) x-ray diff")
     pylab.legend(loc=1)
 
     pylab.subplot(2, 1, 2)

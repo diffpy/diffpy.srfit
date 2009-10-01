@@ -192,14 +192,18 @@ def plotResults(recipe):
     diff1 += offset
 
     import pylab
-    pylab.plot(q,I1,'o',label="I1(Q) Data")
-    pylab.plot(q,Icalc1,label="I1(Q) Fit")
-    pylab.plot(q,diff1,label="I1(Q) diff")
-    pylab.plot(q,bkgd1,label="Bkgd.1 Fit")
+    pylab.subplot(2, 1, 1)
+    pylab.plot(q,I1,'bo',label="I1(Q) Data")
+    pylab.plot(q,Icalc1,'r',label="I1(Q) Fit")
+    pylab.plot(q,diff1,'g',label="I1(Q) diff")
+    pylab.plot(q,bkgd1,'y',label="Bkgd1 Fit")
+    pylab.legend(loc=1)
+
+    pylab.subplot(2, 1, 2)
     pylab.plot(q,I2,'o',label="I2(Q) Data")
-    pylab.plot(q,Icalc2,label="I2(Q) Fit")
-    pylab.plot(q,diff2,label="I2(Q) diff")
-    pylab.plot(q,bkgd2,label="Bkgd.2 Fit")
+    pylab.plot(q,Icalc2,'r',label="I2(Q) Fit")
+    pylab.plot(q,diff2,'g',label="I2(Q) diff")
+    pylab.plot(q,bkgd2,'y',label="Bkgd2 Fit")
     pylab.xlabel("$Q (\AA^{-1})$")
     pylab.ylabel("Intensity (arb. units)")
     pylab.legend(loc=1)

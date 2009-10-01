@@ -24,6 +24,7 @@ examples for its use.
 
 import numpy
 
+from diffpy.srfit.util.clicker import Clicker
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterWrapper
 from diffpy.srfit.structure import struToParameterSet
@@ -45,10 +46,14 @@ class PDFGenerator(ProfileGenerator):
     structure is added.
 
     Attributes:
-    _calc   --  PDFCalculator instance for calculating the PDF
-    _phase  --  The structure ParameterSets used to calculate the profile.
-    _lastr  --  The last value of r over which the PDF was calculated. This is
-                used to configure the calculator when r changes.
+    _calc       --  PDFCalculator instance for calculating the PDF
+    _phase      --  The structure ParameterSets used to calculate the profile.
+    _lastr      --  The last value of r over which the PDF was calculated. This
+                    is used to configure the calculator when r changes.
+    _lastpdf    --  The last calculated PDF.
+    _pdfclicker --  The Clicker for recording when the last PDF was calcualted.
+    _parclicker --  The Clicker that watches Parameters that will modify the
+                    underlying PDFCalculator.
 
     Managed Parameters:
     scale   --  Scale factor
@@ -72,8 +77,6 @@ class PDFGenerator(ProfileGenerator):
     qbroad  --  See Managed Parameters.
     qdamp   --  See Managed Parameters.
 
-
-
     """
 
     def __init__(self, name = "pdf"):
@@ -93,11 +96,21 @@ class PDFGenerator(ProfileGenerator):
         # The last value of r we evaluated over
         self._lastr = None
 
+        # The last PDF and it's clicker
+        self._lastpdf = None
+        self._pdfclicker = Clicker()
+        self._parclicker = Clicker()
+        self._parclicker.click()
+
         return
 
     def processMetaData(self):
         """Process the metadata once it gets set."""
         ProfileGenerator.processMetaData(self)
+
+        if self._phase is None: 
+            return
+
         stype = self.meta.get("stype")
         if stype is not None:
             self.setScatteringType(stype)
@@ -211,6 +224,9 @@ class PDFGenerator(ProfileGenerator):
 
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
+
+        if self.profile is not None:
+            self.processMetaData()
         return
 
     def __wrapPars(self):
@@ -220,14 +236,20 @@ class PDFGenerator(ProfileGenerator):
         Parameters.
 
         """
-        parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
+        parnames = ['delta1', 'delta2', 'qbroad']
 
         for pname in parnames:
             getter = self._calc.__class__._getDoubleAttr
             setter = self._calc.__class__._setDoubleAttr
-            self.addParameter(
-                ParameterWrapper(pname, self._calc, getter, setter, pname)
-                )
+            par =  ParameterWrapper(pname, self._calc, getter, setter, pname)
+            self.addParameter(par)
+            self._parclicker.addSubject(par.clicker)
+
+        self._parclicker.addSubject(self._phase.clicker)
+
+        self.newParameter("scale", 1.0)
+        self.newParameter("qdamp", 1.0)
+
         return
 
     def __wrapPDFFitPars(self):
@@ -240,23 +262,26 @@ class PDFGenerator(ProfileGenerator):
         that should probably be fixed.
 
         """
-        pdfparnames = ['delta1', 'delta2', 'scale']
+        pdfparnames = ['delta1', 'delta2']
 
         for pname in pdfparnames:
             getter = dict.__getitem__
             setter = dict.__setitem__
-            self.addParameter(
-                ParameterWrapper(pname, self._phase.stru.pdffit, getter,
+            par = ParameterWrapper(pname, self._phase.stru.pdffit, getter,
                     setter, pname)
-                )
+            self.addParameter(par)
+            self._parclicker.addSubject(par.clicker)
 
-        parnames = ['qbroad', 'qdamp']
+        parnames = ['qbroad']
         for pname in parnames:
             getter = self._calc.__class__._getDoubleAttr
             setter = self._calc.__class__._setDoubleAttr
-            self.addParameter(
-                ParameterWrapper(pname, self._calc, getter, setter)
-                )
+            par = ParameterWrapper(pname, self._calc, getter, setter)
+            self.addParameter(par)
+            self._parclicker.addSubject(par.clicker)
+
+        self.newParameter("scale", 1.0)
+        self.newParameter("qdamp", 1.0)
 
         return
 
@@ -284,8 +309,14 @@ class PDFGenerator(ProfileGenerator):
         if r is not self._lastr:
             self.__prepare(r)
 
-        self._calc.eval(self._phase.stru)
+        if self._pdfclicker < self._parclicker:
+            self._calc.eval(self._phase.stru)
+            self._lastpdf = self._calc.getPDF()
+            self._pdfclicker.click()
 
-        return self._calc.getPDF()
+        scale = self.scale.getValue()
+        qdamp = self.qdamp.getValue()
+        return self._lastpdf * scale * numpy.exp(-0.5*(qdamp*r)**2)
+
 
 # End class PDFGenerator

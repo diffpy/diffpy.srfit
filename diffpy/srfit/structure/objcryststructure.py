@@ -1291,8 +1291,8 @@ class ObjCrystParSet(BaseStructure):
 
         # Constrain parameters to the space group
         sgname = self.getSpaceGroup()
-        from diffpy.srfit.structure.sgconstraints import constrainSpaceGroup
-        constrainSpaceGroup(self, sgname)
+        from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
+        _constrainSpaceGroup(self, sgname)
 
         return
 

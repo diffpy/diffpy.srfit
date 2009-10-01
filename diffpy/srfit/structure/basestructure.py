@@ -24,6 +24,10 @@ from diffpy.srfit.fitbase.parameterset import ParameterSet
 class BaseStructure(ParameterSet):
     """Base class for structure adapters.
 
+    BaseStructure derives from ParameterSet and provides methods that help
+    interface the ParameterSet with the space group constraint methods in the
+    sgconstraints module and to ProfileGenerators.
+
     Attributes:
     stru    --  The adapted object
 

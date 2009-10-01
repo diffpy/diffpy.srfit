@@ -207,9 +207,9 @@ class CCTBXStructureParSet(BaseStructure):
             self.scatterers.append(scatterer)
 
         # Constrain the lattice
-        from diffpy.srfit.structure.sgconstraints import constrainSpaceGroup
+        from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
         symbol = self.getSpaceGroup()
-        constrainSpaceGroup(self, symbol)
+        _constrainSpaceGroup(self, symbol)
 
         return
 

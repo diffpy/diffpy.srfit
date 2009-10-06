@@ -56,7 +56,19 @@ def makeRecipe():
     def gaussian(t, mu, sig):
         return 1/(2*pi*sig**2)**0.5 * exp(-0.5 * ((t-mu)/sig)**2)
 
-    contribution.registerFunction(gaussian, name = "g")
+    contribution.registerFunction(gaussian, name = "peakshape")
+
+    def delta(t, mu):
+        """Calculate a delta-function.
+
+        We don't have perfect precision, so we must make this a very thin
+        Gaussian.
+
+        """
+        sig = t[1] - t[0]
+        return gaussian(t, mu, sig)
+
+    contribution.registerFunction(delta)
 
     # Here is another one
     bkgdstr = "b0 + b1*t + b2*t**2 + b3*t**3 + b4*t**4 + b5*t**5 + b6*t**6"
@@ -65,10 +77,16 @@ def makeRecipe():
 
     # Now define our fitting equation. We will hardcode the peak ratios.
     contribution.setEquation(
-        "A1 * ( g(t, mu11, sig11) + 0.23*g(t, mu12, sig12) ) +\
-         A2 * ( g(t, mu21, sig21) + 0.23*g(t, mu22, sig22) ) +\
-         A3 * ( g(t, mu31, sig31) + 0.23*g(t, mu32, sig32) ) +\
+        "A1 * ( convolve( delta(t, mu11), peakshape(t, c, sig11) ) \
+         + 0.23*convolve( delta(t, mu12), peakshape(t, c, sig12) ) ) + \
+         A2 * ( convolve( delta(t, mu21), peakshape(t, c, sig21) ) \
+         + 0.23*convolve( delta(t, mu22), peakshape(t, c, sig22) ) ) + \
+         A3 * ( convolve( delta(t, mu31), peakshape(t, c, sig31) ) \
+         + 0.23*convolve( delta(t, mu32), peakshape(t, c, sig32) ) ) + \
          bkgd")
+
+    # c is the center of the gaussian.
+    contribution.c.setValue( x[len(x)/2] )
 
     ## The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
@@ -89,6 +107,7 @@ def makeRecipe():
     recipe.addVar(contribution.mu11, 13.0)
     recipe.addVar(contribution.mu21, 24.0)
     recipe.addVar(contribution.mu31, 33.0)
+
     # Constrain the position of the second double peak
     from numpy import sin, arcsin
     def peakloc(mu):
@@ -108,9 +127,11 @@ def makeRecipe():
     dsig = recipe.newVar("dsig", 4)
     
     def sig(sig0, dsig, mu):
+        """Calculate the peak broadening with respect to position."""
         return sig0 * (1 - dsig * mu**2);
 
     recipe.registerFunction(sig)
+    recipe.fixVar("mu")
     # Now constrain the peak widths to this
     recipe.sig0.setValue(0.001)
     recipe.dsig.setValue(4.0)
@@ -190,7 +211,17 @@ def steerFit(recipe):
     scipyOptimize(recipe)
 
     recipe.freeAll()
+    recipe.fixVar("mu11")
+    recipe.fixVar("mu21")
+    recipe.fixVar("mu31")
     scipyOptimize(recipe)
+
+    recipe.freeAll()
+    recipe.fixVar("mu11")
+    recipe.fixVar("mu21")
+    recipe.fixVar("mu31")
+    scipyOptimize(recipe)
+
     return
 
 if __name__ == "__main__":

@@ -309,7 +309,7 @@ def weightedTest(mutate = 2):
     from diffpy.srfit.equation.builder import EquationFactory
     factory = EquationFactory()
 
-    x = numpy.arange(0, 10, 0.001)
+    x = numpy.arange(0, 10, 0.01)
     qsig = 0.01
     sigma = 0.003
 
@@ -395,7 +395,7 @@ def profileTest():
     eq.b7.setValue(2.0)
     eq.b8.setValue(2.0)
 
-    mutate = 5
+    mutate = 8
     numargs = len(eq.args)
     choices = range(numargs)
     args = [0.1]*numargs
@@ -420,7 +420,7 @@ def profileTest():
 
 if __name__ == "__main__":
 
-    for i in range(1, 13):
+    for i in range(1,13):
         speedTest2(i)
     """
     for i in range(1, 9):

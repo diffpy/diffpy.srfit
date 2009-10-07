@@ -25,7 +25,6 @@ from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
 import elements
 
-
 class PDFNPGenerator(ProfileGenerator):
     """A class for calculating the PDF for an isolated scatterer.
 

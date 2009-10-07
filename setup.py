@@ -29,6 +29,7 @@ dist = setup(
         install_requires = [
             'diffpy.Structure',
             'pyobjcryst>=0.1a1.dev-r3631',
+            'periodictable>=0.9.dev-r197-20090419',
             ],
         dependency_links = [
             # REMOVE dev.danse.us for a public release.

@@ -88,6 +88,15 @@ class ScattererParSet(ParameterSet):
             "Occupancy"))
         return
 
+    def isDummy(self):
+        """Indicate whether this scatterer is a dummy atom."""
+        return False
+
+    def hasScatterers(self):
+        """Indicate if this scatterer has its own scatterers."""
+        return hasattr(self, "getScatterers")
+
+
 # End class ScattererParSet
 
 class AtomParSet(ScattererParSet):
@@ -205,6 +214,17 @@ class MoleculeParSet(ScattererParSet):
             anames.append(name)
 
         return
+
+    def getScatterers(self):
+        """Get a list of ParameterSets that represents the scatterers.
+
+        The site positions must be accessible from the list entries via the
+        names "x", "y", and "z". The ADPs must be accessible as well, but the
+        name and nature of the ADPs (U-factors, B-factors, isotropic,
+        anisotropic) depends on the adapted structure.
+
+        """
+        return self.atoms
 
     def wrapRestraints(self):
         """Wrap the restraints implicit to the molecule.

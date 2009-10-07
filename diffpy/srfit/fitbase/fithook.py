@@ -93,7 +93,7 @@ class FitHook(object):
             res = numpy.dot(resv, resv)
 
         print "Residual:", chi2tot
-        if res:
+        if numres:
             print "FitContributions:", chi2
             print "Restraints:", res
 

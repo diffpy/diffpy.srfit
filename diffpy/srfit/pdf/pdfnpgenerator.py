@@ -26,17 +26,10 @@ from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 from periodictable import elements
 
 class PDFNPGenerator(ProfileGenerator):
-    """A class for calculating the PDF for an isolated scatterer.
-
-    This is another example of using a ProfileGenerator class with a
-    ParameterSet adapter to refine a structure recipe to data using a
-    FitRecipe.
-    
-    """
+    """A class for calculating the PDF for an isolated scatterer.""" 
 
     def __init__(self, name):
-        """Initialize our generator.
-
+        """Initialize the generator.
         
         """
         ProfileGenerator.__init__(self, name)
@@ -56,14 +49,14 @@ class PDFNPGenerator(ProfileGenerator):
         This converts the Crystal to a ObjCrystParSet that is used to organize
         the fitting parameters for the generator.  The generator will have its
         own parameters, each of which will be a proxy for some part of the
-        crystal. The parameters will be accessible by name under the 'crystal'
+        crystal. The parameters will be accessible by name under the 'phase'
         attribute of this generator.
         
         """
 
         # Create a custom ParameterSet designed to interface with
         # pyobjcryst.Crystal
-        parset = ObjCrystParSet(cryst, "crystal")
+        parset = ObjCrystParSet(cryst, "phase")
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
         return
@@ -80,7 +73,7 @@ class PDFNPGenerator(ProfileGenerator):
         """
         qmin = self.meta["qmin"]
         qmax = self.meta["qmax"]
-        return pdf(self.crystal.stru, r, self.delta2.getValue(),
+        return pdf(self.phase.stru, r, self.delta2.getValue(),
                 self.qbroad.getValue(), qmin, qmax)
 
 # End class PDFNPGenerator
@@ -146,25 +139,6 @@ def pdf(cryst, r, delta2 = 0, qbroad = 0, qmin = 1, qmax = 20):
 
     return gr
 
-def rebinArray(A, xold, xnew):
-    """Rebin the an array by interpolating over the new x range.
-
-    Arguments:
-    A       --  Array to interpolate
-    xold    --  Old sampling array
-    xnew    --  New sampling array
-
-    This uses cubic spline interpolation.
-    
-    Returns: A new array over the new sampling array.
-
-    """
-    if numpy.array_equal(xold, xnew):
-        return A
-    from scipy.interpolate import splrep, splev
-    finterp = splrep(xold, A, s=0)
-    return splev(xnew, finterp, der=0)
-
 
 def fofq(cryst, q, delta2, qbroad):
     """Calculate F(Q) (X-ray) using the Debye Equation.
@@ -192,7 +166,7 @@ def fofq(cryst, q, delta2, qbroad):
     # The brute-force calculation is very slow. Thus we optimize a little bit.
 
     # The precision of distance measurements.
-    deltad = 1e-12
+    deltad = 1e-8
     dmult = int(1/deltad)
     deltau = deltad**2
     umult = int(1/deltau)

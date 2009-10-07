@@ -425,6 +425,10 @@ class FitResults(object):
         print self.formatResults(header, footer, update)
         return
 
+    def __str__(self):
+        return self.formatResults()
+
+
     def saveResults(self, filename, header = "", footer = "", update = False):
         """Format and save the results.
 

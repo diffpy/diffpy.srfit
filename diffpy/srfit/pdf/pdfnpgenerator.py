@@ -23,7 +23,7 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
-import elements
+from periodictable import elements
 
 class PDFNPGenerator(ProfileGenerator):
     """A class for calculating the PDF for an isolated scatterer.
@@ -320,7 +320,7 @@ def getXScatteringFactor(el, q):
 
     """
     elobj = getattr(elements, el)
-    f = el.number
+    f = elobj.number
     fq = numpy.ones_like(q) * f
     return fq
 

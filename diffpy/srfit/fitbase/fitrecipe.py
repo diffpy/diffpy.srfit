@@ -292,11 +292,11 @@ class FitRecipe(RecipeOrganizer):
         # Construct an error message, if necessary
         m = ""
         if len(badnames) == 1:
-            m = "%s needs an initial value" % badnames[0]
+            m = "%s is not defined or needs an initial value" % badnames[0]
         elif len(badnames) > 0:
             s1 = ",".join(badnames[:-1])
             s2 = badnames[-1]
-            m = "%s and %s need initial values" % (s1, s2)
+            m = "%s and %s are not defined or need initial values" % (s1, s2)
 
         if m:
             raise AttributeError(m)

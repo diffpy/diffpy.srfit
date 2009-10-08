@@ -23,7 +23,7 @@ import numpy
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults
 
-from debyemodel import makeRecipe, scipyOptimize, parkOptimize
+from debyemodel import makeRecipe, scipyOptimize
 
 def makeModelII():
     """Make a recipe for fitting low and high temperature regions.
@@ -118,7 +118,6 @@ if __name__ == "__main__":
 
     # Refine using the optimizer of your choice
     scipyOptimize(recipe)
-    #parkOptimize(recipe)
 
     # Get the results in a FitResults object.
     res = FitResults(recipe)

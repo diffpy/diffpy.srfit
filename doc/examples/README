@@ -5,9 +5,6 @@ how to use SrFit.
 Here is an overview of the examples. It is recommended that you work through
 them in the order listed below.
 
-NOTE: To use PARK in the examples, you must install the 'pak' branch PARK
-separately.
-
 Basic:
 
 * gaussian.py

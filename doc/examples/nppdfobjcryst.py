@@ -33,7 +33,7 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 
-from gaussianrecipe import scipyOptimize, parkOptimize
+from gaussianrecipe import scipyOptimize
 
 class PDFGenerator(ProfileGenerator):
     """A class for calculating the PDF for an isolated scatterer.
@@ -518,7 +518,6 @@ if __name__ == "__main__":
     
     # Optimize
     scipyOptimize(recipe)
-    #parkOptimize(recipe)
 
     # Print results
     res = FitResults(recipe)

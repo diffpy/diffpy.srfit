@@ -28,7 +28,7 @@ import numpy
 
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 
-from gaussianrecipe import scipyOptimize, parkOptimize
+from gaussianrecipe import scipyOptimize
 
 # Functions required for calculation of Debye curve. Feel free to skip these,
 # as we treat them as if existing in some external library that we cannot
@@ -228,7 +228,6 @@ if __name__ == "__main__":
 
     # Refine using the optimizer of your choice
     scipyOptimize(recipe)
-    #parkOptimize(recipe)
 
     # Get the results.
     res = FitResults(recipe)

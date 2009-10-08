@@ -34,7 +34,7 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.diffpystructure import StructureParSet
 
-from gaussianrecipe import scipyOptimize, parkOptimize
+from gaussianrecipe import scipyOptimize
 
 class IntensityGenerator(ProfileGenerator):
     """A class for calculating intensity using the Debye equation.
@@ -458,7 +458,6 @@ if __name__ == "__main__":
 
     # Optimize
     scipyOptimize(recipe)
-    #parkOptimize(recipe)
 
     # Generate and print the FitResults
     res = FitResults(recipe)

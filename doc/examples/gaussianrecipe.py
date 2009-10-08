@@ -17,9 +17,9 @@
 This is an example of building a FitRecipe in order to fit experimental data.
 
 The makeRecipe function shows how to build a FitRecipe, which describes what we
-want to fit, and how to fit it. The scipyOptimize and parkOptimize functions
-show two different ways of refining the recipe, using scipy and PARK,
-respectively.
+want to fit, and how to fit it. The scipyOptimize function
+shows one way of refining the recipe using scipy's implementation of the
+Levenberg-Marquardt algorithm.
 
 """
 
@@ -39,7 +39,7 @@ def makeRecipe():
     code. 
     
     Once we define the FitRecipe, we can send it an optimizer to be optimized.
-    See the scipyOptimize and parkOptimize functions.
+    See the scipyOptimize function.
     
     """
 
@@ -128,29 +128,6 @@ def scipyOptimize(recipe):
 
     return
 
-def parkOptimize(recipe):
-    """Optimize the recipe created above using PARK.
-    
-    This requires the 'pak' branch of PARK to be installed on your system.
-
-    """
-    from diffpy.srfit.park import FitnessAdapter
-
-    # We have to turn the recipe into something that PARK can use. In PARK, a
-    # Fitness object is the equivalent of a SrFit FitContribution. However, we
-    # want to use the varibles, constraints and restraints, defined in our
-    # FitRecipe, so we will turn it into a Fitness object. To do this, we have
-    # written a special FitnessAdapter class in the diffpy.srfit.park package.
-    f = FitnessAdapter(recipe)
-
-    # Now we can fit this using park.
-    from park.fitting.fit import fit
-    print "Fit using the default PARK optimizer"
-    result = fit([f])
-
-    return
-
-
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
@@ -182,7 +159,6 @@ if __name__ == "__main__":
 
     # Refine using the optimizer of your choice
     scipyOptimize(recipe)
-    #parkOptimize(recipe)
 
     # Get the results in a FitResults object. The FitResults object stores the
     # current state of the recipe, and uses it to calculate useful statistics

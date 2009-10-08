@@ -64,7 +64,7 @@ class TestContribution(unittest.TestCase):
         self.fitcontribution.setEquation("2*I")
         self.fitcontribution.setResidualEquation("resv")
         chiv = self.fitcontribution.residual()
-        self.assertEqual(sum((2*xobs-yobs)**2)/sum(yobs**2), dot(chiv, chiv))
+        self.assertAlmostEqual(sum((2*xobs-yobs)**2)/sum(yobs**2), dot(chiv, chiv))
 
         # Make a custom residual.
         self.fitcontribution.setResidualEquation("abs(eq-y)**0.5")

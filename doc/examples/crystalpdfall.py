@@ -31,7 +31,7 @@ from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 
-from gaussianrecipe import scipyOptimize, parkOptimize
+from gaussianrecipe import scipyOptimize
 from crystalpdf import plotResults
 
 ####### Example Code

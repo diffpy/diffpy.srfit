@@ -34,7 +34,7 @@ from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 
-from gaussianrecipe import scipyOptimize, parkOptimize
+from gaussianrecipe import scipyOptimize
 
 ####### Example Code
 
@@ -160,7 +160,6 @@ if __name__ == "__main__":
 
     # Optimize
     scipyOptimize(recipe)
-    #parkOptimize(recipe)
 
     # Generate and print the FitResults
     res = FitResults(recipe)

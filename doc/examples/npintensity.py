@@ -15,13 +15,30 @@
 """Example of using ProfileGenerators in FitContributions.
 
 This is an example of building a ProfileGenerator and using it in a
-FitContribution in order to fit theoretical intensity data.
+FitContribution in order to fit theoretical intensity data.  ProfileGenerators
+are used to organize profile calculators that require more information than can
+be conveniently passed into a function call.  The IntensityGenerator class is
+an example of a ProfileGenerator that can be used by a FitContribution to help
+generate a the profile. 
 
-The IntensityGenerator class is an example of a ProfileGenerator that can be
-used by a FitContribution to help generate a signal.
+Instructions
 
-The makeRecipe function shows how to build a FitRecipe that uses the
-IntensityGenerator.
+Run the example and note the last line of the output. It will be described in
+the code. Then read through 'IntensityGenerator' class.  This will describe and
+motivate the need for the ProfileGenerator class. Next read the 'makeRecipe'
+code.  This will demonstrate how to use the generator, the structure container
+needed by the generator and introduce new operations that can be used in a
+registered equation. 
+
+Extensions
+
+- The IntensityGenerator class uses the 'addParameterSet' method to associate
+  the structure adapter (StructureParSet) with the generator. Most SrFit
+  classes have an 'addParameterSet' class and can store ParameterSet objects.
+  Grab the phase object from the IntensityGenerator and try to add it to other
+  objects used in the fit recipe. Create variables from the moved Parameters
+  rather than from the 'phase' that lives in the IntensityGenerator and see if
+  everything still refines.
 
 """
 
@@ -36,27 +53,35 @@ from diffpy.srfit.structure.diffpystructure import StructureParSet
 
 from gaussianrecipe import scipyOptimize
 
+####### Example Code
+
 class IntensityGenerator(ProfileGenerator):
     """A class for calculating intensity using the Debye equation.
 
     Calculating intensity from a structure is difficult in general. This class
     takes a diffpy.Structure.Structure instance and from that generates a
     theoretical intensity signal. Unlike the example in gaussianrecipe.py, the
-    intensity generator is not simple, so we must define this ProfileGenerator
-    to help us interface with a FitRecipe.
+    intensity generator is not simple. It must take a structure object and some
+    Parameters, and from that generate a signal. At the same time, the
+    structure itself (the lattice, atom positions, thermal parameters, etc.)
+    needs to be refinable.  Thus we define this ProfileGenerator to help us
+    interface which exposes the Parameters required by the calculation and
+    provides a way for a FitContribution to perform that calculation.
 
     The purpose of a ProfileGenerator is to
     1) provide a function that generates a profile signal
     2) organize the Parameters required for the calculation
 
-    This generator wraps the 'iofq' function defined below.
+    This generator wraps the 'iofq' function defined below. Knowledge of this
+    function is not required for this example.
     
     """
 
     def __init__(self, name):
         """Define our generator.
 
-        Keep count of how many times the function has been called (self.count).
+        In this example we will keep count of how many times the calculation
+        gets performed. The 'count' attribute will be used to store the count.
 
         """
         ProfileGenerator.__init__(self, name)
@@ -67,34 +92,46 @@ class IntensityGenerator(ProfileGenerator):
     def setStructure(self, strufile):
         """Set the structure used in the calculation.
 
-        This will create the refinement Parameters using the StructureParSet
-        adapter from diffpy.srfit.structure. The created Parameters are proxies
-        for attributes of the Structure instance that can be interfaced within
-        SrFit.  The Parameters will be accessible by name under the 'structure'
-        attribute of this generator, and are organized hierarchically:
+        strufile    --  The name of a structure file. A
+                        diffpy.Structure.Structure object will be created from
+                        the file, and that object will be passed to the 'iofq'
+                        function whenever it is called.
 
-        structure
-          - lattice
-          - atom1 (the name depends on the element)
-            - x
-            - y
-            - z
-            - occ
-            - U11
-            - U22
-            - U33
-            - U12
-            - U13
-            - U23
-            - Uiso
-          - ...
-          - atomN
+        This will create the refinement Parameters using the StructureParSet
+        adapter from diffpy.srfit.structure. StructureParSet is a ParameterSet
+        object that organizes and gives attribute access to Parametes and other
+        ParameterSets.  The Parameters in the StructureParSet are proxies for
+        attributes of the diffpy.Structure.Structure object that is needed by
+        the 'iofq' function. The Parameters will be accessible by name under
+        the 'phase' attribute of this generator, and are organized
+        hierarchically:
+
+        phase
+          - lattice (retrieved with 'getLattice')
+            - a
+            - b
+            - c
+            - alpha
+            - beta
+            - gamma
+          - scatterers (retrieved with 'getScatterers')
+            - atom1 (the name depends on the element)
+              - x
+              - y
+              - z
+              - occ
+              - U11
+              - U22
+              - U33
+              - U12
+              - U13
+              - U23
+              - Uiso
+            - etc.
 
         The diffpy.Structure.Structure instance is held within the
-        StructureParSet as the stru attribute.
+        StructureParSet as the 'stru' attribute.
 
-        See the makeRecipe code to see how these Parameters are accessed.
-        
         """
         # Load the structure from file
         from diffpy.Structure import Structure
@@ -107,8 +144,8 @@ class IntensityGenerator(ProfileGenerator):
         # structure that we use in the __call__ method below.
         #
         # We pass the diffpy.Structure.Structure instance, and give the
-        # StructureParSet the name "structure".
-        parset = StructureParSet(stru, "structure")
+        # StructureParSet the name "phase".
+        parset = StructureParSet(stru, "phase")
 
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
@@ -121,15 +158,194 @@ class IntensityGenerator(ProfileGenerator):
         This ProfileGenerator will be used in a FitContribution that will be
         optimized to fit some data.  By the time this function is evaluated,
         the diffpy.Structure.Structure instance has been updated by the
-        optimizer via the StructureParSet defined in setStructure. Thus, we
+        optimizer via the StructureParSet defined in setStructure.  Thus, we
         need only call iofq with the internal structure object.
 
         """
         self.count += 1
         print "iofq called", self.count
-        return iofq(self.structure.stru, q)
+        return iofq(self.phase.stru, q)
 
 # End class IntensityGenerator
+
+
+def makeRecipe(strufile, datname):
+    """Create a recipe that uses the IntensityGenerator.
+
+    This will create a FitContribution that uses the IntensityGenerator,
+    associate this with a Profile, and use this to define a FitRecipe.
+
+    """
+
+    ## The Profile
+    # Create a Profile. This will hold the experimental and calculated signal.
+    profile = Profile()
+
+    # Load data and add it to the profile
+    x, y, u = numpy.loadtxt(datname, unpack=True)
+    profile.setObservedProfile(x, y, u)
+
+    ## The ProfileGenerator
+    # Create an IntensityGenerator named "I". This will be the name we use to
+    # refer to the generator from within the FitContribution equation.  We also
+    # need to load the model structure we're using.
+    generator = IntensityGenerator("I")
+    generator.setStructure(strufile)
+    
+    ## The FitContribution
+    # Create a FitContribution, that will associate the Profile with the
+    # ProfileGenerator.  The ProfileGenerator will be accessible as an
+    # attribute of the FitContribution by its name ("I").  We also want to tell
+    # the FitContribution to name the x-variable of the profile "q", so we can
+    # use it in equations with this name.
+    contribution = FitContribution("bucky")
+    contribution.addProfileGenerator(generator)
+    contribution.setProfile(profile, xname = "q")
+
+    # Now we're ready to define the fitting equation for the FitContribution.
+    # We need to modify the intensity calculation, and we'll do that from
+    # within the fitting equation for the sake of instruction. We want to
+    # modify the calculation in three ways.  We want to scale it, add a
+    # polynomial background, and broaden the peaks. 
+    #
+    # There is added benefit for defining these operations outside of the
+    # IntensityGenerator. By combining the different parts of the calculation
+    # within the fitting equation, the time-consuming iofq calculation is only
+    # performed when a structural Parameter is changed. If only non-structural
+    # parameters are changed, such as the background and broadening Parameters,
+    # then then previously computed iofq value will be used to compute the
+    # contribution equation.  The benefit in this is very apparent when
+    # refining the recipe with the LM optimizer, which only changes two
+    # variables at a time most of the time. Note in the refinement output how
+    # many times the residual is calculated, versus how many times iofq is
+    # called when using the scipyOptimize function.
+
+    # We will define the background as a string.
+
+    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
+               b7*q**7 + b8*q**8 + b9*q**9"
+
+    # This creates a callable equation named "bkgd" within the FitContribution,
+    # and turns the polynomial coefficients into Parameters.
+    contribution.registerStringFunction(bkgdstr, "bkgd")
+
+    # We will create the broadening function that we need by creating a python
+    # function and registering it with the FitContribution.
+    pi = numpy.pi
+    exp = numpy.exp
+    def gaussian(q, q0, width):
+        return 1/(2*pi*width**2)**0.5 * exp(-0.5 * ((q-q0)/width)**2)
+
+    # This registers the python function and extracts the name and creates
+    # Parameters from the arguments.
+    contribution.registerFunction(gaussian)
+
+    # Center the Gaussian.
+    contribution.q0.setValue(x[len(x)/2])
+
+    # Now we can incorporate the scale and bkgd into our calculation. We also
+    # convolve the signal with the gaussian to broaden it. Recall that we don't
+    # need to supply arguments to the registered functions unless we want to
+    # make changes to their input values.
+    contribution.setEquation("scale * convolve(I, gaussian) + bkgd")
+
+    # Make the FitRecipe and add the FitContribution.
+    recipe = FitRecipe()
+    recipe.addContribution(contribution)
+
+    # Specify which parameters we want to refine.
+    recipe.addVar(contribution.b0, 0)
+    recipe.addVar(contribution.b1, 0)
+    recipe.addVar(contribution.b2, 0)
+    recipe.addVar(contribution.b3, 0)
+    recipe.addVar(contribution.b4, 0)
+    recipe.addVar(contribution.b5, 0)
+    recipe.addVar(contribution.b6, 0)
+    recipe.addVar(contribution.b7, 0)
+    recipe.addVar(contribution.b8, 0)
+    recipe.addVar(contribution.b9, 0)
+
+    # We also want to adjust the scale and the convolution width
+    recipe.addVar(contribution.scale, 1)
+    recipe.addVar(contribution.width, 0.1)
+
+    # We can also refine structural parameters. Here we extract the
+    # StructureParSet from the intensity generator and use the parameters like
+    # we would any others.
+    phase = generator.phase
+
+    # We want to allow for isotropic expansion, so we'll constrain the lattice
+    # parameters to the same value (the lattice is cubic). Note that we
+    # constrain to the "a" Parameter directly. In previous examples, we
+    # constrained to a Variable by name. This has the same effect.
+    lattice = phase.getLattice()
+    a = lattice.a
+    recipe.addVar(a)
+    recipe.constrain(lattice.b, a)
+    recipe.constrain(lattice.c, a)
+    # We want to refine the thermal paramters as well. We will add a new
+    # Variable that we call "Uiso" and constrain the atomic Uiso values to
+    # this. Note that we don't give Uiso an initial value. The initial value
+    # will be inferred from the following constraints.
+    Uiso = recipe.newVar("Uiso")
+    for atom in phase.getScatterers():
+        recipe.constrain(atom.Uiso, Uiso)
+
+    # Give the recipe away so it can be used!
+    return recipe
+
+def main():
+
+    # Make the data and the recipe
+    strufile = "data/C60.stru"
+    q = numpy.arange(1, 20, 0.05)
+    makeData(strufile, q, "C60.iq", 1.0, 100.68, 0.005, 0.13, 2)
+
+    # Make the recipe
+    recipe = makeRecipe(strufile, "C60.iq")
+
+    # Optimize
+    scipyOptimize(recipe)
+
+    # Generate and print the FitResults
+    res = FitResults(recipe)
+    # We want to see how much speed-up we get from bringing the scale and
+    # background outside of the intensity generator.  Get the number of calls
+    # to the residual function from the FitRecipe, and the number of calls to
+    # 'iofq' from the IntensityGenerator.
+    rescount = recipe.fithook.count
+    calcount = recipe.bucky.I.count
+    footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)
+    res.printResults(footer = footer)
+
+    # Plot!
+    plotResults(recipe)
+
+    return
+
+def plotResults(recipe):
+    """Plot the results contained within a refined FitRecipe."""
+
+    # All this should be pretty familiar by now.
+    q = recipe.bucky.profile.x
+
+    I = recipe.bucky.profile.y
+    Icalc = recipe.bucky.profile.ycalc
+    bkgd = recipe.bucky.evaluateEquation("bkgd")
+    diff = I - Icalc
+
+    import pylab
+    pylab.plot(q,I,'o',label="I(Q) Data")
+    pylab.plot(q,Icalc,label="I(Q) Fit")
+    pylab.plot(q,diff,label="I(Q) diff")
+    pylab.plot(q,bkgd,label="Bkgd. Fit")
+    pylab.xlabel("$Q (\AA^{-1})$")
+    pylab.ylabel("Intensity (arb. units)")
+    pylab.legend(loc=1)
+
+    pylab.show()
+    return
+
 
 def iofq(S, q):
     """Calculate I(Q) (X-ray) using the Debye Equation.
@@ -294,183 +510,9 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
     numpy.savetxt(datname, zip(q, y, u))
     return
 
-####### Example Code
-
-def makeRecipe(strufile, datname):
-    """Create a recipe that uses the IntensityGenerator.
-
-    This will create a FitContribution that uses the IntensityGenerator,
-    associate this with a Profile, and use this to define a FitRecipe.
-
-    """
-
-    ## The Profile
-    # Create a Profile. This will hold the experimental and calculated signal.
-    profile = Profile()
-
-    # Load data and add it to the profile
-    x, y, u = numpy.loadtxt(datname, unpack=True)
-    profile.setObservedProfile(x, y, u)
-
-    ## The ProfileGenerator
-    # Create an IntensityGenerator named "I". This will be the name we use to
-    # refer to the generator from within the FitContribution equation.  We also
-    # need to load the model structure we're using.
-    generator = IntensityGenerator("I")
-    generator.setStructure(strufile)
-    
-    ## The FitContribution
-    # Create a FitContribution, that will associate the Profile with the
-    # ProfileGenerator.  The ProfileGenerator will be accessible as an
-    # attribute of the FitContribution by its name ("I").  We also want to tell
-    # the FitContribution to name the x-variable of the profile "q", so we can
-    # use it in equations with this name.
-    contribution = FitContribution("bucky")
-    contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "q")
-
-    # Now we're ready to define the fitting equation for the FitContribution.
-    # We need to modify the intensity calculation, and we'll do that from
-    # within the fitting equation for the sake of instruction. We want to
-    # modify the calculation in three ways.  We want to scale it, add a
-    # polynomial background, and broaden the peaks. 
-    #
-    # There is added benefit for defining these operations outside of the
-    # IntensityGenerator. By combining the different parts of the calculation
-    # within the fitting equation, the time-consuming iofq calculation is only
-    # performed when a structural Parameter is changed. If only non-structural
-    # parameters are changed, such as the background and broadening Parameters,
-    # then then previously computed iofq value will be used to compute the
-    # contribution equation.  The benefit in this is very apparent when
-    # refining the recipe with the LM optimizer, which only changes two
-    # variables at a time most of the time. Note in the refinement output how
-    # many times the residual is calculated, versus how many times iofq is
-    # called when using the scipyOptimize function.
-
-    # We will define the background as a string.
-
-    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
-               b7*q**7 + b8*q**8 + b9*q**9"
-
-    # This creates a callable equation named "bkgd" within the FitContribution,
-    # and turns the polynomial coefficients into Parameters.
-    contribution.registerStringFunction(bkgdstr, "bkgd")
-
-    # We will create the broadening function that we need by creating a python
-    # function and registering it with the FitContribution.
-    pi = numpy.pi
-    exp = numpy.exp
-    def gaussian(q, q0, width):
-        return 1/(2*pi*width**2)**0.5 * exp(-0.5 * ((q-q0)/width)**2)
-
-    # This registers the python function and extracts the name and creates
-    # Parameters from the arguments.
-    contribution.registerFunction(gaussian)
-
-    # Center the Gaussian.
-    contribution.q0.setValue(x[len(x)/2])
-
-    # Now we can incorporate the scale and bkgd into our calculation. We also
-    # convolve the signal with the gaussian to broaden it. Recall that we don't
-    # need to supply arguments to the registered functions unless we want to
-    # make changes to their input values.
-    contribution.setEquation("scale * convolve(I, gaussian) + bkgd")
-
-    # Make the FitRecipe and add the FitContribution.
-    recipe = FitRecipe()
-    recipe.addContribution(contribution)
-
-    # Specify which parameters we want to refine.
-    recipe.addVar(contribution.b0, 0)
-    recipe.addVar(contribution.b1, 0)
-    recipe.addVar(contribution.b2, 0)
-    recipe.addVar(contribution.b3, 0)
-    recipe.addVar(contribution.b4, 0)
-    recipe.addVar(contribution.b5, 0)
-    recipe.addVar(contribution.b6, 0)
-    recipe.addVar(contribution.b7, 0)
-    recipe.addVar(contribution.b8, 0)
-    recipe.addVar(contribution.b9, 0)
-
-    # We also want to adjust the scale and the convolution width
-    recipe.addVar(contribution.scale, 1)
-    recipe.addVar(contribution.width, 0.1)
-
-    # We can also refine structural parameters. Here we extract the
-    # StructureParSet from the intensity generator and use the parameters like
-    # we would any others.
-    structure = generator.structure
-
-    # We want to allow for isotropic expansion, so we'll constrain the lattice
-    # parameters to the same value (the lattice is cubic). Note that we
-    # constrain to the "a" Parameter directly. In previous examples, we
-    # constrained to a Variable by name. This has the same effect.
-    a = structure.lattice.a
-    recipe.addVar(a)
-    recipe.constrain(structure.lattice.b, a)
-    recipe.constrain(structure.lattice.c, a)
-    # We want to refine the thermal paramters as well. We will add a new
-    # Variable that we call "Uiso" and constrain the atomic Uiso values to
-    # this. Note that we don't give Uiso an initial value. The initial value
-    # will be inferred from the following constraints.
-    Uiso = recipe.newVar("Uiso")
-    for atom in structure.getScatterers():
-        recipe.constrain(atom.Uiso, Uiso)
-
-    # Give the recipe away so it can be used!
-    return recipe
-
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-
-    # All this should be pretty familiar by now.
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
-    q = recipe.bucky.profile.x
-
-    I = recipe.bucky.profile.y
-    Icalc = recipe.bucky.profile.ycalc
-    bkgd = recipe.bucky.evaluateEquation("bkgd")
-    diff = I - Icalc
-
-    import pylab
-    pylab.plot(q,I,'o',label="I(Q) Data")
-    pylab.plot(q,Icalc,label="I(Q) Fit")
-    pylab.plot(q,diff,label="I(Q) diff")
-    pylab.plot(q,bkgd,label="Bkgd. Fit")
-    pylab.xlabel("$Q (\AA^{-1})$")
-    pylab.ylabel("Intensity (arb. units)")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
 
 if __name__ == "__main__":
 
-    # Make the data and the recipe
-    strufile = "data/C60.stru"
-    q = numpy.arange(1, 20, 0.05)
-    makeData(strufile, q, "C60.iq", 1.0, 100.68, 0.005, 0.13, 2)
-
-    # Make the recipe
-    recipe = makeRecipe(strufile, "C60.iq")
-
-    # Optimize
-    scipyOptimize(recipe)
-
-    # Generate and print the FitResults
-    res = FitResults(recipe)
-    # We want to see how much speed-up we get from bringing the scale and
-    # background outside of the intensity generator.  Get the number of calls
-    # to the residual function from the FitRecipe, and the number of calls to
-    # 'iofq' from the IntensityGenerator.
-    rescount = recipe.fithook.count
-    calcount = recipe.bucky.I.count
-    footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)
-    res.printResults(footer = footer)
-
-    # Plot!
-    plotResults(recipe)
+    main()
 
 # End of file

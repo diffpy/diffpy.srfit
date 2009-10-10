@@ -14,9 +14,23 @@
 ########################################################################
 """Example of fitting the Debye recipe to experimental Debye-Waller factors.
 
-This is an extension of example in debyemodel.py. Here we fit the low and high
-temperature parts of the data simultaneously using the same debye temperature,
-but different offsets.
+This is an extension of example in debyemodel.py. The recipe we create will
+simultaneously fit the low and high temperature parts of the experimental data
+with the same debye temperature, but different offsets. This example also
+introduces constraints.
+
+Instructions
+
+Run the example and then read through the 'makeRecipeII' code to learn about
+multi-profile recipes.  You will learn how to constrain related information
+between the fit contributions.
+
+Extensions
+
+- Play with the fit ranges and see if you can improve the fit.
+- The Debye temperature parameters from the two contributions can be
+  constrained without creating a new variable. Try to figure out how that is
+  done.
 
 """
 import numpy
@@ -25,7 +39,9 @@ from diffpy.srfit.fitbase import FitRecipe, FitResults
 
 from debyemodel import makeRecipe, scipyOptimize
 
-def makeModelII():
+####### Example Code
+
+def makeRecipeII():
     """Make a recipe for fitting low and high temperature regions.
 
     We will fit the low and high temperature parts of Debye curve
@@ -64,7 +80,8 @@ def makeModelII():
     highT.profile.setCalculationRange(400, 500)
 
     # Vary the offset from each FitContribution separately, while keeping the
-    # Debye temperatures the same.
+    # Debye temperatures the same. We give each offset variable a different
+    # name in the recipe so it retains its identity.
     recipe.addVar(recipe.lowT.offset, name = "lowToffset")
     recipe.addVar(recipe.highT.offset, name = "highToffset")
     # We create a new Variable and use the recipe's "constrain" method to
@@ -111,10 +128,10 @@ def plotResults(recipe):
     pylab.show()
     return
 
-if __name__ == "__main__":
+def main():
 
     # Create the recipe
-    recipe = makeModelII()
+    recipe = makeRecipeII()
 
     # Refine using the optimizer of your choice
     scipyOptimize(recipe)
@@ -127,5 +144,12 @@ if __name__ == "__main__":
 
     # Plot the results
     plotResults(recipe)
+
+    return
+
+
+if __name__ == "__main__":
+
+    main()
 
 # End of file

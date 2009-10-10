@@ -12,14 +12,25 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of extracting information from multiple data simultaneously.
+"""Example of extracting information from multiple data sets simultaneously.
 
 This example builds on npintensitygenerator.py, and uses IntensityGenerator
-from that example, and simultaneoulsy refines a recipe to two data sets
+from that example to build a recipe that simultaneously refines two data sets
 generated from the same structure.
 
-The makeRecipe function shows how to build a FitRecipe that uses the
-IntensityGenerator and refines it to two data sets.
+Instructions
+
+Run the example and then read through the 'makeRecipe' code. You will see how
+to refine a single structure to two data sets.
+
+Extensions
+
+- In 'makeRecipe' the fit contributions are identically configured except for
+  the profile. Factor out that configuration code and apply it in the
+  'makeRecipe' method. This will reduce the amount of code required to get the
+  job done, make it clearer what is being done and therefore reduce potential
+  mistakes in the code. This encapsulation of configuration workflow is the
+  first step towards writing a user interface.
 
 """
 
@@ -71,7 +82,7 @@ def makeRecipe(strufile, datname1, datname2):
     generator1 = IntensityGenerator("I")
     generator1.setStructure(strufile)
     generator2 = IntensityGenerator("I")
-    generator2.addParameterSet(generator1.structure)
+    generator2.addParameterSet(generator1.phase)
     
     ## The FitContributions
     # Create the FitContributions. 
@@ -150,18 +161,19 @@ def makeRecipe(strufile, datname1, datname2):
 
     # We can also refine structural parameters. We only have to do this once,
     # since each generator holds the same StructureParSet.
-    structure = generator1.structure
-    a = recipe.addVar(structure.lattice.a)
+    phase = generator1.phase
+    lattice = phase.getLattice()
+    a = recipe.addVar(lattice.a)
     # We want to allow for isotropic expansion, so we'll make constraints for
     # that.
-    recipe.constrain(structure.lattice.b, a)
-    recipe.constrain(structure.lattice.c, a)
+    recipe.constrain(lattice.b, a)
+    recipe.constrain(lattice.c, a)
     # We want to refine the thermal paramters as well. We will add a new
     # variable that we call "Uiso" and constrain the atomic Uiso values to
     # this. Note that we don't give Uiso an initial value. The initial value
     # will be inferred from the following constraints.
     Uiso = recipe.newVar("Uiso")
-    for atom in structure.getScatterers():
+    for atom in phase.getScatterers():
         recipe.constrain(atom.Uiso, Uiso)
 
     # Give the recipe away so it can be used!
@@ -170,10 +182,7 @@ def makeRecipe(strufile, datname1, datname2):
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
-    # For the basic info about the fit, we can use the FitRecipe directly
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
+    # plotting song and dance
     q = recipe.bucky1.profile.x
 
     # Plot this for fun.
@@ -211,7 +220,8 @@ def plotResults(recipe):
     pylab.show()
     return
 
-if __name__ == "__main__":
+def main():
+
 
     # Make two different data sets, each from the same structure, but with
     # different scale, noise, broadening and background.
@@ -233,5 +243,10 @@ if __name__ == "__main__":
     # Plot!
     plotResults(recipe)
 
+    return
+
+if __name__ == "__main__":
+
+    main()
 
 # End of file

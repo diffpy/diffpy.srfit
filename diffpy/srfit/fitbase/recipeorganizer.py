@@ -462,7 +462,7 @@ class RecipeOrganizer(RecipeContainer):
         if makepars:
             for pname in argnames:
                 if pname not in self._eqfactory.builders:
-                    self._newParameter(pname, 0)
+                    self._newParameter(pname, None)
 
         # In order to make the function callable without plugging in the
         # arguments, we will build an Equation instance and register it. We'll

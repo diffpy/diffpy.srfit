@@ -12,14 +12,35 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of fitting a gaussian to simulated data.
+"""Example of fitting a Gaussian to simulated data.
 
-This is an example of building a FitRecipe in order to fit experimental data.
+This is an example of building a fit recipe that can be driven by an optimizer
+to fit a Gaussian profile to simulated data.  The purpose of this example is
+familiarize the developer with the objects involved in defining a SrFit
+refinement recipe. 
 
-The makeRecipe function shows how to build a FitRecipe, which describes what we
-want to fit, and how to fit it. The scipyOptimize function
-shows one way of refining the recipe using scipy's implementation of the
-Levenberg-Marquardt algorithm.
+Instructions
+
+If you have not yet run the example, run it and inspect the output. The example
+script is driven by the 'main' method defined below. Take a look at that method
+to get an understanding of how a fit recipe can be used once created.  After
+that, read the 'makeRecipe' code to see what goes into a fit recipe. After
+that, read the 'scipyOptimize' code to see how the refinement is executed.
+Finally, read the 'plotResults' code to see how to extracts the refined profile
+and plot it.
+
+Extensions
+
+After reading through the code, try to perform the folowing tasks. The process
+will leave you with a much better understanding of how SrFit works.
+
+- Play around with setting the values of the Variables and Parameters. What
+  happens to the associated Parameter when you change a variable value? What
+  happens to the variable when you change the Parameter value?
+- Modify the fitting equation by adding a constant. See if that improves the
+  fit.
+- Create a FitRecipe to fit the Lorentzian profile in the data/lorentzian.dat
+  file.
 
 """
 
@@ -29,20 +50,46 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 
 ####### Example Code
 
+def main():
+    """The workflow of creating, running and inspecting a fit."""
+
+    # Start by creating the recipe. The recipe describes the data to be fit,
+    # the profile generator used to simulate the data and the variables that
+    # will be tuned by the optimizer.
+    recipe = makeRecipe()
+
+    # Refine using the optimizer of your choice.
+    scipyOptimize(recipe)
+
+    # Get the results in a FitResults object. The FitResults object stores the
+    # current state of the recipe, and uses it to calculate useful statistics
+    # about the fit.  
+    res = FitResults(recipe)
+
+    # Print the results.
+    res.printResults()
+
+    # Plot the results.
+    plotResults(recipe)
+
+    return
+
+
 def makeRecipe():
     """Make a FitRecipe for fitting a Gaussian curve to data.
 
     The instructions for what we want to refine, and how to refine it will be
     defined within a FitRecipe instance. The job of a FitRecipe is to collect
     and associate all the data, the fitting equations, fitting variables,
-    constraints and restraints. We will demonstrate each of these within the
-    code. 
+    constraints and restraints. The configured recipe provides a 'residual'
+    function and the initial variable values that an optimizer can use to
+    refine the variables to minimize the disagreement between the calculated
+    profile and the data.
     
     Once we define the FitRecipe, we can send it an optimizer to be optimized.
-    See the scipyOptimize function.
+    See the 'scipyOptimize' function.
     
     """
-
         
     ## The Profile
     # Create a Profile to hold the experimental and calculated signal.
@@ -70,16 +117,16 @@ def makeRecipe():
     # function internally. In the process, it extracts all the parameters from
     # the equation (A, x, x0, sigma) and turns them into Parameter objects
     # internally. These objects can be accessed as attributes of the
-    # contribution.  Since we told the contribution that our independent
-    # variable is named "x", this value will be substituted into the fitting
-    # equation whenever it is called.
+    # contribution by name.  Since we told the contribution that our
+    # independent variable is named "x", this value will be substituted into
+    # the fitting equation whenever it is called.
     contribution.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
 
     # To demonstrate how these parameters are used, we will give "A" an initial
     # value. Note that Parameters are not numbers, but are containers for
     # numbers. To change the value of a parameter, use its 'setValue' method.
     # To get its value, use the 'getValue' method. Parameters also have a
-    # 'name' attribute.
+    # 'name' attribute
     contribution.A.setValue(1.0)
 
     ## The FitRecipe
@@ -154,24 +201,6 @@ def plotResults(recipe):
 
 if __name__ == "__main__":
 
-    # Create the recipe
-    recipe = makeRecipe()
-
-    # Refine using the optimizer of your choice
-    scipyOptimize(recipe)
-
-    # Get the results in a FitResults object. The FitResults object stores the
-    # current state of the recipe, and uses it to calculate useful statistics
-    # about the fit.  If you later modify the recipe, the FitResults object
-    # will hold the recipe values from when it was created. You can tell it to
-    # update its values by calling its 'update' method.
-    res = FitResults(recipe)
-
-    # Print the results
-    res.printResults()
-
-    # Plot the results
-    plotResults(recipe)
-
+    main()
 
 # End of file

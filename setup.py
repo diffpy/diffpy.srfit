@@ -28,7 +28,7 @@ dist = setup(
         entry_points = {},
         install_requires = [
             'diffpy.Structure',
-            'pyobjcryst>=0.1a1.dev-r3631',
+            'pyobjcryst>=0.1a1.dev-r3762',
             'periodictable>=0.9.dev-r197-20090419',
             ],
         dependency_links = [

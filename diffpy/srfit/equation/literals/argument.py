@@ -28,11 +28,15 @@ class Argument(Literal):
 
     This class inherits from Literal. See the Literal documentation.
 
+    Attributes
+    const   --  A flag indicating whether this is a constant.
+
     """
 
     def _identify(self, visitor):
         """Identify self to a visitor."""
         visitor.onArgument(self)
+        self.const = False
         return
 
     def __str__(self):

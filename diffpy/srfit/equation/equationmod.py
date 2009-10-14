@@ -12,15 +12,15 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""The Equation class for holding and evaluating an equation.
+"""The Equation class for wrapping an evaluation network as a functor.
 
-Equation is a functor that holds a Literal tree that defines an equation. It's
-__call__ method evaluates the equation at the most recent value of its
-Arguments. The non-constant arguments are accessible as attributes of the
-Equation instance.
+Equation is a functor that holds an evaluation network and gives access to the
+Argument nodes of that network.  __call__ method evaluates the equation at the
+most recent value of its Arguments. The non-constant arguments are accessible
+as attributes of the Equation instance.
 
 Example
-> # make a Literal tree. Here's a simple one
+> # make an evaluation network. Here's a simple one
 > add = AdditionOperator()
 > a = Argument(name="a") # Don't forget to name these!
 > b = Argument(name="b")

@@ -40,7 +40,7 @@ class Literal(Observable):
     _target     --  The target of this Literal. (defaults to the Literal)
     _proxies    --  A set of Literals that are acting as proxies to the
                     Literal.
-    args       --  List of Literals needed to compute the value of this
+    args       --   List of Literals needed to compute the value of this
                     Literal (other than this Literal, the target, or proxies).
 
     """ 
@@ -55,6 +55,10 @@ class Literal(Observable):
         self.args = []
         return
 
+    def __call__(self):
+        """Overloaded getValue."""
+        return self.getValue()
+
     def setValue(self, val):
         """Set the value of the Literal.
 
@@ -67,7 +71,7 @@ class Literal(Observable):
         if notequiv is False:
             return
         if notequiv is True or notequiv.any():
-            # Order is important here. We want val = None to notify
+            # Order is important here. We want val = None to notify.
             target.notify()
             target._value = val
         # If not notequiv.any() falls through
@@ -122,10 +126,17 @@ class Literal(Observable):
         return
 
     def notify(self):
-        """Notify at self and all observers."""
+        """Notify at self and all observers.
+
+        This is called from the deep target when the value changes. This is
+        called from self when self's target changes.
+        
+        """
         Observable.notify(self)
         for p in self._proxies:
             p.notify()
+        for a in self.args:
+            a.notify()
         return
 
     def _getDeepTarget(self):

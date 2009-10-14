@@ -152,14 +152,14 @@ class TestOperator(unittest.TestCase):
     def testInit(self):
         """Test that everthing initializes as expected."""
         op = literals.Operator(name = "add", symbol = "+", operation =
-                numpy.add, nin = 2, nout = 1)
+                numpy.add, nin = 2)
 
         self.assertEqual("add", op.name)
         self.assertEqual("+", op.symbol)
         self.assertEqual(numpy.add, op.operation)
         self.assertEqual(2, op.nin)
         self.assertEqual(1, op.nout)
-        self.assertEqual([], op._args)
+        self.assertEqual([], op.args)
         self.assertEqual(None, op._value)
         self.assertEqual(op, op._target)
         self.assertEqual(set(), op._proxies)
@@ -168,7 +168,7 @@ class TestOperator(unittest.TestCase):
     def testAddLiteral(self):
         """Test adding a literal to an operator node."""
         op = literals.Operator(name = "add", symbol = "+", operation =
-                numpy.add, nin = 2, nout = 1)
+                numpy.add, nin = 2)
 
         self.assertRaises(ValueError, op.getValue)
         op._value = 1
@@ -186,6 +186,7 @@ class TestOperator(unittest.TestCase):
 
         a.setValue(1)
         b.setValue(2)
+        self.assertTrue(op._value is None)
         self.assertAlmostEqual(op.getValue(), 3)
 
         a.setValue(None)
@@ -195,7 +196,7 @@ class TestOperator(unittest.TestCase):
 
         # Try to add self
         op = literals.Operator(name = "add", symbol = "+", operation =
-                numpy.add, nin = 2, nout = 1)
+                numpy.add, nin = 2)
         op.addLiteral(a)
         self.assertRaises(ValueError, op.addLiteral, op)
 
@@ -210,7 +211,7 @@ class TestOperator(unittest.TestCase):
 
         # Try to add argument that contains self
         op2 = literals.Operator(name = "sub", symbol = "-", operation =
-                numpy.subtract, nin = 2, nout = 1)
+                numpy.subtract, nin = 2)
         op2.addLiteral(op)
         self.assertRaises(ValueError, op.addLiteral, op2)
 
@@ -220,9 +221,31 @@ class TestOperator(unittest.TestCase):
 
         # Try to add argument that contains proxy to self
         op3 = literals.Operator(name = "mul", symbol = "*", operation =
-                numpy.multiply, nin = 2, nout = 1)
+                numpy.multiply, nin = 2)
         op3.addLiteral(c)
         self.assertRaises(ValueError, op2.addLiteral, op3)
+
+        # Continue making the equation
+        a = literals.Argument(name = "a", value = 1)
+        b = literals.Argument(name = "b", value = 2)
+        c = literals.Argument(name = "c", value = 3)
+        op = literals.Operator(name = "add", symbol = "+", operation =
+                numpy.add, nin = 2)
+        op2 = literals.Operator(name = "sub", symbol = "-", operation =
+                numpy.subtract, nin = 2)
+
+        op.addLiteral(op2)
+        op.addLiteral(a)
+        op2.addLiteral(b)
+        op2.addLiteral(c)
+        self.assertAlmostEqual(-1, op2.getValue())
+        self.assertAlmostEqual(0, op.getValue())
+
+        c.setValue(0)
+        self.assertTrue(op2._value is None)
+        self.assertTrue(op._value is None)
+        self.assertAlmostEqual(2, op2.getValue())
+        self.assertAlmostEqual(3, op.getValue())
 
         return
 

@@ -14,12 +14,20 @@
 ########################################################################
 """Visitor for extracting the Argument entries in a Literal tree.
 
-ArgFinder extracts all Arguments from a literal true, even "hidden" ones that
-are contained in Partitions within and below Generators.
+ArgFinder extracts all Arguments from a literal true.
 
 """ 
 
 from .visitor import Visitor
+
+from diffpy.srfit.util.ordereddict import OrderedDict
+
+def getArguments(literal, getconsts = True):
+    """Get an OrderedDict of arguments from an evaluation network."""
+    f = ArgFinder(getconsts)
+    literal.identify(f)
+    args = OrderedDict([(a.name, a) for a in f.args])
+    return args
 
 class ArgFinder(Visitor):
     """ArgFinder extracts Arguments from a Literal tree.
@@ -49,6 +57,7 @@ class ArgFinder(Visitor):
 
     def onArgument(self, arg):
         """Process an Argument node."""
+        print arg, arg.getValue()
         if self.getconsts or not arg.const:
             self.args.append(arg)
         return

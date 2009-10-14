@@ -21,27 +21,11 @@ The Literal-Visitor relationship is that described by the Visitor pattern
 (http://en.wikipedia.org/wiki/Visitor_pattern), execept that Literals contain
 attributes that are used specifically by the Evaluator visitor.
 
-Modules:
-argfinder   --  Contains the ArgFinder class (see below). The module
-                documentation contains more information about ArgFinders.
-printer     --  Contains the Printer class (see below). The module
-                documentation contains more information about Printers.
-validiator  --  Contains the Validator class (see below). The module
-                documentation contains more information about Validators.
-visitor     --  Contains the Visitor base class. The module documentation
-                contains more information about Visitors.
-
-Classes:
-ArgFinder   --  ArgFinder extracts Arguments from a Literal tree.
-Printer     --  A not-so-pretty-printer for an Argument tree. Used primarily
-                for debugging.
-Validator   --  Used to validate a Literal tree.
-
 """
 
 # package version
 from diffpy.srfit.version import __version__
 
-from .argfinder import ArgFinder
+from .argfinder import ArgFinder, getArguments
 from .printer import Printer
 from .validator import Validator

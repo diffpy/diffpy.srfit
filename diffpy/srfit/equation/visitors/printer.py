@@ -17,13 +17,9 @@
 The Printer visitor creates a one-line representation of the Literal tree,
 which is valid as a string equivalent of the equation.
 
-Printer is mostly 
-
 """
 
 from .visitor import Visitor
-
-from diffpy.srfit.util.clicker import Clicker
 
 class Printer(Visitor):
     """Printer for printing a Literal tree.
@@ -80,22 +76,6 @@ class Printer(Visitor):
         op.args[1].identify(self)
         self.output += ")"
         return
-
-    def onPartition(self, part):
-        """Process a Partition node."""
-        if part.name is None:
-            self.output += "partition"
-        else:
-            self.output += str(part.name)
-        return
-
-    def onGenerator(self, gen):
-        """Process a Generator node."""
-        self.output += "Generator(%s)"%gen.name
-        for arg in gen.args:
-            arg.identify(self)
-        return
-
 
 # version
 __id__ = "$Id$"

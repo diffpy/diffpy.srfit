@@ -51,14 +51,4 @@ Equation    --  Equations encapsulate a Literal tree and an Evaluator that can
 # package version
 from diffpy.srfit.version import __version__
 
-from .equationmod import Equation
-
-# Try some optimizations on these classes
-try:
-    import psyco
-    psyco.profile()
-except ImportError:
-    pass
-
-
 # End of file

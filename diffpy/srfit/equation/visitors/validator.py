@@ -26,7 +26,6 @@ interface.
 
 from .visitor import Visitor
 
-from diffpy.srfit.util.clicker import Clicker
 from diffpy.srfit.equation.literals.abcs import *
 
 msg = "'%s' does not have the interface required by '%s'"
@@ -47,7 +46,7 @@ class Validator(Visitor):
         return
 
     def reset(self):
-        """Click the clicker and reset non-public data."""
+        """Reset non-public data."""
         self.errors = []
         self._nin = 0
         return
@@ -100,26 +99,6 @@ class Validator(Visitor):
             self.errors.append(m)
 
         self._nin = op.nout
-        return
-
-    def onPartition(self, part):
-        """Process a Partition node."""
-
-        if not isinstance(part, PartitionABC):
-            m = msg%(part, PartitionABC.__name__)
-            self.errors.append(m)
-
-        self._nin = 1
-        return
-
-    def onGenerator(self, gen):
-        """Process a Generator node."""
-
-        if not isinstance(gen, GeneratorABC):
-            m = msg%(gen, GeneratorABC.__name__)
-            self.errors.append(m)
-
-        self._nin = 1
         return
 
 

@@ -22,7 +22,7 @@ __id__ = "$Id$"
 
 # obtain version information
 from pkg_resources import get_distribution
-__version__ = get_distribution('diffpy.srfit ').version
+__version__ = get_distribution('diffpy.srfit').version
 
 # we assume that tag_date was used and __version__ ends in YYYYMMDD
 __date__ = __version__[-8:-4] + '-' + \

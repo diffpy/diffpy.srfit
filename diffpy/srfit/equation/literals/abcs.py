@@ -14,8 +14,8 @@
 ########################################################################
 """Abstract Base Classes for Literals."""
 
-__all__ = ["LiteralABC", "ArgumentABC", "GeneratorABC", "OperatorABC",
-        "PartitionABC", "isinstance", "issubclass"]
+__all__ = ["LiteralABC", "ArgumentABC", "OperatorABC", "isinstance",
+        "issubclass"]
 
 from diffpy.srfit.util.abc import *
 
@@ -28,7 +28,8 @@ class LiteralABC(object):
     def identify(self, visitor): pass
 
     name = abstractproperty(None, None)
-    clicker = abstractproperty(None, None)
+    _value = abstractproperty(None, None)
+    _evaluator = abstractproperty(None, None)
 
 # End class LiteralABC
 
@@ -47,35 +48,12 @@ class ArgumentABC(LiteralABC):
 # End class ArgumentABC
 
 
-class GeneratorABC(LiteralABC):
-    """Abstract Base Class for Generator. See Generator for usage."""
-
-    @abstractmethod
-    def addLiteral(self, literal): pass
-
-    @abstractmethod
-    def generate(self, clicker): pass
-
-    args = abstractproperty(None, None)
-    literal = abstractproperty(None, None)
-
-# End class GeneratorABC
-
 
 class OperatorABC(LiteralABC):
     """Abstract Base Class for Operator. See Operator for usage."""
 
     @abstractmethod
     def addLiteral(self, literal): pass
-
-    @abstractmethod
-    def setCombine(self, combine): pass
-
-    @abstractmethod
-    def addTags(self, *tags): pass
-
-    @abstractmethod
-    def clearTags(self): pass
 
     args = abstractproperty(None, None)
     nin = abstractproperty(None, None)
@@ -88,22 +66,3 @@ class OperatorABC(LiteralABC):
 
 # End class OperatorABC
 
-
-class PartitionABC(LiteralABC):
-    """Abstract Base Class for Partition. See Partition for usage."""
-
-    @abstractmethod
-    def addArgument(self, arg, *tags): pass
-
-    @abstractmethod
-    def combine(self, vals): pass
-
-    @abstractmethod
-    def _prepare(self, *tags): pass
-
-    args = abstractproperty(None, None)
-    tags = abstractproperty(None, None)
-    tagmap = abstractproperty(None, None)
-    _partvals = abstractproperty(None, None)
-
-# End class PartitionABC

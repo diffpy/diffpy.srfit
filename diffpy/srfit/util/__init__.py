@@ -18,8 +18,6 @@
 Modules:
 abc         --  The abc module backported to python2.5. See the python2.6
                 documentation for details on this module.
-clicker     --  The clicker module defines the clickerFactory method for
-                creating Clicker classes.
 nameutils   --  Module for verifying that object names can be identifiers.
 ordereddict --  The OrderedDict class backported to python2.5. See the
                 python2.7 documentation for details on the OrderedDict class.

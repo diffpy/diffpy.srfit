@@ -213,7 +213,7 @@ class SpaceGroupParameters(RecipeContainer):
         if self.constrainadps:
             Uijs = []
             for scatterer in scatterers:
-                Uij = numpy.matrix(numpy.zeros((3,3)), dtype=float)
+                Uij = numpy.zeros((3,3), dtype=float)
                 for idx, pname in enumerate(adpsymbols):
                     par = scatterer.get(pname)
                     scatterer.unconstrain(par)

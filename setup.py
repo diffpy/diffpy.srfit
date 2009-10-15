@@ -22,7 +22,7 @@ clickermodule = Extension('diffpy.srfit.util._clicker',
 # define distribution
 dist = setup(
         name = "diffpy.srfit",
-        version = "1.0a3",
+        version = "1.0a4",
         namespace_packages = ['diffpy'],
         packages = find_packages(),
         entry_points = {},

@@ -54,10 +54,9 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None, sgoffset = [0, 0, 
 
         New Parameters that are used in constraints are created within a
         SpaceGroupParameters object, which is returned from this function.
-        Lattice constraints do not produce new Parameters.  Constraints are
-        created in ParameterSet that constains the constrained Parameter.  This
-        will erase any constraints or constant flags on the scatterers, lattice
-        or ADPs if they are to be constrained.
+        Constraints are created in ParameterSet that constains the constrained
+        Parameter.  This will erase any constraints or constant flags on the
+        scatterers, lattice or ADPs if they are to be constrained.
 
         The lattice constraints are applied as following.
         

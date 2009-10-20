@@ -48,7 +48,7 @@ Equation    --  Equations encapsulate a Literal tree and an Evaluator that can
 
 """
 
-from builder import EquationFactory
+from .equationmod import Equation
 
 # package version
 from diffpy.srfit.version import __version__

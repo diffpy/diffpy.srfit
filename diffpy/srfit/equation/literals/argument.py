@@ -33,16 +33,10 @@ class Argument(Literal):
 
     """
 
-    def _identify(self, visitor):
-        """Identify self to a visitor."""
-        visitor.onArgument(self)
-        self.const = False
+    def __init__(self, value = None, const = False):
+        Literal.__init__(self, value)
+        self.const = const
         return
-
-    def __str__(self):
-        if self.name:
-            return "Argument(" + self.name + ")"
-        return self.__repr__()
 
 # version
 __id__ = "$Id$"

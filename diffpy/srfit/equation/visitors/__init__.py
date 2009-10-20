@@ -26,6 +26,6 @@ attributes that are used specifically by the Evaluator visitor.
 # package version
 from diffpy.srfit.version import __version__
 
-from .argfinder import ArgFinder, getArguments
+from .argfinder import ArgFinder
 from .printer import Printer
 from .validator import Validator

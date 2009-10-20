@@ -5,8 +5,7 @@ import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
 import unittest
 
-from utils import _makeArgs
-
+from utils import _makeArgs, _makeNodes
 
 class TestValidator(unittest.TestCase):
 
@@ -14,7 +13,7 @@ class TestValidator(unittest.TestCase):
         """Test a simple function."""
 
         # Make some variables
-        v1, v2, v3, v4 = _makeArgs(4)
+        v1, v2, v3, v4 = _makeNodes(4)
 
         # Make some operations
         mult = literals.MultiplicationOperator()
@@ -79,18 +78,22 @@ class TestArgFinder(unittest.TestCase):
         """Test a simple function."""
 
         # Make some variables
-        v1, v2, v3, v4 = _makeArgs(4)
+        v1, v2, v3, v4 = _makeNodes(4)
 
         # Make some operations
-        mult = literals.MultiplicationOperator()
-        plus = literals.AdditionOperator()
-        minus = literals.SubtractionOperator()
+        ns = v1.namespace
+        ns["mult"] = mult = literals.MultiplicationOperator()
+        ns["plus"] = plus = literals.AdditionOperator()
+        ns["minus"] = minus = literals.SubtractionOperator()
+        nmult = literals.Node(mult, ns)
+        nplus = literals.Node(plus, ns)
+        nminus = literals.Node(minus, ns)
 
         # Create the equation (v1+v3)*(v4-v2)
-        plus.addLiteral(v1)
-        plus.addLiteral(v3)
-        minus.addLiteral(v4)
-        minus.addLiteral(v2)
+        plus.addLiteral(v1.target)
+        plus.addLiteral(v3.target)
+        minus.addLiteral(v4.target)
+        minus.addLiteral(v2.target)
         mult.addLiteral(plus)
         mult.addLiteral(minus)
 
@@ -106,11 +109,10 @@ class TestArgFinder(unittest.TestCase):
         mult.identify(argfinder)
         args = argfinder.args
         self.assertEqual(4, len(args))
-        self.assertTrue(v1 in args)
-        self.assertTrue(v2 in args)
-        self.assertTrue(v3 in args)
-        self.assertTrue(v4 in args)
-
+        self.assertTrue(v1.target in args)
+        self.assertTrue(v2.target in args)
+        self.assertTrue(v3.target in args)
+        self.assertTrue(v4.target in args)
         return
 
     def testArg(self):

@@ -15,9 +15,7 @@ class TestEquation(unittest.TestCase):
 
         # Make some variables
         v1, v2, v3, v4, c = _makeArgs(5)
-        c.name = "c"
         c.const = True
-
 
         # Make some operations
         mult = literals.MultiplicationOperator()
@@ -37,15 +35,17 @@ class TestEquation(unittest.TestCase):
 
         # Set the values of the variables.
         # The equation should evaluate to 2.5*(1+3)*(4-2) = 20
-        v1.setValue(1)
-        v2.setValue(2)
-        v3.setValue(3)
-        v4.setValue(4)
-        c.setValue(2.5)
+        v1.value = 1
+        v2.value = 2
+        v3.value = 3
+        v4.value = 4
+        c.value = 2.5
 
         # Make the equation
         eq = Equation(mult2)
         args = eq.args
+        # The arguments are found depth-first
+        self.assertEquals(args, [v1, v3, v4, v2])
         self.assertTrue(v1 in args)
         self.assertTrue(v2 in args)
         self.assertTrue(v3 in args)
@@ -53,20 +53,12 @@ class TestEquation(unittest.TestCase):
         self.assertTrue(c not in args)
         self.assertTrue(mult2 is eq.root)
 
-        self.assertEqual(v1, eq.v1)
-        self.assertEqual(v2, eq.v2)
-        self.assertEqual(v3, eq.v3)
-        self.assertEqual(v4, eq.v4)
+        self.assertAlmostEqual(20, eq()) # 20 = 2.5*(1+3)*(4-2)
+        self.assertAlmostEqual(25, eq(2)) # 25 = 2.5*(2+3)*(4-2)
+        self.assertAlmostEqual(10, eq(2, 0)) # 10 = 2.5*(2+0)*(4-2)
+        self.assertAlmostEqual(-5, eq(2, 0, 1)) # -5 = 2.5*(2+0)*(1-2)
+        self.assertAlmostEqual(-5, eq(2, 0, 0, 1)) # -5 = 2.5*(2+0)*(0-1)
 
-        self.assertEqual(20, eq()) # 20 = 2.5*(1+3)*(4-2)
-        self.assertEqual(25, eq(v1=2)) # 25 = 2.5*(2+3)*(4-2)
-        self.assertEqual(50, eq(v2=0)) # 50 = 2.5*(2+3)*(4-0)
-        self.assertEqual(30, eq(v3=1)) # 30 = 2.5*(2+1)*(4-0)
-        self.assertEqual(0, eq(v4=0)) # 20 = 2.5*(2+1)*(0-0)
-
-        # Try some swapping
-        eq.swap(v4, v1)
-        self.assertEqual(15, eq()) # 15 = 2.5*(2+1)*(2-0)
         return
 
 if __name__ == "__main__":

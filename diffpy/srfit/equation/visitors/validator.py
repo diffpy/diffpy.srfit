@@ -57,6 +57,7 @@ class Validator(Visitor):
         No assumption is made about the argument type.
 
         """
+        return
         if not isinstance(arg, ArgumentABC):
             m = msg%(arg, ArgumentABC.__name__)
             self.errors.append(m)
@@ -65,6 +66,7 @@ class Validator(Visitor):
 
     def onOperator(self, op):
         """Process an Operator node."""
+        return
 
         if not isinstance(op, OperatorABC):
             m = msg%(op, OperatorABC.__name__)

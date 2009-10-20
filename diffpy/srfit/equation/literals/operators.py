@@ -33,7 +33,6 @@ class Operator(Literal):
     information alone.
 
     Attributes
-    args   --  List of Literal arguments, set with addLiteral.
     nin     --  Number of inputs (non-positive means this is variable)
     nout    --  Number of outputs
     operation   --  Function that performs the operation. 
@@ -42,49 +41,21 @@ class Operator(Literal):
 
     """
 
-    def __init__(self, name = None, symbol = None, operation = None, nin = 2):
+    def __init__(self, symbol = None, operation = None, nin = 2):
         """Initialization."""
-        Literal.__init__(self, name = name)
+        Literal.__init__(self)
         self.symbol = symbol
         self.nin = nin
         self.nout = 1
-        self.args = []
         self.operation = operation
         return
 
-    def addLiteral(self, literal):
-        """Add a literal to this operator.
-
-        Note that order of operation matters. The first literal added is the
-        leftmost argument. The last is the rightmost.
-
-        Raises ValueError if we cannot use the argument.
-
-        """
-        if self.nin >= 0 and len(self.args) >= self.nin:
-            raise ValueError("Cannot accept more arguments")
-        self._validateArg(literal)
-
-        self.args.append(literal)
-        literal.addObserver(self.flush)
-        self.flush(None)
-        return
-
-    def _updateValue(self):
-        """Update my value if possible."""
-        vals = [l.getValue() for l in self.args]
-        self._value = self.operation(*vals)
-        return
-
-    def _identify(self, visitor):
-        """Identify self to a visitor."""
-        visitor.onOperator(self)
-        return
-
-    def __str__(self):
-        if self.name:
-            return "Operator(" + self.name + ")"
-        return self.__repr__()
+    def evaluate(self, node):
+        """Evaluate self based on node's dependencies."""
+        if self._value is None:
+            vals = [n.getValue() for n in node.args]
+            self._value = self.operation(*vals)
+        return self._value
 
 # Some specified operators
 
@@ -94,7 +65,6 @@ class AdditionOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "add"
         self.symbol = "+"
         self.operation = numpy.add
         return
@@ -105,7 +75,6 @@ class SubtractionOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "subtract"
         self.symbol = "-"
         self.operation = numpy.subtract
         return
@@ -116,7 +85,6 @@ class MultiplicationOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "multiply"
         self.symbol = "*"
         self.operation = numpy.multiply
         return
@@ -127,7 +95,6 @@ class DivisionOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "divide"
         self.symbol = "/"
         self.operation = numpy.divide
         return
@@ -138,7 +105,6 @@ class ExponentiationOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "power"
         self.symbol = "**"
         self.operation = numpy.power
         return
@@ -149,7 +115,6 @@ class RemainderOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "mod"
         self.symbol = "%"
         self.operation = numpy.mod
         return
@@ -160,7 +125,6 @@ class NegationOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "negative"
         self.symbol = "-"
         self.nin = 1
         self.operation = numpy.negative
@@ -179,7 +143,6 @@ class ConvolutionOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "convolve"
         self.symbol = "convolve"
 
         def conv(v1, v2):
@@ -198,7 +161,6 @@ class SumOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "sum"
         self.symbol = "sum"
         self.nin = 1
         self.operation = numpy.sum
@@ -220,7 +182,6 @@ class UFuncOperator(Operator):
 
         """
         Operator.__init__(self)
-        self.name = op.__name__
         self.symbol = op.__name__
         self.nin = op.nin
         self.nout = op.nout
@@ -233,7 +194,6 @@ class ListOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "list"
         self.symbol = "list"
         self.nin = -1
 
@@ -249,7 +209,6 @@ class SetOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "set"
         self.symbol = "set"
         self.nin = -1
 
@@ -265,7 +224,6 @@ class ArrayOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "array"
         self.symbol = "array"
         self.nin = -1
 
@@ -281,7 +239,6 @@ class PolyvalOperator(Operator):
     def __init__(self):
         """Initialization."""
         Operator.__init__(self)
-        self.name = "polyval"
         self.symbol = "polyval"
         self.nin = 2
         self.operation = numpy.polyval

@@ -42,6 +42,10 @@ class Visitor(object):
         """Process an Operator node."""
         return self._abstract("onOperator")
 
+    def onNode(self, node):
+        """Process a generic Node."""
+        node.target.identify(self)
+
     # throw an exception
     def _abstract(self, method):
         raise NotImplementedError(

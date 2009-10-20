@@ -12,16 +12,16 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Classes and utilities for creating evaluation networks.
+"""Classes and utilities for creating Equations objects.
 
-The EquationFactory class is used to create an evaluation network isolated
-namespace. A string equation can be given to an EquationFactory to be turned
-into an evaluation network. User-defined literals can be registered with the
-factory so that they are used in the equation.
+The EquationFactory class is used to create Equation instances within an
+isolated namespace. A string equation can be given to an EquationFactory to be
+turned into an Equation instance. User-defined literals can be registered with
+the factory so that they are used in the equation.
 
 An example using the EquationFactory:
 The makeEquation method turns the string-representation of an equation into
-an evaluation network.
+an Equation instance.
 > factory = EquationFactory()
 > eq = factory.makeEquation("A*sin(a*x)")
 will create an Equation with Arguments A, a and x that evaluates as
@@ -37,17 +37,18 @@ user-defined Argument is in the equation. This is can be used to assure that
 the same instance of an Argument appears in multiple equation. Other literals
 can be registered in a similar fashion.
 
-The EquationBuilder class does the hard work of making an evaluation network
-from a string in EquationFactory.makeEquation. EquationBuilder can be used
-directly to create evaluation networks. EquationBuilder instances overload
-normal arithmetic operations so that they build an evaluation network instead.
-EquationBuilder is specified in the ArgumentBuilder and OperatorBuilder
-classes.  All of the numpy ufunc operators are overloaded within this module as
-OperatorBuilder instances. You can create builders from literals by using the
-"wrap" methods within this module or by using the builder classes directly.
+The EquationBuilder class does the hard work of making an Equation from a
+string in EquationFactory.makeEquation. EquationBuilder can be used directly to
+create Equations. EquationBuilder instances overload normal arithmetic
+operations so that they build an Equation object instead.  EquationBuilder is
+specified in the ArgumentBuilder, GeneratorBuilder, OperatorBuilder and
+PartitionBuilder classes.  All of the numpy ufunc operators are overloaded
+within this module as OperatorBuilder instances. You can create builders from
+literals by using the "wrap" methods within this module or by using the builder
+classes directly.
 
-With a collection of EquationBuilder objects, one can create the evaluation
-network using normal python syntax:
+With a collection of EquationBuilder objects, one can simply write
+the Equation using normal python syntax:
 > A = ArgumentBuilder(name = "A")
 > a = ArgumentBuilder(name = "a")
 > x = ArgumentBuilder(name = "x")
@@ -84,9 +85,11 @@ example.
 
 _builders = {}
 
+
 import sys
 import numpy
 
+from .equationmod import Equation
 import diffpy.srfit.equation.literals as literals
 
 class EquationFactory(object):
@@ -147,8 +150,7 @@ class EquationFactory(object):
 
     def registerConstant(self, name, value):
         """Register a named constant with the factory."""
-        arg = literals.Argument(name=name, value=value)
-        arg.const =  True
+        arg = literals.Argument(name=name, value=value, const=True)
         self.registerArgument(name, arg)
         return
 
@@ -156,6 +158,17 @@ class EquationFactory(object):
         """Register a named Argument with the factory."""
         argbuilder = wrapArgument(name, arg)
         self.registerBuilder(name, argbuilder)
+        return
+
+    def registerEquation(self, name, eq):
+        """Register the equation with the factory.
+
+        Equations are Generators, so they are evaluated in an equation string
+        without parentheses.
+
+        """
+        eqbuilder = wrapEquation(name, eq)
+        self.registerBuilder(name, eqbuilder)
         return
 
     def registerFunction(self, name, func, nin = 2, nout = 1):
@@ -175,12 +188,20 @@ class EquationFactory(object):
         self.registerBuilder(name, opbuilder)
         return
 
+    def registerPartition(self, name, part):
+        """Register a named Partition with the factory."""
+        partbuilder = wrapPartition(name, part)
+        self.registerBuilder(name, partbuilder)
+        return
+
+    def registerGenerator(self, name, gen):
+        """Register a named Generator with the factory."""
+        genbuilder = wrapGenerator(name, gen)
+        self.registerBuilder(name, genbuilder)
+        return
+
     def registerBuilder(self, name, builder):
         """Register builder in this module so it can be used in makeEquation."""
-        # Check if we already have a builder with this name. If so, then we
-        # need to change the target of that object and add the new builder.
-        if name in self.builders:
-            self.builders[name].literal.setTarget(builder.literal)
         self.builders[name] = builder
         return
 
@@ -315,9 +336,11 @@ class EquationBuilder(object):
             (self.literal.name, self.__class__.__name__)
         raise TypeError(m)
 
+
     def getEquation(self):
         """Get the equation built by this object."""
-        return self.literal
+        eq = Equation(root = self.literal)
+        return eq
 
     def __evalBinary(self, other, OperatorClass, onright = False):
         """Evaluate a binary function.
@@ -339,8 +362,7 @@ class EquationBuilder(object):
 
         # Deal with constants
         if not isinstance(other, EquationBuilder):
-            literal = literals.Argument(value=other)
-            literal.const = True
+            literal = literals.Argument(value=other, const=True)
         else:
             literal = other.literal
         #print "value:", OperatorClass, self.literal, literal
@@ -430,14 +452,107 @@ class ArgumentBuilder(EquationBuilder):
         """
         EquationBuilder.__init__(self)
         if arg is None:
-            self.literal = literals.Argument(value=value, name=name)
-            self.literal.const = const
+            self.literal = literals.Argument(value=value, name=name,
+                    const=const)
         else:
             self.literal = arg
         return
 
 # end class ArgumentBuilder
 
+class PartitionBuilder(EquationBuilder):
+    """EquationBuilder wrapper around a Partition literal.
+
+    Equation builder objects can be composed like a normal function where the
+    arguments can be other EquationBuilder instances or constants.
+
+    Attributes
+    literal     --  The Partition wrapped by this instance.
+
+    """
+
+    def __init__(self, part):
+        """Wrap the Partition.
+        
+        Arguments
+        part    --  The Partition instance to be wrapped.
+
+        """
+        EquationBuilder.__init__(self)
+        self.literal = part
+        return
+
+# end class PartitionBuilder
+
+class GeneratorBuilder(EquationBuilder):
+    """EquationBuilder wrapper around a Generator literal.
+
+    Equation builder objects can be composed like a normal function where the
+    arguments can be other EquationBuilder instances or constants.
+
+    Attributes
+    literal     --  The Generator wrapped by this instance.
+
+    """
+
+    def __init__(self, gen):
+        """Wrap the Generator.
+        
+        Arguments
+        gen --  The Generator instance to be wrapped.
+
+        """
+        EquationBuilder.__init__(self)
+        self.literal = gen
+        return
+
+# end class GeneratorBuilder
+
+class EqGeneratorBuilder(EquationBuilder):
+    """EquationBuilder wrapper around an Equation.
+
+    Equation builder objects can be composed like a normal function where the
+    arguments can be other EquationBuilder instances or constants.
+
+    Attributes
+    literal     --  The Generator wrapped by this instance.
+
+    """
+
+    def __init__(self, name, eq):
+        """Wrap the Generator.
+        
+        Arguments
+        eq  --  The Generator instance to be wrapped.
+
+        """
+        EquationBuilder.__init__(self)
+        self.name = name
+        self.literal = eq
+        return
+
+    def __call__(self, *args):
+        """Call the builder.
+
+        This creates a new builder that will link the arguments in args to the
+        arguments inside of the equation.
+        
+        args    --  Arguments of the operation.
+
+        """
+        # We need to treat this as an equation. So, we will wrap it as an
+        # OperatorBuilder.
+        nin = len(self.literal.args)
+        if nin != len(args):
+            m = "%i arguments required, %i recieved"%(nin, len(args))
+            raise TypeError(m)
+
+        builder = wrapFunction(self.name, self.literal, nin=nin)
+
+        return builder(*args)
+
+
+# end class EqGeneratorBuilder
 
 class OperatorBuilder(EquationBuilder):
     """EquationBuilder wrapper around an Operator literal.
@@ -472,7 +587,11 @@ class OperatorBuilder(EquationBuilder):
 
         This creates a new builder that encapsulates the operation.
         
-        args    --  Arguments of the operation.
+        args    --  Arguments of the operation. Args past nin are considered
+                    tags.
+        kw      --  Key-word arguments. If "combine" appears and is True, the
+                    operation is allowed to combine any partitions it
+                    encounters after the operation.
 
         """
         newobj = OperatorBuilder(self.name)
@@ -500,16 +619,20 @@ class OperatorBuilder(EquationBuilder):
         # Do a quick check. This is the only thing we can require, since args
         # can hold tags for the equation.
         nin = newobj.literal.nin
-        if len(args) != nin:
+        if nin > len(args):
             m = "%i arguments required, %i recieved"%(nin, len(args))
-            raise ValueError(m)
+            raise TypeError(m)
 
+
+        combine = kw.get("combine", False)
         # Wrap scalar arguments and process tags
-        for arg in args:
+        for arg in args[:newobj.literal.nin]:
             # Wrap the argument if it is not already
             if not isinstance(arg, EquationBuilder):
                 arg = ArgumentBuilder(value=arg, const=True)
             newobj.literal.addLiteral(arg.literal)
+        newobj.literal.addTags(*args[newobj.literal.nin:])
+        newobj.literal.setCombine(combine)
         return newobj
 
 # end class OperatorBuilder
@@ -545,6 +668,41 @@ def wrapFunction(name, func, nin = 2, nout = 1):
     # Return it
     return opbuilder
 
+def wrapPartition(name, part):
+    """Wrap a Partition as a builder.
+
+    Returns the wrapped Partition.
+
+    """
+    part.name = name
+    partbuilder = PartitionBuilder(part)
+    return partbuilder
+
+def wrapGenerator(name, gen):
+    """Wrap a Generator as a builder.
+    
+    Returns the wrapped Generator.
+
+    """
+    gen.name = name
+    genbuilder = GeneratorBuilder(gen)
+    return genbuilder
+
+def wrapEquation(name, eq):
+    """Wrap a function as an EqGeneratorBuilder.
+
+    Equations can be treated as generators, with no arguments, but they can
+    also be treated as functions and accept arguments.
+
+    name    --  The name of the funciton
+    eq      --  An equation instance.
+
+    Returns the EqGeneratorBuilder instance that wraps the function.
+
+    """
+    eqbuilder = EqGeneratorBuilder(name, eq)
+    return eqbuilder
+
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module
     namespace.
@@ -558,7 +716,6 @@ def __wrapNumpyOperators():
 __wrapNumpyOperators()
 
 # Register other functions as well
-
 def __wrapSrFitOperators():
     """Export all non-base operators from the
     diffpy.srfit.equation.literals.operators module as OperatorBuilder

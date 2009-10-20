@@ -59,6 +59,7 @@ from diffpy.srfit.version import __version__
 
 # Import the operators
 
+from .node import Node
 from .argument import Argument
 from .operators import Operator
 from .operators import AdditionOperator

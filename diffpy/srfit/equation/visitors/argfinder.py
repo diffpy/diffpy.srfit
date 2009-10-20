@@ -22,19 +22,12 @@ from .visitor import Visitor
 
 from diffpy.srfit.util.ordereddict import OrderedDict
 
-def getArguments(literal, getconsts = True):
-    """Get an OrderedDict of arguments from an evaluation network."""
-    f = ArgFinder(getconsts)
-    literal.identify(f)
-    args = OrderedDict([(a.name, a) for a in f.args])
-    return args
-
 class ArgFinder(Visitor):
     """ArgFinder extracts Arguments from a Literal tree.
 
     Attributes
-    args    --  The list of collected Arguments
-    getconsts  --  Flag indicating whether to grab constant arguments.
+    args        --  The list of collected Arguments
+    getconsts   --  Flag indicating whether to grab constant arguments.
 
     """
 
@@ -57,16 +50,15 @@ class ArgFinder(Visitor):
 
     def onArgument(self, arg):
         """Process an Argument node."""
-        print arg, arg.getValue()
         if self.getconsts or not arg.const:
             self.args.append(arg)
-        return
+        return self.args
 
     def onOperator(self, op):
         """Process an Operator node."""
         for arg in op.args:
             arg.identify(self)
-        return
+        return self.args
 
 # version
 __id__ = "$Id$"

@@ -36,18 +36,12 @@ class FitContribution(ParameterSet):
     FitContribution.
 
     Attributes
-    clicker         --  A Clicker instance for recording changes in the
-                        Parameters or the residual components.
     name            --  A name for this FitContribution.
     profile         --  A Profile that holds the measured (and calcuated)
                         signal.
-    _confclicker    --  A Clicker for recording configuration
-                        changes, esp.  additions and removal of managed
-                        objects.
     _calculators    --  A managed dictionary of Calculators, indexed by name.
-    _constraints    --  A dictionary of Constraints, indexed by the constrained
-                        Parameter. Constraints can be added using the
-                        'constrain' method.
+    _constraints    --  A set of constrained Parameters. Constraints can be
+                        added using the 'constrain' methods.
     _generators     --  A managed dictionary of ProfileGenerators.
     _parameters     --  A managed OrderedDict of parameters.
     _restraints     --  A set of Restraints. Restraints can be added using the
@@ -57,12 +51,7 @@ class FitContribution(ParameterSet):
                         instance that is used to create constraints and
                         restraints from string
     _eq             --  The FitContribution equation that will be optimized.
-    _xname          --  The name of of the independent variable from the
-                        profile (default None). 
-    _yname          --  The name of of the observed profile (default None). 
-    _dyname         --  The name of of the uncertainty in the observed profile
-                        (default None).
-    _resstr         --  The residual equation in string form.
+    _reseq          --  The residual equation.
 
     """
 
@@ -76,17 +65,13 @@ class FitContribution(ParameterSet):
         self._yname = None
         self._dyname = None
 
-        self._reseqstr = ""
-
         self._generators = {}
         self._manage(self._generators)
         return
     
     def setProfile(self, profile, xname = None, yname = None, dyname = None):
-        """Assign the Profile for this fitcontribution.
+        """Assign the Profile for this FitContribution.
 
-        This resets the current residual (see setResidualEquation).
-        
         profile --  A Profile that specifies the calculation points and that
                     will store the calculated signal.
         xname   --  The name of the independent variable from the Profile. If
@@ -102,23 +87,9 @@ class FitContribution(ParameterSet):
                     Profile for this parameter will be used.  This variable is
                     usable within string equations with the specified name.
 
-        Raises ValueError if non-Profile Parameters with names conflicting with
-        the Profile Parameters already exist.
-
         """
-        # FIXME - Should this only be callable once? The resetting of
-        # configuration suggests that one should just start a new configuration
-        # in a new FitContribution, with the new Profile.
-        seteq = self.profile is None
-
-        # Clear previously watched parameters
-        if self.profile is not None:
-            self.removeParameter(self._orgdict[self._xname])
-            self.removeParameter(self._orgdict[self._yname])
-            self.removeParameter(self._orgdict[self._dyname])
 
         # Set the Profile and add its parameters to this organizer.
-
         self.profile = profile
 
         if xname is None:
@@ -132,20 +103,19 @@ class FitContribution(ParameterSet):
         self._yname = yname
         self._dyname = dyname
 
-        xpar = ParameterProxy(self._xname, self.profile.xpar)
-        ypar = ParameterProxy(self._yname, self.profile.ypar)
-        dypar = ParameterProxy(self._dyname, self.profile.dypar)
-        self.addParameter(xpar)
-        self.addParameter(ypar)
-        self.addParameter(dypar)
+        xpar = ParameterProxy(xname, self.profile.xpar)
+        ypar = ParameterProxy(yname, self.profile.ypar)
+        dypar = ParameterProxy(dyname, self.profile.dypar)
+        self.addParameter(xpar, check = False)
+        self.addParameter(ypar, check = False)
+        self.addParameter(dypar, check = False)
 
-        # If we have a ProfileGenerator, set its Profile as well, and assign
-        # the default residual equation if we're setting the Profile for the
-        # first time.
+        # If we have ProfileGenerators, set their Profiles.
         for gen in self._generators.values():
             gen.setProfile(profile)
 
-        if self._eq is not None and seteq:
+        # If we have _eq, but not _reseq, set the residual
+        if self._eq is not None and self._reseq is None:
             self.setResidualEquation()
 
         return
@@ -169,69 +139,63 @@ class FitContribution(ParameterSet):
         Raises ValueError if the ProfileGenerator has no name.
         Raises ValueError if the ProfileGenerator has the same name as some
         other managed object.
+
         """
         if name is None:
             name = gen.name
 
-        # Register the calculator with the equation factory
-        self._eqfactory.registerGenerator(name, gen)
+        # Register the generator with the equation factory and add it as a
+        # managed object.
+        self._eqfactory.registerOperator(name, gen)
         self._addObject(gen, self._generators, True)
 
-        # Set the default fitting equation if there is not one.
+        # If we have a profile, set the profile of the generator. 
+        if self.profile is not None:
+            gen.setProfile(self.profile)
+
+        # Make this our equation if we don't have one. This will set the
+        # residual equation if necessary.
         if self._eq is None:
             self.setEquation(name)
 
-        # If we have a Profile already, let the ProfileGenerator know about it.
-        if self.profile is not None:
-            for gen in self._generators.values():
-                gen.setProfile(self.profile)
-
         return
 
-    def setEquation(self, eqstr, makepars = True, ns = {}):
+    def setEquation(self, eqstr, ns = {}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual
         for this FitContribution.  The equation will be usable within
-        setResidualEquation as "eq", and it takes no arguments.  Calling
-        setEquation resets the residual equation.
+        setResidualEquation as "eq", and it takes no arguments.
 
         eqstr   --  A string representation of the equation. Any Parameter
                     registered by addParameter or setProfile, or function
                     registered by setCalculator, registerFunction or
                     registerStringFunction can be can be used in the equation
                     by name.
-        makepars    --  A flag indicating whether missing Parameters can be
-                    created by the Factory (default True). If False, then the a
-                    ValueError will be raised if there are undefined arguments
-                    in the eqstr. 
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not registered (default {}).
         
         Raises ValueError if ns uses a name that is already used for a
         variable.
-        Raises ValueError if makepars is false and eqstr depends on a Parameter
-        that is not in ns or part of the FitContribution.
 
         """
-
         # Build the equation instance.
-        eq = equationFromString(eqstr, self._eqfactory, buildargs = makepars,
-                ns = ns)
+        eq = equationFromString(eqstr, self._eqfactory, buildargs = True, ns =
+                ns)
         eq.name = "eq"
-        # Register the equation
-        self._registerEquation(eq.name, eq, check = False)
-        # FIXME - this will have to be changed when proper swapping is
-        # implemented.
+
         # Register any new Parameters.
         for par in self._eqfactory.newargs:
             self._addParameter(par)
 
+        # Register eq as an operator
+        self._eqfactory.registerOperator("eq", eq)
         self._eq = eq
-        self._eq.clicker.addSubject(self.clicker)
 
-        if self.profile is not None:
+        # Set the residual if we need to
+        if self.profile is not None and self._reseq is None:
             self.setResidualEquation()
+
         return
 
     def setResidualEquation(self, eqstr = None):
@@ -258,19 +222,14 @@ class FitContribution(ParameterSet):
         if self.profile is None:
             raise AttributeError("Assign the Profile first")
 
-
         chivstr = "(eq - %s)/%s" % (self._yname, self._dyname)
         resvstr = "(eq - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)
 
         # Get the equation string if it is not defined
-        if eqstr == "chiv":
+        if eqstr == "chiv" or eqstr is None:
             eqstr = chivstr
         elif eqstr == "resv":
             eqstr = resvstr
-        elif eqstr is None:
-            eqstr = self._reseqstr or chivstr
-
-        self._reseqstr = eqstr
 
         self._reseq = equationFromString(eqstr, self._eqfactory)
 

@@ -421,6 +421,7 @@ def profileTest():
 if __name__ == "__main__":
 
     for i in range(1,13):
+    #for i in range(1,2):
         speedTest2(i)
     """
     for i in range(1, 9):

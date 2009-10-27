@@ -13,6 +13,18 @@ class TestProfile(unittest.TestCase):
         self.profile = Profile()
         return
 
+    def testInit(self):
+        profile = self.profile
+        self.assertTrue(profile.xobs is None)
+        self.assertTrue(profile.yobs is None)
+        self.assertTrue(profile.dyobs is None)
+        self.assertTrue(profile.x is None)
+        self.assertTrue(profile.y is None)
+        self.assertTrue(profile.dy is None)
+        self.assertTrue(profile.ycalc is None)
+        self.assertEquals(profile.meta, {})
+        return
+
     def testSetObservedProfile(self):
         """Test the setObservedProfile method."""
         # Make a profile with defined dy

@@ -160,8 +160,9 @@ def makeRecipe():
 def scipyOptimize(recipe):
     """Optimize the recipe created above using scipy.
 
-    The FitRecipe we created in makeRecipe has a 'residual' method that we can be
-    minimized using a scipy optimizer. The details are described in the source.
+    The FitRecipe we created in makeRecipe has a 'residual' method that we can
+    be minimized using a scipy optimizer. The details are described in the
+    source.
 
     """
 

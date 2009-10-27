@@ -147,12 +147,12 @@ def plotResults(recipe):
     xr = recipe.xnickel.profile.x
     xg = recipe.xnickel.profile.y
     xgcalc = recipe.xnickel.profile.ycalc
-    xdiff = xg - xgcalc - 0.5 * max(xg)
+    xdiff = xg - xgcalc - 0.8 * max(xg)
 
     nr = recipe.nnickel.profile.x
     ng = recipe.nnickel.profile.y
     ngcalc = recipe.nnickel.profile.ycalc
-    ndiff = ng - ngcalc - 0.5 * max(ng)
+    ndiff = ng - ngcalc - 0.8 * max(ng)
 
     import pylab
     pylab.subplot(2, 1, 1)

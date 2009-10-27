@@ -23,15 +23,27 @@ residual equation.
 
 import numpy
 
+from diffpy.srfit.util.observable import Observable
+
 from .parameter import Parameter
-from diffpy.srfit.util.clicker import Clicker
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8
 
+class ProfileParameter(Parameter):
+    """A Parameter for profiles that can have a None value."""
 
-class Profile(object):
+    def getValue(self):
+        """Get the value, even if it is None."""
+        return self._value
+
+# End class ProfileParameter
+
+class Profile(Observable):
     """Observed and calculated profile container.
+
+    Profile is an Observable. The xpar, ypar and dypar attributes are observed
+    by the Profile, which can in turn be observed by some other object.
 
     Attributes
 
@@ -40,15 +52,16 @@ class Profile(object):
     yobs    --  A numpy array of the observed signal (default None)
     dyobs   --  A numpy array of the uncertainty of the observed signal (default
                 None, optional).
-    y       --  The profile over the calculation range (default None).
-    dy      --  The uncertainty in the profile over the calculation range
-                (default None).
     x       --  A numpy array of the calculated independent variable (default
-                None)
+                None, property for xpar accessors).
+    y       --  The profile over the calculation range (default None, property
+                for ypar accessors).
+    dy      --  The uncertainty in the profile over the calculation range
+                (default None, property for dypar accessors).
     ycalc   --  A numpy array of the calculated signal (default None).
-    xpar    --  A Parameter that stores x (named "x").
-    ypar    --  A Parameter that stores y (named "y").
-    dypar   --  A Parameter that stores dy (named "dy").
+    xpar    --  A ProfileParameter that stores x (named "x").
+    ypar    --  A ProfileParameter that stores y (named "y").
+    dypar   --  A ProfileParameter that stores dy (named "dy").
     meta    --  A dictionary of metadata. This is only set if provided by a
                 parser.
 
@@ -56,14 +69,20 @@ class Profile(object):
 
     def __init__(self):
         """Initialize the attributes."""
+        Observable.__init__(self)
         self.xobs = None
         self.yobs = None
         self.dyobs = None
         self.ycalc = None
-        self.xpar = Parameter("x")
-        self.ypar = Parameter("y")
-        self.dypar = Parameter("dy")
+        self.xpar = ProfileParameter("x")
+        self.ypar = ProfileParameter("y")
+        self.dypar = ProfileParameter("dy")
         self.meta = {}
+
+        # Observable
+        self.xpar.addObserver(self._flush)
+        self.ypar.addObserver(self._flush)
+        self.dypar.addObserver(self._flush)
         return
 
     # We want x, y and dy to stay in-sync with xpar, ypar and dypar
@@ -211,6 +230,17 @@ class Profile(object):
             # introduces (more) correlation between the data points.
             self.dy = rebinArray(self.dyobs, self.xobs, self.x)
 
+        return
+
+    def _flush(self, other):
+        """Invalidate cached state.
+
+        This will force any observer to invalidate its state. By default this
+        does nothing.
+
+        """
+        self.ycalc = None
+        self.notify()
         return
 
 # End class Profile

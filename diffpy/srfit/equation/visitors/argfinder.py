@@ -14,8 +14,7 @@
 ########################################################################
 """Visitor for extracting the Argument entries in a Literal tree.
 
-ArgFinder extracts all Arguments from a literal true, even "hidden" ones that
-are contained in Partitions within and below Generators.
+ArgFinder extracts all Arguments from a literal true.
 
 """ 
 
@@ -51,26 +50,13 @@ class ArgFinder(Visitor):
         """Process an Argument node."""
         if self.getconsts or not arg.const:
             self.args.append(arg)
-        return
+        return self.args
 
     def onOperator(self, op):
         """Process an Operator node."""
         for arg in op.args:
             arg.identify(self)
-        return
-
-    def onPartition(self, part):
-        """Process a Partition node."""
-        for arg in part.args:
-            arg.identify(self)
-        return
-
-    def onGenerator(self, gen):
-        """Process a Generator node."""
-        for arg in gen.args:
-            arg.identify(self)
-        return
-
+        return self.args
 
 # version
 __id__ = "$Id$"

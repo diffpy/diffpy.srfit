@@ -26,7 +26,6 @@ interface.
 
 from .visitor import Visitor
 
-from diffpy.srfit.util.clicker import Clicker
 from diffpy.srfit.equation.literals.abcs import *
 
 msg = "'%s' does not have the interface required by '%s'"
@@ -55,17 +54,23 @@ class Validator(Visitor):
     def onArgument(self, arg):
         """Process an Argument node.
 
-        No assumption is made about the argument type.
+        The Argument must be an instance of ArgumentABC from
+        diffpy.srfit.equation.literals.abcs
 
         """
         if not isinstance(arg, ArgumentABC):
             m = msg%(arg, ArgumentABC.__name__)
             self.errors.append(m)
         self._nin = 1
-        return
+        return self.errors
 
     def onOperator(self, op):
-        """Process an Operator node."""
+        """Process an Operator node.
+
+        The Operator must be an instance of OperatorABC from
+        diffpy.srfit.equation.literals.abcs
+        
+        """
 
         if not isinstance(op, OperatorABC):
             m = msg%(op, OperatorABC.__name__)
@@ -100,28 +105,7 @@ class Validator(Visitor):
             self.errors.append(m)
 
         self._nin = op.nout
-        return
-
-    def onPartition(self, part):
-        """Process a Partition node."""
-
-        if not isinstance(part, PartitionABC):
-            m = msg%(part, PartitionABC.__name__)
-            self.errors.append(m)
-
-        self._nin = 1
-        return
-
-    def onGenerator(self, gen):
-        """Process a Generator node."""
-
-        if not isinstance(gen, GeneratorABC):
-            m = msg%(gen, GeneratorABC.__name__)
-            self.errors.append(m)
-
-        self._nin = 1
-        return
-
+        return self.errors
 
 # version
 __id__ = "$Id$"

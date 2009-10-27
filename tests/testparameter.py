@@ -12,22 +12,25 @@ class TestParameter(unittest.TestCase):
         l = Parameter("l")
 
         l.setValue(3.14)
-        self.assertAlmostEqual(l.getValue(), 3.14)
+        self.assertAlmostEqual(3.14, l.getValue())
 
         # Try array
         import numpy
         x = numpy.arange(0, 10, 0.1)
         l.setValue(x)
         self.assertTrue( l.getValue() is x )
+        self.assertTrue( l.value is x )
 
         # Change the array
         y = numpy.arange(0, 10, 0.5)
-        l.setValue(y)
+        l.value = y
         self.assertTrue( l.getValue() is y )
+        self.assertTrue( l.value is y )
 
         # Back to scalar
         l.setValue(1.01)
-        self.assertAlmostEqual(l.getValue(), 1.01)
+        self.assertAlmostEqual(1.01, l.getValue())
+        self.assertAlmostEqual(1.01, l.value)
         return
 
 class TestParameterProxy(unittest.TestCase):
@@ -43,11 +46,11 @@ class TestParameterProxy(unittest.TestCase):
         self.assertEqual(l.getValue(), la.getValue())
 
         # Change the parameter
-        l.setValue(2.3)
+        l.value = 2.3
         self.assertEqual(l.getValue(), la.getValue())
 
         # Change the proxy
-        la.setValue(3.2)
+        la.value = 3.2
         self.assertEqual(l.getValue(), la.getValue())
 
         return

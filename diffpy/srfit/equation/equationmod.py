@@ -17,7 +17,7 @@
 Equation is a functor that holds a Literal tree that defines an equation. It's
 __call__ method evaluates the equation at the most recent value of its
 Arguments. The non-constant arguments are accessible as attributes of the
-Equation instance.
+Equation instance and can be passed as arguments to __call__.
 
 Example
 > # make a Literal tree. Here's a simple one
@@ -38,59 +38,73 @@ See the class documentation for more information.
 
 """
 
-# IDEA - Evaluate the branch-weight at every node when the root is added. Use
-# this to break the evaluation into smaller problems that can be run in
-# parallel.
+from diffpy.srfit.util.ordereddict import OrderedDict
 
-from .visitors import Evaluator
-from .visitors import Validator
-from .visitors import ArgFinder
-from .visitors import PartFinder
-from .visitors import Swapper
-from .literals import Generator
-from .literals import Argument
-from .literals import Operator
+from .visitors import validate, getArgs, swap
+from .literals.operators import Operator
+from .literals.literal import Literal
 
-class Equation(Generator):
+
+class Equation(Operator):
     """Class for holding and evaluating a Literal tree.
 
     Instances have attributes that are the non-const Arguments of the tree
-    (accessed by name) and a __call__ method that uses an Evaluator vistor to
-    evaluate the tree.  It is assumed, but not checked that Arguments have
-    unique names.  If this is not the case, then one should keep their own list
-    of Arguments.
+    (accessed by name) and a __call__ method that evaluates the tree.  It is
+    assumed, but not enforced that Arguments have unique names.  If this is not
+    the case, then one should keep its own list of Arguments.
 
     The tree is scanned for errors when it is added. Thus, the tree should be
     complete before putting it inside an Equation.
 
+    Equations can act as Operator nodes within a literal tree. In this context,
+    they evaluate as the root node, but provide a calling interface that
+    accepts new argument values for the literal tree.
+
     Attributes
-    evaluator   --  An Evaluator instance unique to this Equation
-    root        --  The root Literal of the equation tree
-    argdict     --  A dictionary of Arguments from the root, indexed by
-                    name. This is used by the __call__ method.
-    args        --  A list of Arguments, used to preserve the order of the
-                    Arguments, which is used by the __call__ method.
-    name        --  A name for this Equation.
-    clicker     --  A Clicker instance for recording change in the Generator.
-    literal     --  An Argument to store the value of te
+    root    --  The root Literal of the equation tree
+    argdict --  An OrderedDict of Arguments from the root.
+    args    --  Property that gets the values of argdict.
+
+    Operator Attributes
+    args    --  List of Literal arguments, set with 'addLiteral'
+    name    --  A name for this operator. e.g. "add" or "sin"
+    nin     --  Number of inputs (<1 means this is variable)
+    nout    --  Number of outputs
+    operation   --  Function that performs the operation. e.g. numpy.add.
+    symbol  --  The symbolic representation. e.g. "+" or "sin".
+    _value  --  The value of the Operator.
+    value   --  Property for 'getValue'.
 
     """
 
-    def __init__(self, root=None):
+    def __init__(self, name = None, root = None):
         """Initialize.
 
-        root    --  The root node of the Literal tree (optional)
+        name    --  A name for this Equation.
+        root    --  The root node of the Literal tree (default None). If root
+                    is not passed here, you must call the 'setRoot' method to
+                    set or change the root node.
 
         """
-        Generator.__init__(self)
-        self.evaluator = None
-        self.root = None
-        self.argdict = {}
-        self.literal = Argument()
+        # Operator stuff. We circumvent Operator.__init__ since we're using
+        # args as a property. We cannot set it, as the Operator tries to do.
+        Literal.__init__(self, name)
+        self.symbol = name
+        self.nin = None
+        self.nout = 1
+        self.operation = self.__call__
 
+        self.root = None
+        self.argdict = OrderedDict()
         if root is not None:
             self.setRoot(root)
+
         return
+
+    def _getArgs(self):
+        return self.argdict.values()
+
+    args = property(_getArgs)
 
     def __getattr__(self, name):
         """Gives access to the Arguments as attributes."""
@@ -106,24 +120,26 @@ class Equation(Generator):
         ValueError if errors are found in the Literal tree.
 
         """
-        validator = Validator()
-        root.identify(validator)
-        if validator.errors:
-            m = "Errors found in Literal tree %s\n"%root
-            m += "\n".join(validator.errors)
-            raise ValueError(m)
 
-        argfinder = ArgFinder(getconsts=False)
-        root.identify(argfinder)
-        self.args = list(argfinder.args)
-        self.argdict = dict( [(arg.name, arg) for arg in argfinder.args] )
+        # Validate the new root
+        validate(root)
 
-        partfinder = PartFinder()
-        root.identify(partfinder)
-        self.evaluator = Evaluator(parts = bool(partfinder.parts))
+        # Stop observing the old root
+        if self.root is not None:
+            self.root.removeObserver(self._flush)
 
+        # Add the new root
         self.root = root
-        self.clicker.addSubject(root.clicker)
+        self.root.addObserver(self._flush)
+        self._flush(self)
+
+        # Get the args
+        args = getArgs(root, getconsts=False)
+        self.argdict = OrderedDict( [(arg.name, arg) for arg in args] )
+
+        # Set Operator attributes
+        self.nin = len(self.args)
+
         return
 
     def __call__(self, *args, **kw):
@@ -139,7 +155,7 @@ class Equation(Generator):
         """
         # Process args
         for idx, val in enumerate(args):
-            if idx > len(self.args):
+            if idx > len(self.argdict):
                 raise ValueError("Too many arguments")
             arg = self.args[idx]
             arg.setValue(val)
@@ -151,62 +167,30 @@ class Equation(Generator):
                 raise ValueError("No argument named '%s' here"%name)
             arg.setValue(val)
 
-        # Evaluate the function
-        self.root.identify(self.evaluator)
-        self.evaluator.click()
-        return self.evaluator.value
+        self._value = self.root.getValue()
+        return self._value
 
     def swap(self, oldlit, newlit):
-        """Swap out one Literal in the equation for another one.
+        """Swap a literal in the equation for another.
 
-        oldlit  --  A Literal to be swapped out
-        newlit  --  A Literal to be swapped in
-
-        Rules:
-        Argument    --  All instances of oldlit replaced with newlit (even
-                        within Generators and Partitions)
-        Generator   --  All instances of oldlit replaced with newlit
-        Operator    --  All instances of oldlit replaced with newlit, Literals
-                        of oldlit added to newlit
-        Partition   --  All instances of oldlit replaced with newlit
-
-        Raises TypeError of oldlit and newlit are incompatible
+        Note that this may change the root and the operation interface
 
         """
-
-        swapper = Swapper(oldlit, newlit)
-        # We can't swap out the root node, so we'll put our root inside of an
-        # identity operator.
-        identity = Operator("identity", operation = lambda x: x, nin = 1)
-        identity.addLiteral(self.root)
-        identity.identify(swapper)
-
-        # Now remove the root from the identity operator
-        identity.clicker.removeSubject(self.root.clicker)
-
-        # Remove the new root, if there is one
-        identity.clicker.removeSubject(newlit.clicker)
-
-        # Now reset the root so we can find the arguments properly
-        self.setRoot(self.root)
-
+        newroot = swap(self.root, oldlit, newlit)
+        self.setRoot(newroot)
         return
 
-    # for the Generator interface
-    def generate(self, clicker):
-        """Generate the Literal.
+    # Operator methods
 
-        clicker --  A Clicker instance for decision making. It is not up to the
-                    Evaluator or any other visitor to decide when it can call
-                    this method.  The clicker can be used by the Generator to
-                    make that decision.
+    def addLiteral(self, literal):
+        """Cannot add a literal to an Equation."""
+        raise AttributeError("Cannot add literals to an Equation.")
 
-        This stores the value of the equation in the literal attribute.
+    # Visitors can treat us differently than an Operator.
 
-        """
-        self.literal.setValue( self() )
-        return
-
+    def identify(self, visitor):
+        """Identify self to a visitor."""
+        return visitor.onEquation(self)
 
 # version
 __id__ = "$Id$"

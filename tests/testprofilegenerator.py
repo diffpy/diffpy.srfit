@@ -7,34 +7,58 @@ from numpy import arange, array_equal
 
 from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.util.clicker import Clicker
-
 
 class TestProfileGenerator(unittest.TestCase):
 
     def setUp(self):
-        self.calc = ProfileGenerator("test")
+        self.gen = ProfileGenerator("test")
         self.profile = Profile()
         x = arange(0, 10, 0.1)
         self.profile.setCalculationPoints(x)
-        self.calc.setProfile(self.profile)
+        self.gen.setProfile(self.profile)
         return
 
-    def testEval(self):
-        """Test the eval method."""
-        calc = self.calc
+    def testOperation(self):
+        """Test the operation method."""
+        gen = self.gen
         prof = self.profile
 
         # Try the direct evaluation
-        calc.eval()
+        gen.operation()
         self.assertTrue(array_equal(prof.x, prof.ycalc))
 
-        # Try evaluation through the generate method
-        calc.generate(Clicker())
+        # Try evaluation through __call__
+        gen(prof.x)
         self.assertTrue(array_equal(prof.x, prof.ycalc))
-        ylit = calc.literal.getValue()
-        self.assertTrue(array_equal(prof.ycalc, ylit))
+        return
 
+    def testUpdate(self):
+        """Update and change the profile to make sure generator is flushed."""
+        gen = self.gen
+        prof = self.profile
+
+        # Make sure attributes get updated with a change in the calculation
+        # points.
+        x = arange(0, 9, 0.1)
+        prof.setCalculationPoints(x)
+        self.assertTrue(gen._value is None)
+        val = gen.value
+        self.assertTrue(array_equal(x, prof.ycalc))
+        self.assertTrue(array_equal(prof.x, prof.ycalc))
+        self.assertTrue(array_equal(val, prof.ycalc))
+        self.assertTrue(array_equal(gen._value, prof.ycalc))
+
+        # Make sure attributes get updated with a new profile.
+        x = arange(0, 8, 0.1)
+        prof = Profile()
+        prof.setCalculationPoints(x)
+        gen.setProfile(prof)
+        self.assertTrue(gen._value is None)
+        val = gen.value
+        self.assertTrue(array_equal(x, prof.ycalc))
+        self.assertTrue(array_equal(prof.x, prof.ycalc))
+        self.assertTrue(array_equal(val, prof.ycalc))
+        self.assertTrue(array_equal(gen._value, prof.ycalc))
         return
 
 if __name__ == "__main__":

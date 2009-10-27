@@ -121,7 +121,7 @@ class TestParameterWrapper(unittest.TestCase):
         def _testCrystal():
 
             # Test the lattice
-            self.assertAlmostEquals(occryst.a, cryst.a.getValue())
+            self.assertAlmostEquals(occryst.a, cryst.a.value)
             self.assertAlmostEquals(occryst.b, cryst.b.getValue())
             self.assertAlmostEquals(occryst.c, cryst.c.getValue())
             self.assertAlmostEquals(occryst.alpha, cryst.alpha.getValue())

@@ -41,12 +41,10 @@ from pyobjcryst.molecule import GetBondLength, GetBondAngle, GetDihedralAngle
 from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
 from pyobjcryst.molecule import StretchModeTorsion
 
-from diffpy.srfit.fitbase.constraint import Constraint
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.restraint import Restraint
-from diffpy.srfit.util.clicker import Clicker
 from diffpy.srfit.structure.basestructure import BaseStructure
 
 class ScattererParSet(ParameterSet):
@@ -830,6 +828,8 @@ class StretchModeParameter(Parameter):
 
         """
         curval = self.getValue()
+        val = float(val)
+
         if val == curval:
             return
 
@@ -837,8 +837,8 @@ class StretchModeParameter(Parameter):
         delta = val - curval
         self.mode.Stretch(delta)
 
-        # Click everything that has changed
-        self.click()
+        # Let Parameter take care of the general details
+        Parameter.setValue(self, val)
 
         return
 
@@ -855,27 +855,37 @@ class StretchModeParameter(Parameter):
             atomlist = [atomlist]
         # Record the added atoms in the Parameter
         self.matoms.update(atomlist)
+        # Make sure we're observing these atoms
         for a in atomlist:
-            self.clicker.addSubject(a.clicker)
+            a.x.addObserver(self._flush)
+            a.y.addObserver(self._flush)
+            a.z.addObserver(self._flush)
 
         # Record the added atoms in the StretchMode
         scatlist = [a.scat for a in atomlist]
         self.mode.AddAtoms(scatlist)
         return
 
-    def click(self):
-        """Click the clickers of all the mutated Parameters."""
-        # Click the atoms that have moved
-        for a in self.matoms:
-            a.x.clicker.click()
-            a.y.clicker.click()
-            a.z.clicker.click()
-        # Click the molecule position
-        self.molecule.x.clicker.click()
-        self.molecule.y.clicker.click()
-        self.molecule.z.clicker.click()
+    def notify(self):
+        """Notify all mutated Parameters and observers.
 
-        self.clicker.click()
+        Some of the mutated parameters will be observing us. At the same time
+        we need to observe them. Observable won't let us do both, so we notify
+        the Parameters that we mutate directly.
+
+        """
+        # Notify the atoms that have moved
+        for a in self.matoms:
+            a.x._flush(None)
+            a.y._flush(None)
+            a.z._flush(None)
+        # Notify the molecule position
+        self.molecule.x._flush(None)
+        self.molecule.y._flush(None)
+        self.molecule.z._flush(None)
+
+        # Notify observers
+        Parameter.notify(self)
         return
 
 # End class StretchModeParameter
@@ -912,15 +922,17 @@ class BondLengthParameter(StretchModeParameter):
     matoms  --  The set of all mutated MolAtomParSets
     molecule    --  The MoleculeParSet the MolAtomParSets belong to
     mode    --  The pyobjcryst.molecule.StretchModeBondLength for the bond
-    calclicker  --  A Clicker to record when we have calculated the latest
-                    value of the Parameter.
 
     Inherited Attributes
-    name    --  A name for this Parameter. Names should be unique within a
-                ParameterSet.
-    clicker --  A Clicker instance for recording change in the value.
-    value   --  The value of the Parameter. Modified with setValue.
-    const   --  A flag indicating whether the Parameter is constant.
+    name    --  A name for this Parameter.
+    const   --  A flag indicating whether this is considered a constant.
+    _value  --  The value of the Parameter. Modified with 'setValue'.
+    value   --  Property for 'getValue' and 'setValue'.
+    constraint  --  A callable that calculates the value of this Parameter. If
+                this is None (None), the the Parameter is responsible for its
+                own value. The callable takes no arguments.
+    bounds  --  A 2-list defining the bounds on the Parameter. This can be
+                used by some optimizers when the Parameter is varied.
 
     """
 
@@ -941,19 +953,6 @@ class BondLengthParameter(StretchModeParameter):
                     will be built.
 
         """
-        if value is None:
-            value = GetBondLength(atom1.scat, atom2.scat)
-
-
-        self.calclicker = Clicker()
-        self.calclicker.click()
-
-        self.value = value
-
-        StretchModeParameter.__init__(self, name, value, const)
-
-        atom1.setConst(const)
-        atom2.setConst(const)
 
         # Create the mode
         self.mode = mode
@@ -961,21 +960,30 @@ class BondLengthParameter(StretchModeParameter):
             self.mode = StretchModeBondLength(atom1.scat, atom2.scat, None)
         # We only add the last atom. This is the one that will move
         self.mode.AddAtom(atom2.scat)
+        self.matoms = set([atom2])
 
-        self.clicker.addSubject(atom1.clicker)
-        self.clicker.addSubject(atom2.clicker)
+        # Observe the atom positions
+        for a in [atom1, atom2]:
+            a.x.addObserver(self._flush)
+            a.y.addObserver(self._flush)
+            a.z.addObserver(self._flush)
 
         self.atom1 = atom1
         self.atom2 = atom2
         self.molecule = atom1.parent
-        self.matoms = set([atom2])
+
+        # We do this last so the atoms are defined before we set any values.
+        if value is None:
+            value = GetBondLength(atom1.scat, atom2.scat)
+        StretchModeParameter.__init__(self, name, value, const)
+        self.setConst(const)
 
         return
 
     def setConst(self, const = True, value = None):
         """Toggle the Parameter as constant.
 
-        This sets the underlying MolAtomParSets as const as well.
+        This sets the underlying MolAtomParSet positions const as well.
 
         const   --  Flag indicating if the Parameter is constant (default
                     True).
@@ -985,8 +993,11 @@ class BondLengthParameter(StretchModeParameter):
 
         """
         StretchModeParameter.setConst(self, const, value)
-        self.atom1.setConst(const)
-        self.atom2.setConst(const)
+
+        for a in [self.atom1, self.atom2]:
+            a.x.setConst(const)
+            a.y.setConst(const)
+            a.z.setConst(const)
         return
 
     def getValue(self):
@@ -997,11 +1008,12 @@ class BondLengthParameter(StretchModeParameter):
         called.
 
         """
-        if self.calclicker < self.clicker:
-            self.value = GetBondLength(self.atom1.scat, self.atom2.scat)
-            self.calclicker.click()
+        if self._value is None:
+            val = GetBondLength(self.atom1.scat, self.atom2.scat)
+            Parameter.setValue(self, val)
 
-        return self.value
+        return self._value
+
 
 # End class BondLengthParameter
                      
@@ -1023,15 +1035,17 @@ class BondAngleParameter(StretchModeParameter):
     matoms  --  The set of all mutated MolAtomParSets
     molecule    --  The MoleculeParSet the MolAtomParSets belong to
     mode    --  The pyobjcryst.molecule.StretchModeBondAngle for the bond angle
-    calclicker  --  A Clicker to record when we have calculated the latest
-                    value of the parameter.
 
     Inherited Attributes
-    name    --  A name for this Parameter. Names should be unique within a
-                ParameterSet.
-    clicker --  A Clicker instance for recording change in the value.
-    value   --  The value of the Parameter. Modified with setValue.
-    const   --  A flag indicating whether the Parameter is constant.
+    name    --  A name for this Parameter.
+    const   --  A flag indicating whether this is considered a constant.
+    _value  --  The value of the Parameter. Modified with 'setValue'.
+    value   --  Property for 'getValue' and 'setValue'.
+    constraint  --  A callable that calculates the value of this Parameter. If
+                this is None (None), the the Parameter is responsible for its
+                own value. The callable takes no arguments.
+    bounds  --  A 2-list defining the bounds on the Parameter. This can be
+                used by some optimizers when the Parameter is varied.
 
     """
 
@@ -1052,17 +1066,6 @@ class BondAngleParameter(StretchModeParameter):
                     None (default), then a StretchMode will be built.
 
         """
-        if value is None:
-            value = GetBondAngle(atom1.scat, atom2.scat, atom3.scat)
-
-        self.calclicker = Clicker()
-        self.calclicker.click()
-
-        StretchModeParameter.__init__(self, name, value, const)
-
-        atom1.setConst(const)
-        atom2.setConst(const)
-        atom3.setConst(const)
 
         # Create the stretch mode
         self.mode = mode
@@ -1071,23 +1074,31 @@ class BondAngleParameter(StretchModeParameter):
                     atom3.scat, None)
         # We only add the last atom. This is the one that will move
         self.mode.AddAtom(atom3.scat)
+        self.matoms = set([atom3])
 
-        self.clicker.addSubject(atom1.clicker)
-        self.clicker.addSubject(atom2.clicker)
-        self.clicker.addSubject(atom3.clicker)
+        # Observe the atom positions
+        for a in [atom1, atom2, atom3]:
+            a.x.addObserver(self._flush)
+            a.y.addObserver(self._flush)
+            a.z.addObserver(self._flush)
 
         self.atom1 = atom1
         self.atom2 = atom2
         self.atom3 = atom3
         self.molecule = atom1.parent
-        self.matoms = set([atom3])
+
+        # We do this last so the atoms are defined before we set any values.
+        if value is None:
+            value = GetBondAngle(atom1.scat, atom2.scat, atom3.scat)
+        StretchModeParameter.__init__(self, name, value, const)
+        self.setConst(const)
 
         return
 
     def setConst(self, const = True, value = None):
         """Toggle the Parameter as constant.
 
-        This sets the underlying MolAtomParSets as const as well.
+        This sets the underlying MolAtomParSet positions const as well.
 
         const   --  Flag indicating if the Parameter is constant (default
                     True).
@@ -1097,9 +1108,10 @@ class BondAngleParameter(StretchModeParameter):
 
         """
         StretchModeParameter.setConst(self, const, value)
-        self.atom1.setConst(const)
-        self.atom2.setConst(const)
-        self.atom3.setConst(const)
+        for a in [self.atom1, self.atom2, self.atom3]:
+            a.x.setConst(const)
+            a.y.setConst(const)
+            a.z.setConst(const)
         return
 
     def getValue(self):
@@ -1110,12 +1122,12 @@ class BondAngleParameter(StretchModeParameter):
         called.
 
         """
-        if self.calclicker < self.clicker:
-            self.value = GetBondAngle(self.atom1.scat, self.atom2.scat,
+        if self._value is None:
+            val = GetBondAngle(self.atom1.scat, self.atom2.scat,
                     self.atom3.scat)
-            self.calclicker.click()
+            Parameter.setValue(self, val)
 
-        return self.value
+        return self._value
 
 # End class BondAngleParameter
                      
@@ -1139,15 +1151,17 @@ class DihedralAngleParameter(StretchModeParameter):
     molecule    --  The MoleculeParSet the atoms belong to
     mode    --  The pyobjcryst.molecule.StretchModeTorsion for the dihedral
                 angle
-    calclicker  --  A Clicker to record when we have calculated the latest
-                    value of the Parameter.
 
     Inherited Attributes
-    name    --  A name for this Parameter. Names should be unique within a
-                ParameterSet.
-    clicker --  A Clicker instance for recording change in the value.
-    value   --  The value of the Parameter. Modified with setValue.
-    const   --  A flag indicating whether the Parameter is constant.
+    name    --  A name for this Parameter.
+    const   --  A flag indicating whether this is considered a constant.
+    _value  --  The value of the Parameter. Modified with 'setValue'.
+    value   --  Property for 'getValue' and 'setValue'.
+    constraint  --  A callable that calculates the value of this Parameter. If
+                this is None (None), the the Parameter is responsible for its
+                own value. The callable takes no arguments.
+    bounds  --  A 2-list defining the bounds on the Parameter. This can be
+                used by some optimizers when the Parameter is varied.
 
     """
 
@@ -1172,19 +1186,6 @@ class DihedralAngleParameter(StretchModeParameter):
                     None (default), then a StretchMode will be built.
 
         """
-        if value is None:
-            value = GetDihedralAngle(atom1.scat, atom2.scat, atom3.scat,
-                    atom4.scat)
-
-        self.calclicker = Clicker()
-        self.calclicker.click()
-
-        StretchModeParameter.__init__(self, name, value, const)
-
-        atom1.setConst(const)
-        atom2.setConst(const)
-        atom3.setConst(const)
-        atom4.setConst(const)
 
         # Create the stretch mode
         self.mode = mode
@@ -1192,25 +1193,33 @@ class DihedralAngleParameter(StretchModeParameter):
             self.mode = StretchModeTorsion(atom2.scat, atom3.scat, None)
         # We only add the last atom. This is the one that will move
         self.mode.AddAtom(atom4.scat)
+        self.matoms = set([atom4])
 
-        self.clicker.addSubject(atom1.clicker)
-        self.clicker.addSubject(atom2.clicker)
-        self.clicker.addSubject(atom3.clicker)
-        self.clicker.addSubject(atom4.clicker)
+        # Observe the atom positions
+        for a in [atom1, atom2, atom3, atom4]:
+            a.x.addObserver(self._flush)
+            a.y.addObserver(self._flush)
+            a.z.addObserver(self._flush)
 
         self.atom1 = atom1
         self.atom2 = atom2
         self.atom3 = atom3
         self.atom4 = atom4
         self.molecule = atom1.parent
-        self.matoms = set([atom4])
+
+        # We do this last so the atoms are defined before we set any values.
+        if value is None:
+            value = GetDihedralAngle(atom1.scat, atom2.scat, atom3.scat,
+                    atom4.scat)
+        StretchModeParameter.__init__(self, name, value, const)
+        self.setConst(const)
 
         return
 
     def setConst(self, const = True, value = None):
         """Toggle the Parameter as constant.
 
-        This sets the underlying atoms as const as well.
+        This sets the underlying MolAtomParSet positions const as well.
 
         const   --  Flag indicating if the Parameter is constant (default
                     True).
@@ -1220,10 +1229,10 @@ class DihedralAngleParameter(StretchModeParameter):
 
         """
         StretchModeParameter.setConst(self, const, value)
-        self.atom1.setConst(const)
-        self.atom2.setConst(const)
-        self.atom3.setConst(const)
-        self.atom4.setConst(const)
+        for a in [self.atom1, self.atom2, self.atom3, self.atom4]:
+            a.x.setConst(const)
+            a.y.setConst(const)
+            a.z.setConst(const)
         return
 
     def getValue(self):
@@ -1234,12 +1243,12 @@ class DihedralAngleParameter(StretchModeParameter):
         recalculated each time.
 
         """
-        if self.calclicker < self.clicker:
-            self.value = GetDihedralAngle(self.atom1.scat, self.atom2.scat,
+        if self._value is None:
+            val = GetDihedralAngle(self.atom1.scat, self.atom2.scat,
                     self.atom3.scat, self.atom4.scat)
-            self.calclicker.click()
+            Parameter.setValue(self, val)
 
-        return self.value
+        return self._value
 
 # End class DihedralAngleParameter
 

@@ -32,7 +32,6 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 
 from gaussianrecipe import scipyOptimize
-from crystalpdf import plotResults
 
 ####### Example Code
 
@@ -161,25 +160,25 @@ def plotResults(recipe):
     xr_ni = xnickel.profile.x
     xg_ni = xnickel.profile.y
     xgcalc_ni = xnickel.profile.ycalc
-    xdiff_ni = xg_ni - xgcalc_ni - 0.5 * max(xg_ni)
+    xdiff_ni = xg_ni - xgcalc_ni - 0.8 * max(xg_ni)
 
     xsilicon = recipe.xsilicon
     xr_si = xsilicon.profile.x
     xg_si = xsilicon.profile.y
     xgcalc_si = xsilicon.profile.ycalc
-    xdiff_si = xg_si - xgcalc_si - 0.5 * max(xg_si)
+    xdiff_si = xg_si - xgcalc_si - 0.8 * max(xg_si)
 
     nnickel = recipe.nnickel
     nr_ni = nnickel.profile.x
     ng_ni = nnickel.profile.y
     ngcalc_ni = nnickel.profile.ycalc
-    ndiff_ni = ng_ni - ngcalc_ni - 0.5 * max(ng_ni)
+    ndiff_ni = ng_ni - ngcalc_ni - 0.8 * max(ng_ni)
 
     xsini = recipe.xsini
     xr_sini = xsini.profile.x
     xg_sini = xsini.profile.y
     xgcalc_sini = xsini.profile.ycalc
-    xdiff_sini = xg_sini - xgcalc_sini - 0.5 * max(xg_sini)
+    xdiff_sini = xg_sini - xgcalc_sini - 0.8 * max(xg_sini)
 
 
     import pylab

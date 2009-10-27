@@ -9,7 +9,6 @@ from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
-from diffpy.srfit.util.clicker import Clicker
 
 import numpy
 
@@ -68,41 +67,6 @@ class TestRecipeContainer(unittest.TestCase):
         # Add another managed dictionary
         self.m._containers = {}
         self.m._manage(self.m._containers)
-
-        return
-
-    def testClickers(self):
-        """Test make sure that objects are observed by the organizer."""
-        m = self.m
-
-        ref = Clicker()
-
-        m2 = RecipeContainer("m2")
-        p1 = Parameter("p1", 1)
-        p2 = Parameter("p2", 1)
-        m2._addObject(p1, m2._parameters)
-        self.assertTrue(m2._confclicker > ref)
-        ref.click()
-        self.assertTrue(m2._confclicker < ref)
-        m._addObject(m2, m._containers)
-        self.assertTrue(m._confclicker > ref)
-        ref.click()
-        self.assertTrue(m._confclicker < ref)
-        m._addObject(p2, m._parameters)
-        self.assertTrue(m._confclicker > ref)
-        ref.click()
-        self.assertTrue(m._confclicker < ref)
-
-        self.assertTrue(m.clicker >= p1.clicker)
-        self.assertTrue(m.clicker >= m2.clicker)
-
-        p1.setValue(1.234)
-        self.assertTrue(m.clicker >= p1.clicker)
-        self.assertTrue(m.clicker >= m2.clicker)
-
-        p2.setValue(5.678)
-        self.assertTrue(m.clicker >= p2.clicker)
-        self.assertTrue(m.clicker > m2.clicker)
 
         return
 
@@ -171,7 +135,6 @@ class TestRecipeOrganizer(unittest.TestCase):
         p2 = m._newParameter("p2", 0)
         self.assertTrue(p2 is m.p2)
 
-        self.assertTrue(p2.clicker >= m.clicker)
         return
 
     def testAddParameter(self):
@@ -229,9 +192,6 @@ class TestRecipeOrganizer(unittest.TestCase):
         m._removeParameter(p1)
         self.assertTrue(p1.name not in m._eqfactory.builders)
 
-        p1.clicker.click()
-        self.assertTrue( p1.clicker > m.clicker)
-
         # Try to remove it again
         self.assertRaises(ValueError, m._removeParameter, p1)
 
@@ -240,18 +200,12 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertRaises(ValueError, m._removeParameter, c)
         return
 
-
-
-
-
     def testConstrain(self):
         """Test the constrain method."""
 
-        p1 = Parameter("p1", 1)
-        p2 = Parameter("p2", 2)
+        p1 = self.m._newParameter("p1", 1)
+        p2 = self.m._newParameter("p2", 2)
         p3 = Parameter("p3", 3)
-        self.m._eqfactory.registerArgument("p1", p1)
-        self.m._eqfactory.registerArgument("p2", p2)
 
         self.assertFalse(p1.constrained)
         self.assertEquals(0, len(self.m._constraints))
@@ -398,20 +352,19 @@ class TestRecipeOrganizer(unittest.TestCase):
         eq = self.m.registerStringFunction("g/x - 1", "pdf")
         self.assertTrue(numpy.array_equal(g(x)/x - 1, eq()))
 
-        # Make sure we can't overwrite "g"
-        self.assertRaises(ValueError, self.m.registerStringFunction, "x", "g")
-
-        g2 = GCalc("g")
-        self.assertRaises(ValueError, self.m.registerCalculator, g2)
-
         return
 
     def testRegisterFunction(self):
         """Test registering various functions."""
-        def g(A, c, w, x):
+        def g1(A, c, w, x):
             return A * numpy.exp(-0.5*((x-c)/w)**2)
+        def g2(A):
+            return A+1
 
-        eq = self.m.registerFunction(g)
+        eq = self.m.registerFunction(g1, "g")
+
+        for p in eq.args:
+            self.assertTrue(p in self.m._parameters.values())
 
         x = numpy.arange(0.5, 10, 0.5)
         self.m.x.setValue(x)
@@ -423,12 +376,26 @@ class TestRecipeOrganizer(unittest.TestCase):
             eq()))
 
         # Use this in another equation
-
         eq2 = self.m.registerStringFunction("g/x - 1", "pdf")
-        self.assertTrue(numpy.array_equal(eq(x)/x - 1, eq2()))
+        self.assertTrue(numpy.array_equal(eq()/x - 1, eq2()))
 
-        # Make sure we can't swap out "g"
-        self.assertRaises(ValueError, self.m.registerStringFunction, "x", "g")
+        # Make sure we can swap out "g".
+        self.m.registerFunction(g2, "g")
+        self.assertAlmostEquals(2.0, eq())
+
+        # Try a bound method
+        class temp(object):
+            def eval(self): return 1.23
+            def __call__(self): return 4.56
+
+        t = temp()
+        eq = self.m.registerFunction(t.eval, "eval")
+        self.assertAlmostEquals(1.23, eq())
+
+        # Now the callable
+        eq2 = self.m.registerFunction(t, "eval2")
+        self.assertAlmostEquals(4.56, eq2())
+
         return
 
     def testRegisterStringFunction(self):
@@ -437,6 +404,9 @@ class TestRecipeOrganizer(unittest.TestCase):
         # Make an equation.
         eq1 = self.m.registerStringFunction("x**2 + 3", "eq1")
         eq1.x.setValue(0)
+
+        for p in eq1.args:
+            self.assertTrue(p in self.m._parameters.values())
 
         # Add a parameter
         self.m._newParameter("y", 3.0)
@@ -464,9 +434,6 @@ class TestRecipeOrganizer(unittest.TestCase):
         eq4 = self.m.registerStringFunction("2*eq3", "eq4")
         self.assertEquals(18.0, eq4())
 
-        # Replace eq1 with some other equation
-        self.assertRaises(ValueError, self.m.registerStringFunction, "x", 
-                "eq1")
         return
         
 

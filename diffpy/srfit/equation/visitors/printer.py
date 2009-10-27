@@ -23,8 +23,6 @@ Printer is mostly
 
 from .visitor import Visitor
 
-from diffpy.srfit.util.clicker import Clicker
-
 class Printer(Visitor):
     """Printer for printing a Literal tree.
 
@@ -41,6 +39,7 @@ class Printer(Visitor):
     def reset(self):
         """Reset the out put string."""
         self.output = ""
+        return
 
     def onArgument(self, arg):
         """Process an Argument node.
@@ -52,7 +51,7 @@ class Printer(Visitor):
             self.output += str(arg.value)
         else:
             self.output += str(arg.name)
-        return
+        return self.output
 
     def onOperator(self, op):
         """Process an Operator node."""
@@ -67,9 +66,8 @@ class Printer(Visitor):
             if idx != 0: self.output += ", "
             literal.identify(self)
 
-
         self.output += ")"
-        return
+        return self.output
 
     def _onInfix(self, op):
         """Process infix operators."""
@@ -80,22 +78,6 @@ class Printer(Visitor):
         op.args[1].identify(self)
         self.output += ")"
         return
-
-    def onPartition(self, part):
-        """Process a Partition node."""
-        if part.name is None:
-            self.output += "partition"
-        else:
-            self.output += str(part.name)
-        return
-
-    def onGenerator(self, gen):
-        """Process a Generator node."""
-        self.output += "Generator(%s)"%gen.name
-        for arg in gen.args:
-            arg.identify(self)
-        return
-
 
 # version
 __id__ = "$Id$"

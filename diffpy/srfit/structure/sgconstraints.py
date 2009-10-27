@@ -27,73 +27,74 @@ from diffpy.srfit.fitbase.parameter import Parameter
 
 __all__ = ["constrainAsSpaceGroup", "SpaceGroupParameters"]
 
-def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None, sgoffset = [0, 0, 0],
-        constrainlat = True, constrainadps = True, adpsymbols = stdUsymbols):
-        """Constrain the structure to the space group.
+def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None, 
+        sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
+        adpsymbols = stdUsymbols):
+    """Constrain the structure to the space group.
 
-        This applies space group constriants to a StructureParSet with P1
-        symmetry.  Passed scatterers are explicitly constrained to the
-        specified space group. The ADPs and lattice may be constrained as well.
+    This applies space group constriants to a StructureParSet with P1
+    symmetry.  Passed scatterers are explicitly constrained to the
+    specified space group. The ADPs and lattice may be constrained as well.
 
-        Arguments:
-        phase       --  A BaseStructure object.
-        sgsymbol    --  The space group number or symbol (compatible with
-                        diffpy.Structure.SpaceGroups.GetSpaceGroup.
-        sgoffset    --  Optional offset for sg origin (default [0, 0, 0]).
-        scatterers  --  The scatterer ParameterSets to constrain. If scatterers
-                        is None (default), then all scatterers accessible from
-                        phase.getScatterers will be constrained.
-        constrainlat    --  Flag indicating whether to constrain the lattice
-                        (default True).
-        constrainadps   --  Flag indicating whether to constrain the ADPs
-                        (default True).
-        adpsymbols  --  A list of the ADP names. By default this is equal to
-                        diffpy.Structure.SymmetryUtilities.stdUsymbols (U11,
-                        U22, etc.). The names must be given in the same order
-                        as stdUsymbols.
+    Arguments:
+    phase       --  A BaseStructure object.
+    sgsymbol    --  The space group number or symbol (compatible with
+                    diffpy.Structure.SpaceGroups.GetSpaceGroup.
+    sgoffset    --  Optional offset for sg origin (default [0, 0, 0]).
+    scatterers  --  The scatterer ParameterSets to constrain. If scatterers
+                    is None (default), then all scatterers accessible from
+                    phase.getScatterers will be constrained.
+    constrainlat    --  Flag indicating whether to constrain the lattice
+                    (default True).
+    constrainadps   --  Flag indicating whether to constrain the ADPs
+                    (default True).
+    adpsymbols  --  A list of the ADP names. By default this is equal to
+                    diffpy.Structure.SymmetryUtilities.stdUsymbols (U11,
+                    U22, etc.). The names must be given in the same order
+                    as stdUsymbols.
 
-        New Parameters that are used in constraints are created within a
-        SpaceGroupParameters object, which is returned from this function.
-        Constraints are created in ParameterSet that constains the constrained
-        Parameter.  This will erase any constraints or constant flags on the
-        scatterers, lattice or ADPs if they are to be constrained.
+    New Parameters that are used in constraints are created within a
+    SpaceGroupParameters object, which is returned from this function.
+    Constraints are created in ParameterSet that constains the constrained
+    Parameter.  This will erase any constraints or constant flags on the
+    scatterers, lattice or ADPs if they are to be constrained.
 
-        The lattice constraints are applied as following.
-        
-        Crystal System:
-        Triclinic       --  No constraints.
-        Monoclinic      --  alpha and beta are fixed to 90 unless alpha != beta and
-                            alpha == gamma, in which case alpha and gamma are fixed
-                            to 90.
-        Orthorhombic    --  alpha, beta and gamma are fixed to 90.
-        Tetragonal      --  b is constrained to a and alpha, beta and gamma are
-                            fixed to 90.
-        Trigonal        --  If gamma == 120, then b is constrained to a, alpha
-                            and beta are fixed to 90 and gamma is fixed to 120.
-                            Otherwise, b and c are constrained to a, beta and gamma
-                            are fixed to alpha.
-        Hexagonal       --  b is constrained to a, alpha and beta are fixed to 90
-                            and gamma is fixed to 120.
-        Cubic           --  b and c are constrained to a, and alpha, beta and
-                            gamma are fixed to 90.
+    The lattice constraints are applied as following.
+    
+    Crystal System:
+    Triclinic       --  No constraints.
+    Monoclinic      --  alpha and beta are fixed to 90 unless alpha != beta and
+                        alpha == gamma, in which case alpha and gamma are fixed
+                        to 90.
+    Orthorhombic    --  alpha, beta and gamma are fixed to 90.
+    Tetragonal      --  b is constrained to a and alpha, beta and gamma are
+                        fixed to 90.
+    Trigonal        --  If gamma == 120, then b is constrained to a, alpha
+                        and beta are fixed to 90 and gamma is fixed to 120.
+                        Otherwise, b and c are constrained to a, beta and gamma
+                        are fixed to alpha.
+    Hexagonal       --  b is constrained to a, alpha and beta are fixed to 90
+                        and gamma is fixed to 120.
+    Cubic           --  b and c are constrained to a, and alpha, beta and
+                        gamma are fixed to 90.
 
-        Raises ValueError if phase is not in P1 symmetry.
+    Raises ValueError if phase is not in P1 symmetry.
 
-        """
+    """
 
-        phasesg = SpaceGroups.GetSpaceGroup( phase.getSpaceGroup() )
-        if phasesg != SpaceGroups.sg1:
-            raise ValueError("Structure is not in 'P1' symmetry")
+    phasesg = SpaceGroups.GetSpaceGroup( phase.getSpaceGroup() )
+    if phasesg != SpaceGroups.sg1:
+        raise ValueError("Structure is not in 'P1' symmetry")
 
-        sg = SpaceGroups.GetSpaceGroup(sgsymbol)
+    sg = SpaceGroups.GetSpaceGroup(sgsymbol)
 
-        if scatterers is None:
-            scatterers = phase.getScatterers()
+    if scatterers is None:
+        scatterers = phase.getScatterers()
 
-        sgp = SpaceGroupParameters(phase, sg, scatterers, sgoffset,
-                constrainlat, constrainadps, adpsymbols)
+    sgp = SpaceGroupParameters(phase, sg, scatterers, sgoffset,
+            constrainlat, constrainadps, adpsymbols)
 
-        return sgp
+    return sgp
 
 class SpaceGroupParameters(RecipeContainer):
     """This is a class for holding space group Parameters.
@@ -128,8 +129,8 @@ class SpaceGroupParameters(RecipeContainer):
         sg      --  The space group number or symbol (compatible with
                     diffpy.Structure.SpaceGroups.GetSpaceGroup.
         sgoffset    --  Optional offset for sg origin.
-        scatterers  --  The scatterer ParameterSets to constrain. If scatterers is
-                    None, then all scatterers accessible from
+        scatterers  --  The scatterer ParameterSets to constrain. If scatterers
+                    is None, then all scatterers accessible from
                     phase.getScatterers will be constrained.
         constrainlat    --  Flag indicating whether to constrain the lattice.
         constrainadps   --  Flag indicating whether to constrain the ADPs.
@@ -197,8 +198,9 @@ class SpaceGroupParameters(RecipeContainer):
                     self.latpars.append(newpar)
 
         ## Constrain x, y, z
-        # Remove any prior constraints or constants. We do this explicitly in case
-        # the scatterer ParameterSet contains more than just the site information.
+        # Remove any prior constraints or constants. We do this explicitly in
+        # case the scatterer ParameterSet contains more than just the site
+        # information.
         positions =  []
         for scatterer in scatterers:
 

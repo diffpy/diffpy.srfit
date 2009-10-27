@@ -21,9 +21,7 @@ designed according to the visitor pattern
 Visitors work with the following Literal classes
 (diffpy.srfit.equation.literals):
 Argument
-Generator
 Operator
-Partition
 
 See the Visitor class for the required methods that each Visitor must overload.
 
@@ -44,14 +42,14 @@ class Visitor(object):
         """Process an Operator node."""
         return self._abstract("onOperator")
 
-    def onPartition(self, part):
-        """Process a Partition node."""
-        return self._abstract("onPartition")
+    def onEquation(self, eq):
+        """Process an Equation node.
 
-    def onGenerator(self, gen):
-        """Process a Generator node."""
-        return self._abstract("onGenerator")
-
+        Equations are specialized Operators. They don't need to be specifically
+        supported by a Visitor.
+        
+        """
+        return self.onOperator(eq)
 
     # throw an exception
     def _abstract(self, method):

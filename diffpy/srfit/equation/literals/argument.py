@@ -22,70 +22,54 @@ constant.
 from .abcs import ArgumentABC
 from .literal import Literal
 
-import numpy
-
 class Argument(Literal, ArgumentABC):
     """Argument class.
     
     Attributes
     name    --  A name for this Argument.
-    clicker --  A Clicker instance for recording change in the value.
     const   --  A flag indicating whether this is considered a constant.
                 Constants may be given special treatment by the Visitors.
-    value   --  The value of the Argument. Modified with setValue.
+    _value  --  The value of the Argument. Modified with 'setValue'.
+    value   --  Property for 'getValue' and 'setValue'.
 
     """
 
     const = None
-    value = None
 
-    def __init__(self, value = None, name = None, const = False):
+    def __init__(self, name = None, value = None, const = False):
         """Initialization."""
-        Literal.__init__(self)
-        self.name = name
+        Literal.__init__(self, name)
         self.const = const
         self.value = value
-        self.clicker.click()
         return
 
     def identify(self, visitor):
         """Identify self to a visitor."""
-        visitor.onArgument(self)
-        return
-
-    def setValue(self, val):
-        """Set the value of the argument to something.
-
-        This will click the clicker.
-
-        """
-        # This faster than using numpy.array_equiv.
-        # The most common case is that of comparing scalars so we check that
-        # first.
-        notequiv = (val != self.value)
-        if notequiv is True:
-            self.value = val
-            self.clicker.click()
-        elif notequiv is False:
-            return
-        elif notequiv.any():
-            self.value = val
-            self.clicker.click()
-        return
+        return visitor.onArgument(self)
 
     def getValue(self):
-        """Get the value of the argument.
+        """Get the value of this Literal."""
+        if self._value is None:
+            raise ValueError("I have no value!")
+        return self._value
 
-        For the sake of easy subclassing, use this rather than the value
-        attribute.
+    def setValue(self, val):
+        """Set the value of the Literal.
+
+        val --  The value to assign
 
         """
-        return self.value
+        notequiv = (val != self._value)
+        if notequiv is False:
+            return
+        if notequiv is True or notequiv.any():
+            self.notify()
+            self._value = val
+        # if not notequiv.any(): falls through
+        return
 
-    def __str__(self):
-        if self.name:
-            return "Argument(" + self.name + ")"
-        return self.__repr__()
+    value = property( lambda self: self.getValue(), 
+            lambda self, val: self.setValue(val))
 
 # version
 __id__ = "$Id$"

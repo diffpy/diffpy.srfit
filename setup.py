@@ -10,14 +10,8 @@ Scripts:    (none yet)
 """
 
 from setuptools import setup, find_packages
-from setuptools import Extension
 import fix_setuptools_chmod
-import glob
 
-clickermodule = Extension('diffpy.srfit.util._clicker', 
-        glob.glob("extensions/util/*.cpp"),
-        libraries = ["boost_python"],
-        )
 
 # define distribution
 dist = setup(
@@ -36,12 +30,6 @@ dist = setup(
             'http://dev.danse.us/packages/',
             "http://www.diffpy.org/packages/",
         ],
-
-        # The extensions
-        ext_modules = [clickermodule],
-
-        # Stuff for building extensions
-        zip_safe = False,
 
         author = "Simon J.L. Billinge",
         author_email = "sb2896@columbia.edu",

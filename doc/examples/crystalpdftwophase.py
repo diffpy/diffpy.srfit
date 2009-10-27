@@ -156,7 +156,7 @@ def plotResults(recipe):
 
     g = recipe.nisi.profile.y
     gcalc = recipe.nisi.profile.ycalc
-    diff = g - gcalc - 0.5 * max(g)
+    diff = g - gcalc - 0.8 * max(g)
 
     import pylab
     pylab.plot(r,g,'bo',label="G(r) Data")

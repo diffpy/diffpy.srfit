@@ -16,9 +16,7 @@
 
 ProfileGenerators encapsulate the evaluation and required Parameters and
 ParameterSets of a profile calculator.  The ProfileGenerator class can be
-associated with a FitContribution to help calculate a profile.  It implements
-the diffpy.srfit.equation.literals.Generator interface so that it can be used
-within a diffpy.srfit.equation.Equation.
+associated with a FitContribution to help calculate a profile. 
 
 To define a ProfileGenerator, one must implement the required Parameters and
 ParameterSets as well as overload the __call__ method with the calculation. A
@@ -43,49 +41,59 @@ More examples can be found in the example directory of the documentation.
 
 """
 
-from numpy import array, asarray
+from numpy import asarray
 
-from .parameter import Parameter
+from diffpy.srfit.equation.literals.operators import Operator
+
 from .parameterset import ParameterSet
 
-class ProfileGenerator(ParameterSet):
+class ProfileGenerator(Operator, ParameterSet):
     """Base class for profile generators.
 
     A ProfileGenerator organizes Parameters and has a __call__ method that can
-    generate a profile.
+    generate a profile. ProfileGenerator is also an Operator
+    (diffpy.srfit.equation.literals.operators), so it can be used directly in
+    an evaluation network.
 
     Attributes
-    args            --  List needed by Generator interface.
-    clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and RecipeOrganizers.
-    literal         --  This is literal created or modified by the generate
-                        method (by default, a Parameter)
     name            --  A name for this organizer.
     profile         --  A Profile instance that contains the calculation range
                         and will contain the generated profile.
     meta            --  A dictionary of metadata needed by the generator.
-    _confclicker    --  A Clicker for recording configuration
-                        changes, esp.  additions and removal of managed
-                        objects.
+    eq              --  The Equation object used to wrap this ProfileGenerator.
+                        This is set when the ProfileGenerator is added to a
+                        FitContribution.
     _calculators    --  A managed dictionary of Calculators, indexed by name.
-    _constraints    --  A dictionary of Constraints, indexed by the constrained
-                        Parameter. Constraints can be added using the
-                        'constrain' method.
+    _constraints    --  A set of constrained Parameters. Constraints can be
+                        added using the 'constrain' methods.
     _parameters     --  A managed OrderedDict of contained Parameters.
     _parsets        --  A managed dictionary of ParameterSets.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used create Equations from string.
+
+    Operator Attributes
+    args    --  List of Literal arguments, set with 'addLiteral'
+    name    --  A name for this operator. e.g. "add" or "sin"
+    nin     --  Number of inputs (<1 means this is variable)
+    nout    --  Number of outputs
+    operation   --  Function that performs the operation. e.g. numpy.add. In
+                this case, operation is an instance method.
+    symbol  --  The symbolic representation. e.g. "+" or "sin"
+    _value  --  The value of the Operator.
+    value   --  Property for 'getValue'.
+
     """
 
     def __init__(self, name):
         """Initialize the attributes."""
         ParameterSet.__init__(self, name)
         self.profile = None
-        self.literal = Parameter(name)
-        self.args = []
         self.meta = {}
+
+        # Operator attributes
+        Operator.__init__(self, name, name, self.operation, 0, 1)
         return
 
     # Overload me!
@@ -101,21 +109,17 @@ class ProfileGenerator(ParameterSet):
 
     ## No need to overload anything below here
 
-    def eval(self):
+    def operation(self):
         """Evaluate the profile.
 
-        This method takes no arguments. The values of the calculator Parameters
-        should be changed directly. The independent variable to calculate over
-        is defined in the profile attribute.
-
-        This method calculates the profile and stores it in profile.ycalc.
+        This calls __call__ and passes in profile.x. It also stores the output
+        in profile.ycalc. The calculated value is then returned.
 
         """
         y = self.__call__(self.profile.x)
         self.profile.ycalc = asarray(y)
-        return
+        return y
 
-        
     def setProfile(self, profile):
         """Assign the profile.
 
@@ -123,24 +127,13 @@ class ProfileGenerator(ParameterSet):
                     will store the calculated signal.
 
         """
-        if profile is not self.profile:
+        if self.profile is not None:
+            self.profile.removeObserver(self._flush)
 
-            # Stop watching the parameters
-            if self.profile is not None:
-                self.clicker.removeSubject(self.profile.xpar.clicker)
-                self.clicker.removeSubject(self.profile.ypar.clicker)
-                self.clicker.removeSubject(self.profile.dypar.clicker)
+        self.profile = profile
+        self.profile.addObserver(self._flush)
+        self._flush(self)
 
-            # Set the profile and watch its parameters
-            self.profile = profile
-            self.clicker.addSubject(self.profile.xpar.clicker)
-            self.clicker.addSubject(self.profile.ypar.clicker)
-            self.clicker.addSubject(self.profile.dypar.clicker)
-
-            self.clicker.click()
-
-        # Process the metadata even if the profile is the same. The metadata
-        # may have changed.
         self.processMetaData()
         return
 
@@ -153,45 +146,6 @@ class ProfileGenerator(ParameterSet):
         self.meta.update( self.profile.meta )
         return
 
-    # Generator methods. These are used when the ProfileGenerator is called from
-    # within an equation.
-
-    def generate(self, clicker):
-        """Generate the signal and store it in the literal attribute.
-
-        This method is part of the Generator interface. It does not need to be
-        overloaded. By default it creates a Parameter to store the results.
-
-        clicker --  A Clicker instance for decision making. The clicker is
-                    sent by the Evaluator class to indicate its state. If the
-                    clicker is greater than or equal to the ProfileGenerator's
-                    clicker, or that of the calculation arrays, then the
-                    profile should be re-evaluated.
-
-        """
-        if self.clicker >= clicker or self.profile.xpar.clicker >= clicker:
-            self.eval()
-            self.literal.setValue( self.profile.ycalc )
-        return
-
-    def identify(self, visitor):
-        """Identify this to a visitor.
-
-        This method is part of the Generator interface. This does not need to
-        be overloaded.
-
-        """
-        visitor.onGenerator(self)
-        return
-
-    def addLiteral(self, literal):
-        """Required for Generator interface."""
-        raise AttributeError("'addLiteral' not used by this class")
-
 # End class ProfileGenerator
-
-# Make sure this class is registered as a Generator.
-from diffpy.srfit.equation.literals.abcs import GeneratorABC
-GeneratorABC.register(ProfileGenerator)
 
 __id__ = "$Id$"

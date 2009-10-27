@@ -14,38 +14,11 @@
 """Visitors that perform on Literal trees.
 
 Visitors are designed to traverse and extract infromation from Literal trees
-(diffpy.srfit.equation.literals). The primary Visitor is the Evaluator, which
-can evaluate the value of a Literal tree. The Evaluator can inspect the state
-of a Literal tree and decide if it must re-evaluate values of given nodes on
-subsequent visits. Other Visitors are useful for validating, printing and
-extracting Argument literals from the Literal tree.
+(diffpy.srfit.equation.literals). Visitors are useful for validating, printing
+and extracting Argument literals from the Literal tree.
 
 The Literal-Visitor relationship is that described by the Visitor pattern
-(http://en.wikipedia.org/wiki/Visitor_pattern), execept that Literals contain
-attributes that are used specifically by the Evaluator visitor.
-
-Modules:
-argfinder   --  Contains the ArgFinder class (see below). The module
-                documentation contains more information about ArgFinders.
-evaluator   --  Contains the Evaluator class (see below). The module
-                documentation contains more information about Evaluators.
-printer     --  Contains the Printer class (see below). The module
-                documentation contains more information about Printers.
-swapper     --  Contains the Swapper class (see below). The module
-                documentation contains more information about Swappers.
-validiator  --  Contains the Validator class (see below). The module
-                documentation contains more information about Validators.
-visitor     --  Contains the Visitor base class. The module documentation
-                contains more information about Visitors.
-
-Classes:
-ArgFinder   --  ArgFinder extracts Arguments from a Literal tree.
-Evaluator   --  Evaluates a Literal tree.
-PartFinder  --  PartFinder extracts partitions from a Literal tree.
-Printer     --  A not-so-pretty-printer for an Argument tree. Used primarily
-                for debugging.
-Swapper     --  Class for swapping Literals that appear in a Literal tree.
-Validator   --  Used to validate a Literal tree.
+(http://en.wikipedia.org/wiki/Visitor_pattern).
 
 """
 
@@ -54,14 +27,56 @@ from diffpy.srfit.version import __version__
 
 from .argfinder import ArgFinder
 from .printer import Printer
-from .partfinder import PartFinder
-from .evaluator import Evaluator
 from .validator import Validator
 from .swapper import Swapper
 
-# Try to optimize
-try:
-    import psyco
-    psyco.bind(Evaluator)
-except ImportError:
-    pass
+def getArgs(literal, getconsts = True):
+    """Get the Arguments of a Literal tree.
+
+    getconsts   --  If True (default), then Arguments designated as constant
+                    are also retrieved.
+
+    Returns a list of Arguments searched for depth-first.
+    
+    """
+    v = ArgFinder(getconsts)
+    return literal.identify(v)
+
+def prettyPrint(literal):
+    """Print a Literal tree."""
+    v = Printer()
+    print literal.identify(v)
+    return
+
+def validate(literal):
+    """Validate a Literal tree.
+
+    Raises ValueError if the tree contains errors.
+
+    """
+    v = Validator()
+    errors = literal.identify(v)
+    if errors:
+        m = "Errors found in Literal tree '%s'\n"%literal
+        m += "\n".join(errors)
+        raise ValueError(m)
+    return
+
+def swap(literal, oldlit, newlit):
+    """Swap one literal for another in a Literal tree.
+
+    Corrections are done in-place unless literal is oldlit, in which case the
+    return value is newlit.
+
+    Returns the literal tree with oldlit swapped for newlit.
+
+    """
+
+    if literal is oldlit:
+        return newlit
+
+    v = Swapper(oldlit, newlit)
+    literal.identify(v)
+
+    return literal
+

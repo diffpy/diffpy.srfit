@@ -18,49 +18,53 @@ Literals are base pieces of the equation hierarchy. The 'identify' method
 identifies the Literal to a visitor by calling the identifying method of the
 vistior. 
 
-Literals have two data attributes: 
-name    --  The name of the literal as it would appear in an equation.
-clicker --  Records changes in the state of the Literal.
-The clicker is used by the Evaluator visitor. See that class for a more
-detailed description.
-
-Note that even though an equation hierarchy is designed according to the
-visitor pattern, the primary purpose of the hierarchy is to flexibly and
-efficiently evaluate equations. To make this work without overly complex
-machinery, some of the information needed by the Evaluator visitor is stored in
-the data objects.
-
-The clicker is described in the diffpy.equation.clicker module.
-
 """
+
+import numpy
 
 from .abcs import LiteralABC
 
-from diffpy.srfit.util.clicker import Clicker
+from diffpy.srfit.util.observable import Observable
 
-class Literal(LiteralABC):
+class Literal(Observable,LiteralABC):
     """Abstract class for equation pieces, such as operators and arguments.
+
+    Literal derives from Observable. See diffpy.srfit.util.observable.
 
     Attributes
     name    --  A name for this Literal (default None).
-    clicker --  A Clicker instance for recording change in the value
+    _value  --  The value of the Literal.
 
     """ 
 
     name = None
-    clicker = None
+    _value = None
 
-    def __init__(self):
+    def __init__(self, name = None):
         """Initialization."""
-        self.name = None
-        self.clicker = Clicker()
+        Observable.__init__(self)
+        self.name = name
         return
+
+    def getValue(self):
+        """Get the value of the Literal."""
+        raise NotImplementedError("Define in derived class")
 
     def identify(self, visitor):
         """Identify self to a visitor."""
         m = "'%s' must override 'identify'" % self.__class__.__name__
         raise NotImplementedError(m)
 
+    def _flush(self, other):
+        """Invalidate my state and notify observers."""
+        if self._value is None:
+            return
+        self._value = None
+        self.notify()
+        return
+
+    def __str__(self):
+        return "%s(%s)"%(self.__class__.__name__, self.name)
 
 # version
 __id__ = "$Id$"

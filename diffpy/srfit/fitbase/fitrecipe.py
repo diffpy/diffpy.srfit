@@ -18,10 +18,10 @@ FitRecipes organize FitContributions, variables, Restraints and Constraints to
 create a recipe of the system you wish to optimize. From the client's
 perspective, the FitRecipe is a residual calculator. The residual method does
 the work of updating variable values, which get propagated to the Parameters of
-the underlying FitContributions via the Varibles, Restraints and Constraints.
-This class needs no special knowledge of the type of FitContribution or data
-being used. Thus, it is suitable for combining residual equations from various
-types of refinements into a single residual.
+the underlying FitContributions via the varibles and Constraints.  This class
+needs no special knowledge of the type of FitContribution or data being used.
+Thus, it is suitable for combining residual equations from various types of
+refinements into a single residual.
 
 See the examples in the documentation for how to create an optimization problem
 using FitRecipe.
@@ -32,33 +32,27 @@ from numpy import concatenate, sqrt, dot
 
 from diffpy.srfit.util.ordereddict import OrderedDict
 from .parameter import ParameterProxy
-from .recipeorganizer import RecipeOrganizer, Clicker
+from .recipeorganizer import RecipeOrganizer
 from .fithook import FitHook
 
 class FitRecipe(RecipeOrganizer):
     """FitRecipe class.
 
     Attributes
-    clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and FitContributions.
     name            --  A name for this FitRecipe.
     fithook         --  An object to be called whenever within the residual
                         (default FitHook()) that can pass information out of
                         the system during a refinement.
-    _confclicker    --  A Clicker for recording configuration changes, esp.
-                        additions and removal of managed objects.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
-    _calculators    --  A managed dictionary of Calculators.
-    _contributions  --  A managed OrderedDict of FitContributions.
     _oconstraints   --  An ordered list of the constraints from this and all
                         sub-components.
+    _calculators    --  A managed dictionary of Calculators.
+    _contributions  --  A managed OrderedDict of FitContributions.
     _parameters     --  A managed OrderedDict of parameters (in this case the
                         parameters are varied).
     _parsets        --  A managed dictionary of ParameterSets.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from string
@@ -66,12 +60,12 @@ class FitRecipe(RecipeOrganizer):
     _restraintlist  --  A list of restraints from this and all sub-components.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
+    _ready          --  A flag indicating if all attributes are ready for the
+                        calculation.
     _tagdict        --  A dictionary of tags to variables.
     _weights        --  List of weighing factors for each FitContribution. The
                         weights are multiplied by the residual of the
                         FitContribution when determining the overall residual.
-    _refclicker     --  A Clicker for reference against
-                        configuration changes.
 
     """
 
@@ -79,15 +73,14 @@ class FitRecipe(RecipeOrganizer):
         """Initialization."""
         RecipeOrganizer.__init__(self, name)
         self.fithook = FitHook()
-        self._oconstraints = []
         self._restraintlist = []
+        self._oconstraints = []
+        self._ready = False
 
         self._weights = []
         self._tagdict = {}
 
         self._fixed = set()
-
-        self._refclicker = Clicker()
 
         self._parsets = {}
         self._manage(self._parsets)
@@ -223,21 +216,15 @@ class FitRecipe(RecipeOrganizer):
         This will prepare the data attributes to be used in the residual
         calculation.
 
-        This updates the local constraints and restraints with those of the
-        contributions.
-
-        Constraints can have inter-dependencies that require that they are
-        updated in a specific order. This will set the proper order.
+        This updates the local restraints with those of the contributions.
 
         Raises AttributeError if there are variables without a value.
-        Raises AttributeError if there are multiple constraints on the same
-        parameter defined in different places within the recipe hierarchy.
 
         """
 
         # Only prepare if the configuration has changed within the recipe
         # hierarchy.
-        if self._confclicker < self._refclicker:
+        if self._ready:
             return
 
         # Inform the fit hook that we're updating things
@@ -253,8 +240,8 @@ class FitRecipe(RecipeOrganizer):
         # Update constraints and restraints. 
         self.__collectConstraintsAndRestraints()
 
-        # We're done here
-        self._refclicker.click()
+        self._ready = True
+
         return
 
     def __verifyProfiles(self):
@@ -279,7 +266,9 @@ class FitRecipe(RecipeOrganizer):
         # Get all parameters with a value of None
         badpars = []
         for par in self.iterPars():
-            if par.getValue() is None:
+            try: 
+                par.getValue()
+            except ValueError:
                 badpars.append(par)
 
         # Get the bad names
@@ -360,7 +349,6 @@ class FitRecipe(RecipeOrganizer):
         self._oconstraints.sort(cmp)
 
         return
-
 
     # Variable manipulation
 
@@ -577,7 +565,8 @@ class FitRecipe(RecipeOrganizer):
         Note that only one constraint can exist on a Parameter at a time.
 
         This is overloaded to set the value of con if it represents a variable
-        and its current value is None.
+        and its current value is None. A constrained variable will be set as
+        fixed.
 
         par     --  The Parameter to constrain.
         con     --  A string representation of the constraint equation or a
@@ -604,14 +593,20 @@ class FitRecipe(RecipeOrganizer):
                 raise ValueError("The parameter '%s' cannot be found"%name)
 
         if con in self._parameters.keys():
-            con = self.get(con)
+            con = self._parameters[con]
 
         if par.const:
             raise ValueError("The parameter '%s' is constant"%par)
 
-        if con in self._parameters.values() and con.getValue() is None:
-            val = par.getValue()
-            con.setValue(val)
+        if con in self._parameters.values(): 
+            try:
+                con.getValue()
+            except ValueError:
+                val = par.getValue()
+                con.setValue(val)
+
+        if par in self._parameters.values():
+            self.fixVar(par)
 
         RecipeOrganizer.constrain(self, par, con, ns)
         return
@@ -633,12 +628,27 @@ class FitRecipe(RecipeOrganizer):
         return [par.name for par in self._parameters.values() if par not in
                 self._fixed]
 
+    def getBounds(self):
+        """Get the bounds on variables in a list.
+
+        Returns a list of (lb, ub) pairs, where lb is the lower bound and ub is
+        the upper bound.
+
+        """
+        return [par.bounds for par in self._parameters.values() if par not
+                in self._fixed]
+
     def __applyValues(self, p):
         """Apply variable values to the variables."""
         if len(p) == 0: return
         vars = [v for v in self._parameters.values() if v not in self._fixed]
         for var, pval in zip(vars, p):
             var.setValue(pval)
+        return
+
+    def _updateConfiguration(self):
+        """Notify RecipeContainers in hierarchy of configuration change."""
+        self._ready = False
         return
 
 

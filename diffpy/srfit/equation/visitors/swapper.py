@@ -12,27 +12,24 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Swapper visitor for replacing literals in an equation with other literals.
+"""Swapper for replacing a Literal in an equation with another Literals.
 
 """
 
 from .visitor import Visitor
 
 from ..literals import Argument
-from ..literals import Generator
 from ..literals import Operator
-from ..literals import Partition
 
 class Swapper(Visitor):
     """Swapper for swapping out one literal for another in a literal tree.
 
-    Note that this cannot swap out a root node of a literal tree.
+    Note that this cannot swap out a root node of a literal tree. This case
+    must be tested for explicitly.
 
     Attributes:
-    newlit  --  The literal to be placed into the literal tree. See the class
-                for how the replacement takes place.
+    newlit  --  The literal to be placed into the literal tree.
     oldlit  --  The literal to be replaced.
-    _swap   --  A flag indicating to replace a child node.
 
     """
 
@@ -55,113 +52,95 @@ class Swapper(Visitor):
     def onArgument(self, arg):
         """Process an Argument node.
 
-        Tell the parent to swap the old Argument with the new one. 
+        Tell the parent to swap the old Argument with the replacement Literal.
 
         """
 
         if arg is self.oldlit:
-
             self._swap = True
-
-            self.newlit.clicker.click()
 
         return
 
     def onOperator(self, op):
         """Process an Operator node.
 
-        The visitor does pass through an Operator.
+        Tell the parent to swap the old Operator with the replacement Literal.
 
-        Put the children of the old Operator in the new Operator. Tell the
-        parent to swap this operator out. This does not detach the children
-        from the old Operator.
-        
         """
 
+        # Check to see if we need to swap out this Operator. If so, then we
+        # don't need to traverse into its arguments.
+        if op is self.oldlit:
+            self._swap = True
+            return
+
+        # Now traverse into the arguments.
         for literal in op.args:
             literal.identify(self)
 
-
-        # If we've been told to swap out a child, then we must do it in-place.
+        # If we've been told to swap out a literal, then we must do it in-place
+        # because the order of op.args matters.
         if self._swap:
 
-            while self.oldlit in op.args:
-                idx = op.args.index(self.oldlit)
+            oldlit = self.oldlit
+            newlit = self.newlit
 
-                op.args[idx] = self.newlit
-                op.clicker.addSubject(self.newlit.clicker)
+            while oldlit in op.args:
 
-            self.newlit.clicker.click()
+                # Record the index
+                idx = op.args.index(oldlit)
+                # Remove the literal
+                del op.args[idx]
+                # Remove op as an observer. A KeyError will be raised if we
+                # attempt to remove the same observer more than once, which
+                # might happen if the oldlit appears multiple times in op.args.
+                try:
+                    oldlit.removeObserver(op._flush)
+                except KeyError:
+                    pass
+
+                # Validate the new literal. If it fails, we need to restore the
+                # old one
+                try:
+                    op._loopCheck(newlit)
+                except ValueError:
+                    # Restore the old literal
+                    op.args.insert(idx, oldlit)
+                    oldlit.addObserver(op._flush)
+                    raise
+
+                # If we got here, then go on with replacing the literal
+                op.args.insert(idx, newlit)
+                newlit.addObserver(op._flush)
+                op._flush(None)
+
+
             self._swap = False
-
-        # If this is the old literal, then we want to place it's children into
-        # the new literal.
-        if op is self.oldlit:
-
-            self._swap = True
-
-            if op.args != self.newlit.args:
-                for literal in op.args:
-                    self.newlit.addLiteral(literal)
-
-
-        # We also see if the operation itself needs to be swapped. This is in
-        # case a Generator is being used as an operation in an Operator.
-        if op.operation is self.oldlit:
-            op.operation = self.newlit
-            op.clicker.click()
 
         return
 
-    def onPartition(self, part):
-        """Process a Partition node.
+    def onEquation(self, eq):
+        """Process an Equation node.
 
-        The visitor does pass through a Partition.
-
-        Tell the parent to swap this Partition for the new one.  We assume that
-        the new Partition already has Arguments, so the Arguments of an old
-        Partition will not be transferred to a new one.
-        
-        """
-
-        for literal in part.args:
-            literal.identify(self)
-
-        # Swap out a child
-        if self._swap:
-            idx = part.args.index(self.oldlit)
-            part.args[idx] = self.newlit
-            part.clicker.addSubject(self.newlit.clicker)
-
-            self.newlit.clicker.click()
-            self._swap = False
-
-        # Swap out children in the new operator
-        if part is self.oldlit:
-
-            self._swap = True
-
-            self.newlit.clicker.click()
-
-        return
-
-
-    def onGenerator(self, gen):
-        """Process a Generator node.
-
-        The visitor does not pass through a Generator.
-        
-        Tell the parent to swap this Generator for the new one.  We assume that
-        the new Generator already has assigned Literals, so the Literals of the
-        old Generator will not be transferred to a new one.
+        This looks at the equation itself as well as the root.
 
         """
-        # Swap out children in the new generator
-        if gen is self.oldlit:
-
+        if eq is self.oldlit:
             self._swap = True
+            return
 
-            self.newlit.clicker.click()
+        # If the newlit is the root, then swap that out and move on.
+        if eq.root is self.oldlit:
+            eq.setRoot(self.newlit)
+            return
+
+        # Now move into the equation. We have to do a _loopCheck to make sure
+        # that we won't have any loops in the equation.
+        eq._loopCheck(self.newlit)
+        eq.root.identify(self)
+
+        # Reset the root in case anything changed underneath.
+        eq.setRoot(eq.root)
 
         return
 

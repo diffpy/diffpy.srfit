@@ -222,13 +222,13 @@ def plotResults(recipe):
     r = recipe.bucky.profile.x
 
     # Plot this.
-    G = recipe.bucky.profile.y
-    Gcalc = recipe.bucky.profile.ycalc
-    diff = G - Gcalc - 10 * recipe.scale.getValue()
+    g = recipe.bucky.profile.y
+    gcalc = recipe.bucky.profile.ycalc
+    diff = g - gcalc - 0.8 * max(g)
 
     import pylab
-    pylab.plot(r,G,'ob',label="G(r) Data")
-    pylab.plot(r,Gcalc,'-r',label="G(r) Fit")
+    pylab.plot(r,g,'ob',label="G(r) Data")
+    pylab.plot(r,gcalc,'-r',label="G(r) Fit")
     pylab.plot(r,diff,'-g',label="G(r) diff")
     pylab.xlabel("$r (\AA)$")
     pylab.ylabel("$G (\AA^{-2})$")

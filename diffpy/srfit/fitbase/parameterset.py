@@ -35,23 +35,17 @@ class ParameterSet(RecipeOrganizer):
     methods.
 
     Attributes
-    clicker         --  A Clicker instance for recording changes in contained
-                        Parameters and RecipeOrganizers.
     name            --  A name for this organizer.
-    _confclicker    --  A Clicker for recording configuration
-                        changes, esp.  additions and removal of managed
-                        objects.
     _calculators    --  A managed dictionary of Calculators, indexed by name.
-    _constraints    --  A dictionary of Constraints, indexed by the constrained
-                        Parameter. Constraints can be added using the
-                        'constrain' method.
+    _constraints    --  A set of constrained Parameters. Constraints can be
+                        added using the 'constrain' methods.
     _parameters     --  A managed OrderedDict of parameters.
     _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
+                        'restrain' methods.
     _parsets        --  A managed dictionary of ParameterSets.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
-                        restraints from string
+                        restraints from string equations.
 
     """
 

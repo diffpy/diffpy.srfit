@@ -29,20 +29,23 @@ ParameterProxy      --  A proxy for another Parameter, but with a different
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
-from diffpy.srfit.util.clicker import Clicker
 from diffpy.srfit.util.nameutils import validateName
+
+from numpy import inf
 
 class Parameter(Argument):
     """Parameter class.
     
     Attributes
-    name    --  A name for this Parameter. Names should be unique within a
-                RecipeOrganizer and should be valid attribute names.
-    clicker --  A Clicker instance for recording change in the value.
-    value   --  The value of the Parameter. Modified with setValue.
-    const   --  A flag indicating whether the Parameter is constant. A constant
-                parameter cannot be made into a variable, nor can it be
-                constrained to something else.
+    name    --  A name for this Parameter.
+    const   --  A flag indicating whether this is considered a constant.
+    _value  --  The value of the Parameter. Modified with 'setValue'.
+    value   --  Property for 'getValue' and 'setValue'.
+    constrained --  A flag indicating if the Parameter is constrained
+                (default False).
+    bounds  --  A 2-list defining the bounds on the Parameter. This can be
+                used by some optimizers when the Parameter is varied. These
+                bounds are unrelated to restraints on a Parameter.
 
     """
 
@@ -55,16 +58,15 @@ class Parameter(Argument):
         const   --  A flag inticating whether the Parameter is a constant (like
                     pi).
         constrained --  A flag indicating if the Parameter is constrained
-                        (default False).
+                    (default False).
 
         Raises ValueError if the name is not a valid attribute identifier
         
         """
-        validateName(name)
-
-        Argument.__init__(self, value, name, const)
-
         self.constrained = False
+        self.bounds = [-inf, inf]
+        validateName(name)
+        Argument.__init__(self, name, value, const)
         return
 
     def setConst(self, const = True, value = None):
@@ -80,13 +82,7 @@ class Parameter(Argument):
         self.const = bool(const)
         if value is not None:
             self.setValue(value)
-
         return
-
-    def __str__(self):
-        if self.name:
-            return "Parameter(" + self.name + ")"
-        return self.__repr__()
 
 # End class Parameter
 
@@ -121,6 +117,9 @@ class ParameterProxy(object):
     def __getattr__(self, attrname):
         """Redirect accessors and attributes to the reference Parameter."""
         return getattr(self.par, attrname)
+
+    value = property( lambda self: self.par.getValue(),
+            lambda self, val: self.par.setValue(val) )
 
 # End class ParameterProxy
 
@@ -195,7 +194,7 @@ class ParameterWrapper(Parameter):
         """Set the value of the Parameter."""
         if value != self.getValue():
             self.setter(self.obj, value)
-            self.clicker.click()
+            self.notify()
 
         return
                     

@@ -25,7 +25,7 @@ examples for its use.
 import numpy
 
 from diffpy.srfit.fitbase import ProfileGenerator
-from diffpy.srfit.fitbase.parameter import ParameterWrapper
+from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import struToParameterSet
 from diffpy.srreal.pdf_ext import PDFCalculator
 
@@ -226,7 +226,7 @@ class PDFGenerator(ProfileGenerator):
             getter = self._calc.__class__._getDoubleAttr
             setter = self._calc.__class__._setDoubleAttr
             self.addParameter(
-                ParameterWrapper(pname, self._calc, getter, setter, pname)
+                ParameterAdapter(pname, self._calc, getter, setter, pname)
                 )
         return
 
@@ -246,7 +246,7 @@ class PDFGenerator(ProfileGenerator):
             getter = dict.__getitem__
             setter = dict.__setitem__
             self.addParameter(
-                ParameterWrapper(pname, self._phase.stru.pdffit, getter,
+                ParameterAdapter(pname, self._phase.stru.pdffit, getter,
                     setter, pname)
                 )
 
@@ -255,7 +255,7 @@ class PDFGenerator(ProfileGenerator):
             getter = self._calc.__class__._getDoubleAttr
             setter = self._calc.__class__._setDoubleAttr
             self.addParameter(
-                ParameterWrapper(pname, self._calc, getter, setter)
+                ParameterAdapter(pname, self._calc, getter, setter)
                 )
 
         return

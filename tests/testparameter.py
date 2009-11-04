@@ -55,7 +55,7 @@ class TestParameterProxy(unittest.TestCase):
 
         return
 
-class TestParameterWrapper(unittest.TestCase):
+class TestParameterAdapter(unittest.TestCase):
 
     def testWrapper(self):
         """Test the adapter.
@@ -65,7 +65,7 @@ class TestParameterWrapper(unittest.TestCase):
         l = Parameter("l", 3.14)
 
         # Try Accessor adaptation
-        la = ParameterWrapper("l", l, getter = Parameter.getValue, setter =
+        la = ParameterAdapter("l", l, getter = Parameter.getValue, setter =
                 Parameter.setValue)
 
         self.assertEqual(l.name, la.name)
@@ -80,7 +80,7 @@ class TestParameterWrapper(unittest.TestCase):
         self.assertEqual(l.getValue(), la.getValue())
 
         # Try Attribute adaptation
-        la = ParameterWrapper("l", l, attr = "value")
+        la = ParameterAdapter("l", l, attr = "value")
 
         self.assertEqual(l.name, la.name)
         self.assertEqual("value", la.attr)

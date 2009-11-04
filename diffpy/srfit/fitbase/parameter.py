@@ -17,7 +17,7 @@
 Parameters encapsulate an adjustable parameter of a Calculator. There are three
 varieties of Parameter here.
 Parameter           --  Base parameter class.
-ParameterWrapper    --  Wrap attributes or methods of an object as a Parameter.
+ParameterAdapter    --  Wrap attributes or methods of an object as a Parameter.
 ParameterProxy      --  A proxy for another Parameter, but with a different
                         name.
 
@@ -126,7 +126,7 @@ class ParameterProxy(object):
 # Make sure that this is registered as an Argument class
 ArgumentABC.register(ParameterProxy)
 
-class ParameterWrapper(Parameter):
+class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.
 
     This class wraps an object as a Paramter. The getValue and setValue methods
@@ -198,7 +198,7 @@ class ParameterWrapper(Parameter):
 
         return
                     
-# End class ParameterWrapper
+# End class ParameterAdapter
 
 # version
 __id__ = "$Id$"

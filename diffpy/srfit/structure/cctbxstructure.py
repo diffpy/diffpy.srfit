@@ -29,7 +29,7 @@ ScattererParSet --  Wrapper for cctbx.xray.scatterer
 """
 __id__ = "$Id$"
 
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructure import BaseStructure
 
@@ -44,10 +44,10 @@ class ScattererParSet(ParameterSet):
     name        --  Name of the scatterer. The name is always of the form
                     "%s%i" % (element, number), where the number is the running
                     index of that element type (starting at 0).
-    x (y, z)    --  Atom position in crystal coordinates (ParameterWrapper)
+    x (y, z)    --  Atom position in crystal coordinates (ParameterAdapter)
     occupancy   --  Occupancy of the atom on its crystal location
-                    (ParameterWrapper)
-    Uiso        --  Isotropic scattering factor (ParameterWrapper).
+                    (ParameterAdapter)
+    Uiso        --  Isotropic scattering factor (ParameterAdapter).
     
     """
 
@@ -64,15 +64,15 @@ class ScattererParSet(ParameterSet):
         self.idx = idx
 
         # x, y, z, occupancy
-        self.addParameter(ParameterWrapper("x", None, self._xyzgetter(0),
+        self.addParameter(ParameterAdapter("x", None, self._xyzgetter(0),
             self._xyzsetter(0)))
-        self.addParameter(ParameterWrapper("y", None, self._xyzgetter(1),
+        self.addParameter(ParameterAdapter("y", None, self._xyzgetter(1),
             self._xyzsetter(1)))
-        self.addParameter(ParameterWrapper("z", None, self._xyzgetter(2),
+        self.addParameter(ParameterAdapter("z", None, self._xyzgetter(2),
             self._xyzsetter(2)))
-        self.addParameter(ParameterWrapper("occupancy", None, self._getocc,
+        self.addParameter(ParameterAdapter("occupancy", None, self._getocc,
             self._setocc))
-        self.addParameter(ParameterWrapper("Uiso", None, self._getuiso,
+        self.addParameter(ParameterAdapter("Uiso", None, self._getuiso,
             self._setuiso))
         return
 
@@ -121,7 +121,7 @@ class UnitCellParSet(ParameterSet):
     
     Attributes:
     name    --  Always "unitcell".
-    a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterWrapper).
+    a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterAdapter).
     
     """
 
@@ -136,17 +136,17 @@ class UnitCellParSet(ParameterSet):
         self.strups = strups
         self._latpars = list(self.strups.stru.unit_cell().parameters())
 
-        self.addParameter(ParameterWrapper("a", None, self._latgetter(0),
+        self.addParameter(ParameterAdapter("a", None, self._latgetter(0),
             self._latsetter(0)))
-        self.addParameter(ParameterWrapper("b", None, self._latgetter(1),
+        self.addParameter(ParameterAdapter("b", None, self._latgetter(1),
             self._latsetter(1)))
-        self.addParameter(ParameterWrapper("c", None, self._latgetter(2),
+        self.addParameter(ParameterAdapter("c", None, self._latgetter(2),
             self._latsetter(2)))
-        self.addParameter(ParameterWrapper("alpha", None, self._latgetter(3),
+        self.addParameter(ParameterAdapter("alpha", None, self._latgetter(3),
             self._latsetter(3)))
-        self.addParameter(ParameterWrapper("beta", None, self._latgetter(4),
+        self.addParameter(ParameterAdapter("beta", None, self._latgetter(4),
             self._latsetter(4)))
-        self.addParameter(ParameterWrapper("gamma", None, self._latgetter(5),
+        self.addParameter(ParameterAdapter("gamma", None, self._latgetter(5),
             self._latsetter(5)))
 
         return

@@ -95,7 +95,7 @@ def makeC60():
 
     return c
 
-class TestParameterWrapper(unittest.TestCase):
+class TestParameterAdapter(unittest.TestCase):
 
     def setUp(self):
         self.occryst = makeC60()

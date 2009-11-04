@@ -41,7 +41,7 @@ from pyobjcryst.molecule import GetBondLength, GetBondAngle, GetDihedralAngle
 from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
 from pyobjcryst.molecule import StretchModeTorsion
 
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterWrapper
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.restraint import Restraint
@@ -79,10 +79,10 @@ class ScattererParSet(ParameterSet):
         self.parent = parent
 
         # x, y, z, occupancy
-        self.addParameter(ParameterWrapper("x", self.scat, attr = "X"))
-        self.addParameter(ParameterWrapper("y", self.scat, attr = "Y"))
-        self.addParameter(ParameterWrapper("z", self.scat, attr = "Z"))
-        self.addParameter(ParameterWrapper("occ", self.scat, attr =
+        self.addParameter(ParameterAdapter("x", self.scat, attr = "X"))
+        self.addParameter(ParameterAdapter("y", self.scat, attr = "Y"))
+        self.addParameter(ParameterAdapter("z", self.scat, attr = "Z"))
+        self.addParameter(ParameterAdapter("occ", self.scat, attr =
             "Occupancy"))
         return
 
@@ -108,13 +108,13 @@ class AtomParSet(ScattererParSet):
     parent      --  The ObjCrystParSet this belongs to.
 
     Managed Parameters:
-    x, y, z     --  Atom position in crystal coordinates (ParameterWrapper)
+    x, y, z     --  Atom position in crystal coordinates (ParameterAdapter)
     occupancy   --  Occupancy of the atom on its crystal location
-                    (ParameterWrapper)
-    Biso        --  Isotropic scattering factor (ParameterWrapper).
+                    (ParameterAdapter)
+    Biso        --  Isotropic scattering factor (ParameterAdapter).
     B11, B22, B33, B12, B21, B23, B32, B13, B31
                 --  Anisotropic displacement factor for scatterer
-                (ParameterWrapper or ParameterProxy). Note that the Bij and Bji
+                (ParameterAdapter or ParameterProxy). Note that the Bij and Bji
                 parameters are the same.
     
     """
@@ -131,15 +131,15 @@ class AtomParSet(ScattererParSet):
         sp = atom.GetScatteringPower()
 
         # The B-parameters
-        self.addParameter(ParameterWrapper("Biso", sp, attr = "Biso"))
-        self.addParameter(ParameterWrapper("B11", sp, attr = "B11"))
-        self.addParameter(ParameterWrapper("B22", sp, attr = "B22"))
-        self.addParameter(ParameterWrapper("B33", sp, attr = "B33"))
-        B12 = ParameterWrapper("B12", sp, attr = "B12")
+        self.addParameter(ParameterAdapter("Biso", sp, attr = "Biso"))
+        self.addParameter(ParameterAdapter("B11", sp, attr = "B11"))
+        self.addParameter(ParameterAdapter("B22", sp, attr = "B22"))
+        self.addParameter(ParameterAdapter("B33", sp, attr = "B33"))
+        B12 = ParameterAdapter("B12", sp, attr = "B12")
         B21 = ParameterProxy("B21", B12)
-        B13 = ParameterWrapper("B13", sp, attr = "B13")
+        B13 = ParameterAdapter("B13", sp, attr = "B13")
         B31 = ParameterProxy("B31", B13)
-        B23 = ParameterWrapper("B23", sp, attr = "B23")
+        B23 = ParameterAdapter("B23", sp, attr = "B23")
         B32 = ParameterProxy("B32", B23)
         self.addParameter(B12)
         self.addParameter(B21)
@@ -167,10 +167,10 @@ class MoleculeParSet(ScattererParSet):
     parent      --  The ObjCrystParSet this belongs to.
 
     Managed Parameters:
-    x, y, z     --  Molecule position in crystal coordinates (ParameterWrapper)
+    x, y, z     --  Molecule position in crystal coordinates (ParameterAdapter)
     occupancy   --  Occupancy of the molecule on its crystal location
-                    (ParameterWrapper)
-    q0, q1, q2, q3  --  Orientational quaternion (ParameterWrapper)
+                    (ParameterAdapter)
+    q0, q1, q2, q3  --  Orientational quaternion (ParameterAdapter)
     
     Other attributes are inherited from
     diffpy.srfit.fitbase.parameterset.ParameterSet
@@ -188,10 +188,10 @@ class MoleculeParSet(ScattererParSet):
         ScattererParSet.__init__(self, name, molecule, parent)
 
         # Add orientiation quaternion
-        self.addParameter(ParameterWrapper("q0", self.scat, attr = "Q0"))
-        self.addParameter(ParameterWrapper("q1", self.scat, attr = "Q1"))
-        self.addParameter(ParameterWrapper("q2", self.scat, attr = "Q2"))
-        self.addParameter(ParameterWrapper("q3", self.scat, attr = "Q3"))
+        self.addParameter(ParameterAdapter("q0", self.scat, attr = "Q0"))
+        self.addParameter(ParameterAdapter("q1", self.scat, attr = "Q1"))
+        self.addParameter(ParameterAdapter("q2", self.scat, attr = "Q2"))
+        self.addParameter(ParameterAdapter("q3", self.scat, attr = "Q3"))
 
         # Wrap the MolAtoms within the molecule
         self.atoms = []
@@ -545,14 +545,14 @@ class MolAtomParSet(ScattererParSet):
     element     --  Non-refinable name of the element (property).
 
     Managed Parameters:
-    x, y, z     --  Atom position in crystal coordinates (ParameterWrapper)
+    x, y, z     --  Atom position in crystal coordinates (ParameterAdapter)
     occupancy   --  Occupancy of the atom on its crystal location
-                    (ParameterWrapper)
-    Biso        --  Isotropic scattering factor (ParameterWrapper). This does
+                    (ParameterAdapter)
+    Biso        --  Isotropic scattering factor (ParameterAdapter). This does
                     not exist for dummy atoms. See the 'isDummy' method.
     B11, B22, B33, B12, B21, B23, B32, B13, B31
                 --  Anisotropic displacement factor for scatterer
-                (ParameterWrapper or ParameterProxy). Note that the Bij and Bji
+                (ParameterAdapter or ParameterProxy). Note that the Bij and Bji
                 parameters are the same.
     
     """
@@ -570,15 +570,15 @@ class MolAtomParSet(ScattererParSet):
 
         # Only wrap this if there is a scattering power
         if sp is not None:
-            self.addParameter(ParameterWrapper("Biso", sp, attr = "Biso"))
-            self.addParameter(ParameterWrapper("B11", sp, attr = "B11"))
-            self.addParameter(ParameterWrapper("B22", sp, attr = "B22"))
-            self.addParameter(ParameterWrapper("B33", sp, attr = "B33"))
-            B12 = ParameterWrapper("B12", sp, attr = "B12")
+            self.addParameter(ParameterAdapter("Biso", sp, attr = "Biso"))
+            self.addParameter(ParameterAdapter("B11", sp, attr = "B11"))
+            self.addParameter(ParameterAdapter("B22", sp, attr = "B22"))
+            self.addParameter(ParameterAdapter("B33", sp, attr = "B33"))
+            B12 = ParameterAdapter("B12", sp, attr = "B12")
             B21 = ParameterProxy("B21", B12)
-            B13 = ParameterWrapper("B13", sp, attr = "B13")
+            B13 = ParameterAdapter("B13", sp, attr = "B13")
             B31 = ParameterProxy("B31", B13)
-            B23 = ParameterWrapper("B23", sp, attr = "B23")
+            B23 = ParameterAdapter("B23", sp, attr = "B23")
             B32 = ParameterProxy("B32", B23)
             self.addParameter(B12)
             self.addParameter(B21)
@@ -1264,7 +1264,7 @@ class ObjCrystParSet(BaseStructure):
                     or MoleculeParSet), provided for convenience.
 
     Managed Parameters:
-    a, b, c, alpha, beta, gamma --  Lattice parameters (ParameterWrapper)
+    a, b, c, alpha, beta, gamma --  Lattice parameters (ParameterAdapter)
 
     Managed ParameterSets:
     <sname>     --  A ScattererParSet (either AtomParSet or MoleculeParSet),
@@ -1283,13 +1283,13 @@ class ObjCrystParSet(BaseStructure):
         ParameterSet.__init__(self, name)
         self.stru = cryst
 
-        self.addParameter(ParameterWrapper("a", self.stru, attr = "a"))
-        self.addParameter(ParameterWrapper("b", self.stru, attr = "b"))
-        self.addParameter(ParameterWrapper("c", self.stru, attr = "c"))
-        self.addParameter(ParameterWrapper("alpha", self.stru, attr =
+        self.addParameter(ParameterAdapter("a", self.stru, attr = "a"))
+        self.addParameter(ParameterAdapter("b", self.stru, attr = "b"))
+        self.addParameter(ParameterAdapter("c", self.stru, attr = "c"))
+        self.addParameter(ParameterAdapter("alpha", self.stru, attr =
             "alpha"))
-        self.addParameter(ParameterWrapper("beta", self.stru, attr = "beta"))
-        self.addParameter(ParameterWrapper("gamma", self.stru, attr =
+        self.addParameter(ParameterAdapter("beta", self.stru, attr = "beta"))
+        self.addParameter(ParameterAdapter("gamma", self.stru, attr =
             "gamma"))
 
         # Now we must loop over the scatterers and create parameter sets from

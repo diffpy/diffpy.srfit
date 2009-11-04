@@ -8,7 +8,7 @@ import numpy
 from diffpy.Structure import Atom, Lattice, Structure
 from diffpy.srfit.structure.diffpystructure import StructureParSet
 
-class TestParameterWrapper(unittest.TestCase):
+class TestParameterAdapter(unittest.TestCase):
 
     def testStructureParSet(self):
         """Test the structure conversion."""

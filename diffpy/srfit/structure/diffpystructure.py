@@ -29,7 +29,7 @@ AtomParSet      --  Adapter for diffpy.Structure.Atom
 __id__ = "$Id$"
 
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
-from diffpy.srfit.fitbase.parameter import ParameterWrapper
+from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructure import BaseStructure
 
@@ -61,20 +61,20 @@ class AtomParSet(ParameterSet):
     element     --  The element name (property).
 
     Managed Parameters:
-    x (y, z)    --  Atom position in crystal coordinates (ParameterWrapper)
+    x (y, z)    --  Atom position in crystal coordinates (ParameterAdapter)
     occupancy   --  Occupancy of the atom on its crystal location
-                    (ParameterWrapper)
+                    (ParameterAdapter)
     occ         --  Proxy for occupancy (ParameterProxy).
     U11, U22, U33, U12, U21, U23, U32, U13, U31
-                --  Anisotropic displacement factor for atom (ParameterWrapper
+                --  Anisotropic displacement factor for atom (ParameterAdapter
                     or ParameterProxy). Note that the Uij and Uji parameters
                     are the same.
-    Uiso        --  Isotropic ADP (ParameterWrapper).
+    Uiso        --  Isotropic ADP (ParameterAdapter).
     B11, B22, B33, B12, B21, B23, B32, B13, B31
-                --  Anisotropic displacement factor for atom (ParameterWrapper
+                --  Anisotropic displacement factor for atom (ParameterAdapter
                     or ParameterProxy). Note that the Bij and Bji parameters
                     are the same. (Bij = 8*pi**2*Uij)
-    Biso        --  Isotropic ADP (ParameterWrapper).
+    Biso        --  Isotropic ADP (ParameterAdapter).
     
     """
 
@@ -88,24 +88,24 @@ class AtomParSet(ParameterSet):
         self.atom = atom
         a = atom
         # x, y, z, occupancy
-        self.addParameter(ParameterWrapper("x", a, _xyzgetter(0),
+        self.addParameter(ParameterAdapter("x", a, _xyzgetter(0),
             _xyzsetter(0)))
-        self.addParameter(ParameterWrapper("y", a, _xyzgetter(1),
+        self.addParameter(ParameterAdapter("y", a, _xyzgetter(1),
             _xyzsetter(1)))
-        self.addParameter(ParameterWrapper("z", a, _xyzgetter(2),
+        self.addParameter(ParameterAdapter("z", a, _xyzgetter(2),
             _xyzsetter(2)))
-        occupancy = ParameterWrapper("occupancy", a, attr = "occupancy")
+        occupancy = ParameterAdapter("occupancy", a, attr = "occupancy")
         self.addParameter(occupancy)
         self.addParameter(ParameterProxy("occ", occupancy))
         # U
-        self.addParameter(ParameterWrapper("U11", a, attr = "U11"))
-        self.addParameter(ParameterWrapper("U22", a, attr = "U22"))
-        self.addParameter(ParameterWrapper("U33", a, attr = "U33"))
-        U12 = ParameterWrapper("U12", a, attr = "U12")
+        self.addParameter(ParameterAdapter("U11", a, attr = "U11"))
+        self.addParameter(ParameterAdapter("U22", a, attr = "U22"))
+        self.addParameter(ParameterAdapter("U33", a, attr = "U33"))
+        U12 = ParameterAdapter("U12", a, attr = "U12")
         U21 = ParameterProxy("U21", U12)
-        U13 = ParameterWrapper("U13", a, attr = "U13")
+        U13 = ParameterAdapter("U13", a, attr = "U13")
         U31 = ParameterProxy("U31", U13)
-        U23 = ParameterWrapper("U23", a, attr = "U23")
+        U23 = ParameterAdapter("U23", a, attr = "U23")
         U32 = ParameterProxy("U32", U23)
         self.addParameter(U12)
         self.addParameter(U21)
@@ -113,16 +113,16 @@ class AtomParSet(ParameterSet):
         self.addParameter(U31)
         self.addParameter(U23)
         self.addParameter(U32)
-        self.addParameter(ParameterWrapper("Uiso", a, attr = "Uisoequiv"))
+        self.addParameter(ParameterAdapter("Uiso", a, attr = "Uisoequiv"))
         # B
-        self.addParameter(ParameterWrapper("B11", a, attr = "B11"))
-        self.addParameter(ParameterWrapper("B22", a, attr = "B22"))
-        self.addParameter(ParameterWrapper("B33", a, attr = "B33"))
-        B12 = ParameterWrapper("B12", a, attr = "B12")
+        self.addParameter(ParameterAdapter("B11", a, attr = "B11"))
+        self.addParameter(ParameterAdapter("B22", a, attr = "B22"))
+        self.addParameter(ParameterAdapter("B33", a, attr = "B33"))
+        B12 = ParameterAdapter("B12", a, attr = "B12")
         B21 = ParameterProxy("B21", B12)
-        B13 = ParameterWrapper("B13", a, attr = "B13")
+        B13 = ParameterAdapter("B13", a, attr = "B13")
         B31 = ParameterProxy("B31", B13)
-        B23 = ParameterWrapper("B23", a, attr = "B23")
+        B23 = ParameterAdapter("B23", a, attr = "B23")
         B32 = ParameterProxy("B32", B23)
         self.addParameter(B12)
         self.addParameter(B21)
@@ -130,7 +130,7 @@ class AtomParSet(ParameterSet):
         self.addParameter(B31)
         self.addParameter(B23)
         self.addParameter(B32)
-        self.addParameter(ParameterWrapper("Biso", a, attr = "Bisoequiv"))
+        self.addParameter(ParameterAdapter("Biso", a, attr = "Bisoequiv"))
 
         # Other setup
         self.__repr__ = a.__repr__
@@ -175,7 +175,7 @@ class LatticeParSet(ParameterSet):
     name    --  Always "lattice"
 
     Managed Parameters:
-    a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterWrapper).
+    a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterAdapter).
     
     """
 
@@ -188,17 +188,17 @@ class LatticeParSet(ParameterSet):
         ParameterSet.__init__(self, "lattice")
         self.lattice = lattice
         l = lattice
-        self.addParameter(ParameterWrapper("a", l, _latgetter("a"),
+        self.addParameter(ParameterAdapter("a", l, _latgetter("a"),
             _latsetter("a")))
-        self.addParameter(ParameterWrapper("b", l, _latgetter("b"),
+        self.addParameter(ParameterAdapter("b", l, _latgetter("b"),
             _latsetter("b")))
-        self.addParameter(ParameterWrapper("c", l, _latgetter("c"),
+        self.addParameter(ParameterAdapter("c", l, _latgetter("c"),
             _latsetter("c")))
-        self.addParameter(ParameterWrapper("alpha", l, _latgetter("alpha"),
+        self.addParameter(ParameterAdapter("alpha", l, _latgetter("alpha"),
             _latsetter("alpha")))
-        self.addParameter(ParameterWrapper("beta", l, _latgetter("beta"),
+        self.addParameter(ParameterAdapter("beta", l, _latgetter("beta"),
             _latsetter("beta")))
-        self.addParameter(ParameterWrapper("gamma", l, _latgetter("gamma"),
+        self.addParameter(ParameterAdapter("gamma", l, _latgetter("gamma"),
             _latsetter("gamma")))
 
         # Other setup

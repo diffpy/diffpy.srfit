@@ -442,6 +442,14 @@ class FitRecipe(RecipeOrganizer):
         
         return
 
+    def __delattr__(self, name):
+        if name in self._parameters:
+            self.delVar( self._parameters[name] )
+            return
+        super(FitRecipe, self).__delattr__(name)
+        return
+
+
     def newVar(self, name, value = None, fixed = False, tag = None, tags = []):
         """Create a new variable of the fit.
 

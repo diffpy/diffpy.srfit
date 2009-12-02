@@ -258,10 +258,12 @@ class SpaceGroupParameters(RecipeContainer):
                 # If we got here, then we have a constraint equation
                 scatterer.constrain(par, formula, ns = self._parameters )
 
-        symbolmap = dict(zip(stdUsymbols, adpsymbols))
         # Now constrain ADPs
-        adpnames = []
         self.adppars = []
+        if not self.constrainadps:
+            return
+
+        adpnames = []
         for name, val in g.Upars:
             name = name[:3] + "_" + name[3:]
             adpnames.append(name)

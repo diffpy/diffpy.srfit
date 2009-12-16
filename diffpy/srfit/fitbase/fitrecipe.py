@@ -555,7 +555,7 @@ class FitRecipe(RecipeOrganizer):
         """Free all variables.
 
         Extra arguments are assumed to be tags. If present, only variables with
-        the given tag will be fixed.
+        the given tag will be freed.
 
         """
         tagset = self.__getTagSet(tags)

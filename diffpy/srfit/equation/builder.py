@@ -600,7 +600,7 @@ def wrapOperator(name, op):
 def wrapFunction(name, func, nin = 2, nout = 1):
     """Wrap a function in an OperatorBuilder instance.
 
-    name    --  The name of the funciton
+    name    --  The name of the function
     func    --  A callable python object
     nin     --  The number of input arguments (default 2)
     nout    --  The number of return values (default 1)

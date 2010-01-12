@@ -1,4 +1,5 @@
-== Purpose ==
+Purpose
+----------
 
 These example scripts are intended to help a developer get acquainted with the
 SrFit programming interface. Although one can write scripts like these to drive
@@ -13,7 +14,8 @@ help you with that, please feel free to contact us through the DiffPy website.
 http://www.diffpy.org
 
 
-== Overview ==
+Overview
+----------
 
 Three things are required for optimization: a function that generates a
 quantity to be minimized, variables that can be used to manipulate that
@@ -32,6 +34,7 @@ system.  SrFit helps users combine these views of the system in a coherent and
 consistent manner.
 
 To achieve this purpose, SrFit provides:
+
 1) a function to be optimized given one or more measured profiles, one or more
    profile generators and variables to be steered by an optimizer.
 2) constraints and restraints that encapsulate known information about the
@@ -39,18 +42,23 @@ To achieve this purpose, SrFit provides:
 3) a clearly defined programming interface that developers can use to add their
    own profile generators, thereby enabling the combination of more views of a
    system.
-5) an equation building interface that allows users to tweak profile generators
+4) an equation building interface that allows users to tweak profile generators
    when scientific understanding of a system is more advanced than the existing
    software.
 
 The examples described below will go into detail about each of these points.
 
 
-== Examples ==
+Examples
+----------
 
-For each example, start by running the example by typing in the command line
-> python example.py
-where example.py represents the example file. The output will show on screen
+The following examples are contained in the *doc/examples/* directory of the
+SrFit source distribution.  For each example, start by running the example by
+typing in the command line ::
+
+    python example.py
+
+where *example.py* represents the example file. The output will show on screen
 and a plot window will display. Once you've studied the output and plot, close
 the plot window and open the example file. In the file there will be a
 description of what the script is doing and the purpose of the example. By
@@ -62,56 +70,57 @@ them in the order listed below.
 
 Basic:
 
-* gaussianrecipe.py
+* gaussianrecipe.py_
     Introductory recipe building and configuration. This introduces the
     fundamental classes in SrFit.
 
-* debyemodel.py
+* debyemodel.py_
     Introductory recipe building and configuration. This shows how to use a
-    created by someone else in a refinement. This example also introduces
-    restraints.
+    function created by someone else in a refinement. This example also
+    introduces restraints.
 
-* debyemodelII.py
+* debyemodelII.py_
     Refine two different values of a variable from two different regions of a
     profile. This example introduces constraints.
 
 Advanced:
 
-* npintensity.py
+* npintensity.py_
     Use diffpy.Structure to build a nanoparticle intensity generator, and use
     it to refine a structure to simulated data.
 
-* npintensityII.py
+* npintensityII.py_
     Use the calculator built in npintensity.py to simultaneously refine a
     structure to two data sets.
 
-* nppdfobjcryst.py
+* nppdfobjcryst.py_
     Create a nanoparticle PDF calculator using pyobjcryst and refine the C60
     structure to real data.
 
 
-== Use Cases ==
+Use Cases
+-----------
 
 There are several examples that demonstrate various SrFit use cases. These do
 not adopt the tutorial format of the previous examples. Regardless, SrFit
 developers should read through these use cases to gain an understanding of PDF
 refinement with SrFit.
 
-* crystalpdf.py
+* crystalpdf.py_
     Refine a diffpy.Structure crystal to PDF data using automatic explicit space
     group constraints.
 
-* crystalpdfobjcryst.py
+* crystalpdfobjcryst.py_
     Refine a pyobjcryst crystal to PDF data using automatic implicit space
     group constraints.
 
-* crystalpdftwophase.py
+* crystalpdftwophase.py_
     Refine a two-phase structure to PDF data using two profile generators.
 
-* crystalpdftwodata.py
+* crystalpdftwodata.py_
     Refine a single structure to x-ray and neutron data simultaneously.
 
-* crystalpdfall.py
+* crystalpdfall.py_
     Refine a two-phase structure using four data sets.
    
 

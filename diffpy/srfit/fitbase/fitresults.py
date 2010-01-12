@@ -22,8 +22,11 @@ displayed on screen or saved to file.
 
 import numpy
 
+from diffpy.srfit.util import public
+
 # FIXME - really small numbers don't print well
 
+@public
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 
@@ -453,6 +456,7 @@ class FitResults(object):
 
 # End class FitResults
 
+@public
 class ContributionResults(object):
     """Class for processing, storing FitContribution results.
 

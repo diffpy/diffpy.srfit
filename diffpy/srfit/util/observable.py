@@ -9,7 +9,9 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 
+from .public import public
 
+@public
 class Observable(object):
     """
     Provide notification support for classes that maintain dynamic associations with multiple

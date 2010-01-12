@@ -34,7 +34,9 @@ from diffpy.srfit.util.ordereddict import OrderedDict
 from .parameter import ParameterProxy
 from .recipeorganizer import RecipeOrganizer
 from .fithook import FitHook
+from diffpy.srfit.util import public
 
+@public
 class FitRecipe(RecipeOrganizer):
     """FitRecipe class.
 

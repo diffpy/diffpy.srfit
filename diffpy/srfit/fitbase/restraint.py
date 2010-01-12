@@ -23,6 +23,9 @@ equation calculated by a FitRecipe.
 
 from numpy import inf
 
+from diffpy.srfit.util import public
+
+@public
 class Restraint(object):
     """Restraint class.
 

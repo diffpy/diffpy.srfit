@@ -24,13 +24,14 @@ base class. Other Operators can be derived from Operator (see AdditionOperator),
 but they all identify themselves with the Visitor.onOperator method.
 
 """
+import numpy
 
-
+from diffpy.srfit.util import public
 from .abcs import OperatorABC
 from .literal import Literal
 
-import numpy
 
+@public
 class Operator(Literal, OperatorABC):
     """Class for holding a general operator.
 
@@ -111,6 +112,7 @@ class Operator(Literal, OperatorABC):
 # Some specified operators
 
 
+@public
 class AdditionOperator(Operator):
     """Addition operator."""
 
@@ -122,6 +124,7 @@ class AdditionOperator(Operator):
         self.operation = numpy.add
         return
 
+@public
 class SubtractionOperator(Operator):
     """Subtraction operator."""
 
@@ -133,6 +136,7 @@ class SubtractionOperator(Operator):
         self.operation = numpy.subtract
         return
 
+@public
 class MultiplicationOperator(Operator):
     """Multiplication operator."""
 
@@ -144,6 +148,7 @@ class MultiplicationOperator(Operator):
         self.operation = numpy.multiply
         return
 
+@public
 class DivisionOperator(Operator):
     """Division operator."""
 
@@ -155,6 +160,7 @@ class DivisionOperator(Operator):
         self.operation = numpy.divide
         return
 
+@public
 class ExponentiationOperator(Operator):
     """Exponentiation operator."""
 
@@ -166,6 +172,7 @@ class ExponentiationOperator(Operator):
         self.operation = numpy.power
         return
 
+@public
 class RemainderOperator(Operator):
     """Remainder operator."""
 
@@ -177,6 +184,7 @@ class RemainderOperator(Operator):
         self.operation = numpy.mod
         return
 
+@public
 class NegationOperator(Operator):
     """Negation operator."""
 
@@ -189,6 +197,7 @@ class NegationOperator(Operator):
         self.operation = numpy.negative
         return
 
+@public
 class ConvolutionOperator(Operator):
     """Convolve two signals.
 
@@ -234,6 +243,7 @@ class ConvolutionOperator(Operator):
         self.operation = conv
         return
 
+@public
 class SumOperator(Operator):
     """numpy.sum operator."""
 
@@ -247,6 +257,7 @@ class SumOperator(Operator):
         self.operation = numpy.sum
         return
 
+@public
 class UFuncOperator(Operator):
     """A operator wrapper around a numpy ufunc.
 
@@ -270,6 +281,7 @@ class UFuncOperator(Operator):
         self.operation = op
         return
 
+@public
 class ListOperator(Operator):
     """Operator that will take parameters and turn them into a list."""
 
@@ -286,6 +298,7 @@ class ListOperator(Operator):
         self.operation = makeList
         return
 
+@public
 class SetOperator(Operator):
     """Operator that will take parameters and turn them into a set."""
 
@@ -302,6 +315,7 @@ class SetOperator(Operator):
         self.operation = makeSet
         return
 
+@public
 class ArrayOperator(Operator):
     """Operator that will take parameters and turn them into an array."""
 
@@ -318,7 +332,7 @@ class ArrayOperator(Operator):
         self.operation = makeArray
         return
 
-
+@public
 class PolyvalOperator(Operator):
     """Operator for numpy polyval."""
 

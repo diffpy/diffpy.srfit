@@ -27,6 +27,9 @@ from .parameterset import ParameterSet
 from .recipeorganizer import equationFromString
 from .parameter import ParameterProxy
 
+from diffpy.srfit.util import public
+
+@public
 class FitContribution(ParameterSet):
     """FitContribution class.
 

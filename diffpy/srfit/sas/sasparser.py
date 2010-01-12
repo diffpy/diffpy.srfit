@@ -10,7 +10,9 @@ __id__ = "$Id$"
 import numpy
 
 from diffpy.srfit.fitbase.profileparser import ProfileParser, ParseError
+from diffpy.srfit.util import public
 
+@public
 class SASParser(ProfileParser):
     """Class for parsing a sas profile.
 

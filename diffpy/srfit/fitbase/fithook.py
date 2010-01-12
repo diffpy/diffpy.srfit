@@ -25,7 +25,9 @@ Custom FitHooks can be added to a FitRecipe with the FitRecipe.setFitHook method
 """
 
 import numpy
+from diffpy.srfit.util import public
 
+@public
 class FitHook(object):
     """Base class for inspecting the progress of a FitRecipe refinement.
 

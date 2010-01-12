@@ -21,7 +21,9 @@ embedded Parameters.
 """
 
 from .recipeorganizer import RecipeOrganizer
+from diffpy.srfit.util import public
 
+@public
 class ParameterSet(RecipeOrganizer):
     """Class for organizing Parameters and other ParameterSets.
 

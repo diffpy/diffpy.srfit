@@ -21,6 +21,9 @@ this association.
 
 """
 
+from diffpy.srfit.util import public
+
+@public
 class Constraint(object):
     """Constraint class.
 

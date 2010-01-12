@@ -3,7 +3,9 @@
 
 """Abstract Base Classes (ABCs) according to PEP 3119."""
 
+from .public import public
 
+@public
 def abstractmethod(funcobj):
     """A decorator indicating abstract methods.
 
@@ -25,6 +27,7 @@ def abstractmethod(funcobj):
     return funcobj
 
 
+@public
 class abstractproperty(property):
     """A decorator indicating abstract properties.
 
@@ -54,6 +57,7 @@ class abstractproperty(property):
     __isabstractmethod__ = True
 
 
+@public
 class ABCMeta(type):
 
     """Metaclass for defining Abstract Base Classes (ABCs).

@@ -28,6 +28,7 @@ from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import struToParameterSet
 from diffpy.srreal.pdf_ext import PDFCalculator
+from diffpy.srfit.util import public
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
@@ -35,8 +36,7 @@ from diffpy.srreal.pdf_ext import PDFCalculator
 # diffpy.Structure object, otherwise, we can't share the structural
 # ParameterSet between different Generators.
 
-__all__ = ["PDFGenerator"]
-
+@public
 class PDFGenerator(ProfileGenerator):
     """A class for calculating the PDF from a single crystal structure.
 
@@ -250,13 +250,13 @@ class PDFGenerator(ProfileGenerator):
                     setter, pname)
                 )
 
-        parnames = ['qbroad', 'qdamp']
-        for pname in parnames:
-            getter = self._calc.__class__._getDoubleAttr
-            setter = self._calc.__class__._setDoubleAttr
-            self.addParameter(
-                ParameterAdapter(pname, self._calc, getter, setter)
-                )
+        #parnames = ['qbroad', 'qdamp']
+        #for pname in parnames:
+        #    getter = self._calc.__class__._getDoubleAttr
+        #    setter = self._calc.__class__._setDoubleAttr
+        #    self.addParameter(
+        #        ParameterAdapter(pname, self._calc, getter, setter)
+        #        )
 
         return
 

@@ -24,12 +24,13 @@ interface.
 
 """
 
-from .visitor import Visitor
-
+from diffpy.srfit.util import public
 from diffpy.srfit.equation.literals.abcs import *
+from .visitor import Visitor
 
 msg = "'%s' does not have the interface required by '%s'"
 
+@public
 class Validator(Visitor):
     """Validator error for checking validity of an equation tree.
 

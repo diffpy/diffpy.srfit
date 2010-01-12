@@ -18,8 +18,11 @@ ArgFinder extracts all Arguments from a literal true.
 
 """ 
 
+from diffpy.srfit.util import public
+
 from .visitor import Visitor
 
+@public
 class ArgFinder(Visitor):
     """ArgFinder extracts Arguments from a Literal tree.
 

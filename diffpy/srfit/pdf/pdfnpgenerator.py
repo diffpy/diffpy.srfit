@@ -18,13 +18,15 @@
 
 import numpy
 
+from periodictable import elements
+
 from diffpy.srfit.fitbase import ProfileGenerator, Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
+from diffpy.srfit.util import public
 
-from periodictable import elements
-
+@public
 class PDFNPGenerator(ProfileGenerator):
     """A class for calculating the PDF for an isolated scatterer.""" 
 
@@ -41,6 +43,7 @@ class PDFNPGenerator(ProfileGenerator):
         # Non-Parameters that are needed by the generator.
         self.meta["qmin"] = 1
         self.meta["qmax"] = 20
+        self._phase = None
         return
 
     def setCrystal(self, cryst):
@@ -59,6 +62,7 @@ class PDFNPGenerator(ProfileGenerator):
         parset = ObjCrystParSet(cryst, "phase")
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
+        self._phase = parset
         return
 
     def __call__(self, r):

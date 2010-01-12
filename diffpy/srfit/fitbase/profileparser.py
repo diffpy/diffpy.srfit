@@ -9,9 +9,10 @@ See the class documentation for more information.
 
 """
 
-__id__ = "$Id$"
 
+from diffpy.srfit.util import public
 
+@public
 class ProfileParser(object):
     """Class for parsing data from a or string.
 
@@ -167,8 +168,11 @@ class ProfileParser(object):
 
 # End of ProfileParser
 
+@public
 class ParseError(Exception):
     """Exception used by ProfileParsers."""
     pass
+
+__id__ = "$Id$"
 
 # End of ParseError

@@ -46,7 +46,9 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.structure.basestructure import BaseStructure
+from diffpy.srfit.util import public
 
+@public
 class ScattererParSet(ParameterSet):
     """A base adaptor for an Objcryst Scatterer.
 
@@ -97,6 +99,7 @@ class ScattererParSet(ParameterSet):
 
 # End class ScattererParSet
 
+@public
 class AtomParSet(ScattererParSet):
     """A adaptor for a pyobjcryst.Atom.
 
@@ -157,6 +160,7 @@ class AtomParSet(ScattererParSet):
 
 # End class AtomParSet
 
+@public
 class MoleculeParSet(ScattererParSet):
     """A adaptor for a pyobjcryst.Molecule.
 
@@ -532,6 +536,7 @@ class MoleculeParSet(ScattererParSet):
 
 # End class MoleculeParSet
 
+@public
 class MolAtomParSet(ScattererParSet):
     """A adaptor for an pyobjcryst.molecule.MolAtom.
 
@@ -605,6 +610,7 @@ class MolAtomParSet(ScattererParSet):
 
 # End class MolAtomParSet
 
+@public
 class MoleculeRestraint(object):
     """Base class for adapting pyobjcryst Molecule restraints to srfit.
 
@@ -648,6 +654,7 @@ class MoleculeRestraint(object):
 
 # End class MoleculeRestraint
 
+@public
 class BondLengthRestraint(MoleculeRestraint):
     """Restrain the distance between two atoms.
 
@@ -696,6 +703,7 @@ class BondLengthRestraint(MoleculeRestraint):
 
 # End class BondLengthRestraint
 
+@public
 class BondAngleRestraint(MoleculeRestraint):
     """Restrain the angle defined by three atoms.
 
@@ -749,6 +757,7 @@ class BondAngleRestraint(MoleculeRestraint):
 
 # End class BondAngleRestraint
 
+@public
 class DihedralAngleRestraint(MoleculeRestraint):
     """Restrain the dihedral (torsion) angle defined by four atoms.
 
@@ -805,6 +814,7 @@ class DihedralAngleRestraint(MoleculeRestraint):
 
 # End class DihedralAngleRestraint
 
+@public
 class StretchModeParameter(Parameter):
     """Partial Parameter class encapsulating pyobjcryst stretch modes.
 
@@ -890,6 +900,7 @@ class StretchModeParameter(Parameter):
 
 # End class StretchModeParameter
 
+@public
 class BondLengthParameter(StretchModeParameter):
     """Class for abstracting a bond length in a Molecule to a Parameter.
 
@@ -1017,6 +1028,7 @@ class BondLengthParameter(StretchModeParameter):
 
 # End class BondLengthParameter
                      
+@public
 class BondAngleParameter(StretchModeParameter):
     """Class for abstracting a bond angle in a Molecule to a Parameter.
 
@@ -1131,6 +1143,7 @@ class BondAngleParameter(StretchModeParameter):
 
 # End class BondAngleParameter
                      
+@public
 class DihedralAngleParameter(StretchModeParameter):
     """Class for abstracting a dihedral angle in a Molecule to a Parameter.
 
@@ -1252,6 +1265,7 @@ class DihedralAngleParameter(StretchModeParameter):
 
 # End class DihedralAngleParameter
 
+@public
 class ObjCrystParSet(BaseStructure):
     """A adaptor for pyobjcryst.crystal.Crystal instance.
 

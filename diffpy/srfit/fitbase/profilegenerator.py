@@ -44,9 +44,11 @@ More examples can be found in the example directory of the documentation.
 from numpy import asarray
 
 from diffpy.srfit.equation.literals.operators import Operator
+from diffpy.srfit.util import public
 
 from .parameterset import ParameterSet
 
+@public
 class ProfileGenerator(Operator, ParameterSet):
     """Base class for profile generators.
 

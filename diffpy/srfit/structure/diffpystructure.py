@@ -32,6 +32,7 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructure import BaseStructure
+from diffpy.srfit.util import public
 
 # Accessor for xyz of atoms
 def _xyzgetter(i):
@@ -49,7 +50,7 @@ def _xyzsetter(i):
 
     return f
 
-
+@public
 class AtomParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Atom.
 
@@ -164,6 +165,7 @@ def _latsetter(par):
     return f
 
 
+@public
 class LatticeParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Lattice.
 
@@ -207,6 +209,7 @@ class LatticeParSet(ParameterSet):
 
 # End class LatticeParSet
 
+@public
 class StructureParSet(BaseStructure):
     """A wrapper for diffpy.Structure.Structure.
 

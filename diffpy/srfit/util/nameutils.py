@@ -17,7 +17,11 @@
 """
 
 import re
+
+from .public import public
+
 reident = re.compile(r'^[a-zA-Z_]\w*$')
+@public
 def isIdentifier(s):
     """Check to see if a python string is a valid identifier.
     
@@ -27,7 +31,7 @@ def isIdentifier(s):
     if reident.match(s) is None: return False
     return True
 
-
+@public
 def validateName(name):
     """Validate that a name is a valid identifier.
 

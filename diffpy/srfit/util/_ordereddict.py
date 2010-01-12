@@ -3,6 +3,8 @@
 
 from itertools import repeat as _repeat, chain as _chain, starmap as _starmap
 
+from .public import public
+
 try:
     from itertools import izip_longest as _zip_longest
 except ImportError:
@@ -22,6 +24,7 @@ except ImportError:
         except IndexError:
             pass
 
+@public
 class OrderedDict(dict):
 
     def __init__(self, *args, **kwds):

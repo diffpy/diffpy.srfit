@@ -26,6 +26,9 @@ Calculator can be added to another RecipeOrganizer with the
 
 from .parameterset import ParameterSet
 
+from diffpy.srfit.util import public
+
+@public
 class Calculator(ParameterSet):
     """Base class for calculators.
 
@@ -65,6 +68,7 @@ class Calculator(ParameterSet):
 
 # End class Calculator
 
+@public
 def makeCalculator(f, name, argnames):
     """Make a calculator out of a function.
 

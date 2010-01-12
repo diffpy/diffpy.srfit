@@ -7,14 +7,14 @@ See the class documentation for more information.
 
 """
 
-__id__ = "$Id$"
-
 import re
 
 import numpy
 
 from diffpy.srfit.fitbase.profileparser import ProfileParser, ParseError
+from diffpy.srfit.util import public
 
+@public
 class PDFParser(ProfileParser):
     """Class for holding a diffraction pattern.
 
@@ -201,6 +201,6 @@ class PDFParser(ProfileParser):
         self._banks.append([robs, Gobs, drobs, dGobs])
         return
 
-
 # End of PDFParser
 
+__id__ = "$Id$"

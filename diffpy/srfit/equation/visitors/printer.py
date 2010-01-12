@@ -21,8 +21,10 @@ Printer is mostly
 
 """
 
+from diffpy.srfit.util import public
 from .visitor import Visitor
 
+@public
 class Printer(Visitor):
     """Printer for printing a Literal tree.
 

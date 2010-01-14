@@ -1,0 +1,73 @@
+======================================
+Installing SrFit
+======================================
+
+PREREQUISITES
+--------------------------
+
+SrFit requires the following software to operate:
+
+1) Python 2.5 or newer ( < 3.0 )
+
+  http://www.python.org
+
+2) NumPy 1.0 or newer
+
+  http://www.numpy.org/
+
+2) SciPy 0.7 or newer
+
+  http://www.scipy.org/
+
+3) Matplotlib 0.98 or greater
+
+  http://matplotlib.sourceforge.net/
+
+4) Setuptools 0.6c9 or newer
+
+  http://peak.telecommunity.com/DevCenter/setuptools
+
+
+OPTIONAL PACKAGES
+--------------------------
+
+1) PyObjCryst 0.1a1
+
+  http://danse.us/trac/diffraction/wiki/PyObjCrystInstallation
+
+
+INSTALLATION
+--------------------------
+
+If all prerequisites are properly installed, you can run from the command
+line::
+
+  easy_install -f http://dev.danse.us/packages diffpy.srfit
+
+This will install SrFit and prerequisite DANSE packages.  Installation may
+require root privileges. Type ::
+
+  easy_install --help
+
+for other installation options. In particular, the `--prefix` option will allow
+you to install to a non-standard location. See the python documation for how to
+make python aware of a non-standard package location.
+
+ 
+EXAMPLES
+--------------------------
+
+The SrFit examples can be downloaded from
+http://dev.danse.us/packages/diffpy.srfitexamples.zip. The `README` file inside
+of the archive explains how to progress through the examples. Note that some of
+the examples will not work without PyObjCryst installed.
+
+CONTACT
+--------------------------
+
+Please contact us at our google-group :: 
+
+  http://groups.google.com/group/diffpy-dev
+
+if you have questions or comments about the installation procedure. We will
+assist you with installation problems you may have.

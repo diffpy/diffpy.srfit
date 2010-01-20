@@ -11,13 +11,37 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Definition of public decorator for defining object part of the API."""
+"""Definition of public decorator for defining object part of the API.
 
+This will place the name of a function or class into the __all__ list of the
+containing module. It will create the __all__ list if necessary. In this way,
+it is easy to determine and update what is importable from the module.
 
+"""
 import sys
 
-# Taken from Recipe 576993: "public" decorator, adds an item to __all__
+# From Recipe 576993: "public" decorator, adds an item to __all__
 # http://code.activestate.com/recipes/576993/
+# Copyright (c) 2009 Sam Denton
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
 def public(f):
     """"Use a decorator to avoid retyping function/class names.
 
@@ -31,6 +55,6 @@ def public(f):
         all.append(f.__name__)
     return f
 
-public(public)  # Emulate decorating ourself
+public(public)
 
 # End of file

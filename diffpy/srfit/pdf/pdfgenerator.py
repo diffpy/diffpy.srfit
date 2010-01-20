@@ -66,6 +66,8 @@ class PDFGenerator(ProfileGenerator):
                 'setScatteringType').
     qmax    --  The maximum scattering vector used to generate the PDF (see
                 setQmax).
+    qmin    --  The minimum scattering vector used to generate the PDF (see
+                setQmin).
     scale   --  See Managed Parameters.
     delta1  --  See Managed Parameters.
     delta2  --  See Managed Parameters.
@@ -150,8 +152,7 @@ class PDFGenerator(ProfileGenerator):
 
     def getQmax(self):
         """Get the qmax value."""
-        self._calc._getDoubleAttr("qmax")
-        return
+        return self.meta.get('qmax')
 
     def setQmin(self, qmin):
         """Set the qmin value.
@@ -165,8 +166,7 @@ class PDFGenerator(ProfileGenerator):
 
     def getQmin(self):
         """Get the qmin value."""
-        self._calc._getDoubleAttr("qmin")
-        return
+        return self.meta.get('qmin')
 
     def setPhase(self, stru = None, name = None, parset = None):
         """Add a phase to the calculated structure.

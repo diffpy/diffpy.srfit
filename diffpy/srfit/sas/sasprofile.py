@@ -54,10 +54,10 @@ class SASProfile(Profile):
 
     """
 
-    def __init__(self, dataifo):
+    def __init__(self, datainfo):
         """Initialize the attributes.
         
-        _datainfo   --  The DataInfo object this wraps.
+        datainfo   --  The DataInfo object this wraps.
         
         """
         self._datainfo = datainfo
@@ -65,7 +65,7 @@ class SASProfile(Profile):
 
         self.xobs = self._datainfo.x
         self.yobs = self._datainfo.y
-        self.dyobs = self._datainfo.dy or numpy.ones_like(self.xobs)
+        self.dyobs = self._datainfo.dy or ones_like(self.xobs)
         return
 
 __id__ = "$Id$"

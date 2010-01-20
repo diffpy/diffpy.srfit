@@ -101,6 +101,20 @@ class TestPDFParser(unittest.TestCase):
             stru[i].Bisoequiv = 1
         gen.setPhase(stru)
 
+        calc = gen._calc
+        # Test parameters - FIXME
+        #for par in gen.iterPars(recurse = False):
+        #    pname = par.name
+        #    defval = calc._getDoubleAttr(pname)
+        #    self.assertEquals(defval, par.getValue())
+        #    # Test setting values
+        #    par.setValue(1.0)
+        #    self.assertEquals(1.0, par.getValue())
+        #    self.assertEquals(1.0, calc._getDoubleAttr(pname))
+        #    par.setValue(defval)
+        #    self.assertEquals(defval, par.getValue())
+        #    self.assertEquals(defval, calc._getDoubleAttr(pname))
+
         r = numpy.arange(0, 10, 0.1)
         y = gen(r)
 

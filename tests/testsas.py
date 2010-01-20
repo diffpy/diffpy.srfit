@@ -50,6 +50,7 @@ class TestSASGenerator(unittest.TestCase):
 
     def testGenerator(self):
 
+        # Test generator output
         from sans.models.SphereModel import SphereModel
         model = SphereModel()
         gen = SASGenerator("sphere", model)
@@ -67,13 +68,39 @@ class TestSASGenerator(unittest.TestCase):
             self.assertEquals(defval, model.getParam(pname))
 
 
-        r = numpy.arange(1, 5, dtype = float)
+        r = numpy.arange(1, 10, 0.1, dtype = float)
         y = gen(r)
         refy = model.evalDistribution(r)
         diff = y - refy
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
+        return
+
+    def testGenerator2(self):
+
+        # Test generator with a profile
+        from sans.models.EllipsoidModel import EllipsoidModel
+        model = EllipsoidModel()
+        gen = SASGenerator("ellipsoid", model)
+
+        # Load the data using SAS tools
+        from DataLoader.loader import Loader
+        loader = Loader()
+        datainfo = loader.load("testdata/sas_ellipsoid_testdata.txt")
+        profile = SASProfile(datainfo)
+
+        gen.setProfile(profile)
+        gen.scale = 1.0
+        gen.radius_a = 20
+        gen.radius_b = 400
+        gen.contrast = 3e-6
+        gen.background = 0.01
+
+        y = gen(profile.xobs)
+        diff = profile.yobs - y
+        res = numpy.dot(diff, diff)
+        self.assertAlmostEqual(0, res)
         return
 
 

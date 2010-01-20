@@ -122,5 +122,9 @@ refinement with SrFit.
 
 * crystalpdfall.py_
     Refine a two-phase structure using four data sets.
+
+* ellipsoidsas.py_
+    Refine an ellipsoid SAS model to ideal data.
+
    
 

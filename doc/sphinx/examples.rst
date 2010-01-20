@@ -17,6 +17,7 @@ Examples
 .. _crystalpdftwophase.py: crystalpdftwophase.html
 .. _crystalpdftwodata.py: crystalpdftwodata.html
 .. _crystalpdfall.py: crystalpdfall.html
+.. _ellipsoidsas.py: ellipsoidsas.html
 
 Files
 ----------
@@ -34,5 +35,5 @@ Files
    crystalpdftwophase.rst
    crystalpdftwodata.rst
    crystalpdfall.rst
-
+   ellipsoidsas.rst
 

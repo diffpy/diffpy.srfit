@@ -2,16 +2,21 @@
 """Tests for sas package."""
 
 import unittest
+import os.path
 
 import numpy
 
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
 from diffpy.srfit.fitbase import Profile
 
+thisfile = locals().get('__file__', 'testpdf.py')
+tests_dir = os.path.dirname(os.path.abspath(thisfile))
+testdata_dir = os.path.join(tests_dir, 'testdata')
+
 class TestSASParser(unittest.TestCase):
 
     def testParser(self):
-        data = "testdata/sas_ascii_test_1.txt"
+        data = os.path.join(testdata_dir, "sas_ascii_test_1.txt")
         parser = SASParser()
         parser.parseFile(data)
 
@@ -87,7 +92,8 @@ class TestSASGenerator(unittest.TestCase):
         # Load the data using SAS tools
         from DataLoader.loader import Loader
         loader = Loader()
-        datainfo = loader.load("testdata/sas_ellipsoid_testdata.txt")
+        data = os.path.join(testdata_dir, "sas_ellipsoid_testdata.txt")
+        datainfo = loader.load(data)
         profile = SASProfile(datainfo)
 
         gen.setProfile(profile)

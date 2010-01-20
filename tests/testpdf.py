@@ -1,0 +1,132 @@
+#!/usr/bin/env python
+"""Tests for pdf package."""
+
+import unittest
+
+import numpy
+
+from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.fitbase import Profile
+
+class TestPDFParser(unittest.TestCase):
+
+    def testParser1(self):
+        data = "testdata/ni-q27r100-neutron.gr"
+        parser = PDFParser()
+        parser.parseFile(data)
+
+        meta = parser._meta
+
+        self.assertEqual(data, meta['filename'])
+        self.assertEqual(1, meta['nbanks'])
+        self.assertEqual('N', meta['stype'])
+        self.assertEqual(27, meta['qmax'])
+        self.assertEquals(300, meta.get('temperature'))
+        self.assertEquals(None, meta.get('qdamp'))
+        self.assertEquals(None, meta.get('qbroad'))
+        self.assertEquals(None, meta.get('spdiameter'))
+        self.assertEquals(None, meta.get('scale'))
+        self.assertEquals(None, meta.get('doping'))
+
+        x, y, dx, dy = parser.getData()
+        self.assertTrue(dx is None)
+        self.assertTrue(dy is None)
+
+        testx = numpy.linspace(0.01, 100, 10000)
+        diff = testx - x
+        res = numpy.dot(diff, diff)
+        self.assertAlmostEqual(0, res)
+
+        testy = numpy.array([1.144, 2.258, 3.312, 4.279, 5.135, 5.862, 6.445,
+            6.875, 7.150, 7.272])
+        diff = testy - y[:10]
+        res = numpy.dot(diff, diff)
+        self.assertAlmostEqual(0, res)
+
+        return
+
+    def testParser2(self):
+        data = "testdata/si-q27r60-xray.gr"
+        parser = PDFParser()
+        parser.parseFile(data)
+
+        meta = parser._meta
+
+        self.assertEqual(data, meta['filename'])
+        self.assertEqual(1, meta['nbanks'])
+        self.assertEqual('X', meta['stype'])
+        self.assertEqual(27, meta['qmax'])
+        self.assertEquals(300, meta.get('temperature'))
+        self.assertEquals(None, meta.get('qdamp'))
+        self.assertEquals(None, meta.get('qbroad'))
+        self.assertEquals(None, meta.get('spdiameter'))
+        self.assertEquals(None, meta.get('scale'))
+        self.assertEquals(None, meta.get('doping'))
+
+        x, y, dx, dy = parser.getData()
+        testx = numpy.linspace(0.01, 60, 5999, endpoint=False)
+        diff = testx - x
+        res = numpy.dot(diff, diff)
+        self.assertAlmostEqual(0, res)
+
+        testy = numpy.array([0.1105784, 0.2199684, 0.3270088, 0.4305913,
+            0.5296853, 0.6233606, 0.7108060, 0.7913456, 0.8644501, 0.9297440])
+        diff = testy - y[:10]
+        res = numpy.dot(diff, diff)
+        self.assertAlmostEqual(0, res)
+
+        testdy = numpy.array([0.001802192, 0.003521449, 0.005079115,
+            0.006404892, 0.007440527, 0.008142955, 0.008486813, 0.008466340,
+            0.008096858, 0.007416456])
+        diff = testdy - dy[:10]
+        res = numpy.dot(diff, diff)
+        self.assertAlmostEqual(0, res)
+
+        self.assertTrue(dx is None)
+        return
+
+class TestPDFParser(unittest.TestCase):
+
+    def testGenerator(self):
+        qmax = 27.0
+        gen = PDFGenerator()
+        gen.setScatteringType('N')
+        self.assertEqual('N', gen.getScatteringType())
+        gen.setQmax(qmax)
+        self.assertAlmostEqual(qmax, gen.getQmax())
+        from diffpy.Structure import PDFFitStructure
+        stru = PDFFitStructure()
+        stru.read("testdata/ni.cif")
+        for i in range(4):
+            stru[i].Bisoequiv = 1
+        gen.setPhase(stru)
+
+        r = numpy.arange(0, 10, 0.1)
+        y = gen(r)
+
+        # Now create a reference PDF. Since the calculator is testing its
+        # output, we just have to make sure we can calculate from the
+        # PDFGenerator interface.
+        from diffpy.srreal.pdf_ext import PDFCalculator
+        calc = PDFCalculator()
+        calc._setDoubleAttr('rstep', r[1] - r[0])
+        calc._setDoubleAttr('rmin', r[0])
+        precision = calc._getDoubleAttr("peakprecision")
+        calc._setDoubleAttr('rmax', r[-1] + precision)
+        calc._setDoubleAttr('qmax', qmax)
+        calc.setScatteringFactorTable('N')
+        calc.eval(stru)
+        yref = calc.getPDF()
+
+        diff = y - yref
+        res = numpy.dot(diff, diff)
+        self.assertAlmostEquals(0, res)
+        return
+
+
+
+if __name__ == "__main__":
+
+    unittest.main()
+
+

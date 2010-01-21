@@ -9,6 +9,7 @@ Examples
 .. _gaussianrecipe.py: gaussianrecipe.html
 .. _debyemodel.py: debyemodel.html
 .. _debyemodelII.py: debyemodelII.html
+.. _gaussiangenerator.py: gaussiangenerator.html
 .. _npintensity.py: npintensity.html
 .. _npintensityII.py: npintensityII.html
 .. _nppdfobjcryst.py: nppdfobjcryst.html
@@ -27,6 +28,7 @@ Files
    gaussianrecipe.rst
    debyemodel.rst
    debyemodelII.rst
+   gaussiangenerator.rst
    npintensity.rst
    npintensityII.rst
    nppdfobjcryst.rst

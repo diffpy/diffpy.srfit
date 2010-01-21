@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of a SAS refinement of ellipsoidal I(Q) data.
+"""Example of a refinement of SAS I(Q) data to an ellipsoidal model.
 
 """
 
@@ -45,9 +45,11 @@ def makeRecipe(datname):
 
     ## The ProfileGenerator
     # The SASGenerator is for configuring and calculating a SAS profile. We use
-    # a configurable sans model to configure the generator. This allows us to
-    # use the full sans model creation capabilities, and tie this into SrFit
-    # when we want to fit a model to data.
+    # a sans model to configure and serve as the calculation engine of the
+    # generator. This allows us to use the full sans model creation
+    # capabilities, and tie this into SrFit when we want to fit a model to
+    # data. The documentation for the various sans models can be found at
+    # http://danse.chem.utk.edu/sansview.html.
     from sans.models.EllipsoidModel import EllipsoidModel
     model = EllipsoidModel()
     generator = SASGenerator("generator", model)
@@ -63,7 +65,7 @@ def makeRecipe(datname):
     # higher-Q information remains significant. There are no I(Q) uncertainty
     # values with the data, so we do not need to worry about the effect this
     # will have on the estimated parameter uncertainties.
-    contribution.setResidualEquation("(log(eq) - log(y))/dy")
+    contribution.setResidualEquation("log(eq) - log(y)")
 
     ## Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
@@ -96,7 +98,7 @@ def plotResults(recipe):
 
     y = recipe.ellipsoid.profile.y
     ycalc = recipe.ellipsoid.profile.ycalc
-    diff = y - ycalc - 0.8 * max(y)
+    diff = y - ycalc + min(y)
 
     import pylab
     pylab.loglog(r,y,'bo',label="I(Q) Data")

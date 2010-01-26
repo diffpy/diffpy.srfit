@@ -2,65 +2,86 @@
 Installing SrFit
 ======================================
 
-PREREQUISITES
---------------------------
+Target Audience
+-----------------------
 
-SrFit requires the following software to operate:
+The Alpha-5 release is an internal testing release. It is intended for Billinge
+group developers. 
 
-1) Python 2.5 or newer ( < 3.0 )
+Platform
+-----------------------
+Billinge group workstations: lowslide, poirot and romaioi. 
 
-  http://www.python.org
+SrFit and its dependencies are installed on these Billing-group workstations.
+We do not provide an installer for SrFit and its dependencies at this time, so
+you must be logged into one of these workstations (either physically, or
+through ssh) to use the code and run the examples. If you have trouble running
+the software, please see the troubleshooting_ section below.
 
-2) NumPy 1.0 or newer
+Documentation
+-----------------------
 
-  http://www.numpy.org/
+The latest documentation for SrFit can be found on-line at
+http://docs.danse.us/diffraction/diffpy.srfit/.
 
-2) SciPy 0.7 or newer
+Using SrFit
+-------------------------------
 
-  http://www.scipy.org/
-
-3) Matplotlib 0.98 or greater
-
-  http://matplotlib.sourceforge.net/
-
-4) Setuptools 0.6c9 or newer
-
-  http://peak.telecommunity.com/DevCenter/setuptools
-
-
-OPTIONAL PACKAGES
---------------------------
-
-1) PyObjCryst 0.1a1
-
-  http://danse.us/trac/diffraction/wiki/PyObjCrystInstallation
-
-
-INSTALLATION
---------------------------
-
-If all prerequisites are properly installed, you can run from the command
-line::
-
-  easy_install -f http://dev.danse.us/packages diffpy.srfit
-
-This will install SrFit and prerequisite DANSE packages.  Installation may
-require root privileges. Type ::
-
-  easy_install --help
-
-for other installation options. In particular, the `--prefix` option will allow
-you to install to a non-standard location. See the python documation for how to
-make python aware of a non-standard package location.
-
- 
-EXAMPLES
---------------------------
+Developers should read through and run the SrFit examples from your account on
+one of the target workstations. 
 
 The SrFit examples can be downloaded from
-http://dev.danse.us/packages/diffpy.srfitexamples.zip. The `README` file inside
-of the archive explains how to progress through the examples. Note that some of
-the examples will not work without PyObjCryst installed.
+http://dev.danse.us/packages/srfit_examples.zip. The `README` file inside of
+the archive explains how to progress through the examples.
+
+Note that SrFit has no user interface in this release. The purpose of the
+examples is to demonstrate the programming interface of SrFit and to acquaint
+the developer with that interface.
+
+Troubleshooting
+--------------------------------
+
+ * Problem: I cannot log into lowslide, poirot or romaioi.
+ * Solution: You must either be physically located at a target workstation or
+   logged in via ssh. These workstations are located at
+   `<workstation>.apam.columbia.edu` where <workstation> is one lowslide,
+   poirot or romaioi.  If you cannot log in via ssh, please contact the system
+   administrator, Pavol Juhas.
+
+ * Problem: The examples don't appear to run, I only get errors.
+ * Solution: You might not be using the default system environment. While
+   logged into a target workstation, type ::
+ 
+    echo $PYTHONPATH
+ 
+   in a command terminal to check the value of this environment variable. Make
+   sure that the first entry in the output reads ::
+
+    /u24/local/bgPrefix/arch/i686/lib/python2.5/site-packages
+
+   Note that there may be several entries separated by colons ':'.
+   Also check the value of the LD_LIBRARY_PATH variable. The first entry
+   should be ::
+
+    /u24/local/bgPrefix/arch/i686/lib
+
+   If either of these entries is incorrect, reset the environment variables
+   before running the examples. This can be done by typing the following into
+   the command terminal ::
+
+    export PYTHONPATH=/u24/local/bgPrefix/arch/i686/lib/python2.5/site-packages
+    export LD_LIBRARY_PATH=/u24/local/bgPrefix/arch/i686/lib
+
+ * Problem: The examples run, but I get errors about the GdkCursor or the
+   display afterwords.
+ * Solution: Make sure that your ssh client is forwarding X11. If using OpenSSH
+   from a command terminal to connect to a target workstation, be sure to pass
+   the '-X' flag (run 'ssh -X' rather than 'ssh').  If using PuTTY to connect
+   to a target workstation, see the
+   PuTTY documentation at http://the.earth.li/~sgtatham/putty/0.60/htmldoc/Chapter3.html#using-x-forwardin.
+
+ * Problem: None of these points addresses my problem.
+ * Solution: Please contact the developers.
 
 CONTACT
 --------------------------

@@ -9,9 +9,8 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
 
-from .public import public
+__all__ = ["Observable"]
 
-@public
 class Observable(object):
     """
     Provide notification support for classes that maintain dynamic associations with multiple

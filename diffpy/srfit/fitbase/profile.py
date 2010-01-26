@@ -20,17 +20,16 @@ to store a calculated signal, and by FitContributions to help calculate a
 residual equation.
 
 """
+__all__ = ["ProfileParameter", "Profile"]
 
 import numpy
 
 from diffpy.srfit.util.observable import Observable
-from diffpy.srfit.util import public
 from .parameter import Parameter
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8
 
-@public
 class ProfileParameter(Parameter):
     """A Parameter for profiles that can have a None value."""
 
@@ -40,7 +39,6 @@ class ProfileParameter(Parameter):
 
 # End class ProfileParameter
 
-@public
 class Profile(Observable):
     """Observed and calculated profile container.
 

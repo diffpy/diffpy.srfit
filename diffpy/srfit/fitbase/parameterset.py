@@ -19,11 +19,10 @@ ParameterSets. They provide attribute-access of other ParameterSets and
 embedded Parameters.
 
 """
+__all__ = ["ParameterSet"]
 
 from .recipeorganizer import RecipeOrganizer
-from diffpy.srfit.util import public
 
-@public
 class ParameterSet(RecipeOrganizer):
     """Class for organizing Parameters and other ParameterSets.
 

@@ -24,9 +24,9 @@ from diffpy.Structure.SymmetryUtilities import GeneratorSite, stdUsymbols
 from diffpy.Structure.SymmetryUtilities import SymmetryConstraints
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.util import public
 
-@public
+__all__ = [ "constrainAsSpaceGroup", "SpaceGroupParameters" ]
+
 def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None, 
         sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
         adpsymbols = stdUsymbols):
@@ -96,7 +96,6 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
 
     return sgp
 
-@public
 class SpaceGroupParameters(RecipeContainer):
     """This is a class for holding space group Parameters.
 

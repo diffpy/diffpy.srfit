@@ -27,15 +27,15 @@ ParameterProxy      --  A proxy for another Parameter, but with a different
 # IDEA - Add tags to parameters so they can be easily retrieved.
 # IDEA - Consider scaling parameters to avoid precision issues in optimizers.
 
+__all__ = [ "Parameter", "ParameterProxy", "ParameterAdapter"]
+
 from numpy import inf
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.util.nameutils import validateName
-from diffpy.srfit.util import public
 
 
-@public
 class Parameter(Argument):
     """Parameter class.
     
@@ -89,7 +89,6 @@ class Parameter(Argument):
 
 # End class Parameter
 
-@public
 class ParameterProxy(object):
     """A Parameter proxy for another parameter. 
     
@@ -130,7 +129,6 @@ class ParameterProxy(object):
 # Make sure that this is registered as an Argument class
 ArgumentABC.register(ParameterProxy)
 
-@public
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.
 

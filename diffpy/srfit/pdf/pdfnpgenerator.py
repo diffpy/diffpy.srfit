@@ -16,6 +16,8 @@
 
 """
 
+__all__ = ["PDFNPGenerator"]
+
 import numpy
 
 from periodictable import elements
@@ -24,9 +26,7 @@ from diffpy.srfit.fitbase import ProfileGenerator, Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
-from diffpy.srfit.util import public
 
-@public
 class PDFNPGenerator(ProfileGenerator):
     """A class for calculating the PDF for an isolated scatterer.""" 
 

@@ -14,12 +14,11 @@
 ########################################################################
 """Abstract Base Classes for Literals."""
 
-__all__ = ["isinstance", "issubclass"]
+__all__ = ["isinstance", "issubclass", "LiteralABC", "ArgumentABC",
+        "OperatorABC"]
 
 from diffpy.srfit.util.abc import *
-from diffpy.srfit.util import public
 
-@public
 class LiteralABC(object):
     """Abstract Base Class for Literal. See Literal for usage."""
 
@@ -35,7 +34,6 @@ class LiteralABC(object):
 
 # End class LiteralABC
 
-@public
 class ArgumentABC(LiteralABC):
     """Abstract Base Class for Argument. See Argument for usage."""
 
@@ -47,7 +45,6 @@ class ArgumentABC(LiteralABC):
 
 # End class ArgumentABC
 
-@public
 class OperatorABC(LiteralABC):
     """Abstract Base Class for Operator. See Operator for usage."""
 

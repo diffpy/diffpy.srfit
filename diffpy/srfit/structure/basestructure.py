@@ -19,10 +19,10 @@ structure adaptors.
 
 """
 
-from diffpy.srfit.fitbase.parameterset import ParameterSet
-from diffpy.srfit.util import public
+__all__ = ["BaseStructure"]
 
-@public
+from diffpy.srfit.fitbase.parameterset import ParameterSet
+
 class BaseStructure(ParameterSet):
     """Base class for structure adapters.
 

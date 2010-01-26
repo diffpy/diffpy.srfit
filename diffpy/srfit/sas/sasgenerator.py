@@ -19,12 +19,13 @@ ProfileGenerator.
 
 """
 
+__all__ = ["SASGenerator"]
+
 import numpy
 
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
-from diffpy.srfit.util import public
 
 class SASParameter(Parameter):
     """Class adapting a sansmodel parameter to srfit Parameter.
@@ -93,7 +94,6 @@ class SASParameter(Parameter):
             self.notify()
         return
 
-@public
 class SASGenerator(ProfileGenerator):
     """A class for calculating I(Q) from a scattering type.
 

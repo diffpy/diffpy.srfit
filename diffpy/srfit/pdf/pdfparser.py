@@ -6,15 +6,14 @@ PDFParser is suitable for parsing data generated from PDFGetN and PDFGetX.
 See the class documentation for more information.
 
 """
+__all__ = ["PDFParser"]
 
 import re
 
 import numpy
 
 from diffpy.srfit.fitbase.profileparser import ProfileParser, ParseError
-from diffpy.srfit.util import public
 
-@public
 class PDFParser(ProfileParser):
     """Class for holding a diffraction pattern.
 

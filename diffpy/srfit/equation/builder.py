@@ -77,6 +77,10 @@ example.
 
 """
 
+__all__ = [ "EquationFactory", "BaseBuilder", "ArgumentBuilder",
+        "OperatorBuilder", "wrapArgument", "wrapOperator", "wrapFunction",
+        "getBuilder"]
+
 # NOTE - the builder cannot handle numpy arrays on the left of a binary
 # operation because the array will automatically loop the operator of the
 # right-side over its arguments. This results in an array of BaseBuilder
@@ -87,10 +91,8 @@ _builders = {}
 import numpy
 
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.util import public
 from .equationmod import Equation
 
-@public
 class EquationFactory(object):
     """A Factory for equations.
 
@@ -355,7 +357,6 @@ class EquationFactory(object):
 
 # End class EquationFactory
 
-@public
 class BaseBuilder(object):
     """Class for building equations.
 
@@ -474,7 +475,6 @@ class BaseBuilder(object):
 
 ## These are used by the class.
 
-@public
 class ArgumentBuilder(BaseBuilder):
     """BaseBuilder wrapper around an Argument literal.
 
@@ -509,7 +509,6 @@ class ArgumentBuilder(BaseBuilder):
 
 # end class ArgumentBuilder
 
-@public
 class OperatorBuilder(BaseBuilder):
     """BaseBuilder wrapper around an Operator literal.
 
@@ -584,19 +583,16 @@ class OperatorBuilder(BaseBuilder):
 
 # Utility functions
 
-@public
 def wrapArgument(name, arg):
     """Wrap an Argument as a builder."""
     argbuilder = ArgumentBuilder(arg = arg)
     return argbuilder
 
-@public
 def wrapOperator(name, op):
     """Wrap an Operator as a builder."""
     opbuilder = OperatorBuilder(name, op)
     return opbuilder
 
-@public
 def wrapFunction(name, func, nin = 2, nout = 1):
     """Wrap a function in an OperatorBuilder instance.
 
@@ -620,7 +616,6 @@ def wrapFunction(name, func, nin = 2, nout = 1):
 
     return opbuilder
 
-@public
 def getBuilder(name):
     """Get an operator from the global builders dictionary."""
     return _builders[name]

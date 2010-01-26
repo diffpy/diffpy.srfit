@@ -38,14 +38,14 @@ See the class documentation for more information.
 
 """
 
+__all__ = ["Equation"]
+
 from diffpy.srfit.util.ordereddict import OrderedDict
-from diffpy.srfit.util import public
 
 from .visitors import validate, getArgs, swap
 from .literals.operators import Operator
 from .literals.literal import Literal
 
-@public
 class Equation(Operator):
     """Class for holding and evaluating a Literal tree.
 

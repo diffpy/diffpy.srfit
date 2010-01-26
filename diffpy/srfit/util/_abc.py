@@ -1,11 +1,9 @@
 # Copyright 2007 Google, Inc. All Rights Reserved.
 # Licensed to PSF under a Contributor Agreement.
-
 """Abstract Base Classes (ABCs) according to PEP 3119."""
 
-from .public import public
+__all__ = ["abstractmethod", "abstractproperty", "ABCMeta"]
 
-@public
 def abstractmethod(funcobj):
     """A decorator indicating abstract methods.
 
@@ -27,7 +25,6 @@ def abstractmethod(funcobj):
     return funcobj
 
 
-@public
 class abstractproperty(property):
     """A decorator indicating abstract properties.
 
@@ -57,7 +54,6 @@ class abstractproperty(property):
     __isabstractmethod__ = True
 
 
-@public
 class ABCMeta(type):
 
     """Metaclass for defining Abstract Base Classes (ABCs).

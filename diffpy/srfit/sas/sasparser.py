@@ -4,15 +4,12 @@
 SASParser uses the sas DataLoader class to load data.
 
 """
-
-__id__ = "$Id$"
+__all__ = ["SASParser"]
 
 import numpy
 
 from diffpy.srfit.fitbase.profileparser import ProfileParser, ParseError
-from diffpy.srfit.util import public
 
-@public
 class SASParser(ProfileParser):
     """Class for parsing a sas profile.
 
@@ -118,5 +115,6 @@ class SASParser(ProfileParser):
         return
 
 
-# End of PDFParser
+# End of SASParser
+__id__ = "$Id$"
 

@@ -22,14 +22,12 @@ holds the observed and calculated signals.
 See the examples in the documention for how to use a FitContribution.
 
 """
+__all__ = ["FitContribution"]
 
 from .parameterset import ParameterSet
 from .recipeorganizer import equationFromString
 from .parameter import ParameterProxy
 
-from diffpy.srfit.util import public
-
-@public
 class FitContribution(ParameterSet):
     """FitContribution class.
 

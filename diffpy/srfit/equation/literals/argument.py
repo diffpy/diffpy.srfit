@@ -19,11 +19,11 @@ constant.
 
 """
 
-from diffpy.srfit.util import public
+__all__ = ["Argument"]
+
 from .abcs import ArgumentABC
 from .literal import Literal
 
-@public
 class Argument(Literal, ArgumentABC):
     """Argument class.
     

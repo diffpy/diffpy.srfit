@@ -20,12 +20,10 @@ function for breaking a restraint. This penalty is added to the residual
 equation calculated by a FitRecipe.
 
 """
+__all__ = ["Restraint"]
 
 from numpy import inf
 
-from diffpy.srfit.util import public
-
-@public
 class Restraint(object):
     """Restraint class.
 

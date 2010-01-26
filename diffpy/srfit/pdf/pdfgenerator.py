@@ -21,6 +21,7 @@ attributes refinable. See the class definition for more details and the
 examples for its use.
 
 """
+__all__ = ["PDFGenerator"]
 
 import numpy
 
@@ -28,7 +29,6 @@ from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import struToParameterSet
 from diffpy.srreal.pdf_ext import PDFCalculator
-from diffpy.srfit.util import public
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
@@ -36,7 +36,6 @@ from diffpy.srfit.util import public
 # diffpy.Structure object, otherwise, we can't share the structural
 # ParameterSet between different Generators.
 
-@public
 class PDFGenerator(ProfileGenerator):
     """A class for calculating the PDF from a single crystal structure.
 

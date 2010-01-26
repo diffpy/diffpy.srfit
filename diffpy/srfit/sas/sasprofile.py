@@ -16,12 +16,12 @@
 
 """
 
+__all__ = ["SASProfile"]
+
 from numpy import ones_like
 
 from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.util import public
 
-@public
 class SASProfile(Profile):
     """Observed and calculated profile container for SAS data.
 

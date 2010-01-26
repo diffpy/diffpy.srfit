@@ -20,6 +20,7 @@ incorporates equation building, constraints and Restraints.  equationFromString
 creates an Equation instance from a string.
 
 """
+__all__ = [ "RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
 from itertools import chain, ifilter
@@ -34,9 +35,7 @@ from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.ordereddict import OrderedDict
-from diffpy.srfit.util import public
 
-@public
 class RecipeContainer(Observable):
     """Base class for organizing pieces of a FitRecipe.
 
@@ -281,7 +280,6 @@ class RecipeContainer(Observable):
 
 # End class RecipeContainer
 
-@public
 class RecipeOrganizer(RecipeContainer):
     """Extended base class for organizing pieces of a FitRecipe.
 
@@ -715,7 +713,6 @@ class RecipeOrganizer(RecipeContainer):
 
 # End RecipeOrganizer
 
-@public
 def equationFromString(eqstr, factory, ns = {}, buildargs = False,
         argclass = Parameter, argkw = {}):
     """Make an equation from a string.

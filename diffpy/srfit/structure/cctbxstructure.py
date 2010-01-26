@@ -34,9 +34,9 @@ from cctbx import crystal
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructure import BaseStructure
-from diffpy.srfit.util import public
 
-@public
+__all__ = ["ScattererParSet", "UnitCellParSet", "CCTBXStructureParSet"]
+
 class ScattererParSet(ParameterSet):
     """A wrapper for cctbx.xray.scatterer
 
@@ -118,7 +118,6 @@ class ScattererParSet(ParameterSet):
 
 # End class ScattererParSet
 
-@public
 class UnitCellParSet(ParameterSet):
     """A wrapper for cctbx unit_cell object.
     
@@ -175,7 +174,6 @@ class UnitCellParSet(ParameterSet):
 
 # FIXME - Special positions should be constant.
 
-@public
 class CCTBXStructureParSet(BaseStructure):
     """A wrapper for CCTBX structure.
 

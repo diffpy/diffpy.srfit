@@ -27,6 +27,7 @@ See the examples in the documentation for how to create an optimization problem
 using FitRecipe.
 
 """
+__all__ = ["FitRecipe"]
 
 from numpy import concatenate, sqrt, dot
 
@@ -34,9 +35,7 @@ from diffpy.srfit.util.ordereddict import OrderedDict
 from .parameter import ParameterProxy
 from .recipeorganizer import RecipeOrganizer
 from .fithook import FitHook
-from diffpy.srfit.util import public
 
-@public
 class FitRecipe(RecipeOrganizer):
     """FitRecipe class.
 

@@ -8,11 +8,9 @@ format must be encapsulated in a ProfileParser subclass.
 See the class documentation for more information.
 
 """
+__all__ = ["ProfileParser", "ParseError"]
 
 
-from diffpy.srfit.util import public
-
-@public
 class ProfileParser(object):
     """Class for parsing data from a or string.
 
@@ -168,7 +166,6 @@ class ProfileParser(object):
 
 # End of ProfileParser
 
-@public
 class ParseError(Exception):
     """Exception used by ProfileParsers."""
     pass

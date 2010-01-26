@@ -26,9 +26,8 @@ Operator
 See the Visitor class for the required methods that each Visitor must overload.
 
 """
-from diffpy.srfit.util import public
+__all__ = ["Visitor"]
 
-@public
 class Visitor(object):
     """Abstract class for all visitors to a Literal tree.
 

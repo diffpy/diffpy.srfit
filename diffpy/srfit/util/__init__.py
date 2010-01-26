@@ -21,10 +21,8 @@ abc         --  The abc module backported to python2.5. See the python2.6
 nameutils   --  Module for verifying that object names can be identifiers.
 ordereddict --  The OrderedDict class backported to python2.5. See the
                 python2.7 documentation for details on the OrderedDict class.
-public      --  Definition of public decorator.
 
 """
-from .public import public
 
 # package version
 from diffpy.srfit.version import __version__

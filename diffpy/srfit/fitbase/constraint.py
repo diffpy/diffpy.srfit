@@ -20,10 +20,9 @@ is used to compute its value. The Constraint.constrain method is used to create
 this association.
 
 """
+__all__ = ["Constraint"]
 
-from diffpy.srfit.util import public
 
-@public
 class Constraint(object):
     """Constraint class.
 

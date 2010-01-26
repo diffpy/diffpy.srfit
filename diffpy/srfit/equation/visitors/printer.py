@@ -20,11 +20,10 @@ which is valid as a string equivalent of the equation.
 Printer is mostly 
 
 """
+__all__ = ["Printer"]
 
-from diffpy.srfit.util import public
 from .visitor import Visitor
 
-@public
 class Printer(Visitor):
     """Printer for printing a Literal tree.
 

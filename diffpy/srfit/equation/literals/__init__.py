@@ -12,21 +12,25 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Building blocks for defining a state-aware equation
+"""Building blocks for defining a lazy evaluation network.
 
-Literals are the building blocks for equations. Literals are composed into
-equation trees (or Literal trees) that can be evaluated or have other actions
-performed on them by Visitors (in diffpy.srfit.equation.visitors). The
-Literal-Visitor relationship is that described by the Visitor pattern
+Literals are the building blocks of the evaluation network. An Argument holds
+the name and value of an equation variable. Operators are used to compose
+other Literals to produce a new value.
+
+Literal networks can be evaluated or have other actions performed on them by
+Visitors (in diffpy.srfit.equation.visitors). The Literal-Visitor relationship
+is that described by the Visitor pattern
 (http://en.wikipedia.org/wiki/Visitor_pattern).
 
-The simplest Literal is the Argument, which holds the name and value of a
-equation variable.  Operators are Literals that are used to compose other
-Literals. Once an Operator is evaluated, it has a value that it can pass to
-other operators. Hence, a network or tree of Literals can be composed that
-evaluate as an equation. 
-
 """
+
+__all__ = ["Argument", "Operator", "AdditionOperator", "SubtractionOperator",
+        "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
+        "RemainderOperator", "NegationOperator", "ConvolutionOperator",
+        "SumOperator", "UFuncOperator", "ListOperator", "SetOperator",
+        "ArrayOperator", "PolyvalOperator"]
+
 
 # package version
 from diffpy.srfit.version import __version__
@@ -44,6 +48,11 @@ from .operators import RemainderOperator
 from .operators import NegationOperator
 from .operators import ConvolutionOperator
 from .operators import UFuncOperator
+from .operators import SumOperator
+from .operators import ListOperator
+from .operators import SetOperator
+from .operators import ArrayOperator
+from .operators import PolyvalOperator
 
 # Try some optimizations on these classes
 try:

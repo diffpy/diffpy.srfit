@@ -18,8 +18,6 @@
 __all__ = ["Swapper"]
 
 from .visitor import Visitor
-from ..literals import Argument
-from ..literals import Operator
 
 class Swapper(Visitor):
     """Swapper for swapping out one literal for another in a literal tree.

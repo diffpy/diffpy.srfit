@@ -10,7 +10,7 @@ group developers.
 
 Platform
 -----------------------
-Billinge group workstations: lowslide, poirot and romaioi. 
+Billinge group workstation: morini.
 
 SrFit and its dependencies are installed on these Billing-group workstations.
 We do not provide an installer for SrFit and its dependencies at this time, so

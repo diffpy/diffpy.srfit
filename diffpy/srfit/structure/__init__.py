@@ -12,19 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Classes that wrap structure containers with Parameters and ParameterSets.
-
-Modules:
-    basestructure       --  Home to the BaseStructure class from which others
-                            derive.
-    cctbxstructure      --  Home to adapters for cctbx structure objects. See
-                            the module documentation for more details.
-    diffpystructure     --  Home to adapters for the diffpy.Structure objects.
-                            See the module documentation for more details.
-    objcryststructure   --  Home to adapters for pyobjcryst structure objects.
-                            See the module documentation for more details.
-    sgconstraints       --  Home to methods that can automatically apply space
-                            group constraints to a BaseStructure instance.
+"""Classes that wrap structure representations as Parameters and ParameterSets.
 
 """
 

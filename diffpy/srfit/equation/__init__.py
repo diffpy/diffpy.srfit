@@ -15,13 +15,16 @@
 """The core equation evaluator for diffpy.srfit.
 
 This package contains modules and subpackages that are used to create Equation
-objects. An Equation is a functor that remembers its state, and that can
-quickly re-evaluate its value based on changes in its variables. Equations can
-be used to encapsulate simple expressions or complex signal generators.
-provided one gets to know how to create and use Literal classes (from the
-literals subpackage), that are the basic building blocks of an Equation.
+objects. The Equation class is an encapsulation of a lazy evaluation network
+that is used throughout SrFit. The EquationsFactory class is used to create
+Equation objects from strings and can incorporate user-defined functions as
+well as default operations.
+
+The subpackages define various pieces of the evaluation network.
 
 """
+
+__all__ = ["Equation"]
 
 # package version
 from diffpy.srfit.version import __version__

@@ -15,7 +15,7 @@
 
 """diffpy - tools for structure analysis by diffraction.
 
-Blank namespace package.
+This is the namespace package shared by all DiffPy software.
 
 """
 

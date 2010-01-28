@@ -11,11 +11,11 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Visitors that perform on Literal trees.
+"""Visitors that perform on Literal networks.
 
-Visitors are designed to traverse and extract infromation from Literal trees
-(diffpy.srfit.equation.literals). Visitors are useful for validating, printing
-and extracting Argument literals from the Literal tree.
+Visitors are designed to traverse and extract information from Literal networks
+(diffpy.srfit.equation.literals). Visitors are used to validate, print and
+extracting Arguments from Literal networks.
 
 The Literal-Visitor relationship is that described by the Visitor pattern
 (http://en.wikipedia.org/wiki/Visitor_pattern).

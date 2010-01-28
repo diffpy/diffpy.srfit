@@ -55,7 +55,7 @@ Where next?
    intro.rst
    install.rst
    examples.rst
-   API <http://docs.danse.us/diffraction/diffpy.srfitapi/>
+   API <http://docs.danse.us/diffraction/diffpy.srfitapi-alpha5/>
 .. faq.rst
 
 * :ref:`genindex`

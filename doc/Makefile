@@ -10,7 +10,7 @@ PKGROOT = ~/dev_danse_us/
 doc:
 	epydoc diffpy.srfit --html -vvv -o diffpy.srfitapi -n diffpy.srfit \
 --include-log $@
-	$(MAKE) -C sphinx $@
+	$(MAKE) -C devmanual $@
 
 .PHONY : upload
 upload:
@@ -20,7 +20,7 @@ upload:
 	rsync -ruv srfit_examples.zip $(TARGET):$(PKGROOT)
 	ssh $(TARGET) "rm -rf $(PKGROOT)/srfit_examples-$(RELEASE).zip"
 	ssh $(TARGET) "cp -r $(PKGROOT)/srfit_examples.zip $(PKGROOT)/srfit_examples-$(RELEASE).zip"
-	$(MAKE) -C sphinx $@
+	$(MAKE) -C devmanual $@
 
 .PHONY : examples
 examples:
@@ -30,5 +30,5 @@ examples:
 clean:
 	rm -rf diffpy.srfitapi
 	rm -f srfit_examples.zip
-	$(MAKE) -C sphinx $@
+	$(MAKE) -C devmanual $@
 

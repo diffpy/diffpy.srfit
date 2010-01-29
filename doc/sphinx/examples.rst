@@ -6,6 +6,7 @@ Examples
 
 .. include:: ../examples/README
 
+.. This creates the links from the filenames within README to pages.
 .. _gaussianrecipe.py: gaussianrecipe.html
 .. _debyemodel.py: debyemodel.html
 .. _debyemodelII.py: debyemodelII.html

@@ -83,12 +83,9 @@ Troubleshooting
  * Problem: None of these points addresses my problem.
  * Solution: Please contact the developers.
 
-CONTACT
+Contact
 --------------------------
 
-Please contact us at our google-group :: 
-
-  http://groups.google.com/group/diffpy-dev
-
+Please contact us at our google-group http://groups.google.com/group/diffpy-dev
 if you have questions or comments about the installation procedure. We will
 assist you with installation problems you may have.

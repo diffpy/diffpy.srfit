@@ -4,9 +4,107 @@
 Extending SrFit
 ===================
 
-The examples in :ref:`_developers-guide-examples` give an overview of how to
+The :ref:`developers-guide-examples` give an overview of how to
 use SrFit and extend it with various custom-made objects. Many pieces of SrFit
 that are not covered in the examples are discussed here.
+
+Plugging Other Objects into SrFit
+-------------------------------------
+
+Much of the power of SrFit comes from being able to plug existing python codes
+into various places. For example, external forward calculators can be wrapped
+up inside ProfileGenerators without modifying the calculator. Structure
+adapters defined in the diffpy.srfit.structure module are also built around
+this principle. These adapters are hierarchical ParameterSets (found in
+diffpy.srfit.fitbase.parameterset) that encapsulate the different pieces of a
+structure.  For example, the DiffpyStructure structure adapter in
+diffpy.srfit.structure.diffpystructure contains a LatticeParSet that
+encapsulates the lattice data and one AtomParSet per atom.  These each contain
+parameters for what they encapsulate, such as lattice parameters or atom
+positions. 
+
+Fundamentally, it is the adjustable parameters of a structure container,
+forward calculator or other object that needs to be adapted so that SrFit can
+manipulate the underlying data object. These adapted parameters can then be
+organized into ParameterSets, as in the case of a structure adapter. The
+ParameterAdapter class found in diffpy.srfit.fitbase.parameter is designed for
+this purpose. ParameterAdapter is a Parameter that defers to another object
+when setting or retrieving its value.
+
+We give a simplified example of how to do such an adaptation with a
+hypothetical atom object called SimpleAtom that has attributes ``x``, ``y`` and
+``z``. ::
+
+    class SimpleAtomParSet(ParameterSet):
+        
+        def __init__(self, atom, name):
+            ParameterSet.__init__(self, name)
+            self.atom = atom
+
+            # Here we create a Parameter for each x, y and z
+            xpar = ParameterAdapter("x", atom, attr = "x")
+            ypar = ParameterAdapter("y", atom, attr = "y")
+            zpar = ParameterAdapter("z", atom, attr = "z")
+
+            # Here we add them to the structure
+            self.addParameter(xpar)
+            self.addParameter(ypar)
+            self.addParameter(zpar)
+
+            return
+
+ParameterAdapter as used here accesses the attribute ``x`` via ``atom.x`` by
+specifing ``attr = "x"``. When retrieving or setting the value of ``xpar``, the
+call would be redirected to ``atom.x``.
+
+If SimpleAtom did not have an attribute named ``x``, but rather accessor
+methods named ``getX`` and ``setX``, then the ParameterAdapter would be used
+as::
+
+    xpar = ParameterAdapter("x", atom, getter = SimpleAtom.getX, 
+            setter = SimpleAtom.setX)
+
+Note that the unbound methods are used. The names ``getter`` and ``setter``
+describe how the accessor attributes are used to access the value of the
+parameter. When ``xpar.getValue()`` is called, it redirects to
+``SimpleAtom.getX(atom)``.
+
+A third usage of ParameterAdapter is also possible. If instead SimpleAtom had a
+methods called ``get`` and ``set`` that take as the second argument the name of
+what to retrieve, then this can be adapted as::
+
+    xpar = ParameterAdapter("x", atom, getter = SimpleAtom.get, 
+            setter = SimpleAtom.set, attr = "x")
+
+Thus, when ``xpar.getValue()`` is called, it in turn calls
+``SimpleAtom.get(atom, "x")``. ``xpar.setValue(value)`` calls
+``SimpleAtom.set(atom, "x", value)``.
+
+If the attributes of an object object cannot be accessed in one of these three
+ways, then you must write external accessor methods that can be set as the
+getter and setter of the ParameterAdapter. For example, if the ``x``, ``y`` and
+``z`` values were held in a list called ``xyz``, then you would have to write
+the functions ``getX`` and ``setX`` that would manipulate this list, and use
+these functions as in the second example.
+
+
+Creating Custom FitHooks
+--------------------------
+
+The FitHook class is used by a FitRecipe to report fit progress to a user.
+FitHook can be found in the diffpy.srfit.fitbase.fithook module.  FitHook can
+be customized to provide customized fit output, such as a live plot of the
+output. The FitHook class has three methods that one can overload.
+
+.. currentmodule:: diffpy.srfit.fitbase.fithook
+
+* .. automethod:: FitHook.reset
+* .. automethod:: FitHook.precall
+* .. automethod:: FitHook.postcall
+
+To use a custom FitHook, assign an instance to a FitRecipe using the
+``setFitHook`` method.
+
 
 Extending Profile Parsers
 --------------------------
@@ -64,100 +162,22 @@ Extending Profiles
 
 Even with the ability to customize ProfileParsers, it may be necessary to
 create custom Profile objects for different types of data. This is useful when
-adapting an external data container to the SrFit interface. This is useful when
-that external container can be used within an external program before or after
-iterfacing with SrFit. An example of a customized Profile is the SASProfile
-class in the diffpy.srfit.sas.sasprofile module.
+adapting an external data container to the SrFit interface. For example, the
+external container may need to be retained so it can be used within an external
+program before or after iterfacing with SrFit. An example of a customized
+Profile is the SASProfile class in the diffpy.srfit.sas.sasprofile module:
+
+.. literalinclude:: ../../diffpy/srfit/sas/sasprofile.py
+   :pyobject: SASProfile
+
+The ``__init__`` method sets the ``xobs``, ``yobs`` and ``dyobs`` attributes of
+the SASProfile to the associated arrays within the ``_datainfo`` attribute. The
+``setObservedProfile`` method is overloaded to modify the ``_datainfo`` arrays
+when their corresponding attributes are modified. This keeps the arrays in
+sync.
 
 
-Creating Custom FitHooks
---------------------------
+Custom Constraints and Restraints
+----------------------------------------
 
-The FitHook class is used by a FitRecipe to report fit progress to a user.
-FitHook can be found in the diffpy.srfit.fitbase.fithook module.  FitHook can
-be customized to provide customized fit output, such as a live plot of the
-output. The FitHook class has three methods that one can overload.
-
- * ``reset`` - This is called whenever a FitRecipe is reconfigured after a
-   change in the data structure.
- * ``precall`` - This gets called within FitRecipe.residual before the residual
-   is calculated. It takes the FitRecipe instance as an argument.
- * ``postcall`` - This gets called within FitRecipe.residual after the residual
-   is calculated. It takes the FitRecipe instance and residual vector as
-   arguments.
-
-To use a custom FitHook, assign an instance to the ``fithook`` attribute of a
-FitRecipe.
-
-
-Creating Custom Structure Containers
--------------------------------------
-
-The structure containers for SrFit are found in the diffpy.srfit.structure
-module. These containers are hierarchical ParameterSets (found in
-diffpy.srfit.fitbase.parameterset) that encapsulate the sub-components of a
-structure. For example, the DiffpyStructure structure adapter contains a
-LatticeParSet that encapsulates the lattice data and one AtomParSet per atom.
-These each contain parameters for the component, such as lattice parameters or
-atom positions.
-
-The purpose of a structure ParameterSet is to adapt a structure object so that
-changing the Parameters in the ParameterSet mutates the structure object. The
-mutated structure can then be used by a forward calculator that knows nothing
-about SrFit. Just as well, changing the structure object directly (within
-limitations) should reflect in the ParameterSet.
-
-Useful in adapting an object in this way is the ParameterAdapter class found in
-diffpy.srfit.fitbase.parameter. This class is designed to defer to another
-object when setting or retrieving its value.
-
-We give a simplified example of how to do such an adaptation with a
-hypothetical atom object called SimpleAtom that has attributes x, y and z. ::
-
-    class SimpleAtomParSet(ParameterSet):
-        
-        def __init__(self, atom, name):
-            ParameterSet.__init__(self, name)
-            self.atom = atom
-
-            # Here we create a Parameter for each x, y and z
-            xpar = ParameterAdapter("x", atom, attr = "x")
-            ypar = ParameterAdapter("y", atom, attr = "y")
-            zpar = ParameterAdapter("z", atom, attr = "z")
-
-            # Here we add them to the structure
-            self.addParameter(xpar)
-            self.addParameter(ypar)
-            self.addParameter(zpar)
-
-            return
-
-ParameterAdapter as used here accesses the attribute x via ``atom.x`` by
-specifing ``attr = "x"``. If SimpleAtom did not have an attribute named x, but
-rather accessor methods named ``getX`` and ``setX``, then the ParameterAdapter
-would be used as::
-
-    xpar = ParameterAdapter("x", atom, getter = SimpleAtom.getX, setter =
-                SimpleAtom.setX)
-
-Note that the unbound methods are used. A third usage of ParameterAdapter is
-also possible. If instead SimpleAtom had a methods called ``get`` and ``set``
-that take as the first argument the name of what to get, then this can be
-adapted as::
-
-    xpar = ParameterAdapter("x", atom, getter = SimpleAtom.get, setter =
-                SimpleAtom.set, attr = "x")
-
-If the attributes of the structure object cannot be accessed in one of these
-three ways, then it is recommended to write external accessor methods that can
-be set as the getter and setter of the ParameterAdapter. An example of how this
-is done can be found in the LatticeParSet class in
-diffpy.srfit.structure.diffpystructure.
-
-Note that parameter adapters can be used wherever parameters can be. For
-example, the built-in PDFGenerator in diffpy.srfit.pdf.pdfgenerator works in
-concert with the structure adapters and an external PDF forward calculator by
-adapting the parameters of the calculator. All of this is done without the
-structure objects or forward calculator knowing anything about SrFit.
-
-
+**TODO**. For now, see the diffpy.srfit.structure.objcryststructure module.

@@ -94,7 +94,7 @@ class FitRecipe(RecipeOrganizer):
     def setFitHook(self, fithook):
         """Set a hook to be called within the residual method.
 
-        The hook is an object for reportind updates, or more fundamentally,
+        The hook is an object for reporting updates, or more fundamentally,
         passing information out of the system during a refinement. It must have
         'precall' and 'postcall' methods, which are called at the start and at
         the end of the residual calculation. The precall method must accept a

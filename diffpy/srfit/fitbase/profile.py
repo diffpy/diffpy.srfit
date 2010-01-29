@@ -47,11 +47,14 @@ class Profile(Observable):
 
     Attributes
 
-    xobs    --  A numpy array of the observed independent variable (default
+    _xobs   --  A numpy array of the observed independent variable (default
                 None)
-    yobs    --  A numpy array of the observed signal (default None)
-    dyobs   --  A numpy array of the uncertainty of the observed signal (default
+    xobs    --  Read-only property of _xobs.
+    _yobs   --  A numpy array of the observed signal (default None)
+    yobs    --  Read-only property of _yobs.
+    _dyobs  --  A numpy array of the uncertainty of the observed signal (default
                 None, optional).
+    dyobs   --  Read-only property of _dyobs.
     x       --  A numpy array of the calculated independent variable (default
                 None, property for xpar accessors).
     y       --  The profile over the calculation range (default None, property
@@ -70,9 +73,9 @@ class Profile(Observable):
     def __init__(self):
         """Initialize the attributes."""
         Observable.__init__(self)
-        self.xobs = None
-        self.yobs = None
-        self.dyobs = None
+        self._xobs = None
+        self._yobs = None
+        self._dyobs = None
         self.ycalc = None
         self.xpar = ProfileParameter("x")
         self.ypar = ProfileParameter("y")
@@ -92,6 +95,11 @@ class Profile(Observable):
                   lambda self, val : self.ypar.setValue(val) )
     dy = property( lambda self : self.dypar.getValue(),
                    lambda self, val : self.dypar.setValue(val) )
+
+    # We want xobs, yobs and dyobs to be read-only
+    xobs = property( lambda self: self._xobs )
+    yobs = property( lambda self: self._yobs )
+    dyobs = property( lambda self: self._dyobs )
 
     def loadParsedData(self, parser):
         """Load parsed data from a ProfileParser.
@@ -123,17 +131,17 @@ class Profile(Observable):
         if dyobs is not None and len(dyobs) != len(xobs):
             raise ValueError("xobs and dyobs are different lengths")
 
-        self.xobs = numpy.asarray(xobs, dtype=float)
-        self.yobs = numpy.asarray(yobs, dtype=float)
+        self._xobs = numpy.asarray(xobs, dtype=float)
+        self._yobs = numpy.asarray(yobs, dtype=float)
 
         if dyobs is None:
-            self.dyobs = numpy.ones_like(xobs)
+            self._dyobs = numpy.ones_like(xobs)
         else:
-            self.dyobs = numpy.asarray(dyobs, dtype=float)
+            self._dyobs = numpy.asarray(dyobs, dtype=float)
 
         # Set the default calculation points
         if self.x is None:
-            self.setCalculationPoints(self.xobs)
+            self.setCalculationPoints(self._xobs)
         else:
             self.setCalculationPoints(self.x)
 

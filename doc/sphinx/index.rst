@@ -49,7 +49,6 @@ reflect the views of the respective funding bodies.
 Where next?
 ======================================
 
-
 .. toctree::
    :maxdepth: 2
 

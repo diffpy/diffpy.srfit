@@ -20,7 +20,8 @@ is called, and reports that number every time the residual is calculated.
 Depending on the verbosity, it will also report the residual and the current
 variable values.
 
-Custom FitHooks can be added to a FitRecipe with the FitRecipe.setFitHook method.
+Custom FitHooks can be added to a FitRecipe with the FitRecipe.setFitHook
+method.
 
 """
 __all__ = ["FitHook"]
@@ -55,7 +56,9 @@ class FitHook(object):
     def reset(self):
         """Reset the hook data.
 
-        This is called whenever FitRecipe._prepare is called.
+        This is called whenever FitRecipe._prepare is called, which is whenever
+        a configurational change to the fit hierarchy takes place, such as
+        adding a new ParameterSet, constraint or restraint.
 
         """
         self.count = 0
@@ -64,7 +67,7 @@ class FitHook(object):
     def precall(self, recipe):
         """This is called within FitRecipe.residual, before the calculation.
 
-        recipe   --  The FitRecipe instance
+        recipe  --  The FitRecipe instance
         
         """
         self.count += 1
@@ -75,7 +78,7 @@ class FitHook(object):
     def postcall(self, recipe, chiv):
         """This is called within FitRecipe.residual, after the calculation.
 
-        recipe   --  The FitRecipe instance
+        recipe  --  The FitRecipe instance
         chiv    --  The residual vector
         
         """

@@ -32,11 +32,14 @@ class SASProfile(Profile):
 
     Attributes
 
-    xobs    --  A numpy array of the observed independent variable (default
+    _xobs   --  A numpy array of the observed independent variable (default
                 None)
-    yobs    --  A numpy array of the observed signal (default None)
-    dyobs   --  A numpy array of the uncertainty of the observed signal (default
+    xobs    --  Read-only property of _xobs.
+    _yobs   --  A numpy array of the observed signal (default None)
+    yobs    --  Read-only property of _yobs.
+    _dyobs  --  A numpy array of the uncertainty of the observed signal (default
                 None, optional).
+    dyobs   --  Read-only property of _dyobs.
     x       --  A numpy array of the calculated independent variable (default
                 None, property for xpar accessors).
     y       --  The profile over the calculation range (default None, property
@@ -63,9 +66,9 @@ class SASProfile(Profile):
         self._datainfo = datainfo
         Profile.__init__(self)
 
-        self.xobs = self._datainfo.x
-        self.yobs = self._datainfo.y
-        self.dyobs = self._datainfo.dy or ones_like(self.xobs)
+        self._xobs = self._datainfo.x
+        self._yobs = self._datainfo.y
+        self._dyobs = self._datainfo.dy or ones_like(self.xobs)
         return
 
     def setObservedProfile(self, xobs, yobs, dyobs = None):
@@ -86,9 +89,9 @@ class SASProfile(Profile):
         """
         Profile.setObservedProfile(self, xobs, yobs, dyobs)
         # Copy the arrays to the _datainfo attribute.
-        self._datainfo.x = self.xobs
-        self._datainfo.y = self.yobs
-        self._datainfo.dy = self.dyobs
+        self._datainfo.x = self._xobs
+        self._datainfo.y = self._yobs
+        self._datainfo.dy = self._dyobs
         return
 
 __id__ = "$Id$"

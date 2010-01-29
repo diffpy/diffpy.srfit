@@ -13,7 +13,7 @@
 ########################################################################
 
 
-"""Utitiles used throughout SrFit."""
+"""Utilities used throughout SrFit."""
 
 # package version
 from diffpy.srfit.version import __version__

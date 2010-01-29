@@ -124,7 +124,7 @@ class Profile(Observable):
             raise ValueError("xobs and dyobs are different lengths")
 
         self.xobs = numpy.asarray(xobs, dtype=float)
-        self.yobs = numpy.asarray(yobs)
+        self.yobs = numpy.asarray(yobs, dtype=float)
 
         if dyobs is None:
             self.dyobs = numpy.ones_like(xobs)

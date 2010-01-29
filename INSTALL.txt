@@ -21,8 +21,8 @@ the software, please see the troubleshooting_ section below.
 Documentation
 -----------------------
 
-The latest documentation for SrFit can be found on-line at
-http://docs.danse.us/diffraction/diffpy.srfit/.
+The documentation this release of SrFit can be found at
+http://docs.danse.us/diffraction/diffpy.srfit-alpha5/.
 
 Using SrFit
 -------------------------------
@@ -31,8 +31,8 @@ Developers should read through and run the SrFit examples from your account on
 one of the target workstations. 
 
 The SrFit examples can be downloaded from
-http://dev.danse.us/packages/srfit_examples.zip. The `README` file inside of
-the archive explains how to progress through the examples.
+http://dev.danse.us/packages/srfit_examples-alpha5.zip. The `README` file
+inside of the archive explains how to progress through the examples.
 
 Note that SrFit has no user interface in this release. The purpose of the
 examples is to demonstrate the programming interface of SrFit and to acquaint

@@ -188,7 +188,8 @@ class FitRecipe(RecipeOrganizer):
 
         # Calculate the bare chiv
         chiv = concatenate([ 
-            sqrt(self._weights[i])*self._contributions.values()[i].residual() \
+            sqrt(self._weights[i])*\
+                    self._contributions.values()[i].residual().flatten() \
                     for i in range(len(self._contributions))])
 
         # Calculate the point-average chi^2

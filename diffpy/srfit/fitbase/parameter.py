@@ -14,12 +14,7 @@
 ########################################################################
 """Parameter classes.
 
-Parameters encapsulate an adjustable parameter of a Calculator. There are three
-varieties of Parameter here.
-Parameter           --  Base parameter class.
-ParameterAdapter    --  Wrap attributes or methods of an object as a Parameter.
-ParameterProxy      --  A proxy for another Parameter, but with a different
-                        name.
+Parameters encapsulate an adjustable parameter within SrFit.
 
 """
 # IDEA - Add onConstrain, onRestrain, onVary so that adaptors to Parameters

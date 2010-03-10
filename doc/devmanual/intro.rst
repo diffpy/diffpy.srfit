@@ -50,8 +50,10 @@ Features
  * Automatic and user-defined space group constraints.
  * Data parser compatible with PDFGetX2 and PDFGetN output.
  * Automatic configuration from parsed metadata.
+ * Small-angle scattering models leveraging the DANSE SANS software.
 
-Target Audiences
-------------------
+Relese Definition
+--------------------
 
-The Alpha-4 release is an internal testing and getting-to-know-you release. It is intended for Billinge group developers.
+The SrFit Alpha-5 release definition can be found at
+http://danse.us/trac/diffraction/wiki/SrFitReleaseAlpha5.

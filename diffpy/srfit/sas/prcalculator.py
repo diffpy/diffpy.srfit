@@ -27,6 +27,8 @@ import numpy
 
 from diffpy.srfit.fitbase import Calculator
 
+from sans.pr.invertor import Invertor
+
 class PrCalculator(Calculator):
     """A class for calculating P(r) from data.
 
@@ -39,39 +41,47 @@ class PrCalculator(Calculator):
     P(r) = 4 pi r**2 f(r).
 
     Attributes:
-    _invertor   --  sans.pr.invertor.Invertor object. This object is configured
-                    by the user and added during initialization. This allows
-                    the user to specify a background, regularization, etc.
-                    using the Invertor interface.
+    _invertor   --  sans.pr.invertor.Invertor object. This object is internal,
+                    but can be configured by the user after initialization.
+                    Note that the 'x', 'y' and 'err' attributes get overwritten
+                    every time the invertor is used.
 
     Managed Parameters:
     scale       --  The scale factor (default 1).
+    q           --  The q-values of the I(q) signal
+    iq          --  The I(q) signal
+    diq         --  The uncertainty in I(q)
+
     """
 
-    def __init__(self, name, invertor):
+    def __init__(self, name):
         """Initialize the generator.
 
         name        --  A name for the PrCalculator
-        invertor    --  Configured invertor. This may or may not be configured
-                        with data. If it is not, use the setProfile method.
         
         """
         Calculator.__init__(self, name)
 
-        self._invertor = invertor
+        self._invertor = Invertor()
 
         self._newParameter("scale", 1)
+        self._newParameter("q", None)
+        self._newParameter("iq", None)
+        self._newParameter("diq", None)
         return
 
-    def __call__(self, r, q, iq, diq = None):
+    def __call__(self, r):
         """Calculate P(r) from the data or calculated signal."""
+        q = self.q.value
+        iq = self.iq.value
+        diq = self.diq.value
+        if diq is None:
+            diq = numpy.ones_like(q)
         self._invertor.d_max = max(r) + 5.0
         # Assume profile doesn't include 0. It's up to the user to make this
         # happen.
         self._invertor.x = q
         self._invertor.y = iq
-        if diq is None:
-            diq = numpy.ones_like(q)
         self._invertor.err = diq
         c, c_cov = self._invertor.invert_optimize()
         l = lambda x: self._invertor.pr(c, x)

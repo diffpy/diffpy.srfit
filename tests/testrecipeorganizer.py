@@ -347,6 +347,11 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertTrue(numpy.array_equal(numpy.exp(-0.5*((x-3.0)/0.1)**2),
             g(x)))
 
+        self.m.g.center.setValue(5.0)
+
+        self.assertTrue(numpy.array_equal(numpy.exp(-0.5*((x-5.0)/0.1)**2),
+            g(x)))
+
         # Use this in another equation
 
         eq = self.m.registerStringFunction("g/x - 1", "pdf")

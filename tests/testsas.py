@@ -97,11 +97,11 @@ class TestSASGenerator(unittest.TestCase):
         profile = SASProfile(datainfo)
 
         gen.setProfile(profile)
-        gen.scale = 1.0
-        gen.radius_a = 20
-        gen.radius_b = 400
-        gen.contrast = 3e-6
-        gen.background = 0.01
+        gen.scale.value = 1.0
+        gen.radius_a.value = 20
+        gen.radius_b.value = 400
+        gen.contrast.value = 3e-6
+        gen.background.value = 0.01
 
         y = gen(profile.xobs)
         diff = profile.yobs - y

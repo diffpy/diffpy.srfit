@@ -20,6 +20,8 @@ Examples
 .. _crystalpdftwodata.py: crystalpdftwodata.html
 .. _crystalpdfall.py: crystalpdfall.html
 .. _ellipsoidsas.py: ellipsoidsas.html
+.. _nppdfsas.py: nppdfsas.html
+.. _nppdfsasII.py: nppdfsasII.html
 
 
 Files
@@ -40,4 +42,6 @@ Files
    crystalpdftwodata.rst
    crystalpdfall.rst
    ellipsoidsas.rst
+   nppdfsas.rst
+   nppdfsasII.rst
 

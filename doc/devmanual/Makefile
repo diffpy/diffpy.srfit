@@ -1,7 +1,7 @@
 
 all: doc upload
 
-RELEASE = alpha5
+RELEASE = alpha6
 TARGET = farrowch@login.cacr.caltech.edu
 DOCROOT = ~/docroot/diffraction/
 PKGROOT = ~/dev_danse_us/

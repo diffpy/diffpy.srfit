@@ -108,7 +108,7 @@ Use Cases
 There are several examples that demonstrate various SrFit use cases. These do
 not adopt the tutorial format of the previous examples. Regardless, SrFit
 developers should read through these use cases to gain an understanding of PDF
-refinement with SrFit.
+and SAS refinement with SrFit.
 
 * crystalpdf.py_
     Refine a diffpy.Structure crystal to PDF data using automatic explicit space
@@ -130,5 +130,11 @@ refinement with SrFit.
 * ellipsoidsas.py_
     Refine an ellipsoid SAS model to ideal data.
 
+* nppdfsas.py_
+    Refine PDF from nanoparticle of unknown shape using a crystal model and SAS
+    data from the same system.
+
+* nppdfsas.py_
+    As nppdfsas.py_, but refine the shape of the nanoparticle as well.
    
 

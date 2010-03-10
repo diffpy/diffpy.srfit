@@ -222,6 +222,8 @@ class FitContribution(ParameterSet):
         """
         if self.profile is None:
             raise AttributeError("Assign the Profile first")
+        if self._eq is None:
+            raise AttributeError("Assign the Equation first")
 
         chivstr = "(eq - %s)/%s" % (self._yname, self._dyname)
         resvstr = "(eq - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)

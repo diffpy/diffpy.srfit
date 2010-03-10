@@ -23,11 +23,12 @@ Calculator can be added to another RecipeOrganizer with the
 'registerCalculator' method.
 
 """
-__all__ = ["Calculator", "makeCalculator"]
+__all__ = ["Calculator"]
 
 from .parameterset import ParameterSet
+from diffpy.srfit.equation.literals.operators import Operator
 
-class Calculator(ParameterSet):
+class Calculator(Operator, ParameterSet):
     """Base class for calculators.
 
     A Calculator organizes Parameters and has a __call__ method that can
@@ -46,11 +47,23 @@ class Calculator(ParameterSet):
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used create Equations from string.
 
+    Operator Attributes
+    args    --  List of Literal arguments
+    nin     --  Number of inputs (<1 means this is variable)
+    nout    --  Number of outputs (1)
+    operation   --  Function that performs the operation, self.__call__
+    symbol  --  Same as name
+    _value  --  The value of the Operator.
+    value   --  Property for 'getValue'.
+
     """
 
     def __init__(self, name):
         ParameterSet.__init__(self, name)
         self.meta = {}
+
+        # Initialize Operator attributes
+        Operator.__init__(self, name, name, self.operation, -1, 1)
         return
 
     # Overload me!
@@ -64,34 +77,10 @@ class Calculator(ParameterSet):
         """
         return 0
 
+    def operation(self, *args):
+        self._value = self.__call__(*args)
+        return self._value
+
 # End class Calculator
-
-def makeCalculator(f, name, argnames):
-    """Make a calculator out of a function.
-
-    This creates a Calculator whose __call__ method calls f, and whose bound
-    signature is that of f. The Calculator has a Parameter for each of the
-    arguments of f.
-
-    Returns the Calculator instance.
-
-    """
-    c = Calculator(name)
-    for n in argnames:
-        c.newParameter(n, None)
-
-    # FIXME - This uses the same mechanism as Equation. Is this what want?
-    def _callf(*args):
-        for i, val in enumerate(args):
-            c._parameters.values()[i].setValue(val)
-
-        vals = [p.value for p in self._parameters]
-        return f(*vals)
-
-    c.__call__ = _callf
-
-    return c
-
-
 
 __id__ = "$Id$"

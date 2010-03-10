@@ -65,6 +65,9 @@ class Profile(Observable):
     xpar    --  A ProfileParameter that stores x (named "x").
     ypar    --  A ProfileParameter that stores y (named "y").
     dypar   --  A ProfileParameter that stores dy (named "dy").
+    ycpar   --  A ProfileParameter that stores ycalc (named "ycalc"). This is
+                not observed by the profile, but it is present so it can be
+                observed from elsewhere.
     meta    --  A dictionary of metadata. This is only set if provided by a
                 parser.
 
@@ -76,10 +79,10 @@ class Profile(Observable):
         self._xobs = None
         self._yobs = None
         self._dyobs = None
-        self.ycalc = None
         self.xpar = ProfileParameter("x")
         self.ypar = ProfileParameter("y")
         self.dypar = ProfileParameter("dy")
+        self.ycpar = ProfileParameter("ycalc")
         self.meta = {}
 
         # Observable
@@ -88,13 +91,15 @@ class Profile(Observable):
         self.dypar.addObserver(self._flush)
         return
 
-    # We want x, y and dy to stay in-sync with xpar, ypar and dypar
+    # We want x, y, ycalc and dy to stay in-sync with xpar, ypar and dypar
     x = property( lambda self : self.xpar.getValue(),
                   lambda self, val : self.xpar.setValue(val) )
     y = property( lambda self : self.ypar.getValue(),
                   lambda self, val : self.ypar.setValue(val) )
     dy = property( lambda self : self.dypar.getValue(),
                    lambda self, val : self.dypar.setValue(val) )
+    ycalc = property( lambda self : self.ycpar.getValue(),
+                  lambda self, val : self.ycpar.setValue(val) )
 
     # We want xobs, yobs and dyobs to be read-only
     xobs = property( lambda self: self._xobs )
@@ -243,8 +248,7 @@ class Profile(Observable):
     def _flush(self, other):
         """Invalidate cached state.
 
-        This will force any observer to invalidate its state. By default this
-        does nothing.
+        This will force any observer to invalidate its state.
 
         """
         self.ycalc = None

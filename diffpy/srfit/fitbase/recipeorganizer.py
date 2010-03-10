@@ -365,14 +365,27 @@ class RecipeOrganizer(RecipeContainer):
         f           --  The Calculator to register.
         argnames    --  The names of the arguments to f (list or None). 
                         If this is None, then the argument names will be
-                        extracted from the Calculator.
-
-        Raises ValueError if argnames cannot be automatically extracted.
+                        extracted from the function.
 
         """
-        self._addObject(f, self._calculators, True)
-        self.registerFunction(f, f.name, argnames)
-        return
+        self._eqfactory.registerOperator(f.name, f)
+        self._addObject(f, self._calculators)
+        # Register arguments of the calculator
+        if argnames is None:
+            func_code = f.__call__.im_func.func_code
+            argnames = list(func_code.co_varnames)
+            argnames = argnames[1:func_code.co_argcount]
+
+        for pname in argnames:
+            if pname not in self._eqfactory.builders:
+                par = self._newParameter(pname, 0)
+            else:
+                par = self.get(pname)
+            f.addLiteral(par)
+
+        # Now return an equation object
+        eq = self._eqfactory.makeEquation(f.name)
+        return eq
 
     def registerFunction(self, f, name = None, argnames = None):
         """Register a function so it can be used within equation strings.
@@ -458,8 +471,15 @@ class RecipeOrganizer(RecipeContainer):
             if pname not in self._eqfactory.builders:
                 self._newParameter(pname, 0)
 
-        # Now register this.
-        self._eqfactory.registerFunction(name, f, argnames)
+        # Initialize and register
+        from .calculator import Calculator
+        if isinstance(f, Calculator):
+            for pname in argnames:
+                par = self.get(pname)
+                f.addLiteral(par)
+            self._eqfactory.registerOperator(name, f)
+        else:
+            self._eqfactory.registerFunction(name, f, argnames)
 
         # Now we can create the Equation and return it to the user.
         eq = self._eqfactory.makeEquation(name)

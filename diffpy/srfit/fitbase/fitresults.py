@@ -192,10 +192,15 @@ class FitResults(object):
             pvals[k] = v - h
             rk -= self.recipe.residual(pvals)
 
+            # FIXME - constraints are used for vectors as well!
             for i, con in enumerate(recipe._oconstraints):
                 con.update()
-                cond[i] -= con.par.getValue()
-                cond[i] /= 2*h
+                val = con.par.getValue()
+                if numpy.isscalar(val):
+                    cond[i] -= con.par.getValue()
+                    cond[i] /= 2*h
+                else:
+                    cond[i] = 0.0
 
             conr.append(cond)
 

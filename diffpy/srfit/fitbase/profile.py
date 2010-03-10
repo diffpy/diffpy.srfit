@@ -67,7 +67,7 @@ class Profile(Observable):
     dypar   --  A ProfileParameter that stores dy (named "dy").
     ycpar   --  A ProfileParameter that stores ycalc (named "ycalc"). This is
                 not observed by the profile, but it is present so it can be
-                observed from elsewhere.
+                constrained to.
     meta    --  A dictionary of metadata. This is only set if provided by a
                 parser.
 

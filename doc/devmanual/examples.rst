@@ -22,6 +22,7 @@ Examples
 .. _ellipsoidsas.py: ellipsoidsas.html
 .. _nppdfsas.py: nppdfsas.html
 .. _nppdfsasII.py: nppdfsasII.html
+.. _interface.py: interface.html
 
 
 Files
@@ -44,4 +45,5 @@ Files
    ellipsoidsas.rst
    nppdfsas.rst
    nppdfsasII.rst
+   interface.rst
 

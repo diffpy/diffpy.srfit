@@ -136,5 +136,17 @@ and SAS refinement with SrFit.
 
 * nppdfsas.py_
     As nppdfsas.py_, but refine the shape of the nanoparticle as well.
+
+Miscellaneous
+--------------
+
+These demonstrate other SrFit features. These are in flux and may not be in
+future versions.
+
+* interface.py_
+    This example introduces some interface enhancements that allow the SrFit
+    recipes to be written with less code. This is not the same as a
+    full-featured scripting interface, but rather somewhere in between a
+    scripting interface and the API.
    
 

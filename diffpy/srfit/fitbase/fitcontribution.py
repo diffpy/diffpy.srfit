@@ -24,11 +24,12 @@ See the examples in the documention for how to use a FitContribution.
 """
 __all__ = ["FitContribution"]
 
+from diffpy.srfit.interface import _fitcontribution_interface
 from .parameterset import ParameterSet
 from .recipeorganizer import equationFromString
 from .parameter import ParameterProxy
 
-class FitContribution(ParameterSet):
+class FitContribution(_fitcontribution_interface, ParameterSet):
     """FitContribution class.
 
     FitContributions organize an Equation that calculates the signal, and a

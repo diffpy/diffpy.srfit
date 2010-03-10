@@ -32,7 +32,7 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
         adpsymbols = stdUsymbols):
     """Constrain the structure to the space group.
 
-    This applies space group constriants to a StructureParSet with P1
+    This applies space group constraints to a StructureParSet with P1
     symmetry.  Passed scatterers are explicitly constrained to the
     specified space group. The ADPs and lattice may be constrained as well.
 
@@ -55,7 +55,7 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
 
     New Parameters that are used in constraints are created within a
     SpaceGroupParameters object, which is returned from this function.
-    Constraints are created in ParameterSet that constains the constrained
+    Constraints are created in ParameterSet that contains the constrained
     Parameter.  This will erase any constraints or constant flags on the
     scatterers, lattice or ADPs if they are to be constrained.
 
@@ -100,7 +100,7 @@ class SpaceGroupParameters(RecipeContainer):
     """This is a class for holding space group Parameters.
 
     This class is used by the constrainAsSpaceGroup method to store the
-    Parameters needed to constain the space group. It has the same Parameter
+    Parameters needed to contain the space group. It has the same Parameter
     attribute access of a ParameterSet.
 
     Attributes

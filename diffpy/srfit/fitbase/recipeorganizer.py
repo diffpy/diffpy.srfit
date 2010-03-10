@@ -35,6 +35,7 @@ from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.ordereddict import OrderedDict
+from diffpy.srfit.interface import _recipeorganizer_interface
 
 class RecipeContainer(Observable):
     """Base class for organizing pieces of a FitRecipe.
@@ -263,7 +264,7 @@ class RecipeContainer(Observable):
 
 # End class RecipeContainer
 
-class RecipeOrganizer(RecipeContainer):
+class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     """Extended base class for organizing pieces of a FitRecipe.
 
     This class extends RecipeContainer by organizing constraints and

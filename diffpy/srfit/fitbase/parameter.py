@@ -29,9 +29,10 @@ from numpy import inf
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.interface import _parameter_interface
 
 
-class Parameter(Argument):
+class Parameter(_parameter_interface, Argument):
     """Parameter class.
     
     Attributes
@@ -84,7 +85,7 @@ class Parameter(Argument):
 
 # End class Parameter
 
-class ParameterProxy(object):
+class ParameterProxy(_parameter_interface):
     """A Parameter proxy for another parameter. 
     
     This allows for the same parameter to have multiple names.

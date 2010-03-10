@@ -31,12 +31,13 @@ __all__ = ["FitRecipe"]
 
 from numpy import concatenate, sqrt, dot
 
+from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.ordereddict import OrderedDict
 from .parameter import ParameterProxy
 from .recipeorganizer import RecipeOrganizer
 from .fithook import FitHook
 
-class FitRecipe(RecipeOrganizer):
+class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
 
     Attributes

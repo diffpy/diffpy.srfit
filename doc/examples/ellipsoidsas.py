@@ -59,7 +59,7 @@ def makeRecipe(datname):
     # before. 
     contribution = FitContribution("ellipsoid")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname = "q")
 
     # We want to fit the log of the signal to the log of the data so that the
     # higher-Q information remains significant. There are no I(Q) uncertainty
@@ -76,7 +76,7 @@ def makeRecipe(datname):
     # attribues of the model. These vary from model to model, but are adopted
     # as SrFit Parameters within the generator. Whereas the dispersion
     # parameters are accessible as, e.g. "radius.width", within the
-    # SASGenerator these are named like "radiuswidth".
+    # SASGenerator these are named like "radius_width".
     #
     # We want to fit the scale factor, radii and background factors.
     recipe.addVar(generator.scale, 1)

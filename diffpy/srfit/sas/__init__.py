@@ -20,6 +20,7 @@
 from sasgenerator import SASGenerator
 from sasparser import SASParser
 from sasprofile import SASProfile
+from prcalculator import PrCalculator
 
 # package version
 from diffpy.srfit.version import __version__

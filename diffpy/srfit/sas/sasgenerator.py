@@ -46,51 +46,30 @@ class SASParameter(Parameter):
     
     """
 
-    class _SASBounds(object):
-
-        def __init__(self, name, model):
-            self.name = name
-            self._model = model
-            # We use -inf..inf for unbounded
-            if self._model.details[name][1] is None:
-                self._model.details[name][1] = -numpy.inf
-            if self._model.details[name][2] is None:
-                self._model.details[name][2] = numpy.inf
-            return
-
-        def __getitem__(self, i):
-            return self._model.details[self.name][i+1]
-
-        def __setitem__(self, i, val):
-            self._model.details[self.name][i+1] = float(val)
-            return
-
-        def __str__(self):
-            return self._model.details[self.name][1:].__str__()
-
-    # End class _SASBounds
-
-    def __init__(self, name, model):
+    def __init__(self, name, model, parname = None):
         """Create the Parameter.
 
         name    --  Name of the Parameter
         model   --  The BaseModel to which the underlying parameter belongs
+        parname --  Name of parameter used by the model. If this is None
+                    (default), then name is used.
 
         """
-        val = model.getParam(name)
+        self._parname = parname or name
+        val = model.getParam(self._parname)
         self._model = model
         Parameter.__init__(self, name, val)
-        self.bounds = self.__class__._SASBounds(name, model)
         return
 
     def getValue(self):
         """Get the value of the Parameter."""
-        return self._model.getParam(self.name)
+        value =  self._model.getParam(self._parname)
+        return value
 
     def setValue(self, value):
         """Set the value of the Parameter."""
         if value != self.getValue():
-            self._model.setParam(self.name, value)
+            self._model.setParam(self._parname, value)
             self.notify()
         return
 
@@ -104,7 +83,7 @@ class SASGenerator(ProfileGenerator):
     These depend on the parameters of the BaseModel object held by _model. They
     are created from the 'params' attribute of the BaseModel. If a dispersion
     is set for the BaseModel, the dispersion "width" will be accessible under
-    "<parname>width", where <parname> is the name a parameter adjusted by
+    "<parname>_width", where <parname> is the name a parameter adjusted by
     dispersion.
 
     """
@@ -121,22 +100,15 @@ class SASGenerator(ProfileGenerator):
         self._model = model
 
         # Wrap normal parameters
-        for pname in model.params:
-            par = SASParameter(pname, model)
+        for parname in model.params:
+            par = SASParameter(parname, model)
             self.addParameter(par)
 
         # Wrap dispersion parameters
-        def _dispgetter(obj, _name):
-            return obj.getParam(_name)
-        def _dispsetter(obj, _name, val):
-            return obj.setParam(_name, val)
-
-        for pname in model.dispersion:
-            attrname = "%s.width"%pname
-            pname = "%swidth"%pname
-
-            par = ParameterAdapter(pname, self._model, _dispgetter,
-                    _dispsetter, attrname)
+        for parname in model.dispersion:
+            name = parname + "_width"
+            parname += ".width"
+            par = SASParameter(name, model, parname)
             self.addParameter(par)
 
         return

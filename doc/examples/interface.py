@@ -14,17 +14,13 @@
 ########################################################################
 """Example of fitting a Gaussian to simulated data.
 
-This is like gaussianrecipe.py, but it uses a shorthand interface that is
-enabled by the lines:
-import diffpy.srfit.interface
-diffpy.srfit.interface.use()
+This is like gaussianrecipe.py, but it uses a shorthand interface defined in
+the diffpy.srfit.interface.interface.py module.
 
 """
 
 import numpy
 
-import diffpy.srfit.interface
-diffpy.srfit.interface.use()
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 
 ####### Example Code

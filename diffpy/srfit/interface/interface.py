@@ -137,7 +137,7 @@ class FitRecipeInterface(object):
     def __iadd__(self, args):
         """addVar or newVar with +=
 
-        Think of "+" as addition of a Parameter.
+        Think of "+" as addition of a variable.
 
         This accepts a single argument or an iterable of single arguments or
         argument tuples.

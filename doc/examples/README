@@ -143,6 +143,12 @@ Miscellaneous
 These demonstrate other SrFit features. These are in flux and may not be in
 future versions.
 
+* simplerecipe.py_
+    This introduces the SimpleRecipe class that is a FitRecipe with an embedded
+    Profile and FitContribution. SimpleRecipe exposes methods from the Profile
+    and FitContribution, and adds other methods so it is easy to set up a
+    simple fit.
+
 * interface.py_
     This example introduces some interface enhancements that allow the SrFit
     recipes to be written with less code. This is not the same as a

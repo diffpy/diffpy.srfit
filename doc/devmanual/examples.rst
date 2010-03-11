@@ -23,6 +23,7 @@ Examples
 .. _nppdfsas.py: nppdfsas.html
 .. _nppdfsasII.py: nppdfsasII.html
 .. _interface.py: interface.html
+.. _simplerecipe.py: simplerecipe.html
 
 
 Files
@@ -46,4 +47,5 @@ Files
    nppdfsas.rst
    nppdfsasII.rst
    interface.rst
+   simplerecipe.rst
 

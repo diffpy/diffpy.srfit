@@ -37,6 +37,7 @@ from diffpy.srfit.version import __version__
 from .calculator import Calculator
 from .fitcontribution import FitContribution
 from .fitrecipe import FitRecipe
+from .simplerecipe import SimpleRecipe
 from .fitresults import FitResults
 from .profile import Profile
 from .profilegenerator import ProfileGenerator

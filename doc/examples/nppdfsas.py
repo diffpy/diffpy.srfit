@@ -27,9 +27,10 @@ We use the PDFGenerator to calculate Gcrystal(r), and retrieve f(r) from the
 SAS data. The PrCalculator class can calculate P(r), the nanoparticle density
 factor, from the nanoparticle I(Q), using the Invertor object from
 sans.pr.invertor. P(r) is related to f(r) via
-P(r) = 4 * pi * r**2 f(r).
-The Invertor class performs an indirect transform of I(Q) to obtain P(r). See
-the class documentation for more details.
+P(r) = 4 * pi * rho * r**2 f(r).
+P(r) is the radial distribution function (RDF) for particle with uniform
+density.  The Invertor class performs an indirect transform of I(Q) to obtain
+P(r). See the class documentation for more details.
 
 Below we use both a PDFGenerator and PrCalculator to calculate Gnano(r) and
 refine the crystal structure of lead to fit the nanoparticle PDF data.

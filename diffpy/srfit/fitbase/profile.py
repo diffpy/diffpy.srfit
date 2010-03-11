@@ -245,6 +245,39 @@ class Profile(Observable):
 
         return
 
+    def loadtxt(self, *args, **kw):
+        """Call numpy.loadtxt.
+
+        Arguments are passed to numpy.loadtxt. 
+        unpack = True is enforced. 
+        The first two arrays returned by numpy.loadtxt are assumed to be x and
+        y.  If there is a third array, it is assumed to by dy. Any other arrays
+        are ignored. These are passed to setObservedProfile.
+
+        Raises ValueError if the call to numpy.loadtxt returns fewer than 2
+        arrays.
+
+        """
+        if len(args) == 8 and not args[-1]:
+            args = list(args)
+            args[-1] = True
+        else:
+            kw["unpack"] = True
+        cols = numpy.loadtxt(*args, **kw)
+
+        x = y = dy = None
+        # Due to using 'unpack', a single column will come out as a single
+        # array, thus the second check.
+        if len(cols) < 2 or not isinstance(cols[0], numpy.ndarray):
+            raise ValueError("numpy.loadtxt returned fewer than 2 arrays")
+        x = cols[0]
+        y = cols[1]
+        if len(cols) > 2:
+            dy = cols[2]
+
+        self.setObservedProfile(x, y, dy)
+        return
+
     def _flush(self, other):
         """Invalidate cached state.
 

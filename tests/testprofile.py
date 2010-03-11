@@ -2,10 +2,15 @@
 """Tests for refinableobj module."""
 
 import unittest
+import os.path
 
 from numpy import array, arange, array_equal, ones_like
 
 from diffpy.srfit.fitbase.profile import Profile
+
+thisfile = locals().get('__file__', 'testpdf.py')
+tests_dir = os.path.dirname(os.path.abspath(thisfile))
+testdata_dir = os.path.join(tests_dir, 'testdata')
 
 class TestProfile(unittest.TestCase):
 
@@ -143,6 +148,37 @@ class TestProfile(unittest.TestCase):
         prof.setObservedProfile(x, y, dy)
         self.assertTrue( array_equal(arange(3, 10.1, 0.2), prof.x ) )
 
+        return
+
+    def testLoadtxt(self):
+        """Test the loadtxt method"""
+
+        prof = self.profile
+        data = os.path.join(testdata_dir, "testdata.txt")
+
+        def _test(p):
+            self.assertAlmostEqual(1e-2, p.x[0])
+            self.assertAlmostEqual(1.105784e-1, p.y[0])
+            self.assertAlmostEqual(1.802192e-3, p.dy[0])
+
+        # Test normal load
+        prof.loadtxt(data, usecols=(0,1,3))
+        _test(prof)
+
+        # Test trying to not set unpack
+        prof.loadtxt(data, usecols=(0,1,3), unpack = False)
+        _test(prof)
+        prof.loadtxt(data, float, '#', None, None, 0, (0,1,3), False)
+        _test(prof)
+
+        # Try not including dy
+        prof.loadtxt(data, usecols=(0,1))
+        self.assertAlmostEqual(1e-2, prof.x[0])
+        self.assertAlmostEqual(1.105784e-1, prof.y[0])
+        self.assertAlmostEqual(1, prof.dy[0])
+
+        # Try to include too little
+        self.assertRaises(ValueError, prof.loadtxt, data, usecols=(0,))
         return
 
 

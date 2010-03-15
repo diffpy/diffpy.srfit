@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 ########################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group

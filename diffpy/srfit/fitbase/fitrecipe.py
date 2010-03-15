@@ -29,7 +29,7 @@ using FitRecipe.
 """
 __all__ = ["FitRecipe"]
 
-from numpy import concatenate, sqrt, dot
+from numpy import array, concatenate, sqrt, dot
 
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.ordereddict import OrderedDict
@@ -631,8 +631,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def getValues(self):
         """Get the current values of the variables in a list."""
-        return [par.getValue() for par in self._parameters.values() if par not
-                in self._fixed]
+        return array([v.getValue() for v in self._parameters.values() if v
+            not in self._fixed])
 
     def getNames(self):
         """Get the names of the variables in a list."""
@@ -646,8 +646,36 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         the upper bound.
 
         """
-        return [par.bounds for par in self._parameters.values() if par not
-                in self._fixed]
+        return [v.bounds for v in self._parameters.values() if v not in
+                self._fixed]
+
+    def getBounds2(self):
+        """Get the bounds on variables in two lists.
+
+        Returns lower- and upper-bound lists of variable bounds.
+
+        """
+        bounds = self.getBounds()
+        lb = array([b[0] for b in bounds])
+        ub = array([b[1] for b in bounds])
+        return lb, ub
+
+    def boundsToRestraints(self, prefactor = 1, scaled = False):
+        """Turn all bounded parameters into restraints.
+
+        The bounds become limits on the restraint.
+
+        prefactor   --  prefactor for each parameter (scalar or iterable)
+        scaled      --  Scale the restraints, see restrain.
+
+        """
+        pars = self._parameters.values()
+        if not hasattr(prefactor, "__iter__"):
+            prefactor = [prefactor] * len(pars)
+        for par, x in zip(pars, prefactor):
+            self.restrain(par, par.bounds[0], par.bounds[1], prefactor = x,
+                    scaled = scaled)
+        return
 
     def __applyValues(self, p):
         """Apply variable values to the variables."""

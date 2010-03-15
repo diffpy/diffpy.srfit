@@ -82,7 +82,7 @@ class FitHook(object):
         chiv    --  The residual vector
         
         """
-        if self.verbose < 3:
+        if self.verbose < 2:
             return
 
         # Get the number of restraints

@@ -91,3 +91,34 @@ class PrCalculator(Calculator):
         return self.scale.value * pr
 
 # End class PrCalculator
+
+class CFCalculator(PrCalculator):
+    """A class for calculating the characteristic function (CF) from data.
+    
+    This calculator produces
+    f(r) = P(r) / 4 pi r**2
+    which is the nanoparticle form factor scaled by density.
+
+    Attributes:
+    _invertor   --  sans.pr.invertor.Invertor object. This object is internal,
+                    but can be configured by the user after initialization.
+                    Note that the 'x', 'y' and 'err' attributes get overwritten
+                    every time the invertor is used.
+
+    Managed Parameters:
+    scale       --  The scale factor (default 1).
+    q           --  The q-values of the I(q) signal
+    iq          --  The I(q) signal
+    diq         --  The uncertainty in I(q)
+
+    """
+
+    def __call__(self, r):
+        """Calculate P(r) from the data or calculated signal."""
+        fr = PrCalculator.__call__(self, r)
+        fr /= 4 * numpy.pi * r**2
+        if r[0] == 0:
+            fr[0] = self.scale.value
+        return fr
+
+# End class CFCalculator

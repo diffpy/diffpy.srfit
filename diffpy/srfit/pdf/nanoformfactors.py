@@ -40,6 +40,7 @@ def sphericalFF(r, psize):
     
     From Kodama et al., Acta Cryst. A, 62, 444-453 
     (converted from radius to diameter)
+
     """
     f = numpy.zeros_like(r)
     if psize > 0: 
@@ -71,7 +72,6 @@ def ellipsoidalFF(r, psize, pelpt):
 
     if v == 1: 
         return sphericalFF(r, psize)
-
 
     rx = r
     if v < 1:

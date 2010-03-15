@@ -127,6 +127,10 @@ and SAS refinement with SrFit.
 * crystalpdfall.py_
     Refine a two-phase structure using four data sets.
 
+* nppdfcrystal.py_
+    Fit a nanoparticle PDF as a crystal PDF attenuated by a nanoparticle form
+    factor.
+
 * ellipsoidsas.py_
     Refine an ellipsoid SAS model to ideal data.
 

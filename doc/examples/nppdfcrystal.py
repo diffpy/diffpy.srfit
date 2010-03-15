@@ -12,28 +12,15 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of combining PDF and SAS nanoparticles data. 
+"""Example of fitting a crystal-like nanoparticle PDF.
 
-This is an example of using both PDF and SAS data in the same fit. This example
-refines a crystal structure (Pb) to nanoparticle data by approximating the PDF
-as 
-Gnano(r) = f(r) * Gcrystal(r).
-(See Acta Cryst. A, 65 p. 232 (2009) and references therein.) This equation
-assumes that the nanoparticle is crystal-like. (The hypothetical structure from
-which the PDF and SAS data were calculated, data/pb_100.xyz, is indeed a cut
-from a crystal.)
-
-We use the PDFGenerator to calculate Gcrystal(r), and retrieve f(r) from the
-SAS data. The PrCalculator class can calculate P(r), the nanoparticle density
-factor, from the nanoparticle I(Q), using the Invertor object from
-sans.pr.invertor. P(r) is related to f(r) via
-P(r) = 4 * pi * rho * r**2 f(r).
-P(r) is the radial distribution function (RDF) for particle with uniform
-density.  The Invertor class performs an indirect transform of I(Q) to obtain
-P(r). See the class documentation for more details.
-
-Below we use both a PDFGenerator and PrCalculator to calculate Gnano(r) and
-refine the crystal structure of lead to fit the nanoparticle PDF data.
+This is an example of modeling the PDF from a nanocrystal as an attenuated bulk
+PDF. This involves a crystal PDF calculation and a nanoparticle form factor.
+The equation we model is
+Gnano(r) = f(r) * Gbulk(r),
+where f(r) is the nanoparticle form factor (or characteristic function) for the
+nanoparticle shape. Functions for calculating the nanoparticle form factor in
+the diffpy.srfit.pdf.nanoformfactors module.
 
 """
 
@@ -49,8 +36,8 @@ from diffpy.srfit.fitbase import FitResults
 
 from gaussianrecipe import scipyOptimize
 
-def makeRecipe(ciffile, grdata, iqdata):
-    """Make a recipe to combine PDF and SAS data in a nanoparticle fit."""
+def makeRecipe(ciffile, grdata):
+    """Make a recipe to model a crystal-like nanoparticle PDF."""
 
     # Set up a PDF fit as has been done in other examples.
     pdfprofile = Profile()
@@ -69,29 +56,15 @@ def makeRecipe(ciffile, grdata, iqdata):
     pdfgenerator.setPhase(stru)
     pdfcontribution.addProfileGenerator(pdfgenerator)
 
-    # Load in the SAS data for the nanoparticle. For convenience, we hold this
-    # in a Profile.
-    sasprofile = Profile()
-    sasparser = SASParser()
-    sasparser.parseFile(iqdata)
-    sasprofile.loadParsedData(sasparser)
+    # Register the nanoparticle shape factor.
+    from diffpy.srfit.pdf.nanoformfactors import sphericalFF
+    pdfcontribution.registerFunction(sphericalFF, name = "f")
 
-    # Create the PrCalculator. The PrCalculator requires parameters q, iq and
-    # diq to be specified. These represent the SAS Q, I(Q) and uncertainty in
-    # I(Q). These are held in the sasprofile.
-    prcalculator = PrCalculator("P")
-    prcalculator.q.setValue(sasprofile.x)
-    prcalculator.iq.setValue(sasprofile.y)
-    prcalculator.diq.setValue(sasprofile.dy)
+    # Now we set up the fitting equation.
+    pdfcontribution.setEquation("f * G")
 
-    # Now we register the calculator with pdfcontribution. This allows us to
-    # use it in the fitting equation. The nanoparticle fitting equation is 
-    # f(r) * G(r), where f(r) = P(r) / (4 * pi * r**2).
-    pdfcontribution.registerCalculator(prcalculator)
-    pdfcontribution.setEquation("P/(4 * pi * r**2) * G")
-
-    # Now we can move on as before. The use of the PrCalculator does not add
-    # any fittable parameters to the 
+    # Now make the recipe. Make sure we fit the form factor shape parameters,
+    # in this case 'psize', which is the diameter of the particle.
     recipe = FitRecipe()
     recipe.addContribution(pdfcontribution)
 
@@ -102,6 +75,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     for scatterer in phase.getScatterers():
         recipe.constrain(scatterer.Biso, Biso)
 
+    recipe.addVar(pdfcontribution.psize, 20)
     recipe.addVar(pdfgenerator.scale, 1)
     recipe.addVar(pdfgenerator.delta2, 0)
 
@@ -124,8 +98,7 @@ def plotResults(recipe):
     gcryst = recipe.pdf.evaluateEquation("G")
     gcryst /= recipe.scale.value
 
-    pr = recipe.pdf.evaluateEquation("P")
-    fr = pr / r**2
+    fr = recipe.pdf.evaluateEquation("f")
     fr *= max(g) / fr[0]
 
     import pylab
@@ -146,9 +119,8 @@ if __name__ == "__main__":
 
     ciffile = "data/pb.cif"
     grdata = "data/pb_100_qmin1.gr"
-    iqdata = "data/pb_100_qmax1.iq"
 
-    recipe = makeRecipe(ciffile, grdata, iqdata)
+    recipe = makeRecipe(ciffile, grdata)
     scipyOptimize(recipe)
 
     res = FitResults(recipe)

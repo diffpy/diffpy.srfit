@@ -21,7 +21,7 @@ profile as the PDF, which is where the calculator will be applied.
 
 """
 
-__all__ = ["PrCalculator"]
+__all__ = ["PrCalculator", "CFCalculator"]
 
 import numpy
 
@@ -118,7 +118,9 @@ class CFCalculator(PrCalculator):
         fr = PrCalculator.__call__(self, r)
         fr /= 4 * numpy.pi * r**2
         if r[0] == 0:
-            fr[0] = self.scale.value
+            # Assume the scale makes fr properly normalized. We don't have much
+            # other choice.
+            fr[0] = 1
         return fr
 
 # End class CFCalculator

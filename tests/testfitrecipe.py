@@ -46,13 +46,13 @@ class TestFitRecipe(unittest.TestCase):
         names = recipe.getNames()
         self.assertEquals(names, ["A", "k", "c", "B"])
         values = recipe.getValues()
-        self.assertEquals(values, [2, 1, 0, 0])
+        self.assertTrue((values == [2, 1, 0, 0]).all())
 
         # Constrain a parameter to the B-variable to give it a value
         p = Parameter("Bpar", -1)
         recipe.constrain(recipe.B, p)
         values = recipe.getValues()
-        self.assertEquals(values, [2, 1, 0])
+        self.assertTrue((values == [2, 1, 0]).all())
         recipe.delVar(recipe.B)
 
         recipe.fixVar(recipe.k)
@@ -60,13 +60,13 @@ class TestFitRecipe(unittest.TestCase):
         names = recipe.getNames()
         self.assertEquals(names, ["A", "c"])
         values = recipe.getValues()
-        self.assertEquals(values, [2, 0])
+        self.assertTrue((values == [2, 0]).all())
 
         recipe.fixAll()
         names = recipe.getNames()
         self.assertEquals(names, [])
         values = recipe.getValues()
-        self.assertEquals(values, [])
+        self.assertTrue((values == []).all())
 
         # The order is no longer valid
         recipe.freeAll()

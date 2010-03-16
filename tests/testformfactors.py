@@ -10,7 +10,7 @@ import diffpy.srfit.pdf.nanoformfactors as nff
 
 class TestSASFormFactor(unittest.TestCase):
 
-    def test__call__(self):
+    def testSphere(self):
         radius = 25
         # Calculate sphere ff from SphereModel
         from sans.models.SphereModel import SphereModel
@@ -28,10 +28,10 @@ class TestSASFormFactor(unittest.TestCase):
         self.assertAlmostEqual(0, res, 4)
         return
 
-    def test__call__2(self):
+    def testSpheroid(self):
         prad = 20.9
         erad = 33.114
-        # Calculate sphere ff from SphereModel
+        # Calculate ff from EllipsoidModel
         from sans.models.EllipsoidModel import EllipsoidModel
         model = EllipsoidModel()
         model.setParam("radius_a", prad)
@@ -40,8 +40,28 @@ class TestSASFormFactor(unittest.TestCase):
         r = numpy.arange(0, 100, 1/numpy.pi, dtype = float)
         fr1 = ff(r)
 
+        # Calculate ff analytically
+        fr2 = nff.spheroidalFF(r, erad, prad)
+        diff = fr1 - fr2
+        res = numpy.dot(diff, diff)
+        res /= numpy.dot(fr2, fr2)
+        self.assertAlmostEqual(0, res, 4)
+        return
+
+    def testShell(self):
+        radius = 19.2
+        thickness = 7.8
+        # Calculate ff from VesicleModel
+        from sans.models.VesicleModel import VesicleModel
+        model = VesicleModel()
+        model.setParam("radius", radius)
+        model.setParam("thickness", thickness)
+        ff = nff.SASFormFactor("vesicle", model)
+        r = numpy.arange(0, 99.45, 0.1, dtype = float)
+        fr1 = ff(r)
+
         # Calculate sphere ff analytically
-        fr2 = nff.spheroidalFF2(r, erad, prad)
+        fr2 = nff.shellFF(r, radius, thickness)
         diff = fr1 - fr2
         res = numpy.dot(diff, diff)
         res /= numpy.dot(fr2, fr2)

@@ -28,7 +28,7 @@ __all__ = ["sphericalFF", "spheroidalFF", "spheroidalFF2",
         "lognormalSphericalFF", "sheetFF"]
 
 import numpy
-from numpy import pi, sqrt, log, exp, log2, ceil
+from numpy import pi, sqrt, log, exp, log2, ceil, sign
 from numpy import arctan as atan
 from numpy import arctanh as atanh
 from numpy.fft import ifft, fftfreq
@@ -54,7 +54,24 @@ def sphericalFF(r, psize):
         f += g
     return f
 
-def spheroidalFF(r, psize, axrat):
+def spheroidalFF(r, erad, prad):
+    """Spheroidal form factor specified using radii.
+
+    Spheroid with radii (erad, erad, prad)
+
+    prad    --  polar radius
+    erad    --  equatorial radius
+
+    erad < prad equates to a prolate spheroid
+    erad > prad equates to a oblate spheroid
+    erad == prad is a sphere
+
+    """
+    psize = 2*erad
+    pelpt = prad / erad
+    return spheroidalFF2(r, psize, pelpt)
+
+def spheroidalFF2(r, psize, axrat):
     """Spheroidal nanoparticle form factor.
 
     Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)
@@ -120,23 +137,6 @@ def spheroidalFF(r, psize, axrat):
 
     return f
 
-def spheroidalFF2(r, erad, prad):
-    """Spheroidal form factor specified using radii.
-
-    Spheroid with radii (erad, erad, prad)
-
-    prad    --  polar radius
-    erad    --  equatorial radius
-
-    erad < prad equates to a prolate spheroid
-    erad > prad equates to a oblate spheroid
-    erad == prad is a sphere
-
-    """
-    psize = 2*erad
-    pelpt = prad / erad
-    return spheroidalFF(r, psize, pelpt)
-
 
 def lognormalSphericalFF(r, psize, psig):
     """Spherical nanoparticle form factor with lognormal size distribution.
@@ -192,6 +192,53 @@ def sheetFF(r, sthick):
     sel = (r <= sthick)
     f[sel] = 1 - f[sel]
     return f
+
+def shellFF(r, radius, thickness):
+    """Spherical shell form factor.
+
+    radius      --  Inner radius
+    thickness   --  Thickness of shell
+
+    outer radius = radius + thickness
+
+    From Lei et al., Phys. Rev. B, 80, 024118 (2009)
+
+    """
+    d = 1.0*thickness
+    a = 1.0*radius + d/2
+    return shellFF2(r, a, d)
+
+def shellFF2(r, a, delta):
+    """Spherical shell form factor.
+
+    a       --  Central radius
+    delta   --  Thickness of shell
+
+    outer radius = a + thickness/2
+
+    From Lei et al., Phys. Rev. B, 80, 024118 (2009)
+
+    """
+    a = 1.0*a
+    d = 1.0*delta
+    a2 = a**2
+    d2 = d**2
+    dmr = d-r
+    dmr2 = dmr**2
+
+    f = r * (16*a*a2 + 12*a*d*dmr + 36*a2*(2*d-r) + 3*dmr2*(2*d+r)) \
+      + 2*dmr2 * (r*(2*d+r)-12*a2) * sign(dmr) \
+      - 2*(2*a-r)**2 * (r*(4*a+r)-3*d2) * sign(2*a-r) \
+      + r*(4*a-2*d+r)*(2*a-d-r)**2*sign(2*a-d-r)
+
+    f[r > 2*a+d] = 0
+
+    f /= 8*r*d*(12*a2+d2)
+
+    if r[0] == 0:
+        f[0] = 1
+    return f
+
 
 class SASFormFactor(Calculator):
     """Calculator class for form factors from sans-models.

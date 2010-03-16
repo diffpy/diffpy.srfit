@@ -24,13 +24,17 @@ the 'registerFunction' method of that class.
 
 """
 
-__all__ = ["sphericalFF", "ellipsoidalFF", "lognormalSphericalFF", "sheetFF"]
+__all__ = ["sphericalFF", "spheroidalFF", "spheroidalFF2",
+        "lognormalSphericalFF", "sheetFF"]
 
 import numpy
-from numpy import sqrt, log, exp
+from numpy import pi, sqrt, log, exp, log2, ceil
 from numpy import arctan as atan
 from numpy import arctanh as atanh
+from numpy.fft import ifft, fftfreq
 from scipy.special import erf
+
+from diffpy.srfit.fitbase.calculator import Calculator
 
 def sphericalFF(r, psize):
     """Spherical nanoparticle form factor.
@@ -50,16 +54,19 @@ def sphericalFF(r, psize):
         f += g
     return f
 
-def ellipsoidalFF(r, psize, pelpt):
-    """Spherical nanoparticle form factor.
-     
-     r      --  distance of interaction
-     psize  --  The particle diameter
-     pelpt  --  The ellipticity (ratio of axis lengths)
+def spheroidalFF(r, psize, axrat):
+    """Spheroidal nanoparticle form factor.
 
-     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
-     
-     """
+    Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)
+    
+    r      --  distance of interaction
+    psize  --  The equatorial diameter
+    axrat  --  The ratio of axis lengths
+
+    From Lei et al., Phys. Rev. B, 80, 024118 (2009)
+    
+    """
+    pelpt = axrat
 
     if psize <= 0 or pelpt <= 0: 
         numpy.zeros_like(r)
@@ -112,6 +119,24 @@ def ellipsoidalFF(r, psize, pelpt):
         f = numpy.concatenate((f1,f2,f3))
 
     return f
+
+def spheroidalFF2(r, erad, prad):
+    """Spheroidal form factor specified using radii.
+
+    Spheroid with radii (erad, erad, prad)
+
+    prad    --  polar radius
+    erad    --  equatorial radius
+
+    erad < prad equates to a prolate spheroid
+    erad > prad equates to a oblate spheroid
+    erad == prad is a sphere
+
+    """
+    psize = 2*erad
+    pelpt = prad / erad
+    return spheroidalFF(r, psize, pelpt)
+
 
 def lognormalSphericalFF(r, psize, psig):
     """Spherical nanoparticle form factor with lognormal size distribution.
@@ -167,5 +192,99 @@ def sheetFF(r, sthick):
     sel = (r <= sthick)
     f[sel] = 1 - f[sel]
     return f
+
+class SASFormFactor(Calculator):
+    """Calculator class for form factors from sans-models.
+
+    This class wraps a sans.models.BaseModel to calculate I(Q) related to
+    nanoparticle shape. This I(Q) is inverted to f(r) according to:
+    f(r) = 1 / (4 pi r) * SINFT(I(Q)),
+    where "SINFT" represents the sine Fourier transform.
+
+    Attributes:
+    _model      --  BaseModel object this adapts.
+
+    Managed Parameters:
+    These depend on the parameters of the BaseModel object held by _model. They
+    are created from the 'params' attribute of the BaseModel. If a dispersion
+    is set for the BaseModel, the dispersion "width" will be accessible under
+    "<parname>_width", where <parname> is the name a parameter adjusted by
+    dispersion.
+
+    """
+
+    def __init__(self, name, model):
+        """Initialize the generator.
+
+        name    --  A name for the SASFormFactor
+        model   --  SASModel object this adapts.
+        
+        """
+        Calculator.__init__(self, name)
+
+        self._model = model
+
+        from diffpy.srfit.sas.sasparameter import SASParameter
+        # Wrap normal parameters
+        for parname in model.params:
+            par = SASParameter(parname, model)
+            self.addParameter(par)
+
+        # Wrap dispersion parameters
+        for parname in model.dispersion:
+            name = parname + "_width"
+            parname += ".width"
+            par = SASParameter(name, model, parname)
+            self.addParameter(par)
+
+        return
+
+    def __call__(self, r):
+        """Calculate the form factor from the transform of the BaseModel."""
+
+
+        # Determine q-values.
+        # We want very fine r-spacing so we can properly normalize f(r). This
+        # equates to having a large qmax so that the Fourier transform is
+        # finely spaced. We also want the calculation to be fast, so we pick
+        # qmax such that the number of q-points is a power of 2. This allows us
+        # to use the fft. 
+        # 
+        # The initial dr is somewhat arbitrary, but using dr = 0.01 allows for
+        # the f(r) calculated from a particle of diameter 50, over r =
+        # arange(1, 60, 0.1) to agree with the sphericalFF with Rw < 1e-4%.
+        rmax = r[-1]
+        dr = min(0.01, r[1] - r[0])
+        dq = pi / rmax
+        qmax = pi / dr
+        numpoints = int(2**(ceil(log2(qmax/dq))))
+        qmax = dq * numpoints
+
+        # Calculate F(q) = q * I(q) from model
+        q = fftfreq(int(qmax/dq)) * qmax
+        fq = q * self._model.evalDistribution(q)
+
+        # Calculate g(r) and the effective r-points
+        rp = fftfreq(numpoints) * 2 * pi / dq
+        # Note sine transform = imaginary part of ifft
+        gr = ifft(fq).imag
+
+        # Calculate full-fr for normalization
+        frp = gr / rp
+
+        # Inerpolate onto requested grid
+        fr = numpy.interp(r, rp, gr) / r
+
+        # Normalize. We approximate fr[0] by using the fact that f(r) is linear
+        # at low r. By definition, fr[0] should equal 1.
+        fr0 = 2*frp[2] - frp[1]
+        fr /= fr0
+
+        # Fix potential divide-by-zero issue
+        if r[0] == 0:
+            fr[0] = 1
+
+        return fr
+
 
 # End of file

@@ -23,9 +23,9 @@ class SimpleRecipe(FitRecipe):
     """SimpleRecipe class.
 
     This is a FitRecipe with a built-in Profile (the 'profile' attribute) and
-    FitContribution (the 'contribution' attribute). Unique from each of these
-    are exposed to this class to facilitate the creation of a simple fit
-    recipe.
+    FitContribution (the 'contribution' attribute). Unique methods from each of
+    these are exposed through this class to facilitate the creation of a simple
+    fit recipe.
 
     Attributes
     profile         --  The built-in Profile object.
@@ -86,6 +86,7 @@ class SimpleRecipe(FitRecipe):
         self.addVar(par, value, name, fixed, tag, tags)
         return
     
+    # Profile methods
     def loadParsedData(self, parser):
         """See Profile class"""
         return self.profile.loadParsedData(parser)
@@ -107,6 +108,7 @@ class SimpleRecipe(FitRecipe):
         """See Profile class"""
         return self.profile.loadtxt(*args, **kw)
 
+    # FitContribution
     def addProfileGenerator(self, gen, name = None):
         """See ProfileGenerator class"""
         return self.contribution.addProfileGenerator(gen, name = None)

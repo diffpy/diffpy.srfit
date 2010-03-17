@@ -32,7 +32,7 @@ def main():
     recipe = SimpleRecipe()
 
     # SimpleRecipe adopts Profile methods, like 'loadtxt'
-    recipe.loadtxt("data/gaussian.dat", float, '#', None, None, 0, None, False)
+    recipe.loadtxt("data/gaussian.dat")
 
     # SimpleRecipe adopts FitContribution methods, like 'setEquation'
     recipe.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")

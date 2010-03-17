@@ -32,11 +32,27 @@ void speedy()
     }
 }
 
+bp::object pyspeedy(bp::object& f, bp::list& l)
+{
+    bp::object res = f(l);
+    return res;
+}
+
+bp::object pyspeedy2(bp::object& f, bp::object& o)
+{
+    bp::object res = f(o);
+    return res;
+}
+
+
+
 }
 
 BOOST_PYTHON_MODULE(_purespeed)
 {
 
     def("speedy", &speedy);
+    def("pyspeedy", &pyspeedy);
+    def("pyspeedy", &pyspeedy2);
 }
 

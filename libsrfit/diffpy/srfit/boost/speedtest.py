@@ -12,7 +12,6 @@ def _makeArgs(num):
         args[-1].name = "v%i"%(i+1,)
     return args
 
-x = numpy.arange(0, 20, 0.05)
 
 
 class AdditionOperator(UFuncOperator):
@@ -132,6 +131,15 @@ def makeLazyEquation():
 
     return _f
 
+def makeTrunkEquation():
+    from diffpy.srifit.equation.builder import EquationFactory
+    f = EquationFactory()
+
+    f.registerConstant("x", x)
+
+    eq = f.makeEquation("(v1+x)*(50*x-v4))**2.11 * e**v7")
+    return eq
+
 def makeEquation():
     """Make the same equation as the lazy one."""
 
@@ -150,50 +158,59 @@ def timeFunction(f, *args):
     t2 = time.time()
     return (t2-t1)*1000
 
-if __name__ == "__main__":
 
-    f1 = makeLazyEquation()
-    f2 = makeEquation()
+def test(mutate):
 
-    a, b, c = 3.1, 8.19973123410, 2.1
-
-    t1 = timeFunction(f1, a, b, c)
-    t2 = timeFunction(f2, a, b, c)
-    print "Initial"
-    print "lazy", t1
-    print "regular", t2
+    numtrials = 1000
 
     import time
     import _purespeed
     t1 = time.time()
     _purespeed.speedy()
     t2 = time.time()
-    print "Pure Speed", (t2-t1)*1000
+    print "Pure c++", (t2-t1)*1000
+    print
 
+    f0 = makeLazyEquation()
+    f1 = makeLazyEquation()
+    f2 = makeEquation()
 
-    # Change one of the variables
-    b = 10.1
-    t1 = timeFunction(f1, a, b, c)
-    t2 = timeFunction(f2, a, b, c)
-    print "Single change"
+    args = [3.1, 8.19973123410, 2.1]
+
+    t0 = 0
+    t1 = 0
+    t2 = 0
+
+    import random
+    for i in xrange(numtrials):
+
+        c = range(len(args))
+
+        for j in range(mutate):
+            k = random.choice(c)
+            c.remove(k)
+            args[k] = random.uniform(0, 10)
+
+        t0 += timeFunction(f0, *args)
+        t1 += timeFunction(f1, *args)
+        t2 += timeFunction(f2, *args)
+
+    t0 /= numtrials
+    t1 /= numtrials
+    t2 /= numtrials
+
+    print "Mutate %i (%i trials averaged)" % (mutate, numtrials)
+    print "trunk", t0
     print "lazy", t1
     print "regular", t2
+    print
 
-    # Change two
-    a = 2.0
-    b = 2.0
-    t1 = timeFunction(f1, a, b, c)
-    t2 = timeFunction(f2, a, b, c)
-    print "Two change"
-    print "lazy", t1
-    print "regular", t2
 
-    # Change three
-    a = 1.0
-    b = 1.0
-    c = 1.0
-    t1 = timeFunction(f1, a, b, c)
-    t2 = timeFunction(f2, a, b, c)
-    print "Three change"
-    print "lazy", t1
-    print "regular", t2
+
+
+if __name__ == "__main__":
+
+    x = numpy.arange(0, 20, 0.05)
+    test(1)
+    test(2)
+    test(3)

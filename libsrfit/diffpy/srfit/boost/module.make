@@ -18,7 +18,7 @@ endif
 
 # SrFit headers
 ifndef SRFIT_HEADERS
-SRFIT_HEADERS=/home/chris/Programming/Pyre/dv/danse/diffraction/diffpy.srfit/trunk/libsrfit/
+SRFIT_HEADERS=/home/chris/Programming/Pyre/dv/danse/diffraction/diffpy.srfit/branches/cppequation/libsrfit/
 endif 
 
 # PYTHON_INCDIR

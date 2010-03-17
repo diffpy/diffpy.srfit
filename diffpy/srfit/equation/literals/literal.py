@@ -62,6 +62,14 @@ class Literal(object):
         # If not notequiv.any() falls through
         return
 
+    def flush(self, other):
+        """Invalidate my state and notify observers."""
+        if self._value is None:
+            return
+        self._value = None
+        self.notify()
+        return
+
 # version
 __id__ = "$Id$"
 

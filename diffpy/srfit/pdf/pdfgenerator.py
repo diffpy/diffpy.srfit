@@ -73,8 +73,6 @@ class PDFGenerator(ProfileGenerator):
     qbroad  --  See Managed Parameters.
     qdamp   --  See Managed Parameters.
 
-
-
     """
 
     def __init__(self, name = "pdf"):
@@ -221,9 +219,9 @@ class PDFGenerator(ProfileGenerator):
         """
         parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
 
+        getter = self._calc.__class__._getDoubleAttr
+        setter = self._calc.__class__._setDoubleAttr
         for pname in parnames:
-            getter = self._calc.__class__._getDoubleAttr
-            setter = self._calc.__class__._setDoubleAttr
             self.addParameter(
                 ParameterAdapter(pname, self._calc, getter, setter, pname)
                 )
@@ -249,13 +247,13 @@ class PDFGenerator(ProfileGenerator):
                     setter, pname)
                 )
 
-        #parnames = ['qbroad', 'qdamp']
-        #for pname in parnames:
-        #    getter = self._calc.__class__._getDoubleAttr
-        #    setter = self._calc.__class__._setDoubleAttr
-        #    self.addParameter(
-        #        ParameterAdapter(pname, self._calc, getter, setter)
-        #        )
+        parnames = ['qbroad', 'qdamp']
+        getter = self._calc.__class__._getDoubleAttr
+        setter = self._calc.__class__._setDoubleAttr
+        for pname in parnames:
+            self.addParameter(
+                ParameterAdapter(pname, self._calc, getter, setter, pname)
+                )
 
         return
 

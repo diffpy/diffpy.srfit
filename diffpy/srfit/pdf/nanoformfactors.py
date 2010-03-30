@@ -86,7 +86,7 @@ def spheroidalFF2(r, psize, axrat):
     pelpt = axrat
 
     if psize <= 0 or pelpt <= 0: 
-        numpy.zeros_like(r)
+        return numpy.zeros_like(r)
 
     # to simplify the equations
     v = pelpt

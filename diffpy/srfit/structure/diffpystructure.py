@@ -239,7 +239,7 @@ class StructureParSet(BaseStructure):
 
         cdict = {}
         for a in stru:
-            el = a.element
+            el = a.element.title()
             i = cdict.get(el, 0)
             aname = "%s%i"%(el,i)
             cdict[el] = i+1

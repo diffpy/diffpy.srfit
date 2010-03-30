@@ -14,7 +14,8 @@
 ########################################################################
 """Code to set space group constraints for a crystal structure."""
 
-__id__ = "$Id$"
+from __future__ import division
+
 
 
 import numpy
@@ -505,8 +506,10 @@ _constraintMap = {
 def _getFloat(formula):
     """Get a float from a formula string, or None if this is not possible."""
     try:
-        return float(formula)
-    except ValueError:
+        return eval(formula)
+    except NameError:
         return None
 
+# End of file
 
+__id__ = "$Id$"

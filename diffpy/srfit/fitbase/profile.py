@@ -239,9 +239,13 @@ class Profile(Observable):
         if self.yobs is not None:
             self.y = rebinArray(self.yobs, self.xobs, self.x)
         if self.dyobs is not None:
+            # work around for interpolation issue making some of these non-1
+            if (self.dyobs == 1).all():
+                self.dy = numpy.ones_like(self.x)
+            else:
             # FIXME - This does not follow error propogation rules and it
             # introduces (more) correlation between the data points.
-            self.dy = rebinArray(self.dyobs, self.xobs, self.x)
+                self.dy = rebinArray(self.dyobs, self.xobs, self.x)
 
         return
 

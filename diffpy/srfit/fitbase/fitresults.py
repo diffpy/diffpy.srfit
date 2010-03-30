@@ -278,7 +278,7 @@ class FitResults(object):
         # Check to see if the uncertainty values are reliable.
         certain = True
         for con in self.conresults.values():
-            if numpy.array_equal(con.dy, numpy.ones_like(con.dy)):
+            if (con.dy == 1).all():
                 certain = False
                 break
 

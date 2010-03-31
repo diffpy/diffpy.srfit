@@ -28,7 +28,7 @@ import numpy
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import struToParameterSet
-from diffpy.srreal.pdf_ext import PDFCalculator
+from diffpy.srreal.pdfcalculator import PDFCalculator
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
@@ -282,7 +282,10 @@ class PDFGenerator(ProfileGenerator):
             self.__prepare(r)
 
         self._calc.eval(self._phase.stru)
+        y  = self._calc.getPDF()
+        if numpy.isnan(y).any():
+            y = numpy.zeros_like(r)
+        return y
 
-        return self._calc.getPDF()
 
 # End class PDFGenerator

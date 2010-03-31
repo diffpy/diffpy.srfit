@@ -127,7 +127,7 @@ class TestPDFParser(unittest.TestCase):
         # Now create a reference PDF. Since the calculator is testing its
         # output, we just have to make sure we can calculate from the
         # PDFGenerator interface.
-        from diffpy.srreal.pdf_ext import PDFCalculator
+        from diffpy.srreal.pdfcalculator import PDFCalculator
         calc = PDFCalculator()
         calc._setDoubleAttr('rstep', r[1] - r[0])
         calc._setDoubleAttr('rmin', r[0])

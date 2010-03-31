@@ -67,7 +67,7 @@ class ScattererParSet(ParameterSet):
 
     Managed Parameters:
     x, y, z     --  Scatterer position in crystal coordinates (ParameterWraper)
-    occupancy   --  Occupancy of the scatterer on its crystal site
+    occ         --  Occupancy of the scatterer on its crystal site
                     (ParameterWraper)
     
     """
@@ -84,7 +84,7 @@ class ScattererParSet(ParameterSet):
         self.scat = scat
         self.parent = parent
 
-        # x, y, z, occupancy
+        # x, y, z, occ
         self.addParameter(ParameterAdapter("x", self.scat, attr = "X"))
         self.addParameter(ParameterAdapter("y", self.scat, attr = "Y"))
         self.addParameter(ParameterAdapter("z", self.scat, attr = "Z"))
@@ -115,7 +115,7 @@ class AtomParSet(ScattererParSet):
 
     Managed Parameters:
     x, y, z     --  Atom position in crystal coordinates (ParameterAdapter)
-    occupancy   --  Occupancy of the atom on its crystal location
+    occ         --  Occupancy of the atom on its crystal location
                     (ParameterAdapter)
     Biso        --  Isotropic scattering factor (ParameterAdapter).
     B11, B22, B33, B12, B21, B23, B32, B13, B31
@@ -174,7 +174,7 @@ class MoleculeParSet(ScattererParSet):
 
     Managed Parameters:
     x, y, z     --  Molecule position in crystal coordinates (ParameterAdapter)
-    occupancy   --  Occupancy of the molecule on its crystal location
+    occ         --  Occupancy of the molecule on its crystal location
                     (ParameterAdapter)
     q0, q1, q2, q3  --  Orientational quaternion (ParameterAdapter)
     
@@ -552,7 +552,7 @@ class MolAtomParSet(ScattererParSet):
 
     Managed Parameters:
     x, y, z     --  Atom position in crystal coordinates (ParameterAdapter)
-    occupancy   --  Occupancy of the atom on its crystal location
+    occ         --  Occupancy of the atom on its crystal location
                     (ParameterAdapter)
     Biso        --  Isotropic scattering factor (ParameterAdapter). This does
                     not exist for dummy atoms. See the 'isDummy' method.

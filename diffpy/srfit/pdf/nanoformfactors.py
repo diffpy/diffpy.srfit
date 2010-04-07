@@ -186,7 +186,7 @@ def sheetFF(r, sthick):
     From Kodama et al., Acta Cryst. A, 62, 444-453
 
     """
-    if sthick < 0: return numpy.zeros_like(r)
+    if sthick <= 0: return numpy.zeros_like(r)
 
     f = 0.5*sthick/r
     sel = (r <= sthick)

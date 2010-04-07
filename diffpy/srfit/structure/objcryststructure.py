@@ -1331,7 +1331,8 @@ class ObjCrystParSet(BaseStructure):
         sgname = self.getSpaceGroup()
         from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
         adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
-        self.sgpars = _constrainSpaceGroup(self, sgname, adpsymbols)
+        isosymbol = "Biso"
+        self.sgpars = _constrainSpaceGroup(self, sgname, adpsymbols, isosymbol)
 
         return
 

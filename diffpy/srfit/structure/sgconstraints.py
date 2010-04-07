@@ -342,7 +342,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
 # End class SpaceGroupParameters
 
-def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols):
+def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols, isosymbol =
+        None):
     """Constrain structure Parameters according to its space group.
 
     This constrains a StructureParSet that has internal space group symmetry.
@@ -357,6 +358,8 @@ def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols):
                 diffpy.Structure.SpaceGroups.GetSpaceGroup.
     adpsymbols  --  A list of the ADP names. The names must be given in the
                 same order as diffpy.Structure.SymmetryUtilities.stdUsymbols.
+    isosymbol   --  Symbol for isotropic ADP. If None (default), isotropic
+                ADPs will be constrainted via the anisotropic ADPs.
 
     The lattice constraints are applied as following.
     
@@ -402,14 +405,28 @@ def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols):
         system = "Triclinic"
     system = system.title()
 
+    # Create sgpars
+    sgpars = BaseSpaceGroupParameters()
+
     # Constrain the lattice
     f = _constraintMap[system]
     f(lattice)
 
+    # Grab free lattice parameters and add them to sgpars
+    for par in latpars:
+        if not par.const and not par.constrained:
+            # Create a ParameterProxy, prepend "sg_" to name. We use a
+            # ParameterProxy to allow other constraint schemes that don't have
+            # to go through sgpars.
+            name = "sg_" + par.name
+            newpar = ParameterProxy(name, par)
+            sgpars.addParameter(newpar)
+            sgpars.latpars.append(newpar)
+
     ## Constrain related positions
 
     # Now make a list of the positions and check for constraints
-    for scatterer in phase.getScatterers():
+    for idx, scatterer in enumerate(phase.getScatterers()):
 
         # Remove prior constraints, get the postion
         xyz = []
@@ -423,25 +440,28 @@ def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols):
         # scatterer has ADP parameters.
         Uij = numpy.zeros((3,3), dtype=float)
         hasadps = True
-        for idx, pname in enumerate(adpsymbols):
+        for k, pname in enumerate(adpsymbols):
             par = scatterer.get(pname)
             if par is None: 
                 hasadps = False
                 break
             scatterer.unconstrain(par)
             par.setConst(False)
-            i, j = _idxtoij[idx]
+            i, j = _idxtoij[k]
             Uij[i,j] = Uij[j,i] = par.getValue()
 
         # Get xyz and adp formulae for this scatterer
         def _fixorfree(parname, formula):
-            """Code used to fix or free a parameter."""
+            """Code used to fix or free a parameter.
+
+            Returns the parameter if it is free.
+            
+            """
+            par = scatterer.get(parname)
 
             # Check to see if this parameter is free
             if parname == formula:
-                return
-
-            par = scatterer.get(parname)
+                return par
 
             # Check to see if it is a constant
             fval = _getFloat(formula)
@@ -453,48 +473,38 @@ def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols):
             scatterer.constrain(par, formula)
             return
 
+        def _constrainPar(par):
+            """Constrain a parameter and add it to sgpars"""
+            name = "%s_%i"%(par.name, idx)
+            newpar = ParameterProxy(name, par)
+            sgpars.addParameter(newpar)
+            return newpar
+
         g = GeneratorSite(sg, xyz, Uij)
 
         # Extract the xyz constraint equation from the formula
         fpos = g.positionFormula(xyz, xyzsymbols=_xyzsymbols)
         for parname, formula in fpos.items():
-            _fixorfree(parname, formula)
+            par = _fixorfree(parname, formula)
+            if par is not None:
+                newpar = _constrainPar(par)
+                sgpars.xyzpars.append(newpar)
 
         # Extract the adp constraint equation from the formula
-        if hasadps:
+        # Check for isotropy
+        if isosymbol and g.Uisotropy:
+            # Constrain the isotropic parameter
+            par = scatterer.get(isosymbol)
+            newpar = _constrainPar(par)
+            sgpars.adppars.append(newpar)
+        elif hasadps:
             fadp = g.UFormula(xyz, Usymbols=adpsymbols)
             for stdparname, formula in fadp.items():
                 parname = adpmap[stdparname]
-                _fixorfree(parname, formula)
-
-    # Grab free parameters and add them to sgpars
-    sgpars = BaseSpaceGroupParameters()
-    for par in latpars:
-        if not par.const and not par.constrained:
-            # Create a ParameterProxy, prepend "sg_" to name.
-            name = "sg_" + par.name
-            newpar = ParameterProxy(name, par)
-            sgpars.addParameter(newpar)
-            sgpars.latpars.append(newpar)
-
-    for idx, scatterer in enumerate(phase.getScatterers()):
-        xyz = [scatterer.get(symb) for symb in _xyzsymbols]
-        for par in xyz:
-            if not par.const and not par.constrained:
-                # Create a ParameterProxy, append index to name
-                name = "%s_%i"%(par.name, idx)
-                newpar = ParameterProxy(name, par)
-                sgpars.addParameter(newpar)
-                sgpars.xyzpars.append(newpar)
-
-        adps = [scatterer.get(symb) for symb in adpsymbols]
-        for par in adps:
-            if par is None: continue
-            if not par.const and not par.constrained:
-                name = "%s_%i"%(par.name, idx)
-                newpar = ParameterProxy(name, par)
-                sgpars.addParameter(newpar)
-                sgpars.adppars.append(newpar)
+                par = _fixorfree(parname, formula)
+                if par is not None:
+                    newpar = _constrainPar(par)
+                    sgpars.adppars.append(newpar)
 
     return sgpars
 

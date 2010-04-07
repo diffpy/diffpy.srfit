@@ -219,11 +219,9 @@ class PDFGenerator(ProfileGenerator):
         """
         parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
 
-        getter = self._calc.__class__._getDoubleAttr
-        setter = self._calc.__class__._setDoubleAttr
         for pname in parnames:
             self.addParameter(
-                ParameterAdapter(pname, self._calc, getter, setter, pname)
+                ParameterAdapter(pname, self._calc, attr = pname)
                 )
         return
 
@@ -233,8 +231,7 @@ class PDFGenerator(ProfileGenerator):
         This wraps the parameters provided in a pdffit-aware diffpy.Structure
         object. The DiffpyStructureAdapter (customPQConfig) looks to the
         structure for the parameter values, so we must modify them at that
-        level, rather than at the PDFCalculator level. This is an inconsistency
-        that should probably be fixed.
+        level, rather than at the PDFCalculator level.
 
         """
         pdfparnames = ['delta1', 'delta2', 'scale']
@@ -248,11 +245,9 @@ class PDFGenerator(ProfileGenerator):
                 )
 
         parnames = ['qbroad', 'qdamp']
-        getter = self._calc.__class__._getDoubleAttr
-        setter = self._calc.__class__._setDoubleAttr
         for pname in parnames:
             self.addParameter(
-                ParameterAdapter(pname, self._calc, getter, setter, pname)
+                ParameterAdapter(pname, self._calc, attr = pname)
                 )
 
         return
@@ -282,7 +277,7 @@ class PDFGenerator(ProfileGenerator):
             self.__prepare(r)
 
         self._calc.eval(self._phase.stru)
-        y  = self._calc.getPDF()
+        y = self._calc.getPDF()
         if numpy.isnan(y).any():
             y = numpy.zeros_like(r)
         return y

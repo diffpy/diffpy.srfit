@@ -122,6 +122,10 @@ class RecipeContainer(Observable):
 
         return
 
+    def __iter__(self):
+        """Iterate over top-level parameters."""
+        return self._parameters.itervalues()
+
     def __getattr__(self, name):
         """Gives access to the contained objects as attributes."""
         arg = self.get(name)

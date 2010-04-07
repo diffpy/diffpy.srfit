@@ -120,6 +120,9 @@ class ParameterProxy(_parameter_interface):
     value = property( lambda self: self.par.getValue(),
             lambda self, val: self.par.setValue(val) )
 
+    def __str__(self):
+        return "%s(%s)"%(self.__class__.__name__, self.name)
+
 # End class ParameterProxy
 
 # Make sure that this is registered as an Argument class

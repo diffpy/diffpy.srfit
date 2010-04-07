@@ -1268,6 +1268,9 @@ class ObjCrystParSet(BaseStructure):
     stru        --  The adapted pyobjcryst.Crystal.
     scatterers  --  The list of aggregated ScattererParSets (either AtomParSet
                     or MoleculeParSet), provided for convenience.
+    sgpars      --  A BaseSpaceGroupParameters object containing free structure
+                    Parameters. See the diffpy.srfit.structure.sgconstraints
+                    module.
 
     Managed Parameters:
     a, b, c, alpha, beta, gamma --  Lattice parameters (ParameterAdapter)
@@ -1309,7 +1312,7 @@ class ObjCrystParSet(BaseStructure):
             if not name:
                 raise AttributeError("Each Scatterer must have a name")
             if name in snames:
-                raise AttributeError("MolAtom name '%s' is duplicated"%name)
+                raise AttributeError("Scatterer name '%s' is duplicated"%name)
 
             # Now create the proper object
             cname = s.GetClassName()
@@ -1327,7 +1330,8 @@ class ObjCrystParSet(BaseStructure):
         # Constrain parameters to the space group
         sgname = self.getSpaceGroup()
         from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
-        _constrainSpaceGroup(self, sgname)
+        adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
+        self.sgpars = _constrainSpaceGroup(self, sgname, adpsymbols)
 
         return
 

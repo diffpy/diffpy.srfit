@@ -24,7 +24,7 @@ from diffpy.Structure import SpaceGroups
 from diffpy.Structure.SymmetryUtilities import GeneratorSite, stdUsymbols
 from diffpy.Structure.SymmetryUtilities import SymmetryConstraints
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
-from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 
 __all__ = [ "constrainAsSpaceGroup", "SpaceGroupParameters" ]
 
@@ -97,19 +97,68 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
 
     return sgp
 
-class SpaceGroupParameters(RecipeContainer):
-    """This is a class for holding space group Parameters.
+# End constrainAsSpaceGroup
 
-    This class is used by the constrainAsSpaceGroup method to store the
-    Parameters needed to contain the space group. It has the same Parameter
+class BaseSpaceGroupParameters(RecipeContainer):
+    """Base class for holding space group Parameters.
+
+    This class is used to store the variable Parameters of a structure, leaving
+    out those that constrained or fixed due to space group.  This class has the
+    same Parameter attribute access of a ParameterSet. The purpose of this
+    class is to make it easy to access the free variables of a structure for
+    scripting purposes.
+
+    Attributes
+    name    --  "sgpars"
+    xyzpars --  List of free xyz Parameters.
+    latpars --  List of free lattice Parameters.
+    adppars --  List of free ADPs. This does not include isotropic ADPs.
+
+    """
+
+    def __init__(self):
+        """Create the BaseSpaceGroupParameters object.
+
+        This initializes the attributes.
+
+        """
+        RecipeContainer.__init__(self, "sgpars")
+        self.xyzpars = []
+        self.latpars = []
+        self.adppars = []
+        return
+
+    def addParameter(self, par, check = True):
+        """Store a Parameter.
+
+        par     --  The Parameter to be stored.
+        check   --  If True (default), a ValueError is raised a Parameter of
+                    the specified name has already been inserted.
+
+        Raises ValueError if the Parameter has no name.
+
+        """
+        # Store the Parameter
+        RecipeContainer._addObject(self, par, self._parameters, check)
+        return
+
+# End class BaseSpaceGroupParameters
+
+class SpaceGroupParameters(BaseSpaceGroupParameters):
+    """Class for holding and creating space group Parameters.
+
+    This class is used to store the variable Parameters of a structure, leaving
+    out those that constrained or fixed due to space group.  This does the work
+    of the constrainAsSpaceGroup method.  This class has the same Parameter
     attribute access of a ParameterSet.
 
     Attributes
+    name    --  "sgpars"
     phase   --  The constrained BaseStructure object.
     sg      --  The diffpy.Structure.SpaceGroups.SpaceGroup object
                 corresponding to the space group.
     sgoffset    --  Optional offset for the space group origin.
-    scatterers  --  The constrained scatterer ParameterSets to constrain.
+    scatterers  --  The constrained scatterer ParameterSets.
     constrainlat    --  Flag indicating whether the lattice is constrained.
     constrainadps   --  Flag indicating whether the ADPs are constrained.
     adpsymbols  --  A list of the ADP names.
@@ -119,14 +168,13 @@ class SpaceGroupParameters(RecipeContainer):
 
     """
 
-    _idxtoij = [(0,0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2)]
 
     def __init__(self, phase, sg, scatterers, sgoffset, constrainlat,
             constrainadps, adpsymbols):
         """Create the SpaceGroupParameters object.
 
         Arguments:
-        phase   --  A BaseStructure object.
+        phase   --  A BaseStructure object to be constrained.
         sg      --  The space group number or symbol (compatible with
                     diffpy.Structure.SpaceGroups.GetSpaceGroup.
         sgoffset    --  Optional offset for sg origin.
@@ -140,7 +188,7 @@ class SpaceGroupParameters(RecipeContainer):
                     diffpy.Structure.SymmetryUtilities.stdUsymbols.
 
         """
-        RecipeContainer.__init__(self, "sgpars")
+        BaseSpaceGroupParameters.__init__(self)
 
         self.phase = phase
         self.sg = sg
@@ -149,10 +197,6 @@ class SpaceGroupParameters(RecipeContainer):
         self.constrainlat = constrainlat
         self.constrainadps = constrainadps
         self.adpsymbols = adpsymbols
-
-        self.xyzpars = []
-        self.latpars = []
-        self.adppars = []
 
         self.__makeConstraints()
         return
@@ -194,7 +238,7 @@ class SpaceGroupParameters(RecipeContainer):
             for par in latpars:
                 if not par.const and not par.constrained:
                     newpar = Parameter("sg_" + par.name, par.getValue())
-                    self._addObject(newpar, self._parameters)
+                    self.addParameter(newpar)
                     lattice.constrain(par, newpar)
                     self.latpars.append(newpar)
 
@@ -221,7 +265,7 @@ class SpaceGroupParameters(RecipeContainer):
                     par = scatterer.get(pname)
                     scatterer.unconstrain(par)
                     par.setConst(False)
-                    i, j = self.__class__._idxtoij[idx]
+                    i, j = _idxtoij[idx]
                     Uij[i,j] = Uij[j,i] = par.getValue()
 
                 Uijs.append(Uij)
@@ -232,9 +276,10 @@ class SpaceGroupParameters(RecipeContainer):
         self.xyzpars = []
         xyznames = []
         for name, val in g.pospars:
+            name = name[0] + "_" + name[1:]
             xyznames.append(name)
             par = Parameter(name, val)
-            self._addObject(par, self._parameters)
+            self.addParameter(par)
             self.xyzpars.append(par)
 
         formulas = g.positionFormulas(xyznames)
@@ -269,7 +314,7 @@ class SpaceGroupParameters(RecipeContainer):
             name = name[:3] + "_" + name[3:]
             adpnames.append(name)
             par = Parameter(name, val)
-            self._addObject(par, self._parameters)
+            self.addParameter(par)
             self.adppars.append(par)
 
         formulas = g.UFormulas(adpnames)
@@ -295,21 +340,23 @@ class SpaceGroupParameters(RecipeContainer):
 
         return
 
-# End SpaceGroupParameters
+# End class SpaceGroupParameters
 
-def _constrainSpaceGroup(phase, sg):
+def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols):
     """Constrain structure Parameters according to its space group.
 
-    This is meant to constrain a StructureParSet that has internal space group
-    symmetry.  This forces the lattice parameters to conform to the space group
-    symmetry.  The protocol this follows is listed under Crystal Systems below.
-    It also forces related symmetry positions to be constrained or held
-    constant.
+    This constrains a StructureParSet that has internal space group symmetry.
+    This forces the lattice parameters to conform to the space group symmetry
+    according to the protocol listed under Crystal Systems below.  It also
+    forces related symmetry positions and atomic displacement parameters to be
+    constrained or held constant.
 
     Arguments:
-    phase    --  A BaseStructure object.
+    phase   --  A BaseStructure object.
     sg      --  The space group number or symbol (compatible with
                 diffpy.Structure.SpaceGroups.GetSpaceGroup.
+    adpsymbols  --  A list of the ADP names. The names must be given in the
+                same order as diffpy.Structure.SymmetryUtilities.stdUsymbols.
 
     The lattice constraints are applied as following.
     
@@ -330,18 +377,23 @@ def _constrainSpaceGroup(phase, sg):
     Cubic           --  b and c are constrained to a, and alpha, beta and
                         gamma are fixed to 90.
 
+    Returns a BaseSpaceGroupParameters object containing the variable
+    parameters of the phase.  
+    
     Note that lattice constraints are applied at the level of the lattice
     ParameterSet. The scatterer constraints are applied at the level of each
     scatterer ParameterSet.
 
     """
     sg = SpaceGroups.GetSpaceGroup(sg)
+    adpmap = dict(zip(stdUsymbols, adpsymbols))
 
     ## Constrain the lattice
     # First clear any constraints or constant variables in the lattice
     lattice = phase.getLattice()
-    for par in [lattice.a, lattice.b, lattice.c, lattice.alpha, lattice.beta,
-            lattice.gamma]:
+    latpars = [lattice.a, lattice.b, lattice.c, lattice.alpha, lattice.beta,
+            lattice.gamma]
+    for par in latpars:
         lattice.unconstrain(par)
         par.setConst(False)
 
@@ -350,41 +402,44 @@ def _constrainSpaceGroup(phase, sg):
         system = "Triclinic"
     system = system.title()
 
+    # Constrain the lattice
     f = _constraintMap[system]
     f(lattice)
 
     ## Constrain related positions
 
-    # Remove any prior constraints or constants. We do this explicitly in case
-    # the scatterer ParameterSet contains more than just the scatterer
-    # information.
-    for scatterer in phase.getScatterers():
-
-        for par in [scatterer.x, scatterer.y, scatterer.z]:
-            scatterer.unconstrain(par)
-            par.setConst(False)
-
-    # We can go now if we're in P1 symmetry
-    if sg == SpaceGroups.sg1:
-        return
-
     # Now make a list of the positions and check for constraints
     for scatterer in phase.getScatterers():
 
-        # Get the postion
-        xyz = [scatterer.x.getValue(), scatterer.y.getValue(),
-                scatterer.z.getValue()]
+        # Remove prior constraints, get the postion
+        xyz = []
+        for pname in _xyzsymbols:
+            par = scatterer.get(pname)
+            scatterer.unconstrain(par)
+            par.setConst(False)
+            xyz.append(par.getValue())
 
-        # Get a formula for this scatterer
-        g = GeneratorSite(sg, xyz)
-        f = g.positionFormula(xyz, xyzsymbols=("x","y","z"))
+        # Remove prior constraints, get the ADP. We must check whether the
+        # scatterer has ADP parameters.
+        Uij = numpy.zeros((3,3), dtype=float)
+        hasadps = True
+        for idx, pname in enumerate(adpsymbols):
+            par = scatterer.get(pname)
+            if par is None: 
+                hasadps = False
+                break
+            scatterer.unconstrain(par)
+            par.setConst(False)
+            i, j = _idxtoij[idx]
+            Uij[i,j] = Uij[j,i] = par.getValue()
 
-        # Extract the constraint equation from the formula
-        for parname, formula in f.items():
+        # Get xyz and adp formulae for this scatterer
+        def _fixorfree(parname, formula):
+            """Code used to fix or free a parameter."""
 
             # Check to see if this parameter is free
             if parname == formula:
-                continue
+                return
 
             par = scatterer.get(parname)
 
@@ -392,12 +447,56 @@ def _constrainSpaceGroup(phase, sg):
             fval = _getFloat(formula)
             if fval is not None:
                 par.setConst()
-                continue
+                return
 
             # If we got here, then we have a constraint equation
             scatterer.constrain(par, formula)
+            return
 
-    return
+        g = GeneratorSite(sg, xyz, Uij)
+
+        # Extract the xyz constraint equation from the formula
+        fpos = g.positionFormula(xyz, xyzsymbols=_xyzsymbols)
+        for parname, formula in fpos.items():
+            _fixorfree(parname, formula)
+
+        # Extract the adp constraint equation from the formula
+        if hasadps:
+            fadp = g.UFormula(xyz, Usymbols=adpsymbols)
+            for stdparname, formula in fadp.items():
+                parname = adpmap[stdparname]
+                _fixorfree(parname, formula)
+
+    # Grab free parameters and add them to sgpars
+    sgpars = BaseSpaceGroupParameters()
+    for par in latpars:
+        if not par.const and not par.constrained:
+            # Create a ParameterProxy, prepend "sg_" to name.
+            name = "sg_" + par.name
+            newpar = ParameterProxy(name, par)
+            sgpars.addParameter(newpar)
+            sgpars.latpars.append(newpar)
+
+    for idx, scatterer in enumerate(phase.getScatterers()):
+        xyz = [scatterer.get(symb) for symb in _xyzsymbols]
+        for par in xyz:
+            if not par.const and not par.constrained:
+                # Create a ParameterProxy, append index to name
+                name = "%s_%i"%(par.name, idx)
+                newpar = ParameterProxy(name, par)
+                sgpars.addParameter(newpar)
+                sgpars.xyzpars.append(newpar)
+
+        adps = [scatterer.get(symb) for symb in adpsymbols]
+        for par in adps:
+            if par is None: continue
+            if not par.const and not par.constrained:
+                name = "%s_%i"%(par.name, idx)
+                newpar = ParameterProxy(name, par)
+                sgpars.addParameter(newpar)
+                sgpars.adppars.append(newpar)
+
+    return sgpars
 
 def _constrainTriclinic(lattice):
     """Make constraints for Triclinic systems.
@@ -502,6 +601,9 @@ _constraintMap = {
   "Hexagonal"  : _constrainHexagonal,
   "Cubic"      : _constrainCubic
 }
+
+_idxtoij = [(0, 0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2)]
+_xyzsymbols = ('x', 'y', 'z')
 
 def _getFloat(formula):
     """Get a float from a formula string, or None if this is not possible."""

@@ -107,24 +107,15 @@ def makeRecipe(ciffile_ni, ciffile_si, xdata_ni, ndata_ni, xdata_si,
     recipe.addContribution(xcontribution_sini)
 
     # Now we vary and constrain Parameters as before.
-    # First the commmon parameters
-    lattice_ni = phase_ni.getLattice()
-    a_ni = recipe.newVar("a_ni")
-    recipe.constrain(lattice_ni.a, a_ni)
-    Biso_ni = recipe.newVar("Biso_ni", 0.5)
-    for scatterer in phase_ni.getScatterers():
-        recipe.constrain(scatterer.Biso, Biso_ni)
+    for par in phase_ni.sgpars:
+        recipe.addVar(par, name = par.name + "_ni")
     delta2_ni = recipe.newVar("delta2_ni", 2.5)
     recipe.constrain(xgenerator_ni.delta2, delta2_ni)
     recipe.constrain(ngenerator_ni.delta2, delta2_ni)
     recipe.constrain(xgenerator_sini_ni.delta2, delta2_ni)
 
-    lattice_si = phase_si.getLattice()
-    a_si = recipe.newVar("a_si")
-    recipe.constrain(lattice_si.a, a_si)
-    Biso_si = recipe.newVar("Biso_si", 0.5)
-    for scatterer in phase_si.getScatterers():
-        recipe.constrain(scatterer.Biso, Biso_si)
+    for par in phase_si.sgpars:
+        recipe.addVar(par, name = par.name + "_si")
     delta2_si = recipe.newVar("delta2_si", 2.5)
     recipe.constrain(xgenerator_si.delta2, delta2_si)
     recipe.constrain(xgenerator_sini_si.delta2, delta2_si)

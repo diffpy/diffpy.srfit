@@ -96,11 +96,8 @@ def makeRecipe(ciffile, grdata, iqdata):
     recipe.addContribution(pdfcontribution)
 
     phase = pdfgenerator.phase
-    lattice = phase.getLattice()
-    recipe.addVar(lattice.a)
-    Biso = recipe.newVar("Biso", 0.5)
-    for scatterer in phase.getScatterers():
-        recipe.constrain(scatterer.Biso, Biso)
+    for par in phase.sgpars:
+        recipe.addVar(par)
 
     recipe.addVar(pdfgenerator.scale, 1)
     recipe.addVar(pdfgenerator.delta2, 0)

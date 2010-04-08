@@ -128,11 +128,8 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # We only need to constrain phase properties once since there is a single
     # ObjCrystParSet for the Crystal.
     phase = xgenerator.phase
-    lattice = phase.getLattice()
-    recipe.addVar(lattice.a)
-    Biso = recipe.newVar("Biso", 0.5)
-    for scatterer in phase.getScatterers():
-        recipe.constrain(scatterer.Biso, Biso)
+    for par in phase.sgpars:
+        recipe.addVar(par)
 
     # Give the recipe away so it can be used!
     return recipe

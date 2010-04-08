@@ -106,19 +106,13 @@ def makeRecipe(niciffile, siciffile, datname):
     #
     # First the nickel parameters
     phase_ni = generator_ni.phase
-    lattice_ni = phase_ni.getLattice()
-    recipe.addVar(lattice_ni.a, name = "a_ni")
-    Biso_ni = recipe.newVar("Biso_ni", 0.5)
-    for scatterer in phase_ni.getScatterers():
-        recipe.constrain(scatterer.Biso, Biso_ni)
+    for par in phase_ni.sgpars:
+        recipe.addVar(par, name = par.name + "_ni")
     recipe.addVar(generator_ni.delta2, name = "delta2_ni")
     # Next the silicon parameters
     phase_si = generator_si.phase
-    lattice_si = phase_si.getLattice()
-    recipe.addVar(lattice_si.a, name = "a_si")
-    Biso_si = recipe.newVar("Biso_si", 0.5)
-    for scatterer in phase_si.getScatterers():
-        recipe.constrain(scatterer.Biso, Biso_si)
+    for par in phase_si.sgpars:
+        recipe.addVar(par, name = par.name + "_si")
     recipe.addVar(generator_si.delta2, name = "delta2_si")
 
     # We have prior information from the earlier examples so we'll use it here
@@ -133,14 +127,14 @@ def makeRecipe(niciffile, siciffile, datname):
     # Now we do the same with the delta2 and Biso parameters (remember that
     # Biso = 8*pi**2*Uiso)
     recipe.restrain("delta2_ni", lb = 2.22, ub = 2.22, scaled = True)
-    recipe.restrain("Biso_ni", lb = 0.454, ub = 0.454, scaled = True)
+    recipe.restrain("Biso_0_ni", lb = 0.454, ub = 0.454, scaled = True)
     #
     # We can do the same with the silicon values. We haven't done a thorough
     # job of measuring the uncertainties in the results, so we'll scale these
     # as well.
     recipe.restrain("a_si", lb = 5.430, ub = 5.430, scaled = True)
     recipe.restrain("delta2_si", lb = 3.54, ub = 3.54, scaled = True)
-    recipe.restrain("Biso_si", lb = 0.645, ub = 0.645, scaled = True)
+    recipe.restrain("Biso_0_si", lb = 0.645, ub = 0.645, scaled = True)
 
     # Give the recipe away so it can be used!
     return recipe

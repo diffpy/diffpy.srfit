@@ -103,11 +103,8 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     # PDF
     phase = pdfgenerator.phase
-    lattice = phase.getLattice()
-    recipe.addVar(lattice.a)
-    Biso = recipe.newVar("Biso", 0.5)
-    for scatterer in phase.getScatterers():
-        recipe.constrain(scatterer.Biso, Biso)
+    for par in phase.sgpars:
+        recipe.addVar(par)
 
     recipe.addVar(pdfgenerator.scale, 1)
     recipe.addVar(pdfgenerator.delta2, 0)
@@ -135,7 +132,7 @@ def fitRecipe(recipe):
     recipe.setWeight(recipe.sas, 0)
     recipe.fixAll()
     recipe.freeVar("a")
-    recipe.freeVar("Biso")
+    recipe.freeVar("Biso_0")
     recipe.freeVar("scale")
     recipe.freeVar("delta2")
     scipyOptimize(recipe)

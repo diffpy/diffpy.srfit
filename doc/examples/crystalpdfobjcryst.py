@@ -20,9 +20,6 @@ by the ObjCrystParSet structure adapter.
 
 """
 
-import os
-import numpy
-
 from pyobjcryst.crystal import CreateCrystalFromCIF
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
@@ -82,19 +79,15 @@ def makeRecipe(ciffile, datname):
     # The difference in this example is that the ObjCrystParSet is aware of
     # space groups, and the StructureParSet is not. Constraints are created
     # internally when the ObjCrystParSet is created. (The CreateCrystalFromCIF
-    # read the space group information from the cif file.) What this means is
-    # that we cannot blindly constrain free Parameters from the ObjCrystParSet,
-    # but must know what the space group is doing. If the ObjCrystParSet had
-    # P1 symmetry, we could use the 'constrainAsSpaceGroup' method as before.
+    # read the space group information from the cif file.) These constriants
+    # get enforced within the ObjCrystParSet. Free Parameters are stored within
+    # the 'sgpars' member of the ObjCrystParSet, which is the same as the
+    # object returned from 'constrainAsSpaceGroup'.
     #
-    # As before, we have one free lattice parameter ('a').
-    lattice = phase.getLattice()
-    recipe.addVar(lattice.a)
-    # And there is a free isotropic ADP. ObjCryst uses B-factors as opposed to
-    # U-factors.
-    Biso = recipe.newVar("Biso", 0.5)
-    for scatterer in phase.getScatterers():
-        recipe.constrain(scatterer.Biso, Biso)
+    # As before, we have one free lattice parameter ('a'). We can simplify
+    # things by iterating through all the sgpars.
+    for par in phase.sgpars:
+        recipe.addVar(par)
 
     # We now select non-structural parameters to refine.
     # This controls the scaling of the PDF.

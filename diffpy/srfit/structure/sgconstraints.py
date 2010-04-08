@@ -235,12 +235,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             f = _constraintMap[system]
             f(lattice)
 
-            # Now get the unconstrained, non-constant lattice pars and create
-            # Parameters for them here. We will make proxies for these here.
+            # Now get the unconstrained, non-constant lattice pars and add
+            # them.
             self.latpars = []
             for par in latpars:
                 if not par.const and not par.constrained:
-                    newpar = ParameterProxy("sg_" + par.name, par)
+                    # We don't have to make a proxy, but we do so for
+                    # consistency.
+                    newpar = ParameterProxy(par.name, par)
                     self.addParameter(newpar)
                     self.latpars.append(newpar)
 
@@ -421,11 +423,8 @@ def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols, isosymbol =
     # Grab free lattice parameters and add them to sgpars
     for par in latpars:
         if not par.const and not par.constrained:
-            # Create a ParameterProxy, prepend "sg_" to name. We use a
-            # ParameterProxy to allow other constraint schemes that don't have
-            # to go through sgpars.
-            name = "sg_" + par.name
-            newpar = ParameterProxy(name, par)
+            # We don't have to make a proxy, but we do so for consistency.
+            newpar = ParameterProxy(par.name, par)
             sgpars.addParameter(newpar)
             sgpars.latpars.append(newpar)
 

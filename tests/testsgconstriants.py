@@ -130,7 +130,7 @@ class TestSGConstraints(unittest.TestCase):
                 constrainadps = True)
 
         # Make sure that the new parameters were created
-        for par in sgpars.iterPars():
+        for par in sgpars:
             self.assertNotEquals(None, par)
             self.assertNotEquals(None, par.getValue() )
 
@@ -147,23 +147,33 @@ class TestSGConstraints(unittest.TestCase):
             self.assertFalse(scatterer.U23.const)
             self.assertEquals(0, len(scatterer._constraints))
 
-        # Test the constrained atoms. We only test the existence of constraints
-        # rather than the constraints themselves. These are tested in the
-        # diffpy.Structure package.
-        for scatterer in parset.getScatterers()[::2]:
+        proxied = [p.par for p in sgpars]
 
-            self.assertTrue(scatterer.x.const or scatterer.y.const or
-                    scatterer.z.const or scatterer.x.constrained or
-                    scatterer.y.constrained or scatterer.z.constrained)
+        def _consttest(par):
+            return par.const
+        def _constrainedtest(par):
+            return par.constrained
+        def _proxytest(par):
+            return par in proxied
+        def _alltests(par):
+            return _consttest(par) or _constrainedtest(par) or _proxytest(par)
 
-            self.assertTrue(scatterer.U11.const or scatterer.U22.const or
-                    scatterer.U33.const or scatterer.U12.const or
-                    scatterer.U13.const or scatterer.U23.const or
-                    scatterer.U11.constrained or scatterer.U22.constrained or
-                    scatterer.U33.constrained or scatterer.U12.constrained or
-                    scatterer.U13.constrained or scatterer.U23.constrained)
+        for idx, scatterer in enumerate(parset.getScatterers()[::2]):
+            # Under this scheme, atom 6 is free to vary
+            test = False
+            for par in [scatterer.x, scatterer.y, scatterer.z]:
+                test |= _alltests(par)
+            self.assertTrue(test)
+
+            test = False
+            for par in [scatterer.U11, scatterer.U22, scatterer.U33,
+                    scatterer.U12, scatterer.U13, scatterer.U23]:
+                test |= _alltests(par)
+
+            self.assertTrue(test)
 
         return
+
 lamno3stru =\
 """\
 title  Cell structure file of LaMnO3.0

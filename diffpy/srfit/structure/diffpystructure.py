@@ -240,6 +240,9 @@ class StructureParSet(BaseStructure):
         cdict = {}
         for a in stru:
             el = a.element.title()
+            # Try to sanitize the name.
+            el = el.replace("+","p")
+            el = el.replace("-","m")
             i = cdict.get(el, 0)
             aname = "%s%i"%(el,i)
             cdict[el] = i+1

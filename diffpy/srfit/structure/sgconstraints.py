@@ -508,7 +508,7 @@ def _constrainMonoclinic(lattice):
     beta = lattice.beta.getValue()
     gamma = lattice.gamma.getValue()
 
-    if 90 != beta and beta == gamma:
+    if 90 != beta and 90 == gamma:
         lattice.gamma.setConst(True, 90)
     else:
         lattice.beta.setConst(True, 90)

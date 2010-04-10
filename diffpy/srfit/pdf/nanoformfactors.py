@@ -289,7 +289,6 @@ class SASFormFactor(Calculator):
     def __call__(self, r):
         """Calculate the form factor from the transform of the BaseModel."""
 
-
         # Determine q-values.
         # We want very fine r-spacing so we can properly normalize f(r). This
         # equates to having a large qmax so that the Fourier transform is
@@ -300,8 +299,11 @@ class SASFormFactor(Calculator):
         # The initial dr is somewhat arbitrary, but using dr = 0.01 allows for
         # the f(r) calculated from a particle of diameter 50, over r =
         # arange(1, 60, 0.1) to agree with the sphericalFF with Rw < 1e-4%.
-        rmax = r[-1]
+        #
+        # We also have to make a q-spacing small enough to compute out to at
+        # least the size of the signal. 
         dr = min(0.01, r[1] - r[0])
+        rmax = 2 * r[-1]
         dq = pi / rmax
         qmax = pi / dr
         numpoints = int(2**(ceil(log2(qmax/dq))))

@@ -540,7 +540,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Extra arguments are assumed to be tags. If present, only variables with
         the given tag will be fixed.
 
+        Raises ValueError when passed tags do not rever to any variables.
+
         """
+        for tag in tags:
+            if tag not in self._tagdict:
+                raise ValueError("Tag '%s' not found" % tag)
 
         tagset = self.__getTagSet(tags)
 
@@ -557,7 +562,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Extra arguments are assumed to be tags. If present, only variables with
         the given tag will be freed.
 
+        Raises ValueError when passed tags do not rever to any variables.
+
         """
+        for tag in tags:
+            if tag not in self._tagdict:
+                raise ValueError("Tag '%s' not found" % tag)
+
         tagset = self.__getTagSet(tags)
 
         if tagset:

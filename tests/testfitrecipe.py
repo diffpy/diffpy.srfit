@@ -33,6 +33,25 @@ class TestFitRecipe(unittest.TestCase):
         self.recipe.addContribution(self.fitcontribution)
         return
 
+    def testTags(self):
+        recipe = self.recipe
+        con = self.fitcontribution
+
+        recipe.addVar(con.A, 2, tag = "tagA")
+        recipe.addVar(con.k, 1, tag = "tagk")
+        recipe.addVar(con.c, 0)
+        recipe.newVar("B", 0)
+
+        self.assertFalse(recipe.A in recipe._fixed)
+        recipe.fixAll("tagA")
+        self.assertTrue(recipe.A in recipe._fixed)
+        recipe.freeAll("tagA")
+        self.assertFalse(recipe.A in recipe._fixed)
+
+        self.assertRaises(ValueError, recipe.freeAll, "junk")
+        self.assertRaises(ValueError, recipe.fixAll, "junk")
+        return
+
     def testVars(self):
         """Test to see if variables are added and removed properly."""
         recipe = self.recipe

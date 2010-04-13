@@ -171,8 +171,9 @@ class LatticeParSet(ParameterSet):
     this class for base attributes.
 
     Attributes
-    lattice --  The diffpy.Structure.Lattice this is adapting
-    name    --  Always "lattice"
+    lattice     --  The diffpy.Structure.Lattice this is adapting
+    name        --  Always "lattice"
+    angunits    --  "deg", the units of angle
 
     Managed Parameters:
     a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterAdapter).
@@ -186,6 +187,7 @@ class LatticeParSet(ParameterSet):
 
         """
         ParameterSet.__init__(self, "lattice")
+        self.angunits = "deg"
         self.lattice = lattice
         l = lattice
         self.addParameter(ParameterAdapter("a", l, _latgetter("a"),

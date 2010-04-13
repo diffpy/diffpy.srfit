@@ -26,6 +26,9 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 
 __all__ = ["constrainAsSpaceGroup"]
 
+deg2rad = numpy.pi / 180
+rad2deg = 1.0 / deg2rad
+
 def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None, 
         sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
         adpsymbols = stdUsymbols, isosymbol = "Uiso"):
@@ -350,7 +353,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
 # End class SpaceGroupParameters
 
-def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols, isosymbol =
+def _constrainSpaceGroup(phase, sg, sgoffset = [0, 0, 0], adpsymbols = stdUsymbols, isosymbol =
         "Uiso"):
     """Constrain structure Parameters according to its space group.
 
@@ -462,7 +465,7 @@ def _constrainSpaceGroup(phase, sg, adpsymbols = stdUsymbols, isosymbol =
                 par.setConst(False)
 
         # Get xyz and adp formulae for this scatterer
-        g = GeneratorSite(sg, xyz, Uij)
+        g = GeneratorSite(sg, xyz, Uij, sgoffset = sgoffset)
 
         # Extract the xyz constraint equation from the formula
         fpos = g.positionFormula(xyz, xyzsymbols=_xyzsymbols)
@@ -504,14 +507,17 @@ def _constrainMonoclinic(lattice):
     which case alpha and gamma are constrained to 90.
 
     """
-    lattice.alpha.setConst(True, 90.0)
+    afactor = 1
+    if lattice.angunits == "rad": afactor = deg2rad
+    ang90 = 90.0 * afactor
+    lattice.alpha.setConst(True, ang90)
     beta = lattice.beta.getValue()
     gamma = lattice.gamma.getValue()
 
-    if 90 != beta and 90 == gamma:
-        lattice.gamma.setConst(True, 90)
+    if ang90 != beta and ang90 == gamma:
+        lattice.gamma.setConst(True, ang90)
     else:
-        lattice.beta.setConst(True, 90)
+        lattice.beta.setConst(True, ang90)
     return
 
 def _constrainOrthorhombic(lattice):
@@ -520,9 +526,12 @@ def _constrainOrthorhombic(lattice):
     alpha, beta and gamma are constrained to 90
 
     """
-    lattice.alpha.setConst(True, 90.0)
-    lattice.beta.setConst(True, 90.0)
-    lattice.gamma.setConst(True, 90.0)
+    afactor = 1
+    if lattice.angunits == "rad": afactor = deg2rad
+    ang90 = 90.0 * afactor
+    lattice.alpha.setConst(True, ang90)
+    lattice.beta.setConst(True, ang90)
+    lattice.gamma.setConst(True, ang90)
     return
 
 def _constrainTetragonal(lattice):
@@ -531,9 +540,12 @@ def _constrainTetragonal(lattice):
     b is constrained to a and alpha, beta and gamma are constrained to 90.
 
     """
-    lattice.alpha.setConst(True, 90.0)
-    lattice.beta.setConst(True, 90.0)
-    lattice.gamma.setConst(True, 90.0)
+    afactor = 1
+    if lattice.angunits == "rad": afactor = deg2rad
+    ang90 = 90.0 * afactor
+    lattice.alpha.setConst(True, ang90)
+    lattice.beta.setConst(True, ang90)
+    lattice.gamma.setConst(True, ang90)
     lattice.constrain(lattice.b, lattice.a)
     return
 
@@ -545,11 +557,15 @@ def _constrainTrigonal(lattice):
     are constrained to a, beta and gamma are constrained to alpha.
 
     """
-    if lattice.gamma.getValue() == 120:
+    afactor = 1
+    if lattice.angunits == "rad": afactor = deg2rad
+    ang90 = 90.0 * afactor
+    ang120 = 120.0 * afactor
+    if lattice.gamma.getValue() == ang120:
         lattice.constrain(lattice.b, lattice.a)
-        lattice.alpha.setConst(True, 90.0)
-        lattice.beta.setConst(True, 90.0)
-        lattice.gamma.setConst(True, 120)
+        lattice.alpha.setConst(True, ang90)
+        lattice.beta.setConst(True, ang90)
+        lattice.gamma.setConst(True, ang120)
     else:
         lattice.constrain(lattice.b, lattice.a)
         lattice.constrain(lattice.c, lattice.a)
@@ -564,10 +580,14 @@ def _constrainHexagonal(lattice):
     constrained to 120.
 
     """
+    afactor = 1
+    if lattice.angunits == "rad": afactor = deg2rad
+    ang90 = 90.0 * afactor
+    ang120 = 120.0 * afactor
     lattice.constrain(lattice.b, lattice.a)
-    lattice.alpha.setConst(True, 90.0)
-    lattice.beta.setConst(True, 90.0)
-    lattice.gamma.setConst(True, 120.0)
+    lattice.alpha.setConst(True, ang90)
+    lattice.beta.setConst(True, ang90)
+    lattice.gamma.setConst(True, ang120)
     return
 
 def _constrainCubic(lattice):
@@ -576,11 +596,14 @@ def _constrainCubic(lattice):
     b and c are constrained to a, alpha, beta and gamma are constrained to 90.
 
     """
+    afactor = 1
+    if lattice.angunits == "rad": afactor = deg2rad
+    ang90 = 90.0 * afactor
     lattice.constrain(lattice.b, lattice.a)
     lattice.constrain(lattice.c, lattice.a)
-    lattice.alpha.setConst(True, 90.0)
-    lattice.beta.setConst(True, 90.0)
-    lattice.gamma.setConst(True, 90.0)
+    lattice.alpha.setConst(True, ang90)
+    lattice.beta.setConst(True, ang90)
+    lattice.gamma.setConst(True, ang90)
     return
 
 # This is used to map the correct crystal system to the proper constraint

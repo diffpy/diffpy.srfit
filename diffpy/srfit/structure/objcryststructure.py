@@ -153,6 +153,10 @@ class AtomParSet(ScattererParSet):
         self.addParameter(B31)
         self.addParameter(B23)
         self.addParameter(B32)
+
+        # Give a value to Biso if it doesn't have one, and this is isotropic
+        if sp.IsIsotropic() and self.Biso.value == 0:
+            self.Biso.value = 0.5
         return
 
     def _getElem(self):
@@ -1271,6 +1275,7 @@ class ObjCrystParSet(BaseStructure):
     sgpars      --  A BaseSpaceGroupParameters object containing free structure
                     Parameters. See the diffpy.srfit.structure.sgconstraints
                     module.
+    angunits    --  "rad", the units of angle
 
     Managed Parameters:
     a, b, c, alpha, beta, gamma --  Lattice parameters (ParameterAdapter)
@@ -1290,6 +1295,7 @@ class ObjCrystParSet(BaseStructure):
 
         """
         ParameterSet.__init__(self, name)
+        self.angunits = "rad"
         self.stru = cryst
 
         self.addParameter(ParameterAdapter("a", self.stru, attr = "a"))
@@ -1332,7 +1338,9 @@ class ObjCrystParSet(BaseStructure):
         from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
         adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
         isosymbol = "Biso"
-        self.sgpars = _constrainSpaceGroup(self, sgname, adpsymbols, isosymbol)
+        sgoffset = [0, 0, 0]
+        self.sgpars = _constrainSpaceGroup(self, sgname, sgoffset, adpsymbols,
+                isosymbol)
 
         return
 
@@ -1364,6 +1372,7 @@ class ObjCrystParSet(BaseStructure):
         extnstr = ":%s"%extn
         if sg.endswith(extnstr):
             sg = sg[:-len(extnstr)]
+        sg.replace(" ", "")
         return sg
 
 

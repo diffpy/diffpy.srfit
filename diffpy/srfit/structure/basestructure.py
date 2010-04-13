@@ -46,7 +46,10 @@ class BaseStructure(ParameterSet):
         The returned ParameterSet may contain other Parameters than the lattice
         Parameters. It is assumed that the lattice parameters are named "a",
         "b", "c", "alpha", "beta", "gamma".
-        
+
+        Lattice must also have the "angunits" attribute, which is either "deg"
+        or "rad", to signify degrees or radians.
+
         """
         raise NotImplementedError("The must be overloaded")
 

@@ -108,10 +108,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         """
         self.fithook = fithook
-
-        # Click this so that _prepare gets called, which will initialize the
-        # fit hook.
-        self._confclicker.click()
+        self._updateConfiguration()
         return
 
     def addContribution(self, con, weight = 1.0):
@@ -232,7 +229,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         # Inform the fit hook that we're updating things
         if self.fithook:
-            self.fithook.reset()
+            self.fithook.reset(self)
 
         # Check Profiles
         self.__verifyProfiles()

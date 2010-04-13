@@ -53,7 +53,7 @@ class FitHook(object):
         self.verbose = 1
         return
 
-    def reset(self):
+    def reset(self, recipe):
         """Reset the hook data.
 
         This is called whenever FitRecipe._prepare is called, which is whenever
@@ -110,5 +110,76 @@ class FitHook(object):
 
             for name, val in zip(vnames, vals):
                 print "  %s = %f" % (name, val)
+
+# End class FitHook
+
+class PlotFitHook(FitHook):
+    """This FitHook has live plotting of whatever is being refined."""
+
+    def reset(self, recipe):
+        """Set up the plot."""
+        FitHook.reset(self, recipe)
+
+        self._plots = []
+
+        import pylab
+
+        pylab.clf()
+        pylab.ion()
+
+        nc = len(recipe._contributions)
+        if nc > 1:
+            ncols = 2
+            nrows = (nc + 1) / 2
+
+        for idx, c in enumerate(recipe._contributions.values()):
+
+            name = c.name
+            xname = c._xname
+            yname = c._yname
+            p = c.profile
+
+            # Create a subplot
+            if nc > 1:
+                pylab.subplot(nrows, ncols, idx+1)
+            pdata = pylab.plot(p.x, p.y, 'bo')[0]
+            pfit = pylab.plot(p.x, p.y, 'r-')[0]
+            self._plots.append((pdata, pfit))
+            pylab.xlabel(xname)
+            pylab.ylabel(yname)
+            pylab.title(name)
+
+        # Set up some event handling, so things behave nicely.
+        #def redraw(event):
+        #    canvas = event.canvas
+        #    canvas.draw()
+        #    return
+        #pylab.connect('resize_event', redraw)
+
+        return
+
+    def postcall(self, recipe, chiv):
+        """This is called within FitRecipe.residual, after the calculation.
+
+        Find data and plot it.
+
+        recipe  --  The FitRecipe instance
+        chiv    --  The residual vector
+        
+        """
+        FitHook.postcall(self, recipe, chiv)
+        import pylab
+
+        for c, plottup in zip(recipe._contributions.values(), self._plots):
+
+            p = c.profile
+            pdata = plottup[0]
+            pfit = plottup[1]
+            pdata.set_data(p.x, p.y)
+            pfit.set_data(p.x, p.ycalc)
+
+        pylab.draw()
+        return
+
 
 __id__ = "$Id$"

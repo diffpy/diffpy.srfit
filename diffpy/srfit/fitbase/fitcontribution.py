@@ -54,6 +54,9 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
                         restraints from string
     _eq             --  The FitContribution equation that will be optimized.
     _reseq          --  The residual equation.
+    _xname          --  Name of the x-variable
+    _yname          --  Name of the y-variable
+    _dyname         --  Name of the dy-variable
 
     """
 

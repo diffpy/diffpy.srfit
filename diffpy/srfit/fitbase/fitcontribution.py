@@ -131,7 +131,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         The ProfileGenerator is given a name so that it can be used as part of
         the profile equation (see setEquation). This can be different from the
         name of the ProfileGenerator used for attribute access.
-        FitContributions should not share calculators instance. Different
+        FitContributions should not share ProfileGenerator instances. Different
         ProfileGenerators can share Parameters and ParameterSets, however.
         
         Calling addProfileGenerator sets the profile equation to call the

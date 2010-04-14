@@ -195,9 +195,33 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         self.adpsymbols = adpsymbols
         self.isosymbol = isosymbol
 
-        self.__clearConstraints()
         self.__makeConstraints()
         return
+
+    def __makeConstraints(self):
+        """Constrain the structure to the space group.
+        
+        This works as described by the constrainAsSpaceGroup method.
+
+        """
+
+        # Start by clearing the constraints
+        self.__clearConstraints()
+
+        scatterers = self.scatterers
+
+        # Prepare positions
+        positions =  []
+        for scatterer in scatterers:
+            xyz = [scatterer.x, scatterer.y, scatterer.z]
+            positions.append([p.value for p in xyz])
+
+        self.__constrainLattice()
+        self.__constrainXYZs(positions)
+        self.__constrainADPs(positions)
+
+        return
+
 
     def __clearConstraints(self):
         """Clear old constraints.
@@ -230,10 +254,11 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         ## Clear ADPs
         if self.constrainadps:
             for scatterer in scatterers:
-                par = scatterer.get(isosymbol)
-                if par is not None:
-                    scatterer.unconstrain(par)
-                    par.setConst(False)
+                if isosymbol:
+                    par = scatterer.get(isosymbol)
+                    if par is not None:
+                        scatterer.unconstrain(par)
+                        par.setConst(False)
 
                 for pname in enumerate(adpsymbols):
                     par = scatterer.get(pname)
@@ -243,70 +268,55 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         return
 
-    def __makeConstraints(self):
-        """Constrain the structure to the space group.
-        
-        This works as described by the constrainAsSpaceGroup method.
+    def __constrainLattice(self):
+        """Constrain the lattice parameters."""
 
-        """
+        if not self.constrainlat: return
+
         phase = self.phase
         sg = self.sg
+
+        lattice = phase.getLattice()
+        system = sg.crystal_system
+        if not system:
+            system = "Triclinic"
+        system = system.title()
+        # This makes the constraints
+        f = _constraintMap[system]
+        f(lattice)
+
+        # Now get the unconstrained, non-constant lattice pars and store them.
+        self.latpars = []
+        latpars =  [lattice.a, lattice.b, lattice.c, lattice.alpha,
+                lattice.beta, lattice.gamma]
+        pars = [p for p in latpars if not p.const and not p.constrained]
+        for par in pars:
+                # Make a proxy for the parameter so we make a clean
+                # separation between sgpars and phase.
+                newpar = self.__addPar(par.name, par)
+                self.latpars.append(newpar)
+
+        return
+
+    def __constrainXYZs(self, positions):
+        """Constrain the positions.
+
+        positions   --  The coordinates of the scatterers.
+        
+        """
+
+        sg = self.sg
         sgoffset = self.sgoffset
+
+        # We do this without ADPs here so we can skip much complication. See
+        # the __constrainADPs method for details.
+        g = SymmetryConstraints(sg, positions, sgoffset=sgoffset)
+
         scatterers = self.scatterers
-        adpsymbols = self.adpsymbols
-        isosymbol = self.isosymbol
-        adpmap = dict(zip(stdUsymbols, adpsymbols))
-
-        # Constrain the lattice
-        if self.constrainlat:
-
-            lattice = phase.getLattice()
-            system = sg.crystal_system
-            if not system:
-                system = "Triclinic"
-            system = system.title()
-            f = _constraintMap[system]
-            f(lattice)
-
-            # Now get the unconstrained, non-constant lattice pars and add
-            # them.
-            self.latpars = []
-            lattice = phase.getLattice()
-            latpars =  [lattice.a, lattice.b, lattice.c, lattice.alpha,
-                    lattice.beta, lattice.gamma]
-            for par in latpars:
-                if not par.const and not par.constrained:
-                    # Make a proxy for the parameter so we make a clean
-                    # separation between sgpars and phase.
-                    newpar = self.__addPar(par.name, par)
-                    self.latpars.append(newpar)
-
-        # Prepare xyz
-        positions =  []
-        for scatterer in scatterers:
-            xyz = [scatterer.x, scatterer.y, scatterer.z]
-            positions.append([p.value for p in xyz])
-
-        # Prepare ADPs. Note that not all scatterers have constrainable ADPs.
-        # For example, MoleculeParSet from objcryststructure does not. 
-        Uijs = None
-        if self.constrainadps:
-            Uijs = []
-            for scatterer in scatterers:
-                Uij = numpy.zeros((3,3), dtype=float)
-                for idx, pname in enumerate(adpsymbols):
-                    par = scatterer.get(pname)
-                    if par is not None:
-                        i, j = _idxtoij[idx]
-                        Uij[i,j] = Uij[j,i] = par.getValue()
-
-                Uijs.append(Uij)
-
-        g = SymmetryConstraints(sg, positions, Uijs, sgoffset=sgoffset)
+        self.xyzpars = []
 
         # Make proxies to the free xyz parameters
         xyznames = [name[:1]+"_"+name[1:] for name, val in g.pospars]
-        self.xyzpars = []
         for pname in xyznames:
             name, idx = pname.rsplit('_', 1)
             idx = int(idx)
@@ -324,13 +334,58 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 _makeconstraint(parname, formula, scatterer, idx,
                         self._parameters)
 
-        # Get out if we don't constrain adps
+        return
+
+    def __constrainADPs(self, positions):
+        """Constrain the ADPs.
+
+        positions   --  The coordinates of the scatterers.
+        
+        """
+
         if not self.constrainadps: return
 
-        # Make proxies to the free adp parameters
-        adpnames = [adpmap[name[:3]] + "_" + name[3:] for name, val in g.Upars]
+        sg = self.sg
+        sgoffset = self.sgoffset
+        scatterers = self.scatterers
+        isosymbol = self.isosymbol
+        adpsymbols = self.adpsymbols
+        adpmap = dict(zip(stdUsymbols, adpsymbols))
         self.adppars = []
 
+        # Prepare ADPs. Note that not all scatterers have constrainable ADPs.
+        # For example, MoleculeParSet from objcryststructure does not. We
+        # discard those.
+        nonadps = []
+        Uijs = []
+        for sidx, scatterer in enumerate(scatterers):
+
+            pars = [scatterer.get(symb) for symb in adpsymbols]
+
+            if None in pars:
+                nonadps.append(sidx)
+                continue
+
+            Uij = numpy.zeros((3,3), dtype=float)
+            for idx, par in enumerate(pars):
+                i, j = _idxtoij[idx]
+                Uij[i,j] = Uij[j,i] = par.getValue()
+
+            Uijs.append(Uij)
+
+        # Discard any positions for the nonadps
+        positions = list(positions)
+        nonadps.reverse()
+        [positions.pop(idx) for idx in nonadps]
+
+        # Now we can create symmetry constraints without having to worry about
+        # the nonadps
+        g = SymmetryConstraints(sg, positions, Uijs, sgoffset=sgoffset)
+
+        adpnames = [adpmap[name[:3]] + "_" + name[3:] for name, val in g.Upars]
+
+        # Make proxies to the free adp parameters. We start by filtering out
+        # the isotropic ones so we can use the isotropic parameter.
         isoidx = []
         isonames = []
         for pname in adpnames:
@@ -341,16 +396,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             if isosymbol and g.Uisotropy[idx] and idx not in isoidx:
                 isoidx.append(idx)
                 par = scatterer.get(isosymbol)
-                if par is not None:
-                    parname = "%s_%i" % (isosymbol, idx)
-                    newpar = self.__addPar(parname, par)
-                    self.adppars.append(newpar)
-                    isonames.append(newpar.name)
+                parname = "%s_%i" % (isosymbol, idx)
+                newpar = self.__addPar(parname, par)
+                self.adppars.append(newpar)
+                isonames.append(newpar.name)
             else:
                 par = scatterer.get(name)
-                if par is not None:
-                    newpar = self.__addPar(pname, par)
-                    self.adppars.append(newpar)
+                newpar = self.__addPar(pname, par)
+                self.adppars.append(newpar)
 
         # Constrain dependent isotropics
         for idx, isoname in zip(isoidx[:], isonames):
@@ -362,7 +415,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         fadp = g.UFormulas(adpnames)
 
-        # Constrain dependent anisotropics
+        # Constrain dependent anisotropics. We use the fact that an
+        # anisotropic cannot be dependent on an isotropic.
         for idx, tmp in enumerate(zip(scatterers, fadp)):
             if idx in isoidx: continue
             scatterer, fa = tmp
@@ -372,7 +426,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 _makeconstraint(pname, formula, scatterer, idx,
                         self._parameters)
 
-        return
 
     def __addPar(self, parname, par):
         """Constrain a parameter via proxy with a specified name

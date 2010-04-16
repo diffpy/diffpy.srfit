@@ -440,6 +440,10 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
 # End class SpaceGroupParameters
 
+# crystal system rules
+# ref: Benjamin, W. A., Introduction to crystallography,
+# New York (1969), p.60
+
 def _constrainTriclinic(lattice):
     """Make constraints for Triclinic systems.
 
@@ -608,7 +612,6 @@ def _getFloat(formula):
 _idxtoij = [(0, 0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2)]
 deg2rad = numpy.pi / 180
 rad2deg = 1.0 / deg2rad
-
 
 
 # End of file

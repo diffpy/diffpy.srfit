@@ -127,11 +127,10 @@ class FitRecipeInterface(object):
 
         Think of "|" as the union of components.
 
-        This accepts a single argument or an iterable of single arguments or
-        argument tuples.
+        This accepts a single argument.
         
         """
-        _applymanyargs(args, self.addContribution)
+        self.addContribution(args)
         return self
 
     def __iadd__(self, args):
@@ -184,6 +183,7 @@ def _applymanyargs(args, f):
     ((arg1a, arg1b, ...), ...)
 
     """
+    print args
     if not hasattr(args, '__iter__'):
         f(args)
         return
@@ -205,7 +205,7 @@ def _applyargs(args, f):
     ((arg1a, arg1b, ...), ...)
 
     """
-
+    print args
     if not hasattr(args, '__iter__'):
         f(args)
     else:

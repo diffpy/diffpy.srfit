@@ -188,10 +188,12 @@ class RecipeContainer(Observable, Configurable, Validatable):
                     (obj.__class__.__name__, obj.name)
             raise ValueError(message)
 
+        print self, obj.name, obj
         # Check for object with same name in other dictionary.
         if oldobj is None and self.get(obj.name) is not None:
             message = "Non-%s with name '%s' already exists"%\
                     (obj.__class__.__name__, obj.name)
+            print obj.name, obj, self.get(obj.name)
             raise ValueError(message)
 
         # Detach the old object, if there is one

@@ -29,6 +29,7 @@ import re
 from .constraint import Constraint
 from .restraint import Restraint
 from .parameter import Parameter
+from .configurable import Configurable
 
 from diffpy.srfit.util.observable import Observable
 from diffpy.srfit.equation import Equation
@@ -37,7 +38,7 @@ from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.interface import _recipeorganizer_interface
 
-class RecipeContainer(Observable):
+class RecipeContainer(Observable, Configurable):
     """Base class for organizing pieces of a FitRecipe.
 
     RecipeContainers are hierarchical organizations of Parameters and other
@@ -72,10 +73,10 @@ class RecipeContainer(Observable):
 
     def __init__(self, name):
         Observable.__init__(self)
+        Configurable.__init__(self)
         validateName(name)
         self.name = name
         self._parameters = OrderedDict()
-        self._configobjs = set()
 
         self.__managed = []
         self._manage(self._parameters)
@@ -134,6 +135,12 @@ class RecipeContainer(Observable):
         return arg
      
     def __delattr__(self, name):
+        """Delete parameters with del.
+
+        This does not allow deletion of non-parameters, as this may require
+        configuration changes that cannot be handled here.
+
+        """
         if name in self._parameters:
             self._removeParameter( self._parameters[name] )
             return
@@ -197,9 +204,7 @@ class RecipeContainer(Observable):
         obj.addObserver(self._flush)
 
         # Store this as a configurable object
-        if hasattr(obj, "_updateConfiguration"):
-            self._configobjs.add(obj)
-
+        self._storeConfigurable(obj)
         return
 
     def _removeObject(self, obj, d):
@@ -222,9 +227,10 @@ class RecipeContainer(Observable):
 
         obj     --  The object to find.
 
-        Returns a list of objects. Each entry in the list contains the next
-        entry. The last object is obj, if it can be found, otherwise, the list
-        is empty.
+        Returns a list of objects. The first member of the list is this object,
+        and each subsequent member is a sub-object of the previous one.  The
+        last entry in the list is obj. If obj cannot be found, the list is
+        empty.
 
         """
         loc = [self]
@@ -257,12 +263,6 @@ class RecipeContainer(Observable):
 
         """
         self.notify()
-        return
-
-    def _updateConfiguration(self):
-        """Notify RecipeContainers in hierarchy of configuration change."""
-        for obj in self._configobjs:
-            obj._updateConfiguration()
         return
 
 

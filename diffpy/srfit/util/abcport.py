@@ -43,7 +43,9 @@ except ImportError:
     issubclass_builtin = __builtin__.issubclass
 
     def isinstance(obj, cls):
-        if not hasattr(cls, "__iter__"):
+        try:
+            cls = iter(cls)
+        except TypeError:
             cls = (cls,)
 
         ok = 0
@@ -60,7 +62,9 @@ except ImportError:
         return False
 
     def issubclass(obj, cls):
-        if not hasattr(cls, "__iter__"):
+        try:
+            cls = iter(cls)
+        except TypeError:
             cls = (cls,)
 
         ok = 0

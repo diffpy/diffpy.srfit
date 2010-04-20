@@ -17,7 +17,7 @@
 __all__ = ["isinstance", "issubclass", "LiteralABC", "ArgumentABC",
         "OperatorABC"]
 
-from diffpy.srfit.util.abc import *
+from diffpy.srfit.util.abcport import *
 
 class LiteralABC(object):
     """Abstract Base Class for Literal. See Literal for usage."""

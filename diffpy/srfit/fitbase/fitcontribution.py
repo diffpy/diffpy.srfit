@@ -263,6 +263,48 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         # the following will not recompute the equation.
         return self._reseq()
 
+    def _validate(self):
+        """Validate my state.
+
+        This performs profile validations.
+        This performs ProfileGenerator validations.
+        This validates _eq.
+        This validates _reseq and residual.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        self.profile._validate()
+        ParameterSet._validate(self)
+
+        # Try to get the value of eq.
+        from diffpy.srfit.equation.visitors import validate
+        try:
+            validate(self._eq)
+        except ValueError, e:
+            raise AttributeError(e)
+        if self._eq is None:
+            raise AttributeError("_eq is None")
+        try:
+            val = self._eq()
+        except TypeError, e:
+            raise AttributeError("_eq cannot be evaluated")
+        finally:
+            if val is None:
+                raise AttributeError("_eq evaluates to None")
+
+        # Try to get the value for residual
+        try:
+            validate(self._reseq)
+        except ValueError, e:
+            raise AttributeError(e)
+        try:
+            val = self.residual()
+        except TypeError, e:
+            raise AttributeError("residual cannot be evaluated")
+        if val is None:
+            raise AttributeError("residual evaluates to None")
+        return
 
 
 # version

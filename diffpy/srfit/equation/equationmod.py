@@ -89,6 +89,8 @@ class Equation(Operator):
         """
         # Operator stuff. We circumvent Operator.__init__ since we're using
         # args as a property. We cannot set it, as the Operator tries to do.
+        if name is None and root is not None:
+            name = "eq_%s"%root.name
         Literal.__init__(self, name)
         self.symbol = name
         self.nin = None

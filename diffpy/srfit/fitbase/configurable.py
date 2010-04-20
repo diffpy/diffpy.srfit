@@ -23,7 +23,7 @@ __all__ = ["Configurable"]
 class Configurable(object):
     """Configurable class.
 
-    A Configureable has state of which a FitRecipe must be aware. 
+    A Configurable has state of which a FitRecipe must be aware. 
 
     Attributes
     _configobjs     --  Set of Configureables in a hierarcy or instances.

@@ -20,26 +20,18 @@ to store a calculated signal, and by FitContributions to help calculate a
 residual equation.
 
 """
-__all__ = ["ProfileParameter", "Profile"]
+__all__ = ["Parameter", "Profile"]
 
 import numpy
 
 from diffpy.srfit.util.observable import Observable
 from .parameter import Parameter
+from .validatable import Validatable
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8
 
-class ProfileParameter(Parameter):
-    """A Parameter for profiles that can have a None value."""
-
-    def getValue(self):
-        """Get the value, even if it is None."""
-        return self._value
-
-# End class ProfileParameter
-
-class Profile(Observable):
+class Profile(Observable, Validatable):
     """Observed and calculated profile container.
 
     Profile is an Observable. The xpar, ypar and dypar attributes are observed
@@ -62,10 +54,10 @@ class Profile(Observable):
     dy      --  The uncertainty in the profile over the calculation range
                 (default None, property for dypar accessors).
     ycalc   --  A numpy array of the calculated signal (default None).
-    xpar    --  A ProfileParameter that stores x (named "x").
-    ypar    --  A ProfileParameter that stores y (named "y").
-    dypar   --  A ProfileParameter that stores dy (named "dy").
-    ycpar   --  A ProfileParameter that stores ycalc (named "ycalc"). This is
+    xpar    --  A Parameter that stores x (named "x").
+    ypar    --  A Parameter that stores y (named "y").
+    dypar   --  A Parameter that stores dy (named "dy").
+    ycpar   --  A Parameter that stores ycalc (named "ycalc"). This is
                 not observed by the profile, but it is present so it can be
                 constrained to.
     meta    --  A dictionary of metadata. This is only set if provided by a
@@ -79,10 +71,10 @@ class Profile(Observable):
         self._xobs = None
         self._yobs = None
         self._dyobs = None
-        self.xpar = ProfileParameter("x")
-        self.ypar = ProfileParameter("y")
-        self.dypar = ProfileParameter("dy")
-        self.ycpar = ProfileParameter("ycalc")
+        self.xpar = Parameter("x")
+        self.ypar = Parameter("y")
+        self.dypar = Parameter("dy")
+        self.ycpar = Parameter("ycalc")
         self.meta = {}
 
         # Observable
@@ -291,6 +283,22 @@ class Profile(Observable):
         self.ycalc = None
         self.notify()
         return
+
+    def _validate(self):
+        """Validate my state.
+
+        This validates that x, y, dy, xobx, yobs and dyobs are not None.
+        This validates that x, y, and dy are the same length.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        if None in [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs]:
+            raise AttributeError("Missing data")
+        if len(self.x) != len(self.y) or len(self.x) != len(self.dy):
+            raise AttributeError("Data are different lengths")
+        return
+
 
 # End class Profile
 

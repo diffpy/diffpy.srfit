@@ -30,9 +30,10 @@ from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.interface import _parameter_interface
+from .validatable import Validatable
 
 
-class Parameter(_parameter_interface, Argument):
+class Parameter(_parameter_interface, Argument, Validatable):
     """Parameter class.
     
     Attributes
@@ -83,9 +84,21 @@ class Parameter(_parameter_interface, Argument):
             self.setValue(value)
         return
 
+    def _validate(self):
+        """Validate my state.
+
+        This validates that value is not None.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        if self.value is None:
+            raise AttributeError("value is None")
+        return
+
 # End class Parameter
 
-class ParameterProxy(_parameter_interface):
+class ParameterProxy(_parameter_interface, Validatable):
     """A Parameter proxy for another parameter. 
     
     This allows for the same parameter to have multiple names.
@@ -122,6 +135,20 @@ class ParameterProxy(_parameter_interface):
 
     def __str__(self):
         return "%s(%s)"%(self.__class__.__name__, self.name)
+
+    def _validate(self):
+        """Validate my state.
+
+        This validates that value and par are not None.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        if self.value is None:
+            raise AttributeError("value is None")
+        if self.par is None:
+            raise AttributeError("par is None")
+        return
 
 # End class ParameterProxy
 

@@ -177,7 +177,7 @@ class PDFGenerator(ProfileGenerator):
                     instance. Default None.
         name    --  A name to give the structure. If name is None (default),
                     then the name will be set as "phase".
-        parset  --  A ParameterSet that hoolds the structural information. This
+        parset  --  A ParameterSet that holds the structural information. This
                     can be used to share the phase between multiple
                     PDFGenerators, and have the changes in one reflect in
                     another. If both stru and parset are specified, only parset
@@ -261,6 +261,20 @@ class PDFGenerator(ProfileGenerator):
         self._calc._setDoubleAttr('rmin', r[0])
         precision = self._calc._getDoubleAttr("peakprecision")
         self._calc._setDoubleAttr('rmax', r[-1] + precision)
+        return
+
+    def _validate(self):
+        """Validate my state.
+
+        This validates that the phase is not None.
+        This performs ProfileGenerator validations.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        if self._phase is None:
+            raise AttributeError("_phase is None")
+        ProfileGenerator._validate(self)
         return
 
     def __call__(self, r):

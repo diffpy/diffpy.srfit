@@ -31,8 +31,7 @@ class TestArgument(unittest.TestCase):
 
         a = literals.Argument()
 
-        # Test error when there is no value
-        self.assertRaises(ValueError, a.getValue)
+        self.assertEquals(None, a.getValue())
 
         # Test setting value
         a.setValue(3.14)
@@ -112,8 +111,6 @@ class TestOperator(unittest.TestCase):
         self.assertAlmostEqual(3, op.value)
 
         a.setValue(None)
-        self.assertRaises(ValueError, op.getValue)
-
         # Test for self-references
 
         # Try to add self

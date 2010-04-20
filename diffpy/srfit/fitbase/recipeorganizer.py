@@ -30,6 +30,7 @@ from .constraint import Constraint
 from .restraint import Restraint
 from .parameter import Parameter
 from .configurable import Configurable
+from .validatable import Validatable
 
 from diffpy.srfit.util.observable import Observable
 from diffpy.srfit.equation import Equation
@@ -38,7 +39,7 @@ from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.interface import _recipeorganizer_interface
 
-class RecipeContainer(Observable, Configurable):
+class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
 
     RecipeContainers are hierarchical organizations of Parameters and other
@@ -263,6 +264,18 @@ class RecipeContainer(Observable, Configurable):
 
         """
         self.notify()
+        return
+
+    def _validate(self):
+        """Validate my state.
+
+        This validates that contained Parameters and managed objects are valid.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        iterable = chain(self.__iter__(), self._iterManaged())
+        self._validateOthers(iterable)
         return
 
 
@@ -718,6 +731,21 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 restraints.update( m._getRestraints(recurse) )
 
         return restraints
+
+    def _validate(self):
+        """Validate my state.
+
+        This performs RecipeContainer validations.
+        This validates contained Restraints and Constraints.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        RecipeContainer._validate(self)
+        iterable = chain(iter(self._restraints),
+                self._constraints.itervalues())
+        self._validateOthers(iterable)
+        return
 
 # End RecipeOrganizer
 

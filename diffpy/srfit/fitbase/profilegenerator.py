@@ -147,6 +147,26 @@ class ProfileGenerator(Operator, ParameterSet):
         self.meta.update( self.profile.meta )
         return
 
+    def _validate(self):
+        """Validate my state.
+
+        This performs profile validations.
+        This performs ParameterSet validations.
+        This does not validate the operation, since this could be costly. The
+        operation should be validated with a containing equation.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        if self.profile is None:
+            raise AttributeError("profile is None")
+        self.profile._validate()
+        ParameterSet._validate(self)
+
+        return
+
+
+
 # End class ProfileGenerator
 
 __id__ = "$Id$"

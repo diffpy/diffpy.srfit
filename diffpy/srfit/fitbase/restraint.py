@@ -24,7 +24,9 @@ __all__ = ["Restraint"]
 
 from numpy import inf
 
-class Restraint(object):
+from .validatable import Validatable
+
+class Restraint(Validatable):
     """Restraint class.
 
     Attributes
@@ -93,6 +95,33 @@ class Restraint(object):
             penalty *= w
 
         return penalty
+
+    def _validate(self):
+        """Validate my state.
+
+        This validates eq.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        if self.eq is None:
+            raise AttributeError("eq is None")
+        from diffpy.srfit.equation.visitors import validate
+        try:
+            validate(self.eq)
+        except ValueError, e:
+            raise AttributeError(e)
+
+        # Try to get the value of eq.
+        try:
+            val = self.eq()
+        except TypeError, e:
+            raise AttributeError("eq cannot be evaluated")
+        finally:
+            if val is None:
+                raise AttributeError("eq evaluates to None")
+
+        return
 
 # End class Restraint
 

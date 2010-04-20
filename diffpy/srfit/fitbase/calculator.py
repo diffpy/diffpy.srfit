@@ -81,6 +81,20 @@ class Calculator(Operator, ParameterSet):
         self._value = self.__call__(*args)
         return self._value
 
+    def _validate(self):
+        """Validate my state.
+
+        This performs ParameterSet validations.
+        This does not validate the operation, since this could be costly. The
+        operation should be validated with a containing equation.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        ParameterSet._validate(self)
+
+        return
+
 # End class Calculator
 
 __id__ = "$Id$"

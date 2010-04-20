@@ -51,8 +51,6 @@ class Argument(Literal, ArgumentABC):
 
     def getValue(self):
         """Get the value of this Literal."""
-        if self._value is None:
-            raise ValueError("I have no value!")
         return self._value
 
     def setValue(self, val):

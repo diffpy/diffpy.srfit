@@ -227,6 +227,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if self._ready:
             return
 
+        # Validate!
+        self._validate()
+
         # Inform the fit hook that we're updating things
         if self.fithook:
             self.fithook.reset(self)
@@ -617,10 +620,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if par.const:
             raise ValueError("The parameter '%s' is constant"%par)
 
+        # This will pass the value of a constrained parameter to the initial
+        # value of a parameter constraint.
         if con in self._parameters.values(): 
-            try:
-                con.getValue()
-            except ValueError:
+            val = con.getValue()
+            if val is None:
                 val = par.getValue()
                 con.setValue(val)
 
@@ -697,7 +701,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Notify RecipeContainers in hierarchy of configuration change."""
         self._ready = False
         return
-
 
 # version
 __id__ = "$Id$"

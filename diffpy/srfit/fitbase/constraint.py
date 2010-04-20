@@ -22,8 +22,9 @@ this association.
 """
 __all__ = ["Constraint"]
 
+from .validatable import Validatable
 
-class Constraint(object):
+class Constraint(Validatable):
     """Constraint class.
 
     Constraints are designed to be stored in only one place. (The holder of the
@@ -80,6 +81,39 @@ class Constraint(object):
         # currently stored value.
         self.par.setValue(val)
         return
+
+    def _validate(self):
+        """Validate my state.
+
+        This validates that par is not None.
+        This validates eq.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        if self.par is None:
+            raise AttributeError("par is None")
+        if self.eq is None:
+            raise AttributeError("eq is None")
+        self.par._validate()
+        from diffpy.srfit.equation.visitors import validate
+        try:
+            validate(self.eq)
+        except ValueError, e:
+            raise AttributeError(e)
+
+        # Try to get the value of eq.
+        try:
+            val = self.eq()
+            self.par.setValue(val)
+        except TypeError, e:
+            raise AttributeError("eq cannot be evaluated")
+        finally:
+            if val is None:
+                raise AttributeError("eq evaluates to None")
+
+        return
+
 
 # version
 __id__ = "$Id$"

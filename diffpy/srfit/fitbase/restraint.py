@@ -75,6 +75,8 @@ class Restraint(Validatable):
 
         w   --  The point-average chi^2 which is optionally used to scale the
                 penalty (default 1.0).
+
+        Returns the penalty as a float
         
         """
         val = self.eq()

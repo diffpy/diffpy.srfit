@@ -158,9 +158,8 @@ ArgumentABC.register(ParameterProxy)
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.
 
-    This class wraps an object as a Paramter. The getValue and setValue methods
-    of Parameter directly modify the appropriate attribute of the
-    parameter-like object.
+    This class wraps an object as a Parameter. The getValue and setValue
+    methods defer to the data of the wrapped object.
 
     """
 

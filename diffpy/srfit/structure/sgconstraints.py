@@ -588,7 +588,8 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
     compname = "%s_%i"%(parname, idx)
 
     # Check to see if this parameter is free
-    if compname == formula:
+    if compname == formula or (compname + " +1") == formula \
+            or (compname + " -1") == formula:
         return par
 
     # Check to see if it is a constant

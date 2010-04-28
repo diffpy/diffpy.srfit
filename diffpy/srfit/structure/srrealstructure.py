@@ -43,17 +43,20 @@ class SrRealStructure(BaseStructure):
 
         prefactor   --  A multiplicative prefactor for the restraint 
                         (default 1).
-        scaled  --  A flag indicating if the restraint is scaled (multiplied)
-                    by the unrestrained point-average chi^2 (chi^2/numpoints)
-                    (default False).
+        scaled      --  A flag indicating if the restraint is scaled
+                        (multiplied) by the unrestrained point-average chi^2
+                        (chi^2/numpoints) (default False).
 
         Returns the BVSRestraint object for use with the 'unrestrain' method.
 
         """
 
+        # Create the Restraint object
         res = BVSRestraint(self.stru, prefactor, scaled)
+        # Add it to the _restraints set
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
         self._updateConfiguration()
+        # Return the Restraint object
         return res
 

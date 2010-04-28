@@ -170,7 +170,6 @@ def lognormalSphericalFF(r, psize, psig):
     sqrt2 = sqrt(2.0)
     s = sqrt(log(psig*psig/(1.0*psize*psize) + 1))
     mu = log(psize) - s*s/2;
-    print mu, s
     if mu < 0: return numpy.zeros_like(r)
 
     return 0.5*erfc((-mu-3*s*s+log(r))/(sqrt2*s)) \

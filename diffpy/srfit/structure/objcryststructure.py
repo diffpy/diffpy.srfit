@@ -826,17 +826,29 @@ class StretchModeParameter(Parameter):
     molecule    --  The MoleculeParSet the atoms belong to
     mode        --  The pyobjcryst.molecule.StretchMode used to change atomic
                     positions.
+    keepcenter  --  Flag indicating whether to keep the center of mass of the
+                    molecule stationary within the crystal when changing the
+                    value of the parameter (bool, default True).
 
     """
 
-    def setValue(self, val):
-        """Change the value of the Parameter.
+    def __init__(self, name, value = None, const = False):
+        """Initialization.
+        
+        name    --  The name of this Parameter (must be a valid attribute
+                    identifier)
+        value   --  The initial value of this Parameter (default 0).
+        const   --  A flag inticating whether the Parameter is a constant (like
+                    pi).
 
-        This changes the position of the mutated atom and the absolute position
-        of the molecule in such a way that the center of mass of the molecule
-        does not change.
-
+        Raises ValueError if the name is not a valid attribute identifier
+        
         """
+        Parameter.__init__(self, name, value, const)
+        self.keepcenter = True
+
+    def setValue(self, val):
+        """Change the value of the Parameter."""
         curval = self.getValue()
         val = float(val)
 
@@ -845,7 +857,7 @@ class StretchModeParameter(Parameter):
 
         # The StretchMode expects the change in mutated value.
         delta = val - curval
-        self.mode.Stretch(delta)
+        self.mode.Stretch(delta, self.keepcenter)
 
         # Let Parameter take care of the general details
         Parameter.setValue(self, val)
@@ -908,7 +920,8 @@ class BondLengthParameter(StretchModeParameter):
     adjustable Parameter. When a bond length is adjusted, the second MolAtom is
     moved, and the absolute position of the Molecule is altered to preserve the
     location of the center of mass within the Crystal. Thus, the x, y and z
-    Parameters of the MolAtom and its parent Molecule are altered.
+    Parameters of the MolAtom and its parent Molecule are altered. This can be
+    changed by setting the 'keepcenter' attribute of the parameter to False.
 
     This Parameter makes it possible to mutate a MolAtom multiple times in a
     single refinement step. If these mutations are not orthogonal, then this
@@ -1034,7 +1047,8 @@ class BondAngleParameter(StretchModeParameter):
     angle defined by three MolAtoms in a Molecule can be used as an adjustable
     Parameter. When a bond angle is adjusted, the third MolAtom is moved, and
     the absolute position of the Molecule is altered to preserve the location
-    of the center of mass within the crystal.
+    of the center of mass within the crystal. This can be changed by setting
+    the 'keepcenter' attribute of the parameter to False.
 
     See precautions in the BondLengthParameter class.
 
@@ -1148,7 +1162,8 @@ class DihedralAngleParameter(StretchModeParameter):
     angle defined by four MolAtoms ([a1-a2].[a3-a4]) in a Molecule can be used
     as an adjustable parameter. When a dihedral angle is adjusted, the fourth
     MolAtom is moved, and the absolute position of the Molecule is altered to
-    preserve the location of the center of mass within the crystal.
+    preserve the location of the center of mass within the crystal.  This can
+    be changed by setting the 'keepcenter' attribute of the parameter to False.
 
     See precautions in the BondLengthParameter class.
 

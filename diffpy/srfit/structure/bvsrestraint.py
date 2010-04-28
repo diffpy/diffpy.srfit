@@ -22,7 +22,7 @@ __all__ = ["BVSCalculator"]
 
 from diffpy.srfit.fitbase.restraint import Restraint
 
-from diffpy.srreal.srreal_ext import BVSCalculator
+from diffpy.srreal.bvscalculator import BVSCalculator
 
 class BVSRestraint(Restraint):
     """Wrapping of BVSCalculator.bvrmsdiff as a Restraint.

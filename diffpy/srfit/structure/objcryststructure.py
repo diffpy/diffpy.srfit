@@ -51,7 +51,7 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.restraint import Restraint
-from diffpy.srfit.structure.basestructure import BaseStructure
+from diffpy.srfit.structure.srrealstructure import SrRealStructure
 
 class ScattererParSet(ParameterSet):
     """A base adaptor for an Objcryst Scatterer.
@@ -1262,7 +1262,7 @@ class DihedralAngleParameter(StretchModeParameter):
 
 # End class DihedralAngleParameter
 
-class ObjCrystParSet(BaseStructure):
+class ObjCrystParSet(SrRealStructure):
     """A adaptor for pyobjcryst.crystal.Crystal instance.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
@@ -1374,33 +1374,6 @@ class ObjCrystParSet(BaseStructure):
             sg = sg[:-len(extnstr)]
         sg.replace(" ", "")
         return sg
-
-    def restrainBVS(self, prefactor = 1, scaled = False):
-        """Restrain the bond-valence sum to zero.
-
-        This adds a penalty to the cost function equal to
-        prefactor * bvrmsdiff
-        where bvrmsdiff is the rmsdifference between the calculated and
-        expected bond valence sums for the structure. If scaled is true, this
-        is also scaled by the current chi^2 value so the restraint is roughly
-        equally weighted in the fit.
-
-        prefactor   --  A multiplicative prefactor for the restraint 
-                        (default 1).
-        scaled  --  A flag indicating if the restraint is scaled (multiplied)
-                    by the unrestrained point-average chi^2 (chi^2/numpoints)
-                    (default False).
-
-        Returns the BVSRestraint object for use with the 'unrestrain' method.
-
-        """
-        from .bvsrestraint import BVSRestraint
-
-        res = BVSRestraint(self.stru, prefactor, scaled)
-        self._restraints.add(res)
-        # Our configuration changed. Notify observers.
-        self._updateConfiguration()
-        return res
 
 
 # End class ObjCrystParSet

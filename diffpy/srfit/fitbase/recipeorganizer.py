@@ -677,8 +677,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             eq = Equation(root = res)
 
         # Make and store the restraint
-        res = Restraint()
-        res.restrain(eq, lb, ub, prefactor, power, scaled)
+        res = Restraint(eq, lb, ub, prefactor, power, scaled)
         self._restraints.add(res)
 
         # Our configuration changed. Notify observers.

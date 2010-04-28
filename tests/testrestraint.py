@@ -22,10 +22,9 @@ class TestRestraint(unittest.TestCase):
         factory.registerArgument("p1", p1)
         factory.registerArgument("p2", p2)
 
-        r = Restraint()
         # Restrain 1 <  p1 + p2 < 5
         eq = equationFromString("p1 + p2", factory)
-        r.restrain(eq, 1, 5)
+        r = Restraint(eq, 1, 5)
 
         # This should have no penalty
         p1.setValue(1)
@@ -47,7 +46,7 @@ class TestRestraint(unittest.TestCase):
         # Try a different penalty function
         from numpy import inf
         eq = equationFromString("p1", factory)
-        r.restrain(eq, 0, inf, 2, 4, True)
+        r = Restraint(eq, 0, inf, 2, 4, True)
 
         # Make p1 = -2
         # This should give a penalty of 2*2**4 = 32

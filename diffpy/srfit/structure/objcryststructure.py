@@ -1396,8 +1396,7 @@ class ObjCrystParSet(BaseStructure):
         """
         from .bvsrestraint import BVSRestraint
 
-        res = BVSRestraint(self.stru)
-        res.restrain(prefactor, scaled)
+        res = BVSRestraint(self.stru, prefactor, scaled)
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
         self._updateConfiguration()

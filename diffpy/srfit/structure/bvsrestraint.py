@@ -11,10 +11,10 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Bond-valence sum calculator from SrReal.
+"""Bond-valence sum calculator from SrReal wrapped as a Restraint.
 
 This can be used as an addition to a cost function during a structure
-refinement.
+refinement to keep the bond-valence sum within tolerable limits.
 
 """
 
@@ -41,30 +41,22 @@ class BVSRestraint(Restraint):
 
     """
 
-    def __init__(self, stru):
+    def __init__(self, stru, prefactor = 1, scaled = False):
         """Initialize the Restraint.
 
-        stru       --  Structure object supported by BVSCalculator
+        stru        --  Structure object supported by BVSCalculator
+        prefactor   --  A multiplicative prefactor for the restraint (default
+                        1).
+        scaled      -- A flag indicating if the restraint is scaled
+                       (multiplied) by the unrestrained point-average chi^2
+                       (chi^2/numpoints) (default False).
 
         """
         self._calc = BVSCalculator()
         self._stru = stru
-        self.prefactor = 1
-        self.scaled = False
-        return
-
-    def restrain(self, prefactor = 1, scaled = False):
-        """Set up the restraint.
-        
-        prefactor   --  A multiplicative prefactor for the restraint (default 1).
-        scaled  --  A flag indicating if the restraint is scaled (multiplied)
-                    by the unrestrained point-average chi^2 (chi^2/numpoints)
-                    (default False).
-
-        """
         self.prefactor = prefactor
-        self.scaled = False
-        pass
+        self.scaled = scaled
+        return
 
     def penalty(self, w = 1.0):
         """Calculate the penalty of the restraint.

@@ -47,17 +47,7 @@ class Restraint(Validatable):
 
     """
 
-    def __init__(self):
-        """Initialization. """
-        self.eq = None
-        self.lb = -inf
-        self.up = inf
-        self.prefactor = 1
-        self.power = 2
-        self.scaled = False
-        return
-
-    def restrain(self, eq, lb = -inf, ub = inf, prefactor = 1, power = 2,
+    def __init__(self, eq, lb = -inf, ub = inf, prefactor = 1, power = 2,
             scaled = False):
         """Restrain an equation to specified bounds.
         

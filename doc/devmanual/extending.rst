@@ -129,8 +129,8 @@ string and pass that data and metadata to a ``Profile`` instance. The
 
 The simplest way to extend the ``ProfileParser`` is to derive a new class from
 ``ProfileParser`` and overload the ``parseString`` method. By default, the
-``parseFile`` method can read an ascii file and passes the loaded string to the
-``parseString`` method. For non-ascii data one should overload both of these
+``parseFile`` method can read an ASCII file and passes the loaded string to the
+``parseString`` method. For non-ASCII data one should overload both of these
 methods. An example of a customized ``ProfileParser`` is the ``PDFParser``
 class in the ``diffpy.srfit.pdf.pdfparser`` module.
 
@@ -176,7 +176,7 @@ Even with the ability to customize ``ProfileParsers,`` it may be necessary to
 create custom ``Profile`` objects for different types of data. This is useful
 when adapting an external data container to the SrFit interface. For example,
 the external container may need to be retained so it can be used within an
-external program before or after iterfacing with SrFit. An example of a
+external program before or after interfacing with SrFit. An example of a
 customized Profile is the ``SASProfile`` class in the
 ``diffpy.srfit.sas.sasprofile`` module:
 
@@ -196,7 +196,7 @@ Custom Restraints
 Restraints in SrFit are one way to include known information about a system
 into a fit recipe. When customizing SrFit for a specific purpose, one may want
 to create restraints. One example of this is in the ``SrRealStructure`` base
-class in ``difpy.srfit.structure.srrealstructure``. SrReal provides many
+class in ``diffpy.srfit.structure.srrealstructure``. SrReal provides many
 real-space structure utilities for compatible structures, such as a PDF
 calculator and a bond-valence sum (BVS) calculator. The PDF calculator works
 very well as a ``ProfileGenerator`` (see the :ref:`developers-guide-examples`),

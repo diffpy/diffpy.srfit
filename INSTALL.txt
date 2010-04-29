@@ -94,10 +94,10 @@ Dependencies
 --------------------------
 
   * DiffPy software (svn://danse.us/diffraction) (install in this order)
-    * diffpy.Structure >= 1.0-r5158
-    * PyObjCryst >= 1.0b0.dev-r5168
-    * libDiffPy >= r5168
-    * SrReal >= r5168
+    * diffpy.Structure >= 1.0-r5158-20100428
+    * pyobjcryst >= 1.0b0.dev-r5168-20100429
+    * libdiffpy >= 1.0.dev-r5148-20100429
+    * diffpy.srreal >= 0.2a1.dev-r5148-20100429
 
   * SANS software (svn://danse.us/sans/releases)
     * sansmodels-0.4.6 (sans.models)
@@ -105,6 +105,7 @@ Dependencies
     * DataLoader-0.2.6 (DataLoader, optional, for examples and tests)
 
   * Other
+    * periodictable>=0.9.dev-r197-20090419
     * numpy >= 1.0
     * scipy >= 0.7.0 
     * matplotlib >= 0.9 (optional, for examples)

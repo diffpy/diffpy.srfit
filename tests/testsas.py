@@ -100,7 +100,6 @@ class TestSASGenerator(unittest.TestCase):
         gen.scale.value = 1.0
         gen.radius_a.value = 20
         gen.radius_b.value = 400
-        gen.contrast.value = 3e-6
         gen.background.value = 0.01
 
         y = gen(profile.xobs)

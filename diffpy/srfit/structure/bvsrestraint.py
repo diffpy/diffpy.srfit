@@ -54,8 +54,8 @@ class BVSRestraint(Restraint):
         """
         self._calc = BVSCalculator()
         self._stru = stru
-        self.prefactor = prefactor
-        self.scaled = scaled
+        self.prefactor = float(prefactor)
+        self.scaled = bool(scaled)
         return
 
     def penalty(self, w = 1.0):
@@ -76,6 +76,19 @@ class BVSRestraint(Restraint):
         if self.scaled: penalty *= w
 
         return penalty
+
+    def _validate(self):
+        """This evaluates the calculator.
+
+        Raises AttributeError if validation fails.
+        
+        """
+        from numpy import nan
+        p = self.penalty()
+        if p is None or p is nan:
+            raise AttributeError("Cannot evaluate penalty")
+
+        return
 
     # End of class BVSRestraint
 

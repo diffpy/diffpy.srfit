@@ -132,7 +132,7 @@ class TestPDFGenerator(unittest.TestCase):
         precision = calc._getDoubleAttr("peakprecision")
         calc._setDoubleAttr('rmax', r[-1] + precision)
         calc._setDoubleAttr('qmax', qmax)
-        calc.setScatteringFactorTable('N')
+        calc.setScatteringFactorTableByType('N')
         calc.eval(stru)
         yref = calc.getPDF()
 

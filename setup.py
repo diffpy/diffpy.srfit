@@ -22,9 +22,11 @@ dist = setup(
         test_suite = 'tests',
         entry_points = {},
         install_requires = [
-            'diffpy.Structure',
-            #'pyobjcryst>=0.1a1.dev-r3762',
+            'diffpy.Structure>=1.0-r5158-20100428',
+            'pyobjcryst>=1.0b0.dev-r5168',
             'periodictable>=0.9.dev-r197-20090419',
+            'numpy>=1.0',
+            'scipy>=0.7.0',
             ],
         dependency_links = [
             # REMOVE dev.danse.us for a public release.

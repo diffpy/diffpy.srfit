@@ -57,8 +57,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
         value   --  The initial value of this Parameter (default 0).
         const   --  A flag inticating whether the Parameter is a constant (like
                     pi).
-        constrained --  A flag indicating if the Parameter is constrained
-                    (default False).
 
         Raises ValueError if the name is not a valid attribute identifier
         

@@ -89,3 +89,23 @@ Contact
 Please contact us at our google-group http://groups.google.com/group/diffpy-dev
 if you have questions or comments about the installation procedure. We will
 assist you with installation problems you may have.
+
+Dependencies
+--------------------------
+
+  * DiffPy software (svn://danse.us/diffraction) (install in this order)
+    * diffpy.Structure >= 1.0-r5158
+    * PyObjCryst >= 1.0b0.dev-r5168
+    * libDiffPy >= r5168
+    * SrReal >= r5168
+
+  * SANS software (svn://danse.us/sans/releases)
+    * sansmodels-0.4.6 (sans.models)
+    * pr_inversion-0.2.4 (sans.pr)
+    * DataLoader-0.2.6 (DataLoader, optional, for examples and tests)
+
+  * Other
+    * numpy >= 1.0
+    * scipy >= 0.7.0 
+    * matplotlib >= 0.9 (optional, for examples)
+

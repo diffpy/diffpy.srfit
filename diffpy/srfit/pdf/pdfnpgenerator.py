@@ -128,7 +128,7 @@ class DebyePDFGenerator(ProfileGenerator):
 
         self.meta["stype"] = type
 
-        self._calc.setScatteringFactorTable(type)
+        self._calc.setScatteringFactorTableByType(type)
 
         return
     

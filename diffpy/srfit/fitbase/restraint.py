@@ -53,21 +53,24 @@ class Restraint(Validatable):
         
         eq      --  An equation whose evaluation is compared against the
                     restraint bounds.
-        lb      --  The lower bound on the restraint evaluation (default -inf).
-        ub      --  The lower bound on the restraint evaluation (default inf).
-        prefactor   --  A multiplicative prefactor for the restraint (default 1).
-        power   --  The power of the penalty (default 2).
+        lb      --  The lower bound on the restraint evaluation (float, default
+                    -inf).
+        ub      --  The lower bound on the restraint evaluation (float, default
+                    inf).
+        prefactor   --  A multiplicative prefactor for the restraint (float,
+                    default 1).
+        power   --  The power of the penalty (float, default 2).
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
-                    (default False).
+                    (bool, default False).
 
         """
         self.eq = eq
-        self.lb = lb
-        self.ub = ub
-        self.prefactor = prefactor
-        self.power = power
-        self.scaled = scaled
+        self.lb = float(lb)
+        self.ub = float(ub)
+        self.prefactor = float(prefactor)
+        self.power = float(power)
+        self.scaled = bool(scaled)
         return
 
     def penalty(self, w = 1.0):

@@ -45,7 +45,7 @@ class PDFGenerator(ProfileGenerator):
 
     Attributes:
     _calc   --  PDFCalculator instance for calculating the PDF
-    _phase  --  The structure ParameterSets used to calculate the profile.
+    _phase  --  The structure ParameterSet used to calculate the profile.
     _lastr  --  The last value of r over which the PDF was calculated. This is
                 used to configure the calculator when r changes.
 
@@ -133,7 +133,7 @@ class PDFGenerator(ProfileGenerator):
 
         self.meta["stype"] = type
 
-        self._calc.setScatteringFactorTable(type)
+        self._calc.setScatteringFactorTableByType(type)
 
         return
     

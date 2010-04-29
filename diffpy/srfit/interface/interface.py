@@ -183,7 +183,6 @@ def _applymanyargs(args, f):
     ((arg1a, arg1b, ...), ...)
 
     """
-    print args
     if not hasattr(args, '__iter__'):
         f(args)
         return
@@ -205,7 +204,6 @@ def _applyargs(args, f):
     ((arg1a, arg1b, ...), ...)
 
     """
-    print args
     if not hasattr(args, '__iter__'):
         f(args)
     else:

@@ -62,4 +62,4 @@ Relese Definition
 --------------------
 
 The SrFit Alpha-6 release definition can be found at
-http://danse.us/trac/diffraction/wiki/SrFitReleaseAlpha6.
+http://danse.us/trac/diffraction/wiki/SrFitReleaseBeta0.

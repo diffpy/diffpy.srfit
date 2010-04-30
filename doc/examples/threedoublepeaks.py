@@ -86,7 +86,7 @@ def makeRecipe():
          bkgd")
 
     # c is the center of the gaussian.
-    contribution.c.setValue( x[len(x)/2] )
+    contribution.c.value =  x[len(x)/2] 
 
     ## The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
@@ -133,8 +133,8 @@ def makeRecipe():
     recipe.registerFunction(sig)
     recipe.fixVar("mu")
     # Now constrain the peak widths to this
-    recipe.sig0.setValue(0.001)
-    recipe.dsig.setValue(4.0)
+    recipe.sig0.value = 0.001
+    recipe.dsig.value = 4.0
     recipe.constrain(contribution.sig11, "sig(sig0, dsig, mu11)")
     recipe.constrain(contribution.sig12, "sig(sig0, dsig, mu12)", 
             ns = {"mu12" : contribution.mu12} )

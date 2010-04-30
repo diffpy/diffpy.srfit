@@ -80,9 +80,9 @@ def makeRecipe(ciffile, grdata, iqdata):
     # diq to be specified. These represent the SAS Q, I(Q) and uncertainty in
     # I(Q). These are held in the sasprofile.
     prcalculator = PrCalculator("P")
-    prcalculator.q.setValue(sasprofile.x)
-    prcalculator.iq.setValue(sasprofile.y)
-    prcalculator.diq.setValue(sasprofile.dy)
+    prcalculator.q.value = sasprofile.x
+    prcalculator.iq.value = sasprofile.y
+    prcalculator.diq.value = sasprofile.dy
 
     # Now we register the calculator with pdfcontribution. This allows us to
     # use it in the fitting equation. The nanoparticle fitting equation is 

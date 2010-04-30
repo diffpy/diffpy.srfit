@@ -22,8 +22,8 @@ quantity to be minimized, variables that can be used to manipulate that
 function and an algorithm that can drive the function output to a smaller value
 by steering the variables.  For scientific purposes, the quantity to be
 minimized is the disagreement between a measured profile and a theoretical
-profile; where the scientific understanding of the system under consideration
-partly determines the suitability of the theoretical profile generator and the
+profile. The scientific understanding of the system under consideration partly
+determines the suitability of the theoretical profile generator and the
 scientific relevance of the variables used to drive it.
 
 The purpose of SrFit is to give users the means to combine known information
@@ -35,8 +35,9 @@ consistent manner.
 
 To achieve this purpose, SrFit provides:
 
-1) a function to be optimized given one or more measured profiles, one or more
-   profile generators and variables to be steered by an optimizer.
+1) a function to be optimized (the residual) given one or more measured
+   profiles, one or more profile generators and variables to be steered by an
+   optimizer.
 2) constraints and restraints that encapsulate known information about the
    system.
 3) a clearly defined programming interface that developers can use to add their
@@ -53,8 +54,10 @@ Examples
 ----------
 
 The following examples are contained in the *doc/examples/* directory of the
-SrFit source distribution.  For each example, start by running the example by
-typing in the command line ::
+SrFit source distribution.  They can be downloaded from
+http://dev.danse.us/packages/srfit_examples-alpha6.zip
+
+For each example, start by running the example by typing in the command line ::
 
     python example.py
 
@@ -81,7 +84,8 @@ Basic:
 
 * debyemodelII.py_
     Refine two different values of a variable from two different regions of a
-    profile. This example introduces constraints.
+    profile. This example introduces constraints and working with multiple
+    contributions to a fit.
 
 Advanced:
 
@@ -106,9 +110,9 @@ Use Cases
 -----------
 
 There are several examples that demonstrate various SrFit use cases. These do
-not adopt the tutorial format of the previous examples. Regardless, SrFit
-developers should read through these use cases to gain an understanding of PDF
-and SAS refinement with SrFit.
+not adopt the tutorial format of the previous examples. Regardless, developers
+should read through these use cases to gain an understanding of PDF and SAS
+refinement with SrFit.
 
 * crystalpdf.py_
     Refine a diffpy.Structure crystal to PDF data using automatic explicit space

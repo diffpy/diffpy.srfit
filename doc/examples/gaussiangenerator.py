@@ -103,10 +103,11 @@ class GaussianGenerator(ProfileGenerator):
 
         """
         # First we must get the values of the Parameters. Since we used
-        # _newParameter to create them, the Parameters are accessible by name.
-        A = self.A.getValue()
-        x0 = self.x0.getValue()
-        sigma = self.sigma.getValue()
+        # _newParameter to create them, the Parameters are accessible as
+        # attributes by name.
+        A = self.A.value
+        x0 = self.x0.value
+        sigma = self.sigma.value
 
         # Now we can use them. Note that we imported exp from numpy at the top
         # of the module.
@@ -164,7 +165,7 @@ def makeRecipe():
     recipe.addVar(generator.A, 1)
     recipe.addVar(generator.x0, 5)
     recipe.addVar(generator.sigma, name = "sig")
-    recipe.sig.setValue(1)
+    recipe.sig.value = 1
 
     # Give the recipe away so it can be used!
     return recipe

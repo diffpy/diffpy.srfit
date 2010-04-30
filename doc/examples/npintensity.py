@@ -241,7 +241,7 @@ def makeRecipe(strufile, datname):
     contribution.registerFunction(gaussian)
 
     # Center the Gaussian so it is not truncated.
-    contribution.q0.setValue(x[len(x)/2])
+    contribution.q0.value = x[len(x)/2]
 
     # Now we can incorporate the scale and bkgd into our calculation. We also
     # convolve the signal with the Gaussian to broaden it. Recall that we don't

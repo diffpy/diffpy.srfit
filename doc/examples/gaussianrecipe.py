@@ -127,7 +127,7 @@ def makeRecipe():
     # numbers. To change the value of a parameter, use its 'setValue' method.
     # To get its value, use the 'getValue' method. Parameters also have a
     # 'name' attribute
-    contribution.A.setValue(1.0)
+    contribution.A.value = 1.0
 
     ## The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
@@ -153,7 +153,7 @@ def makeRecipe():
     # Parameter of our FitContribution. We give it an initial value through the
     # FitRecipe instance.
     recipe.addVar(contribution.sigma, name = "sig")
-    recipe.sig.setValue(1)
+    recipe.sig.value = 1
 
     return recipe
 

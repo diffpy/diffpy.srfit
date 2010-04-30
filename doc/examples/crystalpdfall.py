@@ -131,11 +131,11 @@ def makeRecipe(ciffile_ni, ciffile_si, xdata_ni, ndata_ni, xdata_si,
 
     # The qdamp parameters are too correlated to vary so we fix them based on
     # previous measurments.
-    xgenerator_ni.qdamp.setValue(0.055)
-    xgenerator_si.qdamp.setValue(0.051)
-    ngenerator_ni.qdamp.setValue(0.030)
-    xgenerator_sini_ni.qdamp.setValue(0.052)
-    xgenerator_sini_si.qdamp.setValue(0.052)
+    xgenerator_ni.qdamp.value = 0.055
+    xgenerator_si.qdamp.value = 0.051
+    ngenerator_ni.qdamp.value = 0.030
+    xgenerator_sini_ni.qdamp.value = 0.052
+    xgenerator_sini_si.qdamp.value = 0.052
 
     # Give the recipe away so it can be used!
     return recipe

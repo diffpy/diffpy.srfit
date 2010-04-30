@@ -110,7 +110,7 @@ class PDFGenerator(ProfileGenerator):
         """
         qmin = self.meta["qmin"]
         qmax = self.meta["qmax"]
-        return pdf(self.phase.stru, r, self.delta2.getValue(), qmin, qmax)
+        return pdf(self.phase.stru, r, self.delta2.value, qmin, qmax)
 
 # End class PDFGenerator
 

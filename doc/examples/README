@@ -142,7 +142,7 @@ refinement with SrFit.
     Refine PDF from nanoparticle of unknown shape using a crystal model and SAS
     data from the same system.
 
-* nppdfsas.py_
+* nppdfsasII.py_
     As nppdfsas.py_, but refine the shape of the nanoparticle as well.
 
 Miscellaneous

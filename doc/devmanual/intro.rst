@@ -45,15 +45,21 @@ Features
 
  * Supports simultaneous PDF refinement of one or more crystal phases from one
    or more data sets.
- * Fast PDF calculation provided by SrReal.
  * Refine diffpy.Structure or pyobjcryst.crystal.Crystal objects to data.
+ * Fast PDF calculation provided by SrReal.
+   (http://danse.us/trac/diffraction/wiki/SrReal)
+ * Powerful molecule constraints and restraints from ObjCryst++ via PyObjCryst
+   (http://vincefn.net/ObjCryst/)
  * Automatic and user-defined space group constraints.
  * Data parser compatible with PDFGetX2 and PDFGetN output.
  * Automatic configuration from parsed metadata.
- * Small-angle scattering models leveraging the DANSE SANS software.
+ * Small-angle scattering models leveraging the DANSE SANS software
+   (http://danse.chem.utk.edu/).
+ * Various nanoparticle form factors for nanoparticle PDF modeling - extended
+   by small-angle scattering inversion.
 
 Relese Definition
 --------------------
 
-The SrFit Alpha-5 release definition can be found at
-http://danse.us/trac/diffraction/wiki/SrFitReleaseAlpha5.
+The SrFit Alpha-6 release definition can be found at
+http://danse.us/trac/diffraction/wiki/SrFitReleaseAlpha6.

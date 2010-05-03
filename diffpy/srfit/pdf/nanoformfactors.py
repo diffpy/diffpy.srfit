@@ -302,7 +302,8 @@ class SASFormFactor(Calculator):
         # We also have to make a q-spacing small enough to compute out to at
         # least the size of the signal. 
         dr = min(0.01, r[1] - r[0])
-        rmax = 2 * r[-1]
+        ed = 2 * self._model.calculate_ER()
+        rmax = max(ed, 2 * r[-1])
         dq = pi / rmax
         qmax = pi / dr
         numpoints = int(2**(ceil(log2(qmax/dq))))

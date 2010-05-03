@@ -124,9 +124,8 @@ def makeRecipe():
 
     # To demonstrate how these parameters are used, we will give "A" an initial
     # value. Note that Parameters are not numbers, but are containers for
-    # numbers. To change the value of a parameter, use its 'setValue' method.
-    # To get its value, use the 'getValue' method. Parameters also have a
-    # 'name' attribute
+    # numbers. To get or modify the value of a parameter, use its 'value'
+    # attribute.  Parameters also have a 'name' attribute.
     contribution.A.value = 1.0
 
     ## The FitRecipe

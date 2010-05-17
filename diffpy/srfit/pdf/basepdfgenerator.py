@@ -248,7 +248,7 @@ class BasePDFGenerator(ProfileGenerator):
         self._lastr = r
         self._calc.rstep = r[1] - r[0]
         self._calc.rmin = r[0]
-        self._calc.rmax = r[-1] + self._calc.peakprecision
+        self._calc.rmax = r[-1] + 0.5*self._calc.rstep
         return
 
     def _validate(self):

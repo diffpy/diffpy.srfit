@@ -101,10 +101,6 @@ Advanced:
     Use the calculator built in npintensity.py to simultaneously refine a
     structure to two data sets.
 
-* nppdfobjcryst.py_
-    Create a nanoparticle PDF calculator using pyobjcryst and refine the C60
-    structure to real data.
-
 
 Use Cases
 -----------
@@ -130,6 +126,9 @@ refinement with SrFit.
 
 * crystalpdfall.py_
     Refine a two-phase structure using four data sets.
+
+* nppdfobjcryst.py_
+    Refine the C60 structure to real data.
 
 * nppdfcrystal.py_
     Fit a nanoparticle PDF as a crystal PDF attenuated by a nanoparticle form

@@ -127,11 +127,10 @@ class TestPDFGenerator(unittest.TestCase):
         # PDFGenerator interface.
         from diffpy.srreal.pdfcalculator import PDFCalculator
         calc = PDFCalculator()
-        calc._setDoubleAttr('rstep', r[1] - r[0])
-        calc._setDoubleAttr('rmin', r[0])
-        precision = calc._getDoubleAttr("peakprecision")
-        calc._setDoubleAttr('rmax', r[-1] + precision)
-        calc._setDoubleAttr('qmax', qmax)
+        calc.rstep = r[1] - r[0]
+        calc.rmin = r[0]
+        calc.rmax = r[-1] + 0.5 * calc.rstep
+        calc.qmax = qmax
         calc.setScatteringFactorTableByType('N')
         calc.eval(stru)
         yref = calc.getPDF()

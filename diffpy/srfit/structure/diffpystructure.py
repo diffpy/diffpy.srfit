@@ -78,7 +78,7 @@ class AtomParSet(ParameterSet):
     
     """
 
-    def __init__(self, atom, name):
+    def __init__(self, name, atom):
         """Initialize
 
         atom    --  A diffpy.Structure.Atom instance
@@ -228,9 +228,10 @@ class StructureParSet(SrRealStructure):
     
     """
 
-    def __init__(self, stru, name):
+    def __init__(self, name, stru):
         """Initialize
 
+        name    --  A name for the structure
         stru    --  A diffpy.Structure.Structure instance
 
         """
@@ -248,7 +249,7 @@ class StructureParSet(SrRealStructure):
             i = cdict.get(el, 0)
             aname = "%s%i"%(el,i)
             cdict[el] = i+1
-            atom = AtomParSet(a, aname)
+            atom = AtomParSet(aname, a)
             self.addParameterSet(atom)
             self.atoms.append(atom)
 

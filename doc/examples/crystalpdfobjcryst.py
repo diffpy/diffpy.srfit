@@ -14,7 +14,7 @@
 ########################################################################
 """Example of a PDF refinement using pyobjcryst and PDFGenerator.
 
-This example is similar to crystapdf.py, except that here we refine a
+This example is similar to crystalpdf.py, except that here we refine a
 pyobjcryst crystal object. In this example we use internal constraints provided
 by the ObjCrystParSet structure adapter.
 

@@ -174,7 +174,9 @@ class MoleculeParSet(ScattererParSet):
 
     Attributes:
     scat        --  The adapted pyobjcryst.molecule.Molecule.
-    parent      --  The ObjCrystParSet this belongs to.
+    stru        --  The adapted pyobjcryst.molecule.Molecule.
+    parent      --  The ObjCrystParSet this belongs to. MoleculeParSets can be
+                    used on their own, in which case this is None.
 
     Managed Parameters:
     x, y, z     --  Molecule position in crystal coordinates (ParameterAdapter)
@@ -187,15 +189,16 @@ class MoleculeParSet(ScattererParSet):
 
     """
 
-    def __init__(self, name, molecule, parent):
+    def __init__(self, name, molecule, parent = None):
         """Initialize
 
         name    --  The name of the scatterer
         molecule    --  The pyobjcryst.Molecule instance
-        parent  --  The ObjCrystParSet this belongs to
+        parent  --  The ObjCrystParSet this belongs to (default None).
 
         """
         ScattererParSet.__init__(self, name, molecule, parent)
+        self.stru = molecule
 
         # Add orientiation quaternion
         self.addParameter(ParameterAdapter("q0", self.scat, attr = "Q0"))
@@ -223,6 +226,24 @@ class MoleculeParSet(ScattererParSet):
 
         return
 
+    @classmethod
+    def canAdapt(self, stru):
+        """Return whether the structure can be adapted by this class."""
+        from pyobjcryst.molecule import Molecule
+        return isinstance(stru, Molecule)
+
+    def getLattice(self):
+        """Get the ParameterSet containing the lattice Parameters."""
+        lattice = ParameterSet("lattice")
+        lattice.newPar("a", 1.0)
+        lattice.newPar("b", 1.0)
+        lattice.newPar("c", 1.0)
+        lattice.newPar("alpha", 90)
+        lattice.newPar("beta", 90)
+        lattice.newPar("gamma", 90)
+        lattice.angunits = "deg"
+        return self.lattice
+
     def getScatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
@@ -233,6 +254,10 @@ class MoleculeParSet(ScattererParSet):
 
         """
         return self.atoms
+
+    def getSpaceGroup(self):
+        """Get the HM space group symbol for the structure."""
+        return "P1"
 
     def wrapRestraints(self):
         """Wrap the restraints implicit to the molecule.
@@ -1302,11 +1327,11 @@ class ObjCrystParSet(SrRealStructure):
 
     """
 
-    def __init__(self, cryst, name):
+    def __init__(self, name, cryst):
         """Initialize
 
-        cryst   --  An pyobjcryst.Crystal instance.
         name    --  A name for this ParameterSet
+        cryst   --  An pyobjcryst.Crystal instance.
 
         """
         ParameterSet.__init__(self, name)

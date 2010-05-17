@@ -35,7 +35,7 @@ Extensions
   this example. Try other scipy optimizers and see how well they perform.
 - The BondLengthParameter object returned by 'addBondLengthParameter' has an
   'addAtoms' method that can be used to associate additional atoms with the
-  bond length. These when the BondLengthParameter is adjusted, these additional
+  bond length. When the BondLengthParameter is adjusted, these additional
   atoms will be moved in the same way as the mutable atom in that bond.  Use
   this to define two rigid halves of the C60 molecule (a top half and a bottom
   half) and run the refinement.  To save the refined structure, write code in
@@ -93,7 +93,7 @@ class PDFGenerator(ProfileGenerator):
 
         # Create a custom ParameterSet designed to interface with
         # pyobjcryst.Crystal
-        parset = ObjCrystParSet(cryst, "phase")
+        parset = ObjCrystParSet("phase", cryst)
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
         return
@@ -132,7 +132,7 @@ def makeRecipe(cryst, datname):
     profile.setCalculationRange(xmin=1.6, xmax=8)
 
     ## The ProfileGenerator
-    # Create an PDFGenerator named "G". This will be the name we use to refer
+    # Create a PDFGenerator named "G". This will be the name we use to refer
     # to the generator from within the FitContribution equation.  We also need
     # to load the pyobjcryst Crystal we're using.
     generator = PDFGenerator("G")

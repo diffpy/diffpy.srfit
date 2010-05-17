@@ -98,8 +98,7 @@ class DebyePDFGenerator(ProfileGenerator):
         if qmax is not None:
             self.setQmax(qmax)
 
-        #parnames = ['delta1', 'delta2', 'qbroad', 'qdamp']
-        parnames = ['delta1', 'delta2', 'qbroad']
+        parnames = ['delta1', 'delta2', 'qbroad', 'qdamp']
 
         for name in parnames:
             val = self.meta.get(name)
@@ -107,7 +106,6 @@ class DebyePDFGenerator(ProfileGenerator):
                 par = self.get(name)
                 par.setValue(val)
 
-        return
         scale = self.meta.get('scale')
         if scale is not None:
             self.scale.setValue(scale)
@@ -138,7 +136,7 @@ class DebyePDFGenerator(ProfileGenerator):
 
     def setQmax(self, qmax):
         """Set the qmax value."""
-        self._calc._setDoubleAttr("qmax", qmax)
+        self._calc.qmax = qmax
         self.meta["qmax"] = qmax
         return
 
@@ -150,7 +148,7 @@ class DebyePDFGenerator(ProfileGenerator):
         """Set the qmin value.
 
         """
-        self._calc._setDoubleAttr("qmin", qmin)
+        self._calc.qmin = qmin
         self.meta["qmin"] = qmin
         return
 
@@ -166,11 +164,11 @@ class DebyePDFGenerator(ProfileGenerator):
         diffpy.srfit.structure) for how they are used. The resulting
         ParameterSet will be managed by this generator.
 
-        stru    --  diffpy.Structure.Structure or pyobjcryst.crystal.Crystal
-                    instance. Default None.
+        stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
+                    pyobjcryst.molecule.Molecule instance . Default None.
         name    --  A name to give the structure. If name is None (default),
                     then the name will be set as "phase".
-        parset  --  A ParameterSet that hoolds the structural information. This
+        parset  --  A ParameterSet that holds the structural information. This
                     can be used to share the phase between multiple
                     PDFGenerators, and have the changes in one reflect in
                     another. If both stru and parset are specified, only parset
@@ -187,7 +185,7 @@ class DebyePDFGenerator(ProfileGenerator):
             raise ValueError("One of stru or parset must be specified")
 
         if parset is None:
-            parset = struToParameterSet(stru, name)
+            parset = struToParameterSet(name, stru)
 
         self._phase = parset
 
@@ -258,11 +256,10 @@ class DebyePDFGenerator(ProfileGenerator):
         """Prepare the calculator when a new r-value is passed."""
         # TODO - Should we handle non-uniform data?
         self._lastr = r
-        self._calc._setDoubleAttr('rstep', r[1] - r[0])
-        self._calc._setDoubleAttr('rmin', r[0])
+        self._calc.rstep = r[1] - r[0]
+        self._calc.rmin = r[0]
         #precision = self._calc._getDoubleAttr("peakprecision")
-        #self._calc._setDoubleAttr('rmax', r[-1] + precision)
-        self._calc._setDoubleAttr('rmax', r[-1])
+        self._calc.rmax = r[-1]
         return
 
     def __call__(self, r):
@@ -282,6 +279,8 @@ class DebyePDFGenerator(ProfileGenerator):
         y  = self._calc.getPDF()
         if numpy.isnan(y).any():
             y = numpy.zeros_like(r)
+        else:
+            y = numpy.interp(r, self._calc.getRgrid(), y)
         return y
 
 # End class DebyePDFGenerator

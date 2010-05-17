@@ -285,13 +285,15 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
             raise AttributeError(e)
         if self._eq is None:
             raise AttributeError("_eq is None")
+
+        val = None
         try:
             val = self._eq()
         except TypeError, e:
             raise AttributeError("_eq cannot be evaluated")
-        finally:
-            if val is None:
-                raise AttributeError("_eq evaluates to None")
+
+        if val is None:
+            raise AttributeError("_eq evaluates to None")
 
         # Try to get the value for residual
         try:

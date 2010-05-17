@@ -22,7 +22,7 @@ class TestParameterAdapter(unittest.TestCase):
         a1 = dsstru[0]
         a2 = dsstru[1]
 
-        s = StructureParSet(dsstru, "CuAg")
+        s = StructureParSet("CuAg", dsstru)
 
         self.assertEquals(s.name, "CuAg")
 

@@ -173,8 +173,8 @@ class PDFGenerator(ProfileGenerator):
         diffpy.srfit.structure) for how they are used. The resulting
         ParameterSet will be managed by this generator.
 
-        stru    --  diffpy.Structure.Structure or pyobjcryst.crystal.Crystal
-                    instance. Default None.
+        stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
+                    pyobjcryst.molecule.Molecule instance . Default None.
         name    --  A name to give the structure. If name is None (default),
                     then the name will be set as "phase".
         parset  --  A ParameterSet that holds the structural information. This
@@ -194,7 +194,7 @@ class PDFGenerator(ProfileGenerator):
             raise ValueError("One of stru or parset must be specified")
 
         if parset is None:
-            parset = struToParameterSet(stru, name)
+            parset = struToParameterSet(name, stru)
 
         self._phase = parset
 
@@ -257,10 +257,9 @@ class PDFGenerator(ProfileGenerator):
         """Prepare the calculator when a new r-value is passed."""
         # TODO - Should we handle non-uniform data?
         self._lastr = r
-        self._calc._setDoubleAttr('rstep', r[1] - r[0])
-        self._calc._setDoubleAttr('rmin', r[0])
-        precision = self._calc._getDoubleAttr("peakprecision")
-        self._calc._setDoubleAttr('rmax', r[-1] + precision)
+        self._calc.rstep = r[1] - r[0]
+        self._calc.rmin = r[0]
+        self._calc.rmax = r[-1] + self._calc.peakprecision
         return
 
     def _validate(self):
@@ -294,6 +293,9 @@ class PDFGenerator(ProfileGenerator):
         y = self._calc.getPDF()
         if numpy.isnan(y).any():
             y = numpy.zeros_like(r)
+        else:
+            # Only way to guarantee we're on the same grid
+            y = numpy.interp(r, self._calc.getRgrid(), y)
         return y
 
 

@@ -19,7 +19,7 @@
 # package version
 from diffpy.srfit.version import __version__
 
-def struToParameterSet(stru, name):
+def struToParameterSet(name, stru):
     """Creates a ParameterSet from an structure.
 
     This returns a ParameterSet adapted for the structure depending on its
@@ -31,15 +31,19 @@ def struToParameterSet(stru, name):
     """
     from diffpy.srfit.structure.diffpystructure import StructureParSet
     if StructureParSet.canAdapt(stru):
-        return StructureParSet(stru, name)
+        return StructureParSet(name, stru)
 
     from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
     if ObjCrystParSet.canAdapt(stru):
-        return ObjCrystParSet(stru, name)
+        return ObjCrystParSet(name, stru)
+
+    from diffpy.srfit.structure.objcryststructure import MoleculeParSet
+    if MoleculeParSet.canAdapt(stru):
+        return MoleculeParSet(name, stru)
 
     from diffpy.srfit.structure.cctbxstructure import CCTBXStructureParSet
     if CCTBXStructureParSet.canAdapt(stru):
-        return CCTBXStructureParSet(stru, name)
+        return CCTBXStructureParSet(name, stru)
 
     raise TypeError("Unadapatable structure format")
 

@@ -113,7 +113,7 @@ class TestParameterAdapter(unittest.TestCase):
         occryst = self.occryst
         ocmol = self.ocmol
 
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
 
         self.assertEquals(cryst.name, "bucky")
@@ -192,7 +192,7 @@ class TestParameterAdapter(unittest.TestCase):
         ocmol.AddBond(ocmol[0], ocmol[7], 3.3, 0.1, 0.1)
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
         m.wrapRestraints()
 
@@ -218,7 +218,7 @@ class TestParameterAdapter(unittest.TestCase):
         ocmol.AddBondAngle(ocmol[0], ocmol[7], ocmol[44], 1.3, 0.1, 0.1)
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
         m.wrapRestraints()
 
@@ -246,7 +246,7 @@ class TestParameterAdapter(unittest.TestCase):
                 0.1, 0.1)
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
         m.wrapRestraints()
 
@@ -273,7 +273,7 @@ class TestParameterAdapter(unittest.TestCase):
         ocmol = self.ocmol
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         return
         m = cryst.c60
 
@@ -303,7 +303,7 @@ class TestParameterAdapter(unittest.TestCase):
         ocmol = self.ocmol
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
 
         # restrain some bond angles
@@ -329,7 +329,7 @@ class TestParameterAdapter(unittest.TestCase):
         ocmol = self.ocmol
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
 
         # Restrain some dihedral angles.
@@ -356,7 +356,7 @@ class TestParameterAdapter(unittest.TestCase):
         ocmol = self.ocmol
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
 
         a0 = m.atoms[0]
@@ -417,7 +417,7 @@ class TestParameterAdapter(unittest.TestCase):
         ocmol = self.ocmol
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
 
         a0 = m.atoms[0]
@@ -485,7 +485,7 @@ class TestParameterAdapter(unittest.TestCase):
         ocmol = self.ocmol
 
         # make our crystal
-        cryst = ObjCrystParSet(occryst, "bucky")
+        cryst = ObjCrystParSet("bucky", occryst)
         m = cryst.c60
 
         a0 = m.atoms[0]

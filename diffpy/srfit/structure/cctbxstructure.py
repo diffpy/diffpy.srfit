@@ -184,11 +184,11 @@ class CCTBXStructureParSet(BaseStructure):
     
     """
 
-    def __init__(self, stru, name):
+    def __init__(self, name, stru):
         """Initialize
 
-        stru    --  A CCTBX structure instance.
         name    --  A name for this
+        stru    --  A CCTBX structure instance.
 
         """
         ParameterSet.__init__(self, name)

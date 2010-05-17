@@ -64,7 +64,7 @@ class TestSGConstraints(unittest.TestCase):
         pi = numpy.pi
 
         occryst = makeLaMnO3()
-        stru = ObjCrystParSet(occryst, occryst.GetName())
+        stru = ObjCrystParSet(occryst.GetName(), occryst)
 
         # Check the orthorhombic lattice
         l = stru.getLattice()
@@ -123,7 +123,7 @@ class TestSGConstraints(unittest.TestCase):
         from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
 
         stru = makeLaMnO3_P1()
-        parset = StructureParSet(stru, "LaMnO3")
+        parset = StructureParSet("LaMnO3", stru)
 
         sgpars = constrainAsSpaceGroup(parset, "P b n m",
                 scatterers = parset.getScatterers()[::2],

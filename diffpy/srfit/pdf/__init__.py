@@ -18,6 +18,7 @@
 """
 
 from pdfgenerator import PDFGenerator
+from pdfnpgenerator import DebyePDFGenerator
 from pdfparser import PDFParser
 
 # package version

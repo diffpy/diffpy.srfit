@@ -260,7 +260,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                         scatterer.unconstrain(par)
                         par.setConst(False)
 
-                for pname in enumerate(adpsymbols):
+                for pname in adpsymbols:
                     par = scatterer.get(pname)
                     if par is not None:
                         scatterer.unconstrain(par)
@@ -396,14 +396,16 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             if isosymbol and g.Uisotropy[idx] and idx not in isoidx:
                 isoidx.append(idx)
                 par = scatterer.get(isosymbol)
-                parname = "%s_%i" % (isosymbol, idx)
-                newpar = self.__addPar(parname, par)
-                self.adppars.append(newpar)
-                isonames.append(newpar.name)
+                if par is not None:
+                    parname = "%s_%i" % (isosymbol, idx)
+                    newpar = self.__addPar(parname, par)
+                    self.adppars.append(newpar)
+                    isonames.append(newpar.name)
             else:
                 par = scatterer.get(name)
-                newpar = self.__addPar(pname, par)
-                self.adppars.append(newpar)
+                if par is not None:
+                    newpar = self.__addPar(pname, par)
+                    self.adppars.append(newpar)
 
         # Constrain dependent isotropics
         for idx, isoname in zip(isoidx[:], isonames):
@@ -588,8 +590,9 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
     compname = "%s_%i"%(parname, idx)
 
     # Check to see if this parameter is free
-    if compname == formula or (compname + " +1") == formula \
-            or (compname + " -1") == formula:
+    import re
+    pat = '%s *((\+|-) *\d+)?$'%compname
+    if re.match(pat, formula):
         return par
 
     # Check to see if it is a constant
@@ -600,6 +603,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
 
     # If we got here, then we have a constraint equation
     scatterer.constrain(par, formula, ns = ns)
+    print compname, formula
     return
 
 def _getFloat(formula):

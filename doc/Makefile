@@ -9,7 +9,7 @@ PKGROOT = ~/dev_danse_us/
 .PHONY : doc
 doc:
 	epydoc diffpy.srfit --html -vvv -o diffpy.srfitapi -n diffpy.srfit \
---include-log $@
+--include-log --exclude diffpy.srfit.structure.cctbxstructure $@
 	$(MAKE) -C devmanual $@
 
 .PHONY : upload

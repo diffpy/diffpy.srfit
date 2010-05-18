@@ -25,7 +25,7 @@ the 'registerFunction' method of that class.
 """
 
 __all__ = ["sphericalFF", "spheroidalFF", "spheroidalFF2",
-        "lognormalSphericalFF", "sheetFF"]
+"lognormalSphericalFF", "sheetFF", "shellFF", "shellFF2", "SASFormFactor"]
 
 import numpy
 from numpy import pi, sqrt, log, exp, log2, ceil, sign

@@ -603,7 +603,6 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
 
     # If we got here, then we have a constraint equation
     scatterer.constrain(par, formula, ns = ns)
-    print compname, formula
     return
 
 def _getFloat(formula):

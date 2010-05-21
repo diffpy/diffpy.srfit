@@ -235,7 +235,7 @@ class StructureParSet(SrRealStructure):
         stru    --  A diffpy.Structure.Structure instance
 
         """
-        ParameterSet.__init__(self, name)
+        SrRealStructure.__init__(self, name)
         self.stru = stru
         self.addParameterSet(LatticeParSet(stru.lattice))
         self.atoms = []

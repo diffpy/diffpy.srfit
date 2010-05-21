@@ -17,6 +17,8 @@
 
 __all__ = ["BaseStructure"]
 
+from diffpy.srreal.srreal_ext import nosymmetry
+
 from .basestructure import BaseStructure
 from .bvsrestraint import BVSRestraint
 
@@ -27,9 +29,17 @@ class SrRealStructure(BaseStructure):
     provided by SrReal.
 
     Attributes:
-    stru    --  The adapted object
+    stru            --  The adapted object
+    _usesymmetry    --  A flag indicating if SrReal calculators that operate on
+                        this object should use symmetry.
 
     """
+
+    def __init__(self, *args, **kw):
+        BaseStructure.__init__(self, *args, **kw)
+        self._usesymmetry = True
+        self.stru = None
+        return
 
     def restrainBVS(self, prefactor = 1, scaled = False):
         """Restrain the bond-valence sum to zero.
@@ -52,11 +62,35 @@ class SrRealStructure(BaseStructure):
         """
 
         # Create the Restraint object
-        res = BVSRestraint(self.stru, prefactor, scaled)
+        res = BVSRestraint(self._getSrRealStructure(), prefactor, scaled)
         # Add it to the _restraints set
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
         self._updateConfiguration()
         # Return the Restraint object
         return res
+
+    def useSymmetry(self, use = True):
+        """Set this structure to use symmetry.
+
+        This determines how the structure is treated by SrReal calculators.
+        
+        """
+        self._usesymmetry = bool(use)
+        return
+
+    def usingSymmetry(self):
+        """Check if symmetry is being used."""
+        return self._usesymmetry
+
+    def _getSrRealStructure(self):
+        """Get the structure object for use with SrReal calculators.
+
+        If this is periodic, then return the structure, otherwise, wrap it as
+        nonperiodic first.
+
+        """
+        if self._usesymmetry:
+            return self.stru
+        return nosymmetry(self.stru)
 

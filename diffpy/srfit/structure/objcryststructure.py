@@ -234,6 +234,15 @@ class MoleculeParSet(ScattererParSet):
         from pyobjcryst.molecule import Molecule
         return isinstance(stru, Molecule)
 
+    def _getSrRealStructure(self):
+        """Get the structure object for use with SrReal calculators.
+
+        If this is periodic, then return the structure, otherwise, wrap it as
+        nonperiodic first.
+
+        """
+        return self.stru
+
     def getLattice(self):
         """Get the ParameterSet containing the lattice Parameters."""
         lattice = ParameterSet("lattice")
@@ -1310,9 +1319,10 @@ class ObjCrystParSet(SrRealStructure):
     stru        --  The adapted pyobjcryst.Crystal.
     scatterers  --  The list of aggregated ScattererParSets (either AtomParSet
                     or MoleculeParSet), provided for convenience.
-    sgpars      --  A BaseSpaceGroupParameters object containing free structure
+    _sgpars     --  A BaseSpaceGroupParameters object containing free structure
                     Parameters. See the diffpy.srfit.structure.sgconstraints
                     module.
+    sgpars      --  property that creates _sgpars when it is needed.
     angunits    --  "rad", the units of angle
 
     Managed Parameters:
@@ -1332,9 +1342,10 @@ class ObjCrystParSet(SrRealStructure):
         cryst   --  An pyobjcryst.Crystal instance.
 
         """
-        ParameterSet.__init__(self, name)
+        SrRealStructure.__init__(self, name)
         self.angunits = "rad"
         self.stru = cryst
+        self._sgpars = None
 
         self.addParameter(ParameterAdapter("a", self.stru, attr = "a"))
         self.addParameter(ParameterAdapter("b", self.stru, attr = "b"))
@@ -1371,26 +1382,34 @@ class ObjCrystParSet(SrRealStructure):
             self.scatterers.append(parset)
             snames.append(name)
 
-        # Constrain parameters to the space group
-        sg = self._createSpaceGroup()
+        return
+
+    def _constrainSpaceGroup(self):
+        """Constrain the space group."""
+        if self._sgpars is not None:
+            return self._sgpars
+        sg = self._createSpaceGroup(self.stru.GetSpaceGroup())
         from diffpy.srfit.structure.sgconstraints import _constrainAsSpaceGroup
         adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
         isosymbol = "Biso"
         sgoffset = [0, 0, 0]
-        self.sgpars = _constrainAsSpaceGroup(self, sg, self.scatterers,
+        self._sgpars = _constrainAsSpaceGroup(self, sg, self.scatterers,
                 sgoffset, adpsymbols = adpsymbols, isosymbol = isosymbol)
+        return self._sgpars
 
-        return
+    sgpars = property(_constrainSpaceGroup)
 
-    def _createSpaceGroup(self):
-        """Create a diffpy.Structure.SpaceGroup object.
+    @staticmethod
+    def _createSpaceGroup(sgobjcryst):
+        """Create a diffpy.Structure.SpaceGroup object from pyobjcryst.
 
-        This uses the actual space group operations from the Crystal's space
-        group object so there is no abiguity about the actual space group.
+        sgobjcryst  --  A pyobjcryst.spacegroup.SpaceGroup instance.
+
+        This uses the actual space group operations from the
+        pyobjcryst.spacegroup.SpaceGroup instance so there is no abiguity about
+        the actual space group.
 
         """
-        cryst = self.stru
-        sgobjcryst = cryst.GetSpaceGroup()
         from diffpy.Structure.SpaceGroups import GetSpaceGroup, SymOp
         name = sgobjcryst.GetName()
         extnstr = ":%s" % sgobjcryst.GetExtension()

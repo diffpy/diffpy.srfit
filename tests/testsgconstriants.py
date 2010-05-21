@@ -65,6 +65,7 @@ class TestSGConstraints(unittest.TestCase):
 
         occryst = makeLaMnO3()
         stru = ObjCrystParSet(occryst.GetName(), occryst)
+        stru._constrainSpaceGroup()
 
         # Check the orthorhombic lattice
         l = stru.getLattice()

@@ -278,7 +278,7 @@ class BasePDFGenerator(ProfileGenerator):
         if r is not self._lastr:
             self.__prepare(r)
 
-        self._calc.eval(self._phase.stru)
+        self._calc.eval(self._phase._getSrRealStructure())
         y = self._calc.getPDF()
         if numpy.isnan(y).any():
             y = numpy.zeros_like(r)

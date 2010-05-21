@@ -274,6 +274,20 @@ class Profile(Observable, Validatable):
         self.setObservedProfile(x, y, dy)
         return
 
+    def savetxt(self, fname, fmt='%.18e', delimiter=' '):
+        """Call numpy.savetxt with x, ycalc, y, dy
+
+        Arguments are passed to numpy.savetxt. 
+
+        """
+        x = self.x
+        ycalc = self.ycalc
+        y = self.y
+        dy = self.dy
+        numpy.savetxt(fname, zip(x, ycalc, y, dy), fmt, delimiter)
+        return
+
+
     def _flush(self, other):
         """Invalidate cached state.
 

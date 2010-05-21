@@ -82,6 +82,20 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
     """
 
     sg = SpaceGroups.GetSpaceGroup(sgsymbol)
+    sgp = _constrainAsSpaceGroup(phase, sg, scatterers, sgoffset,
+            constrainlat, constrainadps, adpsymbols, isosymbol)
+
+    return sgp
+
+def _constrainAsSpaceGroup(phase, sg, scatterers = None, 
+        sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
+        adpsymbols = stdUsymbols, isosymbol = "Uiso"):
+    """Restricted interface to constrainAsSpaceGroup.
+
+    Arguments: As constrainAsSpaceGroup, except
+    sg          --  diffpy.Structure.SpaceGroups.GetSpaceGroup instance
+
+    """
 
     if scatterers is None:
         scatterers = phase.getScatterers()

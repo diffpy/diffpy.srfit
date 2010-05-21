@@ -43,6 +43,8 @@ __all__ = ["ScattererParSet", "AtomParSet", "MoleculeParSet", "MolAtomParSet"
         "BondLengthParameter", "BondAngleParameter", "DihedralAngleParameter",
         "ObjCrystParSet"]
 
+import numpy
+
 from pyobjcryst.molecule import GetBondLength, GetBondAngle, GetDihedralAngle
 from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
 from pyobjcryst.molecule import StretchModeTorsion
@@ -254,10 +256,6 @@ class MoleculeParSet(ScattererParSet):
 
         """
         return self.atoms
-
-    def getSpaceGroup(self):
-        """Get the HM space group symbol for the structure."""
-        return "P1"
 
     def wrapRestraints(self):
         """Wrap the restraints implicit to the molecule.
@@ -1374,15 +1372,55 @@ class ObjCrystParSet(SrRealStructure):
             snames.append(name)
 
         # Constrain parameters to the space group
-        sgname = self.getSpaceGroup()
-        from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
+        sg = self._createSpaceGroup()
+        from diffpy.srfit.structure.sgconstraints import _constrainAsSpaceGroup
         adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
         isosymbol = "Biso"
         sgoffset = [0, 0, 0]
-        self.sgpars = constrainAsSpaceGroup(self, sgname, self.scatterers,
+        self.sgpars = _constrainAsSpaceGroup(self, sg, self.scatterers,
                 sgoffset, adpsymbols = adpsymbols, isosymbol = isosymbol)
 
         return
+
+    def _createSpaceGroup(self):
+        """Create a diffpy.Structure.SpaceGroup object.
+
+        This uses the actual space group operations from the Crystal's space
+        group object so there is no abiguity about the actual space group.
+
+        """
+        cryst = self.stru
+        sgobjcryst = cryst.GetSpaceGroup()
+        from diffpy.Structure.SpaceGroups import GetSpaceGroup, SymOp
+        name = sgobjcryst.GetName()
+        extnstr = ":%s" % sgobjcryst.GetExtension()
+        if name.endswith(extnstr):
+            name = name[:-len(extnstr)]
+
+        # Get whatever spacegroup we can get by name. This will set the proper
+        # crystal system.
+        sg = GetSpaceGroup(name)
+
+        # Replace the symmetry operations to guarantee that we get it right.
+        symops = sgobjcryst.GetSymmetryOperations()
+        tranops = sgobjcryst.GetTranslationVectors()
+        sg.symop_list = []
+
+        for trans in tranops:
+            for shift, rot in symops:
+                tv = trans + shift
+                tv -= numpy.floor(tv)
+                sg.symop_list.append( SymOp(rot, tv) )
+
+        if sgobjcryst.IsCentrosymmetric():
+            center = sgobjcryst.GetInversionCenter()
+            for trans in tranops:
+                for shift, rot in symops:
+                    tv = center - trans - shift
+                    tv -= numpy.floor(tv)
+                    sg.symop_list.append( SymOp(-rot , tv) )
+
+        return sg
 
     @classmethod
     def canAdapt(self, stru):
@@ -1404,17 +1442,6 @@ class ObjCrystParSet(SrRealStructure):
 
         """
         return self.scatterers
-
-    def getSpaceGroup(self):
-        """Get the HM space group symbol for the structure."""
-        sg = self.stru.GetSpaceGroup().GetName()
-        extn = self.stru.GetSpaceGroup().GetExtension()
-        extnstr = ":%s"%extn
-        if sg.endswith(extnstr):
-            sg = sg[:-len(extnstr)]
-        sg.replace(" ", "")
-        return sg
-
 
 # End class ObjCrystParSet
 

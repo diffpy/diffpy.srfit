@@ -278,11 +278,6 @@ class StructureParSet(SrRealStructure):
         """
         return self.atoms
 
-    def getSpaceGroup(self):
-        """Get the HM space group symbol for the structure."""
-        return "P 1"
-
-
 # End class StructureParSet
 
 __id__ = "$Id$"

@@ -559,6 +559,56 @@ class TestParameterAdapter(unittest.TestCase):
         
         return
 
+
+from diffpy.Structure import SpaceGroups
+
+class TestCreateSpaceGroup(unittest.TestCase):
+    """Test space group creation from pyobjcryst structures.
+
+    This makes sure that the space groups created by the structure parameter
+    set are correct.
+
+    """
+
+    @staticmethod
+    def getObjCrystParSetSpaceGroup(sg):
+        """Make an ObjCrystParSet with the proper space group."""
+        from pyobjcryst.spacegroup import SpaceGroup
+        sgobjcryst = SpaceGroup(sg.short_name)
+        sgnew = ObjCrystParSet._createSpaceGroup(sgobjcryst)
+        return sgnew
+
+    @staticmethod
+    def hashDiffPySpaceGroup(sg):
+        lines = [str(sg.number % 1000)] + sorted(map(str, sg.iter_symops()))
+        s = '\n'.join(lines)
+        return s
+
+    def sgsEquivalent(self, sg1, sg2):
+        """Check to see if two space group objects are the same."""
+        hash1 = self.hashDiffPySpaceGroup(sg1)
+        hash2 = self.hashDiffPySpaceGroup(sg2)
+        return hash1 == hash2
+
+    def testCreateSpaceGroup(self):
+        """Check all sgtbx space groups for proper conversion to SpaceGroup."""
+
+        try:
+            from cctbx import sgtbx
+        except ImportError:
+            return
+
+        for smbls in sgtbx.space_group_symbol_iterator():
+            shn = smbls.hermann_mauguin()
+            short_name = shn.replace(' ', '')
+            if SpaceGroups.IsSpaceGroupIdentifier(short_name):
+                sg = SpaceGroups.GetSpaceGroup(shn)
+                sgnew = self.getObjCrystParSetSpaceGroup(sg)
+                equiv = self.sgsEquivalent(sg, sgnew)
+                self.assertTrue( self.sgsEquivalent(sg, sgnew) )
+        return
+
+
 if __name__ == "__main__":
 
     unittest.main()

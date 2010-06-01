@@ -606,12 +606,24 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
+    def isConstrained(self, par):
+        """Determine if a Parameter is constrained in this object.
+
+        par     --  The name of a Parameter or a Parameter to check.
+
+        """
+        if isinstance(par, str):
+            name = par
+            par = self.get(name)
+
+        return (par in self._constraints)
+
     def unconstrain(self, par):
         """Unconstrain a Parameter.
 
         This removes any constraints on a Parameter. 
 
-        par     --  The name of a Parameter or a Parameter to constrain.
+        par     --  The name of a Parameter or a Parameter to unconstrain.
 
         
         Raises ValueError if the Parameter is not constrained.

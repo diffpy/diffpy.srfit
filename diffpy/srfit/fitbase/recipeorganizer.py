@@ -609,18 +609,31 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def unconstrain(self, par):
         """Unconstrain a Parameter.
 
-        par     --  The Parameter to unconstrain.
+        This removes any constraints on a Parameter. 
 
-        This removes any constraints on a Parameter. This does nothing if the
-        Parameter is not constrained.
+        par     --  The name of a Parameter or a Parameter to constrain.
+
+        
+        Raises ValueError if the Parameter is not constrained.
 
         """
+        if isinstance(par, str):
+            name = par
+            par = self.get(name)
+
+        if par is None:
+            raise ValueError("The parameter cannot be found")
+
         if par in self._constraints:
             self._constraints[par].unconstrain()
             del self._constraints[par]
 
             # Our configuration changed
             self._updateConfiguration()
+
+        else:
+
+            raise ValueError("The parameter is not constrained")
 
         return
 
@@ -635,9 +648,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return const.keys()
 
     def clearConstraints(self):
-        """Clear all constraints."""
-        for par in self._parameters:
-            self.unconstrain(par)
+        """Clear all constraints managed by this organizer.
+
+        This removes constraints that are held in this organizer, no matter
+        where the constrained parameters are from.
+        
+        """
+        for con in self._constraints[:]:
+            self.unconstrain(con.par)
         return
 
     def restrain(self, res, lb = -inf, ub = inf, prefactor = 1, power = 2,  

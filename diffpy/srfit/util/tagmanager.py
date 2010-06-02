@@ -27,6 +27,9 @@ class TagManager(object):
 
     Manage tags on hashable objects. Tags are strings that carry metadata.
 
+    silent          --  Flag indicating whether to silently pass by when a tag
+                        cannot be found (bool, True). If this is False, then a
+                        KeyError will be thrown when a tag cannot be found.
     _tagdict        --  A dictionary of tags to sets of tagged objects.
 
     """
@@ -34,7 +37,9 @@ class TagManager(object):
     def __init__(self):
         """Initialization."""
         self._tagdict = {}
+        self.silent = True
         return
+
 
     def tag(self, obj, *tags):
         """Tag an object.
@@ -52,6 +57,7 @@ class TagManager(object):
             oset.add(obj)
         return
 
+
     def untag(self, obj, *tags):
         """Remove tags from an object.
 
@@ -59,22 +65,21 @@ class TagManager(object):
         *tags   --  Tags to remove from obj. If this is empty, then all
                     tags will be removed from obj.
 
-        Raises KeyError if a passed tag does not apply to obj.
-        Raises KeyError if a passed tag does not exist.
+        Raises KeyError if a passed tag does not apply to obj and self.silent
+        is False
 
         """
         if not tags:
             tags = self.tags(obj)
 
         for tag in tags:
-            oset = self._tagdict.get(str(tag))
-            if oset is None:
-                raise KeyError("Tag '%s' does not exist" % tag)
-            if obj not in oset:
+            oset = self.__getObjectSet(tag)
+            if obj not in oset and not self.silent:
                 raise KeyError("Tag '%s' does not apply" % tag)
             oset.discard(obj)
 
         return
+
 
     def tags(self, obj):
         """Get all tags on an object.
@@ -85,23 +90,77 @@ class TagManager(object):
         tags = [k for (k, v) in self._tagdict.iteritems() if obj in v]
         return tags
 
-    def objects(self, *tags):
-        """Get all objects with passed tags.
+    
+    def hasTags(self, obj, *tags):
+        """Determine if an object has all passed tags.
 
-        Raises KeyError if a passed tag does not exist.
+        Returns bool
+
+        """
+        setgen = (self.__getObjectSet(t) for t in tags)
+        resgen = ((obj in s) for s in setgen)
+        result = reduce(bool.__and__, resgen, True)
+        return result
+
+
+    def union(self, *tags):
+        """Get all objects that have any of the passed tags.
 
         Returns set
 
         """
-        objs = set()
+        if not tags:
+            return set()
 
-        for tag in tags:
-            oset = self._tagdict.get(str(tag))
-            if oset is None:
-                raise KeyError("Tag '%s' does not exist" % tag)
-            objs.update(oset)
+        setgen = (self.__getObjectSet(t) for t in tags)
+        objs = reduce(set.union, setgen)
 
         return objs
+
+
+    def intersection(self, *tags):
+        """Get all objects that have all of the passed tags.
+
+        Returns set
+
+        """
+        if not tags:
+            return set()
+
+        setgen = (self.__getObjectSet(t) for t in tags)
+        objs = reduce(set.intersection, setgen)
+
+        return objs
+
+
+    def verifyTags(self, *tags):
+        """Check that tags are all extant.
+
+        Raises KeyError if a passed tag does not exist. This ignores
+        self.silent.
+        
+        """
+        keys = self._tagdict.keys()
+        for tag in tags:
+            if tag not in keys:
+                raise KeyError("Tag '%s' does not exist" % tag)
+
+        return True
+
+
+    def __getObjectSet(self, tag):
+        """Helper function for getting an object set with given tag.
+
+        Raises KeyError if a passed tag does not exist and self.silent is False
+
+        """
+        oset = self._tagdict.get(str(tag))
+        if oset is None:
+            if not self.silent:
+                raise KeyError("Tag '%s' does not exist" % tag)
+            oset = set()
+        return oset
+
 
 # End class TagManager
 

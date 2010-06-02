@@ -23,6 +23,9 @@ needs no special knowledge of the type of FitContribution or data being used.
 Thus, it is suitable for combining residual equations from various types of
 refinements into a single residual.
 
+Variables added to a FitRecipe can be tagged with string identifiers. Variables
+can be later retrieved or manipulated by tag. The tag name "fixed" is reserved.
+
 See the examples in the documentation for how to create an optimization problem
 using FitRecipe.
 
@@ -33,6 +36,7 @@ from numpy import array, concatenate, sqrt, dot
 
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.ordereddict import OrderedDict
+from diffpy.srfit.util.tagmanager import TagManager
 from .parameter import ParameterProxy
 from .recipeorganizer import RecipeOrganizer
 from .fithook import FitHook
@@ -58,13 +62,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and
                         restraints from string
-    _fixed          --  A set of parameters that are not actually varied.
     _restraintlist  --  A list of restraints from this and all sub-components.
     _restraints     --  A set of Restraints. Restraints can be added using the
                         'restrain' or 'confine' methods.
     _ready          --  A flag indicating if all attributes are ready for the
                         calculation.
-    _tagdict        --  A dictionary of tags to variables.
+    _tagmanager     --  A TagManager instance for managing tags on Parameters.
     _weights        --  List of weighing factors for each FitContribution. The
                         weights are multiplied by the residual of the
                         FitContribution when determining the overall residual.
@@ -80,9 +83,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._ready = False
 
         self._weights = []
-        self._tagdict = {}
-
-        self._fixed = set()
+        self._tagmanager = TagManager()
 
         self._parsets = {}
         self._manage(self._parsets)
@@ -365,8 +366,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         name    --  A name for this variable. If name is None (default), then
                     the name of the parameter will be used.
         fixed   --  Fix the variable so that it does not vary (default False).
-        tag     --  A tag for the variable. This can be used to fix and free
-                    variables by tag (default None).
+        tag     --  A tag for the variable. This can be used to retrieve, fix
+                    or free variables by tag (default None). Note that a
+                    variable is automatically tagged with its name.
         tags    --  A list of tags (default []). Both tag and tags can be
                     applied.
 
@@ -395,34 +397,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if fixed:
             self.fixVar(var)
           
-        # Deal with tags
-        self.__applyTags(var, tag, tags)
-
+        # Tag with passed tags and by name
+        self._tagmanager.tag(var, var.name)
+        self._tagmanager.tag(var, *tags)
+        if tag is not None:
+            self._tagmanager.tag(var, tag)
         return var
-
-    def __applyTags(self, var, tag, tags):
-        """Apply tags to a variable.
-
-        tag     --  A tag for the variable. This can be used to fix and free
-                    variables by tag (default None).
-        tags    --  A list of tags (default []). Both tag and tags can be
-                    applied.
-
-        """
-        if tag:
-            self.__tagVar(var, tag)
-
-        for t in tags:
-            self.__tagVar(var, tag)
-
-        return
-
-    def __tagVar(self, var, tag):
-        """Private function to tag a variable."""
-        vset = self._tagdict.get(tag, set())
-        vset.add(var)
-        self._tagdict[tag] = vset
-        return
 
     def delVar(self, var):
         """Remove a variable.
@@ -437,12 +417,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
 
         self._removeParameter(var)
-        self._fixed.discard(var)
-
-        # Remove tags
-        for vset in self._tagdict.items():
-            vset.discard(var)
-        
+        self._tagmanager.untag(var)
         return
 
     def __delattr__(self, name):
@@ -482,10 +457,30 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if fixed:
             self.fixVar(var)
 
-        # Deal with tags
-        self.__applyTags(var, tag, tags)
+        # Tag with passed tags and by name
+        self._tagmanager.tag(var, var.name)
+        self._tagmanager.tag(var, *tags)
+        if tag is not None:
+            self._tagmanager.tag(var, tag)
 
         return var
+
+    def __getVarAndCheck(self, var):
+        """Get the actual variable from var
+
+        var     --  A variable of the FitRecipe, or the name of a variable.
+
+        Raises ValueError if var is not part of the FitRecipe.
+
+        """
+        if isinstance(var, str):
+            var = self._parameters.get(var)
+
+        if var not in self._parameters.values():
+            raise ValueError("Passed variable is not part of the FitRecipe")
+
+        return var
+        
 
     def fixVar(self, var, value = None):
         """Fix a variable so that it doesn't change.
@@ -499,16 +494,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if var is not part of the FitRecipe.
 
         """
-        if isinstance(var, str):
-            var = self._parameters.get(var)
-
-        if var not in self._parameters.values():
-            raise ValueError("Passed variable is not part of the FitRecipe")
-
-        self._fixed.add(var)
+        var = self.__getVarAndCheck(var)
 
         if value is not None:
             var.setValue(value)
+
+        # Fix the variable by tagging it as such
+        self._tagmanager.tag(var, "fixed")
 
         return
 
@@ -524,13 +516,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if var is not part of the FitRecipe.
 
         """
-        if isinstance(var, str):
-            var = self._parameters.get(var)
+        var = self.__getVarAndCheck(var)
 
-        if var not in self._parameters.values():
-            raise ValueError("Passed variable is not part of the FitRecipe")
-
-        self._fixed.discard(var)
+        # Silently ignore if the variable is not tagged as fixed
+        self._tagmanager.untag(var, "fixed")
 
         if value is not None:
             var.setValue(value)
@@ -541,21 +530,25 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Fix all variables.
 
         Extra arguments are assumed to be tags. If present, only variables with
-        the given tag will be fixed.
+        the given tag will be fixed. Otherwise, all variables are fixed.
 
-        Raises ValueError when passed tags do not rever to any variables.
+        Raises ValueError when passed tags do not refer to any variables.
 
         """
-        for tag in tags:
-            if tag not in self._tagdict:
-                raise ValueError("Tag '%s' not found" % tag)
+        # Verify the tags
+        try: 
+            self._tagmanager.verifyTags(*tags)
+        except KeyError, e:
+            raise ValueError(e)
 
-        tagset = self.__getTagSet(tags)
-
-        if tagset:
-            self._fixed.update(tagset)
+        # Start by getting all variables with the passed tags
+        if tags:
+            objects = self._tagmanager.union(*tags)
         else:
-            self._fixed.update(self._parameters.values())
+            objects = self._parameters.values()
+
+        for obj in objects:
+            self._tagmanager.tag(obj, "fixed")
 
         return
 
@@ -563,23 +556,32 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Free all variables.
 
         Extra arguments are assumed to be tags. If present, only variables with
-        the given tag will be freed.
+        the given tag will be fixed. Otherwise, all variables are fixed.
 
-        Raises ValueError when passed tags do not rever to any variables.
+        Raises ValueError when passed tags do not refer to any variables.
 
         """
-        for tag in tags:
-            if tag not in self._tagdict:
-                raise ValueError("Tag '%s' not found" % tag)
+        # Verify the tags
+        try: 
+            self._tagmanager.verifyTags(*tags)
+        except KeyError, e:
+            raise ValueError(e)
 
-        tagset = self.__getTagSet(tags)
-
-        if tagset:
-            self._fixed.difference_update(tagset)
+        if tags:
+            objects = self._tagmanager.union(*tags)
         else:
-            self._fixed.clear()
+            objects = self._parameters.values()
+
+        for obj in objects:
+            self._tagmanager.untag(obj, "fixed")
 
         return
+
+    def isFree(self, var):
+        """Check if a variable is fixed."""
+        # Do this manually for speed since this is called frequently during
+        # refinement.
+        return (var not in self._tagmanager._tagdict.get("fixed", []))
 
     def unconstrain(self, par, free = True):
         """Unconstrain a Parameter.
@@ -596,8 +598,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if isinstance(par, str):
             par = self.get(par)
         RecipeOrganizer.unconstrain(self, par)
-        if free:
-            self._fixed.discard(par)
+
+        if free and par in self._parameters.values():
+            self._tagmanager.untag(par, "fixed")
         return
 
     def constrain(self, par, con, ns = {}):
@@ -653,22 +656,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         RecipeOrganizer.constrain(self, par, con, ns)
         return
 
-    def __getTagSet(self, tags):
-        """Get all variables with the given tags."""
-        tagset = set()
-        for tag in tags:
-            tagset.update( self._tagdict.get(tag, []) )
-        return tagset
 
     def getValues(self):
         """Get the current values of the variables in a list."""
-        return array([v.getValue() for v in self._parameters.values() if v
-            not in self._fixed])
+        return array([v.getValue() for v in self._parameters.values() if
+            self.isFree(v)])
 
     def getNames(self):
         """Get the names of the variables in a list."""
-        return [par.name for par in self._parameters.values() if par not in
-                self._fixed]
+        return [v.name for v in self._parameters.values() if self.isFree(v)]
 
     def getBounds(self):
         """Get the bounds on variables in a list.
@@ -677,8 +673,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         the upper bound.
 
         """
-        return [v.bounds for v in self._parameters.values() if v not in
-                self._fixed]
+        return [v.bounds for v in self._parameters.values() if self.isFree(v)]
 
     def getBounds2(self):
         """Get the bounds on variables in two lists.
@@ -711,8 +706,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def __applyValues(self, p):
         """Apply variable values to the variables."""
         if len(p) == 0: return
-        vars = [v for v in self._parameters.values() if v not in self._fixed]
-        for var, pval in zip(vars, p):
+        vargen = (v for v in self._parameters.values() if self.isFree(v))
+        for var, pval in zip(vargen, p):
             var.setValue(pval)
         return
 

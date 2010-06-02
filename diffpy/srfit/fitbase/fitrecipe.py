@@ -581,6 +581,25 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
+    def unconstrain(self, par, free = True):
+        """Unconstrain a Parameter.
+
+        This removes any constraints on a Parameter. 
+
+        par     --  The name of a Parameter or a Parameter to unconstrain.
+        free    --  Flag indicating whether to free the Parameter after
+                    removing the constraint (bool, default True)
+        
+        Raises ValueError if the Parameter is not constrained.
+
+        """
+        if isinstance(par, str):
+            par = self.get(par)
+        RecipeOrganizer.unconstrain(self, par)
+        if free:
+            self._fixed.discard(par)
+        return
+
     def constrain(self, par, con, ns = {}):
         """Constrain a parameter to an equation.
 

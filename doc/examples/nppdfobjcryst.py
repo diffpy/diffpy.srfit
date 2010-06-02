@@ -117,12 +117,14 @@ def plotResults(recipe):
     # Plot this.
     g = recipe.bucky.profile.y
     gcalc = recipe.bucky.profile.ycalc
-    diff = g - gcalc - 0.8 * max(g)
+    diffzero =  -0.8 * max(g) * numpy.ones_like(g)
+    diff = g - gcalc + diffzero
 
     import pylab
     pylab.plot(r,g,'ob',label="G(r) Data")
     pylab.plot(r,gcalc,'-r',label="G(r) Fit")
     pylab.plot(r,diff,'-g',label="G(r) diff")
+    pylab.plot(r,diffzero,'-k')
     pylab.xlabel("$r (\AA)$")
     pylab.ylabel("$G (\AA^{-2})$")
     pylab.legend(loc=1)
@@ -139,8 +141,8 @@ def main():
     recipe.fithook.verbose = 3
     
     # Optimize
-    from scipy.optimize import fmin
-    fmin(recipe.scalarResidual, recipe.getValues())
+    from scipy.optimize import leastsq
+    leastsq(recipe.residual, recipe.getValues())
 
     # Print results
     res = FitResults(recipe)

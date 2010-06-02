@@ -145,7 +145,7 @@ class IntensityGenerator(ProfileGenerator):
         #
         # We pass the diffpy.Structure.Structure instance, and give the
         # StructureParSet the name "phase".
-        parset = StructureParSet(stru, "phase")
+        parset = StructureParSet("phase", stru)
 
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)

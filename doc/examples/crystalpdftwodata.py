@@ -144,24 +144,28 @@ def plotResults(recipe):
     xr = recipe.xnickel.profile.x
     xg = recipe.xnickel.profile.y
     xgcalc = recipe.xnickel.profile.ycalc
-    xdiff = xg - xgcalc - 0.8 * max(xg)
+    xdiffzero = -0.8 * max(xg) * numpy.ones_like(xg)
+    xdiff = xg - xgcalc + xdiffzero
 
     nr = recipe.nnickel.profile.x
     ng = recipe.nnickel.profile.y
     ngcalc = recipe.nnickel.profile.ycalc
-    ndiff = ng - ngcalc - 0.8 * max(ng)
+    ndiffzero = -0.8 * max(ng) * numpy.ones_like(ng)
+    ndiff = ng - ngcalc + ndiffzero
 
     import pylab
     pylab.subplot(2, 1, 1)
     pylab.plot(xr,xg,'bo',label="G(r) x-ray Data")
     pylab.plot(xr,xgcalc,'r-',label="G(r) x-ray Fit")
     pylab.plot(xr,xdiff,'g-',label="G(r) x-ray diff")
+    pylab.plot(xr,xdiffzero,'k-')
     pylab.legend(loc=1)
 
     pylab.subplot(2, 1, 2)
     pylab.plot(nr,ng,'bo',label="G(r) neutron Data")
     pylab.plot(nr,ngcalc,'r-',label="G(r) neutron Fit")
     pylab.plot(nr,ndiff,'g-',label="G(r) neutron diff")
+    pylab.plot(nr,ndiffzero,'k-')
     pylab.xlabel("$r (\AA)$")
     pylab.ylabel("$G (\AA^{-2})$")
     pylab.legend(loc=1)

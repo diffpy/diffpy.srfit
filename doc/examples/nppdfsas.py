@@ -115,8 +115,8 @@ def plotResults(recipe):
 
     g = recipe.pdf.profile.y
     gcalc = recipe.pdf.profile.ycalc
-    offset = -0.8 * max(g)
-    diff = g - gcalc + offset
+    diffzero = -0.8 * max(g) * numpy.ones_like(g)
+    diff = g - gcalc + diffzero
 
     gcryst = recipe.pdf.evaluateEquation("G")
     gcryst /= recipe.scale.value
@@ -130,8 +130,8 @@ def plotResults(recipe):
     pylab.plot(r, gcryst,'y--',label="G(r) Crystal")
     pylab.plot(r, fr,'k--',label="f(r) calculated (scaled)")
     pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,numpy.ones_like(r)*offset,'k-')
     pylab.plot(r,diff,'g-',label="G(r) diff")
+    pylab.plot(r,diffzero,'k-')
     pylab.xlabel("$r (\AA)$")
     pylab.ylabel("$G (\AA^{-2})$")
     pylab.legend(loc=1)

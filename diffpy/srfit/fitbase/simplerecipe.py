@@ -74,6 +74,8 @@ class SimpleRecipe(FitRecipe):
             tags = []):
         """Vary a Parameter from the contribution.
         
+        pname   --  Name of a contribution parameter to vary
+
         Other arguments are as addVar.
 
         Raises ValueError if the contribution does not have a parameter named

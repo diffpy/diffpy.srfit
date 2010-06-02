@@ -42,11 +42,11 @@ class TestFitRecipe(unittest.TestCase):
         recipe.addVar(con.c, 0)
         recipe.newVar("B", 0)
 
-        self.assertFalse(recipe.A in recipe._fixed)
+        self.assertTrue(recipe.isFree(recipe.A))
         recipe.fixAll("tagA")
-        self.assertTrue(recipe.A in recipe._fixed)
+        self.assertFalse(recipe.isFree(recipe.A))
         recipe.freeAll("tagA")
-        self.assertFalse(recipe.A in recipe._fixed)
+        self.assertTrue(recipe.isFree(recipe.A))
 
         self.assertRaises(ValueError, recipe.freeAll, "junk")
         self.assertRaises(ValueError, recipe.fixAll, "junk")
@@ -134,7 +134,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Now try some restraints. We want c to be exactly zero. It should give
         # a penalty of (c-0)**2, which is 4 in this case
-        r1 = self.recipe.restrain(self.fitcontribution.c, 0, 0, 1, 2)
+        r1 = self.recipe.restrain(self.fitcontribution.c, 0, 0, 1)
         self.recipe._ready = False
         res = self.recipe.residual()
         chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
@@ -165,7 +165,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertTrue( array_equal(y-self.profile.y, res) )
 
         # Add a restraint at the fitcontribution level.
-        r1 = self.fitcontribution.restrain(self.fitcontribution.c, 0, 0, 1, 2)
+        r1 = self.fitcontribution.restrain(self.fitcontribution.c, 0, 0, 1)
         self.recipe._ready = False
         # The chi2 is the same as above, plus 4
         res = self.recipe.residual()

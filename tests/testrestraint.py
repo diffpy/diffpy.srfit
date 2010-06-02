@@ -43,20 +43,13 @@ class TestRestraint(unittest.TestCase):
         p2.setValue(4)
         self.assertEquals(9, r.penalty())
 
-        # Try a different penalty function
-        from numpy import inf
-        eq = equationFromString("p1", factory)
-        r = Restraint(eq, 0, inf, 2, 4, True)
-
-        # Make p1 = -2
-        # This should give a penalty of 2*2**4 = 32
-        p1.setValue(-2)
-        self.assertEquals(32, r.penalty())
-
         # Set the chi^2 to get a dynamic penalty
-        self.assertEquals(48, r.penalty(1.5))
+        r.scaled = True
+        self.assertEquals(13.5, r.penalty(1.5))
 
         # Make a really large number to check the upper bound
+        import numpy
+        r.ub = numpy.inf
         p1.setValue(1e100)
         self.assertEquals(0, r.penalty())
 

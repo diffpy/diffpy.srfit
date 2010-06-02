@@ -24,7 +24,8 @@ Thus, it is suitable for combining residual equations from various types of
 refinements into a single residual.
 
 Variables added to a FitRecipe can be tagged with string identifiers. Variables
-can be later retrieved or manipulated by tag. The tag name "fixed" is reserved.
+can be later retrieved or manipulated by tag. The tag name "__fixed" is
+reserved.
 
 See the examples in the documentation for how to create an optimization problem
 using FitRecipe.
@@ -71,6 +72,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     _weights        --  List of weighing factors for each FitContribution. The
                         weights are multiplied by the residual of the
                         FitContribution when determining the overall residual.
+    _fixedtag       --  "__fixed", used for tagging variables as fixed. Don't
+                        use this tag unless you want issues.
 
     """
 
@@ -81,6 +84,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._restraintlist = []
         self._oconstraints = []
         self._ready = False
+        self._fixedtag = "__fixed"
 
         self._weights = []
         self._tagmanager = TagManager()
@@ -500,7 +504,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             var.setValue(value)
 
         # Fix the variable by tagging it as such
-        self._tagmanager.tag(var, "fixed")
+        self._tagmanager.tag(var, self._fixedtag)
 
         return
 
@@ -519,7 +523,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         var = self.__getVarAndCheck(var)
 
         # Silently ignore if the variable is not tagged as fixed
-        self._tagmanager.untag(var, "fixed")
+        self._tagmanager.untag(var, self._fixedtag)
 
         if value is not None:
             var.setValue(value)
@@ -548,7 +552,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             objects = self._parameters.values()
 
         for obj in objects:
-            self._tagmanager.tag(obj, "fixed")
+            self._tagmanager.tag(obj, self._fixedtag)
 
         return
 
@@ -573,7 +577,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             objects = self._parameters.values()
 
         for obj in objects:
-            self._tagmanager.untag(obj, "fixed")
+            self._tagmanager.untag(obj, self._fixedtag)
 
         return
 
@@ -581,7 +585,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Check if a variable is fixed."""
         # Do this manually for speed since this is called frequently during
         # refinement.
-        return (var not in self._tagmanager._tagdict.get("fixed", []))
+        return (var not in self._tagmanager._tagdict.get(self._fixedtag, []))
 
     def unconstrain(self, par, free = True):
         """Unconstrain a Parameter.
@@ -600,7 +604,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         RecipeOrganizer.unconstrain(self, par)
 
         if free and par in self._parameters.values():
-            self._tagmanager.untag(par, "fixed")
+            self._tagmanager.untag(par, self._fixedtag)
         return
 
     def constrain(self, par, con, ns = {}):
@@ -686,20 +690,21 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ub = array([b[1] for b in bounds])
         return lb, ub
 
-    def boundsToRestraints(self, prefactor = 1, scaled = False):
+    def boundsToRestraints(self, sig = 1, scaled = False):
         """Turn all bounded parameters into restraints.
 
         The bounds become limits on the restraint.
 
-        prefactor   --  prefactor for each parameter (scalar or iterable)
-        scaled      --  Scale the restraints, see restrain.
+        sig     --  The uncertainty on the bounds (scalar or iterable, 
+                    default 1).
+        scaled  --  Scale the restraints, see restrain.
 
         """
         pars = self._parameters.values()
-        if not hasattr(prefactor, "__iter__"):
-            prefactor = [prefactor] * len(pars)
-        for par, x in zip(pars, prefactor):
-            self.restrain(par, par.bounds[0], par.bounds[1], prefactor = x,
+        if not hasattr(sig, "__iter__"):
+            sig = [sig] * len(pars)
+        for par, x in zip(pars, sig):
+            self.restrain(par, par.bounds[0], par.bounds[1], sig = x,
                     scaled = scaled)
         return
 

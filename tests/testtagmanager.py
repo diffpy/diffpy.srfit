@@ -21,6 +21,7 @@ class TestTagManager(unittest.TestCase):
 
     def setUp(self):
         self.m = TagManager()
+        self.m.silent = False
         return
 
     def tearDown(self):
@@ -39,6 +40,7 @@ class TestTagManager(unittest.TestCase):
         # Try an unhashable object
         obj = set()
         self.assertRaises(TypeError, obj, "unhashable")
+
         return
 
     def test_untag(self):
@@ -63,17 +65,43 @@ class TestTagManager(unittest.TestCase):
         self.assertEquals(set(), tags)
         return
 
-    def test_objects(self):
-        """check TagManager.objects()
+    def test_union_and_intersection(self):
+        """check TagManager.union() and TagManager.intersection()
         """
         m = self.m
         m.tag(3, "3", "number")
         m.tag(4, "4", "number")
         objs = set([3,4])
-        self.assertEqual(m.objects(), set())
-        self.assertEqual(m.objects("number"), objs)
-        self.assertEqual(m.objects("3"), set([3]))
-        self.assertRaises(KeyError, m.objects, "fail")
+        self.assertEqual(m.union(), set())
+        self.assertEqual(m.union("number"), objs)
+        self.assertEqual(m.union("3"), set([3]))
+        self.assertEqual(m.union("3", "4"), objs)
+        self.assertRaises(KeyError, m.union, "fail")
+        m.silent = True
+        self.assertEquals(set(), m.union("fail"))
+        self.assertEquals(set([3]), m.union("fail", "3"))
+        m.silent = False
+        self.assertEqual(m.intersection(), set())
+        self.assertEqual(m.intersection("number"), objs)
+        self.assertEqual(m.intersection("3"), set([3]))
+        self.assertEqual(m.intersection("3", "4"), set())
+        self.assertRaises(KeyError, m.intersection, "fail")
+        m.silent = True
+        self.assertEquals(set(), m.intersection("fail"))
+        return
+
+    def test_hasTags(self):
+        """check TagManager.hasTags()
+        """
+        m = self.m
+        m.tag(3, "3", "number")
+        m.tag(4, "4", "number")
+        self.assertTrue( m.hasTags(3, "3") )
+        self.assertTrue( m.hasTags(3, "3", "number") )
+        self.assertFalse( m.hasTags(3, "3", "4") )
+        self.assertRaises(KeyError, m.hasTags, 3, "fail")
+        m.silent = True
+        self.assertFalse(m.hasTags(3, "fail"))
         return
 
 # End of class TestTagManager

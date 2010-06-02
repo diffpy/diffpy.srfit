@@ -670,15 +670,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self.unconstrain(con.par)
         return
 
-    def restrain(self, res, lb = -inf, ub = inf, prefactor = 1, power = 2,  
-            scaled = False, ns = {}):
+    def restrain(self, res, lb = -inf, ub = inf, sig = 1, scaled = False, ns =
+            {}):
         """Restrain an expression to specified bounds
 
         res     --  An equation string or Parameter to restrain.
         lb      --  The lower bound on the restraint evaluation (default -inf).
         ub      --  The lower bound on the restraint evaluation (default inf).
-        prefactor   --  A multiplicative prefactor for the restraint 
-                        (default 1).
+        sig     --  The uncertainty on the bounds (default 1).
         power   --  The power of the penalty (default 2).
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
@@ -688,8 +687,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                     (default {}).
 
         The penalty is calculated as 
-        prefactor * max(0, lb - val, val - ub) ** power
-        and val is the value of the calculated equation. This is multipled by
+        (max(0, lb - val, val - ub)/sig)**2
+        and val is the value of the calculated equation.  This is multipled by
         the average chi^2 if scaled is True.
 
         Raises ValueError if ns uses a name that is already used for a
@@ -707,7 +706,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             eq = Equation(root = res)
 
         # Make and store the restraint
-        res = Restraint(eq, lb, ub, prefactor, power, scaled)
+        res = Restraint(eq, lb, ub, sig, scaled)
         self._restraints.add(res)
 
         # Our configuration changed. Notify observers.

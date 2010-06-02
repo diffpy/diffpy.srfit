@@ -44,8 +44,8 @@ class Parameter(_parameter_interface, Argument, Validatable):
     constrained --  A flag indicating if the Parameter is constrained
                 (default False).
     bounds  --  A 2-list defining the bounds on the Parameter. This can be
-                used by some optimizers when the Parameter is varied. These
-                bounds are unrelated to restraints on a Parameter.
+                used by some optimizers when the Parameter is varied. See
+                FitRecipe.getBounds and FitRecipe.boundsToRestraints.
 
     """
 

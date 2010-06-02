@@ -34,21 +34,19 @@ class Restraint(Validatable):
                 bounds.
     lb      --  The lower bound on the restraint evaluation (default -inf).
     ub      --  The lower bound on the restraint evaluation (default inf).
-    prefactor   --  A multiplicative prefactor for the restraint (default 1).
-    power   --  The power of the penalty (default 2).
+    sig     --  The uncertainty on the bounds (default 1).
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) 
                 (default False).
 
     The penalty is calculated as 
-    prefactor * max(0, lb - val, val - ub) ** power
+    (max(0, lb - val, val - ub)/sig)**2
     and val is the value of the calculated equation.  This is multipled by the
     average chi^2 if scaled is True.
 
     """
 
-    def __init__(self, eq, lb = -inf, ub = inf, prefactor = 1, power = 2,
-            scaled = False):
+    def __init__(self, eq, lb = -inf, ub = inf, sig = 1, scaled = False):
         """Restrain an equation to specified bounds.
         
         eq      --  An equation whose evaluation is compared against the
@@ -57,9 +55,7 @@ class Restraint(Validatable):
                     -inf).
         ub      --  The lower bound on the restraint evaluation (float, default
                     inf).
-        prefactor   --  A multiplicative prefactor for the restraint (float,
-                    default 1).
-        power   --  The power of the penalty (float, default 2).
+        sig     --  The uncertainty on the bounds (default 1).
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (bool, default False).
@@ -68,8 +64,7 @@ class Restraint(Validatable):
         self.eq = eq
         self.lb = float(lb)
         self.ub = float(ub)
-        self.prefactor = float(prefactor)
-        self.power = float(power)
+        self.sig = float(sig)
         self.scaled = bool(scaled)
         return
 
@@ -83,8 +78,7 @@ class Restraint(Validatable):
         
         """
         val = self.eq()
-        penalty = self.prefactor *\
-                max(0, self.lb - val, val - self.ub) ** self.power
+        penalty = (max(0, self.lb - val, val - self.ub) / self.sig)**2
 
         if self.scaled:
             penalty *= w

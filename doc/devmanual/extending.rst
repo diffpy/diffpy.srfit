@@ -222,7 +222,7 @@ and calculated BVS of a structure.
    :pyobject: BVSRestraint
 
 Note that the penalty scaling is optional (selected by the `scaled` flag) and
-additional scaling (the `prefactor`) may be applied. These two options are
+uncertainty on the result (`sig`) may be applied. These two options are
 recommended with any custom ``Restraint``. 
 
 The second part of a custom restraint is to allow it to be created from a
@@ -235,8 +235,8 @@ SrReal-compatible structures.  The restraint is applied with the
    :pyobject: SrRealStructure.restrainBVS
 
 The purpose of the method is to create the custom ``Restraint`` object,
-configure it and store it. Note that the optional `prefactor` and `scaled` flag
-are passed as part of this method. Both ``_restraints`` and
+configure it and store it. Note that the optional `sig` and `scaled` flag are
+passed as part of this method. Both ``_restraints`` and
 ``_updateConfiguration`` come from ``ParameterSet``, from which
 ``SrRealStructure`` is derived. The ``_restraints`` attribute is a set of
 ``Restraints`` on the object. The ``_updateConfiguration`` method makes any

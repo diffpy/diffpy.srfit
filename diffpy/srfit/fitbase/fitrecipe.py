@@ -577,7 +577,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             objects = self._parameters.values()
 
         for obj in objects:
-            self._tagmanager.untag(obj, self._fixedtag)
+            if not obj.constrained:
+                self._tagmanager.untag(obj, self._fixedtag)
 
         return
 

@@ -16,7 +16,7 @@ import fix_setuptools_chmod
 # define distribution
 dist = setup(
         name = "diffpy.srfit",
-        version = "1.0b0",
+        version = "1.0a7",
         namespace_packages = ['diffpy'],
         packages = find_packages(exclude=['tests']),
         test_suite = 'tests',

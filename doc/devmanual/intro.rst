@@ -61,5 +61,5 @@ Features
 Relese Definition
 --------------------
 
-The SrFit Alpha-6 release definition can be found at
-http://danse.us/trac/diffraction/wiki/SrFitReleaseBeta0.
+The SrFit Alpha-7 release definition can be found at
+http://danse.us/trac/diffraction/wiki/SrFitReleaseAlpha7.

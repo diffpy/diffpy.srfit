@@ -5,7 +5,7 @@ Installing SrFit
 Target Audience
 -----------------------
 
-The Alpha-6 release is an internal testing release. It is intended for Billinge
+The Alpha-7 release is an internal testing release. It is intended for Billinge
 group developers. 
 
 Platform
@@ -22,7 +22,7 @@ Documentation
 -----------------------
 
 The documentation this release of SrFit can be found at
-http://docs.danse.us/diffraction/diffpy.srfit-beta0/.
+http://docs.danse.us/diffraction/diffpy.srfit-alpha7/.
 
 Using SrFit
 -------------------------------
@@ -31,7 +31,7 @@ Developers should read through and run the SrFit examples from your account on
 one of the target workstations. 
 
 The SrFit examples can be downloaded from
-http://dev.danse.us/packages/srfit_examples-beta0.zip. The `README` file
+http://dev.danse.us/packages/srfit_examples-alpha7.zip. The `README` file
 inside of the archive explains how to progress through the examples.
 
 Note that SrFit has no user interface in this release. The purpose of the

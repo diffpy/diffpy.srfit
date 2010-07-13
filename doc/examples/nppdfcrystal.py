@@ -15,7 +15,8 @@
 """Example of fitting a crystal-like nanoparticle PDF.
 
 This is an example of modeling the PDF from a nanocrystal as an attenuated bulk
-PDF. This involves a crystal PDF calculation and a nanoparticle form factor.
+PDF. This involves a crystal PDF calculation and a spherical nanoparticle form
+factor.
 The equation we model is
 Gnano(r) = f(r) * Gbulk(r),
 where f(r) is the nanoparticle form factor (or characteristic function) for the

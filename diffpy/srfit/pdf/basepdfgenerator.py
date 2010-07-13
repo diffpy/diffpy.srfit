@@ -223,7 +223,7 @@ class BasePDFGenerator(ProfileGenerator):
         level, rather than at the PDFCalculator level.
 
         """
-        pdfparnames = ['delta1', 'delta2', 'scale']
+        pdfparnames = ['delta1', 'delta2']
 
         for pname in pdfparnames:
             getter = dict.__getitem__
@@ -233,7 +233,7 @@ class BasePDFGenerator(ProfileGenerator):
                     setter, pname)
                 )
 
-        parnames = ['qbroad', 'qdamp']
+        parnames = ['qbroad', 'qdamp', 'scale']
         for pname in parnames:
             self.addParameter(
                 ParameterAdapter(pname, self._calc, attr = pname)

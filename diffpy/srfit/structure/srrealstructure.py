@@ -31,7 +31,8 @@ class SrRealStructure(BaseStructure):
     Attributes:
     stru            --  The adapted object
     _usesymmetry    --  A flag indicating if SrReal calculators that operate on
-                        this object should use symmetry.
+                        this object should use symmetry. By default this is
+                        True.
 
     """
 

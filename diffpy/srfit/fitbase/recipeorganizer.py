@@ -134,7 +134,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         if arg is None:
             raise AttributeError(name)
         return arg
-     
+
     def __delattr__(self, name):
         """Delete parameters with del.
 

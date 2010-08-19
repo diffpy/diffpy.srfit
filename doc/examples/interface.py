@@ -28,8 +28,7 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 def main():
 
     p = Profile()
-    x, y = numpy.loadtxt("data/gaussian.dat", unpack=1)
-    p.setObservedProfile(x, y)
+    p.loadtxt("data/gaussian.dat")
 
     # FitContribution operations
     # "|="  -   Union of necessary components.

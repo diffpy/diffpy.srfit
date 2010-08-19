@@ -67,10 +67,8 @@ def makeRecipe(strufile, datname1, datname2):
     profile2 = Profile()
 
     # Load data into the Profiles
-    x, y, u = numpy.loadtxt(datname1, unpack=True)
-    profile1.setObservedProfile(x, y, u)
-    x, y, u = numpy.loadtxt(datname2, unpack=True)
-    profile2.setObservedProfile(x, y, u)
+    profile1.loadtxt(datname1)
+    x, y, u = profile2.loadtxt(datname2)
 
     ## The ProfileGenerators
     # Create two IntensityGenerators named "I". There will not be a name

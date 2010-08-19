@@ -43,8 +43,7 @@ def makeRecipe():
     ## The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
-    x, y = numpy.loadtxt("data/threedoublepeaks.dat", unpack=True)
-    profile.setObservedProfile(x,y)
+    x, y, dy = profile.loadtxt("data/threedoublepeaks.dat")
 
     # Create the contribution
     contribution = FitContribution("peaks")

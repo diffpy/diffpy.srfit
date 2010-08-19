@@ -37,8 +37,7 @@ def makeRecipe(molecule, datname):
     profile = Profile()
 
     # Load data and add it to the profile
-    x, y, dy = numpy.loadtxt(datname, unpack=True)
-    profile.setObservedProfile(x, y, dy)
+    profile.loadtxt(datname)
     profile.setCalculationRange(xmin=1.2, xmax=8)
 
     ## The ProfileGenerator

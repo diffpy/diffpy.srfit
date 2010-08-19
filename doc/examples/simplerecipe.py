@@ -19,8 +19,6 @@ the FitContribution and Profile objects for simple recipe creation.
 
 """
 
-import numpy
-
 from diffpy.srfit.fitbase import SimpleRecipe, FitResults
 
 ####### Example Code

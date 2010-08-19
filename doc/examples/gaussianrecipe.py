@@ -97,8 +97,8 @@ def makeRecipe():
 
     # Load data and add it to the profile. It is our responsibility to get our
     # data into the profile. Here we read the data from file.
-    x, y = numpy.loadtxt("data/gaussian.dat", unpack=1)
-    profile.setObservedProfile(x, y)
+    x, y, dy = numpy.loadtxt("data/gaussian.dat", unpack=1)
+    profile.setObservedProfile(x, y, dy)
 
     ## The FitContribution
     # The FitContribution associates the Profile with a fitting equation. The

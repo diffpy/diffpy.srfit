@@ -64,6 +64,7 @@ def makeRecipe(ciffile, datname):
     # In particular, this will set the scattering type (x-ray or neutron), the
     # Qmax value, as well as initial values for the non-structural Parameters.
     generator = PDFGenerator("G")
+    generator.parallel(2)
     stru = Structure()
     stru.read(ciffile)
     generator.setPhase(stru)

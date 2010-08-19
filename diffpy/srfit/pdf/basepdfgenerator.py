@@ -316,7 +316,6 @@ class BasePDFGenerator(ProfileGenerator):
         else:
             self._calc.eval(self._phase._getSrRealStructure())
 
-        print self._calc.delta2
         y = self._calc.getPDF()
 
         if numpy.isnan(y).any():

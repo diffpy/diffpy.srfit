@@ -40,10 +40,13 @@ class BasePDFGenerator(ProfileGenerator):
     are not created until the structure is added.
 
     Attributes:
-    _calc   --  PDFCalculator instance for calculating the PDF
+    _calc   --  PDFCalculator or DebyePDFCalculator instance for calculating
+                the PDF
     _phase  --  The structure ParameterSet used to calculate the profile.
     _lastr  --  The last value of r over which the PDF was calculated. This is
                 used to configure the calculator when r changes.
+    _ncpu   --  The number of cpus to use for the calculation.
+    _pool   --  A multiprocessing.Pool for managing parallel computation.
 
     Managed Parameters:
     scale   --  Scale factor
@@ -72,15 +75,25 @@ class BasePDFGenerator(ProfileGenerator):
     """
 
     def __init__(self, name = "pdf"):
-        """Initialize the generator.
-        
-        """
+        """Initialize the generator."""
         ProfileGenerator.__init__(self, name)
 
         self._phase = None
         self.meta = {}
         self._lastr = None
         self._calc = None
+
+        self._ncpu = 1
+        self._pool = None
+
+        return
+
+    def parallel(self, ncpu):
+        """Run calculation in parallel."""
+        if ncpu <= 1: return
+        import multiprocessing
+        self._ncpu = min(ncpu, multiprocessing.cpu_count())
+        self._pool = multiprocessing.Pool(self._ncpu)
         return
 
     def processMetaData(self):
@@ -265,6 +278,20 @@ class BasePDFGenerator(ProfileGenerator):
         ProfileGenerator._validate(self)
         return
 
+    def _getConfig(self):
+        """Get a configuration dictionary for the calculator."""
+        attrs = ['rmin', 'rmax', 'rstep', 'qmin', 'qmax']
+        cfg = dict((attr, self._calc._getDoubleAttr(attr)) for attr in
+                attrs)
+
+        # Get these values directly from the parameters so we don't have to
+        # worry about where they are pointing.
+        parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
+        for pname in parnames:
+            cfg[pname] = self.get(pname).value
+        return cfg
+
+
     def __call__(self, r):
         """Calculate the PDF.
 
@@ -278,7 +305,16 @@ class BasePDFGenerator(ProfileGenerator):
         if r is not self._lastr:
             self.__prepare(r)
 
-        self._calc.eval(self._phase._getSrRealStructure())
+        if self._ncpu > 1:
+            cfg = self._getConfig()
+            stru = self._phase._getSrRealStructure()
+            self._calc.setStructure(stru)
+            w = _pdfworker(self._calc.__class__, self._ncpu, stru, cfg)
+            for y in self._pool.imap_unordered(w, range(self._ncpu)):
+                self._calc._mergeParallelValue(y)
+        else:
+            self._calc.eval(self._phase._getSrRealStructure())
+
         y = self._calc.getPDF()
         if numpy.isnan(y).any():
             y = numpy.zeros_like(r)
@@ -286,5 +322,18 @@ class BasePDFGenerator(ProfileGenerator):
             y = numpy.interp(r, self._calc.getRgrid(), y)
         return y
 
+class _pdfworker(object):
+
+    def __init__(self, klass, ncpu, stru, cfg):
+        self.ncpu = ncpu
+        self.stru = stru
+        self.klass = klass
+        self.cfg = cfg
+        return
+
+    def __call__(self, cpuindex):
+        _calc = self.klass(**self.cfg)
+        _calc._setupParallelRun(cpuindex, self.ncpu)
+        return _calc.eval(self.stru)
 
 # End class BasePDFGenerator

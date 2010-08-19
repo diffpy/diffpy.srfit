@@ -253,6 +253,8 @@ class Profile(Observable, Validatable):
         Raises ValueError if the call to numpy.loadtxt returns fewer than 2
         arrays.
 
+        Returns the x, y and dy arrays loaded from the file
+
         """
         if len(args) == 8 and not args[-1]:
             args = list(args)
@@ -272,7 +274,7 @@ class Profile(Observable, Validatable):
             dy = cols[2]
 
         self.setObservedProfile(x, y, dy)
-        return
+        return x, y, dy
 
     def savetxt(self, fname, fmt='%.18e', delimiter=' '):
         """Call numpy.savetxt with x, ycalc, y, dy

@@ -285,7 +285,7 @@ class BasePDFGenerator(ProfileGenerator):
                 attrs)
 
         # Get these values directly from the parameters so we don't have to
-        # worry about where they are pointing.
+        # worry about the ultimate sources.
         parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
         for pname in parnames:
             cfg[pname] = self.get(pname).value
@@ -308,18 +308,22 @@ class BasePDFGenerator(ProfileGenerator):
         if self._ncpu > 1:
             cfg = self._getConfig()
             stru = self._phase._getSrRealStructure()
-            self._calc.setStructure(stru)
             w = _pdfworker(self._calc.__class__, self._ncpu, stru, cfg)
+            self._calc = w.klass(**cfg)
+            self._calc.setStructure(stru)
             for y in self._pool.imap_unordered(w, range(self._ncpu)):
                 self._calc._mergeParallelValue(y)
         else:
             self._calc.eval(self._phase._getSrRealStructure())
 
+        print self._calc.delta2
         y = self._calc.getPDF()
+
         if numpy.isnan(y).any():
             y = numpy.zeros_like(r)
         else:
-            y = numpy.interp(r, self._calc.getRgrid(), y)
+            r1 = self._calc.getRgrid()
+            y = numpy.interp(r, r1, y)
         return y
 
 class _pdfworker(object):

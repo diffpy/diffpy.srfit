@@ -290,7 +290,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         try:
             val = self._eq()
         except TypeError, e:
-            raise AttributeError("_eq cannot be evaluated")
+            raise AttributeError("_eq cannot be evaluated: %s"%e)
 
         if val is None:
             raise AttributeError("_eq evaluates to None")

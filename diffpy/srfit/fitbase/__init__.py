@@ -29,7 +29,7 @@ http://www.reflectometry.org/danse/park.html
 """
 
 __all__ = ['Calculator', 'FitContribution', 'FitHook', 'FitRecipe',
-        'FitResults', 'PlotFitHook', 'Profile', 'ProfileGenerator']
+'FitResults', 'initalizeRecipe', 'PlotFitHook', 'Profile', 'ProfileGenerator']
 
 # package version
 from diffpy.srfit.version import __version__
@@ -39,7 +39,7 @@ from .fitcontribution import FitContribution
 from .fithook import FitHook, PlotFitHook
 from .fitrecipe import FitRecipe
 from .simplerecipe import SimpleRecipe
-from .fitresults import FitResults
+from .fitresults import FitResults, initializeRecipe
 from .profile import Profile
 from .profilegenerator import ProfileGenerator
 

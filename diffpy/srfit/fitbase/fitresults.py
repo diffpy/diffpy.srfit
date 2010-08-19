@@ -19,12 +19,9 @@ stores the state, and uses it to calculate useful statistics, which can be
 displayed on screen or saved to file.
 
 """
-__all__ = ["FitResults", "ContributionResults"]
+__all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import numpy
-
-
-# FIXME - really small numbers don't print well
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
@@ -47,6 +44,7 @@ class FitResults(object):
     rchi2       --  The reduced chi2 of the recipe.
     rw          --  The Rw of the recipe.
     messages    --  A list of messages about the results.
+    precision   --  The precision of numeric output (default 8).
     _dcon       --  The derivatives of the constraint equations with respect to
                     the variables. This is used internally.
 
@@ -78,6 +76,7 @@ class FitResults(object):
         self.chi2 = 0
         self.rchi2 = 0
         self.rw = 0
+        self.precision = 8
         self._dcon = []
         self.messages = []
 
@@ -274,7 +273,8 @@ class FitResults(object):
 
         lines = []
         corrmin = 0.25
-
+        p = self.precision
+        pe = "%-" + "%i.%ie" % (p+6, p)
         # Check to see if the uncertainty values are reliable.
         certain = True
         for con in self.conresults.values():
@@ -346,7 +346,7 @@ class FitResults(object):
         w = max(map(len, varnames))
         w = str(w+1)
         # Format the lines
-        formatstr = "%-"+w+"s %- 15f +/- %-15f"
+        formatstr = "%-"+w+"s " + pe + " +/- " + pe
         for name, val, unc in zip(varnames, varvals, varunc):
             varlines.append(formatstr%(name, val, unc))
 
@@ -554,6 +554,53 @@ class ContributionResults(object):
         self.chi2 = numpy.dot(chiv, chiv)
         self.rw = (numpy.dot(num, num) / numpy.dot(y, y))**0.5
         return
+
+
+# End class ContributionResults
+
+def initializeRecipe(recipe, results):
+    """Initialize the variables of a recipe from a results file.
+
+    This reads the results from file and initializes any variables in the
+    recipe to the results values. note that the recipe has to be configured,
+    with variables. This does not reconstruct a FitRecipe.
+
+    recipe  --  A configured recipe with variables
+    results --  An open file-like object, name of a file that contains
+                results from FitResults or a string containing fit results.
+
+    """
+
+    import os.path
+
+    # Get the results into a string
+    resstr = ""
+    if hasattr(results, "read"):
+        resstr = results.read()
+    elif os.path.exists(results):
+        with file(results, 'r') as infile:
+            resstr = infile.read()
+    else:
+        resstr = results
+
+    import re
+    rx = {'f' : r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?",
+          'n' : r'[a-zA-Z_]\w*'}
+    pat = r"(%(n)s)\s+(%(f)s)" % rx
+
+
+    matches = re.findall(pat, resstr)
+    # We want to prefer the first match
+    matches.reverse()
+    mpairs = dict(matches)
+
+    for vname in recipe.getNames():
+        value = mpairs.get(vname)
+        if value is not None:
+            var = recipe.get(vname)
+            var.value = float(value)
+
+    return
 
 
 def numericStringSort(lst):

@@ -14,7 +14,6 @@
 ########################################################################
 """Code to set space group constraints for a crystal structure."""
 
-from __future__ import division
 
 import numpy
 
@@ -309,6 +308,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 lattice.beta, lattice.gamma]
         pars = [p for p in latpars if not p.const and not p.constrained]
         for par in pars:
+                # FIXME - the original parameter will still appear as
+                # constrained.
                 # Make a proxy for the parameter so we make a clean
                 # separation between sgpars and phase.
                 newpar = self.__addPar(par.name, par)
@@ -620,6 +621,8 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
         return
 
     # If we got here, then we have a constraint equation
+    # Fix any division issues
+    formula = formula.replace("/", "*1.0/")
     scatterer.constrain(par, formula, ns = ns)
     return
 

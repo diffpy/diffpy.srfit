@@ -15,7 +15,7 @@
 """Structure wrapper class for structures compatible with SrReal.
 """
 
-__all__ = ["BaseStructure"]
+__all__ = ["SrRealStructure"]
 
 from diffpy.srreal.srreal_ext import nosymmetry
 

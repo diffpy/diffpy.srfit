@@ -88,10 +88,12 @@ __all__ = [ "EquationFactory", "BaseBuilder", "ArgumentBuilder",
 
 _builders = {}
 
+
 import numpy
 
 import diffpy.srfit.equation.literals as literals
 from .equationmod import Equation
+
 
 class EquationFactory(object):
     """A Factory for equations.

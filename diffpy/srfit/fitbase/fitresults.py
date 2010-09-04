@@ -593,6 +593,8 @@ def initializeRecipe(recipe, results):
     # We want to prefer the first match
     matches.reverse()
     mpairs = dict(matches)
+    if not mpairs:
+        raise AttributeError("Cannot find results")
 
     for vname in recipe.getNames():
         value = mpairs.get(vname)

@@ -113,6 +113,7 @@ class FitHook(object):
 
 # End class FitHook
 
+# TODO - Display the chi^2 on the plot during refinement.
 class PlotFitHook(FitHook):
     """This FitHook has live plotting of whatever is being refined."""
 

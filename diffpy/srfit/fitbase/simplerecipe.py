@@ -78,6 +78,8 @@ class SimpleRecipe(FitRecipe):
 
         Other arguments are as addVar.
 
+        Returns the new variable.
+
         Raises ValueError if the contribution does not have a parameter named
         pname.
 
@@ -85,8 +87,7 @@ class SimpleRecipe(FitRecipe):
         par = self.contribution.get(pname)
         if par is None:
             raise ValueError("No parameter named '%s'"%pname)
-        self.addVar(par, value, name, fixed, tag, tags)
-        return
+        return self.addVar(par, value, name, fixed, tag, tags)
     
     # Profile methods
     def loadParsedData(self, parser):

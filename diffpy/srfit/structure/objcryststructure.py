@@ -234,11 +234,29 @@ class MoleculeParSet(ScattererParSet):
         from pyobjcryst.molecule import Molecule
         return isinstance(stru, Molecule)
 
+    # Part of SrRealStructure interface
+    def useSymmetry(self, use = True):
+        """Set this structure to use symmetry.
+
+        This structure object does not support symmetry.
+        
+        """
+        return
+
+    # Part of SrRealStructure interface
+    def usingSymmetry(self):
+        """Check if symmetry is being used.
+
+        This structure object does not support symmetry.
+        """
+        return False
+
+    # Part of SrRealStructure interface
     def _getSrRealStructure(self):
         """Get the structure object for use with SrReal calculators.
 
-        If this is periodic, then return the structure, otherwise, wrap it as
-        nonperiodic first.
+        If this is periodic, then return the structure, otherwise, pass it
+        inside of a nosymmetry wrapper.
 
         """
         return self.stru

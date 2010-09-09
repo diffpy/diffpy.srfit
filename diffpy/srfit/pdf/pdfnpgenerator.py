@@ -63,6 +63,33 @@ class DebyePDFGenerator(BasePDFGenerator):
 
     """
 
+    def setPhase(self, stru = None, name = None, parset = None, periodic =
+            False):
+        """Add a phase to the calculated structure.
+
+        This creates a StructureParSet or ObjCrystParSet that adapts stru to a
+        ParameterSet interface. See those classes (located in
+        diffpy.srfit.structure) for how they are used. The resulting
+        ParameterSet will be managed by this generator.
+
+        stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
+                    pyobjcryst.molecule.Molecule instance . Default None.
+        name    --  A name to give the structure. If name is None (default),
+                    then the name will be set as "phase".
+        parset  --  A ParameterSet that holds the structural information. This
+                    can be used to share the phase between multiple
+                    PDFGenerators, and have the changes in one reflect in
+                    another. If both stru and parset are specified, only parset
+                    is used. Default None. 
+        periodic -- The structure should be treated as periodic (default
+                    False). Note that some structures do not support
+                    periodicity, in which case this will be ignored.
+
+        Raises ValueError if neither stru nor parset is specified.
+
+        """
+        BasePDFGenerator.setPhase(self, stru, name, parset, periodic)
+
     def __init__(self, name = "pdf"):
         """Initialize the generator.
         

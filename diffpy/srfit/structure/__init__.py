@@ -45,7 +45,7 @@ def struToParameterSet(name, stru):
     if CCTBXStructureParSet.canAdapt(stru):
         return CCTBXStructureParSet(name, stru)
 
-    raise TypeError("Unadapatable structure format")
+    raise TypeError("Unadaptable structure format")
 
 from sgconstraints import constrainAsSpaceGroup
 

@@ -105,6 +105,7 @@ class BasePDFGenerator(ProfileGenerator):
     def processMetaData(self):
         """Process the metadata once it gets set."""
         ProfileGenerator.processMetaData(self)
+
         stype = self.meta.get("stype")
         if stype is not None:
             self.setScatteringType(stype)
@@ -112,6 +113,10 @@ class BasePDFGenerator(ProfileGenerator):
         qmax = self.meta.get("qmax")
         if qmax is not None:
             self.setQmax(qmax)
+
+        qmin = self.meta.get("qmin")
+        if qmin is not None:
+            self.setQmin(qmin)
 
         parnames = ['delta1', 'delta2', 'qbroad', 'qdamp']
 
@@ -173,7 +178,8 @@ class BasePDFGenerator(ProfileGenerator):
         """Get the qmin value."""
         return self.meta.get('qmin')
 
-    def setPhase(self, stru = None, name = None, parset = None):
+    def setPhase(self, stru = None, name = None, parset = None, periodic =
+            True):
         """Add a phase to the calculated structure.
 
         This creates a StructureParSet or ObjCrystParSet that adapts stru to a
@@ -190,6 +196,9 @@ class BasePDFGenerator(ProfileGenerator):
                     PDFGenerators, and have the changes in one reflect in
                     another. If both stru and parset are specified, only parset
                     is used. Default None. 
+        periodic -- The structure should be treated as periodic (default
+                    True). Note that some structures do not support
+                    periodicity, in which case this will be ignored.
 
         Raises ValueError if neither stru nor parset is specified.
 
@@ -216,6 +225,9 @@ class BasePDFGenerator(ProfileGenerator):
 
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
+
+        # Set periodicity
+        self._phase.useSymmetry(periodic)
         return
 
     def __wrapPars(self):

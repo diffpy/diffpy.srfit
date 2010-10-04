@@ -23,6 +23,8 @@ __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import numpy
 
+from diffpy.srfit.util.inpututils import inputToString
+
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 
@@ -31,6 +33,8 @@ class FitResults(object):
     cov         --  The covariance matrix from the recipe.
     conresults  --  A dictionary of ContributionResults for each
                     FitContribution, indexed by the FitContribution name.
+    derivstep   --  The fractional step size for calculating numeric
+                    derivatives. Default 1e-8.
     varnames    --  Names of the variables in the recipe.
     varvals     --  Values of the variables in the recipe.
     varunc      --  Uncertainties in the variable values.
@@ -48,8 +52,8 @@ class FitResults(object):
     _dcon       --  The derivatives of the constraint equations with respect to
                     the variables. This is used internally.
 
-    Each of these attributes, except the recipe, are created or updated when the
-    update method is called.
+    Each of these attributes, except the recipe, are created or updated when
+    the update method is called.
 
     """
 
@@ -64,6 +68,7 @@ class FitResults(object):
         """
         self.recipe = recipe
         self.conresults = {}
+        self.derivstep = 1e-8
         self.varnames = []
         self.varvals = []
         self.varunc = []
@@ -149,10 +154,10 @@ class FitResults(object):
             self.cov = numpy.zeros((l, l), dtype=float)
         return
 
-    def _calculateJacobian(self, step=1e-8):
+    def _calculateJacobian(self):
         """Calculate the Jacobian for the fitting.
 
-        Borrowed from PARK.
+        Adapted from PARK.
         Returns the derivative wrt the fit variables at point p.
 
         This also calculates the derivatives of the constrained parameters
@@ -163,6 +168,7 @@ class FitResults(object):
 
         """
         recipe = self.recipe
+        step = self.derivstep
 
         # Make sure the input vector is an array
         pvals = numpy.asarray(self.varvals)
@@ -213,7 +219,8 @@ class FitResults(object):
         self._dcon = numpy.vstack(conr).T
 
         # return the jacobian
-        return numpy.vstack(r).T
+        jac = numpy.vstack(r).T
+        return jac
 
     def _calculateMetrics(self):
         """Calculate chi2, rchi2 and Rw for the recipe."""
@@ -571,23 +578,12 @@ def initializeRecipe(recipe, results):
 
     """
 
-    import os.path
-
-    # Get the results into a string
-    resstr = ""
-    if hasattr(results, "read"):
-        resstr = results.read()
-    elif os.path.exists(results):
-        with file(results, 'r') as infile:
-            resstr = infile.read()
-    else:
-        resstr = results
+    resstr = inputToString(results)
 
     import re
     rx = {'f' : r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?",
           'n' : r'[a-zA-Z_]\w*'}
     pat = r"(%(n)s)\s+(%(f)s)" % rx
-
 
     matches = re.findall(pat, resstr)
     # We want to prefer the first match

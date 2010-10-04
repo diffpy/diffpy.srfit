@@ -25,7 +25,7 @@ from diffpy.srfit.fitbase import ProfileGenerator, Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
-from diffpy.srfit.pdf.pdfnpgenerator import DebyePDFGenerator
+from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
 from diffpy.srfit.pdf import PDFGenerator
 
 ####### Example Code

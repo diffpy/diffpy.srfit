@@ -19,8 +19,6 @@ the diffpy.srfit.interface.interface.py module.
 
 """
 
-import numpy
-
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 
 ####### Example Code

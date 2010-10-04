@@ -16,17 +16,11 @@
 
 """
 
-import os
-
-import numpy
-
 from diffpy.srfit.sas import SASGenerator, SASParser
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults, Profile
 
 from gaussianrecipe import scipyOptimize
-
-
 
 ####### Example Code
 

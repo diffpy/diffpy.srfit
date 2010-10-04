@@ -42,8 +42,6 @@ Extensions
 
 """
 
-import os
-
 import numpy
 
 from diffpy.srfit.fitbase import ProfileGenerator, Profile

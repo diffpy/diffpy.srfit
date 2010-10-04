@@ -60,10 +60,10 @@ class SimpleRecipe(FitRecipe):
 
     """
 
-    def __init__(self, name = "fit"):
+    def __init__(self, name = "fit", conclass = FitContribution):
         """Initialization."""
         FitRecipe.__init__(self, name)
-        contribution = FitContribution("contribution")
+        contribution = conclass("contribution")
         self.profile = Profile()
 
         contribution.setProfile(self.profile)

@@ -135,6 +135,8 @@ class ProfileGenerator(Operator, ParameterSet):
         self.profile.addObserver(self._flush)
         self._flush(self)
 
+        # Merge the profiles metadata with our own
+        self.meta.update( self.profile.meta )
         self.processMetaData()
         return
 
@@ -143,8 +145,8 @@ class ProfileGenerator(Operator, ParameterSet):
 
         This can be used to configure a ProfileGenerator upon a change in the
         metadata. This method gets called whenever the Profile is set.
+
         """
-        self.meta.update( self.profile.meta )
         return
 
     def _validate(self):

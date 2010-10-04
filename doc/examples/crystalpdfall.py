@@ -19,9 +19,6 @@ structure to all the available data.
 
 """
 
-
-import os
-
 import numpy
 
 from pyobjcryst.crystal import CreateCrystalFromCIF

@@ -24,8 +24,6 @@ sources. This example demonstrates only the basic configuration.
 
 """
 
-import os
-
 import numpy
 
 from diffpy.Structure import Structure

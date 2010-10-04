@@ -284,6 +284,8 @@ class Profile(Observable, Validatable):
         """
         x = self.x
         ycalc = self.ycalc
+        if ycalc is None:
+            raise AttributeError("ycalc is None")
         y = self.y
         dy = self.dy
         numpy.savetxt(fname, zip(x, ycalc, y, dy), fmt, delimiter)

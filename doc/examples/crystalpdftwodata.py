@@ -21,9 +21,6 @@ ObjCrystParSet.
 
 """
 
-
-import os
-
 import numpy
 
 from pyobjcryst.crystal import CreateCrystalFromCIF

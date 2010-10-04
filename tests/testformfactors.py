@@ -6,7 +6,7 @@ import os.path
 
 import numpy
 
-import diffpy.srfit.pdf.nanoformfactors as nff
+import diffpy.srfit.pdf.characteristicfunctions as cf
 
 class TestSASFormFactor(unittest.TestCase):
 
@@ -16,12 +16,12 @@ class TestSASFormFactor(unittest.TestCase):
         from sans.models.SphereModel import SphereModel
         model = SphereModel()
         model.setParam("radius", radius)
-        ff = nff.SASFormFactor("sphere", model)
+        ff = cf.SASFormFactor("sphere", model)
         r = numpy.arange(1, 60, 0.1, dtype = float)
         fr1 = ff(r)
 
         # Calculate sphere ff analytically
-        fr2 = nff.sphericalFF(r, 2*radius)
+        fr2 = cf.sphericalFF(r, 2*radius)
         diff = fr1 - fr2
         res = numpy.dot(diff, diff)
         res /= numpy.dot(fr2, fr2)
@@ -36,12 +36,12 @@ class TestSASFormFactor(unittest.TestCase):
         model = EllipsoidModel()
         model.setParam("radius_a", prad)
         model.setParam("radius_b", erad)
-        ff = nff.SASFormFactor("spheroid", model)
+        ff = cf.SASFormFactor("spheroid", model)
         r = numpy.arange(0, 100, 1/numpy.pi, dtype = float)
         fr1 = ff(r)
 
         # Calculate ff analytically
-        fr2 = nff.spheroidalFF(r, erad, prad)
+        fr2 = cf.spheroidalFF(r, erad, prad)
         diff = fr1 - fr2
         res = numpy.dot(diff, diff)
         res /= numpy.dot(fr2, fr2)
@@ -56,12 +56,12 @@ class TestSASFormFactor(unittest.TestCase):
         model = VesicleModel()
         model.setParam("radius", radius)
         model.setParam("thickness", thickness)
-        ff = nff.SASFormFactor("vesicle", model)
+        ff = cf.SASFormFactor("vesicle", model)
         r = numpy.arange(0, 99.45, 0.1, dtype = float)
         fr1 = ff(r)
 
         # Calculate sphere ff analytically
-        fr2 = nff.shellFF(r, radius, thickness)
+        fr2 = cf.shellFF(r, radius, thickness)
         diff = fr1 - fr2
         res = numpy.dot(diff, diff)
         res /= numpy.dot(fr2, fr2)
@@ -78,7 +78,7 @@ class TestSASFormFactor(unittest.TestCase):
         model.setParam("radius", radius)
         model.setParam("length", length)
 
-        ff = nff.SASFormFactor("cylinder", model)
+        ff = cf.SASFormFactor("cylinder", model)
 
         r1 = numpy.arange(0, 10, 0.1, dtype = float)
         r2 = numpy.arange(0, 50, 0.1, dtype = float)

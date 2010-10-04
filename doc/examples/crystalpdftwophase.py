@@ -21,8 +21,6 @@ find the structures and phase fractions.
 
 """
 
-import os
-
 import numpy
 
 from pyobjcryst.crystal import CreateCrystalFromCIF

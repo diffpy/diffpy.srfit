@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of fitting a crystal-like nanoparticle PDF.
+"""Example of fitting a crystal-like nanoparticle (nanocrystal) PDF.
 
 This is an example of modeling the PDF from a nanocrystal as an attenuated bulk
 PDF. This involves a crystal PDF calculation and a spherical nanoparticle form
@@ -21,7 +21,7 @@ The equation we model is
 Gnano(r) = f(r) * Gbulk(r),
 where f(r) is the nanoparticle form factor (or characteristic function) for the
 nanoparticle shape. Functions for calculating the nanoparticle form factor in
-the diffpy.srfit.pdf.nanoformfactors module.
+the diffpy.srfit.pdf.characteristicfunctions module.
 
 """
 
@@ -58,7 +58,7 @@ def makeRecipe(ciffile, grdata):
     pdfcontribution.addProfileGenerator(pdfgenerator)
 
     # Register the nanoparticle shape factor.
-    from diffpy.srfit.pdf.nanoformfactors import sphericalFF
+    from diffpy.srfit.pdf.characteristicfunctions import sphericalFF
     pdfcontribution.registerFunction(sphericalFF, name = "f")
 
     # Now we set up the fitting equation.

@@ -13,16 +13,16 @@
 ########################################################################
 """PDF profile generator using the Debye equation.
 
-The PDFGenerator class can take a diffpy.Structure, pyobjcryst.crystal.Crystal
-or pyobjcryst.molecule.Molecule object and calculate the PDF from it. This
-generator is especially appropriate for isolated scatterers, such as
-nanoparticles and molecules.
+The DebyePDFGenerator class can take a diffpy.Structure,
+pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and calculate
+the PDF from it. This generator is especially appropriate for isolated
+scatterers, such as nanoparticles and molecules.
 
 """
 __all__ = ["PDFDebyeGenerator"]
 
 from diffpy.srreal.pdfcalculator import DebyePDFCalculator
-from .basepdfgenerator import BasePDFGenerator
+from diffpy.srfit.pdf.basepdfgenerator import BasePDFGenerator
 
 class DebyePDFGenerator(BasePDFGenerator):
     """A class for calculating the PDF from an isolated scatterer.
@@ -65,7 +65,7 @@ class DebyePDFGenerator(BasePDFGenerator):
 
     def setPhase(self, stru = None, name = None, parset = None, periodic =
             False):
-        """Add a phase to the calculated structure.
+        """Set the phase that will be used to calculate the PDF.
 
         This creates a StructureParSet or ObjCrystParSet that adapts stru to a
         ParameterSet interface. See those classes (located in
@@ -98,6 +98,6 @@ class DebyePDFGenerator(BasePDFGenerator):
         self._calc = DebyePDFCalculator()
         return
 
-# End class DebyePDFCalculator
+# End class DebyePDFGenerator
 
 # End of file

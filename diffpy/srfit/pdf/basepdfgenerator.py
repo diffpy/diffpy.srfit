@@ -180,7 +180,7 @@ class BasePDFGenerator(ProfileGenerator):
 
     def setPhase(self, stru = None, name = None, parset = None, periodic =
             True):
-        """Add a phase to the calculated structure.
+        """Set the phase that will be used to calculate the PDF.
 
         This creates a StructureParSet or ObjCrystParSet that adapts stru to a
         ParameterSet interface. See those classes (located in

@@ -67,6 +67,21 @@ class Parameter(_parameter_interface, Argument, Validatable):
         Argument.__init__(self, name, value, const)
         return
 
+    def setValue(self, val, lb = None, ub = None):
+        """Set the value of the Parameter and the bounds.
+
+        val     --  The value to assign.
+        lb      --  The lower bounds for the bounds list. If this is None
+                    (default), then the lower bound will not be alterered.
+        ub      --  The upper bounds for the bounds list. If this is None
+                    (default), then the upper bound will not be alterered.
+
+        """
+        Argument.setValue(self, val)
+        if lb is not None: self.bounds[0] = lb
+        if ub is not None: self.bounds[1] = ub
+        return
+
     def setConst(self, const = True, value = None):
         """Toggle the Parameter as constant.
 
@@ -91,7 +106,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         
         """
         if self.value is None:
-            raise AttributeError("value is None")
+            raise AttributeError("value of '%s' is None"%self.name)
         return
 
 # End class Parameter
@@ -215,11 +230,14 @@ class ParameterAdapter(Parameter):
         """Get the value of the Parameter."""
         return self.getter(self.obj)
 
-    def setValue(self, value):
+    def setValue(self, value, lb = None, ub = None):
         """Set the value of the Parameter."""
         if value != self.getValue():
             self.setter(self.obj, value)
             self.notify()
+
+        if lb is not None: self.bounds[0] = lb
+        if ub is not None: self.bounds[1] = ub
 
         return
                     

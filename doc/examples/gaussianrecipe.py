@@ -44,8 +44,6 @@ will leave you with a much better understanding of how SrFit works.
 
 """
 
-import numpy
-
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 
 ####### Example Code

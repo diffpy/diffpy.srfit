@@ -33,7 +33,6 @@ Extensions
   done.
 
 """
-import numpy
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults
 

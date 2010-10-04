@@ -111,8 +111,11 @@ should read through these use cases to gain an understanding of PDF and SAS
 refinement with SrFit.
 
 * crystalpdf.py_
-    Refine a diffpy.Structure crystal to PDF data using automatic explicit space
-    group constraints.
+    Refine a diffpy.Structure crystal to PDF data using automatic explicit
+    space group constraints.
+
+* simplepdf.py_
+    As crystalpdf.py_, but with a simplified interface.
 
 * crystalpdfobjcryst.py_
     Refine a pyobjcryst crystal to PDF data using automatic implicit space

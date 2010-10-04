@@ -15,6 +15,7 @@ Examples
 .. _npintensityII.py: npintensityII.html
 .. _nppdfobjcryst.py: nppdfobjcryst.html
 .. _crystalpdf.py: crystalpdf.html
+.. _simplepdf.py: simplepdf.html
 .. _crystalpdfobjcryst.py: crystalpdfobjcryst.html
 .. _crystalpdftwophase.py: crystalpdftwophase.html
 .. _crystalpdftwodata.py: crystalpdftwodata.html
@@ -40,6 +41,7 @@ Files
    npintensityII.rst
    nppdfobjcryst.rst
    crystalpdf.rst
+   simplepdf.rst
    crystalpdfobjcryst.rst
    crystalpdftwophase.rst
    crystalpdftwodata.rst

@@ -124,6 +124,9 @@ refinement with SrFit.
 * crystalpdftwophase.py_
     Refine a two-phase structure to PDF data using two profile generators.
 
+* simplepdftwophase.py_
+    As crystalpdftwophase.py_, except with a simplified interface.
+
 * crystalpdftwodata.py_
     Refine a single structure to x-ray and neutron data simultaneously.
 

@@ -18,6 +18,7 @@ Examples
 .. _simplepdf.py: simplepdf.html
 .. _crystalpdfobjcryst.py: crystalpdfobjcryst.html
 .. _crystalpdftwophase.py: crystalpdftwophase.html
+.. _simplepdftwophase.py: simplepdftwophase.html
 .. _crystalpdftwodata.py: crystalpdftwodata.html
 .. _crystalpdfall.py: crystalpdfall.html
 .. _nppdfcrystal.py: nppdfcrystal.html
@@ -44,6 +45,7 @@ Files
    simplepdf.rst
    crystalpdfobjcryst.rst
    crystalpdftwophase.rst
+   simplepdftwophase.rst
    crystalpdftwodata.rst
    crystalpdfall.rst
    nppdfcrystal.rst

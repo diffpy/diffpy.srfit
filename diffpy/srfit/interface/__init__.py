@@ -21,19 +21,19 @@ before importing any other part of SrFit.
 
 """
 
-from .interface import ParameterInterface
+from diffpy.srfit.interface.interface import ParameterInterface
 _parameter_interface = ParameterInterface
 
-from .interface import RecipeOrganizerInterface
+from diffpy.srfit.interface.interface import RecipeOrganizerInterface
 _recipeorganizer_interface = RecipeOrganizerInterface
 
-from .interface import FitContributionInterface
+from diffpy.srfit.interface.interface import FitContributionInterface
 _fitcontribution_interface = FitContributionInterface
 
-from .interface import FitRecipeInterface
+from diffpy.srfit.interface.interface import FitRecipeInterface
 _fitrecipe_interface = FitRecipeInterface
 
-from .interface import ParameterFactory
+from diffpy.srfit.interface.interface import ParameterFactory
 
 # package version
 from diffpy.srfit.version import __version__

@@ -490,7 +490,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 self._newParameter(pname, 0)
 
         # Initialize and register
-        from .calculator import Calculator
+        from diffpy.srfit.fitbase.calculator import Calculator
         if isinstance(f, Calculator):
             for pname in argnames:
                 par = self.get(pname)

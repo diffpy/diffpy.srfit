@@ -21,8 +21,8 @@ constant.
 
 __all__ = ["Argument"]
 
-from .abcs import ArgumentABC
-from .literal import Literal
+from diffpy.srfit.equation.literals.abcs import ArgumentABC
+from diffpy.srfit.equation.literals.literal import Literal
 
 class Argument(Literal, ArgumentABC):
     """Argument class.

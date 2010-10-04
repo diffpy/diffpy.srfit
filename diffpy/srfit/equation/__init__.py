@@ -29,7 +29,7 @@ __all__ = ["Equation"]
 # package version
 from diffpy.srfit.version import __version__
 
-from .equationmod import Equation
+from diffpy.srfit.equation.equationmod import Equation
 
 
 # End of file

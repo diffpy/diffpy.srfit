@@ -92,7 +92,7 @@ _builders = {}
 import numpy
 
 import diffpy.srfit.equation.literals as literals
-from .equationmod import Equation
+from diffpy.srfit.equation.equationmod import Equation
 
 
 class EquationFactory(object):

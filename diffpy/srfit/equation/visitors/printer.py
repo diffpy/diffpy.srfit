@@ -22,7 +22,7 @@ Printer is mostly
 """
 __all__ = ["Printer"]
 
-from .visitor import Visitor
+from diffpy.srfit.equation.visitors.visitor import Visitor
 
 class Printer(Visitor):
     """Printer for printing a Literal tree.

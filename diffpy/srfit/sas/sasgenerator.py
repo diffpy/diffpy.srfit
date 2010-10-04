@@ -26,7 +26,7 @@ import numpy
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
-from .sasparameter import SASParameter
+from diffpy.srfit.sas.sasparameter import SASParameter
 
 class SASGenerator(ProfileGenerator):
     """A class for calculating I(Q) from a scattering type.

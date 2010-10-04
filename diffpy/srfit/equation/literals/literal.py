@@ -24,7 +24,7 @@ __all__ = ["Literal"]
 
 import numpy
 
-from .abcs import LiteralABC
+from diffpy.srfit.equation.literals.abcs import LiteralABC
 from diffpy.srfit.util.observable import Observable
 
 class Literal(Observable,LiteralABC):

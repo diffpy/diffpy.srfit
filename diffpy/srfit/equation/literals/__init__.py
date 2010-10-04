@@ -37,22 +37,22 @@ from diffpy.srfit.version import __version__
 
 # Import the operators
 
-from .argument import Argument
-from .operators import Operator
-from .operators import AdditionOperator
-from .operators import SubtractionOperator
-from .operators import MultiplicationOperator
-from .operators import DivisionOperator
-from .operators import ExponentiationOperator
-from .operators import RemainderOperator
-from .operators import NegationOperator
-from .operators import ConvolutionOperator
-from .operators import UFuncOperator
-from .operators import SumOperator
-from .operators import ListOperator
-from .operators import SetOperator
-from .operators import ArrayOperator
-from .operators import PolyvalOperator
+from diffpy.srfit.equation.literals.argument import Argument
+from diffpy.srfit.equation.literals.operators import Operator
+from diffpy.srfit.equation.literals.operators import AdditionOperator
+from diffpy.srfit.equation.literals.operators import SubtractionOperator
+from diffpy.srfit.equation.literals.operators import MultiplicationOperator
+from diffpy.srfit.equation.literals.operators import DivisionOperator
+from diffpy.srfit.equation.literals.operators import ExponentiationOperator
+from diffpy.srfit.equation.literals.operators import RemainderOperator
+from diffpy.srfit.equation.literals.operators import NegationOperator
+from diffpy.srfit.equation.literals.operators import ConvolutionOperator
+from diffpy.srfit.equation.literals.operators import UFuncOperator
+from diffpy.srfit.equation.literals.operators import SumOperator
+from diffpy.srfit.equation.literals.operators import ListOperator
+from diffpy.srfit.equation.literals.operators import SetOperator
+from diffpy.srfit.equation.literals.operators import ArrayOperator
+from diffpy.srfit.equation.literals.operators import PolyvalOperator
 
 # Try some optimizations on these classes
 try:

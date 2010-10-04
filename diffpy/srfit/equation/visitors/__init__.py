@@ -25,10 +25,10 @@ The Literal-Visitor relationship is that described by the Visitor pattern
 # package version
 from diffpy.srfit.version import __version__
 
-from .argfinder import ArgFinder
-from .printer import Printer
-from .validator import Validator
-from .swapper import Swapper
+from diffpy.srfit.equation.visitors.argfinder import ArgFinder
+from diffpy.srfit.equation.visitors.printer import Printer
+from diffpy.srfit.equation.visitors.validator import Validator
+from diffpy.srfit.equation.visitors.swapper import Swapper
 
 def getArgs(literal, getconsts = True):
     """Get the Arguments of a Literal tree.

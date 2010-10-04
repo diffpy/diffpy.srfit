@@ -33,8 +33,8 @@ __all__ = ["Operator", "AdditionOperator", "SubtractionOperator",
 
 import numpy
 
-from .abcs import OperatorABC
-from .literal import Literal
+from diffpy.srfit.equation.literals.abcs import OperatorABC
+from diffpy.srfit.equation.literals.literal import Literal
 
 
 class Operator(Literal, OperatorABC):

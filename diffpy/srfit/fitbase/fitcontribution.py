@@ -25,9 +25,9 @@ See the examples in the documention for how to use a FitContribution.
 __all__ = ["FitContribution"]
 
 from diffpy.srfit.interface import _fitcontribution_interface
-from .parameterset import ParameterSet
-from .recipeorganizer import equationFromString
-from .parameter import ParameterProxy
+from diffpy.srfit.fitbase.parameterset import ParameterSet
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.parameter import ParameterProxy
 
 class FitContribution(_fitcontribution_interface, ParameterSet):
     """FitContribution class.
@@ -47,7 +47,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
     _generators     --  A managed dictionary of ProfileGenerators.
     _parameters     --  A managed OrderedDict of parameters.
     _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
+                        'restrain' method.
     _parsets        --  A managed dictionary of ParameterSets.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used to create constraints and

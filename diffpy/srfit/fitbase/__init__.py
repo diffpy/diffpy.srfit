@@ -34,14 +34,14 @@ __all__ = ['Calculator', 'FitContribution', 'FitHook', 'FitRecipe',
 # package version
 from diffpy.srfit.version import __version__
 
-from .calculator import Calculator
-from .fitcontribution import FitContribution
-from .fithook import FitHook, PlotFitHook
-from .fitrecipe import FitRecipe
-from .simplerecipe import SimpleRecipe
-from .fitresults import FitResults, initializeRecipe
-from .profile import Profile
-from .profilegenerator import ProfileGenerator
+from diffpy.srfit.fitbase.calculator import Calculator
+from diffpy.srfit.fitbase.fitcontribution import FitContribution
+from diffpy.srfit.fitbase.fithook import FitHook, PlotFitHook
+from diffpy.srfit.fitbase.fitrecipe import FitRecipe
+from diffpy.srfit.fitbase.simplerecipe import SimpleRecipe
+from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
+from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 
 __id__ = "$Id$"
 # End of file

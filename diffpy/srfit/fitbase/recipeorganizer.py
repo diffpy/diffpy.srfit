@@ -26,11 +26,11 @@ from numpy import inf
 from itertools import chain, ifilter
 import re
 
-from .constraint import Constraint
-from .restraint import Restraint
-from .parameter import Parameter
-from .configurable import Configurable
-from .validatable import Validatable
+from diffpy.srfit.fitbase.constraint import Constraint
+from diffpy.srfit.fitbase.restraint import Restraint
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.configurable import Configurable
+from diffpy.srfit.fitbase.validatable import Validatable
 
 from diffpy.srfit.util.observable import Observable
 from diffpy.srfit.equation import Equation

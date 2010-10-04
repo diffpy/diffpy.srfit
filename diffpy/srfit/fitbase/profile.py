@@ -25,8 +25,8 @@ __all__ = ["Parameter", "Profile"]
 import numpy
 
 from diffpy.srfit.util.observable import Observable
-from .parameter import Parameter
-from .validatable import Validatable
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.validatable import Validatable
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8

@@ -21,7 +21,7 @@ embedded Parameters.
 """
 __all__ = ["ParameterSet"]
 
-from .recipeorganizer import RecipeOrganizer
+from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 
 class ParameterSet(RecipeOrganizer):
     """Class for organizing Parameters and other ParameterSets.

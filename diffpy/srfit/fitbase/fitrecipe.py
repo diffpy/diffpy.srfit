@@ -38,9 +38,9 @@ from numpy import array, concatenate, sqrt, dot
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.util.tagmanager import TagManager
-from .parameter import ParameterProxy
-from .recipeorganizer import RecipeOrganizer
-from .fithook import FitHook
+from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
+from diffpy.srfit.fitbase.fithook import FitHook
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.

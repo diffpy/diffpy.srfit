@@ -24,7 +24,7 @@ __all__ = ["Restraint"]
 
 from numpy import inf
 
-from .validatable import Validatable
+from diffpy.srfit.fitbase.validatable import Validatable
 
 class Restraint(Validatable):
     """Restraint class.

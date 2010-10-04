@@ -46,7 +46,7 @@ from numpy import asarray
 
 from diffpy.srfit.equation.literals.operators import Operator
 
-from .parameterset import ParameterSet
+from diffpy.srfit.fitbase.parameterset import ParameterSet
 
 class ProfileGenerator(Operator, ParameterSet):
     """Base class for profile generators.

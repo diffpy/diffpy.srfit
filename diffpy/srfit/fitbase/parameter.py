@@ -30,7 +30,7 @@ from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.interface import _parameter_interface
-from .validatable import Validatable
+from diffpy.srfit.fitbase.validatable import Validatable
 
 
 class Parameter(_parameter_interface, Argument, Validatable):

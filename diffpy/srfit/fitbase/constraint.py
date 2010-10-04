@@ -22,7 +22,7 @@ this association.
 """
 __all__ = ["Constraint"]
 
-from .validatable import Validatable
+from diffpy.srfit.fitbase.validatable import Validatable
 
 class Constraint(Validatable):
     """Constraint class.

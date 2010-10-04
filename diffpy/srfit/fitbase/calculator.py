@@ -25,7 +25,7 @@ Calculator can be added to another RecipeOrganizer with the
 """
 __all__ = ["Calculator"]
 
-from .parameterset import ParameterSet
+from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.equation.literals.operators import Operator
 
 class Calculator(Operator, ParameterSet):

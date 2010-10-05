@@ -730,7 +730,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     def clearRestraints(self):
         """Clear all restraints."""
-        for res in self._restraints:
+        for res in tuple(self._restraints):
             self.unrestrain(res)
         return
 

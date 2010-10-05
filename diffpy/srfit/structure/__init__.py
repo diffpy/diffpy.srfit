@@ -16,9 +16,6 @@
 
 """
 
-# package version
-from diffpy.srfit.version import __version__
-
 def struToParameterSet(name, stru):
     """Creates a ParameterSet from an structure.
 

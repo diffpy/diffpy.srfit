@@ -26,9 +26,6 @@ The subpackages define various pieces of the evaluation network.
 
 __all__ = ["Equation"]
 
-# package version
-from diffpy.srfit.version import __version__
-
 from diffpy.srfit.equation.equationmod import Equation
 
 

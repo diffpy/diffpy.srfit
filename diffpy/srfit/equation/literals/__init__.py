@@ -32,9 +32,6 @@ __all__ = ["Argument", "Operator", "AdditionOperator", "SubtractionOperator",
         "ArrayOperator", "PolyvalOperator"]
 
 
-# package version
-from diffpy.srfit.version import __version__
-
 # Import the operators
 
 from diffpy.srfit.equation.literals.argument import Argument

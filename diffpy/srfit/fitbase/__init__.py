@@ -31,9 +31,6 @@ http://www.reflectometry.org/danse/park.html
 __all__ = ['Calculator', 'FitContribution', 'FitHook', 'FitRecipe',
 'FitResults', 'initalizeRecipe', 'PlotFitHook', 'Profile', 'ProfileGenerator']
 
-# package version
-from diffpy.srfit.version import __version__
-
 from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fithook import FitHook, PlotFitHook

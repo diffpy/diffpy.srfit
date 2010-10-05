@@ -22,7 +22,4 @@ from sasparser import SASParser
 from sasprofile import SASProfile
 from prcalculator import PrCalculator, CFCalculator
 
-# package version
-from diffpy.srfit.version import __version__
-
 # End of file

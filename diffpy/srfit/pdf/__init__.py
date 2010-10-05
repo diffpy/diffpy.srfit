@@ -22,7 +22,4 @@ from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
 from diffpy.srfit.pdf.pdfcontribution import PDFContribution
 from diffpy.srfit.pdf.pdfparser import PDFParser
 
-# package version
-from diffpy.srfit.version import __version__
-
 # End of file

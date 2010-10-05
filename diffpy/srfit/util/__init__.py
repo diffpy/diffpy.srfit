@@ -15,8 +15,4 @@
 
 """Utilities used throughout SrFit."""
 
-# package version
-from diffpy.srfit.version import __version__
-
-
 # End of file

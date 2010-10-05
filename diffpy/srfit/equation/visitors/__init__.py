@@ -22,9 +22,6 @@ The Literal-Visitor relationship is that described by the Visitor pattern
 
 """
 
-# package version
-from diffpy.srfit.version import __version__
-
 from diffpy.srfit.equation.visitors.argfinder import ArgFinder
 from diffpy.srfit.equation.visitors.printer import Printer
 from diffpy.srfit.equation.visitors.validator import Validator

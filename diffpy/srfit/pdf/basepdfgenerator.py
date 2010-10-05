@@ -230,6 +230,8 @@ class BasePDFGenerator(ProfileGenerator):
         self._phase.useSymmetry(periodic)
         return
 
+    _parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
+
     def __wrapPars(self):
         """Wrap the Parameters.
 
@@ -237,9 +239,7 @@ class BasePDFGenerator(ProfileGenerator):
         Parameters.
 
         """
-        parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
-
-        for pname in parnames:
+        for pname in self.__class__._parnames:
             self.addParameter(
                 ParameterAdapter(pname, self._calc, attr = pname)
                 )
@@ -264,7 +264,8 @@ class BasePDFGenerator(ProfileGenerator):
                     setter, pname)
                 )
 
-        parnames = ['qbroad', 'qdamp']
+        parnames = set(self.__class__._parnames)
+        parnames -= set(pdfparnames)
         for pname in parnames:
             self.addParameter(
                 ParameterAdapter(pname, self._calc, attr = pname)

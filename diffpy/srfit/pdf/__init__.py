@@ -17,10 +17,10 @@
 
 """
 
-from pdfgenerator import PDFGenerator
-from debyepdfgenerator import DebyePDFGenerator
-from pdfcontribution import PDFContribution
-from pdfparser import PDFParser
+from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
+from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
+from diffpy.srfit.pdf.pdfcontribution import PDFContribution
+from diffpy.srfit.pdf.pdfparser import PDFParser
 
 # package version
 from diffpy.srfit.version import __version__

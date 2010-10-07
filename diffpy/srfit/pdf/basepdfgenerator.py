@@ -135,19 +135,15 @@ class BasePDFGenerator(ProfileGenerator):
     def setScatteringType(self, type = "X"):
         """Set the scattering type.
         
-        type    --   "X" for x-ray or "N" for neutron
+        type    --   "X" for x-ray, "N" for neutron, "E" for electrons,
+                     or any registered type from diffpy.srreal from
+                     ScatteringFactorTable.getRegisteredTypes().
 
-        Raises ValueError if type is not "X" or "N"
-
+        Raises ValueError for unknown scattering type.
         """
-        type = type.upper()
-        if type not in ("X", "N"):
-            raise ValueError("Unknown scattering type '%s'"%type)
-
-        self.meta["stype"] = type
-
         self._calc.setScatteringFactorTableByType(type)
-
+        # update the meta dictionary only if there was no exception
+        self.meta["stype"] = type
         return
     
     def getScatteringType(self):

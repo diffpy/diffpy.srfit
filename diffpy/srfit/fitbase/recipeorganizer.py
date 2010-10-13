@@ -128,6 +128,28 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Iterate over top-level parameters."""
         return self._parameters.itervalues()
 
+    def __len__(self):
+        """Get number of top-level parameters."""
+        return len(self._parameters)
+
+    def __getitem__(self, idx):
+        """Get top-level parameters by index."""
+
+        if isinstance(idx, slice):
+            vals = [self[idx] for idx in xrange(idx.start, idx.stop, idx.step)]
+            return vals
+
+        if not isinstance(idx, int):
+            cname = idx.__class__.__name__
+            raise TypeError("list indices must be integers, not %s"% cname)
+
+        npar = len(self)
+        if idx < 0:
+            idx += np
+        if idx > npar or idx < 0:
+            raise IndexError("list index out of range")
+        return self._parameters.values()[idx]
+
     def __getattr__(self, name):
         """Gives access to the contained objects as attributes."""
         arg = self.get(name)
@@ -139,7 +161,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Delete parameters with del.
 
         This does not allow deletion of non-parameters, as this may require
-        configuration changes that cannot be handled here.
+        configuration changes that cannot be handled in a general way.
 
         """
         if name in self._parameters:
@@ -418,8 +440,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                         this is None (default), the method will try to
                         determine the name of the function automatically.
         argnames    --  The names of the arguments to f (list or None). 
-                        If this is None, then the argument names will be
-                        extracted from the function.
+                        If this is None (default), then the argument names will
+                        be extracted from the function.
 
         Note that name and argnames can be extracted from regular python
         functions (of type 'function'), bound class methods and callable

@@ -70,6 +70,32 @@ class TestRecipeContainer(unittest.TestCase):
 
         return
 
+    def testAccessors(self):
+        """Test accessors."""
+        m1 = self.m
+        p1 = Parameter("p1", 1)
+        m1._addObject(p1, m1._parameters)
+
+        m2 = RecipeContainer("m2")
+        p2 = Parameter("p2", 2)
+        m2._addObject(p2, m2._parameters)
+
+        m1._addObject(m2, m1._containers)
+
+        self.assertTrue(m1.m2 is m2)
+        self.assertTrue(m1.p1 is p1)
+        self.assertTrue(m2.p2 is p2)
+        self.assertTrue(m1.m2.p2 is p2)
+
+        self.assertTrue(m1[0] is p1)
+        self.assertTrue(m1[0:] == [p1,])
+        self.assertTrue(m2[0] is p2)
+
+        self.assertEqual(1, len(m1))
+        self.assertEqual(1, len(m2))
+        return
+
+
     def testLocateManagedObject(self):
         """Test the locateManagedObject method."""
         m1 = self.m

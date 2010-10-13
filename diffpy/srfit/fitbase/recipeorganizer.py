@@ -134,20 +134,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __getitem__(self, idx):
         """Get top-level parameters by index."""
-
-        if isinstance(idx, slice):
-            vals = [self[idx] for idx in xrange(idx.start, idx.stop, idx.step)]
-            return vals
-
-        if not isinstance(idx, int):
-            cname = idx.__class__.__name__
-            raise TypeError("list indices must be integers, not %s"% cname)
-
-        npar = len(self)
-        if idx < 0:
-            idx += np
-        if idx > npar or idx < 0:
-            raise IndexError("list index out of range")
         return self._parameters.values()[idx]
 
     def __getattr__(self, name):

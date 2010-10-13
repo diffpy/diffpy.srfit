@@ -50,7 +50,8 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe.newVar("scale_ni", 0.1)
     recipe.constrain(contribution.ni.scale, "scale_ni")
     recipe.constrain(contribution.si.scale, "1 - scale_ni")
-    # We also want the resolution factor to be the same on each.
+    # We also want the resolution factor to be the same on each. This is done
+    # for free by the PDFContribution.
     recipe.newVar("qdamp", 0.03)
     recipe.constrain(contribution.qdamp, "qdamp")
 
@@ -61,7 +62,9 @@ def makeRecipe(niciffile, siciffile, datname):
     # ObjCrystParSets, the space group constraints are automatically applied to
     # each phase. We must selectively vary the free parameters.
     #
-    # First the nickel parameters
+    # First the nickel parameters. 
+    # Note that ni is the name of the PDFGenerator that was automatically
+    # created by the PDFContribution. We selected this name in addPhase above.
     phase_ni = contribution.ni.phase
     for par in phase_ni.sgpars:
         recipe.addVar(par, name = par.name + "_ni")

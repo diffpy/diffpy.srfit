@@ -17,7 +17,7 @@
 
 __all__ = ["SrRealStructure"]
 
-from diffpy.srreal.srreal_ext import nosymmetry
+from diffpy.srreal.structureadapter import nosymmetry
 
 from diffpy.srfit.structure.basestructure import BaseStructure
 from diffpy.srfit.structure.bvsrestraint import BVSRestraint

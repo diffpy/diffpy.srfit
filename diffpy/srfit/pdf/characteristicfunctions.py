@@ -25,7 +25,7 @@ the 'registerFunction' method of that class.
 """
 
 __all__ = ["sphericalCF", "spheroidalCF", "spheroidalCF2",
-"lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASFormFactor"]
+"lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASCF"]
 
 import numpy
 from numpy import pi, sqrt, log, exp, log2, ceil, sign
@@ -241,7 +241,7 @@ def shellCF2(r, a, delta):
     return f
 
 
-class SASFormFactor(Calculator):
+class SASCF(Calculator):
     """Calculator class for characteristic functions from sans-models.
 
     This class wraps a sans.models.BaseModel to calculate I(Q) related to
@@ -264,7 +264,7 @@ class SASFormFactor(Calculator):
     def __init__(self, name, model):
         """Initialize the generator.
 
-        name    --  A name for the SASFormFactor
+        name    --  A name for the SASCF
         model   --  SASModel object this adapts.
         
         """

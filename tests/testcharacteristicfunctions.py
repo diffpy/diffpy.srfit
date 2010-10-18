@@ -8,7 +8,7 @@ import numpy
 
 import diffpy.srfit.pdf.characteristicfunctions as cf
 
-class TestSASFormFactor(unittest.TestCase):
+class TestSASCF(unittest.TestCase):
 
     def testSphere(self):
         radius = 25
@@ -16,7 +16,7 @@ class TestSASFormFactor(unittest.TestCase):
         from sans.models.SphereModel import SphereModel
         model = SphereModel()
         model.setParam("radius", radius)
-        ff = cf.SASFormFactor("sphere", model)
+        ff = cf.SASCF("sphere", model)
         r = numpy.arange(1, 60, 0.1, dtype = float)
         fr1 = ff(r)
 
@@ -36,7 +36,7 @@ class TestSASFormFactor(unittest.TestCase):
         model = EllipsoidModel()
         model.setParam("radius_a", prad)
         model.setParam("radius_b", erad)
-        ff = cf.SASFormFactor("spheroid", model)
+        ff = cf.SASCF("spheroid", model)
         r = numpy.arange(0, 100, 1/numpy.pi, dtype = float)
         fr1 = ff(r)
 
@@ -56,7 +56,7 @@ class TestSASFormFactor(unittest.TestCase):
         model = VesicleModel()
         model.setParam("radius", radius)
         model.setParam("thickness", thickness)
-        ff = cf.SASFormFactor("vesicle", model)
+        ff = cf.SASCF("vesicle", model)
         r = numpy.arange(0, 99.45, 0.1, dtype = float)
         fr1 = ff(r)
 
@@ -78,7 +78,7 @@ class TestSASFormFactor(unittest.TestCase):
         model.setParam("radius", radius)
         model.setParam("length", length)
 
-        ff = cf.SASFormFactor("cylinder", model)
+        ff = cf.SASCF("cylinder", model)
 
         r1 = numpy.arange(0, 10, 0.1, dtype = float)
         r2 = numpy.arange(0, 50, 0.1, dtype = float)

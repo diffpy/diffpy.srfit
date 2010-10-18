@@ -12,7 +12,7 @@ class TestSASFormFactor(unittest.TestCase):
 
     def testSphere(self):
         radius = 25
-        # Calculate sphere ff from SphereModel
+        # Calculate sphere cf from SphereModel
         from sans.models.SphereModel import SphereModel
         model = SphereModel()
         model.setParam("radius", radius)
@@ -20,8 +20,8 @@ class TestSASFormFactor(unittest.TestCase):
         r = numpy.arange(1, 60, 0.1, dtype = float)
         fr1 = ff(r)
 
-        # Calculate sphere ff analytically
-        fr2 = cf.sphericalFF(r, 2*radius)
+        # Calculate sphere cf analytically
+        fr2 = cf.sphericalCF(r, 2*radius)
         diff = fr1 - fr2
         res = numpy.dot(diff, diff)
         res /= numpy.dot(fr2, fr2)
@@ -31,7 +31,7 @@ class TestSASFormFactor(unittest.TestCase):
     def testSpheroid(self):
         prad = 20.9
         erad = 33.114
-        # Calculate ff from EllipsoidModel
+        # Calculate cf from EllipsoidModel
         from sans.models.EllipsoidModel import EllipsoidModel
         model = EllipsoidModel()
         model.setParam("radius_a", prad)
@@ -40,8 +40,8 @@ class TestSASFormFactor(unittest.TestCase):
         r = numpy.arange(0, 100, 1/numpy.pi, dtype = float)
         fr1 = ff(r)
 
-        # Calculate ff analytically
-        fr2 = cf.spheroidalFF(r, erad, prad)
+        # Calculate cf analytically
+        fr2 = cf.spheroidalCF(r, erad, prad)
         diff = fr1 - fr2
         res = numpy.dot(diff, diff)
         res /= numpy.dot(fr2, fr2)
@@ -51,7 +51,7 @@ class TestSASFormFactor(unittest.TestCase):
     def testShell(self):
         radius = 19.2
         thickness = 7.8
-        # Calculate ff from VesicleModel
+        # Calculate cf from VesicleModel
         from sans.models.VesicleModel import VesicleModel
         model = VesicleModel()
         model.setParam("radius", radius)
@@ -60,8 +60,8 @@ class TestSASFormFactor(unittest.TestCase):
         r = numpy.arange(0, 99.45, 0.1, dtype = float)
         fr1 = ff(r)
 
-        # Calculate sphere ff analytically
-        fr2 = cf.shellFF(r, radius, thickness)
+        # Calculate sphere cf analytically
+        fr2 = cf.shellCF(r, radius, thickness)
         diff = fr1 - fr2
         res = numpy.dot(diff, diff)
         res /= numpy.dot(fr2, fr2)

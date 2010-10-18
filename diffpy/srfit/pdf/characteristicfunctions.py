@@ -16,7 +16,7 @@
 These are used to calculate the attenuation of the PDF due to a finite size.
 For a crystal-like nanoparticle, one can calculate the PDF via
 Gnano(r) = f(r) Gcryst(r),
-where f(r) is the nanoparticle form factor (or characteristic function) and
+where f(r) is the nanoparticle characteristic function and
 Gcryst(f) is the crystal PDF.
 
 These functions are meant to be imported and added to a FitContribution using
@@ -24,8 +24,8 @@ the 'registerFunction' method of that class.
 
 """
 
-__all__ = ["sphericalFF", "spheroidalFF", "spheroidalFF2",
-"lognormalSphericalFF", "sheetFF", "shellFF", "shellFF2", "SASFormFactor"]
+__all__ = ["sphericalCF", "spheroidalCF", "spheroidalCF2",
+"lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASFormFactor"]
 
 import numpy
 from numpy import pi, sqrt, log, exp, log2, ceil, sign
@@ -36,8 +36,8 @@ from scipy.special import erf
 
 from diffpy.srfit.fitbase.calculator import Calculator
 
-def sphericalFF(r, psize):
-    """Spherical nanoparticle form factor.
+def sphericalCF(r, psize):
+    """Spherical nanoparticle characteristic function.
     
     r       --  distance of interaction
     psize   --  The particle diameter
@@ -54,8 +54,8 @@ def sphericalFF(r, psize):
         f += g
     return f
 
-def spheroidalFF(r, erad, prad):
-    """Spheroidal form factor specified using radii.
+def spheroidalCF(r, erad, prad):
+    """Spheroidal characteristic function specified using radii.
 
     Spheroid with radii (erad, erad, prad)
 
@@ -69,10 +69,10 @@ def spheroidalFF(r, erad, prad):
     """
     psize = 2*erad
     pelpt = prad / erad
-    return spheroidalFF2(r, psize, pelpt)
+    return spheroidalCF2(r, psize, pelpt)
 
-def spheroidalFF2(r, psize, axrat):
-    """Spheroidal nanoparticle form factor.
+def spheroidalCF2(r, psize, axrat):
+    """Spheroidal nanoparticle characteristic function.
 
     Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)
     
@@ -95,7 +95,7 @@ def spheroidalFF2(r, psize, axrat):
     v2 = v*v
 
     if v == 1: 
-        return sphericalFF(r, psize)
+        return sphericalCF(r, psize)
 
     rx = r
     if v < 1:
@@ -138,16 +138,18 @@ def spheroidalFF2(r, psize, axrat):
     return f
 
 
-def lognormalSphericalFF(r, psize, psig):
-    """Spherical nanoparticle form factor with lognormal size distribution.
+def lognormalSphericalCF(r, psize, psig):
+    """Spherical nanoparticle characteristic function with lognormal size
+    distribution.
     
     r      --  distance of interaction
     psize  --  The mean particle diameter
     psig   --  The log-normal width of the particle diameter
     
     Here, r is the independent variable, mu is the mean of the distrubution
-    (not of the particle size), and s is the width of the distribution. This
-    is the form factor for the lognormal distribution of particle diameter:
+    (not of the particle size), and s is the width of the distribution. This is
+    the characteristic function for the lognormal distribution of particle
+    diameter:
     
     F(r, mu, s) = 0.5*Erfc((-mu-3*s^2+Log(r))/(sqrt(2)*s))
                + 0.25*r^3*Erfc((-mu+Log(r))/(sqrt(2)*s))*exp(-3*mu-4.5*s^2)
@@ -163,7 +165,7 @@ def lognormalSphericalFF(r, psize, psig):
     Source unknown
     """
     if psize <= 0: return numpy.zeros_like(r)
-    if psig <= 0: return sphericalFF(r, psize)
+    if psig <= 0: return sphericalCF(r, psize)
 
     erfc = lambda x: 1.0-erf(x)
 
@@ -176,8 +178,8 @@ def lognormalSphericalFF(r, psize, psig):
            + 0.25*r*r*r*erfc((-mu+log(r))/(sqrt2*s))*exp(-3*mu-4.5*s*s) \
            - 0.75*r*erfc((-mu-2*s*s+log(r))/(sqrt2*s))*exp(-mu-2.5*s*s)
 
-def sheetFF(r, sthick):
-    """Nanosheet form factor
+def sheetCF(r, sthick):
+    """Nanosheet characteristic function.
     
     r       --  distance of interaction
     sthick  --  Thickness of nanosheet
@@ -192,8 +194,8 @@ def sheetFF(r, sthick):
     f[sel] = 1 - f[sel]
     return f
 
-def shellFF(r, radius, thickness):
-    """Spherical shell form factor.
+def shellCF(r, radius, thickness):
+    """Spherical shell characteristic function.
 
     radius      --  Inner radius
     thickness   --  Thickness of shell
@@ -205,10 +207,10 @@ def shellFF(r, radius, thickness):
     """
     d = 1.0*thickness
     a = 1.0*radius + d/2
-    return shellFF2(r, a, d)
+    return shellCF2(r, a, d)
 
-def shellFF2(r, a, delta):
-    """Spherical shell form factor.
+def shellCF2(r, a, delta):
+    """Spherical shell characteristic function.
 
     a       --  Central radius
     delta   --  Thickness of shell
@@ -240,7 +242,7 @@ def shellFF2(r, a, delta):
 
 
 class SASFormFactor(Calculator):
-    """Calculator class for form factors from sans-models.
+    """Calculator class for characteristic functions from sans-models.
 
     This class wraps a sans.models.BaseModel to calculate I(Q) related to
     nanoparticle shape. This I(Q) is inverted to f(r) according to:
@@ -286,7 +288,7 @@ class SASFormFactor(Calculator):
         return
 
     def __call__(self, r):
-        """Calculate the form factor from the transform of the BaseModel."""
+        """Calculate the characteristic function from the transform of the BaseModel."""
 
         # Determine q-values.
         # We want very fine r-spacing so we can properly normalize f(r). This
@@ -297,7 +299,7 @@ class SASFormFactor(Calculator):
         # 
         # The initial dr is somewhat arbitrary, but using dr = 0.01 allows for
         # the f(r) calculated from a particle of diameter 50, over r =
-        # arange(1, 60, 0.1) to agree with the sphericalFF with Rw < 1e-4%.
+        # arange(1, 60, 0.1) to agree with the sphericalCF with Rw < 1e-4%.
         #
         # We also have to make a q-spacing small enough to compute out to at
         # least the size of the signal. 

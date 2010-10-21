@@ -88,17 +88,26 @@ class BasePDFGenerator(ProfileGenerator):
         return
 
     def parallel(self, ncpu):
-        """Run calculation in parallel."""
-        if ncpu <= 1: return
+        """Run calculation in parallel.
+
+        ncpu -- number of parallel processes.  Revert to serial mode when 1.
+
+        No return value.
+        """
         import multiprocessing
-        ncpu = min(ncpu, multiprocessing.cpu_count())
-        self._pool = multiprocessing.Pool(ncpu)
         from diffpy.srreal.parallel import createParallelCalculator
-        # See if we're already using a pararallel calculator
-        calc = self._calc
-        if hasattr(self._calc, "pqobj"):
-            calc = self._calc.pqobj
-        self._calc = createParallelCalculator(calc, ncpu,
+        calc_serial = self._calc
+        if hasattr(calc_serial, 'pqobj'):
+            calc_serial = calc_serial.pqobj
+        # revert to serial calculator for ncpu <= 1
+        if ncpu <= 1:
+            self._calc = calc_serial
+            self._pool = None
+            return
+        # Why don't we let the user shoot his foot or test on single CPU?
+        # ncpu = min(ncpu, multiprocessing.cpu_count())
+        self._pool = multiprocessing.Pool(ncpu)
+        self._calc = createParallelCalculator(calc_serial, ncpu,
                 self._pool.imap_unordered)
         return
 

@@ -213,7 +213,7 @@ class PDFContribution(FitContribution):
             gen = self._generators.values()[0]
             val = gen.meta.get(kwd)
         else:
-            val = self.profile._meta.get(kwd)
+            val = self.profile.meta.get(kwd)
         return val
 
     def setScatteringType(self, type = "X"):

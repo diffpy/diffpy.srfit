@@ -14,7 +14,7 @@ class TestFitRecipe(unittest.TestCase):
 
     def setUp(self):
         self.recipe = FitRecipe("recipe")
-        self.recipe.fithook.verbose = 0
+        self.recipe.fithooks[0].verbose = 0
 
         # Set up the Profile
         self.profile = Profile()

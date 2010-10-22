@@ -40,16 +40,16 @@ from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.util.tagmanager import TagManager
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
-from diffpy.srfit.fitbase.fithook import FitHook
+from diffpy.srfit.fitbase.fithook import PrintFitHook
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
 
     Attributes
     name            --  A name for this FitRecipe.
-    fithook         --  An object to be called whenever within the residual
-                        (default FitHook()) that can pass information out of
-                        the system during a refinement.
+    fithooks        --  List of FitHook instances that can pass information out
+                        of the system during a refinement. By default, the is
+                        populated by a PrintFitHook instance.
     _constraints    --  A dictionary of Constraints, indexed by the constrained
                         Parameter. Constraints can be added using the
                         'constrain' method.
@@ -80,7 +80,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def __init__(self, name = "fit"):
         """Initialization."""
         RecipeOrganizer.__init__(self, name)
-        self.fithook = FitHook()
+        self.fithooks = []
+        self.pushFitHook(PrintFitHook())
         self._restraintlist = []
         self._oconstraints = []
         self._ready = False
@@ -97,23 +98,69 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def setFitHook(self, fithook):
-        """Set a hook to be called within the residual method.
+    def pushFitHook(self, fithook, index = None):
+        """Add a FitHook to be called within the residual method.
 
         The hook is an object for reporting updates, or more fundamentally,
-        passing information out of the system during a refinement. It must have
-        'precall' and 'postcall' methods, which are called at the start and at
-        the end of the residual calculation. The precall method must accept a
-        single argument, which is this FitRecipe object. The postcall method
-        must accept the recipe and the chiv, vector residual.  It must also
-        have a reset method that takes no arguments, which is called whenver
-        the FitRecipe is prepared for a refinement.
+        passing information out of the system during a refinement. See the
+        diffpy.srfit.fitbase.fithook.FitHook class for the required interface.
+        Added FitHooks will be called sequentially during refinement.
 
-        See the FitHook class for the interface.
+        fithook --  FitHook instance to add to the sequence
+        index   --  Index for inserting fithook into the list of fit hooks.  If
+                    this is None (default), the fithook is added to the end.
 
         """
-        self.fithook = fithook
+        if index is None:
+            index = len(self.fithooks)
+        self.fithooks.insert(index, fithook)
+        # Make sure the added FitHook gets its reset method called.
         self._updateConfiguration()
+        return
+
+    def popFitHook(self, fithook = None, index = -1):
+        """Remove a FitHook by index or reference.
+
+        fithook --  FitHook instance to remove from the sequence. If this is
+                    None (default), default to index.
+        index   --  Index of FitHook instance to remove (default -1).
+
+        Raises ValueError if fithook is not None, but is not present in the
+        sequence.
+        Raises IndexError if the sequence is empty or index is out of range.
+
+        """
+        if fithook is not None:
+            self.fithooks.remove(fithook)
+            return
+        self.fithook.remove(index)
+        return
+
+    def getFitHooks(self):
+        """Get the sequence of FitHook instances."""
+        return self.fithooks[:]
+
+    def popFitHook(self, fithook = None, index = -1):
+        """Remove a FitHook by index or reference.
+
+        fithook --  FitHook instance to remove from the sequence. If this is
+                    None (default), default to index.
+        index   --  Index of FitHook instance to remove (default -1).
+
+        Raises ValueError if fithook is not None, but is not present in the
+        sequence.
+        Raises IndexError if the sequence is empty or index is out of range.
+
+        """
+        if fithook is not None:
+            self.fithooks.remove(fithook)
+            return
+        self.fithook.remove(index)
+        return
+
+    def clearFitHooks(self):
+        """Clear the FitHook sequence."""
+        del self.fithooks[:]
         return
 
     def addContribution(self, con, weight = 1.0):
@@ -178,8 +225,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         # Prepare, if necessary
         self._prepare()
 
-        if self.fithook:
-            self.fithook.precall(self)
+        for fithook in self.fithooks:
+            fithook.precall(self)
 
         # Update the variable parameters.
         self.__applyValues(p)
@@ -201,8 +248,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         penalties = [ sqrt(res.penalty(w)) for res in self._restraintlist ]
         chiv = concatenate( [ chiv, penalties ] )
 
-        if self.fithook:
-            self.fithook.postcall(self, chiv)
+        for fithook in self.fithooks:
+            fithook.postcall(self, chiv)
 
         return chiv
 
@@ -235,9 +282,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         # Validate!
         self._validate()
 
-        # Inform the fit hook that we're updating things
-        if self.fithook:
-            self.fithook.reset(self)
+        # Inform the fit hooks that we're updating things
+        for fithook in self.fithooks:
+            fithook.reset(self)
 
         # Check Profiles
         self.__verifyProfiles()

@@ -137,7 +137,7 @@ def main():
     # Make the data and the recipe
     recipe = makeRecipe(molecule, "data/C60.gr")
     # Tell the fithook that we want very verbose output.
-    recipe.fithook.verbose = 3
+    recipe.fithooks[0].verbose = 3
     
     # Optimize
     from scipy.optimize import leastsq

@@ -31,10 +31,47 @@ import numpy
 class FitHook(object):
     """Base class for inspecting the progress of a FitRecipe refinement.
 
-    Can serve as a fithook for the FitRecipe class (see FitRecipe.setFitHook
+    Can serve as a fithook for the FitRecipe class (see FitRecipe.pushFitHook
     method.) The methods in this class are called during the preparation of the
     FitRecipe for refinement, and during the residual call. See the class
     methods for a description of their purpose.
+
+    """
+
+    def reset(self, recipe):
+        """Reset the hook data.
+
+        This is called whenever FitRecipe._prepare is called, which is whenever
+        a configurational change to the fit hierarchy takes place, such as
+        adding a new ParameterSet, constraint or restraint.
+
+        """
+        return
+
+    def precall(self, recipe):
+        """This is called within FitRecipe.residual, before the calculation.
+
+        recipe  --  The FitRecipe instance
+        
+        """
+        return
+
+    def postcall(self, recipe, chiv):
+        """This is called within FitRecipe.residual, after the calculation.
+
+        recipe  --  The FitRecipe instance
+        chiv    --  The residual vector
+        
+        """
+        return
+
+# End class FitHook
+
+class PrintFitHook(FitHook):
+    """Base class for inspecting the progress of a FitRecipe refinement.
+
+    This FitHook prints out a running count of the number of times the residual
+    has been called, or other information, based on the verbosity.
 
     Attributes
 
@@ -111,7 +148,7 @@ class FitHook(object):
             for name, val in zip(vnames, vals):
                 print "  %s = %f" % (name, val)
 
-# End class FitHook
+# End class PrintFitHook
 
 # TODO - Display the chi^2 on the plot during refinement.
 class PlotFitHook(FitHook):

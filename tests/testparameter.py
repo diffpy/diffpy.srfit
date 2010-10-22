@@ -48,10 +48,12 @@ class TestParameterProxy(unittest.TestCase):
         # Change the parameter
         l.value = 2.3
         self.assertEqual(l.getValue(), la.getValue())
+        self.assertEqual(l.value, la.value)
 
         # Change the proxy
         la.value = 3.2
         self.assertEqual(l.getValue(), la.getValue())
+        self.assertEqual(l.value, la.value)
 
         return
 

@@ -187,7 +187,7 @@ if __name__ == "__main__":
     iqdata = "data/pb_100_qmax1.iq"
 
     recipe = makeRecipe(ciffile, grdata, iqdata)
-    recipe.fithook.verbose = 3
+    recipe.fithooks[0].verbose = 3
     fitRecipe(recipe)
 
     res = FitResults(recipe)

@@ -310,7 +310,7 @@ def main():
     # background outside of the intensity generator.  Get the number of calls
     # to the residual function from the FitRecipe, and the number of calls to
     # 'iofq' from the IntensityGenerator.
-    rescount = recipe.fithook.count
+    rescount = recipe.fithooks[0].count
     calcount = recipe.bucky.I.count
     footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)
     res.printResults(footer = footer)

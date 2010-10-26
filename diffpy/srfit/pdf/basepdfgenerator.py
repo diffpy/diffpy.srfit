@@ -29,9 +29,6 @@ from diffpy.srfit.structure import struToParameterSet
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
-# FIXME - Need to decouple the non-structural parameters from the
-# diffpy.Structure object, otherwise, we can't share the structural
-# ParameterSet between different Generators.
 
 class BasePDFGenerator(ProfileGenerator):
     """Base class for calculating PDF profiles using SrReal.
@@ -44,6 +41,7 @@ class BasePDFGenerator(ProfileGenerator):
     _calc   --  PDFCalculator or DebyePDFCalculator instance for calculating
                 the PDF.
     _phase  --  The structure ParameterSet used to calculate the profile.
+    stru    --  The structure objected adapted by _phase.
     _lastr  --  The last value of r over which the PDF was calculated. This is
                 used to configure the calculator when r changes.
     _pool   --  A multiprocessing.Pool for managing parallel computation.
@@ -56,7 +54,7 @@ class BasePDFGenerator(ProfileGenerator):
     qdamp   --  Resolution peak dampening term
 
     Managed ParameterSets:
-    The structure ParameterSet (BaseStructure instance) used to calculate the
+    The structure ParameterSet (SrRealParSet instance) used to calculate the
     profile is named by the user.
 
     Usable Metadata:
@@ -79,12 +77,30 @@ class BasePDFGenerator(ProfileGenerator):
         ProfileGenerator.__init__(self, name)
 
         self._phase = None
+        self.stru = None
         self.meta = {}
         self._lastr = None
         self._calc = None
 
         self._pool = None
 
+        return
+
+    _parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
+
+    def _setCalculator(self, calc):
+        """Set the SrReal calulator instance.
+
+        Setting the calculator creates Parameters from the variable attributes
+        of the SrReal calculator.
+
+        """
+        self._calc = calc
+        for pname in self.__class__._parnames:
+            self.addParameter(
+                ParameterAdapter(pname, self._calc, attr = pname)
+                )
+        self.processMetaData()
         return
 
     def parallel(self, ncpu):
@@ -127,32 +143,26 @@ class BasePDFGenerator(ProfileGenerator):
         if qmin is not None:
             self.setQmin(qmin)
 
-        parnames = ['delta1', 'delta2', 'qbroad', 'qdamp']
-
-        for name in parnames:
+        for name in self.__class__._parnames:
             val = self.meta.get(name)
             if val is not None:
                 par = self.get(name)
                 par.setValue(val)
 
-        scale = self.meta.get('scale')
-        if scale is not None:
-            self.scale.setValue(scale)
-
         return
 
-    def setScatteringType(self, type = "X"):
+    def setScatteringType(self, stype = "X"):
         """Set the scattering type.
         
-        type    --   "X" for x-ray, "N" for neutron, "E" for electrons,
+        stype   --   "X" for x-ray, "N" for neutron, "E" for electrons,
                      or any registered type from diffpy.srreal from
                      ScatteringFactorTable.getRegisteredTypes().
 
         Raises ValueError for unknown scattering type.
         """
-        self._calc.setScatteringFactorTableByType(type)
+        self._calc.setScatteringFactorTableByType(stype)
         # update the meta dictionary only if there was no exception
-        self.meta["stype"] = type
+        self.meta["stype"] = self.getScatteringType()
         return
     
     def getScatteringType(self):
@@ -162,12 +172,12 @@ class BasePDFGenerator(ProfileGenerator):
     def setQmax(self, qmax):
         """Set the qmax value."""
         self._calc.qmax = qmax
-        self.meta["qmax"] = qmax
+        self.meta["qmax"] = self.getQmax()
         return
 
     def getQmax(self):
         """Get the qmax value."""
-        return self.meta.get('qmax')
+        return self._calc.qmax
 
     def setQmin(self, qmin):
         """Set the qmin value.
@@ -176,57 +186,60 @@ class BasePDFGenerator(ProfileGenerator):
         
         """
         self._calc.qmin = qmin
-        self.meta["qmin"] = qmin
+        self.meta["qmin"] = self.getQmin()
         return
 
     def getQmin(self):
         """Get the qmin value."""
-        return self.meta.get('qmin')
+        return self._calc.qmin
 
-    def setPhase(self, stru = None, name = None, parset = None, periodic =
-            True):
-        """Set the phase that will be used to calculate the PDF.
+    def setStructure(self, stru, name = "phase", periodic = True):
+        """Set the structure that will be used to calculate the PDF.
 
-        This creates a StructureParSet or ObjCrystParSet that adapts stru to a
-        ParameterSet interface. See those classes (located in
-        diffpy.srfit.structure) for how they are used. The resulting
-        ParameterSet will be managed by this generator.
+        This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
+        ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
+        See those classes (located in diffpy.srfit.structure) for how they are
+        used. The resulting ParameterSet will be managed by this generator.
 
         stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
                     pyobjcryst.molecule.Molecule instance . Default None.
-        name    --  A name to give the structure. If name is None (default),
-                    then the name will be set as "phase".
-        parset  --  A ParameterSet that holds the structural information. This
-                    can be used to share the phase between multiple
-                    PDFGenerators, and have the changes in one reflect in
-                    another. If both stru and parset are specified, only parset
-                    is used. Default None. 
+        name    --  A name to give to the managed ParameterSet that adapts stru
+                    (default "phase").
         periodic -- The structure should be treated as periodic (default
                     True). Note that some structures do not support
-                    periodicity, in which case this will be ignored.
-
-        Raises ValueError if neither stru nor parset is specified.
+                    periodicity, in which case this will have no effect on the
+                    PDF calculation.
 
         """
 
-        if name is None:
-            name = "phase"
+        # Create the ParameterSet
+        parset = struToParameterSet(name, stru)
 
-        if stru is None and parset is None:
-            raise ValueError("One of stru or parset must be specified")
+        # Set the phase
+        self.setPhase(parset, periodic)
+        return
 
-        if parset is None:
-            parset = struToParameterSet(name, stru)
 
+    def setPhase(self, parset, periodic = True):
+        """Set the phase that will be used to calculate the PDF.
+
+        Set the phase directly with a DiffpyStructureParSet,
+        ObjCrystCrystalParSet or ObjCrystMoleculeParSet that adapts a structure
+        object (from diffpy or pyobjcryst).  The passed ParameterSet will be
+        managed by this generator.
+
+        parset  --  A SrRealParSet that holds the structural information.
+                    This can be used to share the phase between multiple
+                    BasePDFGenerators, and have the changes in one reflect in
+                    another. 
+        periodic -- The structure should be treated as periodic (default True).
+                    Note that some structures do not support periodicity, in
+                    which case this will be ignored.
+
+        """
+        # Store the ParameterSet for easy access
         self._phase = parset
-
-        # Check if the structure is a diffpy.Structure.PDFFitStructure
-        # instance.
-        from diffpy.Structure import Structure
-        if isinstance(stru, Structure) and hasattr(stru, "pdffit"):
-            self.__wrapPDFFitPars()
-        else:
-            self.__wrapPars()
+        self.stru = self._phase.stru
 
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
@@ -234,50 +247,6 @@ class BasePDFGenerator(ProfileGenerator):
         # Set periodicity
         self._phase.useSymmetry(periodic)
         return
-
-    _parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
-
-    def __wrapPars(self):
-        """Wrap the Parameters.
-
-        This wraps the parameters provided by the PDFCalculator as SrFit
-        Parameters.
-
-        """
-        for pname in self.__class__._parnames:
-            self.addParameter(
-                ParameterAdapter(pname, self._calc, attr = pname)
-                )
-        return
-
-    def __wrapPDFFitPars(self):
-        """Wrap the Parameters in a pdffit-aware structure.
-
-        This wraps the parameters provided in a pdffit-aware diffpy.Structure
-        object. The DiffpyStructureAdapter (customPQConfig) looks to the
-        structure for the parameter values, so we must modify them at that
-        level, rather than at the PDFCalculator level.
-
-        """
-        pdfparnames = ['delta1', 'delta2', 'scale']
-
-        for pname in pdfparnames:
-            getter = dict.__getitem__
-            setter = dict.__setitem__
-            self.addParameter(
-                ParameterAdapter(pname, self._phase.stru.pdffit, getter,
-                    setter, pname)
-                )
-
-        parnames = set(self.__class__._parnames)
-        parnames -= set(pdfparnames)
-        for pname in parnames:
-            self.addParameter(
-                ParameterAdapter(pname, self._calc, attr = pname)
-                )
-
-        return
-
 
     def __prepare(self, r):
         """Prepare the calculator when a new r-value is passed."""
@@ -297,6 +266,8 @@ class BasePDFGenerator(ProfileGenerator):
         Raises AttributeError if validation fails.
         
         """
+        if self._calc is None:
+            raise AttributeError("_calc is None")
         if self._phase is None:
             raise AttributeError("_phase is None")
         ProfileGenerator._validate(self)

@@ -12,23 +12,23 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Base structure wrapper class.
+"""Base class for adapting structures to a ParameterSet interface.
 
-The BaseStructure is a ParameterSet with functionality required by all
-structure adaptors.
+The BaseStructureParSet is a ParameterSet with functionality required by all
+structure adapters.
 
 """
 
-__all__ = ["BaseStructure"]
+__all__ = ["BaseStructureParSet"]
 
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 
-class BaseStructure(ParameterSet):
+class BaseStructureParSet(ParameterSet):
     """Base class for structure adapters.
 
-    BaseStructure derives from ParameterSet and provides methods that help
-    interface the ParameterSet with the space group constraint methods in the
-    sgconstraints module and to ProfileGenerators.
+    BaseStructureParSet derives from ParameterSet and provides methods that
+    help interface the ParameterSet with the space group constraint methods in
+    the sgconstraints module and to ProfileGenerators.
 
     Attributes:
     stru    --  The adapted object

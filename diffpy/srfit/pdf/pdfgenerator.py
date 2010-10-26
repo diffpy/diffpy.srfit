@@ -48,7 +48,7 @@ class PDFGenerator(BasePDFGenerator):
     qdamp   --  Resolution peak dampening term
 
     Managed ParameterSets:
-    The structure ParameterSet (BaseStructure instance) used to calculate the
+    The structure ParameterSet (SrRealStructure instance) used to calculate the
     profile is named by the user.
 
     Usable Metadata:
@@ -71,7 +71,7 @@ class PDFGenerator(BasePDFGenerator):
         
         """
         BasePDFGenerator.__init__(self, name)
-        self._calc = PDFCalculator()
+        self._setCalculator(PDFCalculator())
         return
 
 # End class PDFGenerator

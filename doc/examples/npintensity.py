@@ -33,7 +33,7 @@ equation.
 Extensions
 
 - The IntensityGenerator class uses the 'addParameterSet' method to associate
-  the structure adapter (StructureParSet) with the generator. Most SrFit
+  the structure adapter (DiffpyStructureParSet) with the generator. Most SrFit
   classes have an 'addParameterSet' class and can store ParameterSet objects.
   Grab the phase object from the IntensityGenerator and try to add it to other
   objects used in the fit recipe. Create variables from the moved Parameters
@@ -47,7 +47,7 @@ import numpy
 from diffpy.srfit.fitbase import ProfileGenerator, Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.structure.diffpystructure import StructureParSet
+from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
 from gaussianrecipe import scipyOptimize
 
@@ -95,14 +95,15 @@ class IntensityGenerator(ProfileGenerator):
                         the file, and that object will be passed to the 'iofq'
                         function whenever it is called.
 
-        This will create the refinement Parameters using the StructureParSet
-        adapter from diffpy.srfit.structure. StructureParSet is a ParameterSet
-        object that organizes and gives attribute access to Parametes and other
-        ParameterSets.  The Parameters in the StructureParSet are proxies for
-        attributes of the diffpy.Structure.Structure object that is needed by
-        the 'iofq' function. The Parameters will be accessible by name under
-        the 'phase' attribute of this generator, and are organized
-        hierarchically:
+        This will create the refinement Parameters using the
+        DiffpyStructureParSet adapter from diffpy.srfit.structure.diffpyparset.
+        DiffpyStructureParSet is a ParameterSet object that organizes and gives
+        attribute access to Parameters and ParameterSets adapted from a diffpy
+        Structure object.  The Parameters embedded in the DiffpyStructureParSet
+        are proxies for attributes of the diffpy.Structure.Structure object
+        that is needed by the 'iofq' function. The Parameters will be
+        accessible by name under the 'phase' attribute of this generator, and
+        are organized hierarchically:
 
         phase
           - lattice (retrieved with 'getLattice')
@@ -128,7 +129,7 @@ class IntensityGenerator(ProfileGenerator):
             - etc.
 
         The diffpy.Structure.Structure instance is held within the
-        StructureParSet as the 'stru' attribute.
+        DiffpyStructureParSet as the 'stru' attribute.
 
         """
         # Load the structure from file
@@ -138,12 +139,12 @@ class IntensityGenerator(ProfileGenerator):
 
         # Create a ParameterSet designed to interface with
         # diffpy.Structure.Structure objects that organizes the Parameter
-        # hierarchy. Note that the StructureParSet holds a handle to the loaded
-        # structure that we use in the __call__ method below.
+        # hierarchy. Note that the DiffpyStructureParSet holds a handle to the
+        # loaded structure that we use in the __call__ method below.
         #
         # We pass the diffpy.Structure.Structure instance, and give the
-        # StructureParSet the name "phase".
-        parset = StructureParSet("phase", stru)
+        # DiffpyStructureParSet the name "phase".
+        parset = DiffpyStructureParSet("phase", stru)
 
         # Put this ParameterSet in the ProfileGenerator.
         self.addParameterSet(parset)
@@ -156,8 +157,8 @@ class IntensityGenerator(ProfileGenerator):
         This ProfileGenerator will be used in a FitContribution that will be
         optimized to fit some data.  By the time this function is evaluated,
         the diffpy.Structure.Structure instance has been updated by the
-        optimizer via the StructureParSet defined in setStructure.  Thus, we
-        need only call iofq with the internal structure object.
+        optimizer via the DiffpyStructureParSet defined in setStructure.  Thus,
+        we need only call iofq with the internal structure object.
 
         """
         self.count += 1
@@ -267,8 +268,8 @@ def makeRecipe(strufile, datname):
     recipe.addVar(contribution.width, 0.1)
 
     # We can also refine structural parameters. Here we extract the
-    # StructureParSet from the intensity generator and use the parameters like
-    # we would any others.
+    # DiffpyStructureParSet from the intensity generator and use the parameters
+    # like we would any others.
     phase = generator.phase
 
     # We want to allow for isotropic expansion, so we'll constrain the lattice

@@ -145,7 +145,7 @@ class PDFContribution(FitContribution):
 
     # Phase methods
 
-    def addPhase(self, name, stru = None, parset = None, periodic = True):
+    def addStructure(self, name, stru, periodic = True):
         """Add a phase that goes into the PDF calculation.
 
         name    --  A name to give the generator that will manage the PDF
@@ -157,11 +157,6 @@ class PDFContribution(FitContribution):
                     (default), then the name will be set as "phase".
         stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
                     pyobjcryst.molecule.Molecule instance . Default None.
-        parset  --  A ParameterSet that holds the structural information. This
-                    can be used to share the phase between multiple
-                    PDFGenerators, and have the changes in one reflect in
-                    another. If both stru and parset are specified, only parset
-                    is used. Default None. 
         periodic -- The structure should be treated as periodic.  If this is
                     True (default), then a PDFGenerator will be used to
                     calculate the PDF from the phase. Otherwise, a
@@ -169,23 +164,65 @@ class PDFContribution(FitContribution):
                     do not support periodicity, in which case this may be
                     ignored.
 
-        Raises ValueError if neither stru nor parset is specified.
+        Returns the new phase (ParameterSet appropriate for what was passed in
+        stru.)
+
+        """
+        # Based on periodic, create the proper generator.
+        if periodic:
+            from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
+            gen = PDFGenerator(name)
+        else:
+            from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
+            gen = DebyePDFGenerator(name)
+
+        # Set up the generator
+        gen.setStructure(stru, "phase", periodic)
+        self._setupGenerator(gen)
+
+        return gen.phase
+
+    def addPhase(self, parset, periodic = True):
+        """Add a phase that goes into the PDF calculation.
+
+        parset  --  A SrRealParSet that holds the structural information.
+                    This can be used to share the phase between multiple
+                    BasePDFGenerators, and have the changes in one reflect in
+                    another. 
+        periodic -- The structure should be treated as periodic.  If this is
+                    True (default), then a PDFGenerator will be used to
+                    calculate the PDF from the phase. Otherwise, a
+                    DebyePDFGenerator will be used. Note that some structures
+                    do not support periodicity, in which case this may be
+                    ignored.
 
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)
 
         """
-        from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
-        from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
         # Based on periodic, create the proper generator.
         if periodic:
+            from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
             gen = PDFGenerator(name)
         else:
+            from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
             gen = DebyePDFGenerator(name)
-        self.addProfileGenerator(gen)
 
         # Set up the generator
-        gen.setPhase(stru, "phase", parset, periodic)
+        gen.setPhase(parset, periodic)
+        self._setupGenerator(gen)
+
+        return gen.phase
+
+    def _setupGenerator(self, gen):
+        """Setup a generator.
+
+        The generator must already have a managed SrRealParSet, added with
+        setStructure or setPhase.
+
+        """
+        # Add the generator to this FitContribution
+        self.addProfileGenerator(gen)
 
         # Set the proper equation for the fit, depending on the number of
         # phases we have.
@@ -201,7 +238,7 @@ class PDFContribution(FitContribution):
         # Constrain the shared parameters
         self.constrain(gen.qdamp, self.qdamp)
         self.constrain(gen.qbroad, self.qbroad)
-        return gen.phase
+        return
 
     # Calculation setup methods
 

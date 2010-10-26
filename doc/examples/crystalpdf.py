@@ -57,14 +57,14 @@ def makeRecipe(ciffile, datname):
     ## The ProfileGenerator
     # The PDFGenerator is for configuring and calculating a PDF profile. Here,
     # we want to refine a Structure object from diffpy.Structure. We tell the
-    # PDFGenerator that with the 'setPhase' method. All other configuration
+    # PDFGenerator that with the 'setStructure' method. All other configuration
     # options will be inferred from the metadata that is read by the PDFParser.
     # In particular, this will set the scattering type (x-ray or neutron), the
     # Qmax value, as well as initial values for the non-structural Parameters.
     generator = PDFGenerator("G")
     stru = Structure()
     stru.read(ciffile)
-    generator.setPhase(stru)
+    generator.setStructure(stru)
     
     ## The FitContribution
     # Here we associate the Profile and ProfileGenerator, as has been done

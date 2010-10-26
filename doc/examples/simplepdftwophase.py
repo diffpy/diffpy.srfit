@@ -35,10 +35,10 @@ def makeRecipe(niciffile, siciffile, datname):
     contribution.setCalculationRange(xmax = 20)
 
     stru = CreateCrystalFromCIF(file(niciffile))
-    contribution.addPhase("ni", stru)
+    contribution.addStructure("ni", stru)
 
     stru = CreateCrystalFromCIF(file(siciffile))
-    contribution.addPhase("si", stru)
+    contribution.addStructure("si", stru)
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
@@ -59,12 +59,13 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe.addVar(contribution.scale, 1)
 
     # Now we can configure the structural parameters. Since we're using
-    # ObjCrystParSets, the space group constraints are automatically applied to
-    # each phase. We must selectively vary the free parameters.
+    # ObjCrystCrystalParSets, the space group constraints are automatically
+    # applied to each phase. We must selectively vary the free parameters.
     #
     # First the nickel parameters. 
     # Note that ni is the name of the PDFGenerator that was automatically
-    # created by the PDFContribution. We selected this name in addPhase above.
+    # created by the PDFContribution. We selected this name in addStructure
+    # above.
     phase_ni = contribution.ni.phase
     for par in phase_ni.sgpars:
         recipe.addVar(par, name = par.name + "_ni")

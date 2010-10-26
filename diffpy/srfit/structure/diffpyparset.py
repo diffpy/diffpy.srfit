@@ -12,27 +12,29 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Wrappers for interfacing a diffpy.Structure.Structure with SrFit.
+"""Adapters for interfacing a diffpy.Structure.Structure with SrFit.
 
-A diffpy.Structure.Structure object is meant to be passed to a StrucureParSet
-object from this module, which can then be used as a ParameterSet. Any change
-to the lattice or existing atoms will be registered with the Structure. Changes
-in the number of atoms will not be recognized. Thus, the
-diffpy.Structure.Structure object should be fully configured before passing it
-to Structure.
+A diffpy.Structure.Structure object is meant to be passed to a
+DiffpyStrucureParSet object from this module, which can then be used as a
+ParameterSet. (It has other methods for interfacing with SrReal calculator
+adapters.) Any change to the lattice or existing atoms will be registered with
+the Structure. Changes in the number of atoms will not be recognized.  Thus,
+the diffpy.Structure.Structure object should be fully configured before passing
+it to DiffpyStrucureParSet.
 
-StructureParSet --  Adapter for diffpy.Structure.Structure
-LatticeParSet   --  Adapter for diffpy.Structure.Lattice
-AtomParSet      --  Adapter for diffpy.Structure.Atom
+DiffpyStructureParSet --  Adapter for diffpy.Structure.Structure
+DiffpyLatticeParSet   --  Adapter for diffpy.Structure.Lattice
+DiffpyAtomParSet      --  Adapter for diffpy.Structure.Atom
 
 """
 
-__all__ = ["AtomParSet", "LatticeParSet", "StructureParSet"]
+__all__ = ["DiffpyStructureParSet"]
 
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
-from diffpy.srfit.structure.srrealstructure import SrRealStructure
+from diffpy.srfit.structure.srrealparset import SrRealParSet
+from diffpy.srreal.structureadapter import nometa
 
 # Accessor for xyz of atoms
 def _xyzgetter(i):
@@ -50,7 +52,7 @@ def _xyzsetter(i):
 
     return f
 
-class AtomParSet(ParameterSet):
+class DiffpyAtomParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Atom.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
@@ -144,7 +146,7 @@ class AtomParSet(ParameterSet):
 
     element = property(_getElem, _setElem, "type of atom")
 
-# End class AtomParSet
+# End class DiffpyAtomParSet
 
 
 def _latgetter(par):
@@ -164,7 +166,7 @@ def _latsetter(par):
     return f
 
 
-class LatticeParSet(ParameterSet):
+class DiffpyLatticeParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Lattice.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
@@ -207,24 +209,25 @@ class LatticeParSet(ParameterSet):
         self.__repr__ = l.__repr__
         return
 
-# End class LatticeParSet
+# End class DiffpyLatticeParSet
 
-class StructureParSet(SrRealStructure):
+class DiffpyStructureParSet(SrRealParSet):
     """A wrapper for diffpy.Structure.Structure.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
     this class for base attributes.
 
     Attributes:
-    atoms   --  The list of AtomParSets, provided for convenience.
+    atoms   --  The list of DiffpyAtomParSets, provided for convenience.
     stru    --  The diffpy.Structure.Structure this is adapting
 
     Managed ParameterSets:
-    lattice     --  The managed LatticeParSet
-    <el><idx>   --  A managed AtomParSets. <el> is the atomic element and <idx>
-                    is the index of that element in the structure, starting
-                    from zero. Thus, for nickel in P1 symmetry, the managed
-                    AtomParSets will be named "Ni0", "Ni1", "Ni2" and "Ni3".
+    lattice     --  The managed DiffpyLatticeParSet
+    <el><idx>   --  A managed DiffpyAtomParSets. <el> is the atomic element and
+                    <idx> is the index of that element in the structure,
+                    starting from zero. Thus, for nickel in P1 symmetry, the
+                    managed DiffpyAtomParSets will be named "Ni0", "Ni1", "Ni2"
+                    and "Ni3".
     
     """
 
@@ -235,9 +238,9 @@ class StructureParSet(SrRealStructure):
         stru    --  A diffpy.Structure.Structure instance
 
         """
-        SrRealStructure.__init__(self, name)
+        SrRealParSet.__init__(self, name)
         self.stru = stru
-        self.addParameterSet(LatticeParSet(stru.lattice))
+        self.addParameterSet(DiffpyLatticeParSet(stru.lattice))
         self.atoms = []
 
         cdict = {}
@@ -249,7 +252,7 @@ class StructureParSet(SrRealStructure):
             i = cdict.get(el, 0)
             aname = "%s%i"%(el,i)
             cdict[el] = i+1
-            atom = AtomParSet(aname, a)
+            atom = DiffpyAtomParSet(aname, a)
             self.addParameterSet(atom)
             self.atoms.append(atom)
 
@@ -278,7 +281,19 @@ class StructureParSet(SrRealStructure):
         """
         return self.atoms
 
-# End class StructureParSet
+    def _getSrRealStructure(self):
+        """Get the structure object for use with SrReal calculators.
+
+        If this is periodic, then return the structure, otherwise, pass it
+        inside of a nosymmetry wrapper. This takes the extra step of wrapping
+        the structure in a nometa wrapper.
+
+        """
+        stru = SrRealParSet._getSrRealStructure(self)
+        return nometa(stru)
+
+
+# End class DiffpyStructureParSet
 
 __id__ = "$Id$"
 

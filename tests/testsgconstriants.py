@@ -5,8 +5,8 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
-from diffpy.srfit.structure.diffpystructure import StructureParSet
+from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
+from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
 def makeLaMnO3_P1():
     from diffpy.Structure import Structure
@@ -58,13 +58,13 @@ class TestSGConstraints(unittest.TestCase):
 
         This tests constrainSpaceGroup from
         diffpy.srfit.structure.sgconstraints, which is performed automatically
-        when an ObjCrystParSet is created.
+        when an ObjCrystCrystalParSet is created.
         
         """
         pi = numpy.pi
 
         occryst = makeLaMnO3()
-        stru = ObjCrystParSet(occryst.GetName(), occryst)
+        stru = ObjCrystCrystalParSet(occryst.GetName(), occryst)
         # Make sure we actually create the constraints
         stru._constrainSpaceGroup()
         # Make the space group parameters individually
@@ -129,7 +129,7 @@ class TestSGConstraints(unittest.TestCase):
         from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
 
         stru = makeLaMnO3_P1()
-        parset = StructureParSet("LaMnO3", stru)
+        parset = DiffpyStructureParSet("LaMnO3", stru)
 
         sgpars = constrainAsSpaceGroup(parset, "P b n m",
                 scatterers = parset.getScatterers()[::2],

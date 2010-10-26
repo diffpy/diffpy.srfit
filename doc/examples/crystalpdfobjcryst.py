@@ -16,7 +16,7 @@
 
 This example is similar to crystalpdf.py, except that here we refine a
 pyobjcryst crystal object. In this example we use internal constraints provided
-by the ObjCrystParSet structure adapter.
+by the ObjCrystCrystalParSet structure adapter.
 
 """
 
@@ -54,7 +54,7 @@ def makeRecipe(ciffile, datname):
     # the previous example.
     generator = PDFGenerator("G")
     stru = CreateCrystalFromCIF(file(ciffile))
-    generator.setPhase(stru)
+    generator.setStructure(stru)
     generator.setQmax(40.0)
     
     ## The FitContribution
@@ -69,24 +69,24 @@ def makeRecipe(ciffile, datname):
     ## Configure the fit variables
 
     # As before, we get a handle to the structure parameter set. In this case,
-    # it is a ObjCrystParSet instance that was created when we called
-    # 'setPhase' above. The ObjCrystParSet has different Parameters and options
-    # than the StructureParSet used in the last example. See its documentation
-    # in diffpy.srfit.structure.objcryststructure.
+    # it is a ObjCrystCrystalParSet instance that was created when we called
+    # 'setStructure' above. The ObjCrystCrystalParSet has different Parameters
+    # and options than the DiffpyStructureParSet used in the last example. See
+    # its documentation in diffpy.srfit.structure.objcrystparset.
     phase = generator.phase
 
     # Here is where we created space group constraints in the previous example.
-    # The difference in this example is that the ObjCrystParSet is aware of
-    # space groups, and the StructureParSet is not. Constraints are created
-    # internally when the ObjCrystParSet is created. (The CreateCrystalFromCIF
-    # read the space group information from the cif file.) These constriants
-    # get enforced within the ObjCrystParSet. Free Parameters are stored within
-    # the 'sgpars' member of the ObjCrystParSet, which is the same as the
-    # object returned from 'constrainAsSpaceGroup'.
+    # The difference in this example is that the ObjCrystCrystalParSet is aware
+    # of space groups, and the DiffpyStructureParSet is not. Constraints are
+    # created internally when "sgpars" attribute is called for. These
+    # constriants get enforced within the ObjCrystCrystalParSet. Free
+    # Parameters are stored within the 'sgpars' member of the
+    # ObjCrystCrystalParSet, which is the same as the object returned from
+    # 'constrainAsSpaceGroup'.
     #
     # As before, we have one free lattice parameter ('a'). We can simplify
     # things by iterating through all the sgpars.
-    for par in phase.sgpars:
+    for par in phase.sgpars: 
         recipe.addVar(par)
 
     # We now select non-structural parameters to refine.

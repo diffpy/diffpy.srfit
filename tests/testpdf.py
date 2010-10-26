@@ -105,7 +105,7 @@ class TestPDFGenerator(unittest.TestCase):
         stru.read(ciffile)
         for i in range(4):
             stru[i].Bisoequiv = 1
-        gen.setPhase(stru)
+        gen.setStructure(stru)
 
         calc = gen._calc
         # Test parameters

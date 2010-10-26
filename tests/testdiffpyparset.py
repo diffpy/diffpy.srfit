@@ -6,11 +6,11 @@ import unittest
 import numpy
 
 from diffpy.Structure import Atom, Lattice, Structure
-from diffpy.srfit.structure.diffpystructure import StructureParSet
+from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
 class TestParameterAdapter(unittest.TestCase):
 
-    def testStructureParSet(self):
+    def testDiffpyStructureParSet(self):
         """Test the structure conversion."""
 
         a1 = Atom("Cu", xyz = numpy.array([.0, .1, .2]), Uisoequiv = 0.003)
@@ -22,7 +22,7 @@ class TestParameterAdapter(unittest.TestCase):
         a1 = dsstru[0]
         a2 = dsstru[1]
 
-        s = StructureParSet("CuAg", dsstru)
+        s = DiffpyStructureParSet("CuAg", dsstru)
 
         self.assertEquals(s.name, "CuAg")
 
@@ -73,7 +73,7 @@ class TestParameterAdapter(unittest.TestCase):
         _testAtoms()
         _testLattice()
 
-        # Now change values from the srfit StructureParSet
+        # Now change values from the srfit DiffpyStructureParSet
         s.Cu0.x.setValue(0.456)
         s.Cu0.U22.setValue(0.441)
         s.Cu0.B13.setValue(0.550)

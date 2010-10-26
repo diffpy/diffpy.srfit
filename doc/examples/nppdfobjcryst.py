@@ -24,7 +24,6 @@ import numpy
 from diffpy.srfit.fitbase import ProfileGenerator, Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
 from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
 from diffpy.srfit.pdf import PDFGenerator
 
@@ -43,7 +42,7 @@ def makeRecipe(molecule, datname):
     ## The ProfileGenerator
     # Create a DebyePDFGenerator named "G". 
     generator = DebyePDFGenerator("G")
-    generator.setPhase(molecule)
+    generator.setStructure(molecule)
     # These are metadata needed by the generator
     generator.setQmin(0.68)
     generator.setQmax(22)

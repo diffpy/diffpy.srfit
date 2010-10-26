@@ -12,7 +12,9 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Classes that wrap structure representations as Parameters and ParameterSets.
+"""Modules and classes that adapt structure representations to the ParameterSet
+interface and automatic structure constraint generation from space group
+information.
 
 """
 
@@ -25,20 +27,22 @@ def struToParameterSet(name, stru):
     stru    --  a structure object known by this module
     name    --  A name to give the structure.
 
+    Raises TypeError if stru cannot be adapted
+
     """
-    from diffpy.srfit.structure.diffpystructure import StructureParSet
-    if StructureParSet.canAdapt(stru):
-        return StructureParSet(name, stru)
+    from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+    if DiffpyStructureParSet.canAdapt(stru):
+        return DiffpyStructureParSet(name, stru)
 
-    from diffpy.srfit.structure.objcryststructure import ObjCrystParSet
-    if ObjCrystParSet.canAdapt(stru):
-        return ObjCrystParSet(name, stru)
+    from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
+    if ObjCrystCrystalParSet.canAdapt(stru):
+        return ObjCrystCrystalParSet(name, stru)
 
-    from diffpy.srfit.structure.objcryststructure import MoleculeParSet
-    if MoleculeParSet.canAdapt(stru):
-        return MoleculeParSet(name, stru)
+    from diffpy.srfit.structure.objcrystparset import ObjCrystMoleculeParSet
+    if ObjCrystMoleculeParSet.canAdapt(stru):
+        return ObjCrystMoleculeParSet(name, stru)
 
-    from diffpy.srfit.structure.cctbxstructure import CCTBXStructureParSet
+    from diffpy.srfit.structure.cctbxparset import CCTBXStructureParSet
     if CCTBXStructureParSet.canAdapt(stru):
         return CCTBXStructureParSet(name, stru)
 

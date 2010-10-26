@@ -17,7 +17,7 @@
 This example uses PDFGenerator to refine a single structure two profiles.
 This will require setting up two FitContribution, each with its own
 PDFGenerator. However, the PDFGenerators will refer to the same underlying
-ObjCrystParSet.
+ObjCrystCrystalParSet.
 
 """
 
@@ -59,25 +59,25 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # We need one of these for the x-ray data.
     xgenerator = PDFGenerator("G")
     stru = CreateCrystalFromCIF(file(ciffile))
-    xgenerator.setPhase(stru)
+    xgenerator.setStructure(stru)
 
     # And we need one for the neutron data. We want to refine the same
     # structure object in each PDFGenerator. This would suggest that we add the
     # same Crystal to each. However, if we do that then we will have two
     # Parameters for each Crystal data member (two Parameters for the "a"
-    # lattice parameter, etc.), held in different ObjCrystParSets, each managed
-    # by its own PDFGenerator. Thus, changes made to the Crystal through one
-    # PDFGenerator will not be known to the other PDFGenerator since their
-    # ObjCrystParSets don't know about each other. The solution is to share
-    # ObjCrystParSets rather than Crystals. This way there is only one
-    # Parameter for each Crystal data member. (An alternative to this is to
-    # constrain each structure Parameter to be varied to the same variable. The
-    # present approach is easier and less error prone.)
+    # lattice parameter, etc.), held in different ObjCrystCrystalParSets, each
+    # managed by its own PDFGenerator. Thus, changes made to the Crystal
+    # through one PDFGenerator will not be known to the other PDFGenerator
+    # since their ObjCrystCrystalParSets don't know about each other. The
+    # solution is to share ObjCrystCrystalParSets rather than Crystals. This
+    # way there is only one Parameter for each Crystal data member. (An
+    # alternative to this is to constrain each structure Parameter to be varied
+    # to the same variable. The present approach is easier and less error
+    # prone.)
     #
     # Tell the neutron PDFGenerator to use the phase from the x-ray
     # PDFGenerator.
-    ngenerator = PDFGenerator("G")
-    ngenerator.setPhase(parset = xgenerator.phase)
+    ngenerator = PDFGenerator("G") ngenerator.setPhase(xgenerator.phase)
     
     ## The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
@@ -123,7 +123,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     recipe.constrain(ngenerator.delta2, delta2)
     
     # We only need to constrain phase properties once since there is a single
-    # ObjCrystParSet for the Crystal.
+    # ObjCrystCrystalParSet for the Crystal.
     phase = xgenerator.phase
     for par in phase.sgpars:
         recipe.addVar(par)

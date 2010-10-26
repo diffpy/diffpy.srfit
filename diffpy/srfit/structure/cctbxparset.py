@@ -22,9 +22,9 @@ unpredictable results during a structure refinement.
 
 Classes:
 
-CCTBXStructureParSet    --  Wrapper for cctbx.crystal
-UnitCellParSet  --  Wrapper for the unit cell of cctbx.crystal
-ScattererParSet --  Wrapper for cctbx.xray.scatterer
+CCTBXCrystalParSet  --  Wrapper for cctbx.crystal
+UnitCellParSet      --  Wrapper for the unit cell of cctbx.crystal
+ScattererParSet     --  Wrapper for cctbx.xray.scatterer
 
 """
 __id__ = "$Id$"
@@ -33,11 +33,12 @@ from cctbx import crystal
 
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
-from diffpy.srfit.structure.basestructure import BaseStructure
+from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 
-__all__ = ["ScattererParSet", "UnitCellParSet", "CCTBXStructureParSet"]
+__all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet",
+"CCTBXCrystalParSet"]
 
-class ScattererParSet(ParameterSet):
+class CCTBXScattererParSet(ParameterSet):
     """A wrapper for cctbx.xray.scatterer
 
     This class derives from ParameterSet.
@@ -57,7 +58,7 @@ class ScattererParSet(ParameterSet):
         """Initialize
 
         name    --  The name of this scatterer.
-        strups  --  The CCTBXStructureParSet that contains the cctbx structure
+        strups  --  The CCTBXCrystalParSet that contains the cctbx structure
         idx     --  The index of the scatterer in the structure.
 
         """
@@ -118,7 +119,7 @@ class ScattererParSet(ParameterSet):
 
 # End class ScattererParSet
 
-class UnitCellParSet(ParameterSet):
+class CCTBXUnitCellParSet(ParameterSet):
     """A wrapper for cctbx unit_cell object.
     
     Attributes:
@@ -130,7 +131,7 @@ class UnitCellParSet(ParameterSet):
     def __init__(self, strups):
         """Initialize
 
-        strups  --  The CCTBXStructureParSet that contains the cctbx structure
+        strups  --  The CCTBXCrystalParSet that contains the cctbx structure
                     and the unit cell we're wrapper.
 
         """
@@ -174,7 +175,7 @@ class UnitCellParSet(ParameterSet):
 
 # FIXME - Special positions should be constant.
 
-class CCTBXStructureParSet(BaseStructure):
+class CCTBXCrystalParSet(BaseStructureParSet):
     """A wrapper for CCTBX structure.
 
     Attributes:
@@ -219,7 +220,7 @@ class CCTBXStructureParSet(BaseStructure):
         """Update the unit_cell to a change in lattice parameters.
 
         This remakes the unit cell according to a change in the lattice
-        parameters. Call this function before using the CCTBXStructureParSet.
+        parameters. Call this function before using the CCTBXCrystalParSet.
         The unit_cell will only be remade if necessary.
 
         """
@@ -275,5 +276,5 @@ class CCTBXStructureParSet(BaseStructure):
 
 
 
-# End class StructureParSet
+# End class CCTBXCrystalParSet
 

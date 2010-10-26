@@ -57,7 +57,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)
     stru = CreateCrystalFromCIF(file(ciffile))
-    pdfgenerator.setPhase(stru)
+    pdfgenerator.setStructure(stru)
     pdfcontribution.addProfileGenerator(pdfgenerator)
     pdfcontribution.setResidualEquation("resv")
 

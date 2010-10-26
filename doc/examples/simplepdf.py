@@ -39,7 +39,7 @@ def makeRecipe(ciffile, datname):
     # and the phase
     stru = Structure()
     stru.read(ciffile)
-    contribution.addPhase("nickel", stru)
+    contribution.addStructure("nickel", stru)
     
     ## Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()

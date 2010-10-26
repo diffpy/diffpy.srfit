@@ -419,7 +419,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         fixed   --  Fix the variable so that it does not vary (default False).
         tag     --  A tag for the variable. This can be used to retrieve, fix
                     or free variables by tag (default None). Note that a
-                    variable is automatically tagged with its name.
+                    variable is automatically tagged with its name and "all".
         tags    --  A list of tags (default []). Both tag and tags can be
                     applied.
 
@@ -446,10 +446,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._addParameter(var)
 
         if fixed:
-            self.fixVar(var)
+            self.fix(var)
           
         # Tag with passed tags and by name
         self._tagmanager.tag(var, var.name)
+        self._tagmanager.tag(var, "all")
         self._tagmanager.tag(var, *tags)
         if tag is not None:
             self._tagmanager.tag(var, tag)
@@ -496,7 +497,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         fixed   --  Fix the variable so that it does not vary (default False).
                     The variable will still be managed by the FitRecipe.
         tag     --  A tag for the variable. This can be used to fix and free
-                    variables by tag (default None).
+                    variables by tag (default None). Note that a variable is
+                    automatically tagged with its name and "all".
         tags    --  A list of tags (default []). Both tag and tags can be
                     applied.
 
@@ -506,10 +508,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         var = self._newParameter(name, value)
 
         if fixed:
-            self.fixVar(var)
+            self.fix(var)
 
         # Tag with passed tags and by name
         self._tagmanager.tag(var, var.name)
+        self._tagmanager.tag(var, "all")
         self._tagmanager.tag(var, *tags)
         if tag is not None:
             self._tagmanager.tag(var, tag)
@@ -521,7 +524,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         var     --  A variable of the FitRecipe, or the name of a variable.
 
-        Raises ValueError if var is not part of the FitRecipe.
+        Returns the variable or None if the variable cannot be found in the
+        _parameters list.
 
         """
         if isinstance(var, str):
@@ -531,109 +535,105 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             raise ValueError("Passed variable is not part of the FitRecipe")
 
         return var
-        
 
-    def fixVar(self, var, value = None):
-        """Fix a variable so that it doesn't change.
+    def __getVarsFromArgs(self, *args, **kw):
+        """Get a list of variables from passed arguments.
 
-        The variable will still be managed by the FitRecipe.
+        This method accepts string or variable arguments. An argument of "all"
+        selects all variables. Keyword arguments must be parameter names,
+        followed by a value to assign to the fixed variable. This method is
+        used by the fix and free methods.
 
-        var     --  A variable of the FitRecipe, or the name of a variable.
-        value   --  A new value for the variable. If this is None
-                    (default), then the value will not be changed.
-
-        Raises ValueError if var is not part of the FitRecipe.
+        Raises ValueError if an unknown variable, name or tag is passed, or if
+        a tag is passed in a keyword.
 
         """
-        var = self.__getVarAndCheck(var)
+        # Process args. Each variable is tagged with its name, so this is easy.
+        strargs = set([arg for arg in args if isinstance(arg, str)])
+        varargs = set(args) - strargs
+        # Check that the tags are valid
+        alltags = set(self._tagmanager.alltags())
+        badtags = strargs - alltags
+        if badtags:
+            names = ",".join(badtags)
+            raise ValueError("Variables or tags cannot be found (%s)"% names)
 
-        if value is not None:
-            var.setValue(value)
+        # Check that variables are valid
+        allvars = set(self._parameters.values())
+        badvars = varargs - allvars
+        if badvars:
+            names = ",".join([v.name for v in badvars])
+            raise ValueError("Variables cannot be found (%s)"% names)
 
-        # Fix the variable by tagging it as such
-        self._tagmanager.tag(var, self._fixedtag)
+        # Make sure that we only have parameters in kw
+        kwnames = set(kw.keys())
+        allnames = set(self._parameters.keys())
+        badkw = kwnames - allnames
+        if badkw:
+            names = ",".join(badkw)
+            raise ValueError("Tags cannot be passed as keywords (%s)"% names)
+
+        # Now get all the objects referred to in the arguments.
+        varargs |= self._tagmanager.union(*strargs)
+        varargs |= self._tagmanager.union(*kw.keys())
+        return varargs
+
+    def fix(self, *args, **kw):
+        """Fix a parameter by reference, name or tag.
+
+        A fixed variable is not refined.  Variables are free by default.
+
+        This method accepts string or variable arguments. An argument of "all"
+        selects all variables. Keyword arguments must be parameter names,
+        followed by a value to assign to the fixed variable.
+
+        Raises ValueError if an unknown Parameter, name or tag is passed, or if
+        a tag is passed in a keyword.
+
+        """
+        # Check the inputs and get the variables from them
+        varargs = self.__getVarsFromArgs(*args, **kw)
+
+
+        # Fix all of these
+        for var in varargs:
+            self._tagmanager.tag(var, self._fixedtag)
+
+        # Set the kw values
+        for name, val in kw.items():
+            self.get(name).value = val
 
         return
 
-    def freeVar(self, var, value = None):
-        """Free a variable so that it is refined.
+    def free(self, *args, **kw):
+        """Free a parameter by reference, name or tag.
 
-        Variables are free by default.
+        A free variable is refined.  Variables are free by default.
 
-        var     --  A variable of the FitRecipe, or the name of a variable.
-        value   --  A new value for the variable. If this is None
-                    (default), then the value will not be changed.
+        This method accepts string or variable arguments. An argument of "all"
+        selects all variables. Keyword arguments must be parameter names,
+        followed by a value to assign to the fixed variable.
 
-        Raises ValueError if var is not part of the FitRecipe.
-
-        """
-        var = self.__getVarAndCheck(var)
-
-        # Silently ignore if the variable is not tagged as fixed
-        self._tagmanager.untag(var, self._fixedtag)
-
-        if value is not None:
-            var.setValue(value)
-
-        return
-
-    def fixAll(self, *tags):
-        """Fix all variables.
-
-        Extra arguments are assumed to be tags. If present, only variables with
-        the given tag will be fixed. Otherwise, all variables are fixed.
-
-        Raises ValueError when passed tags do not refer to any variables.
+        Raises ValueError if an unknown Parameter, name or tag is passed, or if
+        a tag is passed in a keyword.
 
         """
-        # Verify the tags
-        try: 
-            self._tagmanager.verifyTags(*tags)
-        except KeyError, e:
-            raise ValueError(e)
+        # Check the inputs and get the variables from them
+        varargs = self.__getVarsFromArgs(*args, **kw)
 
-        # Start by getting all variables with the passed tags
-        if tags:
-            objects = self._tagmanager.union(*tags)
-        else:
-            objects = self._parameters.values()
+        # Free all of these
+        for var in varargs:
+            self._tagmanager.untag(var, self._fixedtag)
 
-        for obj in objects:
-            self._tagmanager.tag(obj, self._fixedtag)
-
-        return
-
-    def freeAll(self, *tags):
-        """Free all variables.
-
-        Extra arguments are assumed to be tags. If present, only variables with
-        the given tag will be fixed. Otherwise, all variables are fixed.
-
-        Raises ValueError when passed tags do not refer to any variables.
-
-        """
-        # Verify the tags
-        try: 
-            self._tagmanager.verifyTags(*tags)
-        except KeyError, e:
-            raise ValueError(e)
-
-        if tags:
-            objects = self._tagmanager.union(*tags)
-        else:
-            objects = self._parameters.values()
-
-        for obj in objects:
-            if not obj.constrained:
-                self._tagmanager.untag(obj, self._fixedtag)
+        # Set the kw values
+        for name, val in kw.items():
+            self.get(name).value = val
 
         return
 
     def isFree(self, var):
         """Check if a variable is fixed."""
-        # Do this manually for speed since this is called frequently during
-        # refinement.
-        return (var not in self._tagmanager._tagdict.get(self._fixedtag, []))
+        return (not self._tagmanager.hasTags(var, self._fixedtag))
 
     def unconstrain(self, par, free = True):
         """Unconstrain a Parameter.
@@ -703,7 +703,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 con.setValue(val)
 
         if par in self._parameters.values():
-            self.fixVar(par)
+            self.fix(par)
 
         RecipeOrganizer.constrain(self, par, con, ns)
         return
@@ -711,7 +711,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def getValues(self):
         """Get the current values of the variables in a list."""
-        return array([v.getValue() for v in self._parameters.values() if
+        return array([v.value for v in self._parameters.values() if
             self.isFree(v)])
 
     def getNames(self):

@@ -130,7 +130,7 @@ def makeRecipe():
         return sig0 * (1 - dsig * mu**2);
 
     recipe.registerFunction(sig)
-    recipe.fixVar("mu")
+    recipe.fix("mu")
     # Now constrain the peak widths to this
     recipe.sig0.value = 0.001
     recipe.dsig.value = 4.0
@@ -204,21 +204,16 @@ def steerFit(recipe):
 
     This is a complex fit, it requires some steering.
     """
-    recipe.fixAll()
+    recipe.fix("all")
 
-    recipe.freeAll("bkgd")
+    recipe.free("bkgd")
     scipyOptimize(recipe)
 
-    recipe.freeAll()
-    recipe.fixVar("mu11")
-    recipe.fixVar("mu21")
-    recipe.fixVar("mu31")
+    recipe.free("all")
+    recipe.fix("mu11", "mu21", "mu31")
     scipyOptimize(recipe)
 
-    recipe.freeAll()
-    recipe.fixVar("mu11")
-    recipe.fixVar("mu21")
-    recipe.fixVar("mu31")
+    recipe.free("all")
     scipyOptimize(recipe)
 
     return

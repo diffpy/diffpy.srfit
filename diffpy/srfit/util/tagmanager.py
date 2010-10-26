@@ -41,6 +41,11 @@ class TagManager(object):
         return
 
 
+    def alltags(self):
+        """Get all tags managed by the TagManager."""
+        return self._tagdict.keys()
+
+
     def tag(self, obj, *tags):
         """Tag an object.
 

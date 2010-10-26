@@ -121,26 +121,21 @@ def fitRecipe(recipe):
 
     # Tune SAS.
     recipe.setWeight(recipe.pdf, 0)
-    recipe.fixAll()
-    recipe.freeVar("iqscale", value = 1e8)
-    recipe.freeVar("radius_a")
-    recipe.freeVar("radius_b")
+    recipe.fix("all")
+    recipe.free("radius_a", "radius_b", iqscale = 1e8)
     scipyOptimize(recipe)
 
     # Tune PDF
     recipe.setWeight(recipe.pdf, 1)
     recipe.setWeight(recipe.sas, 0)
-    recipe.fixAll()
-    recipe.freeVar("a")
-    recipe.freeVar("Biso_0")
-    recipe.freeVar("scale")
-    recipe.freeVar("delta2")
+    recipe.fix("all")
+    recipe.free("a", "Biso_0", "scale", "delta2")
     scipyOptimize(recipe)
 
     # Tune all
     recipe.setWeight(recipe.pdf, 1)
     recipe.setWeight(recipe.sas, 1)
-    recipe.freeAll()
+    recipe.free("all")
     scipyOptimize(recipe)
 
     return

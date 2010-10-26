@@ -33,7 +33,7 @@ class TestFitRecipe(unittest.TestCase):
         self.recipe.addContribution(self.fitcontribution)
         return
 
-    def testTags(self):
+    def testFixFree(self):
         recipe = self.recipe
         con = self.fitcontribution
 
@@ -43,13 +43,40 @@ class TestFitRecipe(unittest.TestCase):
         recipe.newVar("B", 0)
 
         self.assertTrue(recipe.isFree(recipe.A))
-        recipe.fixAll("tagA")
+        recipe.fix("tagA")
         self.assertFalse(recipe.isFree(recipe.A))
-        recipe.freeAll("tagA")
+        recipe.free("tagA")
         self.assertTrue(recipe.isFree(recipe.A))
+        recipe.fix("A")
+        self.assertFalse(recipe.isFree(recipe.A))
+        recipe.free("A")
+        self.assertTrue(recipe.isFree(recipe.A))
+        recipe.fix(recipe.A)
+        self.assertFalse(recipe.isFree(recipe.A))
+        recipe.free(recipe.A)
+        self.assertTrue(recipe.isFree(recipe.A))
+        recipe.fix(recipe.A)
+        self.assertFalse(recipe.isFree(recipe.A))
+        recipe.free("all")
+        self.assertTrue(recipe.isFree(recipe.A))
+        self.assertTrue(recipe.isFree(recipe.k))
+        self.assertTrue(recipe.isFree(recipe.c))
+        self.assertTrue(recipe.isFree(recipe.B))
+        recipe.fix(recipe.A, "tagk", c = 3)
+        self.assertFalse(recipe.isFree(recipe.A))
+        self.assertFalse(recipe.isFree(recipe.k))
+        self.assertFalse(recipe.isFree(recipe.c))
+        self.assertTrue(recipe.isFree(recipe.B))
+        self.assertEquals(3, recipe.c.value)
+        recipe.fix("all")
+        self.assertFalse(recipe.isFree(recipe.A))
+        self.assertFalse(recipe.isFree(recipe.k))
+        self.assertFalse(recipe.isFree(recipe.c))
+        self.assertFalse(recipe.isFree(recipe.B))
 
-        self.assertRaises(ValueError, recipe.freeAll, "junk")
-        self.assertRaises(ValueError, recipe.fixAll, "junk")
+        self.assertRaises(ValueError, recipe.free, "junk")
+        self.assertRaises(ValueError, recipe.fix, tagA = 1)
+        self.assertRaises(ValueError, recipe.fix, "junk")
         return
 
     def testVars(self):
@@ -74,21 +101,20 @@ class TestFitRecipe(unittest.TestCase):
         self.assertTrue((values == [2, 1, 0]).all())
         recipe.delVar(recipe.B)
 
-        recipe.fixVar(recipe.k)
+        recipe.fix(recipe.k)
 
         names = recipe.getNames()
         self.assertEquals(names, ["A", "c"])
         values = recipe.getValues()
         self.assertTrue((values == [2, 0]).all())
 
-        recipe.fixAll()
+        recipe.fix("all")
         names = recipe.getNames()
         self.assertEquals(names, [])
         values = recipe.getValues()
         self.assertTrue((values == []).all())
 
-        # The order is no longer valid
-        recipe.freeAll()
+        recipe.free("all")
         names = recipe.getNames()
         self.assertEquals(3, len(names))
         self.assertTrue("A" in names)

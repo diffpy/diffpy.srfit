@@ -170,6 +170,14 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         return default
 
+    def getNames(self):
+        """Get the names of managed parameters."""
+        return [p.name for p in self._parameters.values()]
+
+    def getValues(self):
+        """Get the values of managed parameters."""
+        return [p.value for p in self._parameters.values()]
+
     def _addObject(self, obj, d, check = True):
         """Add an object to a managed dictionary.
 

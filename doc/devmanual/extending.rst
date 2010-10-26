@@ -18,11 +18,11 @@ handled in the :ref:`developers-guide-examples`. Structure adapters defined in
 the diffpy.srfit.structure module are also built around this principle. These
 adapters are hierarchical ``ParameterSets`` (found in
 ``diffpy.srfit.fitbase.parameterset``) that encapsulate the different pieces of
-a structure.  For example, the ``DiffpyStructure`` structure adapter in
-``diffpy.srfit.structure.diffpystructure`` contains ``LatticeParSet``, which
-encapsulates the lattice data and one ``AtomParSet`` per atom.  These each
-contain parameters for what they encapsulate, such as lattice parameters or
-atom positions. 
+a structure.  For example, the ``DiffpyStructureParSet`` structure adapter in
+``diffpy.srfit.structure.diffpyparset`` contains ``DiffpyLatticeParSet``, which
+encapsulates the lattice data and one ``DiffpyAtomParSet`` per atom.  These
+each contain parameters for what they encapsulate, such as lattice parameters
+or atom positions. 
 
 Fundamentally, it is the adjustable parameters of a structure container,
 forward calculator or other object that needs to be adapted so that SrFit can
@@ -165,8 +165,8 @@ dictionary attribute named ``_meta``. The parser can put any information into
 this dictionary. It is up to a ``ProfileGenerator`` that may use the parsed
 data to define and retrieve usable metadata.
 
-If the data is not in a form that can be used by a ``ProfileGenerator`` then it
-is the responsibility of the parser to convert this data to a usable form.
+If the data is not in a form that can be stored in a ``Profile`` then it is the
+responsibility of the parser to convert this data to a usable form.
 
 
 Extending Profiles
@@ -195,13 +195,13 @@ Custom Restraints
 
 Restraints in SrFit are one way to include known information about a system
 into a fit recipe. When customizing SrFit for a specific purpose, one may want
-to create restraints. One example of this is in the ``SrRealStructure`` base
-class in ``diffpy.srfit.structure.srrealstructure``. SrReal provides many
-real-space structure utilities for compatible structures, such as a PDF
-calculator and a bond-valence sum (BVS) calculator. The PDF calculator works
-very well as a ``ProfileGenerator`` (see the :ref:`developers-guide-examples`),
-but the BVS calculator is better suited as a restraint. This makes it very
-easy to keep the BVS constrained during a PDF fit or some other refinement.
+to create restraints. One example of this is in the ``SrRealParSet`` base class
+in ``diffpy.srfit.structure.srrealparset``. SrReal provides many real-space
+structure utilities for compatible structures, such as a PDF calculator and a
+bond-valence sum (BVS) calculator. The PDF calculator works very well as a
+``ProfileGenerator`` (see the :ref:`developers-guide-examples`), but the BVS
+calculator is better suited as a restraint. This makes it very easy to keep the
+BVS constrained during a PDF fit or some other refinement.
 
 Creating a custom restraint is a two-step process. First, a class must be
 derived from ``diffpy.srfit.fitbase.restraint.Restraint`` that can calculate
@@ -226,26 +226,25 @@ uncertainty on the result (`sig`) may be applied. These two options are
 recommended with any custom ``Restraint``. 
 
 The second part of a custom restraint is to allow it to be created from a
-restrainable object. A ``BVSRestraint`` is used to restrain a
-``SrRealStructure``, which is a ``ParameterSet`` wrapper base class for
-SrReal-compatible structures.  The restraint is applied with the
-``restrainBVS`` method.
+restrainable object. A ``BVSRestraint`` is used to restrain a ``SrRealParSet``,
+which is a ``ParameterSet`` wrapper base class for SrReal-compatible
+structures.  The restraint is applied with the ``restrainBVS`` method.
 
-.. literalinclude:: ../../diffpy/srfit/structure/srrealstructure.py
-   :pyobject: SrRealStructure.restrainBVS
+.. literalinclude:: ../../diffpy/srfit/structure/srrealparset.py
+   :pyobject: SrRealParSet.restrainBVS
 
 The purpose of the method is to create the custom ``Restraint`` object,
 configure it and store it. Note that the optional `sig` and `scaled` flag are
 passed as part of this method. Both ``_restraints`` and
 ``_updateConfiguration`` come from ``ParameterSet``, from which
-``SrRealStructure`` is derived. The ``_restraints`` attribute is a set of
+``SrRealParSet`` is derived. The ``_restraints`` attribute is a set of
 ``Restraints`` on the object. The ``_updateConfiguration`` method makes any
-object containing the ``SrRealStructure`` aware of the configuration change.
-This gets propagated to the top-level ``FitRecipe``, if there is one.  The
-restraint object is returned by the method so that it may be later removed.
+object containing the ``SrRealParSet`` aware of the configuration change.  This
+gets propagated to the top-level ``FitRecipe``, if there is one.  The restraint
+object is returned by the method so that it may be later removed.
 
 For more examples of custom restraints can be found in the
-``diffpy.srfit.structure.objcryststructure`` module.
+``diffpy.srfit.structure.objcrystparset`` module.
 
 
 Custom FitHooks
@@ -263,8 +262,9 @@ overload.
 * .. automethod:: FitHook.precall
 * .. automethod:: FitHook.postcall
 
-To use a custom ``FitHook,`` assign an instance to a ``FitRecipe`` using the
-``setFitHook`` method.
+To use a custom ``FitHook``, assign an instance to a ``FitRecipe`` using the
+``pushFitHook`` method. All ``FitHook`` instances held by a ``FitRecipe`` will
+be used in sequence during a call to ``FitRecipe.residual``.
 
 
 

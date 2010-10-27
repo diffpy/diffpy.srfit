@@ -143,6 +143,24 @@ class RecipeContainer(Observable, Configurable, Validatable):
             raise AttributeError(name)
         return arg
 
+    # Needed by __setattr__
+    _parameters = {}
+    __managed = {}
+
+    def __setattr__(self, name, value):
+        """Parameter access and object checking."""
+        if name in self._parameters:
+            self._parameters[name].value = value
+            return
+
+        m = self.get(name)
+        if m is not None:
+            raise AttributeError("Cannot set '%s'"%name)
+
+        super(RecipeContainer, self).__setattr__(name, value)
+        return
+
+
     def __delattr__(self, name):
         """Delete parameters with del.
 

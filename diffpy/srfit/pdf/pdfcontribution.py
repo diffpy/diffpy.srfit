@@ -182,9 +182,15 @@ class PDFContribution(FitContribution):
 
         return gen.phase
 
-    def addPhase(self, parset, periodic = True):
+    def addPhase(self, name, parset, periodic = True):
         """Add a phase that goes into the PDF calculation.
 
+        name    --  A name to give the generator that will manage the PDF
+                    calculation from the passed parameter phase. The parset
+                    will be accessible via the name "phase" as an attribute
+                    of the generator, e.g., contribution.name.phase, where
+                    'contribution' is this contribution and 'name' is passed
+                    name.
         parset  --  A SrRealParSet that holds the structural information.
                     This can be used to share the phase between multiple
                     BasePDFGenerators, and have the changes in one reflect in

@@ -334,7 +334,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                         Parameter. Constraints can be added using the
                         'constrain' method.
     _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
+                        'restrain' method.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used create Equations from string.
 
@@ -600,14 +600,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                     Parameters are known if they are in the ns argument, or if
                     they are managed by this object.
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of this object (default {}).
+                    in the parameter, but not part of this object (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
         Raises ValueError if par is a string but not part of this object or in
         ns.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        this object and that is not defined in ns.
         Raises ValueError if par is marked as constant.
 
         """
@@ -712,12 +710,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         lb      --  The lower bound on the restraint evaluation (default -inf).
         ub      --  The lower bound on the restraint evaluation (default inf).
         sig     --  The uncertainty on the bounds (default 1).
-        power   --  The power of the penalty (default 2).
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False).
         ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of the RecipeOrganizer 
+                    in the equation string, but not part of the RecipeOrganizer
                     (default {}).
 
         The penalty is calculated as 
@@ -727,7 +724,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
+        Raises ValueError if res depends on a Parameter that is not part of
         the RecipeOrganizer and that is not defined in ns.
 
         Returns the Restraint object for use with the 'unrestrain' method.

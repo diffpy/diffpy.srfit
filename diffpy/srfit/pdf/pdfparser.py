@@ -51,6 +51,7 @@ class PDFParser(ProfileParser):
 
     stype       --  The scattering type ("X", "N")
     qmax        --  Maximum scattering vector (float)
+    qmin        --  Minimum scattering vector (float)
     qdamp       --  Resolution damping factor (float)
     qbroad      --  Resolution broadening factor (float)
     spdiameter  --  Nanoparticle diameter (float)
@@ -107,6 +108,11 @@ class PDFParser(ProfileParser):
             meta["stype"] = 'X'
         elif re.search('(neutron|PDFgetN)', header, re.I):
             meta["stype"] = 'N'
+        # qmin
+        regexp = r"\bqmin *= *(%(f)s)\b" % rx
+        res = re.search(regexp, header, re.I)
+        if res:
+            meta["qmin"] = float(res.groups()[0])
         # qmax
         regexp = r"\bqmax *= *(%(f)s)\b" % rx
         res = re.search(regexp, header, re.I)

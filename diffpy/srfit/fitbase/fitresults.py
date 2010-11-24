@@ -295,7 +295,8 @@ class FitResults(object):
 
         if not certain:
             l = "Some quantities invalid due to missing profile uncertainty"
-            self.messages.append(l)
+            if not l in self.messages:
+                self.messages.append(l)
 
         lines.extend(self.messages)
 
@@ -304,7 +305,8 @@ class FitResults(object):
         if not certain:
             l += " (Chi2 and Reduced Chi2 invalid)"
         lines.append(l)
-        lines.append("-"*79)
+        dashedline = 79 * '-'
+        lines.append(dashedline)
         formatstr = "%-14s %-12.8f"
         lines.append(formatstr%("Residual",self.residual))
         lines.append(formatstr%("Contributions", self.residual - self.penalty))
@@ -323,7 +325,7 @@ class FitResults(object):
             if not certain:
                 l += " (Chi2 and Reduced Chi2 invalid)"
             lines.append(l)
-            lines.append("-"*79)
+            lines.append(dashedline)
             formatstr = "%-10s %-42.8f"
             for name in keys:
                 res = self.conresults[name]
@@ -343,7 +345,7 @@ class FitResults(object):
             m = "Uncertainties invalid"
             l += " (%s)"%m
         lines.append(l)
-        lines.append("-"*79)
+        lines.append(dashedline)
 
         varnames = self.varnames
         varvals = self.varvals
@@ -367,7 +369,7 @@ class FitResults(object):
             if not certain:
                 l += " (Uncertainties invalid)"
             lines.append(l)
-            lines.append("-"*79)
+            lines.append(dashedline)
 
             w = 0
             keys = []
@@ -396,7 +398,7 @@ class FitResults(object):
         if not certain:
             l += " (Correlations invalid)"
         lines.append(l)
-        lines.append("-"*79)
+        lines.append(dashedline)
         tup = []
         cornames = []
         n = len(varnames)
@@ -425,7 +427,7 @@ class FitResults(object):
         if footer:
             lines.append(footer)
 
-        out = "\n".join(lines)
+        out = "\n".join(lines) + '\n'
         return out
 
     def printResults(self, header = "", footer = "", update = False):
@@ -436,7 +438,7 @@ class FitResults(object):
         update  --  Flag indicating whether to call update() (default False).
 
         """
-        print self.formatResults(header, footer, update)
+        print self.formatResults(header, footer, update).rstrip()
         return
 
     def __str__(self):

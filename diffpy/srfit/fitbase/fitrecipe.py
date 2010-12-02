@@ -75,7 +75,18 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     _fixedtag       --  "__fixed", used for tagging variables as fixed. Don't
                         use this tag unless you want issues.
 
+    Properties
+    names           --  Variable names (read only). See getNames.
+    values          --  Variable values (read only). See getValues.
+    bounds          --  Bounds on parameters (read only). See getBounds.
+    bounds2         --  Bounds on parameters (read only). See getBounds2.
+
     """
+
+    names = property(lambda self: self.getNames())
+    values = property(lambda self: self.getValues())
+    bounds = property(lambda self: self.getBounds())
+    bounds2 = property(lambda self: self.getBounds2())
 
     def __init__(self, name = "fit"):
         """Initialization."""

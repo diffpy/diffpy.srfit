@@ -19,32 +19,36 @@ the FitContribution and Profile objects for simple recipe creation.
 
 """
 
-from diffpy.srfit.fitbase import SimpleRecipe, FitResults
+from diffpy.srfit.fitbase import SimpleRecipe
 
 ####### Example Code
 
 def main():
     """Set up a simple recipe in a few lines."""
 
-    # The SimpleRecipe class is a type of FitRecipe
+    # The SimpleRecipe class is a type of FitRecipe. It provides attribute-like
+    # access to variables and a residual function that can be minimized.
     recipe = SimpleRecipe()
 
-    # SimpleRecipe adopts Profile methods, like 'loadtxt'
+    # Load text from file.
     recipe.loadtxt("data/gaussian.dat")
 
-    # SimpleRecipe adopts FitContribution methods, like 'setEquation'
+    # Set the equation. The variable "x" is taken from the data that was just
+    # loaded. The other variables, "A", "x0" and "sigma" are turned into
+    # attributes with an initial value of 0.
     recipe.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
 
-    # SimpleRecipe has a 'vary' method that varies a parameter.
-    recipe.vary('A', 0.5)
-    recipe.vary('x0', 5)
-    recipe.vary('sigma', 1)
+    # We can give them other values here.
+    recipe.A = 1
+    recipe.x0 = 5
+    recipe.sigma = 1
 
-    from gaussianrecipe import scipyOptimize
-    scipyOptimize(recipe)
+    # We explicitly optimize the residual method of the SimpleRecipe
+    from scipy.optimize import leastsq
+    leastsq(recipe.residual, recipe.values)
 
-    res = FitResults(recipe)
-    res.printResults()
+    # Print the results
+    recipe.printResults()
 
     return
 

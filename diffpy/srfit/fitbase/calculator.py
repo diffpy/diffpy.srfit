@@ -56,6 +56,10 @@ class Calculator(Operator, ParameterSet):
     _value  --  The value of the Operator.
     value   --  Property for 'getValue'.
 
+    Properties
+    names           --  Variable names (read only). See getNames.
+    values          --  Variable values (read only). See getValues.
+
     """
 
     def __init__(self, name):

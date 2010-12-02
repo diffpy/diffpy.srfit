@@ -48,6 +48,10 @@ class ParameterSet(RecipeOrganizer):
                         instance that is used to create constraints and
                         restraints from string equations.
 
+    Properties
+    names           --  Variable names (read only). See getNames.
+    values          --  Variable values (read only). See getValues.
+
     """
 
     def __init__(self, name):

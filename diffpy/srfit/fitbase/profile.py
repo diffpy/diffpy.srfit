@@ -242,7 +242,7 @@ class Profile(Observable, Validatable):
         return
 
     def loadtxt(self, *args, **kw):
-        """Call numpy.loadtxt.
+        """Use numpy.loadtxt to load data.
 
         Arguments are passed to numpy.loadtxt. 
         unpack = True is enforced. 

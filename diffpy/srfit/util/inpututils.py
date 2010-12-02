@@ -27,13 +27,16 @@ def inputToString(inpt):
                 or a string containing the input.
 
     Returns the input in a string
+    Raises IOError if the input is supected to be a file name, but the file
+    cannot be found.
 
     """
     # Get the input into a string
     inptstr = ""
     if hasattr(inpt, "read"):
         inptstr = inpt.read()
-    elif os.path.exists(inpt):
+    # FIXME check for typos in the file name
+    elif os.path.exists(inpt) or (len(inpt) < 80 and inpt.count("\n") == 0):
         with file(inpt, 'r') as infile:
             inptstr = infile.read()
     else:

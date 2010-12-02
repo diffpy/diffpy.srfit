@@ -51,9 +51,8 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe.constrain(contribution.ni.scale, "scale_ni")
     recipe.constrain(contribution.si.scale, "1 - scale_ni")
     # We also want the resolution factor to be the same on each. This is done
-    # for free by the PDFContribution.
-    recipe.newVar("qdamp", 0.03)
-    recipe.constrain(contribution.qdamp, "qdamp")
+    # for free by the PDFContribution. We simply need to add it to the recipe.
+    recipe.addVar(contribution.qdamp, 0.03)
 
     # Vary the gloabal scale as well.
     recipe.addVar(contribution.scale, 1)

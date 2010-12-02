@@ -83,8 +83,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     """
 
-    names = property(lambda self: self.getNames())
-    values = property(lambda self: self.getValues())
     bounds = property(lambda self: self.getBounds())
     bounds2 = property(lambda self: self.getBounds2())
 

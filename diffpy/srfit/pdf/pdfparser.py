@@ -50,8 +50,8 @@ class PDFParser(ProfileParser):
     Metadata - These may appear in the metadata dictionary
 
     stype       --  The scattering type ("X", "N")
-    qmax        --  Maximum scattering vector (float)
     qmin        --  Minimum scattering vector (float)
+    qmax        --  Maximum scattering vector (float)
     qdamp       --  Resolution damping factor (float)
     qbroad      --  Resolution broadening factor (float)
     spdiameter  --  Nanoparticle diameter (float)

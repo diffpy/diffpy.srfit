@@ -70,7 +70,14 @@ class RecipeContainer(Observable, Configurable, Validatable):
     _configobjs     --  A set of configurable objects that must know of
                         configuration changes within this object.
 
+    Properties
+    names           --  Variable names (read only). See getNames.
+    values          --  Variable values (read only). See getValues.
+
     """
+
+    names = property(lambda self: self.getNames())
+    values = property(lambda self: self.getValues())
 
     def __init__(self, name):
         Observable.__init__(self)
@@ -165,7 +172,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Delete parameters with del.
 
         This does not allow deletion of non-parameters, as this may require
-        configuration changes that cannot be handled in a general way.
+        configuration changes that are not yet handled in a general way.
 
         """
         if name in self._parameters:
@@ -337,6 +344,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                         'restrain' method.
     _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
                         instance that is used create Equations from string.
+
+    Properties
+    names           --  Variable names (read only). See getNames.
+    values          --  Variable values (read only). See getValues.
 
     Raises ValueError if the name is not a valid attribute identifier
 

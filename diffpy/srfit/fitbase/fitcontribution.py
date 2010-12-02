@@ -58,6 +58,10 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
     _yname          --  Name of the y-variable
     _dyname         --  Name of the dy-variable
 
+    Properties
+    names           --  Variable names (read only). See getNames.
+    values          --  Variable values (read only). See getValues.
+
     """
 
     def __init__(self, name):
@@ -176,7 +180,8 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
                     registered by addParameter or setProfile, or function
                     registered by setCalculator, registerFunction or
                     registerStringFunction can be can be used in the equation
-                    by name.
+                    by name. Other names will be turned into Parameters of this
+                    FitContribution.
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not registered (default {}).
         
@@ -262,6 +267,10 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         # Note that equations only recompute when their inputs are modified, so
         # the following will not recompute the equation.
         return self._reseq()
+
+    def evaluate(self):
+        """Evaluate the contribution equation."""
+        return self._eq()
 
     def _validate(self):
         """Validate my state.

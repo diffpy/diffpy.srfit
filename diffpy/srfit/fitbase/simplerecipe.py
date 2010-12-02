@@ -20,6 +20,7 @@ from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitresults import FitResults
 from diffpy.srfit.fitbase.profile import Profile
 
+
 class SimpleRecipe(FitRecipe):
     """SimpleRecipe class.
 
@@ -75,6 +76,13 @@ class SimpleRecipe(FitRecipe):
         contribution.setProfile(self.profile)
         self.addContribution(contribution)
         self.results = FitResults(self, update = False)
+
+        # Adopt all the FitContribution methods
+        public = [aname for aname in dir(contribution) if aname not in
+                dir(self) and not aname.startswith("_")]
+        for mname in public:
+            method = getattr(contribution, mname)
+            setattr(self, mname, method)
         return
 
     # Profile methods
@@ -159,29 +167,6 @@ class SimpleRecipe(FitRecipe):
         return self.profile.loadtxt(*args, **kw)
 
     # FitContribution
-    def addProfileGenerator(self, gen, name = None):
-        """Add a ProfileGenerator to be used by this FitContribution.
-
-        The ProfileGenerator is given a name so that it can be used as part of
-        the profile equation (see setEquation). This can be different from the
-        name of the ProfileGenerator used for attribute access.
-        FitContributions should not share ProfileGenerator instances. Different
-        ProfileGenerators can share Parameters and ParameterSets, however.
-        
-        Calling addProfileGenerator sets the profile equation to call the
-        calculator and if there is not a profile equation already.
-
-        gen     --  A ProfileGenerator instance
-        name    --  A name for the calculator. If name is None (default), then
-                    the ProfileGenerator's name attribute will be used.
-
-        Raises ValueError if the ProfileGenerator has no name.
-        Raises ValueError if the ProfileGenerator has the same name as some
-        other managed object.
-
-        """
-        return self.contribution.addProfileGenerator(gen, name = None)
-
     def setEquation(self, eqstr, ns = {}):
         """Set the profile equation for the FitContribution.
 
@@ -210,36 +195,11 @@ class SimpleRecipe(FitRecipe):
                 self.addVar(par)
         return
 
-    def setResidualEquation(self, eqstr = None):
-        """Set the residual equation for the FitContribution.
-
-        eqstr   --  A string representation of the residual. If eqstr is None
-                    (default), then the previous residual equation will be
-                    used, or the chi2 residual will be used if that does not
-                    exist.
-
-        Two residuals are preset for convenience, "chiv" and "resv".
-        chiv is defined such that dot(chiv, chiv) = chi^2.
-        resv is defined such that dot(resv, resv) = Rw^2.
-        You can call on these in your residual equation. Note that the quantity
-        that will be optimized is the summed square of the residual equation.
-        Keep that in mind when defining a new residual or using the built-in
-        ones.
-
-        Raises AttributeError if the Profile is not yet defined.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitContribution.
-
-        """
-        return self.contribution.setResidualEquation(eqstr = None)
-
-    def evaluate(self):
-        """Evaluate the contribution equation."""
-        return self.contribution.evaluate()
-
     def __call__(self):
         """Evaluate the contribution equation."""
         return self.contribution.evaluate()
+
+    # FitResults methods
 
     def printResults(self, header = "", footer = ""):
         """Format and print the results.

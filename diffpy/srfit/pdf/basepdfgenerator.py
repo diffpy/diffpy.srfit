@@ -248,9 +248,8 @@ class BasePDFGenerator(ProfileGenerator):
         self._phase.useSymmetry(periodic)
         return
 
-    def __prepare(self, r):
+    def _prepare(self, r):
         """Prepare the calculator when a new r-value is passed."""
-        # TODO - Should we handle non-uniform data?
         self._lastr = r
         self._calc.rstep = r[1] - r[0]
         self._calc.rmin = r[0]
@@ -284,7 +283,7 @@ class BasePDFGenerator(ProfileGenerator):
 
         """
         if r is not self._lastr:
-            self.__prepare(r)
+            self._prepare(r)
 
         rcalc, y = self._calc(self._phase._getSrRealStructure())
 

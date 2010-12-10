@@ -157,7 +157,11 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def __setattr__(self, name, value):
         """Parameter access and object checking."""
         if name in self._parameters:
-            self._parameters[name].value = value
+            par = self._parameters[name]
+            if isinstance(value, Parameter):
+                par.value = value.value
+            else:
+                par.value = value
             return
 
         m = self.get(name)
@@ -661,28 +665,32 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return (par in self._constraints)
 
-    def unconstrain(self, par):
+    def unconstrain(self, *pars):
         """Unconstrain a Parameter.
 
         This removes any constraints on a Parameter. 
 
-        par     --  The name of a Parameter or a Parameter to unconstrain.
+        *pars   --  The names of Parameters or Parameters to unconstrain.
 
         
         Raises ValueError if the Parameter is not constrained.
 
         """
-        if isinstance(par, str):
-            name = par
-            par = self.get(name)
+        update = False
+        for par in pars:
+            if isinstance(par, str):
+                name = par
+                par = self.get(name)
 
-        if par is None:
-            raise ValueError("The parameter cannot be found")
+            if par is None:
+                raise ValueError("The parameter cannot be found")
 
-        if par in self._constraints:
-            self._constraints[par].unconstrain()
-            del self._constraints[par]
+            if par in self._constraints:
+                self._constraints[par].unconstrain()
+                del self._constraints[par]
+                update = True
 
+        if update:
             # Our configuration changed
             self._updateConfiguration()
 
@@ -756,15 +764,19 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return res
 
-    def unrestrain(self, res):
+    def unrestrain(self, *ress):
         """Remove a Restraint from the RecipeOrganizer.
         
-        res     --  A Restraint returned from the 'restrain' method.
+        *ress   --  Restraints returned from the 'restrain' method.
 
         """
-        if res in self._restraints:
-            self._restraints.remove(res)
+        update = False
+        for res in ress:
+            if res in self._restraints:
+                self._restraints.remove(res)
+                update = True
 
+        if update:
             # Our configuration changed
             self._updateConfiguration()
 

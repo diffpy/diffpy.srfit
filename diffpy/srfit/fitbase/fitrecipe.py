@@ -215,7 +215,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         return
 
     def residual(self, p = []):
-        """Calculate the residual to be optimized.
+        """Calculate the vector residual to be optimized.
 
         Arguments
         p   --  The list of current variable values, provided in the same order
@@ -263,13 +263,27 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         return chiv
 
     def scalarResidual(self, p = []):
-        """A scalar version of the residual.
+        """Calculate the scalar residual to be optimized.
 
-        See the residual method. This returns dot(chiv, chiv).
+        Arguments
+        p   --  The list of current variable values, provided in the same order
+                as the '_parameters' list. If p is an empty iterable (default),
+                then it is assumed that the parameters have already been
+                updated in some other way, and the explicit update within this
+                function is skipped.
+
+        The residual is by default the weighted concatenation of each 
+        FitContribution's residual, plus the value of each restraint. The array
+        returned, denoted chiv, is such that 
+        dot(chiv, chiv) = chi^2 + restraints.
 
         """
         chiv = self.residual(p)
         return dot(chiv, chiv)
+
+    def __call__(self, p = []):
+        """Same as scalarResidual method."""
+        return self.scalarResidual(p)
 
     def _prepare(self):
         """Prepare for the residual calculation, if necessary.

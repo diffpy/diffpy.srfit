@@ -144,8 +144,9 @@ class PrintFitHook(FitHook):
 
             vnames = recipe.getNames()
             vals = recipe.getValues()
-
-            for name, val in zip(vnames, vals):
+            items = zip(vnames, vals)
+            items.sort()
+            for name, val in items:
                 print "  %s = %f" % (name, val)
 
 # End class PrintFitHook

@@ -585,7 +585,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         allvars = set(self._parameters.values())
         badvars = varargs - allvars
         if badvars:
-            names = ",".join([v.name for v in badvars])
+            names = ",".join(v.name for v in badvars)
             raise ValueError("Variables cannot be found (%s)"% names)
 
         # Make sure that we only have parameters in kw
@@ -631,7 +631,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def free(self, *args, **kw):
         """Free a parameter by reference, name or tag.
 
-        A free variable is refined.  Variables are free by default.
+        A free variable is refined.  Variables are free by default. Constrained
+        variables are not free.
 
         This method accepts string or variable arguments. An argument of "all"
         selects all variables. Keyword arguments must be parameter names,
@@ -646,7 +647,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         # Free all of these
         for var in varargs:
-            self._tagmanager.untag(var, self._fixedtag)
+            if not var.constrained:
+                self._tagmanager.untag(var, self._fixedtag)
 
         # Set the kw values
         for name, val in kw.items():

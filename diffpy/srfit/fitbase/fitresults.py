@@ -25,6 +25,8 @@ import numpy
 
 from diffpy.srfit.util.inpututils import inputToString
 
+# FIXME - results should print fixed variables
+
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 
@@ -38,6 +40,9 @@ class FitResults(object):
     varnames    --  Names of the variables in the recipe.
     varvals     --  Values of the variables in the recipe.
     varunc      --  Uncertainties in the variable values.
+    showfixed   --  Show fixed variables (default True).
+    fixednames  --  Names of the fixed variables of the recipe.
+    fixedvals   --  Values of the fixed variables of the recipe.
     showcon     --  Show constraint values in the output (default False).
     connames    --  Names of the constrained parameters.
     convals     --  Values of the constrained parameters.
@@ -57,12 +62,14 @@ class FitResults(object):
 
     """
 
-    def __init__(self, recipe, update = True, showcon = False):
+    def __init__(self, recipe, update = True, showfixed = True, showcon =
+            False):
         """Initialize the attributes.
 
         recipe   --  The recipe containing the results
         update  --  Flag indicating whether to do an immediate update (default
                     True).
+        showcon --  Show fixed variables in the output (default True).
         showcon --  Show constraint values in the output (default False).
         
         """
@@ -72,6 +79,8 @@ class FitResults(object):
         self.varnames = []
         self.varvals = []
         self.varunc = []
+        self.fixednames = []
+        self.fixedvals = []
         self.connames = []
         self.convals = []
         self.conunc = []
@@ -85,7 +94,8 @@ class FitResults(object):
         self._dcon = []
         self.messages = []
 
-        self.showcon = showcon
+        self.showfixed = bool(showfixed)
+        self.showcon = bool(showcon)
 
         if update:
             self.update()
@@ -107,19 +117,25 @@ class FitResults(object):
         # Store the variable names and values
         self.varnames = recipe.getNames()
         self.varvals = recipe.getValues()
+        fixedpars = recipe._tagmanager.union(recipe._fixedtag)
+        fixedpars = [p for p in fixedpars if not p.constrained]
+        self.fixednames = [p.name for p in fixedpars]
+        self.fixedvals = [p.value for p in fixedpars]
 
         # Store the constraint information
         self.connames = [con.par.name for con in recipe._oconstraints]
         self.convals = [con.par.getValue() for con in recipe._oconstraints]
 
-        # Calculate the covariance
-        self._calculateCovariance()
+        if self.varnames:
+            # Calculate the covariance
+            self._calculateCovariance()
 
-        # Get the variable uncertainties
-        self.varunc = [self.cov[i,i]**0.5 for i in range(len(self.varnames))]
+            # Get the variable uncertainties
+            self.varunc = [self.cov[i,i]**0.5 for i in \
+                    range(len(self.varnames))]
 
-        # Get the constraint uncertainties
-        self._calculateConstraintUncertainties()
+            # Get the constraint uncertainties
+            self._calculateConstraintUncertainties()
 
         # Store the fitting arrays and metrics for each FitContribution.
         self.conresults = {}
@@ -338,29 +354,44 @@ class FitResults(object):
                 lines.append(formatstr%("Rw",res.rw))
 
         ## The variables
-        lines.append("")
+        if self.varnames:
+            lines.append("")
+            l = "Variables"
+            if not certain:
+                m = "Uncertainties invalid"
+                l += " (%s)"%m
+            lines.append(l)
+            lines.append(dashedline)
 
-        l = "Variables"
-        if not certain:
-            m = "Uncertainties invalid"
-            l += " (%s)"%m
-        lines.append(l)
-        lines.append(dashedline)
+            varnames = self.varnames
+            varvals = self.varvals
+            varunc = self.varunc
+            varlines = []
 
-        varnames = self.varnames
-        varvals = self.varvals
-        varunc = self.varunc
-        varlines = []
+            w = max(map(len, varnames))
+            w = str(w+1)
+            # Format the lines
+            formatstr = "%-"+w+"s " + pe + " +/- " + pe
+            for name, val, unc in zip(varnames, varvals, varunc):
+                varlines.append(formatstr%(name, val, unc))
 
-        w = max(map(len, varnames))
-        w = str(w+1)
-        # Format the lines
-        formatstr = "%-"+w+"s " + pe + " +/- " + pe
-        for name, val, unc in zip(varnames, varvals, varunc):
-            varlines.append(formatstr%(name, val, unc))
+            varlines.sort()
+            lines.extend(varlines)
 
-        varlines.sort()
-        lines.extend(varlines)
+        # Fixed variables
+        if self.showfixed and self.fixednames:
+            varlines = []
+            lines.append("")
+            lines.append("Fixed Variables")
+            lines.append(dashedline)
+            w = max(map(len, self.fixednames))
+            w = str(w+1)
+            formatstr = "%-"+w+"s " + pe
+            for name, val in zip(self.fixednames, self.fixedvals):
+                varlines.append(formatstr%(name, val))
+            varlines.sort()
+            lines.extend(varlines)
+
 
         ## The constraints
         if self.connames and self.showcon:
@@ -401,7 +432,7 @@ class FitResults(object):
         lines.append(dashedline)
         tup = []
         cornames = []
-        n = len(varnames)
+        n = len(self.varnames)
         for i in xrange(n):
             for j in xrange(i+1, n):
                 name = "corr(%s, %s)"%(varnames[i], varnames[j])

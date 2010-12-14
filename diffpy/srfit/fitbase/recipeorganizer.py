@@ -637,15 +637,19 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             raise ValueError("The parameter '%s' is constant"%par)
 
         if isinstance(con, str):
+            eqstr = con
             eq = equationFromString(con, self._eqfactory, ns)
         else:
             eq = Equation(root = con)
+            eqstr = con.name
 
         eq.name = "_constraint_%s"%par.name
 
         # Make and store the constraint
         con = Constraint()
         con.constrain(par, eq)
+        # Store the equation string so it can be shown later.
+        con.eqstr = eqstr
         self._constraints[par] = con
 
         # Our configuration changed
@@ -751,12 +755,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
 
         if isinstance(res, str):
+            eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
         else:
             eq = Equation(root = res)
+            eqstr = res.name
 
         # Make and store the restraint
         res = Restraint(eq, lb, ub, sig, scaled)
+        # Store the equation so it can be shown later
+        res.eqstr = eqstr
         self._restraints.add(res)
 
         # Our configuration changed. Notify observers.
@@ -827,6 +835,113 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         iterable = chain(iter(self._restraints),
                 self._constraints.itervalues())
         self._validateOthers(iterable)
+        return
+
+    # For printing the configured recipe to screen
+
+    def _formatManaged(self, indent = ""):
+        """Format fit hierarchy for showing.
+
+        Returns the lines of the formatted string in a list.
+        
+        """
+        dashedline = 79 * '-'
+        lines = []
+        formatstr = "%-20s %s"
+
+        lines.append((indent + self.name)[:79])
+        # Show parameters
+        if self._parameters:
+            lines.append((indent + dashedline)[:79])
+            items = self._parameters.items()
+            items.sort()
+            lines.extend((indent + formatstr%(n, p.value))[:79] for n,p in
+                    items)
+
+        indent += "  "
+
+        for obj in self._iterManaged():
+            if hasattr(obj, "_formatManaged"):
+                tlines = obj._formatManaged(indent)
+                lines.append("")
+                lines.extend(tlines)
+
+        return lines
+
+    def _formatConstraints(self):
+        """Format constraints for showing.
+
+        This collects constraints on all levels of the hierarchy and displays
+        them with respect to this level.
+
+        Returns the lines of the formatted string in a list.
+        
+        """
+        cdict = self._getConstraints()
+        # Find each constraint and format the equation
+        clines = []
+        for par, con in cdict.items():
+            loc = self._locateManagedObject(par)
+            if loc:
+                locstr = ".".join(o.name for o in loc)
+                clines.append("%s <-- %s" % (locstr, con.eqstr))
+            else:
+                clines.append("?.%s <-- %s" (par.name, con.eqstr))
+
+        if clines:
+            clines.sort()
+            dashedline = 79 * '-'
+            clines.insert(0, dashedline)
+            clines.insert(0, "Constraints")
+        return clines
+
+    def _formatRestraints(self):
+        """Format restraints for showing.
+
+        This collects restraints on all levels of the hierarchy and displays
+        them with respect to this level.
+
+        Returns the lines of the formatted string in a list.
+
+        """
+        rset = self._getRestraints()
+        rlines = []
+        for res in rset:
+            line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s"%\
+                    (res.eqstr, res.lb, res.ub, res.sig, res.scaled)
+            rlines.append(line)
+
+        if rlines:
+            rlines.sort()
+            dashedline = 79 * '-'
+            rlines.insert(0, dashedline)
+            rlines.insert(0, "Restraints")
+        return rlines
+
+    def show(self):
+        """Show the configuration on screen.
+
+        This will print a summary of all contained objects.
+        """
+        # Show sub objects and their parameters
+        lines = []
+        tlines = self._formatManaged()
+        lines.extend(tlines)
+
+        # FIXME - parameter names in equations not particularly informative
+        # Show constraints
+        tlines = self._formatConstraints()
+        lines.append("")
+        lines.extend(tlines)
+
+        # FIXME - parameter names in equations not particularly informative
+        # Show restraints
+        tlines = self._formatRestraints()
+        lines.append("")
+        lines.extend(tlines)
+
+        print "\n".join(lines)
+
         return
 
 # End RecipeOrganizer

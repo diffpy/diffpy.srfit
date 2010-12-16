@@ -714,15 +714,23 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         const = self._getConstraints(recurse)
         return const.keys()
 
-    def clearConstraints(self):
+    def clearConstraints(self, recurse = False):
         """Clear all constraints managed by this organizer.
+
+        recurse --  Recurse into managed objects and clear all constraints
+                    found there as well.
 
         This removes constraints that are held in this organizer, no matter
         where the constrained parameters are from.
         
         """
-        for con in self._constraints[:]:
-            self.unconstrain(con.par)
+        if self._constraints:
+            self.unconstrain(*self._constraints)
+
+        if recurse:
+            f = lambda m : hasattr(m, "clearConstraints")
+            for m in ifilter(f, self._iterManaged()):
+                m.clearConstraints(recurse)
         return
 
     def restrain(self, res, lb = -inf, ub = inf, sig = 1, scaled = False, ns =
@@ -780,7 +788,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         update = False
         for res in ress:
-            if res in self._restraints:
+            if res in tuple(self._restraints):
                 self._restraints.remove(res)
                 update = True
 
@@ -790,10 +798,18 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
-    def clearRestraints(self):
-        """Clear all restraints."""
-        for res in tuple(self._restraints):
-            self.unrestrain(res)
+    def clearRestraints(self, recurse = False):
+        """Clear all restraints.
+
+        recurse --  Recurse into managed objects and clear all restraints
+                    found there as well.
+        """
+        self.unrestrain(*self._restraints)
+
+        if recurse:
+            f = lambda m : hasattr(m, "clearRestraints")
+            for m in ifilter(f, self._iterManaged()):
+                m.clearRestraints(recurse)
         return
 
     def _getConstraints(self, recurse = True):

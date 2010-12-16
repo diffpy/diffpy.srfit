@@ -25,8 +25,6 @@ import numpy
 
 from diffpy.srfit.util.inpututils import inputToString
 
-# FIXME - results should print fixed variables
-
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit. 
 

@@ -100,7 +100,7 @@ describe how the accessor attributes are used to access the value of the
 parameter. When ``xpar.getValue()`` is called, it redirects to
 ``SimpleAtom.getX(atom)``. 
 
-If instead ``SimpleAtom`` had a methods called ``get`` and ``set`` that take as
+If instead ``SimpleAtom`` had methods called ``get`` and ``set`` that take as
 the second argument the name of the attribute to retrieve or modify, then this
 can be adapted as::
 
@@ -124,7 +124,7 @@ Extending Profile Parsers
 
 The ``ProfileParser`` class is located in the ``diffpy.srfit.fitbase.parser``
 module.  The purpose of this class is to read data and metadata from a file or
-string and pass that data and metadata to a ``Profile`` instance. The
+string and pass those data and metadata to a ``Profile`` instance. The
 ``Profile`` in turn will pass this information to a ``ProfileGenerator``.
 
 The simplest way to extend the ``ProfileParser`` is to derive a new class from
@@ -165,8 +165,8 @@ dictionary attribute named ``_meta``. The parser can put any information into
 this dictionary. It is up to a ``ProfileGenerator`` that may use the parsed
 data to define and retrieve usable metadata.
 
-If the data is not in a form that can be stored in a ``Profile`` then it is the
-responsibility of the parser to convert this data to a usable form.
+If the data are not in a form that can be stored in a ``Profile`` then it is
+the responsibility of the parser to convert this data to a usable form.
 
 
 Extending Profiles

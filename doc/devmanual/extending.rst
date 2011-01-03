@@ -13,8 +13,8 @@ Plugging Other Objects into SrFit
 
 Much of the power of SrFit comes from being able to plug existing python codes
 into the framework. For example, external forward calculators can be wrapped up
-inside ``ProfileGenerators`` without modifying the calculator. This case is
-handled in the :ref:`developers-guide-examples`. Structure adapters defined in
+inside ``ProfileGenerators`` without modifying the calculator. This is
+demonstrated in :ref:`developers-guide-examples`. Structure adapters defined in
 the diffpy.srfit.structure module are also built around this principle. These
 adapters are hierarchical ``ParameterSets`` (found in
 ``diffpy.srfit.fitbase.parameterset``) that encapsulate the different pieces of

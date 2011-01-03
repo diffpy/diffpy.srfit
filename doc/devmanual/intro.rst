@@ -63,3 +63,29 @@ Relese Definition
 
 The SrFit Alpha-8 release definition can be found at
 http://danse.us/trac/diffraction/wiki/SrFitReleaseAlpha8.
+
+Major changes since last release
+----------------------------------------
+
+ * Support for parallel PDF calculators from SrReal.
+ * Various interface changes.
+
+   * pdfnpgenerator module renamed debyepdfgenerator.
+   * nanoformfactors module renamed characteristicfunctions.  
+   * Form factors renamed from xyzFF to xyzCF.
+   * Structure adapters renamed for clarification. The monikers "Structure" and
+     "stru" are reserved for structure representations from outside of SrFit
+     (e.g. diffpy.Structure.Structure).  The monikers "ParSet" and "Phase" are
+     used to represent the adapted structures (e.g. DiffpyStructureParSet).
+
+ * PDFContribution class introduced to simpliy PDF fits. See :doc:`simplepdf`
+   and :doc:`simplepdftwophase` examples.
+ * Classes with parameters now support list-like parameter access.
+ * Support for sequence of FitHooks.
+ * Parameter values can be assigned with an ``=`` sign from containers. For
+   example, recipe.a = 3.4 now works. Update operations, such as ``+=`` are not
+   supported.
+ * FitResults now reports on fixed variables.
+ * New ``show`` method prints a summary of the fit configuration.  The display
+   (and implementatation) are a work-in-progress.
+ * Constraints and restraints can be cleared recursively.

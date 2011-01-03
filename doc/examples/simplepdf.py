@@ -57,7 +57,7 @@ def makeRecipe(ciffile, datname):
         recipe.addVar(par, 0.005)
 
     recipe.addVar(contribution.scale, 1)
-    recipe.addVar(contribution.qdamp, 0.01)
+    recipe.addVar(contribution.qdamp, 0.03, fixed = True)
     recipe.addVar(contribution.nickel.delta2, 5)
 
     # Give the recipe away so it can be used!
@@ -74,11 +74,13 @@ if __name__ == "__main__":
 
     # Optimize
     scipyOptimize(recipe)
-    recipe.nickel.savetxt("temp.fit")
+    # Save the file
+    recipe.nickel.savetxt("nickel_example.fit")
 
-    # Generate and print the FitResults
+    # Generate, print and save the FitResults
     res = FitResults(recipe)
     res.printResults()
+    res.saveResults("nickel_example.res")
 
     # Plot!
     plotResults(recipe)

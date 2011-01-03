@@ -17,8 +17,6 @@
 The Printer visitor creates a one-line representation of the Literal tree,
 which is valid as a string equivalent of the equation.
 
-Printer is mostly 
-
 """
 __all__ = ["Printer"]
 

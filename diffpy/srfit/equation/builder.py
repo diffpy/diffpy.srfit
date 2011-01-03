@@ -291,7 +291,8 @@ class EquationFactory(object):
         # Raise an error if there are arguments that need to be created, but
         # this is disallowed.
         if not buildargs and eqargs:
-            msg = "The equation contains undefined arguments %s"%eqargs
+            eqargsstr = ", ".join(eqargs)
+            msg = "The equation contains undefined arguments: %s"%eqargsstr
             raise ValueError(msg)
 
         # Make the arguments

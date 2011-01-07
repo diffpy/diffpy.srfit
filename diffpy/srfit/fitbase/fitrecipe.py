@@ -660,24 +660,38 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Check if a variable is fixed."""
         return (not self._tagmanager.hasTags(var, self._fixedtag))
 
-    def unconstrain(self, par, free = True):
+    def unconstrain(self, *pars):
         """Unconstrain a Parameter.
 
-        This removes any constraints on a Parameter. 
+        This removes any constraints on a Parameter. If the Parameter is also a
+        variable of the recipe, it will be freed as well.
 
-        par     --  The name of a Parameter or a Parameter to unconstrain.
-        free    --  Flag indicating whether to free the Parameter after
-                    removing the constraint (bool, default True)
+        *pars   --  The names of Parameters or Parameters to unconstrain.
+
         
         Raises ValueError if the Parameter is not constrained.
-
         """
-        if isinstance(par, str):
-            par = self.get(par)
-        RecipeOrganizer.unconstrain(self, par)
+        update = False
+        for par in pars:
+            if isinstance(par, str):
+                name = par
+                par = self.get(name)
 
-        if free and par in self._parameters.values():
-            self._tagmanager.untag(par, self._fixedtag)
+            if par is None:
+                raise ValueError("The parameter cannot be found")
+
+            if par in self._constraints:
+                self._constraints[par].unconstrain()
+                del self._constraints[par]
+                update = True
+
+            if par in self._parameters.values():
+                self._tagmanager.untag(par, self._fixedtag)
+
+        if update:
+            # Our configuration changed
+            self._updateConfiguration()
+
         return
 
     def constrain(self, par, con, ns = {}):

@@ -66,7 +66,7 @@ class BVSRestraint(Restraint):
         """
         # Get the bvms from the BVSCalculator
         self._calc.eval(self._stru)
-        penalty = self._calc.bvmsdiff()
+        penalty = self._calc.bvmsdiff
 
         # Scale by the prefactor
         penalty /= self.sig**2

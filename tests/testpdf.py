@@ -133,7 +133,7 @@ class TestPDFGenerator(unittest.TestCase):
         calc.qmax = qmax
         calc.setScatteringFactorTableByType('N')
         calc.eval(stru)
-        yref = calc.getPDF()
+        yref = calc.pdf
 
         diff = y - yref
         res = numpy.dot(diff, diff)

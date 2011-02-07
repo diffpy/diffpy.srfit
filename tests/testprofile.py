@@ -6,9 +6,9 @@ import os.path
 
 from numpy import array, arange, array_equal, ones_like
 
-from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.fit.profile import Profile
 
-thisfile = locals().get('__file__', 'testpdf.py')
+thisfile = locals().get('__file__', 'testprofile.py')
 tests_dir = os.path.dirname(os.path.abspath(thisfile))
 testdata_dir = os.path.join(tests_dir, 'testdata')
 
@@ -26,12 +26,11 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(profile.x is None)
         self.assertTrue(profile.y is None)
         self.assertTrue(profile.dy is None)
-        self.assertTrue(profile.ycalc is None)
         self.assertEquals(profile.meta, {})
         return
 
     def testSetObservedProfile(self):
-        """Test the setObservedProfile method."""
+        """Test the setObserved method."""
         # Make a profile with defined dy
 
         x = arange(0, 10, 0.1)
@@ -39,7 +38,7 @@ class TestProfile(unittest.TestCase):
         dy = x
 
         prof = self.profile
-        prof.setObservedProfile(x, y, dy)
+        prof.setObserved(x, y, dy)
 
         self.assertTrue( array_equal(x, prof.xobs) )
         self.assertTrue( array_equal(y, prof.yobs) )
@@ -50,7 +49,7 @@ class TestProfile(unittest.TestCase):
         y = x
         dy = None
 
-        self.profile.setObservedProfile(x, y, dy)
+        self.profile.setObserved(x, y, dy)
 
         self.assertTrue( array_equal(x, prof.xobs) )
         self.assertTrue( array_equal(y, prof.yobs) )
@@ -63,8 +62,8 @@ class TestProfile(unittest.TestCase):
 
         return
 
-    def testSetCalculationRange(self):
-        """Test the setCalculationRange method."""
+    def testSetRange(self):
+        """Test the setRange method."""
         x = arange(2, 10, 0.5)
         y = array(x)
         dy = array(x)
@@ -72,67 +71,63 @@ class TestProfile(unittest.TestCase):
         prof = self.profile
 
         # Check call before data arrays are present
-        self.assertRaises(AttributeError, prof.setCalculationRange)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0,
+        self.assertRaises(AttributeError, prof.setRange)
+        self.assertRaises(AttributeError, prof.setRange, 0)
+        self.assertRaises(AttributeError, prof.setRange, 0,
                 10)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0,
+        self.assertRaises(AttributeError, prof.setRange, 0,
                 10, 0.2)
 
-        prof.setObservedProfile(x, y, dy)
+        prof.setObserved(x, y, dy)
 
         # Test normal execution w/o arguments
-        prof.setCalculationRange()
+        prof.setRange()
         self.assertTrue( array_equal(x, prof.x) )
         self.assertTrue( array_equal(y, prof.y) )
         self.assertTrue( array_equal(dy, prof.dy) )
 
         # Test a lower bound < xmin
-        prof.setCalculationRange(xmin = 0)
+        prof.setRange(xmin = 0)
         self.assertTrue( array_equal(x, prof.x) )
         self.assertTrue( array_equal(y, prof.y) )
-        self.assertTrue( array_equal(dy, dprof.y) )
+        self.assertTrue( array_equal(dy, prof.dy) )
 
         # Test an upper bound > xmax
-        prof.setCalculationRange(xmax = 100)
-        prof.x, prof.y, dprof.y = prof.getRangedProfile()
+        prof.setRange(xmax = 100)
         self.assertTrue( array_equal(x, prof.x) )
         self.assertTrue( array_equal(y, prof.y) )
-        self.assertTrue( array_equal(dy, dprof.y) )
+        self.assertTrue( array_equal(dy, prof.dy) )
 
         # Test xmin > xmax
-        self.assertRaises(ValueError, profile.setCalculationRange, xmin = 10,
+        self.assertRaises(ValueError, prof.setRange, xmin = 10,
                 xmax = 3)
 
         # Test xmax - xmin < dx
-        self.assertRaises(ValueError, profile.setCalculationRange, xmin = 3,
+        self.assertRaises(ValueError, prof.setRange, xmin = 3,
                 xmax = 3 + 0.4, dx = 0.5)
 
         # Test dx <= 0
-        self.assertRaises(ValueError, profile.setCalculationRange, dx = 0)
-        self.assertRaises(ValueError, profile.setCalculationRange, dx =
-                -0.000001)
+        self.assertRaises(ValueError, prof.setRange, dx = 0)
+        self.assertRaises(ValueError, prof.setRange, dx = -0.000001)
         # This should be alright
-        profile.setCalculationRange(dx = 0.000001)
+        prof.setRange(dx = 0.000001)
 
         # Test an internal bound
-        prof.setCalculationRange(4, 7)
-        prof.x, prof.y, dprof.y = prof.getRangedProfile()
+        prof.setRange(4, 7)
         self.assertTrue( array_equal(prof.x, arange(4, 7.5, 0.5) ) )
         self.assertTrue( array_equal(prof.y, arange(4, 7.5, 0.5) ) )
-        self.assertTrue( array_equal(dprof.y, arange(4, 7.5, 0.5) ) )
+        self.assertTrue( array_equal(prof.dy, arange(4, 7.5, 0.5) ) )
 
         # Test a new grid
-        prof.setCalculationRange(4, 7, 0.1)
-        prof.x, prof.y, dprof.y = prof.getRangedProfile()
+        prof.setRange(4, 7, 0.1)
         self.assertTrue( array_equal(prof.x, arange(4, 7.1, 0.1) ) )
-        self.assertAlmostEqual( 0, sum(prof.y- arange(4, 7.1, 0.1))**2 )
-        self.assertAlmostEqual( 0, sum(dprof.y- arange(4, 7.1, 0.1))**2 )
+        self.assertAlmostEqual( 0, sum(prof.y - arange(4, 7.1, 0.1))**2 )
+        self.assertAlmostEqual( 0, sum(prof.dy - arange(4, 7.1, 0.1))**2 )
 
         return
 
-    def testSetCalculationRange(self):
-        """Test the setCalculationRange method."""
+    def testSetObserved(self):
+        """Test the setObserved method."""
         prof = self.profile
 
         x = arange(2, 10.5, 0.5)
@@ -141,20 +136,28 @@ class TestProfile(unittest.TestCase):
 
         # Test without data
         xcalc = arange(3, 12.2, 0.2)
-        prof.setCalculationPoints(xcalc)
+        prof.setPoints(xcalc)
         self.assertTrue( array_equal(xcalc, prof.x) )
 
         # Add the data. This should change the bounds of the calculation array.
-        prof.setObservedProfile(x, y, dy)
+        prof.setObserved(x, y, dy)
         self.assertTrue( array_equal(arange(3, 10.1, 0.2), prof.x ) )
 
         return
 
-    def testLoadtxt(self):
+    def testInitFilename(self):
+        """Test init with a file name."""
+        data = os.path.join(testdata_dir, "testdata.txt")
+        prof = Profile(data)
+        self.testLoadtxt(prof, data)
+        return
+
+    def testLoadtxt(self, prof = None, data = None):
         """Test the loadtxt method"""
 
-        prof = self.profile
-        data = os.path.join(testdata_dir, "testdata.txt")
+        if prof is None and data is None:
+            prof = self.profile
+            data = os.path.join(testdata_dir, "testdata.txt")
 
         def _test(p):
             self.assertAlmostEqual(1e-2, p.x[0])

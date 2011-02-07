@@ -12,12 +12,15 @@
 #
 ########################################################################
 
-
-"""SAS calculation tools.
+"""Import getcallargs from python >= 2.7/3.1 for earlier python versions.
 
 """
 
-from sasparser import SASParser
-from sasprofile import SASProfile
+__all__ = ["getcallargs"]
+
+try:
+    from inspect import getcallargs
+except ImportError:
+    from diffpy.srfit.util._getcallargs import getcallargs
 
 # End of file

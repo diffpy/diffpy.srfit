@@ -2,7 +2,7 @@
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
-#                   (c) 2011 Trustees of the Columbia University
+#                   (c) 2008 Trustees of the Columbia University
 #                   in the City of New York.  All rights reserved.
 #
 # File coded by:    Chris Farrow
@@ -12,12 +12,16 @@
 #
 ########################################################################
 
-
-"""SAS calculation tools.
+"""The base fitting tools for diffpy.srfit.
 
 """
 
-from sasparser import SASParser
-from sasprofile import SASProfile
+from diffpy.srfit.fit.functions import *
+from diffpy.srfit.fit.parameters import *
+from diffpy.srfit.fit.profile import *
+from diffpy.srfit.fit.residualmod import *
+from diffpy.srfit.fit.restrain import *
+from diffpy.srfit.fit.fitresults import *
 
+__id__ = "$Id$"
 # End of file

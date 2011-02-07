@@ -16,7 +16,7 @@ import fix_setuptools_chmod
 # define distribution
 dist = setup(
         name = "diffpy.srfit",
-        version = "1.0a8",
+        version = "1.0b0",
         namespace_packages = ['diffpy'],
         packages = find_packages(exclude=['tests']),
         test_suite = 'tests',
@@ -46,7 +46,7 @@ dist = setup(
         classifiers = [
             # List of possible values at
             # http://pypi.python.org/pypi?:action=list_classifiers
-            'Development Status :: 3 - Alpha',
+            'Development Status :: 4 - Beta',
             'Environment :: Console',
             'Intended Audience :: Science/Research',
             'Operating System :: MacOS',

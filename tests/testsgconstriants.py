@@ -2,183 +2,303 @@
 """Tests space group constraints."""
 
 import unittest
+import os
 
 import numpy
 
-from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
-from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+from diffpy.Structure import Structure
+from diffpy.srfit import adapt
+from diffpy.srfit.util import isFixed
+from diffpy.srfit.structure import constrainAsSpaceGroup
+
+thisfile = locals().get('__file__', 'testdiffpystructure.py')
+tests_dir = os.path.dirname(os.path.abspath(thisfile))
+testdata_dir = os.path.join(tests_dir, 'testdata')
+
+class TestSGConstraints(unittest.TestCase):
+    """Test creation of space group constraints."""
+
+    def testConstrainAsSpaceGroup1(self):
+        """Test the constrainAsSpaceGroup function."""
+        fpath = os.path.join(testdata_dir, "ni.cif")
+        stru = Structure(filename = fpath)
+        phase = adapt(stru, "nickel")
+        sgpars = constrainAsSpaceGroup(phase, 225)
+
+        lattice = phase.getLattice()
+        self.assertTrue(lattice.a.isVaried())
+        self.assertTrue(lattice.b.isConstrained())
+        self.assertTrue(lattice.b._constraint is lattice.a)
+        self.assertTrue(lattice.c.isConstrained())
+        self.assertTrue(lattice.c._constraint is lattice.a)
+        self.assertTrue(isFixed(lattice.alpha))
+        self.assertTrue(isFixed(lattice.beta))
+        self.assertTrue(isFixed(lattice.gamma))
+
+        self.assertEqual(2, len(sgpars))
+        scatterers = phase.getScatterers()
+
+        # Ni1
+        Ni1 = scatterers[0]
+        self.assertTrue(isFixed(Ni1.x))
+        self.assertTrue(isFixed(Ni1.y))
+        self.assertTrue(isFixed(Ni1.z))
+        self.assertTrue(isFixed(Ni1.U11))
+        self.assertTrue(isFixed(Ni1.U22))
+        self.assertTrue(isFixed(Ni1.U33))
+        self.assertTrue(isFixed(Ni1.U12))
+        self.assertTrue(isFixed(Ni1.U13))
+        self.assertTrue(isFixed(Ni1.U23))
+        self.assertTrue(Ni1.Uisoequiv.isVaried())
+
+        # Ni2
+        Ni2 = scatterers[1]
+        self.assertTrue(isFixed(Ni2.x))
+        self.assertTrue(isFixed(Ni2.y))
+        self.assertTrue(isFixed(Ni2.z))
+        self.assertTrue(isFixed(Ni2.U11))
+        self.assertTrue(isFixed(Ni2.U22))
+        self.assertTrue(isFixed(Ni2.U33))
+        self.assertTrue(isFixed(Ni2.U12))
+        self.assertTrue(isFixed(Ni2.U13))
+        self.assertTrue(isFixed(Ni2.U23))
+        self.assertTrue(Ni2.Uisoequiv.isConstrained())
+        self.assertTrue(Ni2.Uisoequiv._constraint is Ni1.Uisoequiv)
+
+        # Ni3
+        Ni3 = scatterers[2]
+        self.assertTrue(isFixed(Ni3.x))
+        self.assertTrue(isFixed(Ni3.y))
+        self.assertTrue(isFixed(Ni3.z))
+        self.assertTrue(isFixed(Ni3.U11))
+        self.assertTrue(isFixed(Ni3.U22))
+        self.assertTrue(isFixed(Ni3.U33))
+        self.assertTrue(isFixed(Ni3.U12))
+        self.assertTrue(isFixed(Ni3.U13))
+        self.assertTrue(isFixed(Ni3.U23))
+        self.assertTrue(Ni3.Uisoequiv.isConstrained())
+        self.assertTrue(Ni3.Uisoequiv._constraint is Ni1.Uisoequiv)
+
+        # Ni4
+        Ni4 = scatterers[3]
+        self.assertTrue(isFixed(Ni4.x))
+        self.assertTrue(isFixed(Ni4.y))
+        self.assertTrue(isFixed(Ni4.z))
+        self.assertTrue(isFixed(Ni4.U11))
+        self.assertTrue(isFixed(Ni4.U22))
+        self.assertTrue(isFixed(Ni4.U33))
+        self.assertTrue(isFixed(Ni4.U12))
+        self.assertTrue(isFixed(Ni4.U13))
+        self.assertTrue(isFixed(Ni4.U23))
+        self.assertTrue(Ni4.Uisoequiv.isConstrained())
+        self.assertTrue(Ni4.Uisoequiv._constraint is Ni1.Uisoequiv)
+
+        return
+
+    def testConstrainAsSpaceGroup2(self):
+        """Test the constrainAsSpaceGroup function."""
+        stru = makeLaMnO3_P1()
+        phase = adapt(stru, "LaMnO3")
+        sgpars = constrainAsSpaceGroup(phase, "P b n m",
+                scatterers = phase.getScatterers()[::2])
+
+        lattice = phase.getLattice()
+        self.assertTrue(lattice.a.isVaried())
+        self.assertTrue(lattice.b.isVaried())
+        self.assertTrue(lattice.c.isVaried())
+        self.assertTrue(isFixed(lattice.alpha))
+        self.assertTrue(isFixed(lattice.beta))
+        self.assertTrue(isFixed(lattice.gamma))
+
+        # Test the unconstrained atoms
+        for scatterer in phase.getScatterers()[1::2]:
+            self.assertFalse(scatterer.x.isVaried())
+            self.assertFalse(scatterer.y.isVaried())
+            self.assertFalse(scatterer.z.isVaried())
+            self.assertFalse(scatterer.U11.isVaried())
+            self.assertFalse(scatterer.U22.isVaried())
+            self.assertFalse(scatterer.U33.isVaried())
+            self.assertFalse(scatterer.U12.isVaried())
+            self.assertFalse(scatterer.U13.isVaried())
+            self.assertFalse(scatterer.U23.isVaried())
+            self.assertFalse(scatterer.x.isConstrained())
+            self.assertFalse(scatterer.y.isConstrained())
+            self.assertFalse(scatterer.z.isConstrained())
+            self.assertFalse(scatterer.U11.isConstrained())
+            self.assertFalse(scatterer.U22.isConstrained())
+            self.assertFalse(scatterer.U33.isConstrained())
+            self.assertFalse(scatterer.U12.isConstrained())
+            self.assertFalse(scatterer.U13.isConstrained())
+            self.assertFalse(scatterer.U23.isConstrained())
+
+        # Now test the constrained parameters
+        self.assertEqual(30, len(sgpars))
+        scatterers = phase.getScatterers()[::2]
+        # La1
+        La1 = scatterers[0]
+        self.assertTrue(La1.x.isVaried())
+        self.assertTrue(La1.x in sgpars)
+        self.assertTrue(La1.y.isVaried())
+        self.assertTrue(La1.y in sgpars)
+        self.assertTrue(isFixed(La1.z))
+        self.assertTrue(La1.U11.isVaried())
+        self.assertTrue(La1.U11 in sgpars)
+        self.assertTrue(La1.U22.isVaried())
+        self.assertTrue(La1.U22 in sgpars)
+        self.assertTrue(La1.U33.isVaried())
+        self.assertTrue(La1.U33 in sgpars)
+        self.assertTrue(La1.U12.isVaried())
+        self.assertTrue(La1.U12 in sgpars)
+        self.assertTrue(isFixed(La1.U13))
+        self.assertTrue(isFixed(La1.U23))
+        self.assertTrue(isFixed(La1.Uisoequiv))
+
+        # La3
+        La3 = scatterers[1]
+        self.assertTrue(La3.x.isConstrained())
+        self.assertTrue(La3.y.isConstrained())
+        self.assertTrue(isFixed(La3.z))
+        self.assertTrue(La3.U11.isConstrained())
+        self.assertTrue(La3.U22.isConstrained())
+        self.assertTrue(La3.U33.isConstrained())
+        self.assertTrue(La3.U12.isConstrained())
+        self.assertTrue(isFixed(La3.U13))
+        self.assertTrue(isFixed(La3.U23))
+        self.assertTrue(isFixed(La3.Uisoequiv))
+
+        # Mn1
+        Mn1 = scatterers[2]
+        self.assertTrue(isFixed(Mn1.x))
+        self.assertTrue(isFixed(Mn1.y))
+        self.assertTrue(isFixed(Mn1.z))
+        self.assertTrue(Mn1.U11.isVaried())
+        self.assertTrue(Mn1.U11 in sgpars)
+        self.assertTrue(Mn1.U22.isVaried())
+        self.assertTrue(Mn1.U22 in sgpars)
+        self.assertTrue(Mn1.U33.isVaried())
+        self.assertTrue(Mn1.U33 in sgpars)
+        self.assertTrue(Mn1.U12.isVaried())
+        self.assertTrue(Mn1.U12 in sgpars)
+        self.assertTrue(Mn1.U13.isVaried())
+        self.assertTrue(Mn1.U13 in sgpars)
+        self.assertTrue(Mn1.U23.isVaried())
+        self.assertTrue(Mn1.U23 in sgpars)
+        self.assertTrue(isFixed(Mn1.Uisoequiv))
+
+        # Mn3
+        Mn3 = scatterers[3]
+        self.assertTrue(isFixed(Mn3.x))
+        self.assertTrue(isFixed(Mn3.y))
+        self.assertTrue(isFixed(Mn3.z))
+        self.assertTrue(Mn3.U11.isConstrained())
+        self.assertTrue(Mn3.U22.isConstrained())
+        self.assertTrue(Mn3.U33.isConstrained())
+        self.assertTrue(Mn3.U12.isConstrained())
+        self.assertTrue(Mn3.U13.isConstrained())
+        self.assertTrue(Mn3.U23.isConstrained())
+        self.assertTrue(isFixed(Mn3.Uisoequiv))
+
+        # O1
+        O1 = scatterers[4]
+        self.assertTrue(O1.x.isVaried())
+        self.assertTrue(O1.x in sgpars)
+        self.assertTrue(O1.y.isVaried())
+        self.assertTrue(O1.y in sgpars)
+        self.assertTrue(isFixed(O1.z))
+        self.assertTrue(O1.U11.isVaried())
+        self.assertTrue(O1.U11 in sgpars)
+        self.assertTrue(O1.U22.isVaried())
+        self.assertTrue(O1.U22 in sgpars)
+        self.assertTrue(O1.U33.isVaried())
+        self.assertTrue(O1.U33 in sgpars)
+        self.assertTrue(O1.U12.isVaried())
+        self.assertTrue(O1.U12 in sgpars)
+        self.assertTrue(isFixed(O1.U13))
+        self.assertTrue(isFixed(O1.U23))
+        self.assertTrue(isFixed(O1.Uisoequiv))
+
+        # O3
+        O3 = scatterers[5]
+        self.assertTrue(O3.x.isConstrained())
+        self.assertTrue(O3.y.isConstrained())
+        self.assertTrue(isFixed(O3.z))
+        self.assertTrue(O3.U11.isConstrained())
+        self.assertTrue(O3.U22.isConstrained())
+        self.assertTrue(O3.U33.isConstrained())
+        self.assertTrue(O3.U12.isConstrained())
+        self.assertTrue(isFixed(O3.U13))
+        self.assertTrue(isFixed(O3.U23))
+        self.assertTrue(isFixed(O3.Uisoequiv))
+
+        # O5
+        O5 = scatterers[6]
+        self.assertTrue(O5.x.isVaried())
+        self.assertTrue(O5.x in sgpars)
+        self.assertTrue(O5.y.isVaried())
+        self.assertTrue(O5.y in sgpars)
+        self.assertTrue(O5.z.isVaried())
+        self.assertTrue(O5.z in sgpars)
+        self.assertTrue(O5.U11.isVaried())
+        self.assertTrue(O5.U11 in sgpars)
+        self.assertTrue(O5.U22.isVaried())
+        self.assertTrue(O5.U22 in sgpars)
+        self.assertTrue(O5.U33.isVaried())
+        self.assertTrue(O5.U33 in sgpars)
+        self.assertTrue(O5.U12.isVaried())
+        self.assertTrue(O5.U12 in sgpars)
+        self.assertTrue(O5.U13.isVaried())
+        self.assertTrue(O5.U13 in sgpars)
+        self.assertTrue(O5.U23.isVaried())
+        self.assertTrue(O5.U23 in sgpars)
+        self.assertTrue(isFixed(O5.Uisoequiv))
+
+        # O7
+        O7 = scatterers[7]
+        self.assertTrue(O7.x.isConstrained())
+        self.assertTrue(O7.y.isConstrained())
+        self.assertTrue(O7.z.isConstrained())
+        self.assertTrue(O7.U11.isConstrained())
+        self.assertTrue(O7.U22.isConstrained())
+        self.assertTrue(O7.U33.isConstrained())
+        self.assertTrue(O7.U12.isConstrained())
+        self.assertTrue(O7.U13.isConstrained())
+        self.assertTrue(O7.U23.isConstrained())
+        self.assertTrue(isFixed(O7.Uisoequiv))
+
+        # O9
+        O9 = scatterers[8]
+        self.assertTrue(O9.x.isConstrained())
+        self.assertTrue(O9.y.isConstrained())
+        self.assertTrue(O9.z.isConstrained())
+        self.assertTrue(O9.U11.isConstrained())
+        self.assertTrue(O9.U22.isConstrained())
+        self.assertTrue(O9.U33.isConstrained())
+        self.assertTrue(O9.U12.isConstrained())
+        self.assertTrue(O9.U13.isConstrained())
+        self.assertTrue(O9.U23.isConstrained())
+        self.assertTrue(isFixed(O9.Uisoequiv))
+
+        # O11
+        O11 = scatterers[9]
+        self.assertTrue(O11.x.isConstrained())
+        self.assertTrue(O11.y.isConstrained())
+        self.assertTrue(O11.z.isConstrained())
+        self.assertTrue(O11.U11.isConstrained())
+        self.assertTrue(O11.U22.isConstrained())
+        self.assertTrue(O11.U33.isConstrained())
+        self.assertTrue(O11.U12.isConstrained())
+        self.assertTrue(O11.U13.isConstrained())
+        self.assertTrue(O11.U23.isConstrained())
+        self.assertTrue(isFixed(O11.Uisoequiv))
+
+        return
+
 
 def makeLaMnO3_P1():
-    from diffpy.Structure import Structure
     stru = Structure()
     stru.readStr(lamno3stru)
     return stru
 
-def makeLaMnO3():
-    from pyobjcryst.crystal import Crystal 
-    from pyobjcryst.atom import Atom 
-    from pyobjcryst.molecule import Molecule
-    from pyobjcryst.scatteringpower import ScatteringPowerAtom
-
-    pi = numpy.pi
-    # It appears that ObjCryst only supports standard symbols
-    crystal = Crystal(5.486341, 5.619215, 7.628206, "P b n m")
-    crystal.SetName("LaMnO3")
-    # La1
-    sp = ScatteringPowerAtom("La1", "La")
-    sp.SetBiso(8*pi*pi*0.003)
-    atom = Atom(0.996096, 0.0321494, 0.25, "La1", sp)
-    crystal.AddScatteringPower(sp)
-    crystal.AddScatterer(atom)
-    # Mn1
-    sp = ScatteringPowerAtom("Mn1", "Mn")
-    sp.SetBiso(8*pi*pi*0.003)
-    atom = Atom(0, 0.5, 0, "Mn1", sp)
-    crystal.AddScatteringPower(sp)
-    crystal.AddScatterer(atom)
-    # O1
-    sp = ScatteringPowerAtom("O1", "O")
-    sp.SetBiso(8*pi*pi*0.003)
-    atom = Atom(0.0595746, 0.496164, 0.25, "O1", sp)
-    crystal.AddScatteringPower(sp)
-    crystal.AddScatterer(atom)
-    # O2
-    sp = ScatteringPowerAtom("O2", "O")
-    sp.SetBiso(8*pi*pi*0.003)
-    atom = Atom(0.720052, 0.289387, 0.0311126, "O2", sp)
-    crystal.AddScatteringPower(sp)
-    crystal.AddScatterer(atom)
-
-    return crystal
-
-class TestSGConstraints(unittest.TestCase):
-
-    def testConstrainSpaceGroup(self):
-        """Make sure that all Parameters are constrained properly.
-
-        This tests constrainSpaceGroup from
-        diffpy.srfit.structure.sgconstraints, which is performed automatically
-        when an ObjCrystCrystalParSet is created.
-        
-        """
-        pi = numpy.pi
-
-        occryst = makeLaMnO3()
-        stru = ObjCrystCrystalParSet(occryst.GetName(), occryst)
-        # Make sure we actually create the constraints
-        stru._constrainSpaceGroup()
-        # Make the space group parameters individually
-        stru.sgpars.latpars
-        stru.sgpars.xyzpars
-        stru.sgpars.adppars
-
-        # Check the orthorhombic lattice
-        l = stru.getLattice()
-        self.assertTrue( l.alpha.const )
-        self.assertTrue( l.beta.const )
-        self.assertTrue( l.gamma.const )
-        self.assertEquals(pi/2, l.alpha.getValue())
-        self.assertEquals(pi/2, l.beta.getValue())
-        self.assertEquals(pi/2, l.gamma.getValue())
-
-        self.assertFalse( l.a.const )
-        self.assertFalse( l.b.const )
-        self.assertFalse( l.c.const )
-        self.assertEquals(0, len(l._constraints))
-
-        # Now make sure the scatterers are constrained properly
-        scatterers = stru.getScatterers()
-        la = scatterers[0]
-        self.assertFalse(la.x.const)
-        self.assertFalse(la.y.const)
-        self.assertTrue(la.z.const)
-        self.assertEquals(0, len(la._constraints))
-
-        mn = scatterers[1]
-        self.assertTrue(mn.x.const)
-        self.assertTrue(mn.y.const)
-        self.assertTrue(mn.z.const)
-        self.assertEquals(0, len(mn._constraints))
-
-        o1 = scatterers[2]
-        self.assertFalse(o1.x.const)
-        self.assertFalse(o1.y.const)
-        self.assertTrue(o1.z.const)
-        self.assertEquals(0, len(o1._constraints))
-
-        o2 = scatterers[3]
-        self.assertFalse(o2.x.const)
-        self.assertFalse(o2.y.const)
-        self.assertFalse(o2.z.const)
-        self.assertEquals(0, len(o2._constraints))
-
-        # Make sure we can't constrain these
-        self.assertRaises(ValueError, mn.constrain, mn.x, "y")
-        self.assertRaises(ValueError, mn.constrain, mn.y, "z")
-        self.assertRaises(ValueError, mn.constrain, mn.z, "x")
-
-        # Nor can we make them into variables
-        from diffpy.srfit.fitbase.fitrecipe import FitRecipe
-        f = FitRecipe()
-        self.assertRaises(ValueError, f.addVar, mn.x)
-
-        return
-
-    def testConstrainAsSpaceGroup(self):
-        """Test the constrainAsSpaceGroup function."""
-        from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
-
-        stru = makeLaMnO3_P1()
-        parset = DiffpyStructureParSet("LaMnO3", stru)
-
-        sgpars = constrainAsSpaceGroup(parset, "P b n m",
-                scatterers = parset.getScatterers()[::2],
-                constrainadps = True)
-
-        # Make sure that the new parameters were created
-        for par in sgpars:
-            self.assertNotEquals(None, par)
-            self.assertNotEquals(None, par.getValue() )
-
-        # Test the unconstrained atoms
-        for scatterer in parset.getScatterers()[1::2]:
-            self.assertFalse(scatterer.x.const)
-            self.assertFalse(scatterer.y.const)
-            self.assertFalse(scatterer.z.const)
-            self.assertFalse(scatterer.U11.const)
-            self.assertFalse(scatterer.U22.const)
-            self.assertFalse(scatterer.U33.const)
-            self.assertFalse(scatterer.U12.const)
-            self.assertFalse(scatterer.U13.const)
-            self.assertFalse(scatterer.U23.const)
-            self.assertEquals(0, len(scatterer._constraints))
-
-        proxied = [p.par for p in sgpars]
-
-        def _consttest(par):
-            return par.const
-        def _constrainedtest(par):
-            return par.constrained
-        def _proxytest(par):
-            return par in proxied
-        def _alltests(par):
-            return _consttest(par) or _constrainedtest(par) or _proxytest(par)
-
-        for idx, scatterer in enumerate(parset.getScatterers()[::2]):
-            # Under this scheme, atom 6 is free to vary
-            test = False
-            for par in [scatterer.x, scatterer.y, scatterer.z]:
-                test |= _alltests(par)
-            self.assertTrue(test)
-
-            test = False
-            for par in [scatterer.U11, scatterer.U22, scatterer.U33,
-                    scatterer.U12, scatterer.U13, scatterer.U23]:
-                test |= _alltests(par)
-
-            self.assertTrue(test)
-
-        return
 
 lamno3stru =\
 """\

@@ -31,7 +31,12 @@ learn how to use and customize the various parts of SrFit.
 
 """
 
+from diffpy.srfit.adapters import *
+from diffpy.srfit.fit import *
+from diffpy.srfit.structure import *
+
 # package version
 from diffpy.srfit.version import __version__
 
+__id__ = "$Id$"
 # End of file

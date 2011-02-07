@@ -1,101 +1,291 @@
 #!/usr/bin/env python
-"""Tests for refinableobj module."""
 
 import unittest
 
-from diffpy.srfit.fitbase.parameter import *
+from utils import TestViewer
+from pickle import dumps, loads
+
+from diffpy.srfit.fit.parameters import *
+from diffpy.srfit.util import messages
 
 class TestParameter(unittest.TestCase):
 
-    def testSetValue(self):
-        """Test initialization."""
-        l = Parameter("l")
+    def testPar(self):
+        """Test the Par factory."""
+        l = Par("l", 3.14)
 
-        l.setValue(3.14)
-        self.assertAlmostEqual(3.14, l.getValue())
+        # pickle
+        dl = dumps(l)
+        lp = loads(dl)
+
+        self._testPar(l)
+        self._testPar(lp)
+        return
+
+    def testPars(self):
+        """Test the Pars factory."""
+        l, m = Pars(("l", 3.14), ("m", 3.14))
+        self.assertEqual("l", l.name)
+        self.assertEqual("m", m.name)
+
+        # pickle
+        dl = dumps(l)
+        lp = loads(dl)
+        self._testPar(l)
+        self._testPar(lp)
+        self._testPar(m)
+        return
+
+    def _testPar(self, l):
+        """Test the l factory."""
+        self.assertFalse(l.isVaried())
+        l.vary()
+        self.assertTrue(l.isVaried())
+        self.assertTrue( isinstance(l, Parameter) )
+        l.fix()
+        self.assertFalse(l.isVaried())
+        return
+
+    def testVar(self):
+        """Test the Var factory."""
+        l = Var("l", 3.14)
+
+        # pickle
+        dl = dumps(l)
+        lp = loads(dl)
+
+        self._testVar(l)
+        self._testVar(lp)
+        return
+
+    def testPars(self):
+        """Test the Vars factory."""
+        l, m = Vars(("l", 3.14), ("m", 3.14))
+        self.assertEqual("l", l.name)
+        self.assertEqual("m", m.name)
+
+        # pickle
+        dl = dumps(l)
+        lp = loads(dl)
+        self._testVar(l)
+        self._testVar(lp)
+        self._testVar(m)
+        return
+
+    def _testVar(self, l):
+        """Test the Var factory."""
+        self.assertTrue(l.isVaried())
+        l.vary()
+        self.assertTrue(l.isVaried())
+        self.assertTrue( isinstance(l, Parameter) )
+        l.fix()
+        self.assertFalse(l.isVaried())
+        l.vary()
+        return
+
+    def testFixed(self):
+        """Test the Fixed factory."""
+        l = Fixed("l", 3.14)
+
+        # pickle
+        dl = dumps(l)
+        lp = loads(dl)
+
+        self._testFixed(l)
+        self._testFixed(lp)
+        return
+
+    def _testFixed(self, l):
+        """Test the Fixed factory."""
+        self.assertFalse(l.isVaried())
+        self.assertRaises(AttributeError, l.vary)
+        self.assertFalse(l.isVaried())
+        l.fix()
+        self.assertFalse(l.isVaried())
+        self.assertTrue( isinstance(l, Parameter) )
+        return
+
+    def testValue(self):
+        """Test value setting and getting."""
+        l = Parameter("l")
+        viewer = TestViewer()
+        l._addViewer(viewer)
+
+        dl = dumps((l, viewer))
+        lp, viewerp = loads(dl)
+
+        self._testValue(l, viewer)
+        self._testValue(lp, viewerp)
+        return
+
+    def _testValue(self, l, viewer):
+        """Test value setting and getting."""
+
+        l.set(3.14)
+        self.assertAlmostEqual(3.14, l.get())
+        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
+        viewer.msg = None
+        l.set(3.14)
+        self.assertTrue(None is viewer.msg)
 
         # Try array
         import numpy
         x = numpy.arange(0, 10, 0.1)
-        l.setValue(x)
-        self.assertTrue( l.getValue() is x )
+        l.set(x)
+        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
+        viewer.msg = None
+        self.assertTrue( l.get() is x )
         self.assertTrue( l.value is x )
 
         # Change the array
         y = numpy.arange(0, 10, 0.5)
         l.value = y
-        self.assertTrue( l.getValue() is y )
-        self.assertTrue( l.value is y )
+        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
+        viewer.msg = None
+        self.assertTrue( l.get() is y )
 
         # Back to scalar
-        l.setValue(1.01)
-        self.assertAlmostEqual(1.01, l.getValue())
+        l.set(1.01)
+        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
         self.assertAlmostEqual(1.01, l.value)
         return
 
-class TestParameterProxy(unittest.TestCase):
+    def testConstrain(self):
+        """Test constraints."""
+        l = Parameter("l", 3)
+        m = Parameter("m", 4)
+        self.assertFalse( l.isConstrained() )
+        self.assertFalse( m.isConstrained() )
+        self.assertTrue(l not in m._viewers)
+        self.assertAlmostEqual(3, l.value)
+        l.constrain(m)
 
-    def testProxy(self):
-        """Test the ParameterProxy class."""
-        l = Parameter("l", 3.14)
+        # Pickle
+        dl = dumps((l, m))
+        lp, mp = loads(dl)
 
-        # Try Accessor adaptation
-        la = ParameterProxy("l2", l)
-
-        self.assertEqual("l2", la.name)
-        self.assertEqual(l.getValue(), la.getValue())
-
-        # Change the parameter
-        l.value = 2.3
-        self.assertEqual(l.getValue(), la.getValue())
-        self.assertEqual(l.value, la.value)
-
-        # Change the proxy
-        la.value = 3.2
-        self.assertEqual(l.getValue(), la.getValue())
-        self.assertEqual(l.value, la.value)
-
+        self._testConstrain(l, m)
+        self._testConstrain(lp, mp)
         return
 
-class TestParameterAdapter(unittest.TestCase):
+    def _testConstrain(self, l, m):
+        """Test constraints."""
+        self.assertTrue( l.isConstrained() )
+        self.assertTrue(l._constraint is m)
+        self.assertTrue(l in m._viewers)
+        self.assertAlmostEqual(4, l.value)
 
-    def testWrapper(self):
-        """Test the adapter.
+        m.value = 5
+        self.assertAlmostEqual(5, m.value)
+        self.assertAlmostEqual(5, l.value)
 
-        This adapts a Parameter to the Parameter interface. :)
+        self.assertRaises(AttributeError, l.set, 1)
+
+        l.unconstrain()
+        self.assertFalse( l.isConstrained() )
+        self.assertTrue(l not in m._viewers)
+        self.assertAlmostEqual(5, l.value)
+
+        l.value = 9
+        self.assertAlmostEqual(9, l.value)
+
+        # check for circular constraint
+        p = Parameter("p", 5)
+        p.constrain(l)
+        self.assertRaises(AttributeError, l.constrain, p * m)
+        pass
+
+    def testVary(self):
+        """Test parameter varying."""
+        l = Parameter("l")
+
+        # Pickle
+        dl = dumps(l)
+        lp = loads(dl)
+
+        self._testVary(l)
+        self._testVary(lp)
+        return
+
+    def _testVary(self, l):
+        """Test parameter varying."""
+        self.assertFalse(l.isVaried())
+
+        viewer = TestViewer()
+        l._addViewer(viewer)
+        self.assertTrue(viewer in l._viewers)
+        self.assertTrue(viewer.msg is None)
+
+        l.vary()
+        self.assertTrue(l.isVaried())
+        self.assertTrue(viewer.msg is messages.VARY_CHANGED)
+
+        viewer.msg = None
+        l.vary()
+        self.assertTrue(l.isVaried())
+        self.assertFalse(viewer.msg is messages.VARY_CHANGED)
+
+        l.vary(3)
+        self.assertAlmostEqual(3, l.value)
+
+        viewer.msg = None
+        l.fix()
+        self.assertFalse(l.isVaried())
+        self.assertTrue(viewer.msg is messages.VARY_CHANGED)
+
+        l.fix(4)
+        self.assertAlmostEqual(4, l.value)
+        return
+
+    def test_respond(self):
+        """Test _respond.
+
+        Behavior: The behavior depends on the message.
+
+        VALUE_CHANGED       --  Set _value to None if we are constrained and
+                                notify viewers.
+        VARY_CHANGED        --  Notify viewers.
+
         """
-        l = Parameter("l", 3.14)
+        viewer = TestViewer()
+        l = Parameter("l", 1)
+        m = Parameter("m", 2)
+        l._addViewer(viewer)
+        self.assertTrue(viewer.msg is None)
 
-        # Try Accessor adaptation
-        la = ParameterAdapter("l", l, getter = Parameter.getValue, setter =
-                Parameter.setValue)
+        # pickle
+        dl = dumps((l, m, viewer))
+        lp, mp, viewerp = loads(dl)
 
-        self.assertEqual(l.name, la.name)
-        self.assertEqual(l.getValue(), la.getValue())
+        self._test_respond(l, m, viewer)
+        self._test_respond(lp, mp, viewerp)
+        return
 
-        # Change the parameter
-        l.setValue(2.3)
-        self.assertEqual(l.getValue(), la.getValue())
+    def _test_respond(self, l, m, viewer):
+        """Test _respond.
 
-        # Change the adapter
-        la.setValue(3.2)
-        self.assertEqual(l.getValue(), la.getValue())
+        Behavior: The behavior depends on the message.
 
-        # Try Attribute adaptation
-        la = ParameterAdapter("l", l, attr = "value")
+        VALUE_CHANGED       --  Set _value to None if we are constrained and
+                                notify viewers.
+        VARY_CHANGED        --  Notify viewers.
 
-        self.assertEqual(l.name, la.name)
-        self.assertEqual("value", la.attr)
-        self.assertEqual(l.getValue(), la.getValue())
+        """
 
-        # Change the parameter
-        l.setValue(2.3)
-        self.assertEqual(l.getValue(), la.getValue())
+        l._respond(messages.VARY_CHANGED)
+        self.assertTrue(viewer.msg is messages.VARY_CHANGED)
+        viewer.msg = None
 
-        # Change the adapter
-        la.setValue(3.2)
-        self.assertEqual(l.getValue(), la.getValue())
+        val = l._value
+        l._respond(messages.VALUE_CHANGED)
+        self.assertTrue(l._value is val)
+        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
+        viewer.msg = None
 
+        l.constrain(m)
+        l._respond(messages.VALUE_CHANGED)
+        self.assertTrue(l._value is None)
+        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
         return
 
 if __name__ == "__main__":

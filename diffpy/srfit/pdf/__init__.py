@@ -17,9 +17,11 @@
 
 """
 
-from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
-from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
-from diffpy.srfit.pdf.pdfcontribution import PDFContribution
-from diffpy.srfit.pdf.pdfparser import PDFParser
+from diffpy.srfit.pdf.diffpysrrealadapters import *
+from diffpy.srfit.pdf.pdfparser import *
+from diffpy.srfit.pdf.characteristicfunctions import *
+# Make sure structure adapters are registered
+import diffpy.srfit.structure
 
+__id__ = "$Id$"
 # End of file

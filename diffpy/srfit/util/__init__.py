@@ -12,7 +12,9 @@
 #
 ########################################################################
 
-
 """Utilities used throughout SrFit."""
 
+from diffpy.srfit.util.utilmod import *
+
+__id__ = "$Id$"
 # End of file

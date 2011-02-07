@@ -11,21 +11,18 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Form factors (characteristic functions) used in PDF nanoshape fitting.
+"""Characteristic functions (nanoparticle form factors) used in PDF nanoshape
+fitting.
 
 These are used to calculate the attenuation of the PDF due to a finite size.
 For a crystal-like nanoparticle, one can calculate the PDF via
-Gnano(r) = f(r) Gcryst(r),
+Gnano(r) = f(r) * Gcryst(r),
 where f(r) is the nanoparticle characteristic function and
 Gcryst(f) is the crystal PDF.
 
-These functions are meant to be imported and added to a FitContribution using
-the 'registerFunction' method of that class.
-
 """
 
-__all__ = ["sphericalCF", "spheroidalCF", "spheroidalCF2",
-"lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASCF"]
+__all__ = ["sphericalCF", "spheroidalCF", "spheroidalCF2", "lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "sasCF"]
 
 import numpy
 from numpy import pi, sqrt, log, exp, log2, ceil, sign
@@ -33,10 +30,11 @@ from numpy import arctan as atan
 from numpy import arctanh as atanh
 from numpy.fft import ifft, fftfreq
 from scipy.special import erf
+erfc = lambda x: 1.0-erf(x)
 
-from diffpy.srfit.fitbase.calculator import Calculator
+from diffpy.srfit.adapters import adapt
 
-def sphericalCF(r, psize):
+def _sphericalCF(r, psize):
     """Spherical nanoparticle characteristic function.
     
     r       --  distance of interaction
@@ -54,7 +52,9 @@ def sphericalCF(r, psize):
         f += g
     return f
 
-def spheroidalCF(r, erad, prad):
+sphericalCF = adapt(_sphericalCF, "sphericalCF")
+
+def _spheroidalCF(r, erad, prad):
     """Spheroidal characteristic function specified using radii.
 
     Spheroid with radii (erad, erad, prad)
@@ -71,7 +71,9 @@ def spheroidalCF(r, erad, prad):
     pelpt = prad / erad
     return spheroidalCF2(r, psize, pelpt)
 
-def spheroidalCF2(r, psize, axrat):
+spheroidalCF = adapt(_spheroidalCF, "spheroidalCF")
+
+def _spheroidalCF2(r, psize, axrat):
     """Spheroidal nanoparticle characteristic function.
 
     Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)
@@ -137,8 +139,9 @@ def spheroidalCF2(r, psize, axrat):
 
     return f
 
+spheroidalCF2 = adapt(_spheroidalCF2, "spheroidalCF2")
 
-def lognormalSphericalCF(r, psize, psig):
+def _lognormalSphericalCF(r, psize, psig):
     """Spherical nanoparticle characteristic function with lognormal size
     distribution.
     
@@ -167,7 +170,6 @@ def lognormalSphericalCF(r, psize, psig):
     if psize <= 0: return numpy.zeros_like(r)
     if psig <= 0: return sphericalCF(r, psize)
 
-    erfc = lambda x: 1.0-erf(x)
 
     sqrt2 = sqrt(2.0)
     s = sqrt(log(psig*psig/(1.0*psize*psize) + 1))
@@ -178,7 +180,9 @@ def lognormalSphericalCF(r, psize, psig):
            + 0.25*r*r*r*erfc((-mu+log(r))/(sqrt2*s))*exp(-3*mu-4.5*s*s) \
            - 0.75*r*erfc((-mu-2*s*s+log(r))/(sqrt2*s))*exp(-mu-2.5*s*s)
 
-def sheetCF(r, sthick):
+lognormalSphericalCF = adapt(_lognormalSphericalCF, "lognormalSphericalCF")
+
+def _sheetCF(r, sthick):
     """Nanosheet characteristic function.
     
     r       --  distance of interaction
@@ -194,7 +198,9 @@ def sheetCF(r, sthick):
     f[sel] = 1 - f[sel]
     return f
 
-def shellCF(r, radius, thickness):
+sheetCF = adapt(_sheetCF, "sheetCF")
+
+def _shellCF(r, radius, thickness):
     """Spherical shell characteristic function.
 
     radius      --  Inner radius
@@ -209,7 +215,9 @@ def shellCF(r, radius, thickness):
     a = 1.0*radius + d/2
     return shellCF2(r, a, d)
 
-def shellCF2(r, a, delta):
+shellCF = adapt(_shellCF, "shellCF")
+
+def _shellCF2(r, a, delta):
     """Spherical shell characteristic function.
 
     a       --  Central radius
@@ -240,102 +248,68 @@ def shellCF2(r, a, delta):
         f[0] = 1
     return f
 
+shellCF2 = adapt(_shellCF2, "shellCF2")
 
-class SASCF(Calculator):
-    """Calculator class for characteristic functions from sans-models.
+def _sasCF(r, sasmodel):
+    """Calculate characteristic functions from sans-model.
 
-    This class wraps a sans.models.BaseModel to calculate I(Q) related to
+    r           --  distance of interaction
+    sasmodel    --  A BaseModel object from sans.models.
+
+    This uses sasmodel calculate I(Q) related to
     nanoparticle shape. This I(Q) is inverted to f(r) according to:
     f(r) = 1 / (4 pi r) * SINFT(I(Q)),
     where "SINFT" represents the sine Fourier transform.
 
-    Attributes:
-    _model      --  BaseModel object this adapts.
-
-    Managed Parameters:
-    These depend on the parameters of the BaseModel object held by _model. They
-    are created from the 'params' attribute of the BaseModel. If a dispersion
-    is set for the BaseModel, the dispersion "width" will be accessible under
-    "<parname>_width", where <parname> is the name a parameter adjusted by
-    dispersion.
-
     """
 
-    def __init__(self, name, model):
-        """Initialize the generator.
+    # Determine q-values.
+    # We want very fine r-spacing so we can properly normalize f(r). This
+    # equates to having a large qmax so that the Fourier transform is
+    # finely spaced. We also want the calculation to be fast, so we pick
+    # qmax such that the number of q-points is a power of 2. This allows us
+    # to use the fft. 
+    # 
+    # The initial dr is somewhat arbitrary, but using dr = 0.01 allows for
+    # the f(r) calculated from a particle of diameter 50, over r =
+    # arange(1, 60, 0.1) to agree with the sphericalCF with Rw < 1e-4%.
+    #
+    # We also have to make a q-spacing small enough to compute out to at
+    # least the size of the signal. 
+    dr = min(0.01, r[1] - r[0])
+    ed = 2 * model.calculate_ER()
+    rmax = max(ed, 2 * r[-1])
+    dq = pi / rmax
+    qmax = pi / dr
+    numpoints = int(2**(ceil(log2(qmax/dq))))
+    qmax = dq * numpoints
 
-        name    --  A name for the SASCF
-        model   --  SASModel object this adapts.
-        
-        """
-        Calculator.__init__(self, name)
+    # Calculate F(q) = q * I(q) from model
+    q = fftfreq(int(qmax/dq)) * qmax
+    fq = q * model.evalDistribution(q)
 
-        self._model = model
+    # Calculate g(r) and the effective r-points
+    rp = fftfreq(numpoints) * 2 * pi / dq
+    # Note sine transform = imaginary part of ifft
+    gr = ifft(fq).imag
 
-        from diffpy.srfit.sas.sasparameter import SASParameter
-        # Wrap normal parameters
-        for parname in model.params:
-            par = SASParameter(parname, model)
-            self.addParameter(par)
+    # Calculate full-fr for normalization
+    frp = gr / rp
 
-        # Wrap dispersion parameters
-        for parname in model.dispersion:
-            name = parname + "_width"
-            parname += ".width"
-            par = SASParameter(name, model, parname)
-            self.addParameter(par)
+    # Inerpolate onto requested grid
+    fr = numpy.interp(r, rp, gr) / r
 
-        return
+    # Normalize. We approximate fr[0] by using the fact that f(r) is linear
+    # at low r. By definition, fr[0] should equal 1.
+    fr0 = 2*frp[2] - frp[1]
+    fr /= fr0
 
-    def __call__(self, r):
-        """Calculate the characteristic function from the transform of the BaseModel."""
+    # Fix possible divide-by-zero issue
+    if r[0] == 0:
+        fr[0] = 1
 
-        # Determine q-values.
-        # We want very fine r-spacing so we can properly normalize f(r). This
-        # equates to having a large qmax so that the Fourier transform is
-        # finely spaced. We also want the calculation to be fast, so we pick
-        # qmax such that the number of q-points is a power of 2. This allows us
-        # to use the fft. 
-        # 
-        # The initial dr is somewhat arbitrary, but using dr = 0.01 allows for
-        # the f(r) calculated from a particle of diameter 50, over r =
-        # arange(1, 60, 0.1) to agree with the sphericalCF with Rw < 1e-4%.
-        #
-        # We also have to make a q-spacing small enough to compute out to at
-        # least the size of the signal. 
-        dr = min(0.01, r[1] - r[0])
-        ed = 2 * self._model.calculate_ER()
-        rmax = max(ed, 2 * r[-1])
-        dq = pi / rmax
-        qmax = pi / dr
-        numpoints = int(2**(ceil(log2(qmax/dq))))
-        qmax = dq * numpoints
+    return fr
 
-        # Calculate F(q) = q * I(q) from model
-        q = fftfreq(int(qmax/dq)) * qmax
-        fq = q * self._model.evalDistribution(q)
-
-        # Calculate g(r) and the effective r-points
-        rp = fftfreq(numpoints) * 2 * pi / dq
-        # Note sine transform = imaginary part of ifft
-        gr = ifft(fq).imag
-
-        # Calculate full-fr for normalization
-        frp = gr / rp
-
-        # Inerpolate onto requested grid
-        fr = numpy.interp(r, rp, gr) / r
-
-        # Normalize. We approximate fr[0] by using the fact that f(r) is linear
-        # at low r. By definition, fr[0] should equal 1.
-        fr0 = 2*frp[2] - frp[1]
-        fr /= fr0
-
-        # Fix potential divide-by-zero issue
-        if r[0] == 0:
-            fr[0] = 1
-
-        return fr
-
+sasCF = adapt(_sasCF, "sasCF")
 
 # End of file

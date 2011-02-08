@@ -5,7 +5,7 @@ __all__ = []
 import numpy
 import sys
 
-from diffpy.srfit.adapters.nodes import UnboundOperator
+from diffpy.srfit.adapters.adaptersmod import UnboundOperator
 
 def __adaptUFuncs():
     """Adapt all ufuncs from numpy."""
@@ -29,3 +29,6 @@ __all__.append("sum")
 
 concatenate = UnboundOperator("concatenate", numpy.concatenate)
 __all__.append("concatenate")
+
+interp = UnboundOperator("interp", numpy.interp)
+__all__.append("interp")

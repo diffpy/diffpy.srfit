@@ -2,7 +2,6 @@
 import unittest
 
 import diffpy.srfit.adapters.adaptersmod as adapters
-from diffpy.srfit.adapters import nodes
 from diffpy.srfit.structure import *
 adapt = adapters.adapt
 
@@ -19,7 +18,7 @@ class TestAdapt(unittest.TestCase):
         # Test adapter types
         def test(a, b):
             return a+b
-        UnboundOperator = nodes.UnboundOperator
+        UnboundOperator = adapters.UnboundOperator
         self.assertTrue(isinstance(adapt(test), UnboundOperator))
         self.assertTrue(isinstance(adapt(lambda z: z), UnboundOperator))
         from numpy import sin, vectorize, arange, array

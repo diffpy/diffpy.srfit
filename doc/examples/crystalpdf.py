@@ -3,7 +3,7 @@
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
-#                   (c) 2009 Trustees of the Columbia University
+#                   (c) 2011 Trustees of the Columbia University
 #                   in the City of New York.  All rights reserved.
 #
 # File coded by:    Chris Farrow
@@ -12,160 +12,113 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of a PDF refinement using diffpy.Structure and PDFGenerator.
-
-This is example of fitting the fcc nickel structure to measured PDF data. The
-purpose of this example is to demonstrate and describe the classes in
-configuraiton options involved with setting up a fit in this way. The main
-benefit of using SrFit for PDF refinement is the flexibility of modifying the
-PDF profile function for specific needs, adding restraints to a fit and the
-ability to simultaneously refine a structure to PDF data and data from other
-sources. This example demonstrates only the basic configuration.
-
-"""
-
-import numpy
-
 from diffpy.Structure import Structure
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
+from diffpy.srreal.pdfcalculator import PDFCalculator
+from diffpy.srfit.pdf import PDFParser
+from diffpy.srfit import *
 
-from gaussianrecipe import scipyOptimize
-
-####### Example Code
-
-def makeRecipe(ciffile, datname):
+def main(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profile
-    # This will be used to store the observed and calculated PDF profile.
-    profile = Profile()
-
-    # Load data and add it to the Profile. Unlike in other examples, we use a
-    # class (PDFParser) to help us load the data. This class will read the data
-    # and relevant metadata from a two- to four-column data file generated
-    # with PDFGetX2 or PDFGetN. The metadata will be passed to the PDFGenerator
-    # when they are associated in the FitContribution, which saves some
-    # configuration steps.
+    # Load the data. The PDFParser simplifies this task. In short, there is no
+    # reason to have both a PDFParser and a Profile in this example. In the
+    # future, Parsers will inherit from Profile so we can save a few lines of
+    # code here.
     parser = PDFParser()
     parser.parseFile(datname)
-    profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax = 20)
+    profile = Profile()
+    profile.load(parser)
+    profile.setRange(xmax = 20)
+    r, gr, dgr = profile
+    r = r.get()
 
-    ## The ProfileGenerator
-    # The PDFGenerator is for configuring and calculating a PDF profile. Here,
-    # we want to refine a Structure object from diffpy.Structure. We tell the
-    # PDFGenerator that with the 'setStructure' method. All other configuration
-    # options will be inferred from the metadata that is read by the PDFParser.
-    # In particular, this will set the scattering type (x-ray or neutron), the
-    # Qmax value, as well as initial values for the non-structural Parameters.
-    generator = PDFGenerator("G")
-    stru = Structure()
-    stru.read(ciffile)
-    generator.setStructure(stru)
+    # Create a PDFCalculator. We can use information from the metadata loaded
+    # from file to initialize it. We can't pass the whole meta dictionary since
+    # it contains entries that PDFCalculator can't use. In addition, passing a
+    # non-zero qmin value to PDFCalculator cretes a "bad" PDF.
+    calc = PDFCalculator(qmax = profile.meta["qmax"])
+    calc.setScatteringFactorTableByType(profile.meta["stype"])
+    calc.rmin = r[0]
+    calc.rstep = r[1] - r[0]
+    calc.rmax = r[-1] + 0.5 * calc.rstep
+    r = adapt(r, "r")
+
+    # Now we adapt the PDFCalculator. There is no special code written to do
+    # this. The default ContainerAdapter is being used to wrap the calculator.
+    # I will probably write factor functions that streamline the creation of
+    # the calculator and adapter.
+    g = adapt(calc)
+
+    # Create the structure and adapt it. Again, this could be simplified with a
+    # factory function.
+    stru = Structure(filename = ciffile)
+    for a in stru:
+        a.Uisoequiv = 0.005
+    s = adapt(stru, "nickel")
     
-    ## The FitContribution
-    # Here we associate the Profile and ProfileGenerator, as has been done
-    # before. 
-    contribution = FitContribution("nickel")
-    contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "r")
+    # Here retrieve the parameters that we want to refine. We write the
+    # space group constraints manually. 
+    a = s.lattice.a
+    a.vary()
+    s.lattice.b.constrain(a)
+    s.lattice.c.constrain(a)
 
-    ## Make the FitRecipe and add the FitContribution.
-    recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    # Retrive the independent Uisoequiv parameter. Note that mutators, such as
+    # 'vary' return 'self' so that they can be chained.
+    Uisoequiv = s[0].Uisoequiv.vary(0.005)
+    for atom in s[1:]:
+        atom.Uisoequiv.constrain(Uisoequiv)
 
-    ## Configure the fit variables
+    # Now vary parameters from the calculator.
+    g.scale.vary(1)
+    g.qdamp.vary(0.01)
+    g.delta2.vary(5)
 
-    # The PDFGenerator class holds the ParameterSet associated with the
-    # Structure passed above in a data member named "phase". (We could have
-    # given the ParameterSet a name other than "phase" when we added it to the
-    # PDFGenerator.) The ParameterSet in this case is a StructureParameterSet,
-    # the documentation for which is found in the
-    # diffpy.srfit.structure.diffpystructure module.
-    phase = generator.phase
+    # Create the fit equation.
+    out = g(s)
+    # FIXME - calculation gets screwed up somehow. Changes in the parameters
+    # are not seen at any level deeper than interp.
+    assert(out in s._viewers)
+    rcalc, gcalc = out
+    assert(rcalc in out._viewers)
+    assert(out in rcalc._viewers)
+    assert(gcalc in out._viewers)
+    assert(out in gcalc._viewers)
+    rcalc.rename("rcalc")
+    gcalc.rename("gcalc")
+    fiteq = interp(r, rcalc, gcalc)
+    assert(fiteq in r._viewers)
+    assert(fiteq in rcalc._viewers)
+    assert(fiteq in gcalc._viewers)
+    # Create the residual equation. Note that 'chi' creates a vector residual
+    # that can be dotted into itself to generate 'chi^2'.
+    reseq = chi(fiteq, gr, dgr)
+    # Create the residual object. This step and the previous can be performed
+    # at once with the 'reschi2' function.
+    res = residual(reseq)
 
-    # We start by constraining the phase to the known space group. We could do
-    # this by hand, but there is a method in diffpy.srfit.structure named
-    # 'constrainAsSpaceGroup' for this purpose. The constraints will by default
-    # be applied to the sites, the lattice and to the ADPs. See the method
-    # documentation for more details. The 'constrainAsSpaceGroup' method may
-    # create new Parameters, which it returns in a SpaceGroupParameters object.
-    from diffpy.srfit.structure import constrainAsSpaceGroup
-    sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
+    print res.names, res.values
 
-    # The SpaceGroupParameters object returned by 'constrainAsSpaceGroup' holds
-    # the free Parameters allowed by the space group constraints. Once a
-    # structure is constrained, we need (should) only use the Parameters
-    # provided in the SpaceGroupParameters, as the relevant structure
-    # Parameters are constrained to these.
-    #
-    # We know that the space group does not allow for any free sites because
-    # each atom is on a special position. There is one free (cubic) lattice
-    # parameter and one free (isotropic) ADP. We can access these Parameters in
-    # the xyzpars, latpars, and adppars members of the SpaceGroupParameters
-    # object.
-    for par in sgpars.latpars:
-        recipe.addVar(par)
-    for par in sgpars.adppars:
-        recipe.addVar(par, 0.005)
+    # Optimize. 
+    from scipy.optimize import leastsq
+    leastsq(res.vec, res.values)
 
-    # We now select non-structural parameters to refine.
-    # This controls the scaling of the PDF.
-    recipe.addVar(generator.scale, 1)
-    # This is a peak-damping resolution term.
-    recipe.addVar(generator.qdamp, 0.01)
-    # This is a vibrational correlation term that sharpens peaks at low-r.
-    recipe.addVar(generator.delta2, 5)
+    # Get the results
+    results = FitResults(res)
+    results.show()
 
-    # Give the recipe away so it can be used!
-    return recipe
-
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-
-    # All this should be pretty familiar by now.
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
-    r = recipe.nickel.profile.x
-
-    g = recipe.nickel.profile.y
-    gcalc = recipe.nickel.profile.ycalc
-    diffzero = -0.8 * max(g) * numpy.ones_like(g)
-    diff = g - gcalc + diffzero
-
-    import pylab
-    pylab.plot(r,g,'bo',label="G(r) Data")
-    pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,diff,'g-',label="G(r) diff")
-    pylab.plot(r,diffzero,'k-')
-    pylab.xlabel("$r (\AA)$")
-    pylab.ylabel("$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
+    # and plot 
+    from pylab import plot, show
+    # Note that 'value' is a property for 'get' and 'set'.
+    plot(r.get(), gr.get(), 'bo')
+    plot(r.get(), fiteq.get(), 'r-')
+    show()
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
     ciffile = "data/ni.cif"
     data = "data/ni-q27r100-neutron.gr"
-
-    # Make the recipe
-    recipe = makeRecipe(ciffile, data)
-
-    # Optimize
-    scipyOptimize(recipe)
-
-    # Generate and print the FitResults
-    res = FitResults(recipe)
-    res.printResults()
-
-    # Plot!
-    plotResults(recipe)
+    main(ciffile, data)
 
 # End of file

@@ -115,9 +115,35 @@ class TestContainerAdapter(unittest.TestCase):
         self.assertEquals(func.value, 1+2+3+4)
         return
 
-    # FIXME - test for refining functions of containers where the constraints
-    # are hiding underneath. This is analogous to refining structure parameters
-    # but only passing the structure itself to the calculator.
+    def test__call__(self):
+        """Test __call__ """
+        alist = self.alist
+        v = Parameter("v", 4)
+        f = alist(v)
+        self.assertTrue(alist in f._viewers)
+        self.assertTrue(f in alist._viewers)
+        self.assertTrue(v in f._args)
+        self.assertEqual({}, f._kw)
+        self.assertTrue(f._isfunction)
+        self.assertEqual((1,(1,2,2)), f.value)
+        # Try to reference a value from the output
+        p1 = f[0]
+        self.assertTrue(f in p1._viewers)
+        self.assertTrue(p1 in f._viewers)
+        self.assertEqual(1, p1.value)
+        alist.a.value = 3
+        self.assertEqual((3,(1,2,2)), f.value)
+        self.assertEqual(3, p1.value)
+        p2 = f[1][2]
+        self.assertEqual(2, p2.value)
+        alist.b.value = 9
+        self.assertEqual(9, p2.value)
+        return
+
+
+    # Test for refining functions of containers where the constraints are
+    # hiding underneath. This is analogous to refining structure parameters but
+    # only passing the structure itself to the calculator.
     def testHiddenConstraint(self):
         """Test a hidden constraint."""
         class TestClass1(object):
@@ -388,6 +414,7 @@ class TestContainerAdapter(unittest.TestCase):
         # sure that they compute to the same values
         self.assertEqual(func2.value, alist2.calc(d2).value)
         return
+
 
 if __name__ == "__main__":
 

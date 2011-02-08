@@ -2,6 +2,7 @@
 import unittest
 
 from diffpy.srfit.adapters import nodes
+from diffpy.srfit.adapters.adaptersmod import UnboundOperator
 
 class TestUnboundOperator(unittest.TestCase):
     """Test UnboundOperator nodes."""
@@ -9,13 +10,13 @@ class TestUnboundOperator(unittest.TestCase):
     def testUnboundOperator(self):
         """Test unbound operator."""
 
-        uop = nodes.UnboundOperator("f", op)
+        uop = UnboundOperator("f", op)
 
         p1 = nodes.Parameter("a", 1.0)
         p2 = nodes.Parameter("b", 2.0)
 
         op1 = uop(p1, p2)
-        self.assertTrue(uop is op1._unbound)
+        self.assertTrue(uop is op1._obj)
         self.assertTrue( p1 in op1._args )
         self.assertTrue( p2 in op1._args )
         self.assertTrue( {} == op1._kw )
@@ -46,13 +47,13 @@ class TestUnboundOperator(unittest.TestCase):
     def testUnboundOperatorKW(self):
         """Test unbound operator with keywords."""
 
-        uop = nodes.UnboundOperator("f", op)
+        uop = UnboundOperator("f", op)
 
         p1 = nodes.Parameter("a", 1.0)
         p2 = nodes.Parameter("b", 2.0)
 
         op1 = uop(p1, b = p2)
-        self.assertTrue(uop is op1._unbound)
+        self.assertTrue(uop is op1._obj)
         self.assertTrue( p1 in op1._args )
         self.assertTrue( p2 in op1._kw.values() )
         self.assertTrue( op1 in p1._viewers )
@@ -74,13 +75,13 @@ class TestUnboundOperator(unittest.TestCase):
     def testMethod(self):
         """Test unbound operator on a method."""
 
-        uop = nodes.UnboundOperator("f", mtest.f)
+        uop = UnboundOperator("f", mtest.f)
 
         p1 = nodes.Parameter("a", 1.0)
         p2 = nodes.Parameter("b", 2.0)
 
         op1 = uop(p1, p2)
-        self.assertTrue(uop is op1._unbound)
+        self.assertTrue(uop is op1._obj)
         self.assertTrue( p1 in op1._args )
         self.assertTrue( p2 in op1._args )
         self.assertTrue( {} == op1._kw )
@@ -110,13 +111,13 @@ class TestUnboundOperator(unittest.TestCase):
     def testBuiltin(self):
         """Test unbound operator on a built-in function."""
 
-        uop = nodes.UnboundOperator("f", max)
+        uop = UnboundOperator("f", max)
 
         p1 = nodes.Parameter("a", 1.0)
         p2 = nodes.Parameter("b", 2.0)
 
         op1 = uop(p1, p2)
-        self.assertTrue(uop is op1._unbound)
+        self.assertTrue(uop is op1._obj)
         self.assertTrue( p1 in op1._args )
         self.assertTrue( p2 in op1._args )
         self.assertTrue( {} == op1._kw )
@@ -133,9 +134,10 @@ class TestUnboundOperator(unittest.TestCase):
         op3 = uop(1.0, 4.0)
         self.assertAlmostEqual(4, op3.value)
 
-        # Skip these. We know they fail for built-in functions.
-        import warnings
-        warnings.warn("skipping arg checks for built-in functions")
+        # Skip these. We know they fail for built-in functions. The only way to
+        # check these is to evaluate the function. However, the arguments may
+        # not be ready for evaluation when we create a function, so we really
+        # can't do anything.
         return
         self.assertRaises(TypeError, uop, p1)
         self.assertRaises(TypeError, uop, p1, p2, p2)
@@ -151,13 +153,13 @@ class TestUnboundOperator(unittest.TestCase):
     def testFunctor(self):
         """Test unbound operator on a built-in function."""
 
-        uop = nodes.UnboundOperator("f", ftest)
+        uop = UnboundOperator("f", ftest)
 
         p1 = nodes.Parameter("a", 1.0)
         p2 = nodes.Parameter("b", 2.0)
 
         op1 = uop(p1, p2)
-        self.assertTrue(uop is op1._unbound)
+        self.assertTrue(uop is op1._obj)
         self.assertTrue( p1 in op1._args )
         self.assertTrue( p2 in op1._args )
         self.assertTrue( {} == op1._kw )
@@ -165,6 +167,13 @@ class TestUnboundOperator(unittest.TestCase):
         self.assertTrue( op1 in p2._viewers )
 
         self.assertAlmostEqual(3, op1.value)
+
+        # Check lazy update.
+        # FIXME - there has to be a better way to check for this.
+        p1.value = 4.0
+        self.assertTrue(None is op1._value)
+        self.assertAlmostEqual(4.5, op1.value)
+        self.assertAlmostEqual(4.5, op1._value)
 
         # try this again
         op2 = uop(p1, p2)
@@ -188,13 +197,13 @@ class TestUnboundOperator(unittest.TestCase):
         """Test unbound operator on a built-in function."""
 
         import numpy
-        uop = nodes.UnboundOperator("f", numpy.add)
+        uop = UnboundOperator("f", numpy.add)
 
         p1 = nodes.Parameter("a", 1.0)
         p2 = nodes.Parameter("b", 2.0)
 
         op1 = uop(p1, p2)
-        self.assertTrue(uop is op1._unbound)
+        self.assertTrue(uop is op1._obj)
         self.assertTrue( p1 in op1._args )
         self.assertTrue( p2 in op1._args )
         self.assertTrue( {} == op1._kw )

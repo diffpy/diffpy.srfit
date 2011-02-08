@@ -1,23 +1,22 @@
 #!/usr/bin/env python
-# FIXME - need printing
+# FIXME - need better printing
 
 class Visitor(object):
     """Abstract class for all visitors to a tree of nodes.
 
     See implemented visitors for examples of use.
-
     """
 
     def onParameter(self, obj):
-        """Process an Argument node."""
-        raise NotImplementedError
-
-    def onOperator(self, obj):
-        """Process an Operator node."""
+        """Process a Parameter node."""
         raise NotImplementedError
 
     def onContainer(self, obj):
         """Process a Container node."""
+        raise NotImplementedError
+
+    def onFunction(self, obj):
+        """Process a Container node that is being used as a function."""
         raise NotImplementedError
 
 # End class Visitor
@@ -28,29 +27,46 @@ class FilterGetter(Visitor):
     def __init__(self, filt):
         self.filt = filt
         self.vals = set()
+        self.visited = set()
         return
 
     def onParameter(self, obj):
+        if obj in self.visited: return
+        self.visited.add(obj)
+
         if self.filt(obj):
             self.vals.add(obj)
         if obj._constraint is not None:
             obj._constraint._identify(self)
+        #if obj._container is not None:
+        #    obj._container._identify(self)
+
+        # We have to check with the container
         return
 
-    def onOperator(self, obj):
+    def onContainer(self, obj):
+        if obj in self.visited: return
+        self.visited.add(obj)
+
+        if self.filt(obj):
+            self.vals.add(obj)
+        for arg in obj.adapters:
+            arg._identify(self)
+        if obj._isfunction:
+            self.onFunction(obj)
+        if obj._container is not None:
+            obj._container._identify(self)
+        return
+
+    def onFunction(self, obj):
         if self.filt(obj):
             self.vals.add(obj)
         for arg in obj._args:
             arg._identify(self)
         for arg in obj._kw.values():
             arg._identify(self)
-        return
-
-    def onContainer(self, obj):
-        if self.filt(obj):
-            self.vals.add(obj)
-        for arg in obj.adapters:
-            arg._identify(self)
+        if obj._container is not None:
+            obj._container._identify(self)
         return
 
 # End class FilterGetter
@@ -66,25 +82,40 @@ class ParameterGetter(Visitor):
         if self.filt is None:
             self.filt = _identity
         self.vals = set()
+        self.visited = set()
         return
 
     def onParameter(self, obj):
+        if obj in self.visited: return
+        self.visited.add(obj)
+
         if self.filt(obj):
             self.vals.add(obj)
         if obj._constraint is not None:
             obj._constraint._identify(self)
+        if obj._container is not None:
+            obj._container._identify(self)
         return
 
-    def onOperator(self, obj):
+    def onContainer(self, obj):
+        if obj in self.visited: return
+        self.visited.add(obj)
+
+        for arg in obj.adapters:
+            arg._identify(self)
+        if obj._isfunction:
+            self.onFunction(obj)
+        if obj._container is not None:
+            obj._container._identify(self)
+        return
+
+    def onFunction(self, obj):
         for arg in obj._args:
             arg._identify(self)
         for arg in obj._kw.values():
             arg._identify(self)
-        return
-
-    def onContainer(self, obj):
-        for arg in obj.adapters:
-            arg._identify(self)
+        if obj._container is not None:
+            obj._container._identify(self)
         return
 
 # End class ParameterGetter
@@ -114,7 +145,16 @@ class NodeFinder(Visitor):
             obj._constraint._identify(self)
         return
 
-    def onOperator(self, obj):
+    def onContainer(self, obj):
+        if obj is self._node: self.found = True
+        if self.found: return
+        for arg in obj.adapters:
+            arg._identify(self)
+        if obj._isfunction:
+            self.onFunction(obj)
+        return
+
+    def onFunction(self, obj):
         if obj is self._node: self.found = True
         if self.found: return
         for arg in obj._args:
@@ -123,16 +163,9 @@ class NodeFinder(Visitor):
             arg._identify(self)
         return
 
-    def onContainer(self, obj):
-        if obj is self._node: self.found = True
-        if self.found: return
-        for arg in obj.adapters:
-            arg._identify(self)
-        return
-
 # End class NodeFinder
 
-from diffpy.srfit.adapters import nodes
+from diffpy.srfit.fit import functions
 class Printer(Visitor):
     """Printer for printing a tree of nodes.
 
@@ -142,14 +175,14 @@ class Printer(Visitor):
     """
 
     _infix = { 
-            nodes.add : "+",
-            nodes.subtract : "-",
-            nodes.multiply : "*",
-            nodes.divide : "/",
-            nodes.power : "**",
+            functions.add : "+",
+            functions.subtract : "-",
+            functions.multiply : "*",
+            functions.divide : "/",
+            functions.power : "**",
             }
     _unary = {
-            nodes.negative : "-",
+            functions.negative : "-",
             }
 
     def __init__(self):
@@ -167,13 +200,18 @@ class Printer(Visitor):
             self.output += str(obj.value)
         else:
             self.output += str(obj.name)
+        if obj._container is not None:
+            obj._container._identify(self)
         return
 
     def onContainer(self, obj):
-        self.onParameter(obj)
+        if obj._isfunction:
+            self.onFunction(obj)
+        else:
+            self.onParameter(obj)
         return
 
-    def onOperator(self, obj):
+    def onFunction(self, obj):
         instr = self.output
         self.output = ""
 

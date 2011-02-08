@@ -48,6 +48,9 @@ class TestListContainer(list):
     def calc(self, d):
         return self.a + self.b + self._c + d
 
+    def __call__(self, v):
+        return (self.a, (1, 2, self.b))
+
 # End class TestListContainer
 
 class TestDictContainer(dict):

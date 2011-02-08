@@ -17,7 +17,6 @@
 
 """
 
-from diffpy.srfit.pdf.diffpysrrealadapters import *
 from diffpy.srfit.pdf.pdfparser import *
 from diffpy.srfit.pdf.characteristicfunctions import *
 # Make sure structure adapters are registered

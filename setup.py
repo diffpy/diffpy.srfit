@@ -16,16 +16,17 @@ import fix_setuptools_chmod
 # define distribution
 dist = setup(
         name = "diffpy.srfit",
-        version = "1.0b0",
+        version = "1.0a9",
         namespace_packages = ['diffpy'],
         packages = find_packages(exclude=['tests']),
         test_suite = 'tests',
         entry_points = {},
         install_requires = [
+            # FIXME - need version greater than 6162.
             'diffpy.Structure>=1.0-r5333-20100518',
             'pyobjcryst>=1.0b1.dev-r5681-20100816',
+            # FIXME - need version greater than 6162.
             'diffpy.srreal>=0.2a1.dev-r6037-20101130',
-            'periodictable>=1.0b1.dev-r5681-20100816',
             'numpy>=1.0',
             'scipy>=0.7.0',
             ],

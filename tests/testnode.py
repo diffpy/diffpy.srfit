@@ -4,6 +4,7 @@ import unittest
 
 from utils import TestViewer
 from diffpy.srfit.adapters import nodes
+from diffpy.srfit.fit import functions
 
 class TestNode(unittest.TestCase):
     """Test methods common to all nodes."""
@@ -74,7 +75,7 @@ class TestNode(unittest.TestCase):
         n2 = nodes.Node("n2")
 
         out = n1 + n2
-        self.assertTrue( nodes.add is out._unbound )
+        self.assertTrue( functions.add is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -82,7 +83,7 @@ class TestNode(unittest.TestCase):
         self.assertTrue( out in n2._viewers )
 
         out = n1 - n2
-        self.assertTrue( nodes.subtract is out._unbound )
+        self.assertTrue( functions.subtract is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -90,7 +91,7 @@ class TestNode(unittest.TestCase):
         self.assertTrue( out in n2._viewers )
 
         out = n1 * n2
-        self.assertTrue( nodes.multiply is out._unbound )
+        self.assertTrue( functions.multiply is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -98,7 +99,7 @@ class TestNode(unittest.TestCase):
         self.assertTrue( out in n2._viewers )
 
         out = n1 / n2
-        self.assertTrue( nodes.divide is out._unbound )
+        self.assertTrue( functions.divide is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -106,7 +107,7 @@ class TestNode(unittest.TestCase):
         self.assertTrue( out in n2._viewers )
 
         out = n1 ** n2
-        self.assertTrue( nodes.power is out._unbound )
+        self.assertTrue( functions.power is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -114,13 +115,13 @@ class TestNode(unittest.TestCase):
         self.assertTrue( out in n2._viewers )
 
         out = n1 ** 2
-        self.assertTrue( nodes.power is out._unbound )
+        self.assertTrue( functions.power is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( {} == out._kw )
         self.assertTrue( out in n1._viewers )
 
         out = -n1
-        self.assertTrue( nodes.negative is out._unbound )
+        self.assertTrue( functions.negative is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( {} == out._kw )
         self.assertTrue( out in n1._viewers )
@@ -129,14 +130,14 @@ class TestNode(unittest.TestCase):
         self.assertTrue( out is n1 )
 
         out = abs(n1)
-        self.assertTrue( nodes.abs is out._unbound )
+        self.assertTrue( functions.abs is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( out in n1._viewers )
 
         # In-place operations transfer the name, but that is all
         out = n1 
         out += n2
-        self.assertTrue( nodes.add is out._unbound )
+        self.assertTrue( functions.add is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -146,7 +147,7 @@ class TestNode(unittest.TestCase):
 
         out = n1
         out -= n2
-        self.assertTrue( nodes.subtract is out._unbound )
+        self.assertTrue( functions.subtract is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -156,7 +157,7 @@ class TestNode(unittest.TestCase):
 
         out = n1
         out *= n2
-        self.assertTrue( nodes.multiply is out._unbound )
+        self.assertTrue( functions.multiply is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -166,7 +167,7 @@ class TestNode(unittest.TestCase):
 
         out = n1
         out /= n2
-        self.assertTrue( nodes.divide is out._unbound )
+        self.assertTrue( functions.divide is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )
@@ -176,7 +177,7 @@ class TestNode(unittest.TestCase):
 
         out = n1
         out **= n2
-        self.assertTrue( nodes.power is out._unbound )
+        self.assertTrue( functions.power is out._obj )
         self.assertTrue( n1 in out._args )
         self.assertTrue( n2 in out._args )
         self.assertTrue( {} == out._kw )

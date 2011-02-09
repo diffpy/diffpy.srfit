@@ -370,6 +370,16 @@ class TestObjectAdapter(unittest.TestCase):
         # Make sure the objects are indeed abandoned.
         self.assertRaises(AttributeError, alist3.get)
         self.assertRaises(AttributeError, a3.get)
+
+        # Set to something we can actually use and recheck the adapters.
+        tlist4 = utils.TestListContainer()
+        tlist4.tlist = utils.TestListContainer()
+        tlist4.tlist.a = 9
+        alist2.set(tlist4)
+        self.assertTrue(alist2.get() is tlist4)
+        self.assertEqual(9, a3.value)
+        a3.value = 10
+        self.assertEqual(10, tlist4.tlist.a)
         return
 
     def testPickle(self):

@@ -36,6 +36,7 @@ import numpy
 from diffpy.srfit.util.getcallargs import getcallargs
 from diffpy.srfit.util import messages, absName
 from diffpy.srfit.util import isAdapter, isViewable, getParameters
+from diffpy.srfit.util import isConstrained
 from diffpy.srfit.adapters.nodes import Node, Parameter
 
 __all__ = ["adapt"]
@@ -277,7 +278,8 @@ class ParameterAdapter(Parameter):
     def _notify(self, msg):
         """Notify viewers of a change.
 
-        This calls the _respond method of all viewers.
+        This calls the _respond method of the hub (if self is not its own hub)
+        and then asks all viewers to respond.
 
         msg --  The message to send to viewers. Standard messages are defined
                 in the messages module. The response of the viewer is defined
@@ -302,17 +304,37 @@ class ParameterAdapter(Parameter):
         self._hub._nlocked = lval
         return
 
+    def get(self):
+        """Get the nodes's value.
+
+        If the parameter is constrained, get the value of the constraint
+        instead. This tells the hub to update constraints first.
+
+        """
+        if self._value is None:
+            if self is self._hub:
+                self._updateConstraints()
+            self._value = self._get()
+        return self._value
+
     def _updateConstraints(self):
-        """Update constraints within the container network."""
+        """Update constraints.
+
+        Update the constrains in the network. This need only be called from
+        the hub node in a network. Any change in the
+        network invalidates the entire network. When 'get' is called on
+        any network node, the chain of livegetters between that node and
+        the hub will propagate the call to the hub's 'get' method.
+        
+        """
         if self._nlocked: return
         self._nlocked = True
-        if self._container is not None:
-            # If we're in a container, send the message to update the
-            # constraints.
-            self._container._updateConstraints()
-        if self.isConstrained():
-            val = self._constraint.get()
-            self._set(val)
+        # Update the constraint for every invalidated and constrained node.
+        for viewer in filter(isConstrained, self._viewers):
+            if viewer._value is None:
+                val = viewer._constraint.get()
+                viewer._set(val)
+
         self._nlocked = False
         return
 
@@ -433,18 +455,6 @@ class ObjectAdapter(ParameterAdapter):
         
         """
         self._hub._addViewer(node)
-        return
-
-    # FIXME - this should use the message passing mechanism to assure that the
-    # whole network is contacted. This unifies the communication mechanisms.
-    def _updateConstraints(self):
-        """Update constraints within the container network."""
-        if self._nlocked: return
-        self._nlocked = True
-        for adapter in self.adapters:
-            adapter._updateConstraints()
-        self._nlocked = False
-        ParameterAdapter._updateConstraints(self)
         return
 
     ## Indexing methods

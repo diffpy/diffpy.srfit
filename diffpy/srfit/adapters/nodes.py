@@ -137,12 +137,6 @@ class Node(object):
         self.name = name
         return self
 
-    # For constraints
-
-    def _updateConstraints(self):
-        """Update constraints within the container network."""
-        return
-
     # Viewable methods
 
     def _addViewer(self, other):
@@ -308,7 +302,9 @@ class Parameter(Node):
         """
         if self._value is None:
             # This will set _value to the constraint value
-            self._updateConstraints()
+            if self.isConstrained():
+                val = self._constraint.get()
+                self._set(val)
             self._value = self._get()
         return self._value
 
@@ -343,14 +339,6 @@ class Parameter(Node):
             return True
         # if not notequiv.any(): falls through
         return False
-
-    def _updateConstraints(self):
-        """Update constraints within the container network."""
-        if self._nlocked: return
-        if self.isConstrained():
-            val = self._constraint.get()
-            self._set(val)
-        return
 
     def set(self, val):
         """Set the parameter's value.

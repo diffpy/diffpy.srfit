@@ -8,8 +8,32 @@ format must be encapsulated in a ProfileParser subclass.
 See the class documentation for more information.
 
 """
-__all__ = ["ProfileParser", "ParseError"]
+__all__ = ["getParser", "parserInfo"]
 
+# Registry of parsers indexed by parser format.
+_registry = {}
+
+def getParser(fmt):
+    """Get a parser class based on its format.
+
+    Raises ValueError if a parser for the format cannot be found.
+
+    """
+    try:
+        ParserClass = _registry[fmt]
+    except KeyError:
+        msg = "Parser for '%s' format cannot be found"%fmt
+        raise ValueError(msg)
+
+    return ParserClass
+
+def parserInfo():
+    """Print information on all parsers."""
+    _s = lambda lines: lines.split()[0]
+    items = ((fmt, _s(cls.__doc__)) for fmt, cls in _registry.iteritems())
+    info = "\n".join("%s\n%s\n"%item for item in items)
+    print info
+    return
 
 class ProfileParser(object):
     """Class for parsing data from a or string.
@@ -62,7 +86,7 @@ class ProfileParser(object):
         """Get the format string."""
         return self._format
 
-    def parseString(self, patstring):
+    def parseString(self, patstring, *args, **kw):
         """Parse a string and set the _x, _y, _dx, _dy and _meta variables.
 
         When _dx or _dy cannot be obtained in the data format it is set to
@@ -78,7 +102,7 @@ class ProfileParser(object):
         """
         raise NotImplementedError()
 
-    def parseFile(self, filename):
+    def parseFile(self, filename, *args, **kw):
         """Parse a file and set the _x, _y, _dx, _dy and _meta variables.
 
         This wipes out the currently loaded data and selected bank number.
@@ -165,6 +189,88 @@ class ProfileParser(object):
         return self._meta
 
 # End of ProfileParser
+
+class TextParser(ProfileParser):
+    """Parser for text parsers using numpy.loadtxt
+
+    Attributes
+
+    _format     --  Name of the data format that this parses ("txt").
+    _banks      --  The data from each bank. Each bank contains a (x, y, dx, dy)
+                    tuple:
+                    x       --  A numpy array containing the independent
+                                variable read from the file.
+                    y       --  A numpy array containing the profile
+                                from the file.
+                    dx      --  A numpy array containing the uncertainty in x
+                                read from the file. This is None if the
+                                uncertainty cannot be read.
+                    dy      --  A numpy array containing the uncertainty read
+                                from the file. This is None if the uncertainty
+                                cannot be read.
+    _x          --  Indpendent variable from the chosen bank
+    _y          --  Profile from the chosen bank
+    _dx         --  Uncertainty in independent variable from the chosen bank
+    _dy         --  Uncertainty in profile from the chosen bank
+    _meta       --  A dictionary containing metadata read from the file.
+
+    General Metadata
+
+    filename    --  The name of the file from which data was parsed. This key
+                    will not exist if data was not read from file.
+    nbanks      --  The number of banks parsed.
+    bank        --  The chosen bank number.
+
+    """
+
+    _format = "txt"
+
+    def parseString(self, patstring, *args, **kw):
+        """Use numpy.loadtxt to load data.
+
+        patstring   --  String holding the file contents.
+
+        Arguments are passed to numpy.loadtxt. 
+        unpack = True is enforced. 
+        The first two arrays returned by numpy.loadtxt are assumed to be x and
+        y.  If there is a third array, it is assumed to by dy. These can be
+        controlled with the usecols option. Any other arrays are ignored.
+
+        Raises ParseError if the call to numpy.loadtxt returns fewer than 2
+        arrays.
+
+        """
+        # Unfortunately, we need to make this into a file-like object again.
+        import StringIO
+        iofile = StringIO.StringIO(patstring)
+
+        # Enforce unpack
+        from diffpy.srfit.util.getcallargs import getcallargs
+        import numpy
+        callargs = getcallargs(numpy.loadtxt, iofile, *args, **kw)
+        callargs["unpack"] = True
+
+        cols = numpy.loadtxt(**callargs)
+
+        x = y = dy = None
+        # Due to using 'unpack', a single column will come out as a single
+        # array, thus the second check.
+        if len(cols) < 2 or not isinstance(cols[0], numpy.ndarray):
+            raise ParseError("numpy.loadtxt returned fewer than 2 arrays")
+
+        x = cols[0]
+        y = cols[1]
+        if len(cols) > 2:
+            dy = cols[2]
+
+        self._banks.append([x, y, None, dy])
+        return
+
+# End of TextParser
+
+# Register the parser
+_registry[TextParser._format] = TextParser
+
 
 class ParseError(Exception):
     """Exception used by ProfileParsers."""

@@ -13,12 +13,41 @@
 #
 ########################################################################
 import numpy
-
 from diffpy.srfit.fit.parameters import Fixed
 
-__all__ = ["Profile"]
+__all__ = ["loadProfile"]
 
 epsilon = 1e-8
+
+def loadProfile(filename, fmt = 'txt', *args, **kw):
+    """Load a profile with a given format.
+
+    filename    --  Name of file to be loaded into a profile.
+    fmt         --  The format of the data (default 'txt'). This is used to
+                    select a parser for the data. The 'parserInfo' function
+                    prints information about all parsers and the 'getParser'
+                    function can be used to retrieve and introspect a parser
+                    based on its format.
+
+    Remaining arguments are passed to the parser.
+
+    Returns a configured Profile instance.
+
+    Raises ValueError if a parser for the format cannot be found.
+    Raises IOError if the file cannot be read.
+    Raises ParseError if the file cannot be parsed.
+
+    """
+
+    from diffpy.srfit.fit.profileparser import getParser
+    ParserClass = getParser(fmt)
+    parser = ParserClass()
+    parser.parseFile(filename, *args, **kw)
+
+    profile = Profile()
+    profile.load(parser)
+
+    return profile
 
 class Profile(object):
     """Observed and calculated profile container.
@@ -43,13 +72,11 @@ class Profile(object):
     meta    --  A dictionary of metadata. This is only set if provided by a
                 parser.
 
-    Note that the profile is iterable and returns xpar, ypar and dypar in
-    that order.
+    Profile is iterable and returns xpar, ypar and dypar in that order.
 
     """
 
-
-    def __init__(self, filename = None):
+    def __init__(self):
         """Initialize the attributes."""
         self.xobs = None
         self.yobs = None
@@ -58,10 +85,6 @@ class Profile(object):
         self.ypar = Fixed("y", None)
         self.dypar = Fixed("dy", None)
         self.meta = {}
-
-        if filename:
-            self.loadtxt(filename)
-
         return
 
     def __iter__(self):
@@ -91,41 +114,6 @@ class Profile(object):
         self.meta = dict(parser.getMetaData())
         self.setObserved(x, y, dy)
         return
-
-    def loadtxt(self, *args, **kw):
-        """Use numpy.loadtxt to load data.
-
-        Arguments are passed to numpy.loadtxt. 
-        unpack = True is enforced. 
-        The first two arrays returned by numpy.loadtxt are assumed to be x and
-        y.  If there is a third array, it is assumed to by dy. Any other arrays
-        are ignored. These are passed to setObserved.
-
-        Raises ValueError if the call to numpy.loadtxt returns fewer than 2
-        arrays.
-
-        Returns the x, y and dy arrays loaded from the file.
-
-        """
-        if len(args) == 8 and not args[-1]:
-            args = list(args)
-            args[-1] = True
-        else:
-            kw["unpack"] = True
-        cols = numpy.loadtxt(*args, **kw)
-
-        x = y = dy = None
-        # Due to using 'unpack', a single column will come out as a single
-        # array, thus the second check.
-        if len(cols) < 2 or not isinstance(cols[0], numpy.ndarray):
-            raise ValueError("numpy.loadtxt returned fewer than 2 arrays")
-        x = cols[0]
-        y = cols[1]
-        if len(cols) > 2:
-            dy = cols[2]
-
-        self.setObserved(x, y, dy)
-        return x, y, dy
 
     def setObserved(self, xobs, yobs, dyobs = None):
         """Set the observed profile.

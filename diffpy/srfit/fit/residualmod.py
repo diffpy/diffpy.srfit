@@ -12,7 +12,8 @@ from diffpy.srfit.fit import functions
 __all__ = ["chi", "Rw", "reschi2", "resRw2", "residual"]
 
 # FIXME - make chi and Rw classes so they can be identified in FitResults. This
-# will allow us to properly calculate the uncertainties in FitResults.
+# will allow us to calculate the uncertainties in FitResults even if the user
+# is not using chi^2 to optimize.
 def chi(fiteq, y, dy = None):
     """Make vector chi function out of a fit equation and profile.
 

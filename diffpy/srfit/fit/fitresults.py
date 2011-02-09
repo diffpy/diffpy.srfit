@@ -302,6 +302,10 @@ class FitResults(object):
         lines.append(formatstr%("Residual",self.resval))
         lines.append(formatstr%("Reduced residual",self.rresval))
 
+        # See if the uncertainties are valid. Right now we do it based on the
+        # names of the residual terms.
+        invalid = False
+
         ## Per-term results
         if self.resterms:
             lines.append("")
@@ -310,12 +314,15 @@ class FitResults(object):
             lines.append(dashedline)
             formatstr = "%-18s %-12.8f"
             for resname, resval in self.resterms:
+                if resname != "chi^2": invalid = True
                 lines.append(formatstr%(resname,resval))
 
         ## The variables
         if self.varnames:
             lines.append("")
             l = "Variables"
+            if invalid:
+                l += "\n(Uncertainties assume chi^2 residual, may be invalid.)"
             lines.append(l)
             lines.append(dashedline)
 
@@ -338,6 +345,8 @@ class FitResults(object):
         if self.connames and self.showcon:
             lines.append("")
             l = "Constrained Parameters"
+            if invalid:
+                l += "\n(Uncertainties assume chi^2 residual, may be invalid.)"
             lines.append(l)
             lines.append(dashedline)
             conlines = []
@@ -375,6 +384,8 @@ class FitResults(object):
         lines.append("")
         corint = int(corrmin*100)
         l = "Variable Correlations greater than %i%%"%corint
+        if invalid:
+            l += "\n(Correlations assume chi^2 residual, may be invalid.)"
         lines.append(l)
         lines.append(dashedline)
         tup = []

@@ -145,47 +145,6 @@ class TestProfile(unittest.TestCase):
 
         return
 
-    def testInitFilename(self):
-        """Test init with a file name."""
-        data = os.path.join(testdata_dir, "testdata.txt")
-        prof = Profile(data)
-        self.testLoadtxt(prof, data)
-        return
-
-    def testLoadtxt(self, prof = None, data = None):
-        """Test the loadtxt method"""
-
-        if prof is None and data is None:
-            prof = self.profile
-            data = os.path.join(testdata_dir, "testdata.txt")
-
-        def _test(p):
-            self.assertAlmostEqual(1e-2, p.x[0])
-            self.assertAlmostEqual(1.105784e-1, p.y[0])
-            self.assertAlmostEqual(1.802192e-3, p.dy[0])
-
-        # Test normal load
-        prof.loadtxt(data, usecols=(0,1,3))
-        _test(prof)
-
-        # Test trying to not set unpack
-        prof.loadtxt(data, usecols=(0,1,3), unpack = False)
-        _test(prof)
-        prof.loadtxt(data, float, '#', None, None, 0, (0,1,3), False)
-        _test(prof)
-
-        # Try not including dy
-        prof.loadtxt(data, usecols=(0,1))
-        self.assertAlmostEqual(1e-2, prof.x[0])
-        self.assertAlmostEqual(1.105784e-1, prof.y[0])
-        self.assertAlmostEqual(1, prof.dy[0])
-
-        # Try to include too little
-        self.assertRaises(ValueError, prof.loadtxt, data, usecols=(0,))
-        return
-
-
-
 if __name__ == "__main__":
 
     unittest.main()

@@ -8,6 +8,7 @@ __all__ = ["Parameter", "Par", "Pars", "Var", "Vars", "Fixed"]
 # Shorthand for Parameter
 Par = Parameter
 
+# FIXME - check types!
 def Pars(*args): 
     """Factory for multiple parameters.
 

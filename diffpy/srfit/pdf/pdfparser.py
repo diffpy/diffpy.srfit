@@ -19,8 +19,7 @@ class PDFParser(ProfileParser):
 
     Attributes
 
-    _format     --  Name of the data format that this parses (string, default
-                    ""). The format string is a unique identifier for the data
+    _format     --  Name of the data format that this parses ("PDF")
                     format handled by the parser.
     _banks      --  The data from each bank. Each bank contains a (x, y, dx, dy)
                     tuple:
@@ -192,7 +191,7 @@ class PDFParser(ProfileParser):
         except (ValueError, IndexError), err:
             raise ParseError(err)
         if has_drobs:
-            drobs = numpy.assarray(drobs)
+            drobs = numpy.asarray(drobs)
         else:
             drobs = None
         if has_dGobs:
@@ -207,5 +206,9 @@ class PDFParser(ProfileParser):
         return
 
 # End of PDFParser
+
+# Register the parser
+from diffpy.srfit.fit.profileparser import _registry
+_registry[PDFParser._format] = PDFParser
 
 __id__ = "$Id$"

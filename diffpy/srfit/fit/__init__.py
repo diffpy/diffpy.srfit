@@ -19,6 +19,7 @@
 from diffpy.srfit.fit.functions import *
 from diffpy.srfit.fit.parameters import *
 from diffpy.srfit.fit.profile import *
+from diffpy.srfit.fit.profileparser import *
 from diffpy.srfit.fit.residualmod import *
 from diffpy.srfit.fit.restrain import *
 from diffpy.srfit.fit.fitresults import *

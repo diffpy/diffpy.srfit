@@ -34,8 +34,8 @@ class TestObjectAdapter(unittest.TestCase):
 
         aa = alist.a
         self.assertTrue(aa in alist.adapters)
-        self.assertTrue(aa in alist._viewers)
-        self.assertTrue(alist in aa._viewers)
+        self.assertTrue(aa._hub is alist._hub)
+        self.assertTrue(aa in alist._hub._viewers)
         self.assertTrue(aa._container is alist)
         # Make sure all is adapted properly
         self.assertTrue(aa.name is "a")
@@ -59,8 +59,9 @@ class TestObjectAdapter(unittest.TestCase):
         tlist._c = 4
         self.assertEqual(c._get(), tlist.getc())
         self.assertTrue(c in alist.adapters)
-        self.assertTrue(c in alist._viewers)
-        self.assertTrue(alist in c._viewers)
+        self.assertTrue(c._hub is alist._hub)
+        self.assertTrue(alist is alist._hub)
+        self.assertTrue(c in alist._hub._viewers)
         self.assertTrue(c._container is alist)
         self.assertTrue(c is alist.getc())
 
@@ -70,16 +71,16 @@ class TestObjectAdapter(unittest.TestCase):
         tlist.b = 4
         self.assertEqual(b._get(), tlist.getpar("b"))
         self.assertTrue(b in alist.adapters)
-        self.assertTrue(b in alist._viewers)
-        self.assertTrue(alist in b._viewers)
+        self.assertTrue(b._hub is alist._hub)
+        self.assertTrue(b in alist._hub._viewers)
         self.assertTrue(b._container is alist)
         self.assertTrue(b is alist.getpar("b"))
 
-        w = alist.getwhatever(None)
+        w = alist.getwhatever(None).rename("w")
         self.assertRaises(AttributeError, w.set, 1.234)
         self.assertTrue(w in alist.adapters)
-        self.assertTrue(w in alist._viewers)
-        self.assertTrue(alist in w._viewers)
+        self.assertTrue(w._hub is alist._hub)
+        self.assertTrue(w in alist._hub._viewers)
         self.assertTrue(w._container is alist)
         self.assertTrue(w is alist.getwhatever(None))
         return
@@ -100,18 +101,18 @@ class TestObjectAdapter(unittest.TestCase):
         d = Parameter("d", 4)
         a = alist.a
         func = alist.calc(d)
-        self.assertTrue(func in alist._viewers)
-        self.assertTrue(alist in func._viewers)
+        self.assertTrue(func._hub is alist._hub)
+        self.assertTrue(func in alist._hub._viewers)
         self.assertTrue(func._container is alist)
         self.assertEquals(func.value, 1+2+3+4)
         d.value = 5
         self.assertEquals(func.value, 1+2+3+5)
-        b = Parameter("b", 2)
-        a.constrain(b)
+        e = Parameter("e", 2)
+        a.constrain(e)
         self.assertEquals(func.value, 2+2+3+5)
         d.value = 4
         self.assertEquals(func.value, 2+2+3+4)
-        b.value = 1
+        e.value = 1
         self.assertEquals(func.value, 1+2+3+4)
         return
 
@@ -120,16 +121,16 @@ class TestObjectAdapter(unittest.TestCase):
         alist = self.alist
         v = Parameter("v", 4)
         f = alist(v)
-        self.assertTrue(alist in f._viewers)
-        self.assertTrue(f in alist._viewers)
+        self.assertTrue(f._hub is alist._hub)
+        self.assertTrue(f in alist._hub._viewers)
         self.assertTrue(v in f._args)
         self.assertEqual({}, f._kw)
         self.assertTrue(f._isfunction)
         self.assertEqual((1,(1,2,2)), f.value)
         # Try to reference a value from the output
         p1 = f[0]
-        self.assertTrue(f in p1._viewers)
-        self.assertTrue(p1 in f._viewers)
+        self.assertTrue(p1._hub is f._hub)
+        self.assertTrue(p1 in f._hub._viewers)
         self.assertEqual(1, p1.value)
         alist.a.value = 3
         self.assertEqual((3,(1,2,2)), f.value)
@@ -159,10 +160,16 @@ class TestObjectAdapter(unittest.TestCase):
 
         def func(obj):
             return t.a.x + t.b.x
-        afunc = adapt(func)
+        afunc = adapt(func, "func")
 
         eq = afunc(tt)
         self.assertEqual(3, eq.value)
+        self.assertTrue(tt._hub is tt)
+        self.assertTrue(tt.a._hub is tt)
+        self.assertTrue(tt.b._hub is tt)
+        self.assertTrue(tt.a.x._hub is tt)
+        self.assertTrue(tt.b.x._hub is tt)
+        self.assertTrue(eq in tt._viewers)
         tt.a.x.constrain(tt.b.x)
         self.assertEqual(4, eq.value)
         tt.b.x.value = 4
@@ -186,8 +193,7 @@ class TestObjectAdapter(unittest.TestCase):
         self.assertEquals(6, v1.value)
         self.assertEquals(6, tlist[0])
         self.assertTrue(v1 in alist.adapters)
-        self.assertTrue(v1 in alist._viewers)
-        self.assertTrue(alist in v1._viewers)
+        self.assertTrue(v1 in alist._hub._viewers)
         self.assertTrue(v1._container is alist)
         return
 
@@ -252,8 +258,7 @@ class TestObjectAdapter(unittest.TestCase):
         self.assertEquals(6, v1.value)
         self.assertEquals(6, tdict["d"])
         self.assertTrue(v1 in adict.adapters)
-        self.assertTrue(v1 in adict._viewers)
-        self.assertTrue(adict in v1._viewers)
+        self.assertTrue(v1 in adict._hub._viewers)
         self.assertTrue(v1._container is adict)
         return
 

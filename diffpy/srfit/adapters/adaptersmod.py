@@ -71,13 +71,19 @@ class itemsetter(object):
         return obj.__setitem__(self.key, val)
 
 def selfgetter(obj):
+    """Identity getter."""
     return obj
 
-class funcgetter(object):
-    """Evaluates a function.
+def nosetter(obj, val):
+    """Raises AttributeError. Use when adapter is read-only."""
+    msg = "%r cannot be set"%obj
+    raise AttributeError(msg)
 
-    This evaluates a function held by and UnboundOperator using the arguments
-    set by an UnboundOperator.
+class funcgetter(object):
+    """Getter that evaluates a function.
+
+    This evaluates a function adapted by an UnboundOperator with adapter
+    arguments.
 
     """
 
@@ -95,7 +101,7 @@ class funcgetter(object):
     def __call__(self, obj):
         """Get the operator's value.
 
-        obj     --  The UnboundOperator that created this getter.
+        obj  --  The UnboundOperator that adapts the function.
         
         """
         op = obj._getop()
@@ -111,20 +117,21 @@ class funcgetter(object):
 class livegetter(object):
     """Getter for "live" adapters.
 
-    This is used by ObjectAdapters to create a live getter. This calls the
-    obj function passed to __call__ with no arguments to get a current object
-    to pass to another getter to obtain the value for a node.  This is used
-    with functions that return a ObjectAdapter so that the attributes and
-    items of that container refer back to the function.
+    This is used by ObjectAdapters to create "live" adapters. This getter holds
+    another getter that determines what is retrieved. The '__call__' method
+    accepts a function that, when called without arguments, retrieves an object
+    that can be passed to the held getter. By passing an ObjectAdapter's 'get'
+    method to '__call__', the most current value of the adapted object is used
+    by the held getter. This allows ObjectAdapters to switch out the objects
+    they adapt without necessarily invalidating their own adapters.
 
     """
 
     def __init__(self, getter):
         """Create a live getter.
 
-        getter  --  getter that will retrieve a value using the
-                    return value of obj.get(), where obj is passed via
-                    __call__.
+        getter  --  getter that will retrieve a value using obj(), where obj is
+                    passed via __call__.
 
         """
         self._getter = getter
@@ -138,31 +145,22 @@ class livegetter(object):
         
         """
         liveobj = obj()
-        val = self._getter(liveobj)
-        return val
+        return self._getter(liveobj)
 
 # End class livegetter
 
 class livesetter(object):
     """Setter for "live" adapters.
 
-    This is used by ObjectAdapters to create a live setter. This calls the
-    obj function passed to __call__ with no arguments to get a current object
-    to pass to another setter to set the value for a node.  This is used
-    with functions that return a ObjectAdapter so that the attributes and
-    items of that container refer back to the function. With this pattern, it
-    is assumed that the object returned by the getter is an internal object,
-    and thus its attributes can be modified. If this assumption is not true,
-    then setting the value will have no actual effect.
+    See an explanation of live adapters in livegetter.
 
     """
 
     def __init__(self, setter):
         """Create a live setter.
 
-        setter  --  setter that will set a value using the
-                    return value of obj.get(), where obj is passed via
-                    __call__.
+        setter  --  setter that will set a value using obj(), where obj is
+                    passed via __call__.
 
         """
         self._setter = setter
@@ -172,20 +170,14 @@ class livesetter(object):
         """Set the live value.
 
         obj     --  Function to call for live value of referent.
-                    self._getter(obj()) gets the node value.
+                    self._setter(obj(), val) sets the node value.
         val     --  The value to set.
         
         """
         liveobj = obj()
-        val = self._setter(liveobj, val)
-        return val
+        return self._setter(liveobj, val)
 
 # End class livesetter
-
-
-def nosetter(obj, val):
-    msg = "%r cannot be set"%obj
-    raise AttributeError(msg)
 
 def adapt(obj, name = None, getter = selfgetter, setter = nosetter, ignore =
         []):
@@ -242,6 +234,9 @@ class ParameterAdapter(Parameter):
         self._getter = getter
         # Setter for adapted object
         self._setter = setter
+        # Hub of object network. Used to dispatch notifications efficiently.
+        # This will be set by a container.
+        self._hub = self
         # Flag indicating if this is to be treated as a function
         self._isfunction = True
         # The function arguments
@@ -259,7 +254,7 @@ class ParameterAdapter(Parameter):
     def _set(self, val):
         """Set the parameter's value."""
         self._setter(self._obj, val)
-        return self
+        return
 
     def _makeFunction(self, args, kw):
         """Make this into a function.
@@ -279,21 +274,32 @@ class ParameterAdapter(Parameter):
         [arg._addViewer(self) for arg in kw.values()]
         return
 
-    def _respond(self, msg):
-        """Respond to a notification.
+    def _notify(self, msg):
+        """Notify viewers of a change.
 
-        The behavior of _respond is dependent on the message.
+        This calls the _respond method of all viewers.
 
-        VALUE_CHANGED       --  Set _value to None and notify viewers.
-        VARY_CHANGED        --  Notify viewers.
+        msg --  The message to send to viewers. Standard messages are defined
+                in the messages module. The response of the viewer is defined
+                by its _respond method.
 
         """
-        if self._nlocked: return
-        # If we get a VALUE_CHANGED message, then we invalidate our value so it
-        # can be recomputed later.
-        if (msg & messages.VALUE_CHANGED):
-            self._value = None
-        self._notify(msg)
+        # Since adapter nodes may be in a network centered around a hub node ,
+        # we ask the hub to respond to the message, and it will notify the rest
+        # of the network. 
+        # XXX We only ask the hub to respond if we are not the hub. Otherwise,
+        # the first call to _respond would get past this point and then the
+        # flow would continue from this point for a second pass.
+        if self is not self._hub: 
+            self._hub._respond(msg)
+        # Now we can perform normal notification. Since we've already visited
+        # the hub, or in the process of doing so, we can temporarily lock the
+        # hub. We do this just in case one of our viewers is also in our node
+        # network, in which case it will be notified by the hub.
+        lval = self._hub._nlocked
+        self._hub._nlocked = True
+        [viewer._respond(msg) for viewer in tuple(self._viewers)]
+        self._hub._nlocked = lval
         return
 
     def _updateConstraints(self):
@@ -310,16 +316,14 @@ class ParameterAdapter(Parameter):
         self._nlocked = False
         return
 
-
 # End class ParameterAdapter
 
-
-# XXX - perhaps implement __hash__ for this and other nodes
 # XXX - Any method or property may change internal information, and therefore
-# indirectly modify other attributes. The way we handle this is to treat
-# the adaped container as a hub. All adapted containees view the hub, and the
-# hub views all containees. When any of these is modified, all get notified of
-# the change.
+# indirectly modify other attributes. The way we handle this is to treat the
+# adaped container as a hub. All adapted containees are viewed by the hub and
+# notifications get dispatched from the hub. Thus, when any node changes, they
+# are all notified.
+# FIXME - change this back to ContainerAdapter
 class ObjectAdapter(ParameterAdapter):
     """Adapter for generic python objects.
 
@@ -410,10 +414,11 @@ class ObjectAdapter(ParameterAdapter):
         """
         adapter = adapt(obj, name, getter, setter)
         adapter._container = self
+        adapter._hub = self._hub
 
-        # Make sure we are mutual observers
         if isinstance(adapter, MethodAdapter):
             self._cachedunbound[name] = adapter
+        # Add the adapter to the network.
         elif isViewable(adapter):
             self._cachedattrs[name] = adapter
             self._addNode(adapter)
@@ -421,11 +426,17 @@ class ObjectAdapter(ParameterAdapter):
         return adapter
 
     def _addNode(self, node):
-        """Add a node to the network."""
-        self._addViewer(node)
-        node._addViewer(self)
+        """Add a node to the network.
+
+        Allow the node view the hub, which is in charge of dispatching messages
+        to the network.
+        
+        """
+        self._hub._addViewer(node)
         return
 
+    # FIXME - this should use the message passing mechanism to assure that the
+    # whole network is contacted. This unifies the communication mechanisms.
     def _updateConstraints(self):
         """Update constraints within the container network."""
         if self._nlocked: return
@@ -436,30 +447,41 @@ class ObjectAdapter(ParameterAdapter):
         ParameterAdapter._updateConstraints(self)
         return
 
-    # XXX - Special adapters might have auxillary data that could be lost when
-    # a new accessor is created. This method tries to cache accessors, but
-    # cannot do so when the arguments to the accessor are not hashable.
-    # Furthermore, when attributes are retrieved by accessor, it cannot be
-    # guaranteed that the same adapter is returned for the same reason.
-    # IDEA - maybe allow some sort indication that a method is an accessor. For
-    # example, container.access.getIt() would identify 'getIt' as an
-    # accessor and wrap it up.
-    def _wrapAccessor(self, name):
-        """Retrieve attributes that are hiding behind methods.
+    ## Indexing methods
 
-        This wraps an accessor method of the specified name. A call to this
-        container's accessor returns an adapted object that in turn calls the
-        underlying accessor for its value. The adapter cannot be set unless a
-        client specifically assigns the setter. The resulting adapter is linked
-        to the container as an attribute would be. The adapter is cached (if
-        possible) so multiple calls to the container's accessor give the same
-        adapter. This is not possible if the arguments of the accessor are not
-        hashable. It is currently not possible to sync adapters created from
-        an accessor with their attribute equivalents (if any).
+    def __getitem__(self, key):
+        """Retrieve and adapt a contained item."""
 
-        """
-        obj = self.get()
-        return _AccessorWrapper(self, obj, name)
+        # Check for slice
+        if isinstance(key, slice):
+            indices = key.indices(len(self))
+            return [self[i] for i in range(*indices)]
+
+        if key in self._cacheditems:
+            return self._cacheditems[key]
+
+        # Create a suitable name. If the key is a string, then keep it.
+        # Otherwise, go for _labelitem.
+        name = key
+        if not isinstance(name, str):
+            name = self._labelitem(key)
+
+        # Write a getter and setter for the object we're trying to retrieve. We
+        # don't know anything about that object, so we default to itemgetter
+        # and itemsetter and make them live.
+        getter = livegetter(itemgetter(key))
+        setter = livesetter(itemsetter(key))
+
+        # Adapt it
+        adapter = adapt(self.get, name, getter, setter)
+        adapter._container = self
+        adapter._hub = self._hub
+        self._cacheditems[key] = adapter
+
+        # Watch it
+        self._addNode(adapter)
+
+        return adapter
 
     def __iter__(self):
         """Get a dictionary-like or list-like iterator."""
@@ -504,43 +526,24 @@ class ObjectAdapter(ParameterAdapter):
     def iteritems(self):
         return izip(self.iterkeys(), self.itervalues())
 
-    def __getitem__(self, key):
-        """Retrieve and adapt a contained item."""
 
-        # Check for slice
-        if isinstance(key, slice):
-            indices = key.indices(len(self))
-            return [self[i] for i in range(*indices)]
-
-        if key in self._cacheditems:
-            return self._cacheditems[key]
-
-        # Create a suitable name. If the key is a string, then keep it.
-        # Otherwise, go for _labelitem.
-        name = key
-        if not isinstance(name, str):
-            name = self._labelitem(key)
-
-        # Write a getter and setter for the object we're trying to retrieve. We
-        # don't know anything about that object, so we default to itemgetter
-        # and itemsetter and make them live.
-        getter = livegetter(itemgetter(key))
-        setter = livesetter(itemsetter(key))
-
-        # Adapt it
-        adapter = adapt(self.get, name, getter, setter)
-        adapter._container = self
-        self._cacheditems[key] = adapter
-
-        # Watch it
-        self._addNode(adapter)
-
-        return adapter
-
+    # Needed for double-dispatch. It is up to the visitor to decide if it wants
+    # to treat the container like anything other than a container.
     def _identify(self, visitor):
         """Identify self to a visitor."""
         return visitor.onObject(self)
 
+    # For pretty-printing.
+    def _show(self):
+        """Get a detailed description of the container."""
+        pars = getParameters(self)
+        spars = [par._show() for par in pars]
+        spars.sort()
+        out = absName(self) + "\n"
+        out += "\n  ".join(spars)
+        return out
+
+    # For pickling.
     def __setstate__(self, state):
         """Set the state after pickling.
 
@@ -550,14 +553,6 @@ class ObjectAdapter(ParameterAdapter):
         self.__dict__.update(state)
         return
 
-    def _show(self):
-        """Get a detailed description of the container."""
-        pars = getParameters(self)
-        spars = [par._show() for par in pars]
-        spars.sort()
-        out = absName(self) + "\n"
-        out += "\n  ".join(spars)
-        return out
 
 # End class ObjectAdapter
 
@@ -585,6 +580,10 @@ class UnboundOperator(object):
         getter  --  Ignored, needed for adapter interface.
         setter  --  Ignored, needed for adapter interface.
 
+        getter and setter are ignored so that this provides a direct interface
+        to create UnboundOperators directly. The MethodAdapter class has the
+        same functionality, but sticks to the normal adapter interface.
+
         """
         self.name = name
         self._op = op
@@ -593,6 +592,7 @@ class UnboundOperator(object):
         # Generators for cache keys, indexed the same as _cache
         self._keygen = {}
         self._container = None
+        self._hub = None
         return
 
     def _labelself(self):
@@ -613,14 +613,19 @@ class UnboundOperator(object):
 
         This sets the arguments for the operation.
 
-        *args   --  Node arguments.
-        **kw    --  Named node arguments.
+        args    --  Arguments for the function.
+        kw      --  Keyword arguments for the function.
 
-        Returns a new Operator that peforms the operation on the values of args
+        The args and kw need not be adapted. These are used to determine a key
+        that is used to cache the adapter. Calling this multiple times with the
+        same inputs will return the same adapter.
+
+        Returns a new adapter that peforms the operation on the values of args
         and kw.
 
         Raises TypeError if args and kw are not compatible with the
-        requirements of the operation.
+        requirements of the operation. (This error checking is not performed
+        for built-in and non-python function.)
         Raises TypeError if the operation is not callable.
         
         """
@@ -643,10 +648,10 @@ class UnboundOperator(object):
         # Spawn an adapter storing the value. The getter for the container will
         # call the function.
         # FIXME - adapt gets the value of the object, which may not be
-        # available at the time. Furthermore, it is time consuming.
+        # available at the time. Furthermore, it may be time consuming.
         getter = funcgetter(adargs, adkw)
         adapter = adapt(self, self.name, getter, nosetter)
-        # Make the adapter a function
+        # Let the adapter know it is a function
         adapter._makeFunction(adargs, adkw)
 
         ## Store the adapter so we don't have to create it more than once.
@@ -658,6 +663,7 @@ class UnboundOperator(object):
         if self._container is not None:
             self._container._addNode(adapter)
             adapter._container = self._container
+            adapter._hub = self._hub
             self._container._cachedfunctions.add(adapter)
 
         return adapter
@@ -701,7 +707,8 @@ class UnboundOperator(object):
         #    callargs = getcallargs(operation.__call__, *args, **kw)
 
         # FIXME
-        # built-ins, etc. fall through. We don't introspect them.
+        # built-ins, etc. fall through. We don't test them since we don't know
+        # the nature of their arguments.
 
         return
 
@@ -732,7 +739,7 @@ class UnboundOperator(object):
         return state
 
     def __setstate__(self, state):
-        """Recache the reconstituted objects since their keys will change."""
+        """Recache the reconstituted objects since their keys may change."""
         self.__dict__.update(state)
         op = self._op
         for key in self._keygen.keys():

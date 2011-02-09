@@ -91,8 +91,8 @@ class Node(object):
         self._value = None
         self._viewers = set()
 
-        # Flag indicating that we are locked from sending notifications. This
-        # is here to prevent cycles in cyclic viewers.
+        # Flag indicating that we are locked from responding to notifications.
+        # This is here to prevent cycles in cyclic viewers.
         self._nlocked = False
         return
 
@@ -148,8 +148,7 @@ class Node(object):
     def _addViewer(self, other):
         """Add a viewer.
 
-        Viewers get notified of changes when '_notify' is called. Primarily,
-        viewers are made aware
+        Viewers get notified of changes when '_notify' is called.
         
         """
         self._viewers.add(other)
@@ -163,17 +162,14 @@ class Node(object):
     def _notify(self, msg):
         """Notify viewers of a change.
 
-        This calls the _respond method of all viewers.
+        This unconditionally calls the _respond method of all viewers.
 
         msg --  The message to send to viewers. Standard messages are defined
                 in the messages module. The response of the viewer is defined
                 by its _respond method.
 
         """
-        # Do not allow a response from us if we are in the process of notifying
-        self._nlocked = True
         [viewer._respond(msg) for viewer in tuple(self._viewers)]
-        self._nlocked = False
         return
 
     def _respond(self, msg):
@@ -186,7 +182,9 @@ class Node(object):
         
         """
         if self._nlocked: return
+        self._nlocked = True
         self._notify(msg)
+        self._nlocked = False
         return
 
     # Method for visitors
@@ -349,11 +347,9 @@ class Parameter(Node):
     def _updateConstraints(self):
         """Update constraints within the container network."""
         if self._nlocked: return
-        self._nlocked = True
         if self.isConstrained():
             val = self._constraint.get()
             self._set(val)
-        self._nlocked = False
         return
 
     def set(self, val):
@@ -476,18 +472,18 @@ class Parameter(Node):
 
         The behavior of _respond is dependent on the message.
 
-        VALUE_CHANGED   --  Set _value to None if we are constrained. Notify
-                            viewers.
+        VALUE_CHANGED   --  Set _value to None and notify viewers.
         VARY_CHANGED    --  Notify viewers.
         
         """
         if self._nlocked: return
-
+        self._nlocked = True
         # If we get a VALUE_CHANGED message and we are constrained, then we
         # invalidate our value so it can be recomputed later.
-        if self.isConstrained() and (msg & messages.VALUE_CHANGED):
+        if (msg & messages.VALUE_CHANGED):
             self._value = None
         self._notify(msg)
+        self._nlocked = False
         return
 
     def _identify(self, visitor):

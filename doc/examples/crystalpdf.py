@@ -17,8 +17,6 @@ from diffpy.srreal.pdfcalculator import PDFCalculator
 from diffpy.srfit.pdf import PDFParser
 from diffpy.srfit import *
 
-# FIXME - profile how much things get set and get
-
 def main(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
@@ -75,21 +73,19 @@ def main(ciffile, datname):
     g.qdamp.vary(0.01)
     g.delta2.vary(5)
 
+    def talker(val):
+        print "************ called"
+        return val
+    atalker = adapt(talker, "talker")
+
     # Create the fit equation.
-    out = g(s)
-    # FIXME - Can't see refined parameters.
-    assert(out in s._viewers)
+    out = atalker(g(s))
     rcalc, gcalc = out
-    assert(rcalc in out._viewers)
-    assert(out in rcalc._viewers)
-    assert(gcalc in out._viewers)
-    assert(out in gcalc._viewers)
     rcalc.rename("rcalc")
     gcalc.rename("gcalc")
     fiteq = interp(r, rcalc, gcalc)
-    assert(fiteq in r._viewers)
-    assert(fiteq in rcalc._viewers)
-    assert(fiteq in gcalc._viewers)
+    a.value = 3.527
+    fiteq.value
     # Create the residual equation. Note that 'chi' creates a vector residual
     # that can be dotted into itself to generate 'chi^2'.
     reseq = chi(fiteq, gr, dgr)
@@ -100,12 +96,14 @@ def main(ciffile, datname):
     print res.names, res.values
 
     # Optimize. 
-    from scipy.optimize import leastsq
+    from scipy.optimize import leastsq, fmin
     leastsq(res.vec, res.values)
+    #fmin(res, res.values)
 
     # Get the results
     results = FitResults(res)
     results.show()
+    return
 
     # and plot 
     from pylab import plot, show

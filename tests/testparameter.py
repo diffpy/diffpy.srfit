@@ -278,7 +278,7 @@ class TestParameter(unittest.TestCase):
 
         val = l._value
         l._respond(messages.VALUE_CHANGED)
-        self.assertTrue(l._value is val)
+        self.assertTrue(l._value is None)
         self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
         viewer.msg = None
 

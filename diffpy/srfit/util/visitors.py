@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # FIXME - need better printing
 
+from diffpy.srfit.util.utilmod import isFunction
+
 class Visitor(object):
     """Abstract class for all visitors to a tree of nodes.
 
@@ -11,12 +13,12 @@ class Visitor(object):
         """Process a Parameter node."""
         raise NotImplementedError
 
-    def onContainer(self, obj):
+    def onObject(self, obj):
         """Process a Container node."""
         raise NotImplementedError
 
     def onFunction(self, obj):
-        """Process a Container node that is being used as a function."""
+        """Process a node that is being used as a function."""
         raise NotImplementedError
 
 # End class Visitor
@@ -36,15 +38,15 @@ class FilterGetter(Visitor):
 
         if self.filt(obj):
             self.vals.add(obj)
-        if obj._constraint is not None:
+        if obj.isConstrained():
             obj._constraint._identify(self)
-        #if obj._container is not None:
-        #    obj._container._identify(self)
-
-        # We have to check with the container
+        if isFunction(obj):
+            self.onFunction(obj)
+        if obj._container is not None:
+            obj._container._identify(self)
         return
 
-    def onContainer(self, obj):
+    def onObject(self, obj):
         if obj in self.visited: return
         self.visited.add(obj)
 
@@ -52,35 +54,37 @@ class FilterGetter(Visitor):
             self.vals.add(obj)
         for arg in obj.adapters:
             arg._identify(self)
-        if obj._isfunction:
+        if isFunction(obj):
             self.onFunction(obj)
+        if obj.isConstrained():
+            obj._constraint._identify(self)
         if obj._container is not None:
             obj._container._identify(self)
         return
 
     def onFunction(self, obj):
+        # Don't check this here since we were redirected from another method
+        # where this was already done.
+        # if obj in self.visited: return
+        # self.visited.add(obj)
+
         if self.filt(obj):
             self.vals.add(obj)
         for arg in obj._args:
             arg._identify(self)
         for arg in obj._kw.values():
             arg._identify(self)
-        if obj._container is not None:
-            obj._container._identify(self)
         return
 
 # End class FilterGetter
 
-def _identity(obj):
-    return True
-
 class ParameterGetter(Visitor):
-    """Get parameters from a tree of nodes, with an optional filter."""
+    """Get parameters from node network, with an optional filter."""
 
     def __init__(self, filt = None):
         self.filt = filt
         if self.filt is None:
-            self.filt = _identity
+            self.filt = lambda obj: True
         self.vals = set()
         self.visited = set()
         return
@@ -91,31 +95,38 @@ class ParameterGetter(Visitor):
 
         if self.filt(obj):
             self.vals.add(obj)
-        if obj._constraint is not None:
+        if obj.isConstrained():
             obj._constraint._identify(self)
+        if isFunction(obj):
+            self.onFunction(obj)
         if obj._container is not None:
             obj._container._identify(self)
         return
 
-    def onContainer(self, obj):
+    def onObject(self, obj):
         if obj in self.visited: return
         self.visited.add(obj)
 
         for arg in obj.adapters:
             arg._identify(self)
-        if obj._isfunction:
+        if obj.isConstrained():
+            obj._constraint._identify(self)
+        if isFunction(obj):
             self.onFunction(obj)
         if obj._container is not None:
             obj._container._identify(self)
         return
 
     def onFunction(self, obj):
+        # Don't check this here since we were redirected from another method
+        # where this was already done.
+        # if obj in self.visited: return
+        # self.visited.add(obj)
+
         for arg in obj._args:
             arg._identify(self)
         for arg in obj._kw.values():
             arg._identify(self)
-        if obj._container is not None:
-            obj._container._identify(self)
         return
 
 # End class ParameterGetter
@@ -141,22 +152,28 @@ class NodeFinder(Visitor):
     def onParameter(self, obj):
         if obj is self._node: self.found = True
         if self.found: return
-        if obj._constraint is not None:
+        if obj.isConstrained():
             obj._constraint._identify(self)
+        if isFunction(obj):
+            self.onFunction(obj)
         return
 
-    def onContainer(self, obj):
+    def onObject(self, obj):
         if obj is self._node: self.found = True
         if self.found: return
         for arg in obj.adapters:
             arg._identify(self)
-        if obj._isfunction:
+        if obj.isConstrained():
+            obj._constraint._identify(self)
+        if isFunction(obj):
             self.onFunction(obj)
         return
 
     def onFunction(self, obj):
-        if obj is self._node: self.found = True
-        if self.found: return
+        # Don't check this here since we were redirected from another method
+        # where this was already done.
+        # if obj is self._node: self.found = True
+        # if self.found: return
         for arg in obj._args:
             arg._identify(self)
         for arg in obj._kw.values():
@@ -196,19 +213,17 @@ class Printer(Visitor):
         return
 
     def onParameter(self, obj):
+        if isFunction(obj):
+            self.onFunction(obj)
+            return
         if obj.name is None or obj.name.startswith("_"):
             self.output += str(obj.value)
         else:
             self.output += str(obj.name)
-        if obj._container is not None:
-            obj._container._identify(self)
         return
 
-    def onContainer(self, obj):
-        if obj._isfunction:
-            self.onFunction(obj)
-        else:
-            self.onParameter(obj)
+    def onObject(self, obj):
+        self.onParameter(obj)
         return
 
     def onFunction(self, obj):

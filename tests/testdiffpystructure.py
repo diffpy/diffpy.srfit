@@ -6,7 +6,7 @@ from diffpy.Structure import Structure
 
 import diffpy.srfit.structure.diffpyadapters as dpsa
 from diffpy.srfit.adapters.adaptersmod import selfgetter, nosetter
-from diffpy.srfit.adapters.adaptersmod import adapt, ParameterAdapter
+from diffpy.srfit.adapters.adaptersmod import adapt 
 
 thisfile = locals().get('__file__', 'testdiffpystructure.py')
 tests_dir = os.path.dirname(os.path.abspath(thisfile))

@@ -30,7 +30,7 @@ def main(ciffile, datname):
     profile.load(parser)
     profile.setRange(xmax = 20)
     r, gr, dgr = profile
-    r = r.get()
+    _r = r.get()
 
     # Create a PDFCalculator. We can use information from the metadata loaded
     # from file to initialize it. We can't pass the whole meta dictionary since
@@ -38,13 +38,12 @@ def main(ciffile, datname):
     # non-zero qmin value to PDFCalculator cretes a "bad" PDF.
     calc = PDFCalculator(qmax = profile.meta["qmax"])
     calc.setScatteringFactorTableByType(profile.meta["stype"])
-    calc.rmin = r[0]
-    calc.rstep = r[1] - r[0]
-    calc.rmax = r[-1] + 0.5 * calc.rstep
-    r = adapt(r, "r")
+    calc.rmin = _r[0]
+    calc.rstep = _r[1] - _r[0]
+    calc.rmax = _r[-1] + 0.5 * calc.rstep
 
     # Now we adapt the PDFCalculator. There is no special code written to do
-    # this. The default ContainerAdapter is being used to wrap the calculator.
+    # this. The default ObjectAdapter is being used to wrap the calculator.
     # I will probably write factor functions that streamline the creation of
     # the calculator and adapter.
     g = adapt(calc)
@@ -76,8 +75,7 @@ def main(ciffile, datname):
 
     # Create the fit equation.
     out = g(s)
-    # FIXME - calculation gets screwed up somehow. Changes in the parameters
-    # are not seen at any level deeper than interp.
+    # FIXME - Can't see refined parameters.
     assert(out in s._viewers)
     rcalc, gcalc = out
     assert(rcalc in out._viewers)

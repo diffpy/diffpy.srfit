@@ -6,7 +6,7 @@ from diffpy.srfit.structure import *
 adapt = adapters.adapt
 
 class TestAdapt(unittest.TestCase):
-    """Test ContainerAdapter nodes."""
+    """Test ObjectAdapter nodes."""
 
     def testAdaptBuiltin(self):
         """Test the adapt method for builtin types
@@ -28,38 +28,34 @@ class TestAdapt(unittest.TestCase):
         class Test(object):
             def test1(self, a, b):
                 return a+b
-            def test2(self, a, b):
-                return a+b
         MethodAdapter = adapters.MethodAdapter
         self.assertTrue(isinstance(adapt(Test.test1), MethodAdapter))
         ParameterAdapter = adapters.ParameterAdapter
         self.assertTrue(isinstance(adapt(True), ParameterAdapter))
-        self.assertTrue(isinstance(adapt(1+1j), ParameterAdapter))
         self.assertTrue(isinstance(adapt(3.0), ParameterAdapter))
         self.assertTrue(isinstance(adapt(3), ParameterAdapter))
         self.assertTrue(isinstance(adapt(long(3)), ParameterAdapter))
-        self.assertTrue(isinstance(adapt(None), ParameterAdapter))
-        self.assertTrue(isinstance(adapt(arange(2)), ParameterAdapter))
         from numpy import float, float32, float64, float96
         self.assertTrue(isinstance(adapt(float(3)), ParameterAdapter))
         self.assertTrue(isinstance(adapt(float32(3)), ParameterAdapter))
         self.assertTrue(isinstance(adapt(float64(3)), ParameterAdapter))
         self.assertTrue(isinstance(adapt(float96(3)), ParameterAdapter))
-        ContainerAdapter = adapters.ContainerAdapter
-        self.assertTrue(isinstance(adapt({}), ContainerAdapter))
-        self.assertTrue(isinstance(adapt([]), ContainerAdapter))
-        self.assertTrue(isinstance(adapt(Test()), ContainerAdapter))
+        ObjectAdapter = adapters.ObjectAdapter
+        self.assertTrue(isinstance(adapt({}), ObjectAdapter))
+        self.assertTrue(isinstance(adapt([]), ObjectAdapter))
+        self.assertTrue(isinstance(adapt(Test()), ObjectAdapter))
+        self.assertTrue(isinstance(adapt(1+1j), ObjectAdapter))
+        self.assertTrue(isinstance(adapt(arange(2)), ObjectAdapter))
+        self.assertTrue(isinstance(adapt(None), ObjectAdapter))
         testgetter = lambda obj: "testgetter"
         def testsetter(obj, val):
             raise RuntimeError
-        adapter = adapt(Test(), "test", testgetter, testsetter, ["test1"],
-            ["test2"])
-        self.assertTrue(isinstance(adapter, ContainerAdapter))
+        adapter = adapt(Test(), "test", testgetter, testsetter, ["test1"])
+        self.assertTrue(isinstance(adapter, ObjectAdapter))
         self.assertEqual("test", adapter.name)
         self.assertEqual("testgetter", adapter.get())
         self.assertRaises(RuntimeError, adapter.set, 0)
-        self.assertTrue("test1" in adapter.accessors)
-        self.assertTrue("test2" in adapter.ignore)
+        self.assertTrue("test1" in adapter.ignore)
         return
 
 if __name__ == "__main__":

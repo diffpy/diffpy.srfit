@@ -44,7 +44,7 @@ Container
 Containers are adapters for generic python objects and generate adapters for
 the objects' attributes, items and methods.  Containers can act like leaf
 nodes, but are also aware of their sub-objects, and can act like operators. See
-the ContainerAdapter class from the adaptersmod module for more information.
+the ObjectAdapter class from the adaptersmod module for more information.
 
 """
 
@@ -92,6 +92,7 @@ class Node(object):
         self._nlocked = False
 
         # If this is contained, then keep a reference to the container
+        # FIXME - this should be moved to the adapter interface.
         self._container = None
         return
 
@@ -259,6 +260,11 @@ class Node(object):
     def __str__(self):
         return str(self.name)
 
+    def _labelself(self):
+        """Provide a label for self, if one is not provided."""
+        obj = self.get()
+        return obj.__class__.__name__
+
     def _show(self):
         """Get a detailed description of the node."""
         return str(self)
@@ -308,11 +314,9 @@ class Parameter(Node):
 
         """
         if self._value is None:
+            # This will set _value to the constraint value
             self._updateConstraints()
-        # Get the value from _get. Even if we told _set to take on a given
-        # value, it might have chosen to hold a different value. We want to be
-        # true to the adapted object so we get its value.
-        self._value = self._get()
+            self._value = self._get()
         return self._value
 
     def _set(self, val):
@@ -340,6 +344,9 @@ class Parameter(Node):
             return False
         if notequiv is True or notequiv.any():
             self._set(val)
+            # We must call _get in case we are an adapter. The value we pass to
+            # _set might get altered by the adaptee.
+            self._value = self._get()
             return True
         # if not notequiv.any(): falls through
         return False
@@ -349,6 +356,8 @@ class Parameter(Node):
         if self._nlocked: return
         self._nlocked = True
         if self._container is not None:
+            # If we're in a container, send the message to update the
+            # constraints.
             self._container._updateConstraints()
         if self.isConstrained():
             val = self._constraint.get()
@@ -369,6 +378,9 @@ class Parameter(Node):
         """
         if self._tryset(val):
             self._notify(self._valmsg)
+            # FIXME - we might not need this here. _get is called in set. We
+            # want to reduce the number of calls if possible.
+            self._value = self._get()
         return self
 
     def constrain(self, eq):
@@ -397,7 +409,7 @@ class Parameter(Node):
         self.fix()
         self._constraint = eq
         self._constraint._addViewer(self)
-        self._value = self._get()
+        self._value = None
         # XXX we assume the value changed, this might not be the case
         self._notify(self._valmsg)
         return self

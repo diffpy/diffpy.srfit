@@ -173,7 +173,7 @@ class TestParameter(unittest.TestCase):
         self.assertTrue( l.isConstrained() )
         self.assertTrue(l._constraint is m)
         self.assertTrue(l in m._viewers)
-        self.assertAlmostEqual(4, l.value)
+        self.assertEqual(4, l.value)
 
         m.value = 5
         self.assertAlmostEqual(5, m.value)
@@ -286,6 +286,149 @@ class TestParameter(unittest.TestCase):
         l._respond(messages.VALUE_CHANGED)
         self.assertTrue(l._value is None)
         self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
+        return
+
+    def _test_arithmetic(self):
+        """Test operations on parameters.
+
+        Behavior:
+        Arithmetic operations (+, -, *, /, **, -(unary), +(unary), abs) return
+        a node that evaluates the operation. The fact that the operands need
+        not be nodes is not part of the public interface, so is not tested
+        here. Passing a numpy array to an operand will return an array of nodes
+        if the array is on the left of the operation. This is not desired
+        behavior, but it is unavoidable, therefore we only operate on nodes.
+
+        We only test the node type, not the operations.
+        
+        """
+        n1 = Parameter("n1", 1)
+        n2 = Parameter("n2", 2)
+
+        out = n1 + n2
+        self.assertTrue( functions.add is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertEqual(3, out.value)
+
+        out = n1 - n2
+        self.assertTrue( functions.subtract is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertEqual(-1, out.value)
+
+        out = n1 * n2
+        self.assertTrue( functions.multiply is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertEqual(2, out.value)
+
+        out = n1 / n2
+        self.assertTrue( functions.divide is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertEqual(0.5, out.value)
+
+        out = n1 ** n2
+        self.assertTrue( functions.power is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertEqual(1, out.value)
+
+        out = n1 ** 2
+        self.assertTrue( functions.power is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertEqual(1, out.value)
+
+        out = -n1
+        self.assertTrue( functions.negative is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertEqual(-1, out.value)
+
+        out = +n1
+        self.assertTrue( out is n1 )
+
+        out = abs(n1)
+        self.assertTrue( functions.abs is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( out in n1._viewers )
+        self.assertEqual(1, out.value)
+
+        # In-place operations transfer the name, but that is all
+        out = n1 
+        out += n2
+        self.assertTrue( functions.add is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertTrue( out.name is n1.name )
+        self.assertEqual(3, out.value)
+
+        out = n1
+        out -= n2
+        self.assertTrue( functions.subtract is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertTrue( out.name is n1.name )
+        self.assertEqual(-1, out.value)
+
+        out = n1
+        out *= n2
+        self.assertTrue( functions.multiply is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertTrue( out.name is n1.name )
+        self.assertEqual(2, out.value)
+
+        out = n1
+        out /= n2
+        self.assertTrue( functions.divide is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertTrue( out.name is n1.name )
+        self.assertEqual(0.5, out.value)
+
+        out = n1
+        out **= n2
+        self.assertTrue( functions.power is out._obj )
+        self.assertTrue( n1 in out._args )
+        self.assertTrue( n2 in out._args )
+        self.assertTrue( {} == out._kw )
+        self.assertTrue( out in n1._viewers )
+        self.assertTrue( out in n2._viewers )
+        self.assertTrue( out.name is n1.name )
+        self.assertEqual(1, out.value)
+
         return
 
 if __name__ == "__main__":

@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 import unittest
 
-from diffpy.srfit.adapters.adaptersmod import ContainerAdapter
+from diffpy.srfit.adapters.adaptersmod import ObjectAdapter
 from diffpy.srfit.adapters.adaptersmod import selfgetter, nosetter
 from diffpy.srfit.adapters.adaptersmod import adapt
 from diffpy.srfit.adapters.nodes import Parameter
 import utils
 
-class TestContainerAdapter(unittest.TestCase):
-    """Test ContainerAdapter nodes."""
+class TestObjectAdapter(unittest.TestCase):
+    """Test ObjectAdapter nodes."""
 
     def setUp(self):
         self.tlist = utils.TestListContainer()
-        self.alist = ContainerAdapter("list", self.tlist, selfgetter, nosetter)
+        self.alist = ObjectAdapter("list", self.tlist, selfgetter, nosetter)
         self.alist.accessors = ["getc", "getpar", "getwhatever"]
         self.alist.ignore = ["configure"]
 
         self.tdict = utils.TestDictContainer()
-        self.adict = ContainerAdapter("dict", self.tdict, selfgetter, nosetter)
+        self.adict = ObjectAdapter("dict", self.tdict, selfgetter, nosetter)
         self.adict.accessors = ["getc", "getpar"]
         self.adict.ignore = ["configure"]
         return
@@ -57,7 +57,7 @@ class TestContainerAdapter(unittest.TestCase):
         self.assertEqual(c.value, tlist.getc())
         self.assertRaises(AttributeError, c.set, 1.234)
         tlist._c = 4
-        self.assertEqual(c.value, tlist.getc())
+        self.assertEqual(c._get(), tlist.getc())
         self.assertTrue(c in alist.adapters)
         self.assertTrue(c in alist._viewers)
         self.assertTrue(alist in c._viewers)
@@ -68,20 +68,20 @@ class TestContainerAdapter(unittest.TestCase):
         self.assertEqual(b.value, tlist.getpar("b"))
         self.assertRaises(AttributeError, b.set, 1.234)
         tlist.b = 4
-        self.assertEqual(b.value, tlist.getpar("b"))
+        self.assertEqual(b._get(), tlist.getpar("b"))
         self.assertTrue(b in alist.adapters)
         self.assertTrue(b in alist._viewers)
         self.assertTrue(alist in b._viewers)
         self.assertTrue(b._container is alist)
         self.assertTrue(b is alist.getpar("b"))
 
-        w = alist.getwhatever({'d' : None})
+        w = alist.getwhatever(None)
         self.assertRaises(AttributeError, w.set, 1.234)
         self.assertTrue(w in alist.adapters)
         self.assertTrue(w in alist._viewers)
         self.assertTrue(alist in w._viewers)
         self.assertTrue(w._container is alist)
-        self.assertTrue(w is alist.getwhatever({'d' : None}))
+        self.assertTrue(w is alist.getwhatever(None))
         return
 
     def testIgnore(self):
@@ -140,7 +140,6 @@ class TestContainerAdapter(unittest.TestCase):
         self.assertEqual(9, p2.value)
         return
 
-
     # Test for refining functions of containers where the constraints are
     # hiding underneath. This is analogous to refining structure parameters but
     # only passing the structure itself to the calculator.
@@ -156,7 +155,7 @@ class TestContainerAdapter(unittest.TestCase):
                 self.x = 1
 
         t = TestClass1()
-        tt = ContainerAdapter("t", t, selfgetter, nosetter)
+        tt = ObjectAdapter("t", t, selfgetter, nosetter)
 
         def func(obj):
             return t.a.x + t.b.x
@@ -341,7 +340,8 @@ class TestContainerAdapter(unittest.TestCase):
     def testSet(self):
         """Test the set method.
 
-        Behavior: Sets the adapted object and abandons all sub-objects.
+        Behavior: Sets the adapted object. If the change is invalid, this is
+        detected by depended adapters.
 
         """
         tlist = self.tlist
@@ -355,17 +355,17 @@ class TestContainerAdapter(unittest.TestCase):
         alist3 = alist2.tlist
         a3 = alist3.a
 
-        self.assertTrue(ContainerAdapter is type(alist2))
-        self.assertTrue(ContainerAdapter is type(alist3))
+        self.assertTrue(ObjectAdapter is type(alist2))
+        self.assertTrue(ObjectAdapter is type(alist3))
 
         self.assertTrue(alist2 in alist.adapters)
         self.assertTrue(alist3 in alist2.adapters)
         self.assertTrue(a3 in alist3.adapters)
 
-        alist2.set({})
+        alist2.set(None)
         self.assertTrue(alist2 in alist.adapters)
-        self.assertFalse(alist3 in alist2.adapters)
-        self.assertFalse(a3 in alist3.adapters)
+        self.assertTrue(alist3 in alist2.adapters)
+        self.assertTrue(a3 in alist3.adapters)
 
         # Make sure the objects are indeed abandoned.
         self.assertRaises(AttributeError, alist3.get)
@@ -383,20 +383,19 @@ class TestContainerAdapter(unittest.TestCase):
         b = alist.getpar("b").rename("b")
         c = alist.getc().rename("c")
         d = Parameter("d", 4)
-        import numpy
-        v = numpy.arange(10)
-        w = alist.getwhatever(v)
+        # Use a key that will have a different representation after pickling.
+        w = alist.getwhatever(testkey)
         func = alist.calc(d)
         v1 = alist[0].rename("v1")
         v2 = alist[1].rename("v2")
-        dobj = dumps((alist, a, b, c, d, func, v1, v2, w))
-        alist2, a2, b2, c2, d2, func2, v12, v22, w2= loads(dobj)
+        dobj = dumps((alist, a, b, c, d, func, v1, v2, w, testkey))
+        alist2, a2, b2, c2, d2, func2, v12, v22, w2, testkey2, = loads(dobj)
         self.assertEqual(alist2.name, alist.name)
         self.assertEqual(alist2.value, alist.value)
         self.assertTrue(a2 is alist2.a)
         self.assertEqual(a2.name, a.name)
         self.assertEqual(a2.value, a.value)
-        self.assertTrue(w2 is alist2.getwhatever(v))
+        self.assertTrue(w2 is alist2.getwhatever(testkey2))
         self.assertTrue(b2 is alist2.getpar("b"))
         self.assertEqual(b2.name, b.name)
         self.assertEqual(b2.value, b.value)
@@ -415,6 +414,8 @@ class TestContainerAdapter(unittest.TestCase):
         self.assertEqual(func2.value, alist2.calc(d2).value)
         return
 
+class Test(object): pass
+testkey = Test()
 
 if __name__ == "__main__":
 

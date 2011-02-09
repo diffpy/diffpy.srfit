@@ -61,7 +61,8 @@ class TestUnboundOperator(unittest.TestCase):
 
         self.assertAlmostEqual(3, op1.value)
 
-        # try this again
+        # Try this again. We should be able to get the same object even if we
+        # don't use the keywords.
         op2 = uop(p1, p2)
         self.assertTrue( op1 is op2 )
 

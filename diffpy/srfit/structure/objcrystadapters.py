@@ -23,14 +23,11 @@ from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
 from pyobjcryst.molecule import StretchModeTorsion
 
 from diffpy.srfit.adapters.nodes import Parameter
-from diffpy.srfit.adapters.adaptersmod import ContainerAdapter
+from diffpy.srfit.adapters.adaptersmod import ObjectAdapter
 from diffpy.srfit.structure.baseadapters import *
 
-class ObjCrystScatteringPowerAdapter(ContainerAdapter):
+class ObjCrystScatteringPowerAdapter(ObjectAdapter):
     """Adapter for ScatteringPower objects.
-
-    Accessors:
-    None
 
     Ignored:
     GetSymbol
@@ -81,14 +78,10 @@ class ObjCrystScattererAdapter(BaseScattererAdapter):
 class ObjCrystAtomAdapter(ObjCrystScattererAdapter):
     """Adapter for Atom and MolAtom.
 
-    Accessors:
-    GetScatteringPower
-
     Ignored:
     None
 
     """
-    accessors = set(["GetScatteringPower"])
 
     def getADPs(self):
         """Get tuple of adapted ADPs (B-factors)."""
@@ -104,17 +97,12 @@ class ObjCrystMoleculeAdapter(ObjCrystScattererAdapter):
     BaseStructureAdapter objects. GetBond, GetBondAngle and GetDihedralAngle
     have been overloaded to return StretchMode parameters.
 
-    Accessors:
-    GetScatteringPower
-    GetAtom
 
     Ignored:
     GetNbAtoms, GetNbBonds, GetNbBondAngles, GetNbDihedralAngles,
     GetNbRigidGroups
 
     """
-    accessors = ObjCrystScattererAdapter.accessors
-    accessors.update(["GetAtom"])
     ignore = ObjCrystScattererAdapter.ignore
     ignore.update(["GetNbAtoms", "GetNbBonds", "GetNbBondAngles",
     "GetNbDihedralAngles", "GetNbRigidGroups"])
@@ -188,14 +176,10 @@ class ObjCrystMoleculeAdapter(ObjCrystScattererAdapter):
 class ObjCrystCrystalAdapter(BaseStructureAdapter):
     """A adapter for Crystals.
 
-    Accessors:
-    GetScatt, GetBondValenceCost
-
     Ignored:
     GetNbScatterer
    
     """
-    accessors = set(["GetScatt", "GetBondValenceCost"])
     ignore = set(["GetNbScatterer"])
 
     def __init__(self, name, obj, getter, setter):
@@ -532,8 +516,8 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
 
 # End class ObjCrystDihedralAngleParameter
 
+from diffpy.srfit.adapters.adaptersmod import registry
 try:
-    from diffpy.srfit.adapters.adaptersmod import registry
     import pyobjcryst
     registry[pyobjcryst.scatteringpower.ScatteringPower] =\
         ObjCrystScatteringPowerAdapter

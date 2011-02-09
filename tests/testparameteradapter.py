@@ -5,6 +5,8 @@ from pickle import dumps, loads
 
 from diffpy.srfit.fit.parameters import Parameter
 from diffpy.srfit.adapters.adaptersmod import ParameterAdapter
+from diffpy.srfit.adapters.adaptersmod import funcgetter, nosetter
+from diffpy.srfit.adapters.adaptersmod import UnboundOperator
 
 class TestParameterAdapter(unittest.TestCase):
 
@@ -27,9 +29,11 @@ class TestParameterAdapter(unittest.TestCase):
 
         self.assertEqual(l.get(), la.value)
 
-        # Change the parameter
+        # Change the parameter. This will not register with the adapter because
+        # it is not done through the adapter.
         l.set(2.3)
-        self.assertEqual(l.get(), la.value)
+        self.assertNotEqual(l.get(), la.value)
+        self.assertEqual(l.get(), la._get())
 
         # Change the adapter
         la.set(3.2)

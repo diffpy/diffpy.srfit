@@ -15,7 +15,7 @@
 
 
 from diffpy.srfit.adapters.adaptersmod import registry, attrgetter
-from diffpy.srfit.adapters.adaptersmod import ContainerAdapter
+from diffpy.srfit.adapters.adaptersmod import ObjectAdapter
 from diffpy.srfit.structure.baseadapters import\
         BaseScattererAdapter, BaseStructureAdapter, BaseLatticeAdapter
 
@@ -23,9 +23,6 @@ __all__ = []
 
 class DiffpyAtomAdapter(BaseScattererAdapter):
     """Adapter for diffpy.Structure.Atom instances.
-
-    Accessors:
-    None
 
     Ignored:
     element, anisotropy
@@ -75,14 +72,10 @@ class DiffpyStructureAdapter(BaseStructureAdapter):
 
     getAtom is overloaded to return the approprate parameter.
 
-    Accessors:
-    angle, distance
-
     Ignored:
     getLabels
     
     """
-    accessors = set(["angle", "distance"])
     ignore = set(["getLabels"])
 
     def __init__(self, name, obj, getter, setter):

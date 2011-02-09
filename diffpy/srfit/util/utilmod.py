@@ -5,8 +5,8 @@ import types
 import numpy
 
 __all__ = ["makeName", "absName", "formatEq", "hasNode", "getParameters",
-"getVaried", "isAdapted", "isViewable", "isVariable", "isVaried", "isFixed",
-"isConstrained", "makeArray"]
+"getVaried", "isAdapter", "isViewable", "isVariable", "isVaried", "isFixed",
+"isConstrained", "isFunction", "makeArray"]
 
 def makeName(obj):
     """Make a unique name for an object."""
@@ -15,7 +15,7 @@ def makeName(obj):
 def absName(adapter):
     """Get an absolute name for an adapter.
 
-    This assumes that the adapter is somehow embeded in a ContainerAdapter, in
+    This assumes that the adapter is somehow embeded in a ObjectAdapter, in
     which case it has back-links to the top container.
 
     """
@@ -83,10 +83,10 @@ def getVaried(eq):
     return getter.vals
 
 # Functions for duck-typing
-def isAdapted(obj):
-    """Determine if obj is adapted.
+def isAdapter(obj):
+    """Determine if obj is an adapter
 
-    An adapted object has "name", "get" and "set" attributes.
+    An adapter has "name", "get" and "set" attributes.
 
     """
     retval = hasattr(obj, "name") 
@@ -143,6 +143,10 @@ def isConstrained(obj):
 def isFixed(obj):
     """Determine if obj is not varied and not constrained."""
     return not (isVaried(obj) or isConstrained(obj))
+
+def isFunction(obj):
+    """Determine if obj is a function node."""
+    return hasattr(obj, "_isfunction") and obj._isfunction
 
 def makeArray(obj):
     """Make an array out of an object."""

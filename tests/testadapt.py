@@ -6,7 +6,7 @@ from diffpy.srfit.structure import *
 adapt = adapters.adapt
 
 class TestAdapt(unittest.TestCase):
-    """Test ObjectAdapter nodes."""
+    """Test ContainerAdapter nodes."""
 
     def testAdaptBuiltin(self):
         """Test the adapt method for builtin types
@@ -40,18 +40,18 @@ class TestAdapt(unittest.TestCase):
         self.assertTrue(isinstance(adapt(float32(3)), ParameterAdapter))
         self.assertTrue(isinstance(adapt(float64(3)), ParameterAdapter))
         self.assertTrue(isinstance(adapt(float96(3)), ParameterAdapter))
-        ObjectAdapter = adapters.ObjectAdapter
-        self.assertTrue(isinstance(adapt({}), ObjectAdapter))
-        self.assertTrue(isinstance(adapt([]), ObjectAdapter))
-        self.assertTrue(isinstance(adapt(Test()), ObjectAdapter))
-        self.assertTrue(isinstance(adapt(1+1j), ObjectAdapter))
-        self.assertTrue(isinstance(adapt(arange(2)), ObjectAdapter))
-        self.assertTrue(isinstance(adapt(None), ObjectAdapter))
+        ContainerAdapter = adapters.ContainerAdapter
+        self.assertTrue(isinstance(adapt({}), ContainerAdapter))
+        self.assertTrue(isinstance(adapt([]), ContainerAdapter))
+        self.assertTrue(isinstance(adapt(Test()), ContainerAdapter))
+        self.assertTrue(isinstance(adapt(1+1j), ContainerAdapter))
+        self.assertTrue(isinstance(adapt(arange(2)), ContainerAdapter))
+        self.assertTrue(isinstance(adapt(None), ContainerAdapter))
         testgetter = lambda obj: "testgetter"
         def testsetter(obj, val):
             raise RuntimeError
         adapter = adapt(Test(), "test", testgetter, testsetter, ["test1"])
-        self.assertTrue(isinstance(adapter, ObjectAdapter))
+        self.assertTrue(isinstance(adapter, ContainerAdapter))
         self.assertEqual("test", adapter.name)
         self.assertEqual("testgetter", adapter.get())
         self.assertRaises(RuntimeError, adapter.set, 0)

@@ -89,7 +89,7 @@ class funcgetter(object):
     """
 
     def __init__(self, args, kw):
-        """Create the operator getter for a ObjectAdapter.
+        """Create the operator getter for a ContainerAdapter.
 
         args    --  Adapter arguments for the function.
         kw      --  Adapter keyword arguments for the function.
@@ -118,12 +118,12 @@ class funcgetter(object):
 class livegetter(object):
     """Getter for "live" adapters.
 
-    This is used by ObjectAdapters to create "live" adapters. This getter holds
+    This is used by ContainerAdapters to create "live" adapters. This getter holds
     another getter that determines what is retrieved. The '__call__' method
     accepts a function that, when called without arguments, retrieves an object
-    that can be passed to the held getter. By passing an ObjectAdapter's 'get'
+    that can be passed to the held getter. By passing an ContainerAdapter's 'get'
     method to '__call__', the most current value of the adapted object is used
-    by the held getter. This allows ObjectAdapters to switch out the objects
+    by the held getter. This allows ContainerAdapters to switch out the objects
     they adapt without necessarily invalidating their own adapters.
 
     """
@@ -196,7 +196,7 @@ def adapt(obj, name = None, getter = selfgetter, setter = nosetter, ignore =
     getter  --  getter(obj) gets the adapted object (default selfgetter).
     setter  --  setter(obj, val) sets the adapted object (default None).
     ignore  --  List of attribute names that will not be adapted in a
-                ObjectAdapter (default []). See ObjectAdapter.
+                ContainerAdapter (default []). See ContainerAdapter.
 
     Returns the adapter.
     
@@ -212,7 +212,7 @@ def adapt(obj, name = None, getter = selfgetter, setter = nosetter, ignore =
     if aobj.name is None:
         aobj.name = aobj._labelself()
     # Assign ignore
-    if isinstance(aobj, ObjectAdapter):
+    if isinstance(aobj, ContainerAdapter):
         aobj.ignore = set(ignore).union(aobj.ignore)
     return aobj
 
@@ -222,7 +222,7 @@ def getAdapter(obj):
         adapter = registry.get(mro)
         if adapter is not None:
             return adapter
-    return ObjectAdapter
+    return ContainerAdapter
 
 class ParameterAdapter(Parameter):
     """Class for adapting parameter-like objects."""
@@ -346,13 +346,13 @@ class ParameterAdapter(Parameter):
 # notifications get dispatched from the hub. Thus, when any node changes, they
 # are all notified.
 # FIXME - change this back to ContainerAdapter
-class ObjectAdapter(ParameterAdapter):
+class ContainerAdapter(ParameterAdapter):
     """Adapter for generic python objects.
 
-    The main purpose of the ObjectAdapter is to create attributes on the fly
+    The main purpose of the ContainerAdapter is to create attributes on the fly
     that mimic the attributes of the adapted object.  Immutable attributes are
     adapted as ParameterAdapter objects, sub-objects are adapted as
-    ObjectAdapters. Adapted attributes refer to the adapted object for their
+    ContainerAdapters. Adapted attributes refer to the adapted object for their
     value. Methods calls are also adapted and return adapters that refer back
     to the function for their value.
     
@@ -541,7 +541,7 @@ class ObjectAdapter(ParameterAdapter):
     # to treat the container like anything other than a container.
     def _identify(self, visitor):
         """Identify self to a visitor."""
-        return visitor.onObject(self)
+        return visitor.onContainer(self)
 
     # For pretty-printing.
     def _show(self):
@@ -564,7 +564,7 @@ class ObjectAdapter(ParameterAdapter):
         return
 
 
-# End class ObjectAdapter
+# End class ContainerAdapter
 
 # FIXME - It is possible that an unbound function could be passed as an
 # argument to a function (e.g. map). Do we want to support this? If so, then
@@ -572,10 +572,10 @@ class ObjectAdapter(ParameterAdapter):
 class UnboundOperator(object):
     """Factory that generates Operator nodes.
 
-    The __call__ method creates a new ObjectAdapter with a funcgetter for
+    The __call__ method creates a new ContainerAdapter with a funcgetter for
     retrieving its value. __call__ accepts arguments and kewords, which should
     be nodes.  Multiple calls with the same arguments will return the
-    configured ObjectAdapter.
+    configured ContainerAdapter.
 
     Attributes
     name    --  Name of the operator
@@ -765,7 +765,7 @@ class MethodAdapter(UnboundOperator):
     """Class for adapting methods.
 
     This an UnboundOperator that aids in adapting methods. It is used by
-    ObjectAdapter.
+    ContainerAdapter.
     
     """
 
@@ -809,11 +809,11 @@ registry[types.FloatType] = ParameterAdapter
 registry[types.IntType] = ParameterAdapter
 registry[types.LongType] = ParameterAdapter
 registry[numpy.floating] = ParameterAdapter
-# Everything else is handled by ObjectAdapter, which is the default.
-#registry[types.ComplexType] = ObjectAdapter
-#registry[types.NoneType] = ObjectAdapter
-#registry[types.StringType] = ObjectAdapter
-#registry[types.UnicodeType] = ObjectAdapter
-#registry[numpy.ndarray] = ObjectAdapter
+# Everything else is handled by ContainerAdapter, which is the default.
+#registry[types.ComplexType] = ContainerAdapter
+#registry[types.NoneType] = ContainerAdapter
+#registry[types.StringType] = ContainerAdapter
+#registry[types.UnicodeType] = ContainerAdapter
+#registry[numpy.ndarray] = ContainerAdapter
 
 __id__ = "$Id$"

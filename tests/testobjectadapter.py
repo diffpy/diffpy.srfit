@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 import unittest
 
-from diffpy.srfit.adapters.adaptersmod import ObjectAdapter
+from diffpy.srfit.adapters.adaptersmod import ContainerAdapter
 from diffpy.srfit.adapters.adaptersmod import selfgetter, nosetter
 from diffpy.srfit.adapters.adaptersmod import adapt
 from diffpy.srfit.adapters.nodes import Parameter
 import utils
 
-class TestObjectAdapter(unittest.TestCase):
-    """Test ObjectAdapter nodes."""
+class TestContainerAdapter(unittest.TestCase):
+    """Test ContainerAdapter nodes."""
 
     def setUp(self):
         self.tlist = utils.TestListContainer()
-        self.alist = ObjectAdapter("list", self.tlist, selfgetter, nosetter)
+        self.alist = ContainerAdapter("list", self.tlist, selfgetter, nosetter)
         self.alist.accessors = ["getc", "getpar", "getwhatever"]
         self.alist.ignore = ["configure"]
 
         self.tdict = utils.TestDictContainer()
-        self.adict = ObjectAdapter("dict", self.tdict, selfgetter, nosetter)
+        self.adict = ContainerAdapter("dict", self.tdict, selfgetter, nosetter)
         self.adict.accessors = ["getc", "getpar"]
         self.adict.ignore = ["configure"]
         return
@@ -156,7 +156,7 @@ class TestObjectAdapter(unittest.TestCase):
                 self.x = 1
 
         t = TestClass1()
-        tt = ObjectAdapter("t", t, selfgetter, nosetter)
+        tt = ContainerAdapter("t", t, selfgetter, nosetter)
 
         def func(obj):
             return t.a.x + t.b.x
@@ -360,8 +360,8 @@ class TestObjectAdapter(unittest.TestCase):
         alist3 = alist2.tlist
         a3 = alist3.a
 
-        self.assertTrue(ObjectAdapter is type(alist2))
-        self.assertTrue(ObjectAdapter is type(alist3))
+        self.assertTrue(ContainerAdapter is type(alist2))
+        self.assertTrue(ContainerAdapter is type(alist3))
 
         self.assertTrue(alist2 in alist.adapters)
         self.assertTrue(alist3 in alist2.adapters)

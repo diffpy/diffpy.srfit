@@ -15,7 +15,7 @@ def makeName(obj):
 def absName(adapter):
     """Get an absolute name for an adapter.
 
-    This assumes that the adapter is somehow embeded in a ObjectAdapter, in
+    This assumes that the adapter is somehow embeded in a ContainerAdapter, in
     which case it has back-links to the top container.
 
     """

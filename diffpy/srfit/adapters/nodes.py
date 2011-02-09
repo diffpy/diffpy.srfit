@@ -45,12 +45,12 @@ A ParameterAdapter adapts a parameter-like object to the Parameter interface.
 It can also adapt a function. The ParameterAdapter class is defined in the
 adaptersmod module.
 
-ObjectAdapter
-ObjectAdapters are adapters for generic python objects and generate adapters
-for the objects' attributes, items and methods.  ObjectAdapters can act like
+ContainerAdapter
+ContainerAdapters are adapters for generic python objects and generate adapters
+for the objects' attributes, items and methods.  ContainerAdapters can act like
 leaf nodes, but are aware of their sub-objects, and can adapt functions as
-well.  Whether a ParameterAdapter or ObjectAdapter is used to adapt a function
-depends on the function output.  The ObjectAdapter class is defined in the
+well.  Whether a ParameterAdapter or ContainerAdapter is used to adapt a function
+depends on the function output.  The ContainerAdapter class is defined in the
 adaptersmod module.
 
 """

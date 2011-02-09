@@ -15,7 +15,7 @@
 
 
 from diffpy.srfit.adapters.adaptersmod import registry, attrgetter
-from diffpy.srfit.adapters.adaptersmod import ObjectAdapter
+from diffpy.srfit.adapters.adaptersmod import ContainerAdapter
 from diffpy.srfit.structure.baseadapters import\
         BaseScattererAdapter, BaseStructureAdapter, BaseLatticeAdapter
 

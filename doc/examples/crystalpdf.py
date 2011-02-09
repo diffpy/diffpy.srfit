@@ -43,7 +43,7 @@ def main(ciffile, datname):
     calc.rmax = _r[-1] + 0.5 * calc.rstep
 
     # Now we adapt the PDFCalculator. There is no special code written to do
-    # this. The default ObjectAdapter is being used to wrap the calculator.
+    # this. The default ContainerAdapter is being used to wrap the calculator.
     # I will probably write factor functions that streamline the creation of
     # the calculator and adapter.
     g = adapt(calc)

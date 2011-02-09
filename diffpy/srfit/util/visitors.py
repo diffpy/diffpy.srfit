@@ -13,7 +13,7 @@ class Visitor(object):
         """Process a Parameter node."""
         raise NotImplementedError
 
-    def onObject(self, obj):
+    def onContainer(self, obj):
         """Process a Container node."""
         raise NotImplementedError
 
@@ -46,7 +46,7 @@ class FilterGetter(Visitor):
             obj._container._identify(self)
         return
 
-    def onObject(self, obj):
+    def onContainer(self, obj):
         if obj in self.visited: return
         self.visited.add(obj)
 
@@ -103,7 +103,7 @@ class ParameterGetter(Visitor):
             obj._container._identify(self)
         return
 
-    def onObject(self, obj):
+    def onContainer(self, obj):
         if obj in self.visited: return
         self.visited.add(obj)
 
@@ -158,7 +158,7 @@ class NodeFinder(Visitor):
             self.onFunction(obj)
         return
 
-    def onObject(self, obj):
+    def onContainer(self, obj):
         if obj is self._node: self.found = True
         if self.found: return
         for arg in obj.adapters:
@@ -222,7 +222,7 @@ class Printer(Visitor):
             self.output += str(obj.name)
         return
 
-    def onObject(self, obj):
+    def onContainer(self, obj):
         self.onParameter(obj)
         return
 

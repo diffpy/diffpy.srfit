@@ -23,10 +23,10 @@ from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
 from pyobjcryst.molecule import StretchModeTorsion
 
 from diffpy.srfit.adapters.nodes import Parameter
-from diffpy.srfit.adapters.adaptersmod import ObjectAdapter
+from diffpy.srfit.adapters.adaptersmod import ContainerAdapter
 from diffpy.srfit.structure.baseadapters import *
 
-class ObjCrystScatteringPowerAdapter(ObjectAdapter):
+class ObjCrystScatteringPowerAdapter(ContainerAdapter):
     """Adapter for ScatteringPower objects.
 
     Ignored:

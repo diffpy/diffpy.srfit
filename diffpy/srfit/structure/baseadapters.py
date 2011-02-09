@@ -19,9 +19,9 @@
 __all__ = ["BaseScattererAdapter", "BaseStructureAdapter",
     "BaseLatticeAdapter"]
 
-from diffpy.srfit.adapters.adaptersmod import ObjectAdapter
+from diffpy.srfit.adapters.adaptersmod import ContainerAdapter
 
-class BaseScattererAdapter(ObjectAdapter):
+class BaseScattererAdapter(ContainerAdapter):
     """Base class for scatterer adapters.
 
     BaseScattererAdapter provides a getXYZ method that returns a tuple of the
@@ -50,7 +50,7 @@ class BaseScattererAdapter(ObjectAdapter):
 
 # End class BaseScattererAdapter
 
-class BaseLatticeAdapter(ObjectAdapter):
+class BaseLatticeAdapter(ContainerAdapter):
     """Base class for structure adapters.
 
     This contains the "angunits" attribute required by the getLattice method of
@@ -69,7 +69,7 @@ class BaseLatticeAdapter(ObjectAdapter):
 
 # End class BaseLatticeAdapter
 
-class BaseStructureAdapter(ObjectAdapter):
+class BaseStructureAdapter(ContainerAdapter):
     """Base class for structure adapters.
 
     BaseStructureAdapter provides methods that help interface structure

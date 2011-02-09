@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # FIXME - need better printing
 
-from diffpy.srfit.util.utilmod import isFunction
+from diffpy.srfit.util.utilmod import isFunction, isContained
 
 class Visitor(object):
     """Abstract class for all visitors to a tree of nodes.
@@ -42,7 +42,7 @@ class FilterGetter(Visitor):
             obj._constraint._identify(self)
         if isFunction(obj):
             self.onFunction(obj)
-        if obj._container is not None:
+        if isContained(obj):
             obj._container._identify(self)
         return
 
@@ -58,7 +58,7 @@ class FilterGetter(Visitor):
             self.onFunction(obj)
         if obj.isConstrained():
             obj._constraint._identify(self)
-        if obj._container is not None:
+        if isContained(obj):
             obj._container._identify(self)
         return
 
@@ -99,7 +99,7 @@ class ParameterGetter(Visitor):
             obj._constraint._identify(self)
         if isFunction(obj):
             self.onFunction(obj)
-        if obj._container is not None:
+        if isContained(obj):
             obj._container._identify(self)
         return
 
@@ -113,7 +113,7 @@ class ParameterGetter(Visitor):
             obj._constraint._identify(self)
         if isFunction(obj):
             self.onFunction(obj)
-        if obj._container is not None:
+        if isContained(obj):
             obj._container._identify(self)
         return
 

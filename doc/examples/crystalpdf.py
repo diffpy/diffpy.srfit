@@ -17,6 +17,8 @@ from diffpy.srreal.pdfcalculator import PDFCalculator
 from diffpy.srfit.pdf import PDFParser
 from diffpy.srfit import *
 
+# FIXME - profile how much things get set and get
+
 def main(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 

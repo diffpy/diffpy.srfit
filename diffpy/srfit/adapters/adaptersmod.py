@@ -296,6 +296,20 @@ class ParameterAdapter(Parameter):
         self._notify(msg)
         return
 
+    def _updateConstraints(self):
+        """Update constraints within the container network."""
+        if self._nlocked: return
+        self._nlocked = True
+        if self._container is not None:
+            # If we're in a container, send the message to update the
+            # constraints.
+            self._container._updateConstraints()
+        if self.isConstrained():
+            val = self._constraint.get()
+            self._set(val)
+        self._nlocked = False
+        return
+
 
 # End class ParameterAdapter
 
@@ -644,7 +658,6 @@ class UnboundOperator(object):
         if self._container is not None:
             self._container._addNode(adapter)
             adapter._container = self._container
-            # FIXME - don't think we need this
             self._container._cachedfunctions.add(adapter)
 
         return adapter

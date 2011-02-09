@@ -40,19 +40,23 @@ can be constrained to another node, in which case it defers to that node for
 its value. This is done in such a way that if the parameter is adapting another
 object, the object's value is also controlled by the constraint.
 
-Container
-Containers are adapters for generic python objects and generate adapters for
-the objects' attributes, items and methods.  Containers can act like leaf
-nodes, but are also aware of their sub-objects, and can act like operators. See
-the ObjectAdapter class from the adaptersmod module for more information.
+ParameterAdapter
+A ParameterAdapter adapts a parameter-like object to the Parameter interface.
+It can also adapt a function. The ParameterAdapter class is defined in the
+adaptersmod module.
+
+ObjectAdapter
+ObjectAdapters are adapters for generic python objects and generate adapters
+for the objects' attributes, items and methods.  ObjectAdapters can act like
+leaf nodes, but are aware of their sub-objects, and can adapt functions as
+well.  Whether a ParameterAdapter or ObjectAdapter is used to adapt a function
+depends on the function output.  The ObjectAdapter class is defined in the
+adaptersmod module.
 
 """
 
 
 from diffpy.srfit.util import messages, hasNode, absName, formatEq
-
-
-#import diffpy.srfit.fit.functions as funcs
 
 class Node(object):
     """Nodes in an evaluation network.
@@ -90,10 +94,6 @@ class Node(object):
         # Flag indicating that we are locked from sending notifications. This
         # is here to prevent cycles in cyclic viewers.
         self._nlocked = False
-
-        # If this is contained, then keep a reference to the container
-        # FIXME - this should be moved to the adapter interface.
-        self._container = None
         return
 
     value = property( lambda self: self.get(),
@@ -141,11 +141,6 @@ class Node(object):
 
     def _updateConstraints(self):
         """Update constraints within the container network."""
-        if self._nlocked: return
-        if self._container is None: return
-        self._nlocked = True
-        self._container._updateConstraints()
-        self._nlocked = False
         return
 
     # Viewable methods
@@ -355,10 +350,6 @@ class Parameter(Node):
         """Update constraints within the container network."""
         if self._nlocked: return
         self._nlocked = True
-        if self._container is not None:
-            # If we're in a container, send the message to update the
-            # constraints.
-            self._container._updateConstraints()
         if self.isConstrained():
             val = self._constraint.get()
             self._set(val)
@@ -378,9 +369,6 @@ class Parameter(Node):
         """
         if self._tryset(val):
             self._notify(self._valmsg)
-            # FIXME - we might not need this here. _get is called in set. We
-            # want to reduce the number of calls if possible.
-            self._value = self._get()
         return self
 
     def constrain(self, eq):

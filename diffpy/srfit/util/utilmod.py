@@ -6,7 +6,7 @@ import numpy
 
 __all__ = ["makeName", "absName", "formatEq", "hasNode", "getParameters",
 "getVaried", "isAdapter", "isViewable", "isVariable", "isVaried", "isFixed",
-"isConstrained", "isFunction", "makeArray"]
+"isConstrained", "isFunction", "isContained", "makeArray"]
 
 def makeName(obj):
     """Make a unique name for an object."""
@@ -147,6 +147,10 @@ def isFixed(obj):
 def isFunction(obj):
     """Determine if obj is a function node."""
     return hasattr(obj, "_isfunction") and obj._isfunction
+
+def isContained(obj):
+    """Determine if obj is contained in another object."""
+    return hasattr(obj, "_container") and obj._container is not None
 
 def makeArray(obj):
     """Make an array out of an object."""

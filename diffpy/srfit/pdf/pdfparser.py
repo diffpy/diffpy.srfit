@@ -15,7 +15,7 @@ import numpy
 from diffpy.srfit.fit.profileparser import ProfileParser, ParseError
 
 class PDFParser(ProfileParser):
-    """Class for holding a diffraction pattern.
+    """Parser for PDF data from PDFgetX2 and PDFgetN.
 
     Attributes
 

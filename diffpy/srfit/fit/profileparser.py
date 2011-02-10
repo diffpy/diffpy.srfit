@@ -29,9 +29,22 @@ def getParser(fmt):
 
 def parserInfo():
     """Print information on all parsers."""
-    _s = lambda lines: lines.split()[0]
+    import textwrap
+    def _s(docstr):
+        lines = docstr.splitlines()
+        for line in lines:
+            line.strip()
+            if line: return line
+        return ""
+    maxlen = max(map(len, _registry.keys()))
+    pad = maxlen + 2
+    indent = pad + 4
     items = ((fmt, _s(cls.__doc__)) for fmt, cls in _registry.iteritems())
-    info = "\n".join("%s\n%s\n"%item for item in items)
+    lines = (fmt.ljust(pad) + "--  " + doc for fmt, doc in items)
+    tw = textwrap.TextWrapper(width = 79, subsequent_indent = ' '*indent)
+    wlines = (tw.fill(line) for line in lines)
+    info = "Registered parsers\n\n"
+    info += "\n".join(sorted(wlines))
     print info
     return
 
@@ -118,7 +131,7 @@ class ProfileParser(object):
         self._banks = []
         self._meta = {}
         filestring = infile.read()
-        self.parseString(filestring)
+        self.parseString(filestring, *args, **kw)
         infile.close()
         self._meta["filename"] = filename
 
@@ -191,7 +204,7 @@ class ProfileParser(object):
 # End of ProfileParser
 
 class TextParser(ProfileParser):
-    """Parser for text parsers using numpy.loadtxt
+    """Parser for text parsers using numpy.loadtxt.
 
     Attributes
 
@@ -221,6 +234,10 @@ class TextParser(ProfileParser):
     nbanks      --  The number of banks parsed.
     bank        --  The chosen bank number.
 
+    Specific Metadata
+    The arguments sent to loadtxt, including defaults, are stored in the
+    metadata by argument name.
+
     """
 
     _format = "txt"
@@ -233,8 +250,9 @@ class TextParser(ProfileParser):
         Arguments are passed to numpy.loadtxt. 
         unpack = True is enforced. 
         The first two arrays returned by numpy.loadtxt are assumed to be x and
-        y.  If there is a third array, it is assumed to by dy. These can be
-        controlled with the usecols option. Any other arrays are ignored.
+        y.  If there is a third array, it is assumed to be dy and if there is a
+        fourth it is considered to by dx.  These can be controlled with the
+        usecols option. Any other arrays are ignored.
 
         Raises ParseError if the call to numpy.loadtxt returns fewer than 2
         arrays.
@@ -250,9 +268,11 @@ class TextParser(ProfileParser):
         callargs = getcallargs(numpy.loadtxt, iofile, *args, **kw)
         callargs["unpack"] = True
 
+        self._meta.update(callargs)
+
         cols = numpy.loadtxt(**callargs)
 
-        x = y = dy = None
+        x = y = dy = dx = None
         # Due to using 'unpack', a single column will come out as a single
         # array, thus the second check.
         if len(cols) < 2 or not isinstance(cols[0], numpy.ndarray):
@@ -262,8 +282,10 @@ class TextParser(ProfileParser):
         y = cols[1]
         if len(cols) > 2:
             dy = cols[2]
+        if len(cols) > 3:
+            dx = cols[3]
 
-        self._banks.append([x, y, None, dy])
+        self._banks.append([x, y, dx, dy])
         return
 
 # End of TextParser

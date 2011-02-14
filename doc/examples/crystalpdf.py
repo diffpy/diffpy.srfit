@@ -14,7 +14,7 @@
 ########################################################################
 from diffpy.Structure import Structure
 from diffpy.srreal.pdfcalculator import PDFCalculator
-from diffpy.srfit.pdf import PDFParser
+import diffpy.srfit.pdf
 from diffpy.srfit import *
 
 def main(ciffile, datname):
@@ -24,10 +24,7 @@ def main(ciffile, datname):
     # reason to have both a PDFParser and a Profile in this example. In the
     # future, Parsers will inherit from Profile so we can save a few lines of
     # code here.
-    parser = PDFParser()
-    parser.parseFile(datname)
-    profile = Profile()
-    profile.load(parser)
+    profile = loadProfile(datname, "PDF")
     profile.setRange(xmax = 20)
     r, gr, dgr = profile
     _r = r.get()
@@ -79,13 +76,19 @@ def main(ciffile, datname):
     atalker = adapt(talker, "talker")
 
     # Create the fit equation.
-    out = atalker(g(s))
+    gcalc = g(s)
+    out = atalker(gcalc)
+    print s._cache
+    print s._cache._neighbors, gcalc._cache
+    print gcalc._cache, g._cache
+    print out._cache
+
     rcalc, gcalc = out
     rcalc.rename("rcalc")
     gcalc.rename("gcalc")
+
+
     fiteq = interp(r, rcalc, gcalc)
-    a.value = 3.527
-    fiteq.value
     # Create the residual equation. Note that 'chi' creates a vector residual
     # that can be dotted into itself to generate 'chi^2'.
     reseq = chi(fiteq, gr, dgr)
@@ -97,6 +100,7 @@ def main(ciffile, datname):
 
     # Optimize. 
     from scipy.optimize import leastsq, fmin
+    # XXX Why aren't the atoms valid after the first couple of calls?
     leastsq(res.vec, res.values)
     #fmin(res, res.values)
 

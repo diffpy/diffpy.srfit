@@ -186,8 +186,8 @@ class ProfileParser(object):
         index -n returns the nth bank from the end. 
 
         Arguments:
-        index  --   index of bank (integer, starting at 0, default None). If
-                    index is None then the currently selected bank is used.
+        index  --   index of bank (integer, starting at 0). If index is None
+                    then the currently selected bank is used.
 
         This returns (x, y, dx, dy) tuple for the bank. dx is 0 if it cannot
         be determined from the data format.
@@ -204,7 +204,7 @@ class ProfileParser(object):
 # End of ProfileParser
 
 class TextParser(ProfileParser):
-    """Parser for text parsers using numpy.loadtxt.
+    """Text parser using numpy.loadtxt.
 
     Attributes
 
@@ -251,7 +251,7 @@ class TextParser(ProfileParser):
         unpack = True is enforced. 
         The first two arrays returned by numpy.loadtxt are assumed to be x and
         y.  If there is a third array, it is assumed to be dy and if there is a
-        fourth it is considered to by dx.  These can be controlled with the
+        fourth it is considered to be dx.  These can be controlled with the
         usecols option. Any other arrays are ignored.
 
         Raises ParseError if the call to numpy.loadtxt returns fewer than 2

@@ -26,7 +26,7 @@ def Var(name, value = None):
     """Factory for variable parameters.
 
     name    --  Name of the parameter
-    value   --  Value of the parameter (default None)
+    value   --  Value of the parameter
 
     The returned parameter is varied by default, but can be fixed.
 
@@ -54,13 +54,15 @@ class FixedParameter(Parameter):
     This parameter cannot be varied.
 
     """
+
     def vary(self, val = None, dovary = True):
         """Raises AttributeError: cannot vary this parameter"""
         raise AttributeError("Parameter cannot be varied")
+
     def fix(self, val = None):
         """Set this as fixed during a fit. This is the default state.
 
-        val --  New value for the parameter. If this is None (default), the
+        val --  New value for the parameter. If this is None , the
                 parameter value will not change.
 
         Returns self so that mutator methods can be chained.
@@ -68,6 +70,7 @@ class FixedParameter(Parameter):
         """
         Parameter.vary(self, val, False)
         return self
+
     def varied(self):
         """Indicate if this Parameter is varied. Always False."""
         return False

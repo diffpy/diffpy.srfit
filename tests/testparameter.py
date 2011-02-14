@@ -2,7 +2,6 @@
 
 import unittest
 
-from utils import TestViewer
 from pickle import dumps, loads
 
 from diffpy.srfit.fit.parameters import *
@@ -108,45 +107,34 @@ class TestParameter(unittest.TestCase):
     def testValue(self):
         """Test value setting and getting."""
         l = Parameter("l")
-        viewer = TestViewer()
-        l._addViewer(viewer)
 
-        dl = dumps((l, viewer))
-        lp, viewerp = loads(dl)
+        dl = dumps(l)
+        lp = loads(dl)
 
-        self._testValue(l, viewer)
-        self._testValue(lp, viewerp)
+        self._testValue(l)
+        self._testValue(lp)
         return
 
-    def _testValue(self, l, viewer):
+    def _testValue(self, l):
         """Test value setting and getting."""
 
         l.set(3.14)
         self.assertAlmostEqual(3.14, l.get())
-        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
-        viewer.msg = None
-        l.set(3.14)
-        self.assertTrue(None is viewer.msg)
 
         # Try array
         import numpy
         x = numpy.arange(0, 10, 0.1)
         l.set(x)
-        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
-        viewer.msg = None
         self.assertTrue( l.get() is x )
         self.assertTrue( l.value is x )
 
         # Change the array
         y = numpy.arange(0, 10, 0.5)
         l.value = y
-        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
-        viewer.msg = None
         self.assertTrue( l.get() is y )
 
         # Back to scalar
         l.set(1.01)
-        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
         self.assertAlmostEqual(1.01, l.value)
         return
 
@@ -156,7 +144,6 @@ class TestParameter(unittest.TestCase):
         m = Parameter("m", 4)
         self.assertFalse( l.isConstrained() )
         self.assertFalse( m.isConstrained() )
-        self.assertTrue(l not in m._viewers)
         self.assertAlmostEqual(3, l.value)
         l.constrain(m)
 
@@ -172,18 +159,16 @@ class TestParameter(unittest.TestCase):
         """Test constraints."""
         self.assertTrue( l.isConstrained() )
         self.assertTrue(l._constraint is m)
-        self.assertTrue(l in m._viewers)
         self.assertEqual(4, l.value)
 
         m.value = 5
         self.assertAlmostEqual(5, m.value)
         self.assertAlmostEqual(5, l.value)
 
-        self.assertRaises(AttributeError, l.set, 1)
+        self.assertRaises(ValueError, l.set, 1)
 
         l.unconstrain()
         self.assertFalse( l.isConstrained() )
-        self.assertTrue(l not in m._viewers)
         self.assertAlmostEqual(5, l.value)
 
         l.value = 9
@@ -192,7 +177,7 @@ class TestParameter(unittest.TestCase):
         # check for circular constraint
         p = Parameter("p", 5)
         p.constrain(l)
-        self.assertRaises(AttributeError, l.constrain, p * m)
+        self.assertRaises(ValueError, l.constrain, p * m)
         pass
 
     def testVary(self):
@@ -211,82 +196,22 @@ class TestParameter(unittest.TestCase):
         """Test parameter varying."""
         self.assertFalse(l.isVaried())
 
-        viewer = TestViewer()
-        l._addViewer(viewer)
-        self.assertTrue(viewer in l._viewers)
-        self.assertTrue(viewer.msg is None)
+        l.vary()
+        self.assertTrue(l.isVaried())
 
         l.vary()
         self.assertTrue(l.isVaried())
-        self.assertTrue(viewer.msg is messages.VARY_CHANGED)
-
-        viewer.msg = None
-        l.vary()
-        self.assertTrue(l.isVaried())
-        self.assertFalse(viewer.msg is messages.VARY_CHANGED)
 
         l.vary(3)
         self.assertAlmostEqual(3, l.value)
 
-        viewer.msg = None
         l.fix()
         self.assertFalse(l.isVaried())
-        self.assertTrue(viewer.msg is messages.VARY_CHANGED)
 
         l.fix(4)
         self.assertAlmostEqual(4, l.value)
         return
 
-    def test_respond(self):
-        """Test _respond.
-
-        Behavior: The behavior depends on the message.
-
-        VALUE_CHANGED       --  Set _value to None if we are constrained and
-                                notify viewers.
-        VARY_CHANGED        --  Notify viewers.
-
-        """
-        viewer = TestViewer()
-        l = Parameter("l", 1)
-        m = Parameter("m", 2)
-        l._addViewer(viewer)
-        self.assertTrue(viewer.msg is None)
-
-        # pickle
-        dl = dumps((l, m, viewer))
-        lp, mp, viewerp = loads(dl)
-
-        self._test_respond(l, m, viewer)
-        self._test_respond(lp, mp, viewerp)
-        return
-
-    def _test_respond(self, l, m, viewer):
-        """Test _respond.
-
-        Behavior: The behavior depends on the message.
-
-        VALUE_CHANGED       --  Set _value to None if we are constrained and
-                                notify viewers.
-        VARY_CHANGED        --  Notify viewers.
-
-        """
-
-        l._respond(messages.VARY_CHANGED)
-        self.assertTrue(viewer.msg is messages.VARY_CHANGED)
-        viewer.msg = None
-
-        val = l._value
-        l._respond(messages.VALUE_CHANGED)
-        self.assertTrue(l._value is None)
-        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
-        viewer.msg = None
-
-        l.constrain(m)
-        l._respond(messages.VALUE_CHANGED)
-        self.assertTrue(l._value is None)
-        self.assertTrue(viewer.msg is messages.VALUE_CHANGED)
-        return
 
     def _test_arithmetic(self):
         """Test operations on parameters.

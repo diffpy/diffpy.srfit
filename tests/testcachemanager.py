@@ -25,9 +25,9 @@ class TestCacheManager(unittest.TestCase):
         n2 = makeNode(c1)
         n3 = makeNode(c2)
 
-        self.assertTrue(n1 in c1._nodes)
-        self.assertTrue(n2 in c1._nodes)
-        self.assertTrue(n3 in c2._nodes)
+        self.assertTrue(c1.isMember(n1))
+        self.assertTrue(c1.isMember(n2))
+        self.assertTrue(c2.isMember(n3))
         self.assertFalse(c1.isValid(n1))
         self.assertFalse(c1.isValid(n2))
         self.assertFalse(c2.isValid(n3))
@@ -35,8 +35,8 @@ class TestCacheManager(unittest.TestCase):
         c2.validate(n3)
         self.assertTrue(c2.isValid(n3))
         c1.addNode(n3)
-        self.assertFalse(n3 in c1._nodes)
-        self.assertTrue(c1._neighbors[n3._cache] == 1)
+        self.assertFalse(c1.isMember(n3))
+        self.assertTrue(c1.isNeighbor(n3))
         self.assertFalse(c2.isValid(n3))
         return
 
@@ -55,39 +55,44 @@ class TestCacheManager(unittest.TestCase):
         self.assertRaises(ValueError, c2.removeNode, n1)
 
         # Test valid removal of node from neighboring manager
-        self.assertFalse(n3 in c1._nodes)
-        self.assertTrue(n3 in c2._nodes)
-        self.assertTrue(c1._neighbors[n3._cache] == 1)
+        self.assertFalse(c1.isMember(n3))
+        self.assertTrue(c2.isMember(n3))
+        self.assertTrue(c1.isNeighbor(n3))
         c2.validate(n3)
         self.assertTrue(c2.isValid(n3))
-        self.assertTrue(n3 in c2._valid)
+        self.assertTrue(c2.isValid(n3))
         c1.removeNode(n3)
-        self.assertTrue(n3 in c2._nodes)
-        self.assertFalse(n3._cache in c1._neighbors)
+        self.assertTrue(c2.isMember(n3))
+        self.assertFalse(c1.isNeighbor(n3))
         self.assertFalse(c2.isValid(n3))
-        self.assertFalse(n3 in c2._valid)
 
         # Put two nodes in a neighboring network and make sure that the
         # reference count is correct.
         c2.addNode(n1)
         c2.addNode(n2)
-        self.assertFalse(n1 in c2._nodes)
-        self.assertFalse(n2 in c2._nodes)
-        self.assertTrue(n1 in c1._nodes)
-        self.assertTrue(n2 in c1._nodes)
-        self.assertTrue(c2._neighbors[c1] == 2)
+        self.assertFalse(c2.isMember(n1))
+        self.assertFalse(c2.isMember(n2))
+        self.assertTrue(c1.isMember(n1))
+        self.assertTrue(c1.isMember(n2))
+        self.assertTrue(c2.isNeighbor(n1))
+        self.assertTrue(c2.isNeighbor(n2))
         c2.removeNode(n1)
-        self.assertFalse(n1 in c2._nodes)
-        self.assertFalse(n2 in c2._nodes)
-        self.assertTrue(n1 in c1._nodes)
-        self.assertTrue(n2 in c1._nodes)
-        self.assertTrue(c2._neighbors[c1] == 1)
+        self.assertFalse(c2.isMember(n1))
+        self.assertFalse(c2.isMember(n2))
+        self.assertTrue(c1.isMember(n1))
+        self.assertTrue(c1.isMember(n2))
+        self.assertTrue(c2.isNeighbor(n2))
+        # This knowingly fails. isNeighbor does not care about the node, but
+        # rather its cache manager. If one node from a network is a neighbor,
+        # then they all are.
+        # self.assertFalse(c2.isNeighbor(n1))
         c2.removeNode(n2)
-        self.assertFalse(n1 in c2._nodes)
-        self.assertFalse(n2 in c2._nodes)
-        self.assertTrue(n1 in c1._nodes)
-        self.assertTrue(n2 in c1._nodes)
-        self.assertFalse(c1 in c2._neighbors)
+        self.assertFalse(c2.isMember(n1))
+        self.assertFalse(c2.isMember(n2))
+        self.assertTrue(c1.isMember(n1))
+        self.assertTrue(c1.isMember(n2))
+        self.assertFalse(c2.isNeighbor(n2))
+        self.assertFalse(c2.isNeighbor(n1))
 
         return
 
@@ -167,18 +172,124 @@ class TestCacheManager(unittest.TestCase):
 
         return
 
+    def testConstrain(self):
+        """Test the constrain methods."""
+        c1 = CacheManager()
+        c2 = CacheManager()
+        n1 = makeNode(c1)
+        n2 = makeNode(c1)
+        n3 = makeNode(c2)
+
+        # Test various constraint errors
+        self.assertRaises(ValueError, c1.constrain, n3, n1)
+        self.assertFalse(c1.isConstrained(n2))
+        c1.constrain(n2, n3)
+        self.assertRaises(ValueError, c1.constrain, n2, n1)
+        self.assertTrue(c1.isConstrained(n2))
+        self.assertTrue(c2.isNeighbor(n2))
+        c1.unconstrain(n2)
+        self.assertFalse(c1.isConstrained(n2))
+        self.assertRaises(ValueError, c1.unconstrain, n2)
+        self.assertRaises(ValueError, c1.unconstrain, n3)
+        self.assertFalse(c2.isNeighbor(n2))
+
+        # Test actual constraints
+        n1.value = 1
+        n2.value = 2
+        n3.value = 3
+        self.assertEqual(1, n1.value)
+        self.assertEqual(2, n2.value)
+        self.assertEqual(3, n3.value)
+        eq = n1 + n3
+        c1.constrain(n2, n1+n3)
+        self.assertTrue(c1.isConstrained(n2))
+        c1.updateConstraints()
+        self.assertEqual(1, n1.value)
+        self.assertEqual(4, n2.value)
+        self.assertEqual(3, n3.value)
+        n1.value = 0
+        c1.updateConstraints()
+        self.assertEqual(3, n2.value)
+
+        # This is in the same network as n2. It should not be valid
+        self.assertFalse(c1.isValid(n1))
+        # n2 should be valid, we just got its value
+        self.assertTrue(c1.isValid(n2))
+        # n3 is in another network. It should be valid as well.
+        self.assertTrue(c2.isValid(n3))
+        # The equation should be valid, we just got its value
+        self.assertTrue(eq._cache.isValid(eq))
+
+        # Try to make a cyclic constraint
+        self.assertRaises(ValueError, eq.constrain, n2)
+
+        return
+
+    def testVary(self):
+        """Test the vary methods."""
+        c1 = CacheManager()
+        c2 = CacheManager()
+        n1 = makeNode(c1)
+        n2 = makeNode(c1)
+        n3 = makeNode(c2)
+
+        self.assertFalse(n1._testvaried)
+        self.assertFalse(n2._testvaried)
+        self.assertFalse(n3._testvaried)
+
+        c1.vary(n1)
+        # Check that _onVary got called
+        self.assertTrue(n1._testvaried)
+        self.assertTrue(n2._testvaried)
+        self.assertFalse(n3._testvaried)
+        self.assertTrue(c1.isVaried(n1))
+        self.assertFalse(c1.isVaried(n2))
+        self.assertFalse(c2.isVaried(n3))
+
+        c1.vary(n1, False)
+        n1._testvaried = n2._testvaried = n3._testvaried = False
+        self.assertFalse(c1.isVaried(n1))
+        self.assertFalse(c1.isVaried(n2))
+        self.assertFalse(c2.isVaried(n3))
+
+        self.assertRaises(ValueError, c1.vary, n3)
+        c1.addNode(n3)
+        self.assertRaises(ValueError, c1.vary, n3)
+        c2.vary(n3)
+        self.assertFalse(n1._testvaried)
+        self.assertFalse(n2._testvaried)
+        self.assertTrue(n3._testvaried)
+        self.assertFalse(c1.isVaried(n1))
+        self.assertFalse(c1.isVaried(n2))
+        self.assertTrue(c2.isVaried(n3))
+
+        c2.vary(n3, False)
+        n1._testvaried = n2._testvaried = n3._testvaried = False
+        n1.vary(c1)
+        self.assertTrue(n1._testvaried)
+        self.assertTrue(n2._testvaried)
+        self.assertTrue(n3._testvaried)
+        self.assertTrue(c1.isVaried(n1))
+        self.assertFalse(c1.isVaried(n2))
+        self.assertFalse(c2.isVaried(n3))
+        return
+
 
 def makeNode(cache):
     """Make a node with a cache."""
-    node = TestNode()
+    node = TestNode("test")
     node._cache = cache
     cache.addNode(node)
     return node
 
+from diffpy.srfit.fit import Parameter
+class TestNode(Parameter):
+    def __init__(self, *args, **kw):
+        Parameter.__init__(self, *args, **kw)
+        self._testvaried = False
+    def _onVary(self):
+        self._testvaried = True
 
-class TestNode(object):
-    """Node for testing."""
-    pass
 
 # End TestNode class
 

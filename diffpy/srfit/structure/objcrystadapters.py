@@ -132,6 +132,8 @@ class ObjCrystMoleculeAdapter(ObjCrystScattererAdapter):
         atom2 = self.GetAtom(idx2)
         name = "%s-%s" % (atom1.name, atom2.name)
         bond = ObjCrystBondLengthParameter(name, atom1, atom2)
+        # Make it part of the network
+        self._addNode(bond)
         return bond
 
     def GetBondAngle(self, idx1, idx2, idx3):
@@ -149,6 +151,7 @@ class ObjCrystMoleculeAdapter(ObjCrystScattererAdapter):
         atom3 = self.GetAtom(idx3)
         name = "%s-%s-%s" % (atom1.name, atom2.name, atom3.name)
         bondangle = ObjCrystBondAngleParameter(name, atom1, atom2, atom3)
+        self._addNode(bondangle)
         return bondangle
 
     def GetDihedralAngle(self, idx1, idx2, idx3, idx4):
@@ -169,6 +172,7 @@ class ObjCrystMoleculeAdapter(ObjCrystScattererAdapter):
         name = "%s-%s-%s-%s" % (atom1.name, atom2.name, atom3.name, atom4.name)
         diangle = ObjCrystDihedralAngleParameter(name, atom1, atom2, atom3,
                 atom4)
+        self._addNode(diangle)
         return diangle
 
 # End class ObjCrystMoleculeAdapter
@@ -289,15 +293,6 @@ class StretchModeParameter(Parameter):
         Parameter.__init__(self, name, value)
         return
 
-    def _view(self, *atoms):
-        """Mutually view the added atoms."""
-        for a in atoms:
-            self._addViewer(a.X)
-            self._addViewer(a.Y)
-            self._addViewer(a.Z)
-            a._addViewer(self)
-        return
-
     def _set(self, val):
         """Set the parameter's value."""
         if val is None: return
@@ -314,8 +309,6 @@ class StretchModeParameter(Parameter):
         rigidly in response to a change in a bond property.
 
         """
-        # Make sure we're viewing these atoms and they are viewing us.
-        self._view(*atoms)
         scatlist = [a.get() for a in atoms]
         self.mode.AddAtoms(scatlist)
         return
@@ -360,9 +353,8 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         name    --  The name of the ObjCrystBondLengthParameter
         atom1   --  The first atom in the bond
         atom2   --  The second (mutated) atom in the bond
-        value   --  An initial value for the bond length. If this is None
-                    (default), then the current distance between the atoms will
-                    be used.
+        value   --  An initial value for the bond length. If this is None, then
+                    the current distance between the atoms will be used.
 
         """
 
@@ -374,7 +366,6 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
 
         # We do this last so the atoms are defined before we set any values.
         StretchModeParameter.__init__(self, name, value)
-        atom1._addViewer(self)
         self.addAtoms(atom2)
         return
 
@@ -418,9 +409,8 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
                     bond angle
         atom3   --  The third (mutated) atom (ObjCrystAtomAdapter) in the
                     bond angle
-        value   --  An initial value for the bond length. If this is None
-                    (default), then the current bond angle between the atoms
-                    will be used.
+        value   --  An initial value for the bond length. If this is None, then
+                    the current bond angle between the atoms will be used.
         """
 
         # Create the stretch mode
@@ -434,8 +424,6 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
 
         # We do this last so the atoms are defined before we set any values.
         StretchModeParameter.__init__(self, name, value)
-        atom1._addViewer(self)
-        atom2._addViewer(self)
         self.addAtoms(atom3)
         return
 
@@ -485,9 +473,8 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
                     dihderal angle
         atom4   --  The fourth (mutated) atom (ObjCrystAtomAdapter) in the
                     dihderal angle
-        value   --  An initial value for the bond length. If this is None
-                    (default), then the current dihedral angle between atoms
-                    will be used.
+        value   --  An initial value for the bond length. If this is None, then
+                    the current dihedral angle between atoms will be used.
 
         """
 
@@ -502,9 +489,6 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
 
         # We do this last so the atoms are defined before we set any values.
         StretchModeParameter.__init__(self, name, value)
-        atom1._addViewer(self)
-        atom2._addViewer(self)
-        atom3._addViewer(self)
         self.addAtoms(atom4)
         return
 

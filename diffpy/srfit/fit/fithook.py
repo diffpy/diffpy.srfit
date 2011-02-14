@@ -147,7 +147,8 @@ class PlotFitHook(FitHook):
         x       --  The independent variable to plot over (Node).
         ycalc   --  An equation to evaluate to obtain the calculated profile
                     (Node).
-        yobs    --  The observed profile (Node, default None).
+        yobs    --  The observed profile (Node). If this is None, it is not
+                    displayed.
 
         """
         self.x = x

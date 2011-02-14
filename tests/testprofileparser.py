@@ -7,7 +7,7 @@ import os.path
 from diffpy.srfit.fit.profileparser import TextParser, ParseError
 from diffpy.srfit.fit.profileparser import getParser
 
-thisfile = locals().get('__file__', 'testprofile.py')
+thisfile = locals().get('__file__', 'testprofileparser.py')
 tests_dir = os.path.dirname(os.path.abspath(thisfile))
 testdata_dir = os.path.join(tests_dir, 'testdata')
 

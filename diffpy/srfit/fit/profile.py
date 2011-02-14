@@ -23,11 +23,11 @@ def loadProfile(filename, fmt = 'txt', *args, **kw):
     """Load a profile with a given format.
 
     filename    --  Name of file to be loaded into a profile.
-    fmt         --  The format of the data (default 'txt'). This is used to
-                    select a parser for the data. The 'parserInfo' function
-                    prints information about all parsers and the 'getParser'
-                    function can be used to retrieve and introspect a parser
-                    based on its format.
+    fmt         --  The format of the data (string). This is used to select a
+                    parser for the data. The 'parserInfo' function prints
+                    information about all parsers and the 'getParser' function
+                    can be used to retrieve and introspect a parser based on
+                    its format.
 
     Remaining arguments are passed to the parser.
 

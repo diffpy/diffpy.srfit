@@ -23,8 +23,8 @@ class TestMethodAdapter(unittest.TestCase):
         self.assertTrue( p1 in op1._args )
         self.assertTrue( p2 in op1._args )
         self.assertTrue( {} == op1._kw )
-        self.assertTrue( op1 in p1._viewers )
-        self.assertTrue( op1 in p2._viewers )
+        self.assertTrue(p1._cache.isNeighbor(op1))
+        self.assertTrue(p2._cache.isNeighbor(op1))
 
         self.assertAlmostEqual(3, op1.value)
 

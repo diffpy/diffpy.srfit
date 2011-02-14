@@ -65,10 +65,9 @@ class FitResults(object):
         """Initialize the attributes.
 
         res     --  The Residual containing the results
-        showcon --  Show constraint values in the output (default True).
-        showfixed --  Show fixed variables in the output (default False).
-        update  --  Flag indicating whether to do an immediate update (default
-                    True).
+        showcon --  Show constraint values in the output (bool).
+        showfixed --  Show fixed variables in the output (bool).
+        update  --  Flag indicating whether to do an immediate update (bool).
         
         """
         self.res = res
@@ -272,9 +271,9 @@ class FitResults(object):
         This function is called by show and save. Overloading
         the formatting here will change all three functions.
 
-        header  --  A header to add to the output (default "")
-        footer  --  A footer to add to the output (default "")
-        update  --  Flag indicating whether to call update() (default False).
+        header  --  A header to add to the output.
+        footer  --  A footer to add to the output.
+        update  --  Flag indicating whether to call update() (bool).
 
         Returns a string containing the formatted results.
         
@@ -289,7 +288,7 @@ class FitResults(object):
 
         # User-defined header
         if header:
-            lines.append(header)
+            lines.append(str(header))
 
         lines.extend(self.messages)
 
@@ -414,7 +413,7 @@ class FitResults(object):
 
         # User-defined footer
         if footer:
-            lines.append(footer)
+            lines.append(str(footer))
 
         out = "\n".join(lines) + '\n'
         return out
@@ -422,9 +421,9 @@ class FitResults(object):
     def show(self, header = "", footer = "", update = False):
         """Format and print the results.
 
-        header  --  A header to add to the output (default "")
-        footer  --  A footer to add to the output (default "")
-        update  --  Flag indicating whether to call update() (default False).
+        header  --  A header to add to the output.
+        footer  --  A footer to add to the output.
+        update  --  Flag indicating whether to call update() (bool).
 
         """
         print self.format(header, footer, update).rstrip()
@@ -437,9 +436,9 @@ class FitResults(object):
         """Format and save the results.
 
         filename -  Name of the save file.
-        header  --  A header to add to the output (default "")
-        footer  --  A footer to add to the output (default "")
-        update  --  Flag indicating whether to call update() (default False).
+        header  --  A header to add to the output.
+        footer  --  A footer to add to the output.
+        update  --  Flag indicating whether to call update() (bool).
 
         """
         # Save the time and user

@@ -18,9 +18,7 @@ class SASParser(ProfileParser):
 
     Attributes
 
-    _format     --  Name of the data format that this parses (string, default
-                    ""). The format string is a unique identifier for the data
-                    format handled by the parser.
+    _format     --  Name of the data format that this parses ("SAS").
     _banks      --  The data from each bank. Each bank contains a (x, y, dx, dy)
                     tuple:
                     x       --  A numpy array containing the independent
@@ -114,7 +112,11 @@ class SASParser(ProfileParser):
         os.remove(fn)
         return
 
-
 # End of SASParser
+
+from diffpy.srfit.fitbase.profileparser import _registry
+_registry[SASParser._format] = SASParser
+
+
 __id__ = "$Id$"
 

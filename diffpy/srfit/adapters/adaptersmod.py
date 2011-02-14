@@ -35,7 +35,7 @@ import numpy
 
 from diffpy.srfit.util.getcallargs import getcallargs
 from diffpy.srfit.util import messages, absName
-from diffpy.srfit.util import isAdapter, isViewable, getParameters
+from diffpy.srfit.util import isAdapter, getParameters
 from diffpy.srfit.util import isConstrained
 from diffpy.srfit.adapters.nodes import Node, Parameter
 
@@ -76,9 +76,9 @@ def selfgetter(obj):
     return obj
 
 def nosetter(obj, val):
-    """Raises AttributeError. Use when adapter is read-only."""
+    """Raises TypeError. Use when adapter is read-only."""
     msg = "%r cannot be set"%obj
-    raise AttributeError(msg)
+    raise TypeError(msg)
 
 class funcgetter(object):
     """Getter that evaluates a function.
@@ -191,12 +191,13 @@ def adapt(obj, name = None, getter = selfgetter, setter = nosetter, ignore =
     obj     --  The object being adapted or an object that can be used with
                 getter and setter to retrieve and modify the object being
                 wrapped.
-    name    --  Name for the adapter. If this is None (default), a variation of
-                the id of the wrapped object will be used for the name.
-    getter  --  getter(obj) gets the adapted object (default selfgetter).
-    setter  --  setter(obj, val) sets the adapted object (default None).
+    name    --  Name for the adapter. If this is None, a name will be
+                automatically determined.
+                the wrapped object will be used for the name.
+    getter  --  getter(obj) gets the adapted object.
+    setter  --  setter(obj, val) sets the adapted object.
     ignore  --  List of attribute names that will not be adapted in a
-                ContainerAdapter (default []). See ContainerAdapter.
+                ContainerAdapter. See ContainerAdapter.
 
     Returns the adapter.
     
@@ -235,11 +236,8 @@ class ParameterAdapter(Parameter):
         self._getter = getter
         # Setter for adapted object
         self._setter = setter
-        # Hub of object network. Used to dispatch notifications efficiently.
-        # This will be set by a container.
-        self._hub = self
         # Flag indicating if this is to be treated as a function
-        self._isfunction = True
+        self._isfunction = False
         # The function arguments
         self._args = []
         self._kw = {}
@@ -247,6 +245,25 @@ class ParameterAdapter(Parameter):
         self._container = None
         Parameter.__init__(self, name = name)
         return
+
+    # Parameter methods
+
+    def vary(self, val = None, dovary = True):
+        """Set this as varied during a fit.
+
+        val     --  New value for the parameter. If this is None, the parameter
+                    value will not change.
+        dovary  --  Vary the parameter if true, fix it otherwise.
+
+        Raises TypeError if this adapter is a function.
+
+        Returns self so that mutator methods can be chained.
+        
+        """
+        if self._isfunction:
+            msg = "Functions cannot be varied."
+            raise TypeError(msg)
+        return Parameter.vary(self, val, dovary)
 
     def _get(self):
         """Get the parameter's value."""
@@ -261,91 +278,31 @@ class ParameterAdapter(Parameter):
         """Make this into a function.
 
         The adapter must already have the proper getter to be a function. This
-        makes sure that the function arguments are properly viewed.
+        makes sure that the function arguments are properly added to the
+        network.
 
         args    --  List of adapted arguments
         kw      --  Dictionary of adapted keyword arguments
 
         """
         self._isfunction = True
-        self._args = args
-        self._kw = kw
-        # Make sure that I am viewing the arguments.
-        [arg._addViewer(self) for arg in args]
-        [arg._addViewer(self) for arg in kw.values()]
+        self._args = list(args)
+        self._kw = dict(kw)
+        # FIXME - a node needs to be added to a network before it is turned
+        # into a function otherwise the cache will be abandoned.
+        # self needs to be notified of changes in the arguments. Add it to the
+        # node's network.
+        for arg in chain(args, kw.values()):
+            arg._cache.addNode(self)
         return
 
-    def _notify(self, msg):
-        """Notify viewers of a change.
-
-        This calls the _respond method of the hub (if self is not its own hub)
-        and then asks all viewers to respond.
-
-        msg --  The message to send to viewers. Standard messages are defined
-                in the messages module. The response of the viewer is defined
-                by its _respond method.
-
-        """
-        # Since adapter nodes may be in a network centered around a hub node ,
-        # we ask the hub to respond to the message, and it will notify the rest
-        # of the network. 
-        # XXX We only ask the hub to respond if we are not the hub. Otherwise,
-        # the first call to _respond would get past this point and then the
-        # flow would continue from this point for a second pass.
-        if self is not self._hub: 
-            self._hub._respond(msg)
-        # Now we can perform normal notification. Since we've already visited
-        # the hub, or in the process of doing so, we can temporarily lock the
-        # hub. We do this just in case one of our viewers is also in our node
-        # network, in which case it will be notified by the hub.
-        lval = self._hub._nlocked
-        self._hub._nlocked = True
-        [viewer._respond(msg) for viewer in tuple(self._viewers)]
-        self._hub._nlocked = lval
-        return
-
-    def get(self):
-        """Get the nodes's value.
-
-        If the parameter is constrained, get the value of the constraint
-        instead. This tells the hub to update constraints first.
-
-        """
-        if self._value is None:
-            if self is self._hub:
-                self._updateConstraints()
-            self._value = self._get()
-        return self._value
-
-    def _updateConstraints(self):
-        """Update constraints.
-
-        Update the constrains in the network. This need only be called from
-        the hub node in a network. Any change in the
-        network invalidates the entire network. When 'get' is called on
-        any network node, the chain of livegetters between that node and
-        the hub will propagate the call to the hub's 'get' method.
-        
-        """
-        if self._nlocked: return
-        self._nlocked = True
-        # Update the constraint for every invalidated and constrained node.
-        for viewer in filter(isConstrained, self._viewers):
-            if viewer._value is None:
-                val = viewer._constraint.get()
-                viewer._set(val)
-
-        self._nlocked = False
-        return
+    def _labelself(self):
+        """Provide a label for self, if one is not provided."""
+        obj = self.get()
+        return obj.__class__.__name__
 
 # End class ParameterAdapter
 
-# XXX - Any method or property may change internal information, and therefore
-# indirectly modify other attributes. The way we handle this is to treat the
-# adaped container as a hub. All adapted containees are viewed by the hub and
-# notifications get dispatched from the hub. Thus, when any node changes, they
-# are all notified.
-# FIXME - change this back to ContainerAdapter
 class ContainerAdapter(ParameterAdapter):
     """Adapter for generic python objects.
 
@@ -386,12 +343,22 @@ class ContainerAdapter(ParameterAdapter):
         self._cachedfunctions = set()
         return
 
+    # Parameter methods
+
+    def vary(self, val = None, dovary = True):
+        """Set this as varied during a fit.
+
+        Raises TypeError. ContainerAdapters cannot be varied.
+        
+        """
+        raise TypeError("ContainerAdapters cannot be varied.")
+
     def _labelitem(self, idx):
         """Provide a label for adapted items.
 
         This can be overloaded for list-containers to give names to adapted
         items. This takes prescedent over _labelself, but defers to it when
-        returning None (default).
+        returning None.
         
         """
         return None
@@ -421,11 +388,11 @@ class ContainerAdapter(ParameterAdapter):
         getter = livegetter(attrgetter(name))
         setter = livesetter(attrsetter(name))
 
-        adapter = self._addattr(name, self.get, getter, setter)
+        adapter = self._addAttr(name, self.get, getter, setter)
 
         return adapter
 
-    def _addattr(self, name, obj, getter, setter):
+    def _addAttr(self, name, obj, getter, setter):
         """Add an object as an attribute and adapt it.
 
         name    --  Name for the adapter and name by which it is accessed.
@@ -435,26 +402,32 @@ class ContainerAdapter(ParameterAdapter):
         
         """
         adapter = adapt(obj, name, getter, setter)
-        adapter._container = self
-        adapter._hub = self._hub
 
         if isinstance(adapter, MethodAdapter):
+            adapter._container = self
             self._cachedunbound[name] = adapter
-        # Add the adapter to the network.
-        elif isViewable(adapter):
+        else:
             self._cachedattrs[name] = adapter
             self._addNode(adapter)
 
         return adapter
 
+    def _addFunction(self, adapter):
+        """Add a function to the container."""
+        self._cachedfunctions.add(adapter)
+        self._addNode(adapter)
+        return
+
     def _addNode(self, node):
         """Add a node to the network.
 
-        Allow the node view the hub, which is in charge of dispatching messages
-        to the network.
+        This is assumed to be a new node, so it's cache will be changed to the
+        network cache.
         
         """
-        self._hub._addViewer(node)
+        node._container = self
+        node._cache = self._cache
+        self._cache.addNode(node)
         return
 
     ## Indexing methods
@@ -484,11 +457,9 @@ class ContainerAdapter(ParameterAdapter):
 
         # Adapt it
         adapter = adapt(self.get, name, getter, setter)
-        adapter._container = self
-        adapter._hub = self._hub
-        self._cacheditems[key] = adapter
 
-        # Watch it
+        # Add it
+        self._cacheditems[key] = adapter
         self._addNode(adapter)
 
         return adapter
@@ -602,7 +573,6 @@ class UnboundOperator(object):
         # Generators for cache keys, indexed the same as _cache
         self._keygen = {}
         self._container = None
-        self._hub = None
         return
 
     def _labelself(self):
@@ -661,6 +631,14 @@ class UnboundOperator(object):
         # available at the time. Furthermore, it may be time consuming.
         getter = funcgetter(adargs, adkw)
         adapter = adapt(self, self.name, getter, nosetter)
+
+        # If I have a container, add the adapter to it. This will make sure
+        # that the adapter has the same cache manager as the rest of the
+        # container's network. This is necessary when _makeFunction is called
+        # so that the arguments get added to the proper network.
+        if self._container is not None:
+            self._container._addFunction(adapter)
+
         # Let the adapter know it is a function
         adapter._makeFunction(adargs, adkw)
 
@@ -668,13 +646,6 @@ class UnboundOperator(object):
         self._keygen[key] = (args, kw)
         self._cache[key] = adapter
 
-        # If I have a container, make sure that the new adapter is properly
-        # viewed by it.
-        if self._container is not None:
-            self._container._addNode(adapter)
-            adapter._container = self._container
-            adapter._hub = self._hub
-            self._container._cachedfunctions.add(adapter)
 
         return adapter
 

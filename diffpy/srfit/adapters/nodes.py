@@ -55,8 +55,8 @@ adaptersmod module.
 
 """
 
-
-from diffpy.srfit.util import messages, hasNode, absName, formatEq
+from diffpy.srfit.util import hasNode, absName
+from diffpy.srfit.util.cachemanager import CacheManager
 
 class Node(object):
     """Nodes in an evaluation network.
@@ -87,13 +87,11 @@ class Node(object):
     def __init__(self, name = None):
         """Initialize this node, optionally with a name."""
         self.name = name
-        # Cache for the value
+        # Network cache manager
+        self._cache = CacheManager()
+        self._cache.addNode(self)
+        # Local cache value
         self._value = None
-        self._viewers = set()
-
-        # Flag indicating that we are locked from responding to notifications.
-        # This is here to prevent cycles in cyclic viewers.
-        self._nlocked = False
         return
 
     value = property( lambda self: self.get(),
@@ -101,7 +99,7 @@ class Node(object):
 
     def _get(self):
         """Evaluate this node."""
-        raise AttributeError("Cannot get value")
+        raise ValueError("Cannot get value")
 
     def get(self):
         """Get the value of this node.
@@ -114,7 +112,7 @@ class Node(object):
 
     def _set(self, val):
         """Set the value of the node, if possible."""
-        raise AttributeError("Cannot set value")
+        raise ValueError("Cannot set value")
 
     def set(self, val):
         """Set the value of this node.
@@ -137,48 +135,10 @@ class Node(object):
         self.name = name
         return self
 
-    # Viewable methods
+    # Method needed by CacheManager
 
-    def _addViewer(self, other):
-        """Add a viewer.
-
-        Viewers get notified of changes when '_notify' is called.
-        
-        """
-        self._viewers.add(other)
-        return
-
-    def _removeViewer(self, other):
-        """Remove a viewer."""
-        self._viewers.discard(other)
-        return
-
-    def _notify(self, msg):
-        """Notify viewers of a change.
-
-        This unconditionally calls the _respond method of all viewers.
-
-        msg --  The message to send to viewers. Standard messages are defined
-                in the messages module. The response of the viewer is defined
-                by its _respond method.
-
-        """
-        [viewer._respond(msg) for viewer in tuple(self._viewers)]
-        return
-
-    def _respond(self, msg):
-        """Respond to a notification.
-
-        The behavior of _respond is dependent on the message.
-
-        VALUE_CHANGED   --  Notify viewers.
-        VARY_CHANGED    --  Notify viewers.
-        
-        """
-        if self._nlocked: return
-        self._nlocked = True
-        self._notify(msg)
-        self._nlocked = False
+    def _onVary(self):
+        """Respond to change in variable state of a network node."""
         return
 
     # Method for visitors
@@ -247,11 +207,6 @@ class Node(object):
     def __str__(self):
         return str(self.name)
 
-    def _labelself(self):
-        """Provide a label for self, if one is not provided."""
-        obj = self.get()
-        return obj.__class__.__name__
-
     def _show(self):
         """Get a detailed description of the node."""
         return str(self)
@@ -274,19 +229,14 @@ class Parameter(Node):
         """Initialize the parameter.
 
         name    --  Name of the parameter
-        value   --  Value of the parameter (default None)
+        value   --  Value of the parameter
         
         """
         Node.__init__(self, name)
+        # The local cache. Required by CacheManager.
         self._value = value
-        self._varied = False
+        # The local constraint. Required by CacheManager.
         self._constraint = None
-        # The message sent by 'set'. By default this is
-        # VALUE_CHANGED
-        self._valmsg = messages.VALUE_CHANGED
-        # The message sent by 'vary' and 'fix'. By default this is
-        # VARY_CHANGED
-        self._varmsg = messages.VARY_CHANGED
         return
 
     def _get(self):
@@ -300,12 +250,16 @@ class Parameter(Node):
         instead.
 
         """
-        if self._value is None:
-            # This will set _value to the constraint value
-            if self.isConstrained():
-                val = self._constraint.get()
-                self._set(val)
-            self._value = self._get()
+        if not self._cache.isValid(self):
+            # Required to assure that constraints are updated.
+            self._cache.updateConstraints()
+            # Update our cache. We only need to do this if we're not
+            # constrained. 'updateConstraints' will do it for us otherwise. We
+            # make this additional check just in case '_get' is slow.
+            if not self.isConstrained():
+                self._value = self._get()
+            # Notify cache manager that our cache is valid.
+            self._cache.validate(self)
         return self._value
 
     def _set(self, val):
@@ -316,25 +270,23 @@ class Parameter(Node):
     def _tryset(self, val):
         """Try to set the value.
 
-        This calls _set only if val is not the current value returned by get.
+        This calls _set only if val is not equal to the cache.  The method is
+        provided so that other entities, namely the cache manager, can set the
+        value of a node without discussing it with the network.
 
-        val     --  The value to try and set
-
-        Raises AttributeError if the parameter is constrained.
+        val     --  The value to set.
 
         Returns True if the value was set, False otherwise.
 
         """
-        if self.isConstrained():
-            raise AttributeError("parameter is constrained")
-
-        notequiv = (val != self.get())
+        notequiv = (val != self._value)
         if notequiv is False:
             return False
         if notequiv is True or notequiv.any():
+            # Set the value.
             self._set(val)
-            # We must call _get in case we are an adapter. The value we pass to
-            # _set might get altered by the adaptee.
+            # Cache the value. We call '_get' in case the value was somehow
+            # rejected or modified by underlying code.
             self._value = self._get()
             return True
         # if not notequiv.any(): falls through
@@ -343,103 +295,67 @@ class Parameter(Node):
     def set(self, val):
         """Set the parameter's value.
 
-        This calls _set and then notifies viewers of any change in the
-        parameter's value.
-
-        Raises AttributeError if the parameter is constrained.
-
-        Returns self so that mutator methods can be chained.
-        
-        """
-        if self._tryset(val):
-            self._notify(self._valmsg)
-        return self
-
-    def constrain(self, eq):
-        """Constrain this parameter with an equation.
-
-        eq  --  The constraint equation.
-
-        Raises AttributeError if the parameter is already constrained.
-        Raises AttributeError if the constraint refrences the parameter.
-        Raises AttributeError if the parameter cannot be set.
+        Raises ValueError if the parameter is constrained.
 
         Returns self so that mutator methods can be chained.
         
         """
         if self.isConstrained():
-            raise AttributeError("parameter is already constrained")
-        # Make sure the constraint doesn't cause self-reference
-        if hasNode(self, eq):
-            raise AttributeError("constraint causes self-reference")
-        # Make sure we can set the value of the Parameter. If not, then we
-        # can't constrain to it. Our best estimate is the value of the
-        # equation.
-        self._set(eq.get())
-        # We want to be fixed, with no value and then notify viewers of the
-        # change.
-        self.fix()
-        self._constraint = eq
-        self._constraint._addViewer(self)
-        self._value = None
-        # XXX we assume the value changed, this might not be the case
-        self._notify(self._valmsg)
+            raise ValueError("parameter is constrained")
+
+        # No matter what happens here, the cache is valid after '_tryset'
+        if self._tryset(val):
+            self._cache.invalidateNetwork()
+        self._cache.validate(self)
+
+        return self
+
+    def constrain(self, eq):
+        """Constrain a node with an equation.
+
+        eq  --  The constraint equation.
+
+        Raises ValueError if the node is already constrained.
+        Raises ValueError if the constraint refrences the node.
+        Raises ValueError if the node cannot be set.
+
+        Returns self so that mutator methods can be chained.
+        
+        """
+        self._cache.constrain(self, eq)
         return self
 
     def unconstrain(self):
-        """Unconstrain this parameter.
+        """Unconstrain this node.
 
-        Raises AttributeError if the parameter is not constrained.
+        Raises ValueError if the node is not constrained.
 
         Returns self so that mutator methods can be chained.
 
         """
-        if not self.isConstrained():
-            raise AttributeError("parameter is not constrained")
-
-        self._constraint._removeViewer(self)
-        self._constraint = None
-        # XXX we assume the value changed, this might not be the case
-        self._notify(self._valmsg)
+        self._cache.unconstrain(self)
         return self
 
     def vary(self, val = None, dovary = True):
         """Set this as varied during a fit.
 
-        val     --  New value for the parameter. If this is None (default), the
-                    parameter value will not change.
-        dovary  --  Actually vary the parameter (default True). If this is
-                    False, the parameter will be fixed instead.
+        val     --  New value for the parameter. If this is None, the parameter
+                    value will not change.
+        dovary  --  Vary the parameter if true, fix it otherwise.
 
         Returns self so that mutator methods can be chained.
         
         """
-        if dovary and self.isConstrained():
-            raise AttributeError("parameter is constrained")
-
-        msg = 0
-        oldvary = self._varied
-        self._varied = bool(dovary)
-
-        # Record whether the variability changed
-        if oldvary is not self._varied:
-            msg |= self._varmsg
-
-        # Try to set the value and record whether the value changed
-        if val is not None and self._tryset(val):
-            msg |= self._valmsg
-
-        # Send notification if we have a message to send
-        if msg:
-            self._notify(msg)
-
+        self._cache.vary(self, dovary)
+        if val is not None:
+            self.set(val)
         return self
 
     def fix(self, val = None):
         """Set this as fixed during a fit. This is the default state.
 
-        val --  New value for the parameter. If this is None (default), the
-                parameter value will not change.
+        val --  New value for the parameter. If this is None, the parameter
+                value will not change.
 
         Returns self so that mutator methods can be chained.
         
@@ -449,30 +365,11 @@ class Parameter(Node):
 
     def isVaried(self):
         """Indicate if this Parameter is varied."""
-        return self._varied
+        return self._cache.isVaried(self)
 
     def isConstrained(self):
         """Indicate if this Parameter is constrained."""
-        return (self._constraint is not None)
-
-    def _respond(self, msg):
-        """Respond to a notification.
-
-        The behavior of _respond is dependent on the message.
-
-        VALUE_CHANGED   --  Set _value to None and notify viewers.
-        VARY_CHANGED    --  Notify viewers.
-        
-        """
-        if self._nlocked: return
-        self._nlocked = True
-        # If we get a VALUE_CHANGED message and we are constrained, then we
-        # invalidate our value so it can be recomputed later.
-        if (msg & messages.VALUE_CHANGED):
-            self._value = None
-        self._notify(msg)
-        self._nlocked = False
-        return
+        return self._cache.isConstrained(self)
 
     def _identify(self, visitor):
         """Identify self to a visitor."""

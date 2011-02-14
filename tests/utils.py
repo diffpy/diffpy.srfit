@@ -1,13 +1,5 @@
 """Utilities for testing."""
 
-class TestViewer(object):
-    def __init__(self):
-        self.msg = None
-    def _respond(self, msg):
-        self.msg = msg
-
-# end class TestViewer
-
 class TestVisitor(object):
 
     def __init__(self):

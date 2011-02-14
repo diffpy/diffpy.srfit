@@ -6,7 +6,8 @@ import numpy
 
 from diffpy.srfit.adapters import adapt
 from diffpy.srfit.util import getVaried, makeArray
-from diffpy.srfit.util import messages
+from diffpy.srfit.util import messages, isContained
+from diffpy.srfit.util.cachemanager import CacheManager
 from diffpy.srfit.fit import functions
 
 __all__ = ["chi", "Rw", "reschi2", "resRw2", "residual"]
@@ -95,7 +96,6 @@ def resRw2(fiteq, y, w = None):
     reseq = Rw(fiteq, y, w)
     return residual(reseq)
 
-# XXX Any reason to make this a Node?
 class Residual(object):
     """Class for making residual equation.
 
@@ -122,8 +122,10 @@ class Residual(object):
                     dot(resv, resv), is accessible through '__call__'.
         
         """
+        self._cache = CacheManager()
+        self._cache.addNode(self)
         self.terms = terms
-        self._viewTerms()
+        self._networkTerms()
         # Get the fitted variables and the equation
         self._variables = None
         self.fithooks = []
@@ -166,10 +168,11 @@ class Residual(object):
         """Get values of variables."""
         return [v.get() for v in self.variables]
 
-    def _viewTerms(self):
-        """Make sure we are viewing the terms of the residual."""
+    def _networkTerms(self):
+        """Add us to the network of each term."""
         self.terms = map(adapt, self.terms)
-        [term._addViewer(self) for term in self.terms]
+        for term in self.terms:
+            term._cache.addNode(self)
         return
 
     def append(self, term):
@@ -181,7 +184,7 @@ class Residual(object):
         """
         adterm = adapt(term)
         self.terms.append(adterm)
-        adterm._addViewer(self)
+        adterm._cache.addNode(self)
         self._variables = None
         return
 
@@ -193,27 +196,19 @@ class Residual(object):
 
         """
         self.terms.remove(term)
-        term._removeViewer(self)
+        term._cache.removeNode(self)
         self._variables = None
         return
 
-    def _respond(self, msg):
-        """Respond to a notification.
-
-        The behavior of _respond is dependent on the message.
-
-        VALUE_CHANGED   --  Do nothing.
-        VARY_CHANGED    --  Invalidate _variables so they are recollected the
-                            next time they are needed.
-
-        """
-        if msg & messages.VARY_CHANGED:
-            self._variables = None
+    def _onVary(self):
+        """Reset variables if cache manager says they have changed."""
+        self._variables = None
         return
 
     def _setvals(self, p):
         """Update the values of all parameters."""
-        [var.set(val) for (var, val) in zip(self.variables, p)]
+        for var, val in zip(self.variables, p):
+            var.set(val)
         return
 
     def _getresv(self):

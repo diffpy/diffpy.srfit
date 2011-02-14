@@ -5,7 +5,7 @@ import types
 import numpy
 
 __all__ = ["makeName", "absName", "formatEq", "hasNode", "getParameters",
-"getVaried", "isAdapter", "isViewable", "isVariable", "isVaried", "isFixed",
+"getVaried", "isAdapter", "isVariable", "isVaried", "isFixed",
 "isConstrained", "isFunction", "isContained", "makeArray"]
 
 def makeName(obj):
@@ -44,11 +44,11 @@ def formatEq(eq):
     eq._identify(printer)
     return printer.output
 
-def hasNode(node, eq):
+def hasNode(eq, node):
     """Determine if an equation has given node.
 
-    node    --  The node to identify
     eq      --  The equation to investigate
+    node    --  The node to identify
 
     """
     from diffpy.srfit.util.visitors import NodeFinder
@@ -94,28 +94,13 @@ def isAdapter(obj):
     retval &= hasattr(obj, "set")
     return retval
 
-def isViewable(obj):
-    """Determine if obj is viewable.
-
-    A viewable object has the "_addViewer", "_removeViewer", "_notify" and
-    "_respond" attributes.
-    
-    """
-    retval = hasattr(obj, "_addViewer") 
-    retval &= hasattr(obj, "_removeViewer") 
-    retval &= hasattr(obj, "_notify") 
-    retval &= hasattr(obj, "_respond") 
-    return retval
-
 def isVariable(obj):
     """Determine if obj can be varied.
 
-    A variable object is viewable, and has the "vary", "fix" and "varied"
-    attributes.
+    A variable object has the "vary", "fix" and "varied" attributes.
 
     """
-    retval = isViewable(obj)
-    retval &= hasattr(obj, "vary")
+    retval = hasattr(obj, "vary")
     retval &= hasattr(obj, "fix")
     retval &= hasattr(obj, "isVaried")
     return retval

@@ -27,6 +27,7 @@ from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 
+# FIXME - this is not valid
 class SASParameter(Parameter):
     """Class adapting a sansmodel parameter to srfit Parameter.
     
@@ -51,8 +52,8 @@ class SASParameter(Parameter):
 
         name    --  Name of the Parameter
         model   --  The BaseModel to which the underlying parameter belongs
-        parname --  Name of parameter used by the model. If this is None
-                    (default), then name is used.
+        parname --  Name of parameter used by the model. If this is None, then
+                    name is used.
 
         """
         self._parname = parname or name

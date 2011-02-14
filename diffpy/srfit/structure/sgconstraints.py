@@ -40,14 +40,14 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
     phase       --  An object providing the BaseStructure interface.
     sgsymbol    --  The space group number or symbol (compatible with
                     diffpy.Structure.SpaceGroups.GetSpaceGroup.
-    sgoffset    --  Optional offset for sg origin (default [0, 0, 0]).
-    scatterers  --  The adapted scatterers to constrain. If scatterers is None
-                    (default), then all scatterers accessible from
-                    phase.getScatterers will be constrained.
+    sgoffset    --  Optional offset for sg origin (iterable, length 3).
+    scatterers  --  The adapted scatterers to constrain. If scatterers is None,
+                    then all scatterers accessible from phase.getScatterers
+                    will be constrained.
     constrainlat    --  Flag indicating whether to constrain the lattice
-                    (default True).
+                    (bool).
     constrainadps   --  Flag indicating whether to constrain the ADPs
-                    (default True).
+                    (bool).
 
     The lattice constraints are applied as following.
     

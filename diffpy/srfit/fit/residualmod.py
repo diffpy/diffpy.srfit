@@ -6,7 +6,7 @@ import numpy
 
 from diffpy.srfit.adapters import adapt
 from diffpy.srfit.util import getVaried, makeArray
-from diffpy.srfit.util import messages, isContained
+from diffpy.srfit.util import isContained
 from diffpy.srfit.util.cachemanager import CacheManager
 from diffpy.srfit.fit import functions
 

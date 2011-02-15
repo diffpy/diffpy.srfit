@@ -34,7 +34,7 @@ from inspect import isfunction, ismethod, isclass, isbuiltin
 import numpy
 
 from diffpy.srfit.util.getcallargs import getcallargs
-from diffpy.srfit.util import messages, absName
+from diffpy.srfit.util import absName
 from diffpy.srfit.util import isAdapter, getParameters
 from diffpy.srfit.util import isConstrained
 from diffpy.srfit.adapters.nodes import Node, Parameter

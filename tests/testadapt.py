@@ -35,11 +35,10 @@ class TestAdapt(unittest.TestCase):
         self.assertTrue(isinstance(adapt(3.0), ParameterAdapter))
         self.assertTrue(isinstance(adapt(3), ParameterAdapter))
         self.assertTrue(isinstance(adapt(long(3)), ParameterAdapter))
-        from numpy import float, float32, float64, float96
+        from numpy import float, float32, float64
         self.assertTrue(isinstance(adapt(float(3)), ParameterAdapter))
         self.assertTrue(isinstance(adapt(float32(3)), ParameterAdapter))
         self.assertTrue(isinstance(adapt(float64(3)), ParameterAdapter))
-        self.assertTrue(isinstance(adapt(float96(3)), ParameterAdapter))
         ContainerAdapter = adapters.ContainerAdapter
         self.assertTrue(isinstance(adapt({}), ContainerAdapter))
         self.assertTrue(isinstance(adapt([]), ContainerAdapter))

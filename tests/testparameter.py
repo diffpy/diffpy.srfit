@@ -5,7 +5,6 @@ import unittest
 from pickle import dumps, loads
 
 from diffpy.srfit.fit.parameters import *
-from diffpy.srfit.util import messages
 
 class TestParameter(unittest.TestCase):
 

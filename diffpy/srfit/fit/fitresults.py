@@ -118,9 +118,14 @@ class FitResults(object):
         # Pull out the constrained ones
         constrained = filter(isConstrained, fixedpars)
         fixedpars.difference_update(constrained)
-        fixedpars = fixedpars
-        self.fixednames = [absName(p) for p in fixedpars]
-        self.fixedvals = [p.value for p in fixedpars]
+        fixedvals = [p.value for p in fixedpars]
+        scalars = filter(numpy.isscalar, fixedvals)
+        if scalars:
+            self.fixednames = [absName(p) for p in fixedpars]
+            self.fixedvals = scalars
+        else:
+            self.fixednames = []
+            self.fixedvals = []
         # Get the names and values of the constraints
         self.constrained = constrained
         self.connames = [absName(p) for p in constrained]

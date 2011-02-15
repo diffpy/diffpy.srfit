@@ -13,22 +13,23 @@ def __adaptUFuncs():
     for name in dir(numpy):
         op = getattr(numpy, name)
         if isinstance(op, numpy.ufunc):
-            module.__all__.append(name)
-            setattr(module, name, UnboundOperator(name, op))
+            symname = name + "_"
+            module.__all__.append(symname)
+            setattr(module, symname, UnboundOperator(name, op))
     return
 __adaptUFuncs()
 
-array = UnboundOperator("array", numpy.array)
-__all__.append("array")
+array_ = UnboundOperator("array", numpy.array)
+__all__.append("array_")
 
-dot = UnboundOperator("dot", numpy.dot)
-__all__.append("dot")
+dot_ = UnboundOperator("dot", numpy.dot)
+__all__.append("dot_")
 
-sum = UnboundOperator("sum", numpy.sum)
-__all__.append("sum")
+sum_ = UnboundOperator("sum", numpy.sum)
+__all__.append("sum_")
 
-concatenate = UnboundOperator("concatenate", numpy.concatenate)
-__all__.append("concatenate")
+concatenate_ = UnboundOperator("concatenate", numpy.concatenate)
+__all__.append("concatenate_")
 
-interp = UnboundOperator("interp", numpy.interp)
-__all__.append("interp")
+interp_ = UnboundOperator("interp", numpy.interp)
+__all__.append("interp_")

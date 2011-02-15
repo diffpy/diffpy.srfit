@@ -65,10 +65,10 @@ def Rw(fiteq, y, w = None):
 
     rwv = fiteq - y
     if w is None:
-        rwv /= functions.sqrt( functions.dot(y, y) )
+        rwv /= functions.sqrt_( functions.dot_(y, y) )
     else:
-        rwv *= functions.sqrt( functions.abs(w) )
-        rwv /= functions.sqrt( functions.dot(w * y, y) )
+        rwv *= functions.sqrt_( functions.abs_(w) )
+        rwv /= functions.sqrt_( functions.dot_(w * y, y) )
     rwv.name = "Rw^2"
     return rwv
 

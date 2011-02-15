@@ -288,8 +288,6 @@ class ParameterAdapter(Parameter):
         self._isfunction = True
         self._args = list(args)
         self._kw = dict(kw)
-        # FIXME - a node needs to be added to a network before it is turned
-        # into a function otherwise the cache will be abandoned.
         # self needs to be notified of changes in the arguments. Add it to the
         # node's network.
         for arg in chain(args, kw.values()):
@@ -537,7 +535,7 @@ class ContainerAdapter(ParameterAdapter):
 
 # End class ContainerAdapter
 
-# FIXME - It is possible that an unbound function could be passed as an
+# XXX - It is possible that an unbound function could be passed as an
 # argument to a function (e.g. map). Do we want to support this? If so, then
 # UnboundOperator must be a Node.
 class UnboundOperator(object):
@@ -635,7 +633,7 @@ class UnboundOperator(object):
         # If I have a container, add the adapter to it. This will make sure
         # that the adapter has the same cache manager as the rest of the
         # container's network. This is necessary when _makeFunction is called
-        # so that the arguments get added to the proper network.
+        # so that the container gets added to the network of the arguments.
         if self._container is not None:
             self._container._addFunction(adapter)
 

@@ -150,59 +150,59 @@ class Node(object):
     # Arithmetic operators. These allow nodes to be composed using normal
     # python arithmetic syntax. E.g., newnode = node1 + node2.
     def __add__(self, other): 
-        from diffpy.srfit.fit.functions import add
-        return add(self, other)
+        from diffpy.srfit.fit.functions import add_
+        return add_(self, other)
     def __sub__(self, other): 
-        from diffpy.srfit.fit.functions import subtract
-        return subtract(self, other)
+        from diffpy.srfit.fit.functions import subtract_
+        return subtract_(self, other)
     def __mul__(self, other): 
-        from diffpy.srfit.fit.functions import multiply
-        return multiply(self, other)
+        from diffpy.srfit.fit.functions import multiply_
+        return multiply_(self, other)
     def __div__(self, other): 
-        from diffpy.srfit.fit.functions import divide
-        return divide(self, other)
+        from diffpy.srfit.fit.functions import divide_
+        return divide_(self, other)
     def __pow__(self, other): 
-        from diffpy.srfit.fit.functions import power
-        return power(self, other)
+        from diffpy.srfit.fit.functions import power_
+        return power_(self, other)
     def __radd__(self, other): 
-        from diffpy.srfit.fit.functions import add
-        return add(other, self)
+        from diffpy.srfit.fit.functions import add_
+        return add_(other, self)
     def __rsub__(self, other): 
-        from diffpy.srfit.fit.functions import subtract
-        return subtract(other, self)
+        from diffpy.srfit.fit.functions import subtract_
+        return subtract_(other, self)
     def __rmul__(self, other): 
-        from diffpy.srfit.fit.functions import multiply
-        return multiply(other, self)
+        from diffpy.srfit.fit.functions import multiply_
+        return multiply_(other, self)
     def __rdiv__(self, other): 
-        from diffpy.srfit.fit.functions import divide
-        return divide(other, self)
+        from diffpy.srfit.fit.functions import divide_
+        return divide_(other, self)
     def __rpow__(self, other): 
-        from diffpy.srfit.fit.functions import power
-        return power(other, self)
+        from diffpy.srfit.fit.functions import power_
+        return power_(other, self)
     # In-place operations transfer the name, but not identity
     def __iadd__(self, other): 
-        from diffpy.srfit.fit.functions import add
-        return add(self, other).rename(self.name)
+        from diffpy.srfit.fit.functions import add_
+        return add_(self, other).rename(self.name)
     def __isub__(self, other): 
-        from diffpy.srfit.fit.functions import subtract
-        return subtract(self, other).rename(self.name)
+        from diffpy.srfit.fit.functions import subtract_
+        return subtract_(self, other).rename(self.name)
     def __imul__(self, other): 
-        from diffpy.srfit.fit.functions import multiply
-        return multiply(self, other).rename(self.name)
+        from diffpy.srfit.fit.functions import multiply_
+        return multiply_(self, other).rename(self.name)
     def __idiv__(self, other): 
-        from diffpy.srfit.fit.functions import divide
-        return divide(self, other).rename(self.name)
+        from diffpy.srfit.fit.functions import divide_
+        return divide_(self, other).rename(self.name)
     def __ipow__(self, other): 
-        from diffpy.srfit.fit.functions import power
-        return power(self, other).rename(self.name)
+        from diffpy.srfit.fit.functions import power_
+        return power_(self, other).rename(self.name)
     # Unary operations
     def __neg__(self): 
-        from diffpy.srfit.fit.functions import negative
-        return negative(self)
+        from diffpy.srfit.fit.functions import negative_
+        return negative_(self)
     def __pos__(self): return self
     def __abs__(self): 
-        from diffpy.srfit.fit.functions import abs
-        return abs(self)
+        from diffpy.srfit.fit.functions import abs_
+        return abs_(self)
 
     def __str__(self):
         return str(self.name)

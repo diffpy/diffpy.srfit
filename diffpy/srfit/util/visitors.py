@@ -192,14 +192,14 @@ class Printer(Visitor):
     """
 
     _infix = { 
-            functions.add : "+",
-            functions.subtract : "-",
-            functions.multiply : "*",
-            functions.divide : "/",
-            functions.power : "**",
+            functions.add_ : "+",
+            functions.subtract_ : "-",
+            functions.multiply_ : "*",
+            functions.divide_ : "/",
+            functions.power_ : "**",
             }
     _unary = {
-            functions.negative : "-",
+            functions.negative_ : "-",
             }
 
     def __init__(self):

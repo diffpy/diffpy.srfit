@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from diffpy.srfit.fit.functions import array, maximum
 
 __all__ = ["restrain"]
 
@@ -19,7 +18,8 @@ def restrain(eq, lb, ub = None, sig = 1):
     resv = max(0, lb - val, val - ub)/sig
 
     """
+    from diffpy.srfit.fit.functions import maximum_
     if ub is None: ub = lb
-    resv = maximum(lb - eq, maximum(0, eq - ub)) / sig
+    resv = maximum_(lb - eq, maximum_(0, eq - ub)) / sig
     resv.name = "restraint"
     return resv

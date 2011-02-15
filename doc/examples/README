@@ -73,7 +73,7 @@ them in the order listed below.
 
 Basic:
 
-* gaussianrecipe.py_
+* refinegaussian.py_
     Introductory recipe building and configuration. This introduces the
     fundamental classes in SrFit.
 
@@ -88,10 +88,6 @@ Basic:
     contributions to a fit.
 
 Advanced:
-
-* gaussiangenerator.py_
-    Create a custom ProfileGenerator and use it in a refinement. This is an
-    instructive extension to gaussianrecipe.py_.
 
 * npintensity.py_
     Use diffpy.Structure to build a nanoparticle intensity generator, and use

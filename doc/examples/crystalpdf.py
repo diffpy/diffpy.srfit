@@ -48,20 +48,22 @@ def main(ciffile, datname):
     # Create the structure and adapt it. Again, this could be simplified with a
     # factory function.
     stru = Structure(filename = ciffile)
-    for a in stru:
-        a.Uisoequiv = 0.005
+    stru.Uisoequiv = 0.005
     s = adapt(stru, "nickel")
     
     # Here retrieve the parameters that we want to refine. We write the
     # space group constraints manually. 
     a = s.lattice.a
     a.vary()
-    s.lattice.b.constrain(a)
-    s.lattice.c.constrain(a)
+    dummy = Par("dummy")
+    #s.lattice.b.constrain(a)
+    #s.lattice.c.constrain(a)
+    # FIXME - need an addConstraint method, or something similar.
+    # lattice.addConstraint(s.lattice.setLatPar(a = a, b = a, c = a))
 
     # Retrive the independent Uisoequiv parameter. Note that mutators, such as
     # 'vary' return 'self' so that they can be chained.
-    Uisoequiv = s[0].Uisoequiv.vary(0.005)
+    Uisoequiv = s[0].Uisoequiv.vary()
     for atom in s[1:]:
         atom.Uisoequiv.constrain(Uisoequiv)
 
@@ -76,7 +78,7 @@ def main(ciffile, datname):
     atalker = adapt(talker, "talker")
 
     # Create the fit equation.
-    gcalc = g(s)
+    out = gcalc = g(s)
     out = atalker(gcalc)
     print s._cache
     print s._cache._neighbors, gcalc._cache
@@ -86,7 +88,6 @@ def main(ciffile, datname):
     rcalc, gcalc = out
     rcalc.rename("rcalc")
     gcalc.rename("gcalc")
-
 
     fiteq = interp(r, rcalc, gcalc)
     # Create the residual equation. Note that 'chi' creates a vector residual
@@ -105,7 +106,7 @@ def main(ciffile, datname):
     #fmin(res, res.values)
 
     # Get the results
-    results = FitResults(res)
+    results = FitResults(res, showfixed=True)
     results.show()
     return
 

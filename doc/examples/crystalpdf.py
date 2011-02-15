@@ -12,109 +12,112 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
+"""Example of a PDF refinement using diffpy.Structure and SrReal.
+
+This is example of fitting the fcc nickel structure to measured PDF data. The
+purpose of this example is to demonstrate and describe the classes in
+configuration options involved with setting up a fit in this way. The main
+benefit of using SrFit for PDF refinement is the flexibility of modifying the
+PDF profile function for specific needs, adding restraints to a fit and the
+ability to simultaneously refine a structure to PDF data and data from other
+sources. This example demonstrates only the basic configuration.
+
+"""
+
 from diffpy.Structure import Structure
 from diffpy.srreal.pdfcalculator import PDFCalculator
+# This import statement registers pdf-related adapters
 import diffpy.srfit.pdf
 from diffpy.srfit import *
 
 def main(ciffile, datname):
-    """Create a fitting recipe for crystalline PDF data."""
+    """Fit crystalline PDF data using SrFit."""
 
-    # Load the data. The PDFParser simplifies this task. In short, there is no
-    # reason to have both a PDFParser and a Profile in this example. In the
-    # future, Parsers will inherit from Profile so we can save a few lines of
-    # code here.
+    # Load the data. We use 'loadProfile' as in earlier examples, but now we
+    # want to pull out metadata specific to PDF data. The 
+    # 'import diffpy.srfit.pdf' statement above registered a parser designed
+    # just for this. We tell 'loadProfile' to use this parser by specifying the
+    # 'PDF' format.
     profile = loadProfile(datname, "PDF")
+    # Now we can make good use of the profile and set the fit range.
     profile.setRange(xmax = 20)
     r, gr, dgr = profile
-    _r = r.get()
 
     # Create a PDFCalculator. We can use information from the metadata loaded
     # from file to initialize it. We can't pass the whole meta dictionary since
     # it contains entries that PDFCalculator can't use. In addition, passing a
-    # non-zero qmin value to PDFCalculator cretes a "bad" PDF.
+    # non-zero qmin value to PDFCalculator creates a "bad" PDF.
     calc = PDFCalculator(qmax = profile.meta["qmax"])
     calc.setScatteringFactorTableByType(profile.meta["stype"])
-    calc.rmin = _r[0]
-    calc.rstep = _r[1] - _r[0]
-    calc.rmax = _r[-1] + 0.5 * calc.rstep
+    rdat = r.get()
+    calc.rmin = rdat[0]
+    calc.rstep = rdat[1] - rdat[0]
+    calc.rmax = rdat[-1] + 0.5 * calc.rstep
 
-    # Now we adapt the PDFCalculator. There is no special code written to do
-    # this. The default ContainerAdapter is being used to wrap the calculator.
-    # I will probably write factor functions that streamline the creation of
-    # the calculator and adapter.
-    g = adapt(calc)
-
-    # Create the structure and adapt it. Again, this could be simplified with a
-    # factory function.
-    stru = Structure(filename = ciffile)
-    stru.Uisoequiv = 0.005
-    s = adapt(stru, "nickel")
-    
-    # Here retrieve the parameters that we want to refine. We write the
-    # space group constraints manually. 
-    a = s.lattice.a
-    a.vary()
-    dummy = Par("dummy")
-    #s.lattice.b.constrain(a)
-    #s.lattice.c.constrain(a)
-    # FIXME - need an addConstraint method, or something similar.
-    # lattice.addConstraint(s.lattice.setLatPar(a = a, b = a, c = a))
-
-    # Retrive the independent Uisoequiv parameter. Note that mutators, such as
-    # 'vary' return 'self' so that they can be chained.
-    Uisoequiv = s[0].Uisoequiv.vary()
-    for atom in s[1:]:
-        atom.Uisoequiv.constrain(Uisoequiv)
-
-    # Now vary parameters from the calculator.
+    # Now we adapt the PDFCalculator so it can be used as a symbolic
+    # calculation object. We must pass our PDFCalculator instance, and
+    # optionally give it a name.
+    g = adapt(calc, "g")
+    # While we're at it, define which parameters we want to vary and give them
+    # initial values. Since we're using the adapted calculator for attribute
+    # access, these objects are adapted as parameters.
     g.scale.vary(1)
     g.qdamp.vary(0.01)
     g.delta2.vary(5)
 
-    def talker(val):
-        print "************ called"
-        return val
-    atalker = adapt(talker, "talker")
+    # Now we create the structure object we want to refine and then adapt it.
+    stru = Structure(filename = ciffile)
+    stru.Uisoequiv = 0.005
+    s = adapt(stru, "nickel")
+    
+    # Now we must use the adapters to identify the parameters that we want to
+    # refine and how these are inter-related. There is a
+    # 'constrainAsSpaceGroup' function that simplifies this - we're doing it
+    # the hard way for the sake of demonstration.
+    #
+    # First, the lattice parameters.
+    a = s.lattice.a.vary()
+    s.lattice.b.constrain(a)
+    s.lattice.c.constrain(a)
+    # Next, the ADPs.
+    Uisoequiv = s[0].Uisoequiv.vary()
+    for atom in s[1:]:
+        atom.Uisoequiv.constrain(Uisoequiv)
 
-    # Create the fit equation.
-    out = gcalc = g(s)
-    out = atalker(gcalc)
-    print s._cache
-    print s._cache._neighbors, gcalc._cache
-    print gcalc._cache, g._cache
-    print out._cache
+    # Now we symbolically create the fit equation. The PDFCalculator returns
+    # the calculation range and calculated PDF when called. We capture these
+    # symbolically.
+    rcalc, gcalc = g(s)
 
-    rcalc, gcalc = out
-    rcalc.rename("rcalc")
-    gcalc.rename("gcalc")
+    # Because our data is on the grid defined by 'r', and the fit is on the
+    # grid defined by 'rcalc', we have to interpolate in order to compare them.
+    # The numpy function interp has been adapted for this purpose.
+    fiteq = interp_(r, rcalc, gcalc)
 
-    fiteq = interp(r, rcalc, gcalc)
     # Create the residual equation. Note that 'chi' creates a vector residual
     # that can be dotted into itself to generate 'chi^2'.
     reseq = chi(fiteq, gr, dgr)
-    # Create the residual object. This step and the previous can be performed
-    # at once with the 'reschi2' function.
-    res = residual(reseq)
-
-    print res.names, res.values
+    # Create a restraint on Uisoequiv. Here we pretend that we have prior
+    # knowledge that the value of Uisoequiv is 0.0055 with uncertainty 0.0005.
+    # We create a restraint that effectively adds this input as data point to
+    # the fit.
+    rest1 = restrain(Uisoequiv, 0.0055, sig = 0.0005)
+    # Create the residual object. The restraint adds to the cost of the
+    # residual - we pass it as an argument.
+    res = residual(reseq, rest1)
 
     # Optimize. 
-    from scipy.optimize import leastsq, fmin
-    # XXX Why aren't the atoms valid after the first couple of calls?
+    from scipy.optimize import leastsq
     leastsq(res.vec, res.values)
-    #fmin(res, res.values)
 
     # Get the results
-    results = FitResults(res, showfixed=True)
+    results = FitResults(res)
     results.show()
-    return
 
     # and plot 
     from pylab import plot, show
-    # Note that 'value' is a property for 'get' and 'set'.
-    plot(r.get(), gr.get(), 'bo')
-    plot(r.get(), fiteq.get(), 'r-')
+    plot(r.value, gr.value, 'bo')
+    plot(r.value, fiteq.value, 'r-')
     show()
 
 if __name__ == "__main__":

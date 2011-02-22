@@ -24,6 +24,8 @@ sources. This example demonstrates only the basic configuration.
 
 """
 
+from numpy import pi
+
 from diffpy.Structure import Structure
 from diffpy.srreal.pdfcalculator import PDFCalculator
 # This import statement registers pdf-related adapters
@@ -39,20 +41,19 @@ def main(ciffile, datname):
     # just for this. We tell 'loadProfile' to use this parser by specifying the
     # 'PDF' format.
     profile = loadProfile(datname, "PDF")
-    # Now we can make good use of the profile and set the fit range.
-    profile.setRange(xmax = 20)
-    r, gr, dgr = profile
 
     # Create a PDFCalculator. We can use information from the metadata loaded
     # from file to initialize it. We can't pass the whole meta dictionary since
     # it contains entries that PDFCalculator can't use. In addition, passing a
     # non-zero qmin value to PDFCalculator creates a "bad" PDF.
-    calc = PDFCalculator(qmax = profile.meta["qmax"])
+    calc = PDFCalculator(qmax = profile.meta["qmax"], 
+            rmin=profile.x[0], rmax=20)
+    calc.rstep = pi / calc.qmax
     calc.setScatteringFactorTableByType(profile.meta["stype"])
-    rdat = r.get()
-    calc.rmin = rdat[0]
-    calc.rstep = rdat[1] - rdat[0]
-    calc.rmax = rdat[-1] + 0.5 * calc.rstep
+
+    # Use the same grid as the profile
+    profile.setPoints(calc.rgrid)
+    r, gr, dgr = profile.pars
 
     # Now we adapt the PDFCalculator so it can be used as a symbolic
     # calculation object. We must pass our PDFCalculator instance, and
@@ -92,7 +93,7 @@ def main(ciffile, datname):
     # Because our data is on the grid defined by 'r', and the fit is on the
     # grid defined by 'rcalc', we have to interpolate in order to compare them.
     # The numpy function interp has been adapted for this purpose.
-    fiteq = interp_(r, rcalc, gcalc)
+    fiteq = gcalc#interp_(r, rcalc, gcalc)
 
     # Create the residual equation. Note that 'chi' creates a vector residual
     # that can be dotted into itself to generate 'chi^2'.
@@ -107,8 +108,10 @@ def main(ciffile, datname):
     res = residual(reseq, rest1)
 
     # Optimize. 
-    from scipy.optimize import leastsq
-    leastsq(res.vec, res.values)
+    #from scipy.optimize import leastsq
+    #leastsq(res.vec, res.values)
+    from scipy.optimize import fmin
+    fmin(res, res.values)
 
     # Get the results
     results = FitResults(res)
@@ -125,6 +128,7 @@ if __name__ == "__main__":
     # Make the data and the recipe
     ciffile = "data/ni.cif"
     data = "data/ni-q27r100-neutron.gr"
+    #data = "data/ni-q27r60-xray.gr"
     main(ciffile, data)
 
 # End of file

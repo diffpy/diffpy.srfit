@@ -1,5 +1,18 @@
 #!/usr/bin/env python
-
+########################################################################
+#
+# diffpy.srfit      by DANSE Diffraction group
+#                   Simon J. L. Billinge
+#                   (c) 2011 Trustees of the Columbia University
+#                   in the City of New York.  All rights reserved.
+#
+# File coded by:    Chris Farrow
+#
+# See AUTHORS.txt for a list of people who contributed.
+# See LICENSE.txt for license information.
+#
+########################################################################
+"""Function for restraining the value of an equation."""
 
 __all__ = ["restrain"]
 
@@ -23,3 +36,5 @@ def restrain(eq, lb, ub = None, sig = 1):
     resv = maximum_(lb - eq, maximum_(0, eq - ub)) / sig
     resv.name = "restraint"
     return resv
+
+__id__ = "$Id$"

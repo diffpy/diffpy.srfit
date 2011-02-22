@@ -1,9 +1,22 @@
 #!/usr/bin/env python
+########################################################################
+#
+# diffpy.srfit      by DANSE Diffraction group
+#                   Simon J. L. Billinge
+#                   (c) 2011 Trustees of the Columbia University
+#                   in the City of New York.  All rights reserved.
+#
+# File coded by:    Chris Farrow
+#
+# See AUTHORS.txt for a list of people who contributed.
+# See LICENSE.txt for license information.
+#
+########################################################################
 """This module contains classes for parsing profiles from files.
 
 ProfileParser is a base class for parsing data. It can interact with a Profile
-object to automatically set the Profile's data and metadata. Each specific file
-format must be encapsulated in a ProfileParser subclass.
+object to set the Profile's data and metadata. Each specific file format must
+be encapsulated in a ProfileParser subclass.
 
 See the class documentation for more information.
 

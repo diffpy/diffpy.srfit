@@ -68,11 +68,11 @@ class Profile(object):
     xpar    --  A Parameter that stores x.
     ypar    --  A Parameter that stores y.
     dypar   --  A Parameter that stores dy.
-    data    --  Tuple of (x, y, dy) (property).
+    pars    --  Tuple of (xpar, ypar, dypar) (property).
     meta    --  A dictionary of metadata. This is only set if provided by a
                 parser.
 
-    Profile is iterable and returns xpar, ypar and dypar in that order.
+    Profile is iterable and returns x, y and dy in that order.
 
     """
 
@@ -92,7 +92,7 @@ class Profile(object):
 
         Returns (xpar, ypar, dypar).
         """
-        return iter((self.xpar, self.ypar, self.dypar))
+        return iter((self.x, self.y, self.dy))
 
     # Parameter properties
     x = property( lambda self : self.xpar.get(),
@@ -102,7 +102,7 @@ class Profile(object):
     dy = property( lambda self : self.dypar.get(),
                    lambda self, val : self.dypar.set(val) )
 
-    data = property( lambda self: (self.x, self.y, self.dy) )
+    pars = property( lambda self: (self.xpar, self.ypar, self.dypar) )
 
     def load(self, parser):
         """Load parsed data from a ProfileParser.
@@ -150,7 +150,7 @@ class Profile(object):
 
         return
 
-    def setRange(self, xmin = None, xmax = None, dx = None):
+    def setRange(self, xmin = None, xmax = None, xstep = None):
         """Set the calculation range
 
         Arguments
@@ -160,7 +160,7 @@ class Profile(object):
         xmax    --  The maximum value of the independent variable.
                     If xmax is None (default), the maximum observed value will
                     be used. This is clipped to the maximum observed x.
-        dx      --  The sample spacing in the independent variable. If dx is
+        xstep   --  The sample spacing in the independent variable. If xstep is
                     None (default), then the spacing in the observed points
                     will be preserved.
 
@@ -169,16 +169,16 @@ class Profile(object):
 
         raises AttributeError if there is no observed profile
         raises ValueError if xmin > xmax
-        raises ValueError if dx > xmax-xmin
-        raises ValueError if dx <= 0
+        raises ValueError if xstep > xmax-xmin
+        raises ValueError if xstep <= 0
 
         """
-        clip = dx is None
+        clip = xstep is None
 
         if self.xobs is None:
             raise AttributeError("No observed profile")
 
-        if xmin is None and xmax is None and dx is None:
+        if xmin is None and xmax is None and xstep is None:
             self.x = self.xobs
             self.y = self.yobs
             self.dy = self.dyobs
@@ -194,17 +194,17 @@ class Profile(object):
         else:
             xmax = float(xmax)
 
-        if dx is None:
-            dx = (self.xobs[-1] - self.xobs[0]) / len(self.xobs)
+        if xstep is None:
+            xstep = (self.xobs[-1] - self.xobs[0]) / len(self.xobs)
         else:
-            dx = float(dx)
+            xstep = float(xstep)
 
         if xmin > xmax:
             raise ValueError("xmax must be greater than xmin")
-        if dx > xmax - xmin:
-            raise ValueError("dx must be less than xmax-xmin")
-        if dx <= 0:
-            raise ValueError("dx must be positive")
+        if xstep > xmax - xmin:
+            raise ValueError("xstep must be less than xmax-xmin")
+        if xstep <= 0:
+            raise ValueError("xstep must be positive")
 
         if clip:
             x = self.xobs
@@ -214,7 +214,7 @@ class Profile(object):
             self.y = self.yobs[indices]
             self.dy = self.dyobs[indices]
         else:
-            self.setPoints(numpy.arange(xmin, xmax+0.5*dx, dx))
+            self.setPoints(numpy.arange(xmin, xmax+0.5*xstep, xstep))
 
         return
 
@@ -223,49 +223,101 @@ class Profile(object):
 
         Arguments
         x   --  A non-empty numpy array containing the calculation points. If
-                xobs exists, the bounds of x will be limited to its bounds.
+                xobs exists, a valueError will be raised if x falls out of its
+                bounds.
 
         This will create y and dy on the specified grid if xobs, yobs and
-        dyobs exist.
+        dyobs exist. Error in dy will be properly calculated.
 
         """
         x = numpy.asarray(x)
         if self.xobs is not None:
-            x = x[ x >= self.xobs[0] - epsilon ]
-            x = x[ x <= self.xobs[-1] + epsilon ]
+            if x[0] < self.xobs[0] or x[-1] > self.xobs[-1]:
+                msg = "Points lie outside the observed profile"
+                raise ValueError(msg)
         self.x = x
         if self.yobs is not None:
-            self.y = rebinArray(self.yobs, self.xobs, self.x)
-        if self.dyobs is not None:
-            # work around for interpolation issue making some of these non-1
-            if (self.dyobs == 1).all():
+            if self.dyobs is None:
+                self.y = numpy.interp(self.x, self.xobs, self.yobs)
+            elif (self.dyobs == 1).all():
+                self.y = numpy.interp(self.x, self.xobs, self.yobs)
                 self.dy = numpy.ones_like(self.x)
             else:
-                # FIXME - This does not follow error propogation rules and it
-                # introduces (more) correlation between the data points.
-                self.dy = rebinArray(self.dyobs, self.xobs, self.x)
+                # This will properly propagate the interpolation errors, but
+                # it's slow.
+                self.y, self.dy = _interpWithError(self.x, self.xobs,
+                        self.yobs, self.dyobs)
 
         return
 
+
+
 # End class Profile
+def _interpWithError(zarr, xarr, yarr, dyarr):
+    """Interpolate data and uncertainty onto a new grid."""
+    if zarr is xarr:
+        return yarr, dyarr
 
-def rebinArray(A, xold, xnew):
-    """Rebin the an array by interpolating over the new x range.
+    # Checkf or interpolation bounds
+    if zarr[0] < xarr[0] or zarr[-1] > xarr[-1]:
+        msg = "Cannot interpolate outside of bounds"
+        raise ValueError(msg)
+    if len(xarr) < 2:
+        msg = "xarr too short for interpolation"
+        raise ValueError(msg)
 
-    Arguments:
-    A       --  Array to interpolate
-    xold    --  Old sampling array
-    xnew    --  New sampling array
+    # Check for increasing z and x
+    oldz = zarr[0]
+    for z in zarr[1:]:
+        if z <= oldz:
+            msg = "zarr is non-increasing"
+            raise ValueError(msg)
+        oldz = z
+    oldx = xarr[0]
+    for x in xarr[1:]:
+        if x <= oldx:
+            msg = "xarr is non-increasing"
+            raiseValueError(msg)
+        oldx = x
 
-    This uses cubic spline interpolation.
-    
-    Returns: A new array over the new sampling array.
 
-    """
-    if numpy.array_equal(xold, xnew):
-        return A
-    from scipy.interpolate import splrep, splev
-    finterp = splrep(xold, A, s=0)
-    return splev(xnew, finterp, der=0)
+    newy = []
+    newdy = []
+
+    xidx = 0
+    x1 = xarr[0]
+    x2 = xarr[1]
+
+    for z in zarr:
+
+        # Increment x-values. We need a value on either side of z.
+        while x2 < z:
+            xidx += 1
+            x1 = xarr[xidx]
+            x2 = xarr[xidx+1]
+
+        # Now we can interpolate
+        y1 = yarr[xidx]
+        y2 = yarr[xidx+1]
+        dy1 = dyarr[xidx]
+        dy2 = dyarr[xidx+1]
+        mz = (x2 - z) / (x2 - x1)
+        if mz == 0:
+            yp = y2
+            dyp = dy2
+        if mz == 1:
+            yp = y1
+            dyp = dy1
+        else:
+            yp = y2 + (y1 - y2) * mz
+            dyp = (dy2**2 + (dy2**2 + dy1**2)*mz**2)**0.5
+        newy.append(yp)
+        newdy.append(dyp)
+
+    newyarr = numpy.array(newy, dtype=float)
+    newdyarr = numpy.array(newdy, dtype=float)
+
+    return newyarr, newdyarr
+
 
 __id__ = "$Id$"

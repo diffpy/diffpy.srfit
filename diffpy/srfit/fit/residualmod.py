@@ -1,4 +1,18 @@
 #!/usr/bin/env python
+########################################################################
+#
+# diffpy.srfit      by DANSE Diffraction group
+#                   Simon J. L. Billinge
+#                   (c) 2011 Trustees of the Columbia University
+#                   in the City of New York.  All rights reserved.
+#
+# File coded by:    Chris Farrow
+#
+# See AUTHORS.txt for a list of people who contributed.
+# See LICENSE.txt for license information.
+#
+########################################################################
+"""Functions and classes for creating residual functions."""
 
 from itertools import imap
 
@@ -252,3 +266,4 @@ def residual(*terms):
     res = Residual(*terms)
     return res
 
+__id__ = "$Id$"

@@ -61,7 +61,7 @@ def getParameters(eq):
 
     eq  --  The root node of an equation.
 
-    Returns a set of all parameter object.
+    Returns a set of all parameter objects.
 
     """
     from diffpy.srfit.util.visitors import ParameterGetter
@@ -136,6 +136,8 @@ def isFunction(obj):
 def isContained(obj):
     """Determine if obj is contained in another object."""
     return hasattr(obj, "_container") and obj._container is not None
+
+# Miscellaneous helpful stuff
 
 def makeArray(obj):
     """Make an array out of an object."""

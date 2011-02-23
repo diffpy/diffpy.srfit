@@ -1,23 +1,37 @@
 #!/usr/bin/env python
 """Tests for sas package."""
 
+import warnings
 import unittest
 import os.path
 
 import numpy
 
-from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
 from diffpy.srfit.fitbase import Profile
+from utils import TestCaseSaSOptional
+
+# Global variable for the sas module.
+# If available, it will be assign by the setUp method.
+sas = None
+
+# suppress the annoying DeprecationWarning warnings.
+warnings.filterwarnings('ignore', module='sans.models.*',
+        category=DeprecationWarning)
 
 thisfile = locals().get('__file__', 'testpdf.py')
 tests_dir = os.path.dirname(os.path.abspath(thisfile))
 testdata_dir = os.path.join(tests_dir, 'testdata')
 
-class TestSASParser(unittest.TestCase):
+class TestSASParser(TestCaseSaSOptional):
+
+    def setUp(self):
+        global sas
+        import diffpy.srfit.sas as sas
+
 
     def testParser(self):
         data = os.path.join(testdata_dir, "sas_ascii_test_1.txt")
-        parser = SASParser()
+        parser = sas.SASParser()
         parser.parseFile(data)
 
         meta = parser._meta
@@ -51,14 +65,19 @@ class TestSASParser(unittest.TestCase):
         return
 
 
-class TestSASGenerator(unittest.TestCase):
+class TestSASGenerator(TestCaseSaSOptional):
+
+    def setUp(self):
+        global sas
+        import diffpy.srfit.sas as sas
+
 
     def testGenerator(self):
 
         # Test generator output
         from sans.models.SphereModel import SphereModel
         model = SphereModel()
-        gen = SASGenerator("sphere", model)
+        gen = sas.SASGenerator("sphere", model)
 
         for pname in model.params:
             defval = model.getParam(pname)
@@ -87,14 +106,14 @@ class TestSASGenerator(unittest.TestCase):
         # Test generator with a profile
         from sans.models.EllipsoidModel import EllipsoidModel
         model = EllipsoidModel()
-        gen = SASGenerator("ellipsoid", model)
+        gen = sas.SASGenerator("ellipsoid", model)
 
         # Load the data using SAS tools
         from DataLoader.loader import Loader
         loader = Loader()
         data = os.path.join(testdata_dir, "sas_ellipsoid_testdata.txt")
         datainfo = loader.load(data)
-        profile = SASProfile(datainfo)
+        profile = sas.SASProfile(datainfo)
 
         gen.setProfile(profile)
         gen.scale.value = 1.0

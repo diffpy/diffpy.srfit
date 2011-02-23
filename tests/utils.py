@@ -7,10 +7,11 @@ import diffpy.srfit.equation.literals as literals
 # Resolve the TestCaseSaSOptional class
 try:
     import sans.pr.invertor
+    import sans.models
     from unittest import TestCase as TestCaseSaSOptional
-except ImportError:
+except ImportError, e:
     TestCaseSaSOptional = object
-    logging.warning('Cannot import sans.pr.invertor, SaS tests skipped.')
+    logging.warning('%s, SaS tests skipped.', e)
 
 
 def _makeArgs(num):

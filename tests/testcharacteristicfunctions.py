@@ -7,8 +7,9 @@ import os.path
 import numpy
 
 import diffpy.srfit.pdf.characteristicfunctions as cf
+from utils import TestCaseSaSOptional
 
-class TestSASCF(unittest.TestCase):
+class TestSASCF(TestCaseSaSOptional):
 
     def testSphere(self):
         radius = 25

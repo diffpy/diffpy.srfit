@@ -68,7 +68,10 @@ class SASProfile(Profile):
 
         self._xobs = self._datainfo.x
         self._yobs = self._datainfo.y
-        self._dyobs = self._datainfo.dy or ones_like(self.xobs)
+        if self._datainfo.dy is None or 0 == len(self._datainfo.dy):
+            self._dyobs = ones_like(self.xobs)
+        else:
+            self._dyobs = self._datainfo.dy
         return
 
     def setObservedProfile(self, xobs, yobs, dyobs = None):

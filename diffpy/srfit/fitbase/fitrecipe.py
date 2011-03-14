@@ -18,7 +18,7 @@ FitRecipes organize FitContributions, variables, Restraints and Constraints to
 create a recipe of the system you wish to optimize. From the client's
 perspective, the FitRecipe is a residual calculator. The residual method does
 the work of updating variable values, which get propagated to the Parameters of
-the underlying FitContributions via the varibles and Constraints.  This class
+the underlying FitContributions via the variables and Constraints.  This class
 needs no special knowledge of the type of FitContribution or data being used.
 Thus, it is suitable for combining residual equations from various types of
 refinements into a single residual.
@@ -479,6 +479,14 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             self._tagmanager.tag(var, tag)
         return var
 
+    def _newParameter(self, name, value, check=True):
+        par = RecipeOrganizer._newParameter(self, name, value, check)
+        # Be sure to tag this
+        self._tagmanager.tag(par, par.name)
+        self._tagmanager.tag(par, "all")
+        self.fix(par.name)
+        return
+
     def delVar(self, var):
         """Remove a variable.
 
@@ -528,19 +536,33 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns the new variable (Parameter instance).
 
         """
+        # This will fix the Parameter
         var = self._newParameter(name, value)
 
-        if fixed:
-            self.fix(var)
+        # We may explicitly free it
+        if not fixed:
+            self.free(var)
 
-        # Tag with passed tags and by name
-        self._tagmanager.tag(var, var.name)
-        self._tagmanager.tag(var, "all")
+        # Tag with passed tags
         self._tagmanager.tag(var, *tags)
         if tag is not None:
             self._tagmanager.tag(var, tag)
 
         return var
+
+    def _newParameter(self, name, value, check=True):
+        """Overloaded to tag variables.
+
+        See RecipeOrganizer._newParameter
+
+        """
+        par = RecipeOrganizer._newParameter(self, name, value, check)
+        # tag this
+        self._tagmanager.tag(par, par.name)
+        self._tagmanager.tag(par, "all")
+        self.fix(par.name)
+        return par
+
 
     def __getVarAndCheck(self, var):
         """Get the actual variable from var

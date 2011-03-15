@@ -150,6 +150,10 @@ refinement with SrFit.
 * nppdfsasII.py_
     As nppdfsas.py_, but refine the shape of the nanoparticle as well.
 
+* anneal.py_
+    Demonstration of effectively using a simulated annealing algorithm in a PDF
+    structure refinement.
+
 Miscellaneous
 --------------
 

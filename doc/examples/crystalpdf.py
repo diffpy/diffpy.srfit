@@ -157,6 +157,7 @@ if __name__ == "__main__":
 
     # Make the recipe
     recipe = makeRecipe(ciffile, data)
+    recipe.fithooks[0].verbose = 3
 
     # Optimize
     scipyOptimize(recipe)

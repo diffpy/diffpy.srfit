@@ -61,8 +61,8 @@ Features
 Relese Definition
 --------------------
 
-The SrFit Alpha-8 release definition can be found at
-http://danse.us/trac/diffraction/wiki/SrFitReleaseAlpha8.
+The SrFit Alpha-9 release definition can be found at
+http://danse.us/trac/diffraction/wiki/SrFitReleaseAlpha9.
 
 Major changes since last release
 ----------------------------------------

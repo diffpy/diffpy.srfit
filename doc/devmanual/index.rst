@@ -56,7 +56,7 @@ Where next?
    install.rst
    examples.rst
    extending.rst
-   API <http://docs.danse.us/diffraction/diffpy.srfitapi-alpha8/>
+   API <http://docs.danse.us/diffraction/diffpy.srfitapi-alpha9/>
 
 .. faq.rst
 

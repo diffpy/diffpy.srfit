@@ -82,7 +82,11 @@ class DiffpyStructureAdapter(BaseStructureAdapter):
         """See the adapt function."""
         BaseStructureAdapter.__init__(self, name, obj, getter, setter)
         stru = self.get()
-        self.__labels = stru.getLabels()
+        # FIXME: is lookup by labels necessary here?
+        hasuniquelabels = (len(stru) == len(set(stru.label)))
+        if not hasuniquelabels:
+            stru.assignUniqueLabels()
+        self.__labels = stru.label
         # Reverse lookup for atom index based on label
         self.__lindex = dict((k, v) for (v, k) in enumerate(self.__labels))
         return

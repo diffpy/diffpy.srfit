@@ -76,11 +76,13 @@ class Parameter(_parameter_interface, Argument, Validatable):
         ub      --  The upper bounds for the bounds list. If this is None
                     (default), then the upper bound will not be alterered.
 
+        Returns self so that mutators can be chained.
+
         """
         Argument.setValue(self, val)
         if lb is not None: self.bounds[0] = lb
         if ub is not None: self.bounds[1] = ub
-        return
+        return self
 
     def setConst(self, const = True, value = None):
         """Toggle the Parameter as constant.
@@ -91,11 +93,33 @@ class Parameter(_parameter_interface, Argument, Validatable):
                     is not None, then the parameter will get a new value,
                     constant or otherwise.
 
+        Returns self so that mutators can be chained.
+
         """
         self.const = bool(const)
         if value is not None:
             self.setValue(value)
-        return
+        return self
+
+    def boundWindow(self, lr = 0, ur = None):
+        """Create bounds centered on the current value of the Parameter.
+
+        lr  --  The radius of the lower bound (default 0). The lower bound is
+                computed as value - lr.
+        ur  --  The radius of the upper bound. The upper bound is computed as
+                value + ur. If this is None (default), then the value of the
+                lower radius is used.
+
+        Returns self so that mutators can be chained.
+
+        """
+        val = self.getValue()
+        lb = val - lr
+        if ur is None:
+            ur = lr
+        ub = val + ur
+        self.bounds = [lb, ub]
+        return self
 
     def _validate(self):
         """Validate my state.
@@ -239,7 +263,7 @@ class ParameterAdapter(Parameter):
         if lb is not None: self.bounds[0] = lb
         if ub is not None: self.bounds[1] = ub
 
-        return
+        return self
                     
 # End class ParameterAdapter
 

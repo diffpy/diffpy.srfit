@@ -908,7 +908,7 @@ class StretchModeParameter(Parameter):
         val = float(val)
 
         if val == curval:
-            return
+            return self
 
         # The StretchMode expects the change in mutated value.
         delta = val - curval
@@ -917,7 +917,7 @@ class StretchModeParameter(Parameter):
         # Let Parameter take care of the general details
         Parameter.setValue(self, val)
 
-        return
+        return self
 
     def addAtoms(self, atomlist):
         """Associate ObjCrystMolAtomParSets with the Parameter.
@@ -941,7 +941,7 @@ class StretchModeParameter(Parameter):
         # Record the added atoms in the StretchMode
         scatlist = [a.scat for a in atomlist]
         self.mode.AddAtoms(scatlist)
-        return
+        return self
 
     def notify(self):
         """Notify all mutated Parameters and observers.
@@ -1078,7 +1078,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
             a.x.setConst(const)
             a.y.setConst(const)
             a.z.setConst(const)
-        return
+        return self
 
     def getValue(self):
         """This calculates the value if it might have been changed.
@@ -1196,7 +1196,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
             a.x.setConst(const)
             a.y.setConst(const)
             a.z.setConst(const)
-        return
+        return self
 
     def getValue(self):
         """This calculates the value if it might have been changed.
@@ -1321,7 +1321,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
             a.x.setConst(const)
             a.y.setConst(const)
             a.z.setConst(const)
-        return
+        return self
 
     def getValue(self):
         """This calculates the value if it might have been changed.

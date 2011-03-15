@@ -71,6 +71,6 @@ class SASParameter(Parameter):
         if value != self.getValue():
             self._model.setParam(self._parname, value)
             self.notify()
-        return
+        return self
 
 # End of class SASParameter

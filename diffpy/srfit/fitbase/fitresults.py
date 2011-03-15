@@ -596,19 +596,16 @@ class ContributionResults(object):
 
 # End class ContributionResults
 
-def initializeRecipe(recipe, results):
-    """Initialize the variables of a recipe from a results file.
+def resultsDictionary(results):
+    """Get dictionary of results from file.
 
-    This reads the results from file and initializes any variables in the
-    recipe to the results values. note that the recipe has to be configured,
-    with variables. This does not reconstruct a FitRecipe.
+    This reads the results from file and stores them in a dictionary to be
+    returned to the caller. The dictionary may contain non-result entries.
 
-    recipe  --  A configured recipe with variables
     results --  An open file-like object, name of a file that contains
                 results from FitResults or a string containing fit results.
 
     """
-
     resstr = inputToString(results)
 
     import re
@@ -617,9 +614,25 @@ def initializeRecipe(recipe, results):
     pat = r"(%(n)s)\s+(%(f)s)" % rx
 
     matches = re.findall(pat, resstr)
-    # We want to prefer the first match
+    # Prefer the first match
     matches.reverse()
     mpairs = dict(matches)
+    return mpairs
+
+def initializeRecipe(recipe, results):
+    """Initialize the variables of a recipe from a results file.
+
+    This reads the results from file and initializes any variables in the
+    recipe to the results values. Note that the recipe has to be configured,
+    with variables. This does not reconstruct a FitRecipe.
+
+    recipe  --  A configured recipe with variables
+    results --  An open file-like object, name of a file that contains
+                results from FitResults or a string containing fit results.
+
+    """
+
+    mpairs = resultsDictionary(results)
     if not mpairs:
         raise AttributeError("Cannot find results")
 

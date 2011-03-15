@@ -238,7 +238,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             fithook.precall(self)
 
         # Update the variable parameters.
-        self.__applyValues(p)
+        self._applyValues(p)
 
         # Update the constraints. These are ordered such that the list only
         # needs to be cycled once.
@@ -817,7 +817,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                     scaled = scaled)
         return
 
-    def __applyValues(self, p):
+    def _applyValues(self, p):
         """Apply variable values to the variables."""
         if len(p) == 0: return
         vargen = (v for v in self._parameters.values() if self.isFree(v))

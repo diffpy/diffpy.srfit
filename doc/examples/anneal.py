@@ -66,27 +66,22 @@ def makeRecipe(molecule, datname):
     # small, but finite ADP for the PDF calculator to work properly.
     atoms = c60.getScatterers()
     for atom in atoms:
-        atom.Biso.value = 0.001
+        atom.Uiso.value = 0.001
 
     # Scale factor. We cannot optimize this efficiently, so we take the value
-    # from another optimization. In general, care must be taken to properly
+    # from a previous refinement. In general, care must be taken to properly
     # determine the scale of the profile, or to make sure that the residual is
     # not affected by the scale.
-    generator.scale.value = 1.24457360e+04
+    generator.scale.value = 1.24457360e+4
 
-    # Allow every atom to move
+    # Allow every atom to move.  We define the bounds to be a window of radius
+    # 0.1 centered on the current value of the position.
+    win = 0.1
     for idx, atom in enumerate(atoms):
-        # We put tight bounds on the atoms since the optimizer will not
-        # converge otherwise.
-        var = recipe.addVar(atom.x, name = "x_%i"%idx)
-        val = var.value
-        var.bounds = (val - 0.1, val + 0.1)
-        var = recipe.addVar(atom.y, name = "y_%i"%idx)
-        val = var.value
-        var.bounds = (val - 0.1, val + 0.1)
-        var = recipe.addVar(atom.z, name = "z_%i"%idx)
-        val = var.value
-        var.bounds = (val - 0.1, val + 0.1)
+        xname, yname, zname = getXYZNames(idx)
+        recipe.addVar(atom.x, name = xname).boundWindow(win)
+        recipe.addVar(atom.y, name = yname).boundWindow(win)
+        recipe.addVar(atom.z, name = zname).boundWindow(win)
 
     return recipe
 
@@ -116,21 +111,26 @@ def plotResults(recipe):
     pylab.show()
     return
 
-def atomAnneal(recipe, natoms):
+def groupAnneal(recipe, groups):
     """Simple annealing optmizer that works with the above recipe.
 
-    Optimize the atomic positions of the recipe using scipy.optimize.anneal.
-    This function does the work of selecting atoms at random and schedules the
-    temperature down-ramp. Since this is not a general purpose annealing
-    optimizer, the scheduling is rather crude.
-
-    It is assumed that the atomic positions in the structure are variables in
-    the recipe and are named "x_i", "y_i" and "z_i", where 'i' is the atom
-    index.
+    Optimize variables in related groups using scipy.optimize.anneal.  This
+    function does the work of selecting groups of variables from the groups
+    list at random and schedules the temperature down-ramp. When the groups
+    contain atom coordinates, this essentially the Reverse Monte Carlo (RMC
+    [1]) refinement approach. With constraint and restraint flexibility
+    afforded by SrFit, we can include as much information about the system as
+    we have.
 
     recipe  --  The recipe to optimize.
-    natoms  --  The number of atoms in the structure to optimize. This is used
-                to index atom positions.
+    groups  --  List of groups of variables or varible names. During
+                a refinement step, a group is selected for perturbation. For
+                RMC-like refinement, these groups represent atom positions (x,
+                y, z), but in general, they can be anything.
+
+    [1] RL McGreevy and L Pusztai, Reverse Monte Carlo Simulation: A New
+        Technique for the Determination of Disordered Structures, Molecular
+        Simulation 1, 359-367, 1988
     
     """
     from scipy.optimize import anneal
@@ -140,9 +140,9 @@ def atomAnneal(recipe, natoms):
     # Counter for above
     niter = 0
     # How long to dwell at each temperature
-    dwell = natoms
+    dwell = len(groups)
     # How long to wait for an improvement before exiting
-    maxwait = dwell
+    maxwait = 5 * dwell
     # Counter for the above
     waitcount = 0
     # Temperature
@@ -152,29 +152,29 @@ def atomAnneal(recipe, natoms):
     # Minimum error
     minerr = None
 
-    def getVarNames(idx):
-        x = "x_%i" % idx
-        y = "y_%i" % idx
-        z = "z_%i" % idx
-        return x, y, z
-
     def updateTemp():
         T = T0 / numpy.log(1 + niter * 1.0 / dwell)
 
     # Fix all parameters
     recipe.fix("all")
 
-    while niter < maxiter and waitcount < maxwait:
+    while 1:
+        
+        if niter >= maxiter:
+            print "*** Maximum interations exceeded ***"
+            return
+        if waitcount >= maxwait:
+            print "*** Improvement waiting period exceeded ***"
+            return
 
         niter += 1
 
         # Pick an atom and get the names of its positions. Free these
         # variables.
-        idx = random.randint(0, natoms-1)
-        x, y, z = getVarNames(idx)
+        pars = random.choice(groups)
         print "iter =", niter
-        print x, y, z
-        recipe.free(x, y, z)
+        print ("%s " * len(pars)) % pars
+        recipe.free(*pars)
 
         # Get the bounds for the variables. These are used by anneal.
         lb, ub = recipe.getBounds2()
@@ -194,20 +194,20 @@ def atomAnneal(recipe, natoms):
             waitcount += 1
 
         # Update temperature
+        if not niter%dwell:
+            T = T0 / numpy.log(10 + niter * 1.0 / dwell)
+        print "T =", T
         if out[5]: 
             print "move accepted"
             reject = 0
         else:
             print "move rejected"
             reject += 1
-        if not niter%dwell:
-            T = T0 / numpy.log(10 + niter * 1.0 / dwell)
-        print "T =", T
         print "residual =", err
 
         # Clean up for next iteration
         recipe._applyValues(out[0])
-        recipe.fix(x, y, z)
+        recipe.fix(*pars)
 
     return out
 
@@ -226,7 +226,9 @@ def main():
     recipe.fithooks[0].verbose = 0
     
     # Optimize
-    atomAnneal(recipe, len(molecule))
+    # Group related atomic positions for the optimizer
+    parlist = [getXYZNames(i) for i in xrange(60)]
+    groupAnneal(recipe, parlist)
 
     # Print results
     recipe.fix("all")
@@ -304,6 +306,13 @@ c60xyz = \
 2.279809890  -2.580456608  -0.724000000
 -2.279809890  -2.580456608  -0.724000000
 """
+
+def getXYZNames(idx):
+    """Get names for x, y, z variables based on index."""
+    x = "x_%i" % idx
+    y = "y_%i" % idx
+    z = "z_%i" % idx
+    return x, y, z
 
 def makeC60():
     """Make the C60 molecule using diffpy.Structure."""

@@ -144,11 +144,8 @@ refinement with SrFit.
     Refine an ellipsoid SAS model to ideal data.
 
 * nppdfsas.py_
-    Refine PDF from nanoparticle of unknown shape using a crystal model and SAS
+    Refine PDF from nanoparticle of assumed shape using a crystal model and SAS
     data from the same system.
-
-* nppdfsasII.py_
-    As nppdfsas.py_, but refine the shape of the nanoparticle as well.
 
 * anneal.py_
     Demonstration of effectively using a simulated annealing algorithm in a PDF

@@ -14,26 +14,12 @@
 ########################################################################
 """Example of combining PDF and SAS nanoparticles data. 
 
-This is an example of using both PDF and SAS data in the same fit. This example
-refines a crystal structure (Pb) to nanoparticle data by approximating the PDF
-as 
-Gnano(r) = f(r) * Gcrystal(r).
-(See Acta Cryst. A, 65 p. 232 (2009) and references therein.) This equation
-assumes that the nanoparticle is crystal-like. (The hypothetical structure from
-which the PDF and SAS data were calculated, data/pb_100.xyz, is indeed a cut
-from a crystal.)
-
-We use the PDFGenerator to calculate Gcrystal(r), and retrieve f(r) from the
-SAS data. The PrCalculator class can calculate P(r), the nanoparticle density
-factor, from the nanoparticle I(Q), using the Invertor object from
-sans.pr.invertor. P(r) is related to f(r) via
-P(r) = 4 * pi * rho * r**2 f(r).
-P(r) is the radial distribution function (RDF) for particle with uniform
-density.  The Invertor class performs an indirect transform of I(Q) to obtain
-P(r). See the class documentation for more details.
-
-Below we use both a PDFGenerator and PrCalculator to calculate Gnano(r) and
-refine the crystal structure of lead to fit the nanoparticle PDF data.
+This is an example of using both PDF and SAS data in the same fit. This fits a
+crystal model to the PDF while fitting a shape model to both the SAS profile
+and the PDF data. Using the same shape for the PDF and SAS provides a feedback
+mechanism into the fit that allows the PDF and SAS portions of the fit to guide
+one another, and in the end gives the shape of the nanoparticle that agrees
+best with both the PDF and SAS data.
 
 """
 
@@ -42,7 +28,8 @@ import numpy
 from pyobjcryst.crystal import CreateCrystalFromCIF
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.sas import PrCalculator, SASParser, SASGenerator
+from diffpy.srfit.pdf.characteristicfunctions import SASCF
+from diffpy.srfit.sas import SASParser, SASGenerator
 from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
@@ -50,11 +37,16 @@ from diffpy.srfit.fitbase import FitResults
 from gaussianrecipe import scipyOptimize
 
 def makeRecipe(ciffile, grdata, iqdata):
-    """Make a recipe to combine PDF and SAS data in a nanoparticle fit."""
+    """Make complex-modeling recipe where I(q) and G(r) are fit
+    simultaneously.
 
-    # Set up a PDF fit as has been done in other examples.
+    The fit I(q) is fed into the calculation of G(r), which provides feedback
+    for the fit parameters of both.
+    
+    """
+
+    # Create a PDF contribution as before
     pdfprofile = Profile()
-
     pdfparser = PDFParser()
     pdfparser.parseFile(grdata)
     pdfprofile.loadParsedData(pdfparser)
@@ -68,33 +60,41 @@ def makeRecipe(ciffile, grdata, iqdata):
     stru = CreateCrystalFromCIF(file(ciffile))
     pdfgenerator.setStructure(stru)
     pdfcontribution.addProfileGenerator(pdfgenerator)
+    pdfcontribution.setResidualEquation("resv")
 
-    # Load in the SAS data for the nanoparticle. For convenience, we hold this
-    # in a Profile.
+    # Create a SAS contribution as well. We assume the nanoparticle is roughly
+    # elliptical.
     sasprofile = Profile()
     sasparser = SASParser()
     sasparser.parseFile(iqdata)
     sasprofile.loadParsedData(sasparser)
 
-    # Create the PrCalculator. The PrCalculator requires parameters q, iq and
-    # diq to be specified. These represent the SAS Q, I(Q) and uncertainty in
-    # I(Q). These are held in the sasprofile.
-    prcalculator = PrCalculator("P")
-    prcalculator.q.value = sasprofile.x
-    prcalculator.iq.value = sasprofile.y
-    prcalculator.diq.value = sasprofile.dy
+    sascontribution = FitContribution("sas")
+    sascontribution.setProfile(sasprofile)
 
-    # Now we register the calculator with pdfcontribution. This allows us to
-    # use it in the fitting equation. The nanoparticle fitting equation is 
-    # f(r) * G(r), where f(r) = P(r) / (4 * pi * r**2).
-    pdfcontribution.registerCalculator(prcalculator)
-    pdfcontribution.setEquation("P/(4 * pi * r**2) * G")
+    from sans.models.EllipsoidModel import EllipsoidModel
+    model = EllipsoidModel()
+    sasgenerator = SASGenerator("generator", model)
+    sascontribution.addProfileGenerator(sasgenerator)
+    sascontribution.setResidualEquation("resv")
 
-    # Now we can move on as before. The use of the PrCalculator does not add
-    # any fittable parameters to the 
+    # Now we set up a characteristic function calculator that depends on the
+    # sas model.
+    cfcalculator = SASCF("f", model)
+
+    # Register the calculator with the pdf contribution and define the fitting
+    # equation.
+    pdfcontribution.registerCalculator(cfcalculator)
+    # The PDF for a nanoscale crystalline is approximated by
+    # Gnano = f * Gcryst
+    pdfcontribution.setEquation("f * G")
+
+    # Moving on
     recipe = FitRecipe()
     recipe.addContribution(pdfcontribution)
+    recipe.addContribution(sascontribution)
 
+    # PDF
     phase = pdfgenerator.phase
     for par in phase.sgpars:
         recipe.addVar(par)
@@ -102,7 +102,42 @@ def makeRecipe(ciffile, grdata, iqdata):
     recipe.addVar(pdfgenerator.scale, 1)
     recipe.addVar(pdfgenerator.delta2, 0)
 
+    # SAS
+    recipe.addVar(sasgenerator.scale, 1, name = "iqscale")
+    recipe.addVar(sasgenerator.radius_a, 10)
+    recipe.addVar(sasgenerator.radius_b, 10)
+
+    # Even though the cfcalculator and sasgenerator depend on the same sas
+    # model, we must still constrain the cfcalculator Parameters so that it is
+    # informed of changes in the refined parameters.
+    recipe.constrain(cfcalculator.radius_a, "radius_a")
+    recipe.constrain(cfcalculator.radius_b, "radius_b")
+
     return recipe
+
+def fitRecipe(recipe):
+    """We refine in stages to help the refinement converge."""
+
+    # Tune SAS.
+    recipe.setWeight(recipe.pdf, 0)
+    recipe.fix("all")
+    recipe.free("radius_a", "radius_b", iqscale = 1e8)
+    scipyOptimize(recipe)
+
+    # Tune PDF
+    recipe.setWeight(recipe.pdf, 1)
+    recipe.setWeight(recipe.sas, 0)
+    recipe.fix("all")
+    recipe.free("a", "Biso_0", "scale", "delta2")
+    scipyOptimize(recipe)
+
+    # Tune all
+    recipe.setWeight(recipe.pdf, 1)
+    recipe.setWeight(recipe.sas, 1)
+    recipe.free("all")
+    scipyOptimize(recipe)
+
+    return
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -121,8 +156,7 @@ def plotResults(recipe):
     gcryst = recipe.pdf.evaluateEquation("G")
     gcryst /= recipe.scale.value
 
-    pr = recipe.pdf.evaluateEquation("P")
-    fr = pr / r**2
+    fr = recipe.pdf.evaluateEquation("f")
     fr *= max(g) / fr[0]
 
     import pylab
@@ -130,14 +164,15 @@ def plotResults(recipe):
     pylab.plot(r, gcryst,'y--',label="G(r) Crystal")
     pylab.plot(r, fr,'k--',label="f(r) calculated (scaled)")
     pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,diff,'g-',label="G(r) diff")
-    pylab.plot(r,diffzero,'k-')
+    pylab.plot(r, diff,'g-',label="G(r) diff")
+    pylab.plot(r, diffzero,'k-')
     pylab.xlabel("$r (\AA)$")
     pylab.ylabel("$G (\AA^{-2})$")
     pylab.legend(loc=1)
 
     pylab.show()
     return
+
 
 if __name__ == "__main__":
 
@@ -146,7 +181,8 @@ if __name__ == "__main__":
     iqdata = "data/pb_100_qmax1.iq"
 
     recipe = makeRecipe(ciffile, grdata, iqdata)
-    scipyOptimize(recipe)
+    recipe.fithooks[0].verbose = 3
+    fitRecipe(recipe)
 
     res = FitResults(recipe)
     res.printResults()

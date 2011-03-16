@@ -22,9 +22,9 @@ Examples
 .. _crystalpdftwodata.py: crystalpdftwodata.html
 .. _crystalpdfall.py: crystalpdfall.html
 .. _nppdfcrystal.py: nppdfcrystal.html
+.. _coreshellnp.py: coreshellnp.html
 .. _ellipsoidsas.py: ellipsoidsas.html
 .. _nppdfsas.py: nppdfsas.html
-.. _nppdfsasII.py: nppdfsasII.html
 .. _interface.py: interface.html
 .. _simplerecipe.py: simplerecipe.html
 .. _anneal.py: anneal.html
@@ -50,9 +50,9 @@ Files
    crystalpdftwodata.rst
    crystalpdfall.rst
    nppdfcrystal.rst
+   coreshellnp.rst
    ellipsoidsas.rst
    nppdfsas.rst
-   nppdfsasII.rst
    interface.rst
    simplerecipe.rst
    anneal.rst

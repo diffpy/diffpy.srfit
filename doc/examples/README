@@ -140,6 +140,9 @@ refinement with SrFit.
     Fit a nanoparticle PDF as a crystal PDF attenuated by a nanoparticle form
     factor.
 
+* coreshellnp.py_
+    As above, but fit the PDF from core-shell nanoparticles.
+
 * ellipsoidsas.py_
     Refine an ellipsoid SAS model to ideal data.
 

@@ -103,14 +103,15 @@ class BasePDFGenerator(ProfileGenerator):
         self.processMetaData()
         return
 
-    def parallel(self, ncpu):
+    def parallel(self, ncpu, mapfunc = None):
         """Run calculation in parallel.
 
-        ncpu -- number of parallel processes.  Revert to serial mode when 1.
+        ncpu    -- Number of parallel processes.  Revert to serial mode when 1.
+        mapfunc -- A mapping function to use. If this is None (default),
+                   multiprocessing.Pool.imap_unordered will be used.
 
         No return value.
         """
-        import multiprocessing
         from diffpy.srreal.parallel import createParallelCalculator
         calc_serial = self._calc
         if hasattr(calc_serial, 'pqobj'):
@@ -122,9 +123,12 @@ class BasePDFGenerator(ProfileGenerator):
             return
         # Why don't we let the user shoot his foot or test on single CPU?
         # ncpu = min(ncpu, multiprocessing.cpu_count())
-        self._pool = multiprocessing.Pool(ncpu)
-        self._calc = createParallelCalculator(calc_serial, ncpu,
-                self._pool.imap_unordered)
+        if mapfunc is None:
+            import multiprocessing
+            self._pool = multiprocessing.Pool(ncpu)
+            mapfunc = self._pool.imap_unordered
+
+        self._calc = createParallelCalculator(calc_serial, ncpu, mapfunc)
         return
 
     def processMetaData(self):

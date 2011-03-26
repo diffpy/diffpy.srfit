@@ -22,13 +22,11 @@ the atom positions to determine the structure of C60.
 import random
 
 import numpy
-import scipy
 
-from diffpy.srfit.fitbase import ProfileGenerator, Profile
+from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
-from diffpy.srfit.pdf import PDFGenerator
 
 ####### Example Code
 
@@ -151,9 +149,6 @@ def groupAnneal(recipe, groups):
     err = 0
     # Minimum error
     minerr = None
-
-    def updateTemp():
-        T = T0 / numpy.log(1 + niter * 1.0 / dwell)
 
     # Fix all parameters
     recipe.fix("all")

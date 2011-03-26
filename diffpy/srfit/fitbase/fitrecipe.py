@@ -302,9 +302,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if self._ready:
             return
 
-        # Validate!
-        self._validate()
-
         # Inform the fit hooks that we're updating things
         for fithook in self.fithooks:
             fithook.reset(self)
@@ -317,6 +314,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         # Update constraints and restraints. 
         self.__collectConstraintsAndRestraints()
+
+        # We do this here so that the calculations that take place during the
+        # validation use the most current values of the parameters. In most
+        # cases, this will save us from recalculating them later.
+        for con in self._oconstraints:
+            con.update()
+
+        # Validate!
+        self._validate()
 
         self._ready = True
 

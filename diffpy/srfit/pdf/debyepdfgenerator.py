@@ -19,7 +19,7 @@ the PDF from it. This generator is especially appropriate for isolated
 scatterers, such as nanoparticles and molecules.
 
 """
-__all__ = ["PDFDebyeGenerator"]
+__all__ = ["DebyePDFGenerator"]
 
 from diffpy.srreal.pdfcalculator import DebyePDFCalculator
 from diffpy.srfit.pdf.basepdfgenerator import BasePDFGenerator

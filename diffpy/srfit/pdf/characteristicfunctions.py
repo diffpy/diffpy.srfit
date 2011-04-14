@@ -305,6 +305,12 @@ class SASCF(Calculator):
         # least the size of the signal. 
         dr = min(0.01, r[1] - r[0])
         ed = 2 * self._model.calculate_ER()
+
+        # Check for nans. If we find any, then return zeros.
+        if numpy.isnan(ed).any():
+            y = numpy.zeros_like(r)
+            return y
+
         rmax = max(ed, 2 * r[-1])
         dq = pi / rmax
         qmax = pi / dr

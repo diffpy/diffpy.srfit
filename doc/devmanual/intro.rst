@@ -58,7 +58,7 @@ Features
  * Various nanoparticle form factors for nanoparticle PDF modeling - extended
    by small-angle scattering inversion.
 
-Relese Definition
+Release Definition
 --------------------
 
 The SrFit Alpha-9 release definition can be found at

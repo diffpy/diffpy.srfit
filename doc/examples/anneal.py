@@ -86,9 +86,6 @@ def makeRecipe(molecule, datname):
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
     r = recipe.bucky.profile.x
 
     # Plot this.

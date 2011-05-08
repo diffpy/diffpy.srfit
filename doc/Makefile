@@ -24,7 +24,7 @@ upload:
 
 .PHONY : examples
 examples:
-	zip -r srfit_examples.zip ./examples -x \*.pyc -x \*svn\* -x \*threedoublepeaks\*
+	zip -r srfit_examples.zip ./examples/*.py ./examples/data -x \*svn\* -x \*threedoublepeaks\* -x \*temp\* -x \*test\*
 
 .PHONY : clean
 clean:

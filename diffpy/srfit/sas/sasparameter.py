@@ -21,11 +21,7 @@ ProfileGenerator.
 
 __all__ = ["SASParameter"]
 
-import numpy
-
-from diffpy.srfit.fitbase import ProfileGenerator
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
-from diffpy.srfit.fitbase.parameterset import ParameterSet
+from diffpy.srfit.fitbase.parameter import Parameter
 
 class SASParameter(Parameter):
     """Class adapting a sansmodel parameter to srfit Parameter.

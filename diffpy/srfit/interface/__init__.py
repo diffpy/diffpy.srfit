@@ -21,6 +21,8 @@ before importing any other part of SrFit.
 
 """
 
+__all__ = ["ParameterFactory"]
+
 from diffpy.srfit.interface.interface import ParameterInterface
 _parameter_interface = ParameterInterface
 

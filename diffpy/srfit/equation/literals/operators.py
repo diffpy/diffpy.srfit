@@ -195,6 +195,30 @@ class NegationOperator(Operator):
         self.operation = numpy.negative
         return
 
+
+def _conv(v1, v2):
+    # Get the full convolution
+    c = numpy.convolve(v1, v2, mode="full")
+    # Find the centroid of the first signal
+    s1 = sum(v1)
+    x1 = numpy.arange(len(v1), dtype=float)
+    c1idx = numpy.sum(v1 * x1)/s1
+    # Find the centroid of the convolution
+    xc = numpy.arange(len(c), dtype=float)
+    ccidx = numpy.sum(c * xc)/sum(c)
+    # Interpolate the convolution such that the centroids line up. This
+    # uses linear interpolation.
+    shift = ccidx - c1idx
+    x1 += shift
+    c = numpy.interp(x1, xc, c)
+
+    # Normalize
+    sc = sum(c)
+    if sc > 0:
+        c *= s1/sc
+
+    return c
+
 class ConvolutionOperator(Operator):
     """Convolve two signals.
 
@@ -213,31 +237,7 @@ class ConvolutionOperator(Operator):
         Operator.__init__(self)
         self.name = "convolve"
         self.symbol = "convolve"
-
-        def conv(v1, v2):
-            # Get the full convolution
-            c = numpy.convolve(v1, v2, mode="full")
-            # Find the centroid of the first signal
-            s1 = sum(v1)
-            x1 = numpy.arange(len(v1), dtype=float)
-            c1idx = numpy.sum(v1 * x1)/s1
-            # Find the centroid of the convolution
-            xc = numpy.arange(len(c), dtype=float)
-            ccidx = numpy.sum(c * xc)/sum(c)
-            # Interpolate the convolution such that the centroids line up. This
-            # uses linear interpolation.
-            shift = ccidx - c1idx
-            x1 += shift
-            c = numpy.interp(x1, xc, c)
-
-            # Normalize
-            sc = sum(c)
-            if sc > 0:
-                c *= s1/sc
-
-            return c
-
-        self.operation = conv
+        self.operation = _conv
         return
 
 class SumOperator(Operator):
@@ -276,6 +276,9 @@ class UFuncOperator(Operator):
         self.operation = op
         return
 
+def _makeList(*args):
+    return args
+
 class ListOperator(Operator):
     """Operator that will take parameters and turn them into a list."""
 
@@ -285,12 +288,11 @@ class ListOperator(Operator):
         self.name = "list"
         self.symbol = "list"
         self.nin = -1
-
-        def makeList(*args):
-            return args
-
-        self.operation = makeList
+        self.operation = _makeList
         return
+
+def _makeSet(*args):
+    return set(args)
 
 class SetOperator(Operator):
     """Operator that will take parameters and turn them into a set."""
@@ -301,12 +303,11 @@ class SetOperator(Operator):
         self.name = "set"
         self.symbol = "set"
         self.nin = -1
-
-        def makeSet(*args):
-            return set(args)
-
-        self.operation = makeSet
+        self.operation = _makeSet
         return
+
+def _makeArray(*args):
+    return numpy.array(args)
 
 class ArrayOperator(Operator):
     """Operator that will take parameters and turn them into an array."""
@@ -317,11 +318,7 @@ class ArrayOperator(Operator):
         self.name = "array"
         self.symbol = "array"
         self.nin = -1
-
-        def makeArray(*args):
-            return numpy.array(args)
-
-        self.operation = makeArray
+        self.operation = _makeArray
         return
 
 class PolyvalOperator(Operator):

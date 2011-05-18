@@ -149,24 +149,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Get the sequence of FitHook instances."""
         return self.fithooks[:]
 
-    def popFitHook(self, fithook = None, index = -1):
-        """Remove a FitHook by index or reference.
-
-        fithook --  FitHook instance to remove from the sequence. If this is
-                    None (default), default to index.
-        index   --  Index of FitHook instance to remove (default -1).
-
-        Raises ValueError if fithook is not None, but is not present in the
-        sequence.
-        Raises IndexError if the sequence is empty or index is out of range.
-
-        """
-        if fithook is not None:
-            self.fithooks.remove(fithook)
-            return
-        self.fithook.remove(index)
-        return
-
     def clearFitHooks(self):
         """Clear the FitHook sequence."""
         del self.fithooks[:]
@@ -341,7 +323,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
                     m = "Profile for '%s' is missing data"%con.name
                     raise AttributeError(m)
-
         return
 
     def __verifyParameters(self):
@@ -484,14 +465,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if tag is not None:
             self._tagmanager.tag(var, tag)
         return var
-
-    def _newParameter(self, name, value, check=True):
-        par = RecipeOrganizer._newParameter(self, name, value, check)
-        # Be sure to tag this
-        self._tagmanager.tag(par, par.name)
-        self._tagmanager.tag(par, "all")
-        self.fix(par.name)
-        return
 
     def delVar(self, var):
         """Remove a variable.

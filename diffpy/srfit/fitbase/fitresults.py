@@ -6,7 +6,7 @@
 #                   (c) 2008 Trustees of the Columbia University
 #                   in the City of New York.  All rights reserved.
 #
-# File coded by:    Chris Farrow
+# File coded by:    Chris Farrow, Pavol Juhas
 #
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE.txt for license information.

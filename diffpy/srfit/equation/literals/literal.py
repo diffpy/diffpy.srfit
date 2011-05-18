@@ -22,8 +22,6 @@ vistior.
 
 __all__ = ["Literal"]
 
-import numpy
-
 from diffpy.srfit.equation.literals.abcs import LiteralABC
 from diffpy.srfit.util.observable import Observable
 

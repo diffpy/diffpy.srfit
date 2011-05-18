@@ -11,7 +11,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Name utilities."""
+"""Input utilities."""
 
 __all__ = ["inputToString"]
 

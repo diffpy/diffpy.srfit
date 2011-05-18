@@ -223,7 +223,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         # Check name
         if not obj.name:
-            message = "%s has no name" % par.__class__.__name__
+            message = "%s has no name" % obj.__class__.__name__
             raise ValueError(message)
 
         # Check for extant object in d with same name

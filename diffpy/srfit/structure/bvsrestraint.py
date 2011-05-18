@@ -32,8 +32,7 @@ class BVSRestraint(Restraint):
 
     Attributes:
     _calc   --  The SrReal BVSCalculator instance.
-    _stru   --  Structure object supported by SrReal. This is the
-                structure from which the bond-valence sum is calculated.
+    _parset --  The SrRealParSet that created this BVSRestraint.
     sig     --  The uncertainty on the BVS (default 1).
     scaled  --  A flag indicating if the restraint is scaled (multiplied)
                 by the unrestrained point-average chi^2 (chi^2/numpoints)
@@ -41,10 +40,10 @@ class BVSRestraint(Restraint):
 
     """
 
-    def __init__(self, stru, sig = 1, scaled = False):
+    def __init__(self, parset, sig = 1, scaled = False):
         """Initialize the Restraint.
 
-        stru    --  Structure object supported by BVSCalculator.
+        parset  --  SrRealParSet that creates this BVSRestraint.
         sig     --  The uncertainty on the BVS (default 1).
         scaled  --  A flag indicating if the restraint is scaled
                     (multiplied) by the unrestrained point-average chi^2
@@ -52,7 +51,7 @@ class BVSRestraint(Restraint):
 
         """
         self._calc = BVSCalculator()
-        self._stru = stru
+        self._parset = parset
         self.sig = float(sig)
         self.scaled = bool(scaled)
         return
@@ -65,7 +64,8 @@ class BVSRestraint(Restraint):
         
         """
         # Get the bvms from the BVSCalculator
-        self._calc.eval(self._stru)
+        stru = self._parset._getSrRealStructure()
+        self._calc.eval(stru)
         penalty = self._calc.bvmsdiff
 
         # Scale by the prefactor

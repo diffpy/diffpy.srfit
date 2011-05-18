@@ -15,7 +15,7 @@
 """Structure wrapper class for structures compatible with SrReal.
 """
 
-__all__ = ["SrRealStructure"]
+__all__ = ["SrRealParSet"]
 
 from diffpy.srreal.structureadapter import nosymmetry
 
@@ -48,7 +48,7 @@ class SrRealParSet(BaseStructureParSet):
         This adds a penalty to the cost function equal to
         bvmsdiff / sig**2
         where bvmsdiff is the mean-squared difference between the calculated
-        and expected bond valence sums for the structure. If scaled is true,
+        and expected bond valence sums for the structure. If scaled is True,
         this is also scaled by the current point-averaged chi^2 value so the
         restraint is roughly equally weighted in the fit.
 
@@ -62,7 +62,7 @@ class SrRealParSet(BaseStructureParSet):
         """
 
         # Create the Restraint object
-        res = BVSRestraint(self._getSrRealStructure(), sig, scaled)
+        res = BVSRestraint(self, sig, scaled)
         # Add it to the _restraints set
         self._restraints.add(res)
         # Our configuration changed. Notify observers.

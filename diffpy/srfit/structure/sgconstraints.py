@@ -92,7 +92,7 @@ def _constrainAsSpaceGroup(phase, sg, scatterers = None,
     """Restricted interface to constrainAsSpaceGroup.
 
     Arguments: As constrainAsSpaceGroup, except
-    sg          --  diffpy.Structure.SpaceGroups.GetSpaceGroup instance
+    sg          --  diffpy.Structure.SpaceGroups.SpaceGroup instance
 
     """
 

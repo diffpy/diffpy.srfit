@@ -1443,6 +1443,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
         the actual space group.
 
         """
+        import copy
         from diffpy.Structure.SpaceGroups import GetSpaceGroup, SymOp
         name = sgobjcryst.GetName()
         extnstr = ":%s" % sgobjcryst.GetExtension()
@@ -1450,8 +1451,9 @@ class ObjCrystCrystalParSet(SrRealParSet):
             name = name[:-len(extnstr)]
 
         # Get whatever spacegroup we can get by name. This will set the proper
-        # crystal system.
-        sg = GetSpaceGroup(name)
+        # crystal system.  Creating a copy of the singleton from GetSpaceGroup,
+        # as this function messes with sg.symop_list.
+        sg = copy.copy(GetSpaceGroup(name))
 
         # Replace the symmetry operations to guarantee that we get it right.
         symops = sgobjcryst.GetSymmetryOperations()

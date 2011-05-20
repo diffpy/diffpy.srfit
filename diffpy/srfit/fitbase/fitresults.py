@@ -622,9 +622,9 @@ def resultsDictionary(results):
 def initializeRecipe(recipe, results):
     """Initialize the variables of a recipe from a results file.
 
-    This reads the results from file and initializes any variables in the
-    recipe to the results values. Note that the recipe has to be configured,
-    with variables. This does not reconstruct a FitRecipe.
+    This reads the results from file and initializes any variables (fixed or
+    free) in the recipe to the results values. Note that the recipe has to be
+    configured, with variables. This does not reconstruct a FitRecipe.
 
     recipe  --  A configured recipe with variables
     results --  An open file-like object, name of a file that contains
@@ -636,7 +636,9 @@ def initializeRecipe(recipe, results):
     if not mpairs:
         raise AttributeError("Cannot find results")
 
-    for vname in recipe.getNames():
+    # Get variable names
+    names = recipe._parameters.keys()
+    for vname in names:
         value = mpairs.get(vname)
         if value is not None:
             var = recipe.get(vname)

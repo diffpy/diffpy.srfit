@@ -771,24 +771,32 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # Make and store the restraint
         res = Restraint(eq, lb, ub, sig, scaled)
-        # Store the equation so it can be shown later
         res.eqstr = eqstr
-        self._restraints.add(res)
+        self.addRestraint(res)
+        return res
 
+    def addRestraint(self, res):
+        """Add a Restraint instance to the RecipeOrganizer.
+
+        res     --  A Restraint instance.
+
+        """
+        self._restraints.add(res)
         # Our configuration changed. Notify observers.
         self._updateConfiguration()
-
-        return res
+        return
 
     def unrestrain(self, *ress):
         """Remove a Restraint from the RecipeOrganizer.
         
-        *ress   --  Restraints returned from the 'restrain' method.
+        *ress   --  Restraints returned from the 'restrain' method or added
+                    with the 'addRestraint' method.
 
         """
         update = False
+        restuple = tuple(self._restraints)
         for res in ress:
-            if res in tuple(self._restraints):
+            if res in restuple:
                 self._restraints.remove(res)
                 update = True
 

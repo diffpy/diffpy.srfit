@@ -910,7 +910,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 locstr = ".".join(o.name for o in loc)
                 clines.append("%s <-- %s" % (locstr, con.eqstr))
             else:
-                clines.append("?.%s <-- %s" (par.name, con.eqstr))
+                clines.append("%s <-- %s" % (par.name, con.eqstr))
 
         if clines:
             clines.sort()

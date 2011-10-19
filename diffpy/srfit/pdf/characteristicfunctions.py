@@ -46,12 +46,12 @@ def sphericalCF(r, psize):
     (converted from radius to diameter)
 
     """
-    f = numpy.zeros_like(r)
+    f = numpy.zeros(numpy.shape(r), dtype=float)
     if psize > 0: 
-        x = r/psize
-        g = (1.0 - 1.5*x + 0.5*x*x*x)
-        g[x > 1] = 0
-        f += g
+        x = numpy.array(r, dtype=float) / psize
+        inside = (x < 1.0)
+        xin = x[inside]
+        f[inside] = 1.0 - 1.5*xin + 0.5*xin*xin*xin
     return f
 
 def spheroidalCF(r, erad, prad):
@@ -67,8 +67,8 @@ def spheroidalCF(r, erad, prad):
     erad == prad is a sphere
 
     """
-    psize = 2*erad
-    pelpt = prad / erad
+    psize = 2.0 * erad
+    pelpt = 1.0 * prad / erad
     return spheroidalCF2(r, psize, pelpt)
 
 def spheroidalCF2(r, psize, axrat):
@@ -83,14 +83,14 @@ def spheroidalCF2(r, psize, axrat):
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
     
     """
-    pelpt = axrat
+    pelpt = 1.0 * axrat
 
     if psize <= 0 or pelpt <= 0: 
         return numpy.zeros_like(r)
 
     # to simplify the equations
     v = pelpt
-    d = psize
+    d = 1.0 * psize
     d2 = d*d
     v2 = v*v
 

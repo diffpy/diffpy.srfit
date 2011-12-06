@@ -300,7 +300,7 @@ class PDFContribution(FitContribution):
 
     def getQmin(self):
         """Get the qmin value."""
-        return self._getMetaValue("qmax")
+        return self._getMetaValue("qmin")
 
 # version
 __id__ = "$Id$"

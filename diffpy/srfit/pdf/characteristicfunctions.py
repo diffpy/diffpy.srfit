@@ -206,7 +206,7 @@ def shellCF(r, radius, thickness):
 
     """
     d = 1.0*thickness
-    a = 1.0*radius + d/2
+    a = 1.0*radius + d/2.0
     return shellCF2(r, a, d)
 
 def shellCF2(r, a, delta):
@@ -234,10 +234,11 @@ def shellCF2(r, a, delta):
 
     f[r > 2*a+d] = 0
 
-    f /= 8*r*d*(12*a2+d2)
-
-    if r[0] == 0:
-        f[0] = 1
+    den = 8.0*r*d*(12*a2+d2)
+    zmask = (den == 0.0)
+    vmask = ~zmask
+    f[vmask] /= den[vmask]
+    f[zmask] = 1
     return f
 
 
@@ -327,19 +328,24 @@ class SASCF(Calculator):
         gr = ifft(fq).imag
 
         # Calculate full-fr for normalization
-        frp = gr / rp
+        assert (rp[0] == 0.0)
+        frp = numpy.zeros_like(gr)
+        frp[1:] = gr[1:] / rp[1:]
 
-        # Inerpolate onto requested grid
-        fr = numpy.interp(r, rp, gr) / r
+        # Inerpolate onto requested grid, do not use data after jump in rp
+        assert (numpoints % 2 == 0)
+        nhalf = numpoints / 2
+        fr = numpy.interp(r, rp[:nhalf], gr[:nhalf])
+        vmask = (r != 0)
+        fr[vmask] /= r[vmask]
 
         # Normalize. We approximate fr[0] by using the fact that f(r) is linear
         # at low r. By definition, fr[0] should equal 1.
         fr0 = 2*frp[2] - frp[1]
         fr /= fr0
 
-        # Fix potential divide-by-zero issue
-        if r[0] == 0:
-            fr[0] = 1
+        # Fix potential divide-by-zero issue, fr is 1 at r == 0
+        fr[~vmask] = 1
 
         return fr
 

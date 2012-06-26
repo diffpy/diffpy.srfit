@@ -159,7 +159,7 @@ class TestBuilder(unittest.TestCase):
         eq.x.setValue(x)
         eq.sigma.setValue(sigma)
         f = lambda x, sigma : sqrt(e**(-0.5*(x/sigma)**2))
-        self.assertTrue(array_equal(eq(), f(x,sigma)))
+        self.assertTrue(numpy.allclose(eq(), f(x,sigma)))
 
         self.assertEquals(eq.args, [eq.x, eq.sigma])
 
@@ -168,14 +168,14 @@ class TestBuilder(unittest.TestCase):
         eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
         self.assertTrue("sigma" in eq.argdict)
         self.assertTrue("x" not in eq.argdict)
-        self.assertTrue(array_equal(eq(sigma=sigma), f(x,sigma)))
+        self.assertTrue(numpy.allclose(eq(sigma=sigma), f(x,sigma)))
 
         self.assertEquals(eq.args, [eq.sigma])
 
         # Equation with user-defined functions
         factory.registerFunction("myfunc", eq, ["sigma"])
         eq2 = factory.makeEquation("c*myfunc(sigma)")
-        self.assertTrue(array_equal(eq2(c=2, sigma=sigma), 2*f(x,sigma)))
+        self.assertTrue(numpy.allclose(eq2(c=2, sigma=sigma), 2*f(x,sigma)))
         self.assertTrue("sigma" in eq2.argdict)
         self.assertTrue("c" in eq2.argdict)
         self.assertEquals(eq2.args, [eq2.c, eq2.sigma])
@@ -226,7 +226,7 @@ class TestBuilder(unittest.TestCase):
         beq = sqrt(e**(-0.5*(x/sigma)**2))
         eq = beq.getEquation()
         f = lambda x, sigma : sqrt(e**(-0.5*(x/sigma)**2))
-        self.assertTrue(array_equal(eq(), numpy.sqrt(e**(-0.5*(_x/0.1)**2))))
+        self.assertTrue(numpy.allclose(eq(), numpy.sqrt(e**(-0.5*(_x/0.1)**2))))
 
         # Equation with Equation
         A = builder.ArgumentBuilder(name="A", value = 2)

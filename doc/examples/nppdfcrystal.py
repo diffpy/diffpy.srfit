@@ -76,6 +76,7 @@ def makeRecipe(ciffile, grdata):
     recipe.addVar(pdfcontribution.psize, 20)
     recipe.addVar(pdfgenerator.scale, 1)
     recipe.addVar(pdfgenerator.delta2, 0)
+    recipe.B11_0 = 0.1
 
     return recipe
 

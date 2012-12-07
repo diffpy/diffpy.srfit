@@ -88,6 +88,9 @@ def makeRecipe(ciffile, datname):
     # things by iterating through all the sgpars.
     for par in phase.sgpars: 
         recipe.addVar(par)
+    # set the initial thermal factor to a non-zero value
+    assert hasattr(recipe, 'B11_0')
+    recipe.B11_0 = 0.1
 
     # We now select non-structural parameters to refine.
     # This controls the scaling of the PDF.

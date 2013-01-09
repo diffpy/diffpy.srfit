@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Copyright 2007 Google, Inc. All Rights Reserved.
 # Licensed to PSF under a Contributor Agreement.
 """Abstract Base Classes (ABCs) according to PEP 3119."""

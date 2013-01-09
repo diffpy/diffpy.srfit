@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 
-# Installation script for diffpy.Structure
+# Installation script for diffpy.srfit
 
-"""diffpy.srfit - prototype for new PDF calculator and assortment
-of real space utilities.
+"""diffpy.srfit - framework for setting up complex modeling refinements.
 
 Packages:   diffpy.srfit
 Scripts:    (none yet)
 """
 
 from setuptools import setup, find_packages
-import fix_setuptools_chmod
 
 
 # define distribution

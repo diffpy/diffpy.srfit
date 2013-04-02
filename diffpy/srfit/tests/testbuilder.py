@@ -126,7 +126,7 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue(eq1.root is op)
         self.assertAlmostEquals(3, op.value)
         self.assertAlmostEquals(3, eq1())
-        
+
         return
 
     def testParseEquation(self):
@@ -251,7 +251,7 @@ class TestBuilder(unittest.TestCase):
         # Try to pass the wrong number of arguments
         self.assertRaises(ValueError, E, A)
         self.assertRaises(ValueError, E, A, B, C)
-        
+
         return
 
 

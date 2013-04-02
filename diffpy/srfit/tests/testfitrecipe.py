@@ -182,7 +182,7 @@ class TestFitRecipe(unittest.TestCase):
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res) )
 
-        # Add constraints at the fitcontribution level. 
+        # Add constraints at the fitcontribution level.
         self.fitcontribution.constrain(self.fitcontribution.c, "2*A")
         # This should evaluate to sin(x+2)
         x = self.profile.x

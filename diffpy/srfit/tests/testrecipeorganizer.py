@@ -50,7 +50,7 @@ class TestEquationFromString(unittest.TestCase):
         self.assertTrue("p3" not in factory.builders)
 
         # Pass and use an unregistered parameter
-        self.assertRaises(ValueError, equationFromString, "p1+p2+p3+p4", 
+        self.assertRaises(ValueError, equationFromString, "p1+p2+p3+p4",
                 factory, {"p3":p3})
 
         # Try to overload a registered parameter
@@ -469,11 +469,9 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEquals(18.0, eq4())
 
         return
-        
+
 
 #
 
 if __name__ == "__main__":
-
     unittest.main()
-

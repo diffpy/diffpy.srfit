@@ -7,8 +7,8 @@ import numpy
 
 from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
 
-from pyobjcryst.crystal import Crystal 
-from pyobjcryst.atom import Atom 
+from pyobjcryst.crystal import Crystal
+from pyobjcryst.atom import Atom
 from pyobjcryst.molecule import Molecule
 from pyobjcryst.scatteringpower import ScatteringPowerAtom
 
@@ -129,7 +129,7 @@ class TestParameterAdapter(unittest.TestCase):
             self.assertAlmostEquals(occryst.gamma, cryst.gamma.getValue())
 
             return
-            
+
         def _testMolecule():
 
             # Test position / occupancy
@@ -161,7 +161,7 @@ class TestParameterAdapter(unittest.TestCase):
         _testCrystal()
         _testMolecule()
 
-        ## Now change some values from ObjCryst 
+        ## Now change some values from ObjCryst
         ocmol[0].X *= 1.1
         ocmol[0].Occupancy *= 1.1
         ocmol[0].GetScatteringPower().Biso *= 1.1
@@ -233,7 +233,7 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertEqual(p0, p1)
 
         return
-        
+
     def testImplicitDihedralAngleRestraints(self):
         """Test the structure with implicit dihedral angles."""
         occryst = self.occryst
@@ -297,7 +297,7 @@ class TestParameterAdapter(unittest.TestCase):
 
         Note that this cannot work with co-linear points as the direction of
         rotation cannot be defined in this case.
-        
+
         """
         occryst = self.occryst
         ocmol = self.ocmol
@@ -322,7 +322,7 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertEqual(p0, p1)
 
         return
-        
+
     def testExplicitDihedralAngleRestraints(self):
         """Test the structure with explicit dihedral angles."""
         occryst = self.occryst
@@ -376,11 +376,11 @@ class TestParameterAdapter(unittest.TestCase):
         dd = xyz0 - xyz7
         d0 = numpy.dot(dd, dd)**0.5
         self.assertAlmostEquals(d0, p1.getValue(), 6)
-        
+
         # Record the unit direction of change for later
         u = dd/d0
 
-        # Change the value 
+        # Change the value
         scale = 1.05
         p1.setValue(scale*d0)
 
@@ -447,7 +447,7 @@ class TestParameterAdapter(unittest.TestCase):
 
         self.assertAlmostEqual(angle0, p1.getValue(), 6)
 
-        # Change the value 
+        # Change the value
         scale = 1.05
         p1.setValue(scale*angle0)
 
@@ -476,7 +476,7 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertTrue(numpy.array_equal(xyz7, xyz7a))
         self.assertFalse(numpy.array_equal(xyz20, xyz20a))
         self.assertFalse(numpy.array_equal(xyz25, xyz25a))
-        
+
         return
 
     def testExplicitDihedralAngleParameter(self):
@@ -521,7 +521,7 @@ class TestParameterAdapter(unittest.TestCase):
 
         self.assertAlmostEqual(angle0, p1.getValue(), 6)
 
-        # Change the value 
+        # Change the value
         scale = 1.05
         p1.setValue(scale*angle0)
 
@@ -556,7 +556,7 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertTrue(numpy.array_equal(xyz20, xyz20a))
         self.assertFalse(numpy.array_equal(xyz25, xyz25a))
         self.assertFalse(numpy.array_equal(xyz33, xyz33a))
-        
+
         return
 
 

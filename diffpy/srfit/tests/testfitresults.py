@@ -2,14 +2,11 @@
 """Tests for fitresults module."""
 
 import unittest
-import os.path
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import initializeRecipe
+from diffpy.srfit.tests.utils import datafile
 
-thisfile = locals().get('__file__', 'testpdf.py')
-tests_dir = os.path.dirname(os.path.abspath(thisfile))
-testdata_dir = os.path.join(tests_dir, 'testdata')
 
 class TestInitializeRecipe(unittest.TestCase):
 
@@ -18,7 +15,7 @@ class TestInitializeRecipe(unittest.TestCase):
         recipe.newVar("A", 0)
         recipe.newVar("sig", 0)
         recipe.newVar("x0", 0)
-        self.filename = "results.res"
+        self.filename = datafile("results.res")
 
         self.Aval = 5.77619823e-01
         self.sigval = -9.22758690e-01
@@ -30,7 +27,7 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertEquals(0, recipe.A.value)
         self.assertEquals(0, recipe.sig.value)
         self.assertEquals(0, recipe.x0.value)
-        initializeRecipe(recipe, os.path.join(testdata_dir, self.filename))
+        initializeRecipe(recipe, self.filename)
         self.assertAlmostEquals(self.Aval, recipe.A.value)
         self.assertAlmostEquals(self.sigval, recipe.sig.value)
         self.assertAlmostEquals(self.x0val, recipe.x0.value)
@@ -41,7 +38,7 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertEquals(0, recipe.A.value)
         self.assertEquals(0, recipe.sig.value)
         self.assertEquals(0, recipe.x0.value)
-        infile = file(os.path.join(testdata_dir, self.filename), 'r')
+        infile = file(self.filename, 'r')
         initializeRecipe(recipe, infile)
         self.assertFalse(infile.closed)
         infile.close()
@@ -56,7 +53,7 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertEquals(0, recipe.A.value)
         self.assertEquals(0, recipe.sig.value)
         self.assertEquals(0, recipe.x0.value)
-        infile = file(os.path.join(testdata_dir, self.filename), 'r')
+        infile = file(self.filename, 'r')
         resstr = infile.read()
         infile.close()
         initializeRecipe(recipe, resstr)

@@ -63,7 +63,7 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(fc._eq is not None)
         self.assertTrue(fc._reseq is not None)
         self.assertTrue(gen.profile is profile)
-        
+
         # create some data
         xobs = arange(0, 10, 0.5)
         yobs = xobs
@@ -174,15 +174,15 @@ class TestContribution(unittest.TestCase):
         profile.setObservedProfile(xobs, yobs)
         self.assertTrue(fc._eq._value is None)
         self.assertTrue(fc._reseq._value is None)
-        
+
         chiv = fc.residual()
         self.assertAlmostEqual(0, dot(chiv, chiv))
 
-        # Choose a new residual. 
+        # Choose a new residual.
         fc.setEquation("2*I")
         fc.setResidualEquation("resv")
         chiv = fc.residual()
-        self.assertAlmostEqual(sum((2*xobs-yobs)**2)/sum(yobs**2), 
+        self.assertAlmostEqual(sum((2*xobs-yobs)**2)/sum(yobs**2),
                 dot(chiv, chiv))
 
         # Make a custom residual.

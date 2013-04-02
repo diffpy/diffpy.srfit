@@ -6,15 +6,9 @@
 # version
 __id__ = '$Id$'
 
-import os
 import unittest
 
 from diffpy.srfit.util.tagmanager import TagManager
-
-# useful variables
-thisfile = locals().get('__file__', 'file.py')
-tests_dir = os.path.dirname(os.path.abspath(thisfile))
-# testdata_dir = os.path.join(tests_dir, 'testdata')
 
 ##############################################################################
 class TestTagManager(unittest.TestCase):

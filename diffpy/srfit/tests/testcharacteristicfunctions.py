@@ -2,7 +2,6 @@
 """Tests for sas package."""
 
 import unittest
-import os.path
 
 import numpy
 

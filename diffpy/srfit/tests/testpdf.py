@@ -2,21 +2,18 @@
 """Tests for pdf package."""
 
 import unittest
-import os.path
 
 import numpy
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
+from diffpy.srfit.tests.utils import datafile
 
-thisfile = locals().get('__file__', 'testpdf.py')
-tests_dir = os.path.dirname(os.path.abspath(thisfile))
-testdata_dir = os.path.join(tests_dir, 'testdata')
 
 class TestPDFParser(unittest.TestCase):
 
     def testParser1(self):
-        data = os.path.join(testdata_dir, "ni-q27r100-neutron.gr")
+        data = datafile("ni-q27r100-neutron.gr")
         parser = PDFParser()
         parser.parseFile(data)
 
@@ -51,7 +48,7 @@ class TestPDFParser(unittest.TestCase):
         return
 
     def testParser2(self):
-        data = os.path.join(testdata_dir, "si-q27r60-xray.gr")
+        data = datafile("si-q27r60-xray.gr")
         parser = PDFParser()
         parser.parseFile(data)
 
@@ -101,7 +98,7 @@ class TestPDFGenerator(unittest.TestCase):
         self.assertAlmostEqual(qmax, gen.getQmax())
         from diffpy.Structure import PDFFitStructure
         stru = PDFFitStructure()
-        ciffile = os.path.join(testdata_dir, "ni.cif")
+        ciffile = datafile("ni.cif")
         stru.read(ciffile)
         for i in range(4):
             stru[i].Bisoequiv = 1

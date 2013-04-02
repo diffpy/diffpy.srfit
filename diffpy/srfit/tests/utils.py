@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Utilities for testing."""
+"""Helper routines for testing."""
 
 import logging
 import diffpy.srfit.equation.literals as literals
@@ -20,3 +20,11 @@ def _makeArgs(num):
         j=i+1
         args.append(literals.Argument(name="v%i"%j, value=j))
     return args
+
+
+def datafile(filename):
+    from pkg_resources import resource_filename
+    rv = resource_filename(__name__, "testdata/" + filename)
+    return rv
+
+# End of file

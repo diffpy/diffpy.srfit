@@ -3,12 +3,11 @@
 
 import warnings
 import unittest
-import os.path
 
 import numpy
 
 from diffpy.srfit.fitbase import Profile
-from utils import TestCaseSaSOptional
+from diffpy.srfit.tests.utils import TestCaseSaSOptional, datafile
 
 # Global variable for the sas module.
 # If available, it will be assign by the setUp method.
@@ -18,9 +17,6 @@ sas = None
 warnings.filterwarnings('ignore', module='sans.models.*',
         category=DeprecationWarning)
 
-thisfile = locals().get('__file__', 'testpdf.py')
-tests_dir = os.path.dirname(os.path.abspath(thisfile))
-testdata_dir = os.path.join(tests_dir, 'testdata')
 
 class TestSASParser(TestCaseSaSOptional):
 
@@ -30,7 +26,7 @@ class TestSASParser(TestCaseSaSOptional):
 
 
     def testParser(self):
-        data = os.path.join(testdata_dir, "sas_ascii_test_1.txt")
+        data = datafile("sas_ascii_test_1.txt")
         parser = sas.SASParser()
         parser.parseFile(data)
 
@@ -111,7 +107,7 @@ class TestSASGenerator(TestCaseSaSOptional):
         # Load the data using SAS tools
         from DataLoader.loader import Loader
         loader = Loader()
-        data = os.path.join(testdata_dir, "sas_ellipsoid_testdata.txt")
+        data = datafile("sas_ellipsoid_testdata.txt")
         datainfo = loader.load(data)
         profile = sas.SASProfile(datainfo)
 

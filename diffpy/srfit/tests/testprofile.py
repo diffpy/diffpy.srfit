@@ -2,15 +2,12 @@
 """Tests for refinableobj module."""
 
 import unittest
-import os.path
 
 from numpy import array, arange, array_equal, ones_like
 
 from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.tests.utils import datafile
 
-thisfile = locals().get('__file__', 'testpdf.py')
-tests_dir = os.path.dirname(os.path.abspath(thisfile))
-testdata_dir = os.path.join(tests_dir, 'testdata')
 
 class TestProfile(unittest.TestCase):
 
@@ -154,7 +151,7 @@ class TestProfile(unittest.TestCase):
         """Test the loadtxt method"""
 
         prof = self.profile
-        data = os.path.join(testdata_dir, "testdata.txt")
+        data = datafile("testdata.txt")
 
         def _test(p):
             self.assertAlmostEqual(1e-2, p.x[0])

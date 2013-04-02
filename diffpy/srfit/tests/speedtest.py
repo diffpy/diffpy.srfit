@@ -23,7 +23,7 @@ def makeLazyEquation():
     pow = literals.ExponentiationOperator()
     exp = literals.ExponentiationOperator()
     mult2 = literals.MultiplicationOperator()
-    
+
     # Create the equation ((v1+v2)*(v3-v4))**v5 * v6^v7
     plus.addLiteral(v1)
     plus.addLiteral(v2)

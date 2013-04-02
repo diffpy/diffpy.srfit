@@ -15,8 +15,8 @@ def makeLaMnO3_P1():
     return stru
 
 def makeLaMnO3():
-    from pyobjcryst.crystal import Crystal 
-    from pyobjcryst.atom import Atom 
+    from pyobjcryst.crystal import Crystal
+    from pyobjcryst.atom import Atom
     from pyobjcryst.molecule import Molecule
     from pyobjcryst.scatteringpower import ScatteringPowerAtom
 
@@ -59,7 +59,7 @@ class TestSGConstraints(unittest.TestCase):
         This tests constrainSpaceGroup from
         diffpy.srfit.structure.sgconstraints, which is performed automatically
         when an ObjCrystCrystalParSet is created.
-        
+
         """
         pi = numpy.pi
 

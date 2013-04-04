@@ -18,6 +18,7 @@ dist = setup(
         namespace_packages = ['diffpy'],
         packages = find_packages(exclude=['tests']),
         test_suite = 'diffpy.srfit.tests',
+        include_package_data = True,
         entry_points = {},
         install_requires = [
             'diffpy.Structure>=1.0-r5333-20100518',

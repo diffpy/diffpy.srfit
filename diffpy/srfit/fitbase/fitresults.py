@@ -238,6 +238,7 @@ class FitResults(object):
 
     def _calculateMetrics(self):
         """Calculate chi2, rchi2 and Rw for the recipe."""
+        # FIXME the total Rw should take into account the total sum of squares.
         chi2 = 0
         rw = 0
         numpoints = 0

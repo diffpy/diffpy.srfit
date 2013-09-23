@@ -74,7 +74,6 @@ example.
 > c = ArgumentBuilder(name = "c")
 > beq = c*f(a,b)
 > eq = beq.makeEquation()
-
 """
 
 __all__ = [ "EquationFactory", "BaseBuilder", "ArgumentBuilder",
@@ -103,7 +102,6 @@ class EquationFactory(object):
     newargs     --  A set of new arguments created by makeEquation. This is
                     redefined whenever makeEquation is called.
     equations   --  Set of equations that have been built by the EquationFactory.
-    
     """
 
     symbols = ("+", "-", "*", "/", "**", "%", "|")
@@ -113,7 +111,6 @@ class EquationFactory(object):
         """Initialize.
 
         This registers "pi" and "e" as constants within the factory.
-
         """
         self.builders = dict(_builders)
         self.registerConstant("pi", numpy.pi)
@@ -143,7 +140,6 @@ class EquationFactory(object):
                         (default {}).
 
         Returns a callable Literal representing the equation string.
-
         """
         self._prepareBuilders(eqstr, buildargs, argclass, argkw)
         beq = eval(eqstr, self.builders)
@@ -153,9 +149,8 @@ class EquationFactory(object):
 
     def registerConstant(self, name, value):
         """Register a named constant with the factory.
-        
-        Returns the registered builder.
 
+        Returns the registered builder.
         """
         arg = literals.Argument(name=name, value=value, const=True)
         return self.registerArgument(name, arg)
@@ -164,7 +159,6 @@ class EquationFactory(object):
         """Register a named Argument with the factory.
 
         Returns the registered builder.
-
         """
         argbuilder = wrapArgument(name, arg)
         return self.registerBuilder(name, argbuilder)
@@ -179,7 +173,6 @@ class EquationFactory(object):
         arguments, and those will be used.
 
         Returns the registered builder.
-
         """
         opbuilder = wrapOperator(name, op)
         return self.registerBuilder(name, opbuilder)
@@ -188,7 +181,7 @@ class EquationFactory(object):
         """Register a named function with the factory.
 
         This will register a builder for the function.
-        
+
         name    --  The name of the function
         func    --  A callable python object
         argnames--  The argument names for func. If these names do not
@@ -196,7 +189,6 @@ class EquationFactory(object):
                     will be created for each name.
 
         Returns the registered builder.
-
         """
         for n in argnames:
             if n not in self.builders:
@@ -219,9 +211,8 @@ class EquationFactory(object):
 
         Raises ValueError if the new builder's literal causes a self-reference
         in an existing equation.
-        
         """
-        if not isinstance(name, str):
+        if not isinstance(name, basestring):
             raise TypeError("Name must be a string")
         if not isinstance(builder, BaseBuilder):
             raise TypeError("builder must be a BaseBuilder instance")
@@ -243,7 +234,6 @@ class EquationFactory(object):
 
         This does not change the equations that use the Literal wrapped by the
         builder.
-        
         """
         if name in self.builders:
             del self.builders[name]
@@ -254,7 +244,6 @@ class EquationFactory(object):
 
         This will remove an equation from the purview of the factory. Thus,
         changes made to the builders will not affect the equation.
-
         """
         self.equations.discard(eq)
         return
@@ -265,7 +254,7 @@ class EquationFactory(object):
         This method checks the equation string for errors and missing
         arguments, and creates new arguments if allowed. In the process it
         rebuilds the newargs attribute.
-        
+
         Arguments
         eqstr       --  An equation in string as specified in the makeEquation
                         method.
@@ -283,7 +272,6 @@ class EquationFactory(object):
         Raises SyntaxError if the equation string uses invalid syntax.
 
         Returns a dictionary of the name, BaseBuilder pairs.
-
         """
 
         eqargs = self._getUndefinedArgs(eqstr)
@@ -315,7 +303,6 @@ class EquationFactory(object):
         does not correspond to a builder.
 
         Raises SyntaxError if the equation string uses invalid syntax.
-
         """
         import tokenize
         import token
@@ -368,7 +355,6 @@ class BaseBuilder(object):
 
     Attributes
     literal     --  The equation Literal being built by this instance.
-
     """
 
     def __init__(self):
@@ -388,7 +374,6 @@ class BaseBuilder(object):
 
         The equation will given the name "_eq_<root>" where "<root>" is the
         name of the root node.
-        
         """
         # We need to make a name for this, so we name it after its root
         name = "_eq_%s"%self.literal.name
@@ -402,7 +387,6 @@ class BaseBuilder(object):
 
         onleft  --  Indicates that the operator was passed on the left side
                     (defualt True).
-
         """
         # Create the Operator
         op = OperatorClass()
@@ -486,7 +470,6 @@ class ArgumentBuilder(BaseBuilder):
 
     Attributes
     literal     --  The Argument wrapped by this instance.
-
     """
 
     def __init__(self, value = None, name = None, const = False, arg = None):
@@ -500,7 +483,6 @@ class ArgumentBuilder(BaseBuilder):
         arg     --  A pre-defined Argument to use. If this is None (default),
                     then a new Argument will be created from value, name and
                     const.
-
         """
         BaseBuilder.__init__(self)
         if arg is None:
@@ -518,7 +500,6 @@ class OperatorBuilder(BaseBuilder):
     Attributes
     literal     --  The Operator wrapped by this instance.
     name        --  The name of the operator to be wrapped
-
     """
 
     def __init__(self, name, op = None):
@@ -530,7 +511,6 @@ class OperatorBuilder(BaseBuilder):
                     operator (default None). Otherwise, the name is assumed to
                     be that of a numpy ufunc, which is used to specify the
                     Operator.
-
         """
         BaseBuilder.__init__(self)
         self.name = name
@@ -541,11 +521,10 @@ class OperatorBuilder(BaseBuilder):
         """Call the operator builder.
 
         This creates a new builder that encapsulates the operation.
-        
+
         args    --  Arguments of the operation.
 
         Raises ValueError if self.literal.nin >= 0 and len(args) != op.nin
-
         """
         newobj = OperatorBuilder(self.name)
 
@@ -605,7 +584,6 @@ def wrapFunction(name, func, nin = 2, nout = 1):
     nout    --  The number of return values (default 1)
 
     Returns the OperatorBuilder instance that wraps the function.
-
     """
     op = literals.Operator()
     op.name = name
@@ -613,7 +591,7 @@ def wrapFunction(name, func, nin = 2, nout = 1):
     op.nin = nin
     op.nout = nout
     op.operation = func
-    
+
     # Create the OperatorBuilder
     opbuilder = OperatorBuilder(name, op)
 
@@ -626,7 +604,6 @@ def getBuilder(name):
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module
     namespace.
-
     """
     for name in dir(numpy):
         op = getattr(numpy, name)
@@ -640,7 +617,6 @@ def __wrapSrFitOperators():
     """Export all non-base operators from the
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
     instances in the module namespace.
-
     """
     import inspect
     opmod = literals.operators

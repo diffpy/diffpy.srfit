@@ -14,20 +14,19 @@
 ########################################################################
 
 
-"""Definition of __version__ and __date__ for diffpy.srfit .
+"""Definition of __version__, __date__, __gitsha__ for diffpy.srfit.
 """
 
 
 # obtain version information
 from pkg_resources import get_distribution
-__version__ = get_distribution('diffpy.srfit ').version
+__version__ = get_distribution('diffpy.srfit').version
 
 # we assume that tag_date was used and __version__ ends in YYYYMMDD
 __date__ = __version__[-8:-4] + '-' + \
            __version__[-4:-2] + '-' + __version__[-2:]
 
 # GIT SHA hash is the second last component in the version string
-__gitsha__ = __version__.rsplit('-', 2)[-2]
-
+__gitsha__ = __version__.rsplit('-', 2)[-2][1:]
 
 # End of file

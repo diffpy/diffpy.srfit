@@ -105,7 +105,8 @@ class TestSASGenerator(TestCaseSaSOptional):
         gen = sas.SASGenerator("ellipsoid", model)
 
         # Load the data using SAS tools
-        from DataLoader.loader import Loader
+        from diffpy.srfit.sas.sasparser import _import_sans_Loader
+        Loader = _import_sans_Loader()
         loader = Loader()
         data = datafile("sas_ellipsoid_testdata.txt")
         datainfo = loader.load(data)

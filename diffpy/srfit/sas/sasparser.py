@@ -67,8 +67,7 @@ class SASParser(ProfileParser):
 
         """
 
-        from DataLoader.loader import Loader
-
+        Loader = _import_sans_Loader()
         loader = Loader()
 
         try:
@@ -91,7 +90,7 @@ class SASParser(ProfileParser):
         When _dx or _dy cannot be obtained in the data format it is set to 0.
 
         This wipes out the currently loaded data and selected bank number.
-        
+
         Arguments
         patstring   --  A string containing the pattern
 
@@ -115,6 +114,30 @@ class SASParser(ProfileParser):
         return
 
 
-# End of SASParser
-__id__ = "$Id$"
+# End of class SASParser
 
+# Local Helpers --------------------------------------------------------------
+
+def _import_sans_Loader():
+    """Return the Loader class from SANS DataLoader package.
+
+    This is a workaround for a recent change in dataloader package name.
+    """
+    global _the_Loader
+    if _the_Loader is not None:  return _the_Loader
+    # first try to import from the latest interface:
+    try:
+        from sans.dataloader.loader import Loader as _the_Loader
+        return _import_sans_Loader()
+    except ImportError:
+        pass
+    # try to import from the old interface:
+    try:
+        from DataLoader.loader import Loader as _the_Loader
+        return _import_sans_Loader()
+    except ImportError:
+        pass
+    # finally use the latest interface again and let it raise ImportError
+    from sans.dataloader.loader import Loader as _the_Loader
+    return _import_sans_Loader()
+_the_Loader = None

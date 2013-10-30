@@ -12,7 +12,8 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""FitRecipe class. 
+
+"""FitRecipe class.
 
 FitRecipes organize FitContributions, variables, Restraints and Constraints to
 create a recipe of the system you wish to optimize. From the client's
@@ -29,8 +30,8 @@ reserved.
 
 See the examples in the documentation for how to create an optimization problem
 using FitRecipe.
-
 """
+
 __all__ = ["FitRecipe"]
 
 from numpy import array, concatenate, sqrt, dot
@@ -82,7 +83,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     fixedvalues     --  Values of the fixed refinable variables (read only).
     bounds          --  Bounds on parameters (read only). See getBounds.
     bounds2         --  Bounds on parameters (read only). See getBounds2.
-
     """
 
     fixednames = property(lambda self:
@@ -128,7 +128,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         fithook --  FitHook instance to add to the sequence
         index   --  Index for inserting fithook into the list of fit hooks.  If
                     this is None (default), the fithook is added to the end.
-
         """
         if index is None:
             index = len(self.fithooks)
@@ -147,7 +146,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if fithook is not None, but is not present in the
         sequence.
         Raises IndexError if the sequence is empty or index is out of range.
-
         """
         if fithook is not None:
             self.fithooks.remove(fithook)
@@ -172,7 +170,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if the FitContribution has no name
         Raises ValueError if the FitContribution has the same name as some
         other managed object.
-        
         """
         self._addObject(con, self._contributions, True)
         self._weights.append(weight)
@@ -189,10 +186,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         parset  --  The ParameterSet to be stored.
 
-        Raises ValueError if the ParameterSet has no name.  
+        Raises ValueError if the ParameterSet has no name.
         Raises ValueError if the ParameterSet has the same name as some other
         managed object.
-
         """
         self._addObject(parset, self._parsets, True)
         return
@@ -201,7 +197,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Remove a ParameterSet from the hierarchy.
 
         Raises ValueError if parset is not managed by this object.
-
         """
         self._removeObject(parset, self._parsets)
         return
@@ -216,11 +211,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 updated in some other way, and the explicit update within this
                 function is skipped.
 
-        The residual is by default the weighted concatenation of each 
+        The residual is by default the weighted concatenation of each
         FitContribution's residual, plus the value of each restraint. The array
-        returned, denoted chiv, is such that 
+        returned, denoted chiv, is such that
         dot(chiv, chiv) = chi^2 + restraints.
-
         """
 
         # Prepare, if necessary
@@ -238,7 +232,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             con.update()
 
         # Calculate the bare chiv
-        chiv = concatenate([ 
+        chiv = concatenate([
             sqrt(self._weights[i])*\
                     self._contributions.values()[i].residual().flatten() \
                     for i in range(len(self._contributions))])
@@ -264,11 +258,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 updated in some other way, and the explicit update within this
                 function is skipped.
 
-        The residual is by default the weighted concatenation of each 
+        The residual is by default the weighted concatenation of each
         FitContribution's residual, plus the value of each restraint. The array
-        returned, denoted chiv, is such that 
+        returned, denoted chiv, is such that
         dot(chiv, chiv) = chi^2 + restraints.
-
         """
         chiv = self.residual(p)
         return dot(chiv, chiv)
@@ -286,7 +279,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         This updates the local restraints with those of the contributions.
 
         Raises AttributeError if there are variables without a value.
-
         """
 
         # Only prepare if the configuration has changed within the recipe
@@ -304,7 +296,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         # Check parameters
         self.__verifyParameters()
 
-        # Update constraints and restraints. 
+        # Update constraints and restraints.
         self.__collectConstraintsAndRestraints()
 
         # We do this here so that the calculations that take place during the
@@ -341,7 +333,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         # Get all parameters with a value of None
         badpars = []
         for par in self.iterPars():
-            try: 
+            try:
                 par.getValue()
             except ValueError:
                 badpars.append(par)
@@ -449,7 +441,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         another managed object.
         Raises ValueError if par is constant.
         Raises ValueError if par is constrained.
-
         """
         name = name or par.name
 
@@ -467,7 +458,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         if fixed:
             self.fix(var)
-          
+
         # Tag with passed tags and by name
         self._tagmanager.tag(var, var.name)
         self._tagmanager.tag(var, "all")
@@ -485,7 +476,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         var     --  A variable of the FitRecipe.
 
         Raises ValueError if var is not part of the FitRecipe.
-
         """
 
         self._removeParameter(var)
@@ -523,7 +513,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                     applied.
 
         Returns the new variable (Parameter instance).
-
         """
         # This will fix the Parameter
         var = self._newParameter(name, value)
@@ -543,7 +532,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Overloaded to tag variables.
 
         See RecipeOrganizer._newParameter
-
         """
         par = RecipeOrganizer._newParameter(self, name, value, check)
         # tag this
@@ -560,9 +548,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Returns the variable or None if the variable cannot be found in the
         _parameters list.
-
         """
-        if isinstance(var, str):
+        if isinstance(var, basestring):
             var = self._parameters.get(var)
 
         if var not in self._parameters.values():
@@ -580,10 +567,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Raises ValueError if an unknown variable, name or tag is passed, or if
         a tag is passed in a keyword.
-
         """
         # Process args. Each variable is tagged with its name, so this is easy.
-        strargs = set([arg for arg in args if isinstance(arg, str)])
+        strargs = set([arg for arg in args if isinstance(arg, basestring)])
         varargs = set(args) - strargs
         # Check that the tags are valid
         alltags = set(self._tagmanager.alltags())
@@ -623,7 +609,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Raises ValueError if an unknown Parameter, name or tag is passed, or if
         a tag is passed in a keyword.
-
         """
         # Check the inputs and get the variables from them
         varargs = self.__getVarsFromArgs(*args, **kw)
@@ -651,7 +636,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Raises ValueError if an unknown Parameter, name or tag is passed, or if
         a tag is passed in a keyword.
-
         """
         # Check the inputs and get the variables from them
         varargs = self.__getVarsFromArgs(*args, **kw)
@@ -679,12 +663,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         *pars   --  The names of Parameters or Parameters to unconstrain.
 
-        
+
         Raises ValueError if the Parameter is not constrained.
         """
         update = False
         for par in pars:
-            if isinstance(par, str):
+            if isinstance(par, basestring):
                 name = par
                 par = self.get(name)
 
@@ -728,9 +712,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the FitRecipe and that is not defined in ns.
         Raises ValueError if par is marked as constant.
-
         """
-        if isinstance(par, str):
+        if isinstance(par, basestring):
             name = par
             par = self.get(name)
             if par is None:
@@ -746,7 +729,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         # This will pass the value of a constrained parameter to the initial
         # value of a parameter constraint.
-        if con in self._parameters.values(): 
+        if con in self._parameters.values():
             val = con.getValue()
             if val is None:
                 val = par.getValue()
@@ -773,7 +756,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Returns a list of (lb, ub) pairs, where lb is the lower bound and ub is
         the upper bound.
-
         """
         return [v.bounds for v in self._parameters.values() if self.isFree(v)]
 
@@ -781,7 +763,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Get the bounds on variables in two lists.
 
         Returns lower- and upper-bound lists of variable bounds.
-
         """
         bounds = self.getBounds()
         lb = array([b[0] for b in bounds])
@@ -793,10 +774,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         The bounds become limits on the restraint.
 
-        sig     --  The uncertainty on the bounds (scalar or iterable, 
+        sig     --  The uncertainty on the bounds (scalar or iterable,
                     default 1).
         scaled  --  Scale the restraints, see restrain.
-
         """
         pars = self._parameters.values()
         if not hasattr(sig, "__iter__"):

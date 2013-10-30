@@ -26,7 +26,7 @@ import numpy
 from diffpy.srfit.util.inpututils import inputToString
 
 class FitResults(object):
-    """Class for processing, presenting and storing results of a fit. 
+    """Class for processing, presenting and storing results of a fit.
 
     Attributes
     recipe      --  The recipe containing the results.
@@ -69,7 +69,7 @@ class FitResults(object):
                     True).
         showcon --  Show fixed variables in the output (default True).
         showcon --  Show constraint values in the output (default False).
-        
+
         """
         self.recipe = recipe
         self.conresults = {}
@@ -189,12 +189,12 @@ class FitResults(object):
         # Compute the numeric derivative using the center point formula.
         delta = step * pvals
 
-        # Center point formula: 
+        # Center point formula:
         #     df/dv = lim_{h->0} ( f(v+h)-f(v-h) ) / ( 2h )
         #
 
         r = []
-        # The list of constraint derivatives with respect to variables 
+        # The list of constraint derivatives with respect to variables
         # The forward difference would be faster, but perhaps not as accurate.
         conr = []
         for k,v in enumerate(pvals):
@@ -225,7 +225,7 @@ class FitResults(object):
 
             pvals[k] = v
             r.append(rk/(2*h))
-            
+
         # Reset the constrained parameters to their original values
         for con in recipe._oconstraints:
             con.update()
@@ -288,7 +288,7 @@ class FitResults(object):
         update  --  Flag indicating whether to call update() (default False).
 
         Returns a string containing the formatted results.
-        
+
         """
         if update:
             self.update()
@@ -297,6 +297,7 @@ class FitResults(object):
         corrmin = 0.25
         p = self.precision
         pe = "%-" + "%i.%ie" % (p+6, p)
+        pet = "%" + ".%ie" % (p,)
         # Check to see if the uncertainty values are reliable.
         certain = True
         for con in self.conresults.values():
@@ -322,7 +323,7 @@ class FitResults(object):
         lines.append(l)
         dashedline = 79 * '-'
         lines.append(dashedline)
-        formatstr = "%-14s %-12.8f"
+        formatstr = "%-14s %.8f"
         lines.append(formatstr%("Residual",self.residual))
         lines.append(formatstr%("Contributions", self.residual - self.penalty))
         lines.append(formatstr%("Restraints", self.penalty))
@@ -370,7 +371,7 @@ class FitResults(object):
             w = max(map(len, varnames))
             w = str(w+1)
             # Format the lines
-            formatstr = "%-"+w+"s " + pe + " +/- " + pe
+            formatstr = "%-"+w+"s " + pe + " +/- " + pet
             for name, val, unc in zip(varnames, varvals, varunc):
                 varlines.append(formatstr%(name, val, unc))
 
@@ -385,7 +386,7 @@ class FitResults(object):
             lines.append(dashedline)
             w = max(map(len, self.fixednames))
             w = str(w+1)
-            formatstr = "%-"+w+"s " + pe
+            formatstr = "%-"+w+"s " + pet
             for name, val in zip(self.fixednames, self.fixedvals):
                 varlines.append(formatstr%(name, val))
             varlines.sort()
@@ -413,7 +414,7 @@ class FitResults(object):
                     unc = con.conunc[i]
                     keys.append(name)
                     vals[name] = (val, unc)
-                    
+
             numericStringSort(keys)
             w = str(w+1)
             formatstr = "%-"+w+"s %- 15f +/- %-15f"
@@ -446,7 +447,7 @@ class FitResults(object):
         if cornames:
             w = max(map(len, cornames))
             w = str(w + 1)
-            formatstr = "%-"+w+"s %- 8.4f"
+            formatstr = "%-"+w+"s  %.4f"
             for val, name in tup:
                 lines.append(formatstr%(name, val))
         else:
@@ -503,7 +504,7 @@ class ContributionResults(object):
     """Class for processing, storing FitContribution results.
 
     This does not store the FitContribution.
-    
+
     Attributes
     y       --  The FitContribution's profile over the calculation range
                 (default None).
@@ -519,7 +520,7 @@ class ContributionResults(object):
     weight      --  The weight of the FitContribution in the recipe.
     conlocs     --  The location of the constrained parameters in the
                     FitContribution (see the
-                    RecipeContainer._locateManagedObject method).  
+                    RecipeContainer._locateManagedObject method).
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
 
@@ -531,7 +532,7 @@ class ContributionResults(object):
         con     --  The FitContribution
         weight  --  The weight of the FitContribution in the recipe
         fitres  --  The FitResults instance to contain this ContributionResults
-        
+
         """
         self.x = None
         self.y = None
@@ -569,7 +570,7 @@ class ContributionResults(object):
         self.y = numpy.array(con.profile.y)
         self.dy = numpy.array(con.profile.dy)
         self.ycalc = numpy.array(con.profile.ycalc)
-        
+
         # The other metrics
         self._calculateMetrics()
 
@@ -653,9 +654,9 @@ def numericStringSort(lst):
 
     Each string gets split to string and integer segments to create keys
     for comparison.  Signs, decimal points and exponents are ignored.
-    
+
     lst  -- sorted list of strings
-    
+
     No return value to highlight inplace sorting.
 
     """

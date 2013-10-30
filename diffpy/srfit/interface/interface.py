@@ -18,7 +18,6 @@ Most interface additions can thought of by considering the classes in SrFit to
 be sets of parameters. "+=" adds a new parameter, when that makes sense. "|="
 is the 'union' of these sets, and in general is used to combine different
 objects. See individual interface classes for specifics.
-
 """
 
 __all__ = ["ParameterFactory", "ParameterInterface", "FitRecipeInterface",
@@ -35,7 +34,6 @@ class ParameterInterface(object):
         Think of '<<' as injecting a value
 
         v   --  value or Argument derivative
-        
         """
         if isinstance(v, ArgumentABC):
             self.value = v.value
@@ -54,7 +52,6 @@ class RecipeOrganizerInterface(object):
         Think of '*' as a push-pin.
 
         This accepts arguments for a single constraint.
-
         """
         _applyargs(args, self.constrain)
         return self
@@ -65,7 +62,6 @@ class RecipeOrganizerInterface(object):
         This of '%' as a loose rope.
 
         This accepts arguments for a single restraint.
-
         """
         _applyargs(args, self.restrain)
         return self
@@ -76,11 +72,10 @@ class RecipeOrganizerInterface(object):
         Think of "+" as addition of a Parameter.
 
         This accepts arguments for a single function call.
-        
         """
         # Want to detect _addParameter or _newParameter
         def f(*args):
-            if isinstance(args[0], str):
+            if isinstance(args[0], basestring):
                 self._newParameter(*args)
             else:
                 self._addParameter(*args)
@@ -100,7 +95,6 @@ class FitContributionInterface(object):
         Think of "|" as the union of components.
 
         This accepts arguments for a single Profile or ProfileGenerator.
-
         """
         def f(*args):
             from diffpy.srfit.fitbase.profile import Profile
@@ -109,7 +103,7 @@ class FitContributionInterface(object):
                 self.setProfile(*args)
             elif isinstance(args[0], ProfileGenerator):
                 self.addProfileGenerator(*args)
-            elif isinstance(args[0], str):
+            elif isinstance(args[0], basestring):
                 self.setEquation(*args)
             else:
                 raise TypeError("Invalid argument")
@@ -129,7 +123,6 @@ class FitRecipeInterface(object):
         Think of "|" as the union of components.
 
         This accepts a single argument.
-        
         """
         self.addContribution(args)
         return self
@@ -141,11 +134,10 @@ class FitRecipeInterface(object):
 
         This accepts a single argument or an iterable of single arguments or
         argument tuples.
-        
         """
         # Want to detect addVar or newVar
         def f(*args):
-            if isinstance(args[0], str):
+            if isinstance(args[0], basestring):
                 self.newVar(*args)
             else:
                 self.addVar(*args)
@@ -164,7 +156,6 @@ class ParameterFactory(object):
 
         parclass    --  The class used to create new parameters (default
                         diffpy.srfit.fitbase.parameter.Parameter)
-
         """
         self._pclass = parclass
 
@@ -182,7 +173,6 @@ def _applymanyargs(args, f):
     arg
     (arg1, arg2, ...)
     ((arg1a, arg1b, ...), ...)
-
     """
     if not hasattr(args, '__iter__'):
         f(args)
@@ -203,7 +193,6 @@ def _applyargs(args, f):
     arg
     (arg1, arg2, ...)
     ((arg1a, arg1b, ...), ...)
-
     """
     if not hasattr(args, '__iter__'):
         f(args)
@@ -212,4 +201,5 @@ def _applyargs(args, f):
     return
 
 __id__ = "$Id$"
+
 # End of file

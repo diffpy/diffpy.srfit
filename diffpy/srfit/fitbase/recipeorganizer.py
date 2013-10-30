@@ -18,8 +18,8 @@ RecipeContainer is the base class for organizing Parameters, and other
 RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that
 incorporates equation building, constraints and Restraints.  equationFromString
 creates an Equation instance from a string.
-
 """
+
 __all__ = [ "RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
@@ -73,7 +73,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
     Properties
     names           --  Variable names (read only). See getNames.
     values          --  Variable values (read only). See getValues.
-
     """
 
     names = property(lambda self: self.getNames())
@@ -96,7 +95,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         This adds the dictionary to the __managed list. Dictionaries in
         __managed are used for attribute access, addition, and removal.
-
         """
         self.__managed.append(d)
         return
@@ -107,11 +105,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def iterPars(self, name = ".", recurse = True):
         """Iterate over Parameters.
-        
-        name    --  Select parameters with this name (regular expression,
-                    default "."). 
-        recurse --  Recurse into managed objects (default True)
 
+        name    --  Select parameters with this name (regular expression,
+                    default ".").
+        recurse --  Recurse into managed objects (default True)
         """
         for par in self._parameters.itervalues():
             if re.match(name, par.name):
@@ -177,7 +174,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         This does not allow deletion of non-parameters, as this may require
         configuration changes that are not yet handled in a general way.
-
         """
         if name in self._parameters:
             self._removeParameter( self._parameters[name] )
@@ -218,7 +214,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
         Raises ValueError if the object has no name.
         Raises ValueError if the object has the same name as some other managed
         object.
-
         """
 
         # Check name
@@ -255,9 +250,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def _removeObject(self, obj, d):
         """Remove an object from a managed dictionary.
-        
-        Raises ValueError if obj is not part of the dictionary.
 
+        Raises ValueError if obj is not part of the dictionary.
         """
         if obj not in d.values():
             m = "'%s' is not part of the %s" % (obj, self.__class__.__name__)
@@ -277,7 +271,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
         and each subsequent member is a sub-object of the previous one.  The
         last entry in the list is obj. If obj cannot be found, the list is
         empty.
-
         """
         loc = [self]
 
@@ -306,7 +299,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         This will force any observer to invalidate its state. By default this
         does nothing.
-
         """
         self.notify()
         return
@@ -317,7 +309,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
         This validates that contained Parameters and managed objects are valid.
 
         Raises AttributeError if validation fails.
-        
         """
         iterable = chain(self.__iter__(), self._iterManaged())
         self._validateOthers(iterable)
@@ -333,7 +324,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     Restraints, as well as Equations that can be used in Constraint and
     Restraint equations.  These constraints and Restraints can be placed at any
     level and a flattened list of them can be retrieved with the
-    _getConstraints and _getRestraints methods. 
+    _getConstraints and _getRestraints methods.
 
     Attributes
     name            --  A name for this organizer. Names should be unique
@@ -354,7 +345,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     values          --  Variable values (read only). See getValues.
 
     Raises ValueError if the name is not a valid attribute identifier
-
     """
 
     def __init__(self, name):
@@ -376,7 +366,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         _addParameter method.
 
         Returns the Parameter.
-
         """
         p = Parameter(name, value)
         self._addParameter(p, check)
@@ -394,7 +383,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises ValueError if the Parameter has no name.
         Raises ValueError if the Parameter has the same name as a contained
         RecipeContainer.
-
         """
 
         # Store the Parameter
@@ -412,9 +400,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Note that constraints and restraints involving the Parameter are not
         modified.
-        
-        Raises ValueError if par is not part of the RecipeOrganizer.
 
+        Raises ValueError if par is not part of the RecipeOrganizer.
         """
         self._removeObject(par, self._parameters)
         self._eqfactory.deRegisterBuilder(par.name)
@@ -430,10 +417,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Parameters created from argnames will be be used to compute the value.
 
         f           --  The Calculator to register.
-        argnames    --  The names of the arguments to f (list or None). 
+        argnames    --  The names of the arguments to f (list or None).
                         If this is None, then the argument names will be
                         extracted from the function.
-
         """
         self._eqfactory.registerOperator(f.name, f)
         self._addObject(f, self._calculators)
@@ -466,7 +452,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         name        --  The name of the function to be used in equations. If
                         this is None (default), the method will try to
                         determine the name of the function automatically.
-        argnames    --  The names of the arguments to f (list or None). 
+        argnames    --  The names of the arguments to f (list or None).
                         If this is None (default), then the argument names will
                         be extracted from the function.
 
@@ -480,7 +466,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises ValueError if f is an Equation object and name is None.
 
         Returns the callable Equation object.
-
         """
 
         # If the function is an equation, we treat it specially. This is
@@ -561,7 +546,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         passed in the function string, as this will be handled automatically.
 
         fstr        --  A string equation to register.
-        name        --  The name of the function to be used in equations. 
+        name        --  The name of the function to be used in equations.
         ns          --  A dictionary of Parameters, indexed by name, that are
                         used in fstr, but not part of the FitRecipe (default
                         {}).
@@ -572,7 +557,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         object.
 
         Returns the callable Equation object.
-
         """
 
         # Build the equation instance.
@@ -584,7 +568,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         for par in self._eqfactory.newargs:
             self._addParameter(par)
 
-        # Register the equation as a callable function. 
+        # Register the equation as a callable function.
         argnames = eq.argdict.keys()
         return self.registerFunction(eq, name, argnames)
 
@@ -598,7 +582,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
-
         """
         eq = equationFromString(eqstr, self._eqfactory, ns)
         return eq()
@@ -622,9 +605,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises ValueError if par is a string but not part of this object or in
         ns.
         Raises ValueError if par is marked as constant.
-
         """
-        if isinstance(par, str):
+        if isinstance(par, basestring):
             name = par
             par = self.get(name)
             if par is None:
@@ -636,7 +618,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if par.const:
             raise ValueError("The parameter '%s' is constant"%par)
 
-        if isinstance(con, str):
+        if isinstance(con, basestring):
             eqstr = con
             eq = equationFromString(con, self._eqfactory, ns)
         else:
@@ -661,9 +643,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Determine if a Parameter is constrained in this object.
 
         par     --  The name of a Parameter or a Parameter to check.
-
         """
-        if isinstance(par, str):
+        if isinstance(par, basestring):
             name = par
             par = self.get(name)
 
@@ -672,17 +653,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def unconstrain(self, *pars):
         """Unconstrain a Parameter.
 
-        This removes any constraints on a Parameter. 
+        This removes any constraints on a Parameter.
 
         *pars   --  The names of Parameters or Parameters to unconstrain.
 
-        
-        Raises ValueError if the Parameter is not constrained.
 
+        Raises ValueError if the Parameter is not constrained.
         """
         update = False
         for par in pars:
-            if isinstance(par, str):
+            if isinstance(par, basestring):
                 name = par
                 par = self.get(name)
 
@@ -709,7 +689,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         recurse --  Recurse into managed objects and retrive their constrained
                     Parameters as well (default False).
-
         """
         const = self._getConstraints(recurse)
         return const.keys()
@@ -722,7 +701,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         This removes constraints that are held in this organizer, no matter
         where the constrained parameters are from.
-        
         """
         if self._constraints:
             self.unconstrain(*self._constraints)
@@ -748,7 +726,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                     in the equation string, but not part of the RecipeOrganizer
                     (default {}).
 
-        The penalty is calculated as 
+        The penalty is calculated as
         (max(0, lb - val, val - ub)/sig)**2
         and val is the value of the calculated equation.  This is multipled by
         the average chi^2 if scaled is True.
@@ -759,10 +737,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         the RecipeOrganizer and that is not defined in ns.
 
         Returns the Restraint object for use with the 'unrestrain' method.
-
         """
 
-        if isinstance(res, str):
+        if isinstance(res, basestring):
             eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
         else:
@@ -779,7 +756,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Add a Restraint instance to the RecipeOrganizer.
 
         res     --  A Restraint instance.
-
         """
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
@@ -788,10 +764,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     def unrestrain(self, *ress):
         """Remove a Restraint from the RecipeOrganizer.
-        
+
         *ress   --  Restraints returned from the 'restrain' method or added
                     with the 'addRestraint' method.
-
         """
         update = False
         restuple = tuple(self._restraints)
@@ -827,16 +802,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             f = lambda m : hasattr(m, "_getConstraints")
             for m in ifilter(f, self._iterManaged()):
                 constraints.update( m._getConstraints(recurse) )
-        
+
         constraints.update( self._constraints)
 
         return constraints
 
     def _getRestraints(self, recurse = True):
         """Get the Restraints for this and embedded ParameterSets.
-        
-        This returns a set of Restraint objects.
 
+        This returns a set of Restraint objects.
         """
         restraints = set(self._restraints)
         if recurse:
@@ -853,7 +827,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         This validates contained Restraints and Constraints.
 
         Raises AttributeError if validation fails.
-        
         """
         RecipeContainer._validate(self)
         iterable = chain(iter(self._restraints),
@@ -867,7 +840,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Format fit hierarchy for showing.
 
         Returns the lines of the formatted string in a list.
-        
         """
         dashedline = 79 * '-'
         lines = []
@@ -899,7 +871,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         them with respect to this level.
 
         Returns the lines of the formatted string in a list.
-        
         """
         cdict = self._getConstraints()
         # Find each constraint and format the equation
@@ -926,7 +897,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         them with respect to this level.
 
         Returns the lines of the formatted string in a list.
-
         """
         rset = self._getRestraints()
         rlines = []
@@ -979,11 +949,11 @@ def equationFromString(eqstr, factory, ns = {}, buildargs = False,
                 are known if they are in ns, or already defined in the factory.
     factory --  An EquationFactory instance.
     ns      --  A dictionary of Parameters indexed by name that are used
-                in the eqstr but not already defined in the factory 
+                in the eqstr but not already defined in the factory
                 (default {}).
     buildargs   --  A flag indicating whether missing Parameters can be created
                 by the Factory (default False). If False, then the a ValueError
-                will be raised if there are undefined arguments in the eqstr. 
+                will be raised if there are undefined arguments in the eqstr.
     argclass    --  Class to use when creating new Arguments (default
                 Parameter). The class constructor must accept the 'name' key
                 word.
@@ -992,7 +962,6 @@ def equationFromString(eqstr, factory, ns = {}, buildargs = False,
 
     Raises ValueError if ns uses a name that is already defined in the factory.
     Raises ValueError if the equation has undefined parameters.
-
     """
 
     defined = set(factory.builders.keys())

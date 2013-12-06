@@ -4,5 +4,4 @@
 ellipsoidsas.py
 ========================
 
-.. literalinclude:: ../examples/ellipsoidsas.py
-
+.. literalinclude:: ../../examples/ellipsoidsas.py

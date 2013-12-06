@@ -8,13 +8,13 @@ Software version |release|.
 
 Last updated |today|.
 
-.. include:: ../../README.txt
+.. include:: ../../../README.txt
 
 ===================
 Disclaimer
 ===================
 
-.. include:: ../../LICENSE.txt
+.. include:: ../../../LICENSE.txt
 
 ================
 Acknowledgments
@@ -28,11 +28,11 @@ Farrow, Pavol Juhás, Jiwu Liu, Peng Tian and Yingrui Shang.  Former members of
 the project are Dmitriy Bryndin and Wenduo Zhou.  The project was started at
 the Department of Physics and Astronomy, Michigan State University and is now
 centered at the Department of Applied Physics and Applied Mathematics at
-Columbia University in the city of New York. 
+Columbia University in the city of New York.
 
 SrFit is developed and maintained by
 
-.. literalinclude:: ../../AUTHORS.txt
+.. literalinclude:: ../../../AUTHORS.txt
 
 Funding
 -----------
@@ -62,7 +62,3 @@ Where next?
 
 * :ref:`genindex`
 * :ref:`search`
-
-
- 
-

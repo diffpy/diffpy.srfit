@@ -4,5 +4,4 @@
 gaussiangenerator.py
 ========================
 
-.. literalinclude:: ../examples/gaussiangenerator.py
-
+.. literalinclude:: ../../examples/gaussiangenerator.py

@@ -4,5 +4,4 @@
 npintensity.py
 ========================
 
-.. literalinclude:: ../examples/npintensity.py
-
+.. literalinclude:: ../../examples/npintensity.py

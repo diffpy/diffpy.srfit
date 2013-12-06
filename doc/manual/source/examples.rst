@@ -4,7 +4,7 @@
 Examples
 ===================
 
-.. include:: ../examples/README
+.. include:: ../../examples/README
 
 .. This creates the links from the filenames within README to pages.
 .. _gaussianrecipe.py: gaussianrecipe.html
@@ -56,4 +56,3 @@ Files
    interface.rst
    simplerecipe.rst
    anneal.rst
-

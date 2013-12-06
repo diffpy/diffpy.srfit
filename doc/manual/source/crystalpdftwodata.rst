@@ -4,5 +4,4 @@
 crystalpdftwodata.py
 ========================
 
-.. literalinclude:: ../examples/crystalpdftwodata.py
-
+.. literalinclude:: ../../examples/crystalpdftwodata.py

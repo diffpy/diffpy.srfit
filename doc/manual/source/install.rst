@@ -1,4 +1,3 @@
 .. _developers-guide-install:
 
-.. include:: ../../INSTALL.txt
-
+.. include:: ../../../INSTALL.txt

@@ -4,5 +4,4 @@
 simplepdf.py
 ========================
 
-.. literalinclude:: ../examples/simplepdf.py
-
+.. literalinclude:: ../../examples/simplepdf.py

@@ -4,5 +4,4 @@
 anneal.py
 ========================
 
-.. literalinclude:: ../examples/anneal.py
-
+.. literalinclude:: ../../examples/anneal.py

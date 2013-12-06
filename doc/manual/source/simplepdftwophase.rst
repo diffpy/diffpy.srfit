@@ -4,5 +4,4 @@
 simplepdftwophase.py
 ========================
 
-.. literalinclude:: ../examples/simplepdftwophase.py
-
+.. literalinclude:: ../../examples/simplepdftwophase.py

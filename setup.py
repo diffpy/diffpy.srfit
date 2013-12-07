@@ -13,7 +13,8 @@ from setuptools import setup, find_packages
 
 # versioncfgfile holds version data for git commit hash and date.
 # It must reside in the same directory as version.py.
-versioncfgfile = 'diffpy/srfit/version.cfg'
+MYDIR = os.path.dirname(os.path.abspath(__file__))
+versioncfgfile = os.path.join(MYDIR, 'diffpy/srfit/version.cfg')
 
 def gitinfo():
     from subprocess import Popen, PIPE
@@ -42,12 +43,12 @@ def getversioncfg():
         cp.write(open(versioncfgfile, 'w'))
     return cp
 
-cp = getversioncfg()
+versiondata = getversioncfg()
 
 # define distribution
-dist = setup(
+setup_args = dict(
         name = "diffpy.srfit",
-        version = cp.get('DEFAULT', 'version'),
+        version = versiondata.get('DEFAULT', 'version'),
         namespace_packages = ['diffpy'],
         packages = find_packages(exclude=['tests']),
         test_suite = 'diffpy.srfit.tests',
@@ -88,5 +89,8 @@ dist = setup(
             'Topic :: Scientific/Engineering :: Physics',
         ],
 )
+
+if __name__ == '__main__':
+    setup(**setup_args)
 
 # End of file

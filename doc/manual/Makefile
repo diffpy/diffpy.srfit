@@ -176,7 +176,7 @@ publish-prepare:
 	    git diff --cached --quiet || \
 	    git commit -m "Synced with the source at $(GITLASTCOMMIT)."
 	cd build/gh-pages && \
-	    git push $(GITREPOPATH) gh-pages
+	    git push origin gh-pages
 
 publish-push:
 	git push $(GITREMOTE) gh-pages

@@ -18,9 +18,10 @@ versioncfgfile = os.path.join(MYDIR, 'diffpy/srfit/version.cfg')
 
 def gitinfo():
     from subprocess import Popen, PIPE
-    proc = Popen(['git', 'describe'], stdout=PIPE)
+    kw = dict(stdout=PIPE, cwd=MYDIR)
+    proc = Popen(['git', 'describe'], **kw)
     desc = proc.stdout.read()
-    proc = Popen(['git', 'log', '-1', '--format=%H %ai'], stdout=PIPE)
+    proc = Popen(['git', 'log', '-1', '--format=%H %ai'], **kw)
     glog = proc.stdout.read()
     rv = {}
     rv['version'] = '-'.join(desc.strip().split('-')[:2])
@@ -33,7 +34,8 @@ def getversioncfg():
     from ConfigParser import SafeConfigParser
     cp = SafeConfigParser()
     cp.read(versioncfgfile)
-    if not os.path.isdir('.git'):  return cp
+    gitdir = os.path.join(MYDIR, '.git')
+    if not os.path.isdir(gitdir):  return cp
     d = cp.defaults()
     g = gitinfo()
     if g['commit'] != d.get('commit'):

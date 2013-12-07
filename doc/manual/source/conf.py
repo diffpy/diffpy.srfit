@@ -20,6 +20,7 @@ import ConfigParser
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('../../..'))
 
 # -- General configuration -----------------------------------------------------
 
@@ -49,10 +50,8 @@ copyright = u'2013, Christopher L. Farrow, Pavol Juhás'
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-versioncfg = os.path.normpath('../../../diffpy/srfit/version.cfg')
-cp = ConfigParser.SafeConfigParser()
-cp.read(versioncfg)
-fullversion = cp.get('DEFAULT', 'version')
+from setup import versiondata
+fullversion = versiondata.get('DEFAULT', 'version')
 # The short X.Y version.
 version = '.'.join(fullversion.split('.')[:2])
 # The full version, including alpha/beta/rc tags.
@@ -65,7 +64,7 @@ release = fullversion
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
 #today = ''
-cpfulldate = cp.get('DEFAULT', 'date')
+cpfulldate = versiondata.get('DEFAULT', 'date')
 today_seconds = time.strptime(cpfulldate.split()[0], '%Y-%m-%d')
 today = time.strftime('%B %d, %Y', today_seconds)
 year = today.split()[-1]

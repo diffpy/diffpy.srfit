@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; SrFit 1.0b1.dev-10 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0b1.dev-10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b1.dev-10 documentation" href="index.html" />
+    <link rel="next" title="gaussianrecipe.py" href="gaussianrecipe.html" />
+    <link rel="prev" title="Installing SrFit" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="gaussianrecipe.html" title="gaussianrecipe.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing SrFit"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SrFit 1.0b1.dev-10 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<span id="developers-guide-examples"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h2>
+<p>These example scripts are intended to help a developer get acquainted with the
+SrFit programming interface. Although one can write scripts like these to drive
+optimization, these scripts do not represent the SrFit user interface. That
+interface will be made available in a future release.</p>
+<p>A secondary purpose of these tutorials is to generate interest in SrFit.  By
+reading through the examples we hope that you are inspired to think of exciting
+new ways to get the most out of your scientific data. If you think SrFit can
+help you with that, please feel free to contact us through the DiffPy website.</p>
+<p><a class="reference external" href="http://www.diffpy.org">http://www.diffpy.org</a></p>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Three things are required for optimization: a function that generates a
+quantity to be minimized, variables that can be used to manipulate that
+function and an algorithm that can drive the function output to a smaller value
+by steering the variables.  For scientific purposes, the quantity to be
+minimized is the disagreement between a measured profile and a theoretical
+profile. The scientific understanding of the system under consideration partly
+determines the suitability of the theoretical profile generator and the
+scientific relevance of the variables used to drive it.</p>
+<p>The purpose of SrFit is to give users the means to combine known information
+about a system of interest in order to extract scientifically relevant
+quantities, and thus understanding from it. Various experimental procedures and
+theoretical calculations may be needed to gain the desired understanding of the
+system.  SrFit helps users combine these views of the system in a coherent and
+consistent manner.</p>
+<p>To achieve this purpose, SrFit provides:</p>
+<ol class="arabic simple">
+<li>a function to be optimized (the residual) given one or more measured
+profiles, one or more profile generators and variables to be steered by an
+optimizer.</li>
+<li>constraints and restraints that encapsulate known information about the
+system.</li>
+<li>a clearly defined programming interface that developers can use to add their
+own profile generators, thereby enabling the combination of more views of a
+system.</li>
+<li>an equation building interface that allows users to tweak profile generators
+when scientific understanding of a system is more advanced than the existing
+software.</li>
+</ol>
+<p>The examples described below will go into detail about each of these points.</p>
+</div>
+<div class="section" id="id1">
+<h2>Examples<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>The following examples are contained in the <em>doc/examples/</em> directory of the
+SrFit source distribution.  They can be downloaded from
+<a class="reference external" href="http://dev.danse.us/packages/srfit_examples-alpha9.zip">http://dev.danse.us/packages/srfit_examples-alpha9.zip</a></p>
+<p>For each example, start by running the example by typing in the command line</p>
+<div class="highlight-python"><pre>python example.py</pre>
+</div>
+<p>where <em>example.py</em> represents the example file. The output will show on screen
+and a plot window will display. Once you&#8217;ve studied the output and plot, close
+the plot window and open the example file. In the file there will be a
+description of what the script is doing and the purpose of the example. By
+reading through the example, you will be introduced to the SrFit programming
+interface.</p>
+<p>Here is an overview of the examples. It is recommended that you work through
+them in the order listed below.</p>
+<p>Basic:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="gaussianrecipe.html">gaussianrecipe.py</a></dt>
+<dd><p class="first last">Introductory recipe building and configuration. This introduces the
+fundamental classes in SrFit.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="debyemodel.html">debyemodel.py</a></dt>
+<dd><p class="first last">Introductory recipe building and configuration. This shows how to use a
+function created by someone else in a refinement. This example also
+introduces restraints.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="debyemodelII.html">debyemodelII.py</a></dt>
+<dd><p class="first last">Refine two different values of a variable from two different regions of a
+profile. This example introduces constraints and working with multiple
+contributions to a fit.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Advanced:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="gaussiangenerator.html">gaussiangenerator.py</a></dt>
+<dd><p class="first last">Create a custom ProfileGenerator and use it in a refinement. This is an
+instructive extension to <a class="reference external" href="gaussianrecipe.html">gaussianrecipe.py</a>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="npintensity.html">npintensity.py</a></dt>
+<dd><p class="first last">Use diffpy.Structure to build a nanoparticle intensity generator, and use
+it to refine a structure to simulated data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="npintensityII.html">npintensityII.py</a></dt>
+<dd><p class="first last">Use the calculator built in npintensity.py to simultaneously refine a
+structure to two data sets.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="use-cases">
+<h2>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h2>
+<p>There are several examples that demonstrate various SrFit use cases. These do
+not adopt the tutorial format of the previous examples. Regardless, developers
+should read through these use cases to gain an understanding of PDF and SAS
+refinement with SrFit.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="crystalpdf.html">crystalpdf.py</a></dt>
+<dd><p class="first last">Refine a diffpy.Structure crystal to PDF data using automatic explicit
+space group constraints.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="simplepdf.html">simplepdf.py</a></dt>
+<dd><p class="first last">As <a class="reference external" href="crystalpdf.html">crystalpdf.py</a>, but with a simplified interface.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></dt>
+<dd><p class="first last">Refine a pyobjcryst crystal to PDF data using automatic implicit space
+group constraints.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="crystalpdftwophase.html">crystalpdftwophase.py</a></dt>
+<dd><p class="first last">Refine a two-phase structure to PDF data using two profile generators.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="simplepdftwophase.html">simplepdftwophase.py</a></dt>
+<dd><p class="first last"><a class="reference external" href="crystalpdftwophase.html">crystalpdftwophase.py</a> using the simplified PDFContribution interface.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="crystalpdftwodata.html">crystalpdftwodata.py</a></dt>
+<dd><p class="first last">Refine a single structure to x-ray and neutron data simultaneously.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="crystalpdfall.html">crystalpdfall.py</a></dt>
+<dd><p class="first last">Refine a two-phase structure using four data sets.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="nppdfobjcryst.html">nppdfobjcryst.py</a></dt>
+<dd><p class="first last">Refine the C60 structure to real data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="nppdfcrystal.html">nppdfcrystal.py</a></dt>
+<dd><p class="first last">Fit a nanoparticle PDF as a crystal PDF attenuated by a nanoparticle form
+factor.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="coreshellnp.html">coreshellnp.py</a></dt>
+<dd><p class="first last">As above, but fit the PDF from core-shell nanoparticles.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="ellipsoidsas.html">ellipsoidsas.py</a></dt>
+<dd><p class="first last">Refine an ellipsoid SAS model to ideal data.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="nppdfsas.html">nppdfsas.py</a></dt>
+<dd><p class="first last">Refine PDF from nanoparticle of assumed shape using a crystal model and SAS
+data from the same system.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="anneal.html">anneal.py</a></dt>
+<dd><p class="first last">Demonstration of effectively using a simulated annealing algorithm in a PDF
+structure refinement.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="miscellaneous">
+<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
+<p>These demonstrate other SrFit features. These are in flux and may not be in
+future versions.</p>
+<ul>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="simplerecipe.html">simplerecipe.py</a></dt>
+<dd><p class="first last">This introduces the SimpleRecipe class that is a FitRecipe with an embedded
+Profile and FitContribution. SimpleRecipe exposes methods from the Profile
+and FitContribution, and adds other methods so it is easy to set up a
+simple fit.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="interface.html">interface.py</a></dt>
+<dd><p class="first last">This example introduces some interface enhancements that allow the SrFit
+recipes to be written with less code. This is not the same as a
+full-featured scripting interface, but rather somewhere in between a
+scripting interface and the API.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="files">
+<h2>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gaussianrecipe.html">gaussianrecipe.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debyemodel.html">debyemodel.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debyemodelII.html">debyemodelII.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gaussiangenerator.html">gaussiangenerator.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="npintensity.html">npintensity.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="npintensityII.html">npintensityII.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nppdfobjcryst.html">nppdfobjcryst.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crystalpdf.html">crystalpdf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simplepdf.html">simplepdf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crystalpdftwophase.html">crystalpdftwophase.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simplepdftwophase.html">simplepdftwophase.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crystalpdftwodata.html">crystalpdftwodata.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crystalpdfall.html">crystalpdfall.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nppdfcrystal.html">nppdfcrystal.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coreshellnp.html">coreshellnp.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ellipsoidsas.html">ellipsoidsas.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nppdfsas.html">nppdfsas.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interface.html">interface.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simplerecipe.html">simplerecipe.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="anneal.html">anneal.py</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#purpose">Purpose</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#id1">Examples</a></li>
+<li><a class="reference internal" href="#use-cases">Use Cases</a></li>
+<li><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
+<li><a class="reference internal" href="#files">Files</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installing SrFit</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="gaussianrecipe.html"
+                        title="next chapter">gaussianrecipe.py</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="gaussianrecipe.html" title="gaussianrecipe.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installing SrFit"
+             >previous</a> |</li>
+        <li><a href="index.html">SrFit 1.0b1.dev-10 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Christopher L. Farrow, Pavol Juhás.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

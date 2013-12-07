@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>nppdfobjcryst.py &mdash; SrFit 1.0b1.dev-10 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0b1.dev-10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b1.dev-10 documentation" href="index.html" />
+    <link rel="up" title="Examples" href="examples.html" />
+    <link rel="next" title="crystalpdf.py" href="crystalpdf.html" />
+    <link rel="prev" title="npintensityII.py" href="npintensityII.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="crystalpdf.html" title="crystalpdf.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="npintensityII.html" title="npintensityII.py"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SrFit 1.0b1.dev-10 documentation</a> &raquo;</li>
+          <li><a href="examples.html" accesskey="U">Examples</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="nppdfobjcryst-py">
+<span id="id1"></span><h1>nppdfobjcryst.py<a class="headerlink" href="#nppdfobjcryst-py" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="c">########################################################################</span>
+<span class="c">#</span>
+<span class="c"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c">#                   Simon J. L. Billinge</span>
+<span class="c">#                   (c) 2009 Trustees of the Columbia University</span>
+<span class="c">#                   in the City of New York.  All rights reserved.</span>
+<span class="c">#</span>
+<span class="c"># File coded by:    Chris Farrow</span>
+<span class="c">#</span>
+<span class="c"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c"># See LICENSE.txt for license information.</span>
+<span class="c">#</span>
+<span class="c">########################################################################</span>
+<span class="sd">&quot;&quot;&quot;Example of a nanoparticle PDF refinement using DebyePDFGenerator.</span>
+
+<span class="sd">This example is similar to crystalpdfobjcryst.py, except that it uses the</span>
+<span class="sd">DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">ProfileGenerator</span><span class="p">,</span> <span class="n">Profile</span>
+<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">FitContribution</span><span class="p">,</span> <span class="n">FitRecipe</span>
+<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">FitResults</span>
+<span class="kn">from</span> <span class="nn">diffpy.srfit.pdf.debyepdfgenerator</span> <span class="kn">import</span> <span class="n">DebyePDFGenerator</span>
+<span class="kn">from</span> <span class="nn">diffpy.srfit.pdf</span> <span class="kn">import</span> <span class="n">PDFGenerator</span>
+
+<span class="c">####### Example Code</span>
+
+<span class="k">def</span> <span class="nf">makeRecipe</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="n">datname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a recipe that uses the DebyePDFGenerator.&quot;&quot;&quot;</span>
+
+    <span class="c">## The Profile</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
+
+    <span class="c"># Load data and add it to the profile</span>
+    <span class="n">profile</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">datname</span><span class="p">)</span>
+    <span class="n">profile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="c">## The ProfileGenerator</span>
+    <span class="c"># Create a DebyePDFGenerator named &quot;G&quot;. </span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">DebyePDFGenerator</span><span class="p">(</span><span class="s">&quot;G&quot;</span><span class="p">)</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
+    <span class="c"># These are metadata needed by the generator</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">setQmin</span><span class="p">(</span><span class="mf">0.68</span><span class="p">)</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">setQmax</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>
+    
+    <span class="c">## The FitContribution</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s">&quot;bucky&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">addProfileGenerator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span> <span class="o">=</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+
+    <span class="c"># Make a FitRecipe. </span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
+
+    <span class="c"># Specify which parameters we want to refine. We&#39;ll be using the</span>
+    <span class="c"># MoleculeParSet within the generator, so let&#39;s get a handle to it. See the</span>
+    <span class="c"># diffpy.srfit.structure.objcryststructure module for more information</span>
+    <span class="c"># about the MoleculeParSet hierarchy.</span>
+    <span class="n">c60</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">phase</span>
+
+    <span class="c"># First, the isotropic thermal displacement factor.</span>
+    <span class="n">Biso</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="s">&quot;Biso&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">c60</span><span class="o">.</span><span class="n">getScatterers</span><span class="p">():</span>
+
+        <span class="c"># We have defined a &#39;center&#39; atom that is a dummy, which means that it</span>
+        <span class="c"># has no scattering power. It is only used as a reference point for</span>
+        <span class="c"># our bond length. We don&#39;t want to constrain it.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">atom</span><span class="o">.</span><span class="n">isDummy</span><span class="p">():</span>
+            <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">Biso</span><span class="p">,</span> <span class="n">Biso</span><span class="p">)</span>
+
+    <span class="c"># We need to let the molecule expand. If we were modeling it as a crystal,</span>
+    <span class="c"># we could let the unit cell expand. For instruction purposes, we use a</span>
+    <span class="c"># Molecule to model C60, and molecules have different modeling options than</span>
+    <span class="c"># crystals. To make the molecule expand from a central point, we will</span>
+    <span class="c"># constrain the distance from each atom to a dummy center atom that was</span>
+    <span class="c"># created with the molecule, and allow that distance to vary. (We could</span>
+    <span class="c"># also let the nearest-neighbor bond lengths vary, but that would be much</span>
+    <span class="c"># more difficult to set up.)</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="n">c60</span><span class="o">.</span><span class="n">center</span>
+    <span class="c"># Create a new Parameter that represents the radius of the molecule. Note</span>
+    <span class="c"># that we don&#39;t give it an initial value. Since the variable is being</span>
+    <span class="c"># directly constrained to further below, its initial value will be inferred</span>
+    <span class="c"># from the constraint.</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="s">&quot;radius&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">c60</span><span class="o">.</span><span class="n">getScatterers</span><span class="p">()):</span>
+
+        <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">isDummy</span><span class="p">():</span>
+            <span class="k">continue</span>
+
+        <span class="c"># This creates a Parameter that moves the second atom according to the</span>
+        <span class="c"># bond length. Note that each Parameter needs a unique name.</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">c60</span><span class="o">.</span><span class="n">addBondLengthParameter</span><span class="p">(</span><span class="s">&quot;rad</span><span class="si">%i</span><span class="s">&quot;</span><span class="o">%</span><span class="n">i</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">atom</span><span class="p">)</span>
+        <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
+
+    <span class="c"># Add the correlation term, scale. The scale is too short to effectively</span>
+    <span class="c"># determine qdamp.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mf">1.3e4</span><span class="p">)</span>
+
+    <span class="c"># Give the recipe away so it can be used!</span>
+    <span class="k">return</span> <span class="n">recipe</span>
+
+<span class="k">def</span> <span class="nf">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
+
+    <span class="n">names</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">getNames</span><span class="p">()</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">getValues</span><span class="p">()</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span>
+
+    <span class="c"># Plot this.</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">gcalc</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span>
+    <span class="n">diffzero</span> <span class="o">=</span>  <span class="o">-</span><span class="mf">0.8</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="n">g</span> <span class="o">-</span> <span class="n">gcalc</span> <span class="o">+</span> <span class="n">diffzero</span>
+
+    <span class="kn">import</span> <span class="nn">pylab</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">g</span><span class="p">,</span><span class="s">&#39;ob&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;G(r) Data&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">gcalc</span><span class="p">,</span><span class="s">&#39;-r&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;G(r) Fit&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="s">&#39;-g&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;G(r) diff&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">diffzero</span><span class="p">,</span><span class="s">&#39;-k&#39;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;$r (\AA)$&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;$G (\AA^{-2})$&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="n">molecule</span> <span class="o">=</span> <span class="n">makeC60</span><span class="p">()</span>
+    <span class="c"># Make the data and the recipe</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="s">&quot;data/C60.gr&quot;</span><span class="p">)</span>
+    <span class="c"># Tell the fithook that we want very verbose output.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">fithooks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">3</span>
+    
+    <span class="c"># Optimize</span>
+    <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">leastsq</span>
+    <span class="n">leastsq</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">residual</span><span class="p">,</span> <span class="n">recipe</span><span class="o">.</span><span class="n">getValues</span><span class="p">())</span>
+
+    <span class="c"># Print results</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">printResults</span><span class="p">()</span>
+
+    <span class="c"># Plot results</span>
+    <span class="n">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+
+    <span class="k">return</span>
+
+<span class="n">c60xyz</span> <span class="o">=</span> \
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">3.451266498   0.685000000   0.000000000</span>
+<span class="sd">3.451266498  -0.685000000   0.000000000</span>
+<span class="sd">-3.451266498   0.685000000   0.000000000</span>
+<span class="sd">-3.451266498  -0.685000000   0.000000000</span>
+<span class="sd">0.685000000   0.000000000   3.451266498</span>
+<span class="sd">-0.685000000   0.000000000   3.451266498</span>
+<span class="sd">0.685000000   0.000000000  -3.451266498</span>
+<span class="sd">-0.685000000   0.000000000  -3.451266498</span>
+<span class="sd">0.000000000   3.451266498   0.685000000</span>
+<span class="sd">0.000000000   3.451266498  -0.685000000</span>
+<span class="sd">0.000000000  -3.451266498   0.685000000</span>
+<span class="sd">0.000000000  -3.451266498  -0.685000000</span>
+<span class="sd">3.003809890   1.409000000   1.171456608</span>
+<span class="sd">3.003809890   1.409000000  -1.171456608</span>
+<span class="sd">3.003809890  -1.409000000   1.171456608</span>
+<span class="sd">3.003809890  -1.409000000  -1.171456608</span>
+<span class="sd">-3.003809890   1.409000000   1.171456608</span>
+<span class="sd">-3.003809890   1.409000000  -1.171456608</span>
+<span class="sd">-3.003809890  -1.409000000   1.171456608</span>
+<span class="sd">-3.003809890  -1.409000000  -1.171456608</span>
+<span class="sd">1.409000000   1.171456608   3.003809890</span>
+<span class="sd">1.409000000  -1.171456608   3.003809890</span>
+<span class="sd">-1.409000000   1.171456608   3.003809890</span>
+<span class="sd">-1.409000000  -1.171456608   3.003809890</span>
+<span class="sd">1.409000000   1.171456608  -3.003809890</span>
+<span class="sd">1.409000000  -1.171456608  -3.003809890</span>
+<span class="sd">-1.409000000   1.171456608  -3.003809890</span>
+<span class="sd">-1.409000000  -1.171456608  -3.003809890</span>
+<span class="sd">1.171456608   3.003809890   1.409000000</span>
+<span class="sd">-1.171456608   3.003809890   1.409000000</span>
+<span class="sd">1.171456608   3.003809890  -1.409000000</span>
+<span class="sd">-1.171456608   3.003809890  -1.409000000</span>
+<span class="sd">1.171456608  -3.003809890   1.409000000</span>
+<span class="sd">-1.171456608  -3.003809890   1.409000000</span>
+<span class="sd">1.171456608  -3.003809890  -1.409000000</span>
+<span class="sd">-1.171456608  -3.003809890  -1.409000000</span>
+<span class="sd">2.580456608   0.724000000   2.279809890</span>
+<span class="sd">2.580456608   0.724000000  -2.279809890</span>
+<span class="sd">2.580456608  -0.724000000   2.279809890</span>
+<span class="sd">2.580456608  -0.724000000  -2.279809890</span>
+<span class="sd">-2.580456608   0.724000000   2.279809890</span>
+<span class="sd">-2.580456608   0.724000000  -2.279809890</span>
+<span class="sd">-2.580456608  -0.724000000   2.279809890</span>
+<span class="sd">-2.580456608  -0.724000000  -2.279809890</span>
+<span class="sd">0.724000000   2.279809890   2.580456608</span>
+<span class="sd">0.724000000  -2.279809890   2.580456608</span>
+<span class="sd">-0.724000000   2.279809890   2.580456608</span>
+<span class="sd">-0.724000000  -2.279809890   2.580456608</span>
+<span class="sd">0.724000000   2.279809890  -2.580456608</span>
+<span class="sd">0.724000000  -2.279809890  -2.580456608</span>
+<span class="sd">-0.724000000   2.279809890  -2.580456608</span>
+<span class="sd">-0.724000000  -2.279809890  -2.580456608</span>
+<span class="sd">2.279809890   2.580456608   0.724000000</span>
+<span class="sd">-2.279809890   2.580456608   0.724000000</span>
+<span class="sd">2.279809890   2.580456608  -0.724000000</span>
+<span class="sd">-2.279809890   2.580456608  -0.724000000</span>
+<span class="sd">2.279809890  -2.580456608   0.724000000</span>
+<span class="sd">-2.279809890  -2.580456608   0.724000000</span>
+<span class="sd">2.279809890  -2.580456608  -0.724000000</span>
+<span class="sd">-2.279809890  -2.580456608  -0.724000000</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">makeC60</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Make the C60 molecule using pyobjcryst.&quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">pyobjcryst.crystal</span> <span class="kn">import</span> <span class="n">Crystal</span>
+    <span class="kn">from</span> <span class="nn">pyobjcryst.molecule</span> <span class="kn">import</span> <span class="n">Molecule</span>
+    <span class="kn">from</span> <span class="nn">pyobjcryst.scatteringpower</span> <span class="kn">import</span> <span class="n">ScatteringPowerAtom</span>
+
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span>
+
+    <span class="c"># make a crystal box to put the molecule in</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Crystal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;P1&quot;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="s">&quot;c60frame&quot;</span><span class="p">)</span>
+
+    <span class="c"># put a molecule inside the box</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s">&quot;c60&quot;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">AddScatterer</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+    <span class="c"># Create a dummy atom at the center.</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&quot;center&quot;</span><span class="p">)</span>
+
+    <span class="c"># Create the scattering power object for the carbon atoms</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">ScatteringPowerAtom</span><span class="p">(</span><span class="s">&quot;C&quot;</span><span class="p">,</span> <span class="s">&quot;C&quot;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">AddScatteringPower</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
+    <span class="n">sp</span><span class="o">.</span><span class="n">SetBiso</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+
+    <span class="c"># Add the other atoms. They will be named C1, C2, ..., C60.</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">c60xyz</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="s">&quot;C</span><span class="si">%i</span><span class="s">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">m</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">main</span><span class="p">()</span>
+
+<span class="c"># End of file</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="npintensityII.html"
+                        title="previous chapter">npintensityII.py</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="crystalpdf.html"
+                        title="next chapter">crystalpdf.py</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/nppdfobjcryst.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="crystalpdf.html" title="crystalpdf.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="npintensityII.html" title="npintensityII.py"
+             >previous</a> |</li>
+        <li><a href="index.html">SrFit 1.0b1.dev-10 documentation</a> &raquo;</li>
+          <li><a href="examples.html" >Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Christopher L. Farrow, Pavol Juhás.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

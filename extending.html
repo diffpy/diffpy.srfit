@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Extending SrFit &mdash; SrFit 1.0b1.dev-10 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0b1.dev-10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b1.dev-10 documentation" href="index.html" />
+    <link rel="prev" title="anneal.py" href="anneal.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="anneal.html" title="anneal.py"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SrFit 1.0b1.dev-10 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="extending-srfit">
+<span id="developers-guide-extending"></span><h1>Extending SrFit<a class="headerlink" href="#extending-srfit" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="examples.html#developers-guide-examples"><em>Examples</em></a> give an overview of how to
+use SrFit and extend it with various custom-made objects. Many pieces of SrFit
+that are not covered in the examples are discussed here.</p>
+<div class="section" id="plugging-other-objects-into-srfit">
+<h2>Plugging Other Objects into SrFit<a class="headerlink" href="#plugging-other-objects-into-srfit" title="Permalink to this headline">¶</a></h2>
+<p>Much of the power of SrFit comes from being able to plug existing python codes
+into the framework. For example, external forward calculators can be wrapped up
+inside <tt class="docutils literal"><span class="pre">ProfileGenerators</span></tt> without modifying the calculator. This is
+demonstrated in <a class="reference internal" href="examples.html#developers-guide-examples"><em>Examples</em></a>. Structure adapters defined in
+the diffpy.srfit.structure module are also built around this principle. These
+adapters are hierarchical <tt class="docutils literal"><span class="pre">ParameterSets</span></tt> (found in
+<tt class="docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset</span></tt>) that encapsulate the different pieces of
+a structure.  For example, the <tt class="docutils literal"><span class="pre">DiffpyStructureParSet</span></tt> structure adapter in
+<tt class="docutils literal"><span class="pre">diffpy.srfit.structure.diffpyparset</span></tt> contains <tt class="docutils literal"><span class="pre">DiffpyLatticeParSet</span></tt>, which
+encapsulates the lattice data and one <tt class="docutils literal"><span class="pre">DiffpyAtomParSet</span></tt> per atom.  These
+each contain parameters for what they encapsulate, such as lattice parameters
+or atom positions.</p>
+<p>Fundamentally, it is the adjustable parameters of a structure container,
+forward calculator or other object that needs to be adapted so that SrFit can
+manipulate the underlying data object. These adapted parameters can then be
+organized into <tt class="docutils literal"><span class="pre">ParameterSets</span></tt>, as in the case of a structure adapter. The
+<tt class="docutils literal"><span class="pre">ParameterAdapter</span></tt> class found in <tt class="docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter</span></tt> is
+designed for this purpose. <tt class="docutils literal"><span class="pre">ParameterAdapter</span></tt> is a <tt class="docutils literal"><span class="pre">Parameter</span></tt> that defers
+to another object when setting or retrieving its value.</p>
+<dl class="class">
+<dt id="diffpy.srfit.fitbase.parameter.ParameterAdapter">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.parameter.</tt><tt class="descname">ParameterAdapter</tt><big>(</big><em>name</em>, <em>obj</em>, <em>getter=None</em>, <em>setter=None</em>, <em>attr=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>An adapter for parameter-like objects.</p>
+<p>This class wraps an object as a Parameter. The getValue and setValue
+methods defer to the data of the wrapped object.</p>
+<p>The <cite>name</cite> argument is used to give attribute access to the
+ParameterAdapter instance when it is added to a ParameterSet or similar
+object. The <cite>obj</cite> argument is the parameter-like object to be adapted. It
+must provide some form of access to its data. If it provides a getter and
+setter, these can be specified with the <cite>getter</cite> and <cite>setter</cite> arguments.
+If the getter and setter require an attribute name, this is specified with
+the <cite>attr</cite> argument. If the data can be retrieved as an attribute, then the
+name of this attribute can be passed in the <cite>attr</cite> argument.</p>
+</dd></dl>
+
+<p>Here is a simple example of using <tt class="docutils literal"><span class="pre">ParameterAdapter</span></tt> to adapt a hypothetical
+atom object called <tt class="docutils literal"><span class="pre">SimpleAtom</span></tt> that has attributes <tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt> and <tt class="docutils literal"><span class="pre">z</span></tt>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SimpleAtom</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Simple class holding x, y and z coordinates of an atom.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">z</span>
+        <span class="k">return</span>
+
+<span class="c"># End class SimpleAtom</span>
+
+<span class="k">class</span> <span class="nc">SimpleAtomParSet</span><span class="p">(</span><span class="n">ParameterSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class adapting the x, y and z attributes of SimpleAtom as Parameters.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">ParameterSet</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="c"># Store the atom, we might need it later</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="n">atom</span>
+
+        <span class="c"># Create a ParameterAdapter for the x, y and z attributes of atom</span>
+        <span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s">&quot;x&quot;</span><span class="p">)</span>
+        <span class="n">ypar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s">&quot;y&quot;</span><span class="p">)</span>
+        <span class="n">zpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s">&quot;z&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s">&quot;z&quot;</span><span class="p">)</span>
+
+        <span class="c"># Add these to the parameter set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">xpar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ypar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">zpar</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+<span class="c"># End class SimpleAtomParSet</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt> and <tt class="docutils literal"><span class="pre">z</span></tt> attributes (specified by the <tt class="docutils literal"><span class="pre">attr</span></tt> keyword
+argument of <tt class="docutils literal"><span class="pre">ParameterAdapter</span></tt>) of a <tt class="docutils literal"><span class="pre">SimpleAtom</span></tt> are wrapped as
+<tt class="docutils literal"><span class="pre">ParameterAdapter</span></tt> objects named <cite>x</cite>, <cite>y</cite>, and <cite>z</cite>.  They are then added to
+the <tt class="docutils literal"><span class="pre">SimpleAtomParSet</span></tt> using the <tt class="docutils literal"><span class="pre">addParameter</span></tt> method, which makes them
+accessible as attributes.</p>
+<p>If SimpleAtom did not have an attribute named <tt class="docutils literal"><span class="pre">x</span></tt>, but rather accessor
+methods named <tt class="docutils literal"><span class="pre">getX</span></tt> and <tt class="docutils literal"><span class="pre">setX</span></tt>, then the <tt class="docutils literal"><span class="pre">ParameterAdapter</span></tt> would be
+used as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">getX</span><span class="p">,</span>
+    <span class="n">setter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">setX</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the <em>unbound</em> methods are used. The names <tt class="docutils literal"><span class="pre">getter</span></tt> and <tt class="docutils literal"><span class="pre">setter</span></tt>
+describe how the accessor attributes are used to access the value of the
+parameter. When <tt class="docutils literal"><span class="pre">xpar.getValue()</span></tt> is called, it redirects to
+<tt class="docutils literal"><span class="pre">SimpleAtom.getX(atom)</span></tt>.</p>
+<p>If instead <tt class="docutils literal"><span class="pre">SimpleAtom</span></tt> had methods called <tt class="docutils literal"><span class="pre">get</span></tt> and <tt class="docutils literal"><span class="pre">set</span></tt> that take as
+the second argument the name of the attribute to retrieve or modify, then this
+can be adapted as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">get</span><span class="p">,</span>
+        <span class="n">setter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">set</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s">&quot;x&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Thus, when <tt class="docutils literal"><span class="pre">xpar.getValue()</span></tt> is called, it in turn calls
+<tt class="docutils literal"><span class="pre">SimpleAtom.get(atom,</span> <span class="pre">&quot;x&quot;)</span></tt>. <tt class="docutils literal"><span class="pre">xpar.setValue(value)</span></tt> calls
+<tt class="docutils literal"><span class="pre">SimpleAtom.set(atom,</span> <span class="pre">&quot;x&quot;,</span> <span class="pre">value)</span></tt>.</p>
+<p>If the attributes of an object cannot be accessed in one of these three ways,
+then you must write external accessor methods that can be set as the getter and
+setter of the <tt class="docutils literal"><span class="pre">ParameterAdapter</span></tt>. For example, if the <tt class="docutils literal"><span class="pre">x</span></tt>, <tt class="docutils literal"><span class="pre">y</span></tt> and <tt class="docutils literal"><span class="pre">z</span></tt>
+values were held in a list called <tt class="docutils literal"><span class="pre">xyz</span></tt>, then you would have to write the
+functions <tt class="docutils literal"><span class="pre">getX</span></tt> and <tt class="docutils literal"><span class="pre">setX</span></tt> that would manipulate this list, and use these
+functions as in the second example.</p>
+</div>
+<div class="section" id="extending-profile-parsers">
+<h2>Extending Profile Parsers<a class="headerlink" href="#extending-profile-parsers" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">ProfileParser</span></tt> class is located in the <tt class="docutils literal"><span class="pre">diffpy.srfit.fitbase.parser</span></tt>
+module.  The purpose of this class is to read data and metadata from a file or
+string and pass those data and metadata to a <tt class="docutils literal"><span class="pre">Profile</span></tt> instance. The
+<tt class="docutils literal"><span class="pre">Profile</span></tt> in turn will pass this information to a <tt class="docutils literal"><span class="pre">ProfileGenerator</span></tt>.</p>
+<p>The simplest way to extend the <tt class="docutils literal"><span class="pre">ProfileParser</span></tt> is to derive a new class from
+<tt class="docutils literal"><span class="pre">ProfileParser</span></tt> and overload the <tt class="docutils literal"><span class="pre">parseString</span></tt> method. By default, the
+<tt class="docutils literal"><span class="pre">parseFile</span></tt> method can read an ASCII file and passes the loaded string to the
+<tt class="docutils literal"><span class="pre">parseString</span></tt> method. For non-ASCII data one should overload both of these
+methods. An example of a customized <tt class="docutils literal"><span class="pre">ProfileParser</span></tt> is the <tt class="docutils literal"><span class="pre">PDFParser</span></tt>
+class in the <tt class="docutils literal"><span class="pre">diffpy.srfit.pdf.pdfparser</span></tt> module.</p>
+<p>Here is a simple example demonstrating how to extract (x,y) data from a
+two-column string.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">parseString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datastring</span><span class="p">):</span>
+
+    <span class="n">xvals</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">yvals</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dxvals</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">dyvals</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">datastring</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+
+        <span class="n">sline</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">sline</span><span class="p">)</span>
+        <span class="n">xvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">yvals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_banks</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">xvals</span><span class="p">,</span> <span class="n">yvals</span><span class="p">,</span> <span class="n">dxvals</span><span class="p">,</span> <span class="n">dyvals</span><span class="p">])</span>
+    <span class="k">return</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">self._banks.append</span></tt> line puts the data arrays into the <tt class="docutils literal"><span class="pre">_banks</span></tt> list.
+This list is for collecting multiple data sets that may be present within a
+single file.  The <tt class="docutils literal"><span class="pre">dxvals</span></tt> and <tt class="docutils literal"><span class="pre">dyvals</span></tt> are the uncertainty values on the
+<tt class="docutils literal"><span class="pre">xvals</span></tt> and <tt class="docutils literal"><span class="pre">yvals</span></tt>.  In this simple example they are not present, and so
+are set to None.</p>
+<p>In general, the data string may contain metadata. The <tt class="docutils literal"><span class="pre">ProfileParser</span></tt> has a
+dictionary attribute named <tt class="docutils literal"><span class="pre">_meta</span></tt>. The parser can put any information into
+this dictionary. It is up to a <tt class="docutils literal"><span class="pre">ProfileGenerator</span></tt> that may use the parsed
+data to define and retrieve usable metadata.</p>
+<p>If the data are not in a form that can be stored in a <tt class="docutils literal"><span class="pre">Profile</span></tt> then it is
+the responsibility of the parser to convert this data to a usable form.</p>
+</div>
+<div class="section" id="extending-profiles">
+<h2>Extending Profiles<a class="headerlink" href="#extending-profiles" title="Permalink to this headline">¶</a></h2>
+<p>Even with the ability to customize <tt class="docutils literal"><span class="pre">ProfileParsers,</span></tt> it may be necessary to
+create custom <tt class="docutils literal"><span class="pre">Profile</span></tt> objects for different types of data. This is useful
+when adapting an external data container to the SrFit interface. For example,
+the external container may need to be retained so it can be used within an
+external program before or after interfacing with SrFit. An example of a
+customized Profile is the <tt class="docutils literal"><span class="pre">SASProfile</span></tt> class in the
+<tt class="docutils literal"><span class="pre">diffpy.srfit.sas.sasprofile</span></tt> module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SASProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Observed and calculated profile container for SAS data.</span>
+
+<span class="sd">    This wraps a sans DataInfo object as a Profile object. Use this when you</span>
+<span class="sd">    want to use and manipulate a DataProfile before using it with SrFit.</span>
+<span class="sd">    Otherwise, use the SASParser class and load the data into a base Profile</span>
+<span class="sd">    object.</span>
+
+<span class="sd">    Attributes</span>
+
+<span class="sd">    _xobs   --  A numpy array of the observed independent variable (default</span>
+<span class="sd">                None)</span>
+<span class="sd">    xobs    --  Read-only property of _xobs.</span>
+<span class="sd">    _yobs   --  A numpy array of the observed signal (default None)</span>
+<span class="sd">    yobs    --  Read-only property of _yobs.</span>
+<span class="sd">    _dyobs  --  A numpy array of the uncertainty of the observed signal (default</span>
+<span class="sd">                None, optional).</span>
+<span class="sd">    dyobs   --  Read-only property of _dyobs.</span>
+<span class="sd">    x       --  A numpy array of the calculated independent variable (default</span>
+<span class="sd">                None, property for xpar accessors).</span>
+<span class="sd">    y       --  The profile over the calculation range (default None, property</span>
+<span class="sd">                for ypar accessors).</span>
+<span class="sd">    dy      --  The uncertainty in the profile over the calculation range</span>
+<span class="sd">                (default None, property for dypar accessors).</span>
+<span class="sd">    ycalc   --  A numpy array of the calculated signal (default None).</span>
+<span class="sd">    xpar    --  A ProfileParameter that stores x (named &quot;x&quot;).</span>
+<span class="sd">    ypar    --  A ProfileParameter that stores y (named &quot;y&quot;).</span>
+<span class="sd">    dypar   --  A ProfileParameter that stores dy (named &quot;dy&quot;).</span>
+<span class="sd">    meta    --  A dictionary of metadata. This is only set if provided by a</span>
+<span class="sd">                parser.</span>
+
+<span class="sd">    _datainfo   --  The DataInfo object this wraps.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datainfo</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the attributes.</span>
+<span class="sd">        </span>
+<span class="sd">        datainfo   --  The DataInfo object this wraps.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span> <span class="o">=</span> <span class="n">datainfo</span>
+        <span class="n">Profile</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_xobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_yobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">dy</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="mi">0</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">dy</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span> <span class="o">=</span> <span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">dy</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">setObservedProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the observed profile.</span>
+
+<span class="sd">        This is overloaded to change the value within the datainfo object.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        xobs    --  Numpy array of the independent variable</span>
+<span class="sd">        yobs    --  Numpy array of the observed signal.</span>
+<span class="sd">        dyobs   --  Numpy array of the uncertainty in the observed signal. If</span>
+<span class="sd">                    dyobs is None (default), it will be set to 1 at each</span>
+<span class="sd">                    observed xobs.</span>
+
+<span class="sd">        Raises ValueError if len(yobs) != len(xobs)</span>
+<span class="sd">        Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Profile</span><span class="o">.</span><span class="n">setObservedProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="p">)</span>
+        <span class="c"># Copy the arrays to the _datainfo attribute.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span>
+        <span class="k">return</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">__init__</span></tt> method sets the <tt class="docutils literal"><span class="pre">xobs</span></tt>, <tt class="docutils literal"><span class="pre">yobs</span></tt> and <tt class="docutils literal"><span class="pre">dyobs</span></tt> attributes of
+the <tt class="docutils literal"><span class="pre">SASProfile</span></tt> to the associated arrays within the <tt class="docutils literal"><span class="pre">_datainfo</span></tt> attribute.
+The <tt class="docutils literal"><span class="pre">setObservedProfile</span></tt> method is overloaded to modify the <tt class="docutils literal"><span class="pre">_datainfo</span></tt>
+arrays when their corresponding attributes are modified. This keeps the arrays
+in sync.</p>
+</div>
+<div class="section" id="custom-restraints">
+<h2>Custom Restraints<a class="headerlink" href="#custom-restraints" title="Permalink to this headline">¶</a></h2>
+<p>Restraints in SrFit are one way to include known information about a system
+into a fit recipe. When customizing SrFit for a specific purpose, one may want
+to create restraints. One example of this is in the <tt class="docutils literal"><span class="pre">SrRealParSet</span></tt> base class
+in <tt class="docutils literal"><span class="pre">diffpy.srfit.structure.srrealparset</span></tt>. SrReal provides many real-space
+structure utilities for compatible structures, such as a PDF calculator and a
+bond-valence sum (BVS) calculator. The PDF calculator works very well as a
+<tt class="docutils literal"><span class="pre">ProfileGenerator</span></tt> (see the <a class="reference internal" href="examples.html#developers-guide-examples"><em>Examples</em></a>), but the BVS
+calculator is better suited as a restraint. This makes it very easy to keep the
+BVS constrained during a PDF fit or some other refinement.</p>
+<p>Creating a custom restraint is a two-step process. First, a class must be
+derived from <tt class="docutils literal"><span class="pre">diffpy.srfit.fitbase.restraint.Restraint</span></tt> that can calculate
+the restraint cost.  This requires the <tt class="docutils literal"><span class="pre">penalty</span></tt> method to be overloaded.
+This method has the following signature</p>
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.restraint.Restraint.penalty">
+<tt class="descclassname">Restraint.</tt><tt class="descname">penalty</tt><big>(</big><em>w=1.0</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.restraint.Restraint.penalty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the penalty of the restraint.</p>
+<dl class="docutils">
+<dt>w   &#8211;  The point-average chi^2 which is optionally used to scale the</dt>
+<dd>penalty (default 1.0).</dd>
+</dl>
+<p>Returns the penalty as a float</p>
+</dd></dl>
+
+<p>The <cite>w</cite> factor is optionally used to scale the restraint cost. Its purpose is
+to keep the restraint cost comparable to the residual of a single data point.</p>
+<p><tt class="docutils literal"><span class="pre">BVSRestraint</span></tt> from <tt class="docutils literal"><span class="pre">diffpy.srfit.structure.bvsrestraint</span></tt> is a custom
+<tt class="docutils literal"><span class="pre">Restraint</span></tt> whose penalty is the root-mean-square deviation from the expected
+and calculated BVS of a structure.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">BVSRestraint</span><span class="p">(</span><span class="n">Restraint</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapping of BVSCalculator.bvmsdiff as a Restraint.</span>
+
+<span class="sd">    The restraint penalty is the root-mean-square deviation of the theoretical</span>
+<span class="sd">    and calculated bond-valence sum of a structure.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    _calc   --  The SrReal BVSCalculator instance.</span>
+<span class="sd">    _parset --  The SrRealParSet that created this BVSRestraint.</span>
+<span class="sd">    sig     --  The uncertainty on the BVS (default 1).</span>
+<span class="sd">    scaled  --  A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">                by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">                (default False).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">,</span> <span class="n">sig</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the Restraint.</span>
+
+<span class="sd">        parset  --  SrRealParSet that creates this BVSRestraint.</span>
+<span class="sd">        sig     --  The uncertainty on the BVS (default 1).</span>
+<span class="sd">        scaled  --  A flag indicating if the restraint is scaled</span>
+<span class="sd">                    (multiplied) by the unrestrained point-average chi^2</span>
+<span class="sd">                    (chi^2/numpoints) (bool, default False).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span> <span class="o">=</span> <span class="n">BVSCalculator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parset</span> <span class="o">=</span> <span class="n">parset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaled</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">penalty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the penalty of the restraint.</span>
+
+<span class="sd">        w   --  The point-average chi^2 which is optionally used to scale the</span>
+<span class="sd">                penalty (float, default 1.0).</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Get the bvms from the BVSCalculator</span>
+        <span class="n">stru</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parset</span><span class="o">.</span><span class="n">_getSrRealStructure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span>
+        <span class="n">penalty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="o">.</span><span class="n">bvmsdiff</span>
+
+        <span class="c"># Scale by the prefactor</span>
+        <span class="n">penalty</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="c"># Optionally scale by w</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaled</span><span class="p">:</span> <span class="n">penalty</span> <span class="o">*=</span> <span class="n">w</span>
+
+        <span class="k">return</span> <span class="n">penalty</span>
+
+    <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This evaluates the calculator.</span>
+
+<span class="sd">        Raises AttributeError if validation fails.</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">nan</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">penalty</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">p</span> <span class="ow">is</span> <span class="n">nan</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s">&quot;Cannot evaluate penalty&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="c"># End of class BVSRestraint</span>
+
+<span class="c"># End of file</span>
+</pre></div>
+</div>
+<p>Note that the penalty scaling is optional (selected by the <cite>scaled</cite> flag) and
+uncertainty on the result (<cite>sig</cite>) may be applied. These two options are
+recommended with any custom <tt class="docutils literal"><span class="pre">Restraint</span></tt>.</p>
+<p>The second part of a custom restraint is to allow it to be created from a
+restrainable object. A <tt class="docutils literal"><span class="pre">BVSRestraint</span></tt> is used to restrain a <tt class="docutils literal"><span class="pre">SrRealParSet</span></tt>,
+which is a <tt class="docutils literal"><span class="pre">ParameterSet</span></tt> wrapper base class for SrReal-compatible
+structures.  The restraint is applied with the <tt class="docutils literal"><span class="pre">restrainBVS</span></tt> method.</p>
+<div class="highlight-python"><div class="highlight"><pre>    <span class="k">def</span> <span class="nf">restrainBVS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Restrain the bond-valence sum to zero.</span>
+
+<span class="sd">        This adds a penalty to the cost function equal to</span>
+<span class="sd">        bvmsdiff / sig**2</span>
+<span class="sd">        where bvmsdiff is the mean-squared difference between the calculated</span>
+<span class="sd">        and expected bond valence sums for the structure. If scaled is True,</span>
+<span class="sd">        this is also scaled by the current point-averaged chi^2 value so the</span>
+<span class="sd">        restraint is roughly equally weighted in the fit.</span>
+
+<span class="sd">        sig     --  The uncertainty on the BVS (default 1).</span>
+<span class="sd">        scaled  --  A flag indicating if the restraint is scaled</span>
+<span class="sd">                    (multiplied) by the unrestrained point-average chi^2</span>
+<span class="sd">                    (chi^2/numpoints) (default False).</span>
+
+<span class="sd">        Returns the BVSRestraint object for use with the &#39;unrestrain&#39; method.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># Create the Restraint object</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">BVSRestraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
+        <span class="c"># Add it to the _restraints set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="c"># Our configuration changed. Notify observers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_updateConfiguration</span><span class="p">()</span>
+        <span class="c"># Return the Restraint object</span>
+        <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+</div>
+<p>The purpose of the method is to create the custom <tt class="docutils literal"><span class="pre">Restraint</span></tt> object,
+configure it and store it. Note that the optional <cite>sig</cite> and <cite>scaled</cite> flag are
+passed as part of this method. Both <tt class="docutils literal"><span class="pre">_restraints</span></tt> and
+<tt class="docutils literal"><span class="pre">_updateConfiguration</span></tt> come from <tt class="docutils literal"><span class="pre">ParameterSet</span></tt>, from which
+<tt class="docutils literal"><span class="pre">SrRealParSet</span></tt> is derived. The <tt class="docutils literal"><span class="pre">_restraints</span></tt> attribute is a set of
+<tt class="docutils literal"><span class="pre">Restraints</span></tt> on the object. The <tt class="docutils literal"><span class="pre">_updateConfiguration</span></tt> method makes any
+object containing the <tt class="docutils literal"><span class="pre">SrRealParSet</span></tt> aware of the configuration change.  This
+gets propagated to the top-level <tt class="docutils literal"><span class="pre">FitRecipe</span></tt>, if there is one.  The restraint
+object is returned by the method so that it may be later removed.</p>
+<p>For more examples of custom restraints can be found in the
+<tt class="docutils literal"><span class="pre">diffpy.srfit.structure.objcrystparset</span></tt> module.</p>
+</div>
+<div class="section" id="custom-fithooks">
+<h2>Custom FitHooks<a class="headerlink" href="#custom-fithooks" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">FitHook</span></tt> class is used by a <tt class="docutils literal"><span class="pre">FitRecipe</span></tt> to report fit progress to a
+user.  <tt class="docutils literal"><span class="pre">FitHook</span></tt> can be found in the <tt class="docutils literal"><span class="pre">diffpy.srfit.fitbase.fithook</span></tt> module.
+<tt class="docutils literal"><span class="pre">FitHook</span></tt> can be customized to provide customized fit output, such as a live
+plot of the output. The <tt class="docutils literal"><span class="pre">FitHook</span></tt> class has three methods that one can
+overload.</p>
+<ul>
+<li><dl class="method">
+<dt id="diffpy.srfit.fitbase.fithook.FitHook.reset">
+<tt class="descclassname">FitHook.</tt><tt class="descname">reset</tt><big>(</big><em>recipe</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the hook data.</p>
+<p>This is called whenever FitRecipe._prepare is called, which is whenever
+a configurational change to the fit hierarchy takes place, such as
+adding a new ParameterSet, constraint or restraint.</p>
+</dd></dl>
+
+</li>
+<li><dl class="method">
+<dt id="diffpy.srfit.fitbase.fithook.FitHook.precall">
+<tt class="descclassname">FitHook.</tt><tt class="descname">precall</tt><big>(</big><em>recipe</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.precall" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called within FitRecipe.residual, before the calculation.</p>
+<p>recipe  &#8211;  The FitRecipe instance</p>
+</dd></dl>
+
+</li>
+<li><dl class="method">
+<dt id="diffpy.srfit.fitbase.fithook.FitHook.postcall">
+<tt class="descclassname">FitHook.</tt><tt class="descname">postcall</tt><big>(</big><em>recipe</em>, <em>chiv</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.postcall" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called within FitRecipe.residual, after the calculation.</p>
+<p>recipe  &#8211;  The FitRecipe instance
+chiv    &#8211;  The residual vector</p>
+</dd></dl>
+
+</li>
+</ul>
+<p>To use a custom <tt class="docutils literal"><span class="pre">FitHook</span></tt>, assign an instance to a <tt class="docutils literal"><span class="pre">FitRecipe</span></tt> using the
+<tt class="docutils literal"><span class="pre">pushFitHook</span></tt> method. All <tt class="docutils literal"><span class="pre">FitHook</span></tt> instances held by a <tt class="docutils literal"><span class="pre">FitRecipe</span></tt> will
+be used in sequence during a call to <tt class="docutils literal"><span class="pre">FitRecipe.residual</span></tt>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Extending SrFit</a><ul>
+<li><a class="reference internal" href="#plugging-other-objects-into-srfit">Plugging Other Objects into SrFit</a></li>
+<li><a class="reference internal" href="#extending-profile-parsers">Extending Profile Parsers</a></li>
+<li><a class="reference internal" href="#extending-profiles">Extending Profiles</a></li>
+<li><a class="reference internal" href="#custom-restraints">Custom Restraints</a></li>
+<li><a class="reference internal" href="#custom-fithooks">Custom FitHooks</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="anneal.html"
+                        title="previous chapter">anneal.py</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/extending.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="anneal.html" title="anneal.py"
+             >previous</a> |</li>
+        <li><a href="index.html">SrFit 1.0b1.dev-10 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Christopher L. Farrow, Pavol Juhás.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

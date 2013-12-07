@@ -170,7 +170,7 @@ publish-prepare:
 	    git pull $(GITREMOTEURL) gh-pages
 	rsync -acv --delete --exclude=.git --exclude=.rsync-exclude \
 	    --exclude-from=build/gh-pages/.rsync-exclude \
-	    --link-dest=$(PWD)/build/html build/html/ build/gh-pages/
+	    --link-dest=$(CURDIR)/build/html build/html/ build/gh-pages/
 	cd build/gh-pages && \
 	    git add --all . && \
 	    git diff --cached --quiet || \

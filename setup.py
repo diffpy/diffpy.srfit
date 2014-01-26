@@ -5,7 +5,6 @@
 """diffpy.srfit - framework for setting up complex modeling refinements.
 
 Packages:   diffpy.srfit
-Scripts:    (none yet)
 """
 
 import os
@@ -52,7 +51,7 @@ setup_args = dict(
         name = "diffpy.srfit",
         version = versiondata.get('DEFAULT', 'version'),
         namespace_packages = ['diffpy'],
-        packages = find_packages(exclude=['tests']),
+        packages = find_packages(),
         test_suite = 'diffpy.srfit.tests',
         include_package_data = True,
         entry_points = {},

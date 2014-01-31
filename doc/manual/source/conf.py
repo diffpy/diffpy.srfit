@@ -14,7 +14,6 @@
 
 import sys, os
 import time
-import ConfigParser
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -64,8 +63,8 @@ release = fullversion
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
 #today = ''
-cpfulldate = versiondata.get('DEFAULT', 'date')
-today_seconds = time.strptime(cpfulldate.split()[0], '%Y-%m-%d')
+fulldate = versiondata.get('DEFAULT', 'date')
+today_seconds = time.strptime(fulldate.split()[0], '%Y-%m-%d')
 today = time.strftime('%B %d, %Y', today_seconds)
 year = today.split()[-1]
 # Else, today_fmt is used as the format for a strftime call.

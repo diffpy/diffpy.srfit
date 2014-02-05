@@ -21,6 +21,9 @@ import time
 #sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../../..'))
 
+# abbreviations
+ab_authors = u'Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge group'
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -44,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'SrFit'
-copyright = u'2013, Christopher L. Farrow, Pavol Juhás'
+copyright = u'%Y, Brookhaven National Laboratory'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -197,7 +200,7 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
   ('index', 'SrFit_manual.tex', u'SrFit Documentation',
-   u'Christopher L. Farrow, Pavol Juhás', 'manual'),
+   ab_authors, 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -227,7 +230,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'srfit', u'SrFit Documentation',
-     [u'Christopher L. Farrow', u'Pavol Juhás'], 1)
+     ab_authors, 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -241,7 +244,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'SrFit', u'SrFit Documentation',
-   u'Christopher L. Farrow, Pavol Juhás', 'SrFit', 'One line description of project.',
+   ab_authors, 'SrFit', 'One line description of project.',
    'Miscellaneous'),
 ]
 

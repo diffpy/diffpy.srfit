@@ -62,11 +62,6 @@ setup_args = dict(
             'numpy>=1.0',
             'scipy>=0.7.0',
             ],
-        dependency_links = [
-            # REMOVE dev.danse.us for a public release.
-            'http://dev.danse.us/packages/',
-            "http://www.diffpy.org/packages/",
-        ],
 
         author = "Simon J.L. Billinge",
         author_email = "sb2896@columbia.edu",

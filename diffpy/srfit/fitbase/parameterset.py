@@ -107,8 +107,4 @@ class ParameterSet(RecipeOrganizer):
 
 # End class ParameterSet
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

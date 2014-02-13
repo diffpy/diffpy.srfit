@@ -100,5 +100,3 @@ class Calculator(Operator, ParameterSet):
         return
 
 # End class Calculator
-
-__id__ = "$Id$"

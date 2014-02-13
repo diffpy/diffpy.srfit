@@ -169,8 +169,4 @@ class TagManager(object):
 
 # End class TagManager
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

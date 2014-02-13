@@ -294,6 +294,3 @@ class DiffpyStructureParSet(SrRealParSet):
 
 
 # End class DiffpyStructureParSet
-
-__id__ = "$Id$"
-

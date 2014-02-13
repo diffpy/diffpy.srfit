@@ -223,8 +223,4 @@ class SimpleRecipe(FitRecipe):
 
 # End class SimpleRecipe
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

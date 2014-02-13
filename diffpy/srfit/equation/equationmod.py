@@ -195,8 +195,4 @@ class Equation(Operator):
         """Identify self to a visitor."""
         return visitor.onEquation(self)
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

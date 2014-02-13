@@ -317,9 +317,4 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
             raise AttributeError("residual evaluates to None")
         return
 
-
-# version
-__id__ = "$Id$"
-
-#
 # End of file

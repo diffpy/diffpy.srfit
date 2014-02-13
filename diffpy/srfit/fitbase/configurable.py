@@ -55,8 +55,4 @@ class Configurable(object):
 
 # End class Configurable
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

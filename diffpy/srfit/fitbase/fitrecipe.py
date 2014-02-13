@@ -799,8 +799,4 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._ready = False
         return
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

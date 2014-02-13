@@ -680,5 +680,3 @@ rad2deg = 1.0 / deg2rad
 
 
 # End of file
-
-__id__ = "$Id$"

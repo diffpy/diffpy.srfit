@@ -633,8 +633,4 @@ def __wrapSrFitOperators():
     return
 __wrapSrFitOperators()
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

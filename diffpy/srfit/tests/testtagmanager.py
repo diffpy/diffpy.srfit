@@ -3,9 +3,6 @@
 """Unit tests for tagmanager.py
 """
 
-# version
-__id__ = '$Id$'
-
 import unittest
 
 from diffpy.srfit.util.tagmanager import TagManager

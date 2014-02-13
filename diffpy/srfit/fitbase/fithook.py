@@ -220,5 +220,3 @@ class PlotFitHook(FitHook):
         pylab.draw()
         return
 
-
-__id__ = "$Id$"

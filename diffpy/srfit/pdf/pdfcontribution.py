@@ -302,8 +302,4 @@ class PDFContribution(FitContribution):
         """Get the qmin value."""
         return self._getMetaValue("qmin")
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

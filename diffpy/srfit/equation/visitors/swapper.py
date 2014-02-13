@@ -142,9 +142,4 @@ class Swapper(Visitor):
 
         return
 
-
-# version
-__id__ = "$Id$"
-
-#
 # End of file

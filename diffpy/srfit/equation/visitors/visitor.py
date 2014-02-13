@@ -58,8 +58,4 @@ class Visitor(object):
             "class '%s' should override method '%s'" % (self.__class__.__name__, method))
 
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

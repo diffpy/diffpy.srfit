@@ -114,8 +114,4 @@ class Restraint(Validatable):
 
 # End class Restraint
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

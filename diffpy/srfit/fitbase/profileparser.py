@@ -170,6 +170,4 @@ class ParseError(Exception):
     """Exception used by ProfileParsers."""
     pass
 
-__id__ = "$Id$"
-
 # End of ParseError

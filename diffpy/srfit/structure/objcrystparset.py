@@ -1498,6 +1498,3 @@ class ObjCrystCrystalParSet(SrRealParSet):
         return self.scatterers
 
 # End class ObjCrystCrystalParSet
-
-
-__id__ = "$Id$"

@@ -267,8 +267,4 @@ class ParameterAdapter(Parameter):
                     
 # End class ParameterAdapter
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

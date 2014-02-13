@@ -42,5 +42,4 @@ from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 
-__id__ = "$Id$"
 # End of file

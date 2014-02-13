@@ -61,8 +61,4 @@ class ArgFinder(Visitor):
             arg.identify(self)
         return self.args
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

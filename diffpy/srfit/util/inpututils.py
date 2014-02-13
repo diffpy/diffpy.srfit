@@ -45,7 +45,4 @@ def inputToString(inpt):
 
     return inptstr
 
-
-__id__ = "$Id$"
-
 # End of file

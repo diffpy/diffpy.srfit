@@ -207,5 +207,3 @@ class PDFParser(ProfileParser):
         return
 
 # End of PDFParser
-
-__id__ = "$Id$"

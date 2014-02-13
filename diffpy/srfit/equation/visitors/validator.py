@@ -109,8 +109,4 @@ class Validator(Visitor):
         self._nin = op.nout
         return self.errors
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

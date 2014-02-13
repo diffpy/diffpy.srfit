@@ -346,4 +346,3 @@ def rebinArray(A, xold, xnew):
     finterp = splrep(xold, A, s=0)
     return splev(xnew, finterp, der=0)
 
-__id__ = "$Id$"

@@ -200,6 +200,4 @@ def _applyargs(args, f):
         f(*args)
     return
 
-__id__ = "$Id$"
-
 # End of file

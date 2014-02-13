@@ -38,5 +38,4 @@ _fitrecipe_interface = FitRecipeInterface
 
 from diffpy.srfit.interface.interface import ParameterFactory
 
-__id__ = "$Id$"
 # End of file

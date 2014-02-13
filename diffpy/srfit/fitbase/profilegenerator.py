@@ -174,5 +174,3 @@ class ProfileGenerator(Operator, ParameterSet):
 
 
 # End class ProfileGenerator
-
-__id__ = "$Id$"

@@ -27,7 +27,6 @@ UnitCellParSet      --  Wrapper for the unit cell of cctbx.crystal
 ScattererParSet     --  Wrapper for cctbx.xray.scatterer
 
 """
-__id__ = "$Id$"
 
 from cctbx import crystal
 

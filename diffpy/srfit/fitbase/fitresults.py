@@ -669,4 +669,3 @@ def numericStringSort(lst):
     lst[:] = [kv[1] for kv in newlst]
     return
 
-__id__ = "$Id$"

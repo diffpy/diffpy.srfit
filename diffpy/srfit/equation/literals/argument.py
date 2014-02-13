@@ -71,8 +71,4 @@ class Argument(Literal, ArgumentABC):
     value = property( lambda self: self.getValue(), 
             lambda self, val: self.setValue(val))
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

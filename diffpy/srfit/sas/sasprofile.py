@@ -97,4 +97,3 @@ class SASProfile(Profile):
         self._datainfo.dy = self._dyobs
         return
 
-__id__ = "$Id$"

@@ -57,8 +57,4 @@ class Validatable(object):
 
 # End class Validatable
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

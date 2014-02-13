@@ -982,4 +982,3 @@ def equationFromString(eqstr, factory, ns = {}, buildargs = False,
 
     return eq
 
-__id__ = "$Id$"

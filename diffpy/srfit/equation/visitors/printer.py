@@ -78,8 +78,4 @@ class Printer(Visitor):
         self.output += ")"
         return
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

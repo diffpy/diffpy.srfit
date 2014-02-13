@@ -333,8 +333,4 @@ class PolyvalOperator(Operator):
         self.operation = numpy.polyval
         return
 
-# version
-__id__ = "$Id$"
-
-#
 # End of file

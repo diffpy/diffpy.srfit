@@ -16,7 +16,7 @@
 
 ArgFinder extracts all Arguments from a literal true.
 
-""" 
+"""
 
 __all__ = ["ArgFinder"]
 
@@ -38,7 +38,7 @@ class ArgFinder(Visitor):
         Arguments
         getconsts   --  Flag indicating whether to grap constant arguments
                         (default True).
-        
+
         """
         self.args = []
         self.getconsts = getconsts

@@ -44,7 +44,7 @@ class SASGenerator(ProfileGenerator):
 
         name    --  A name for the SASGenerator
         model   --  SASModel object this adapts.
-        
+
         """
         ProfileGenerator.__init__(self, name)
 

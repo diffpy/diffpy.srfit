@@ -16,7 +16,7 @@
 
 ProfileGenerators encapsulate the evaluation and required Parameters and
 ParameterSets of a profile calculator.  The ProfileGenerator class can be
-associated with a FitContribution to help calculate a profile. 
+associated with a FitContribution to help calculate a profile.
 
 To define a ProfileGenerator, one must implement the required Parameters and
 ParameterSets as well as overload the __call__ method with the calculation. A
@@ -30,7 +30,7 @@ very simple example is
 >        self.newParameter("amp", 0)
 >        self.newParameter("center", 0)
 >        self.newParameter("width", 0)
->       
+>
 >    def __call__(self, x):
 >        a = self.amp.getValue()
 >        x0 = self.center.getValue()
@@ -162,7 +162,7 @@ class ProfileGenerator(Operator, ParameterSet):
         operation should be validated with a containing equation.
 
         Raises AttributeError if validation fails.
-        
+
         """
         if self.profile is None:
             raise AttributeError("profile is None")

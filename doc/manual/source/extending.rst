@@ -22,7 +22,7 @@ a structure.  For example, the ``DiffpyStructureParSet`` structure adapter in
 ``diffpy.srfit.structure.diffpyparset`` contains ``DiffpyLatticeParSet``, which
 encapsulates the lattice data and one ``DiffpyAtomParSet`` per atom.  These
 each contain parameters for what they encapsulate, such as lattice parameters
-or atom positions. 
+or atom positions.
 
 Fundamentally, it is the adjustable parameters of a structure container,
 forward calculator or other object that needs to be adapted so that SrFit can
@@ -46,7 +46,7 @@ to another object when setting or retrieving its value.
 
 
 Here is a simple example of using ``ParameterAdapter`` to adapt a hypothetical
-atom object called ``SimpleAtom`` that has attributes ``x``, ``y`` and ``z``. 
+atom object called ``SimpleAtom`` that has attributes ``x``, ``y`` and ``z``.
 ::
 
     class SimpleAtom(object):
@@ -61,7 +61,7 @@ atom object called ``SimpleAtom`` that has attributes ``x``, ``y`` and ``z``.
     # End class SimpleAtom
 
     class SimpleAtomParSet(ParameterSet):
-        """Class adapting the x, y and z attributes of SimpleAtom as Parameters.""" 
+        """Class adapting the x, y and z attributes of SimpleAtom as Parameters."""
 
         def __init__(self, atom, name):
             ParameterSet.__init__(self, name)
@@ -86,25 +86,25 @@ The ``x``, ``y`` and ``z`` attributes (specified by the ``attr`` keyword
 argument of ``ParameterAdapter``) of a ``SimpleAtom`` are wrapped as
 ``ParameterAdapter`` objects named `x`, `y`, and `z`.  They are then added to
 the ``SimpleAtomParSet`` using the ``addParameter`` method, which makes them
-accessible as attributes. 
+accessible as attributes.
 
 If SimpleAtom did not have an attribute named ``x``, but rather accessor
 methods named ``getX`` and ``setX``, then the ``ParameterAdapter`` would be
 used as::
 
-    xpar = ParameterAdapter("x", atom, getter = SimpleAtom.getX, 
+    xpar = ParameterAdapter("x", atom, getter = SimpleAtom.getX,
         setter = SimpleAtom.setX)
 
 Note that the *unbound* methods are used. The names ``getter`` and ``setter``
 describe how the accessor attributes are used to access the value of the
 parameter. When ``xpar.getValue()`` is called, it redirects to
-``SimpleAtom.getX(atom)``. 
+``SimpleAtom.getX(atom)``.
 
 If instead ``SimpleAtom`` had methods called ``get`` and ``set`` that take as
 the second argument the name of the attribute to retrieve or modify, then this
 can be adapted as::
 
-    xpar = ParameterAdapter("x", atom, getter = SimpleAtom.get, 
+    xpar = ParameterAdapter("x", atom, getter = SimpleAtom.get,
             setter = SimpleAtom.set, attr = "x")
 
 Thus, when ``xpar.getValue()`` is called, it in turn calls
@@ -190,7 +190,7 @@ arrays when their corresponding attributes are modified. This keeps the arrays
 in sync.
 
 
-Custom Restraints 
+Custom Restraints
 ----------------------------------------
 
 Restraints in SrFit are one way to include known information about a system
@@ -223,7 +223,7 @@ and calculated BVS of a structure.
 
 Note that the penalty scaling is optional (selected by the `scaled` flag) and
 uncertainty on the result (`sig`) may be applied. These two options are
-recommended with any custom ``Restraint``. 
+recommended with any custom ``Restraint``.
 
 The second part of a custom restraint is to allow it to be created from a
 restrainable object. A ``BVSRestraint`` is used to restrain a ``SrRealParSet``,

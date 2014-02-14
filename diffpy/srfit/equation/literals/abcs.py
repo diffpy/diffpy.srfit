@@ -17,8 +17,8 @@
 __all__ = ["isinstance", "issubclass", "LiteralABC", "ArgumentABC",
         "OperatorABC"]
 
-from diffpy.srfit.util.abcport import ABCMeta 
-from diffpy.srfit.util.abcport import abstractmethod, abstractproperty 
+from diffpy.srfit.util.abcport import ABCMeta
+from diffpy.srfit.util.abcport import abstractmethod, abstractproperty
 from diffpy.srfit.util.abcport import isinstance, issubclass
 
 class LiteralABC(object):
@@ -31,7 +31,7 @@ class LiteralABC(object):
 
     @abstractmethod
     def getValue(self): pass
-    
+
     name = abstractproperty(None, None)
 
 # End class LiteralABC

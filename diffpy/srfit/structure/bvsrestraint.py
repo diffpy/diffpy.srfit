@@ -62,7 +62,7 @@ class BVSRestraint(Restraint):
 
         w   --  The point-average chi^2 which is optionally used to scale the
                 penalty (float, default 1.0).
-        
+
         """
         # Get the bvms from the BVSCalculator
         stru = self._parset._getSrRealStructure()
@@ -81,7 +81,7 @@ class BVSRestraint(Restraint):
         """This evaluates the calculator.
 
         Raises AttributeError if validation fails.
-        
+
         """
         from numpy import nan
         p = self.penalty()

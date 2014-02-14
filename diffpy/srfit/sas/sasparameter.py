@@ -25,7 +25,7 @@ from diffpy.srfit.fitbase.parameter import Parameter
 
 class SASParameter(Parameter):
     """Class adapting a sansmodel parameter to srfit Parameter.
-    
+
     Attributes
     name    --  A name for this Parameter.
     const   --  A flag indicating whether this is considered a constant.
@@ -39,7 +39,7 @@ class SASParameter(Parameter):
     _model  --  The BaseModel to which the underlying parameter belongs.
     _parname    --  The name of the underlying BaseModel parameter.
 
-    
+
     """
 
     def __init__(self, name, model, parname = None):

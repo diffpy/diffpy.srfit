@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Restraints class. 
+"""Restraints class.
 
 Restraints are used by RecipeOrganizers to organize restraint equations.
 Restraints store an Equation, bounds on its value, and the form of the penalty
@@ -36,10 +36,10 @@ class Restraint(Validatable):
     ub      --  The lower bound on the restraint evaluation (default inf).
     sig     --  The uncertainty on the bounds (default 1).
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
-                the unrestrained point-average chi^2 (chi^2/numpoints) 
+                the unrestrained point-average chi^2 (chi^2/numpoints)
                 (default False).
 
-    The penalty is calculated as 
+    The penalty is calculated as
     (max(0, lb - val, val - ub)/sig)**2
     and val is the value of the calculated equation.  This is multipled by the
     average chi^2 if scaled is True.
@@ -48,7 +48,7 @@ class Restraint(Validatable):
 
     def __init__(self, eq, lb = -inf, ub = inf, sig = 1, scaled = False):
         """Restrain an equation to specified bounds.
-        
+
         eq      --  An equation whose evaluation is compared against the
                     restraint bounds.
         lb      --  The lower bound on the restraint evaluation (float, default
@@ -75,7 +75,7 @@ class Restraint(Validatable):
                 penalty (default 1.0).
 
         Returns the penalty as a float
-        
+
         """
         val = self.eq()
         penalty = (max(0, self.lb - val, val - self.ub) / self.sig)**2
@@ -91,7 +91,7 @@ class Restraint(Validatable):
         This validates eq.
 
         Raises AttributeError if validation fails.
-        
+
         """
         if self.eq is None:
             raise AttributeError("eq is None")

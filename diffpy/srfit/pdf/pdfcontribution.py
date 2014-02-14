@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""PDFContribution class. 
+"""PDFContribution class.
 
 This is a custom FitContribution that simplifies the creation of PDF fits.
 
@@ -138,7 +138,7 @@ class PDFContribution(FitContribution):
 
         This calls on the built-in Profile.
 
-        Arguments are passed to numpy.savetxt. 
+        Arguments are passed to numpy.savetxt.
 
         """
         return self.profile.savetxt(fname, fmt, delimiter)
@@ -194,7 +194,7 @@ class PDFContribution(FitContribution):
         parset  --  A SrRealParSet that holds the structural information.
                     This can be used to share the phase between multiple
                     BasePDFGenerators, and have the changes in one reflect in
-                    another. 
+                    another.
         periodic -- The structure should be treated as periodic.  If this is
                     True (default), then a PDFGenerator will be used to
                     calculate the PDF from the phase. Otherwise, a
@@ -261,7 +261,7 @@ class PDFContribution(FitContribution):
 
     def setScatteringType(self, type = "X"):
         """Set the scattering type.
-        
+
         type    --   "X" for x-ray or "N" for neutron
 
         Raises ValueError if type is not "X" or "N"
@@ -271,7 +271,7 @@ class PDFContribution(FitContribution):
         for gen in self._generators.values():
             gen.setScatteringType(type)
         return
-    
+
     def getScatteringType(self):
         """Get the scattering type. See 'setScatteringType'."""
         return self._getMetaValue("stype")
@@ -291,7 +291,7 @@ class PDFContribution(FitContribution):
         """Set the qmin value.
 
         This has no effect on the crystal PDF.
-        
+
         """
         self._meta["qmin"] = qmin
         for gen in self._generators.values():

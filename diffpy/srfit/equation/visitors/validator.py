@@ -71,7 +71,7 @@ class Validator(Visitor):
 
         The Operator must be an instance of OperatorABC from
         diffpy.srfit.equation.literals.abcs
-        
+
         """
 
         if not isinstance(op, OperatorABC):

@@ -52,7 +52,7 @@ class FitHook(object):
         """This is called within FitRecipe.residual, before the calculation.
 
         recipe  --  The FitRecipe instance
-        
+
         """
         return
 
@@ -61,7 +61,7 @@ class FitHook(object):
 
         recipe  --  The FitRecipe instance
         chiv    --  The residual vector
-        
+
         """
         return
 
@@ -105,7 +105,7 @@ class PrintFitHook(FitHook):
         """This is called within FitRecipe.residual, before the calculation.
 
         recipe  --  The FitRecipe instance
-        
+
         """
         self.count += 1
         if self.verbose > 0:
@@ -117,7 +117,7 @@ class PrintFitHook(FitHook):
 
         recipe  --  The FitRecipe instance
         chiv    --  The residual vector
-        
+
         """
         if self.verbose < 2:
             return
@@ -204,7 +204,7 @@ class PlotFitHook(FitHook):
 
         recipe  --  The FitRecipe instance
         chiv    --  The residual vector
-        
+
         """
         FitHook.postcall(self, recipe, chiv)
         import pylab

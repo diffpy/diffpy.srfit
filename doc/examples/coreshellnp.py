@@ -62,7 +62,7 @@ def makeRecipe(stru1, stru2, datname):
     generator_zns.qdamp.value = 0.0396
 
     ## The FitContribution
-    # Add both generators and the profile to the FitContribution. 
+    # Add both generators and the profile to the FitContribution.
     contribution = FitContribution("cdszns")
     contribution.addProfileGenerator(generator_cds)
     contribution.addProfileGenerator(generator_zns)
@@ -114,7 +114,7 @@ def makeRecipe(stru1, stru2, datname):
     # each atom type.
     recipe.constrain("B33_1_cds", "B33_0_cds")
     recipe.addVar(generator_cds.delta2, name = "delta2_cds", value = 5)
-    
+
     phase_zns = generator_zns.phase
     for par in phase_zns.sgpars.latpars:
         recipe.addVar(par, name = par.name + "_zns", tag = "lat")
@@ -123,7 +123,7 @@ def makeRecipe(stru1, stru2, datname):
     recipe.addVar(phase_zns.sgpars.xyzpars.z_1, name = "z_1_zns", tag = "xyz")
     recipe.constrain("B33_1_zns", "B33_0_zns")
     recipe.addVar(generator_zns.delta2, name = "delta2_zns", value = 2.5)
-    
+
     # Give the recipe away so it can be used!
     return recipe
 
@@ -201,7 +201,7 @@ def main():
     # Generate and print the FitResults
     res = FitResults(recipe)
     res.printResults()
-    
+
     # Plot!
     plotResults(recipe)
     return

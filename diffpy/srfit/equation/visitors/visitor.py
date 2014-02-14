@@ -48,7 +48,7 @@ class Visitor(object):
 
         Equations are specialized Operators. They don't need to be specifically
         supported by a Visitor.
-        
+
         """
         return self.onOperator(eq)
 

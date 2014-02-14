@@ -74,7 +74,7 @@ class SrRealParSet(BaseStructureParSet):
         """Set this structure to use symmetry.
 
         This determines how the structure is treated by SrReal calculators.
-        
+
         """
         self._usesymmetry = bool(use)
         return

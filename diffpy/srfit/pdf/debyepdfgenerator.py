@@ -97,7 +97,7 @@ class DebyePDFGenerator(BasePDFGenerator):
         parset  --  A SrRealParSet that holds the structural information.
                     This can be used to share the phase between multiple
                     BasePDFGenerators, and have the changes in one reflect in
-                    another. 
+                    another.
         periodic -- The structure should be treated as periodic (default True).
                     Note that some structures do not support periodicity, in
                     which case this will be ignored.
@@ -108,7 +108,7 @@ class DebyePDFGenerator(BasePDFGenerator):
 
     def __init__(self, name = "pdf"):
         """Initialize the generator.
-        
+
         """
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(DebyePDFCalculator())

@@ -93,7 +93,7 @@ class Calculator(Operator, ParameterSet):
         operation should be validated with a containing equation.
 
         Raises AttributeError if validation fails.
-        
+
         """
         ParameterSet._validate(self)
 

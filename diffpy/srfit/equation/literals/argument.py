@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Argument class. 
+"""Argument class.
 
 Arguments are the leaves of an equation tree, in essense a variable or a
 constant.
@@ -26,7 +26,7 @@ from diffpy.srfit.equation.literals.literal import Literal
 
 class Argument(Literal, ArgumentABC):
     """Argument class.
-    
+
     Attributes
     name    --  A name for this Argument.
     const   --  A flag indicating whether this is considered a constant.
@@ -68,7 +68,7 @@ class Argument(Literal, ArgumentABC):
         # if not notequiv.any(): falls through
         return
 
-    value = property( lambda self: self.getValue(), 
+    value = property( lambda self: self.getValue(),
             lambda self, val: self.setValue(val))
 
 # End of file

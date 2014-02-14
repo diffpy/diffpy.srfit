@@ -69,7 +69,7 @@ class PDFParser(ProfileParser):
         When _dx or _dy cannot be obtained in the data format it is set to 0.
 
         This wipes out the currently loaded data and selected bank number.
-        
+
         Arguments
         patstring   --  A string containing the pattern
 
@@ -93,14 +93,14 @@ class PDFParser(ProfileParser):
                 start_data = 0
         header = patstring[:start_data]
         databody = patstring[start_data:].strip()
-        
+
         # find where the metadata starts
         metadata = ''
         res = re.search(r'^#+\ +metadata\b\n', header, re.M)
         if res:
             metadata = header[res.end():]
-            header = header[:res.start()]   
-            
+            header = header[:res.start()]
+
         # parse header
         meta = self._meta
         # stype
@@ -148,7 +148,7 @@ class PDFParser(ProfileParser):
         res = re.search(regexp, header)
         if res:
             meta['doping'] = float(res.groups()[0])
-            
+
         # parsing gerneral metadata
         if metadata:
             regexp = r"\b(\w+)\ *=\ *(%(f)s)\b" % rx

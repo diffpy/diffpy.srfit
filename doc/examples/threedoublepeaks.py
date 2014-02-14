@@ -39,7 +39,7 @@ def makeRecipe():
     use l1 = 1.012, l2 = 1.0 and r = 0.23.
 
     """
-        
+
     ## The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
@@ -85,7 +85,7 @@ def makeRecipe():
          bkgd")
 
     # c is the center of the gaussian.
-    contribution.c.value =  x[len(x)/2] 
+    contribution.c.value =  x[len(x)/2]
 
     ## The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
@@ -124,7 +124,7 @@ def makeRecipe():
     # broadening.
     sig0 = recipe.newVar("sig0", 0.001)
     dsig = recipe.newVar("dsig", 4)
-    
+
     def sig(sig0, dsig, mu):
         """Calculate the peak broadening with respect to position."""
         return sig0 * (1 - dsig * mu**2);
@@ -135,13 +135,13 @@ def makeRecipe():
     recipe.sig0.value = 0.001
     recipe.dsig.value = 4.0
     recipe.constrain(contribution.sig11, "sig(sig0, dsig, mu11)")
-    recipe.constrain(contribution.sig12, "sig(sig0, dsig, mu12)", 
+    recipe.constrain(contribution.sig12, "sig(sig0, dsig, mu12)",
             ns = {"mu12" : contribution.mu12} )
     recipe.constrain(contribution.sig21, "sig(sig0, dsig, mu21)")
-    recipe.constrain(contribution.sig22, "sig(sig0, dsig, mu22)", 
+    recipe.constrain(contribution.sig22, "sig(sig0, dsig, mu22)",
             ns = {"mu22" : contribution.mu22} )
     recipe.constrain(contribution.sig31, "sig(sig0, dsig, mu31)")
-    recipe.constrain(contribution.sig32, "sig(sig0, dsig, mu32)", 
+    recipe.constrain(contribution.sig32, "sig(sig0, dsig, mu32)",
             ns = {"mu32" : contribution.mu32} )
 
     # Also the background

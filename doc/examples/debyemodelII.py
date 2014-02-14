@@ -50,7 +50,7 @@ def makeRecipeII():
     debyemodel.py and extract the configured FitContribution from each. We will
     use different fitting ranges for each FitContribution and constrain the
     Debye temperature in each FitContribution to be the same.
-    
+
     """
 
     # We'll throw these away. We just want the FitContributions that are

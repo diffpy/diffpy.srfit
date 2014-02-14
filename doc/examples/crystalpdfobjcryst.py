@@ -56,7 +56,7 @@ def makeRecipe(ciffile, datname):
     stru = CreateCrystalFromCIF(file(ciffile))
     generator.setStructure(stru)
     generator.setQmax(40.0)
-    
+
     ## The FitContribution
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
@@ -86,7 +86,7 @@ def makeRecipe(ciffile, datname):
     #
     # As before, we have one free lattice parameter ('a'). We can simplify
     # things by iterating through all the sgpars.
-    for par in phase.sgpars: 
+    for par in phase.sgpars:
         recipe.addVar(par)
     # set the initial thermal factor to a non-zero value
     assert hasattr(recipe, 'B11_0')

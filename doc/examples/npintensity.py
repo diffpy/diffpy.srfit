@@ -19,7 +19,7 @@ FitContribution in order to fit theoretical intensity data.  ProfileGenerators
 are used to organize profile calculators that require more information than can
 be conveniently passed into a function call.  The IntensityGenerator class is
 an example of a ProfileGenerator that can be used by a FitContribution to help
-generate a the profile. 
+generate a the profile.
 
 Instructions
 
@@ -28,7 +28,7 @@ the code. Then read through 'IntensityGenerator' class.  This will motivate the
 need for the ProfileGenerator class. Next read the 'makeRecipe' code.  This
 will demonstrate how to use the generator, the structure container needed by
 the generator and introduce new operations that can be used in a registered
-equation. 
+equation.
 
 Extensions
 
@@ -72,7 +72,7 @@ class IntensityGenerator(ProfileGenerator):
 
     This generator wraps the 'iofq' function defined below. Knowledge of this
     function is not required for this example.
-    
+
     """
 
     def __init__(self, name):
@@ -189,7 +189,7 @@ def makeRecipe(strufile, datname):
     # need to load the model structure we're using.
     generator = IntensityGenerator("I")
     generator.setStructure(strufile)
-    
+
     ## The FitContribution
     # Create a FitContribution, that will associate the Profile with the
     # ProfileGenerator.  The ProfileGenerator will be accessible as an
@@ -204,7 +204,7 @@ def makeRecipe(strufile, datname):
     # We need to modify the intensity calculation, and we'll do that from
     # within the fitting equation for the sake of instruction. We want to
     # modify the calculation in three ways.  We want to scale it, add a
-    # polynomial background, and broaden the peaks. 
+    # polynomial background, and broaden the peaks.
     #
     # There is added benefit for defining these operations outside of the
     # IntensityGenerator. By combining the different parts of the calculation
@@ -439,7 +439,7 @@ def iofq(S, q):
 
 def getXScatteringFactor(el, q):
     """Get the x-ray scattering factor for an element over the q range.
-    
+
     If cctbx is not available, f(q) = 1 is used.
 
     """
@@ -497,7 +497,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
     # Multipy by a scale factor
     y *= scale
 
-    # Calculate the uncertainty 
+    # Calculate the uncertainty
     u = (y/nl)**0.5
 
     # And apply the noise

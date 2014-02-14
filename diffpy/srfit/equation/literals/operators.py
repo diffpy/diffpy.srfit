@@ -12,11 +12,11 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Operator classes. 
+"""Operator classes.
 
 Operators are combined with other Literals to create an equation. Operators are
 non-leaf nodes on a Literal tree. These trees can be evaluated by the Evaluator
-visitor, or otherwise inspected. 
+visitor, or otherwise inspected.
 
 The Operator class contains all the information necessary to be identified and
 evaluated by a Visitor. Thus, a single onOperator method exists in the Visitor
@@ -258,7 +258,7 @@ class UFuncOperator(Operator):
 
     The name and symbol attributes are set equal to the ufunc.__name__
     attribute. nin and nout are also taken from the ufunc.
-    
+
     """
 
     def __init__(self, op):

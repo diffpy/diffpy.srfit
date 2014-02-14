@@ -35,7 +35,7 @@ def getArgs(literal, getconsts = True):
                     are also retrieved.
 
     Returns a list of Arguments searched for depth-first.
-    
+
     """
     v = ArgFinder(getconsts)
     return literal.identify(v)

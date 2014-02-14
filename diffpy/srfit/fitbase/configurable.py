@@ -12,9 +12,9 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Configurable class. 
+"""Configurable class.
 
-A Configurable has state of which a FitRecipe must be aware. 
+A Configurable has state of which a FitRecipe must be aware.
 
 """
 __all__ = ["Configurable"]
@@ -23,7 +23,7 @@ __all__ = ["Configurable"]
 class Configurable(object):
     """Configurable class.
 
-    A Configurable has state of which a FitRecipe must be aware. 
+    A Configurable has state of which a FitRecipe must be aware.
 
     Attributes
     _configobjs     --  Set of Configureables in a hierarcy or instances.
@@ -35,7 +35,7 @@ class Configurable(object):
     def __init__(self):
         self._configobjs = set()
         return
-    
+
     def _updateConfiguration(self):
         """Notify Configurables in hierarchy of configuration change."""
         for obj in self._configobjs:

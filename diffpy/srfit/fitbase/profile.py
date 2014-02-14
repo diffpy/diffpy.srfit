@@ -244,8 +244,8 @@ class Profile(Observable, Validatable):
     def loadtxt(self, *args, **kw):
         """Use numpy.loadtxt to load data.
 
-        Arguments are passed to numpy.loadtxt. 
-        unpack = True is enforced. 
+        Arguments are passed to numpy.loadtxt.
+        unpack = True is enforced.
         The first two arrays returned by numpy.loadtxt are assumed to be x and
         y.  If there is a third array, it is assumed to by dy. Any other arrays
         are ignored. These are passed to setObservedProfile.
@@ -279,7 +279,7 @@ class Profile(Observable, Validatable):
     def savetxt(self, fname, fmt='%.18e', delimiter=' '):
         """Call numpy.savetxt with x, ycalc, y, dy
 
-        Arguments are passed to numpy.savetxt. 
+        Arguments are passed to numpy.savetxt.
 
         """
         x = self.x
@@ -316,7 +316,7 @@ class Profile(Observable, Validatable):
         This validates that x, y, and dy are the same length.
 
         Raises AttributeError if validation fails.
-        
+
         """
         if None in [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs]:
             raise AttributeError("Missing data")
@@ -336,7 +336,7 @@ def rebinArray(A, xold, xnew):
     xnew    --  New sampling array
 
     This uses cubic spline interpolation.
-    
+
     Returns: A new array over the new sampling array.
 
     """

@@ -21,7 +21,7 @@ class.  ProfileGenerators are usually used to organize profile calculators that
 require more information than can be conveniently passed into a function call,
 but can be used for simple calculations as well.  The GaussianGenerator class
 is an example of a ProfileGenerator that can be used by a FitContribution to
-help generate a the profile. 
+help generate a the profile.
 
 Instructions
 
@@ -63,7 +63,7 @@ class GaussianGenerator(ProfileGenerator):
     Parameters for the calculation, and the __call__ method to generate the
     signal.
 
-    
+
     """
 
     def __init__(self, name):
@@ -133,9 +133,9 @@ def makeRecipe():
 
     ## The ProfileGenerator
     # Create a GaussianGenerator named "g". This will be the name we use to
-    # refer to the generator from within the FitContribution equation.  
+    # refer to the generator from within the FitContribution equation.
     generator = GaussianGenerator("g")
-    
+
     ## The FitContribution
     # Create a FitContribution that will associate the Profile with the
     # GaussianGenerator.  The GaussianGenerator will be accessible as an
@@ -153,7 +153,7 @@ def makeRecipe():
     # Specify which Parameters we want to vary in the fit.  This will add
     # Variables to the FitRecipe that directly modify the Parameters of the
     # FitContribution.
-    # 
+    #
     # We create a variable for each Parameter of the GaussianGenerator. Note
     # that the Parameters belong to the GaussianGenerator, not the
     # FitContribution as in gaussianrecipe.py. We initialize parameters as in

@@ -41,23 +41,23 @@ def makeRecipe(molecule, datname):
     profile.setCalculationRange(xmin=1.2, xmax=8)
 
     ## The ProfileGenerator
-    # Create a DebyePDFGenerator named "G". 
+    # Create a DebyePDFGenerator named "G".
     generator = DebyePDFGenerator("G")
     generator.setStructure(molecule)
     # These are metadata needed by the generator
     generator.setQmin(0.68)
     generator.setQmax(22)
-    
+
     ## The FitContribution
     contribution = FitContribution("bucky")
     contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname = "r")
 
-    # Make a FitRecipe. 
+    # Make a FitRecipe.
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    # Specify which parameters we want to refine. 
+    # Specify which parameters we want to refine.
     c60 = generator.phase
 
     # We're not going to refine the ADPs. However, every atom must have a
@@ -126,7 +126,7 @@ def groupAnneal(recipe, groups):
     [1] RL McGreevy and L Pusztai, Reverse Monte Carlo Simulation: A New
         Technique for the Determination of Disordered Structures, Molecular
         Simulation 1, 359-367, 1988
-    
+
     """
     from scipy.optimize import anneal
 
@@ -151,7 +151,7 @@ def groupAnneal(recipe, groups):
     recipe.fix("all")
 
     while 1:
-        
+
         if niter >= maxiter:
             print "*** Maximum interations exceeded ***"
             return
@@ -189,7 +189,7 @@ def groupAnneal(recipe, groups):
         if not niter%dwell:
             T = T0 / numpy.log(10 + niter * 1.0 / dwell)
         print "T =", T
-        if out[5]: 
+        if out[5]:
             print "move accepted"
             reject = 0
         else:
@@ -216,7 +216,7 @@ def main():
     molecule = makeC60()
     recipe = makeRecipe(molecule, "data/C60.gr")
     recipe.fithooks[0].verbose = 0
-    
+
     # Optimize
     # Group related atomic positions for the optimizer
     parlist = [getXYZNames(i) for i in xrange(60)]

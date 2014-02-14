@@ -61,7 +61,7 @@ def makeRecipe(niciffile, siciffile, datname):
     # ObjCrystCrystalParSets, the space group constraints are automatically
     # applied to each phase. We must selectively vary the free parameters.
     #
-    # First the nickel parameters. 
+    # First the nickel parameters.
     # Note that ni is the name of the PDFGenerator that was automatically
     # created by the PDFContribution. We selected this name in addStructure
     # above.

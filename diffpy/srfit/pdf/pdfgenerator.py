@@ -68,7 +68,7 @@ class PDFGenerator(BasePDFGenerator):
 
     def __init__(self, name = "pdf"):
         """Initialize the generator.
-        
+
         """
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(PDFCalculator())
@@ -78,7 +78,7 @@ class PDFGenerator(BasePDFGenerator):
         """Set the qmin value.
 
         This has no effect on the crystal PDF.
-        
+
         """
         # This is overloaded here so that the qmin value does not get
         # propagated to the calculator.

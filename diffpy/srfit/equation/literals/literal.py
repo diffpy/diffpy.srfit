@@ -16,7 +16,7 @@
 
 Literals are base pieces of the equation hierarchy. The 'identify' method
 identifies the Literal to a visitor by calling the identifying method of the
-vistior. 
+vistior.
 
 """
 
@@ -34,7 +34,7 @@ class Literal(Observable,LiteralABC):
     name    --  A name for this Literal (default None).
     _value  --  The value of the Literal.
 
-    """ 
+    """
 
     name = None
     _value = None

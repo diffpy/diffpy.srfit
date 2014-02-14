@@ -16,7 +16,7 @@
 """Import abc module for python2.6 or before.
 
 This imports the abc module in python > 2.6, or a modified abc module for
-earlier python versions. If the modified abc module is used, 
+earlier python versions. If the modified abc module is used,
 
 isinstance and issubclass are redefined here so that ABCs can be used in python
 < 2.6. To assure backwards compatibility, import these methods from this

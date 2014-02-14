@@ -63,7 +63,7 @@ def makeRecipe():
     defined within a FitRecipe instance. The job of a FitRecipe is to collect
     and associate all the data, the fitting equations, fitting variables,
     constraints and restrations. We will demonstrate each of these within the
-    code. 
+    code.
 
     Data is held within a Profile object. The Profile is simply a container
     that holds the data, and the theoretical profile once it has been
@@ -77,9 +77,9 @@ def makeRecipe():
     equation (the 'debye' function defined below) is so simple. The
     FitContribution also defines the residual function to optimize for the
     data/equation pair. This can be modified, but we won't do that here.
-    
+
     """
-        
+
     ## The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
@@ -91,7 +91,7 @@ def makeRecipe():
     profile.setObservedProfile(x, y, dy)
 
     ## The FitContribution
-    # The FitContribution associates the profile with the Debye function. 
+    # The FitContribution associates the profile with the Debye function.
     contribution = FitContribution("pb")
     # Tell the contribution about the Profile. We will need to use the
     # independent variable (the temperature) from the data to calculate the
@@ -112,7 +112,7 @@ def makeRecipe():
     # Now we can create the fitting equation. We want to extend the 'debye'
     # equation by adding a vertical offset. We could wrap 'debye' in a new
     # function with an offset, and register that instead of 'debye', but what
-    # we do here is easier. 
+    # we do here is easier.
     #
     # When we set the fitting equation, we do not need to specify the
     # Parameters to the 'debye' function since the FitContribution already

@@ -78,7 +78,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # Tell the neutron PDFGenerator to use the phase from the x-ray
     # PDFGenerator.
     ngenerator = PDFGenerator("G") ngenerator.setPhase(xgenerator.phase)
-    
+
     ## The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
     xcontribution = FitContribution("xnickel")
@@ -98,7 +98,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # chi^2 residual is proportional to 1 / uncertainty**2. The neutron has no
     # uncertainty, so it's chi^2 is proportional to 1. Thus, my optimizing
     # chi^2 we would give the neutron data practically no weight in the fit. To
-    # get around this, we will optimize a different metric. 
+    # get around this, we will optimize a different metric.
     #
     # The contribution's residual can be either chi^2, Rw^2, or custom crafted.
     # In this case, we should minimize Rw^2 of each contribution so that each
@@ -121,7 +121,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     delta2 = recipe.newVar("delta2", 2)
     recipe.constrain(xgenerator.delta2, delta2)
     recipe.constrain(ngenerator.delta2, delta2)
-    
+
     # We only need to constrain phase properties once since there is a single
     # ObjCrystCrystalParSet for the Crystal.
     phase = xgenerator.phase

@@ -12,12 +12,12 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""FitContribution class. 
+"""FitContribution class.
 
 FitContributions generate a residual function for a FitRecipe. A
 FitContribution associates an Equation for generating a signal, optionally one
 or more ProfileGenerators or Calculators that help in this, and a Profile that
-holds the observed and calculated signals.  
+holds the observed and calculated signals.
 
 See the examples in the documention for how to use a FitContribution.
 
@@ -77,7 +77,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         self._generators = {}
         self._manage(self._generators)
         return
-    
+
     def setProfile(self, profile, xname = None, yname = None, dyname = None):
         """Assign the Profile for this FitContribution.
 
@@ -137,7 +137,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         name of the ProfileGenerator used for attribute access.
         FitContributions should not share ProfileGenerator instances. Different
         ProfileGenerators can share Parameters and ParameterSets, however.
-        
+
         Calling addProfileGenerator sets the profile equation to call the
         calculator and if there is not a profile equation already.
 
@@ -158,7 +158,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         self._eqfactory.registerOperator(name, gen)
         self._addObject(gen, self._generators, True)
 
-        # If we have a profile, set the profile of the generator. 
+        # If we have a profile, set the profile of the generator.
         if self.profile is not None:
             gen.setProfile(self.profile)
 
@@ -184,7 +184,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
                     FitContribution.
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not registered (default {}).
-        
+
         Raises ValueError if ns uses a name that is already used for a
         variable.
 
@@ -260,7 +260,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
 
         The residual equation can be changed with the setResidualEquation
         method.
-        
+
         """
         # Assign the calculated profile
         self.profile.ycalc = self._eq()
@@ -281,7 +281,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         This validates _reseq and residual.
 
         Raises AttributeError if validation fails.
-        
+
         """
         self.profile._validate()
         ParameterSet._validate(self)

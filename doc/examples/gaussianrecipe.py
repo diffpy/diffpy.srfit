@@ -17,7 +17,7 @@
 This is an example of building a fit recipe that can be driven by an optimizer
 to fit a Gaussian profile to simulated data.  The purpose of this example is
 familiarize the developer with the objects involved in defining a SrFit
-refinement recipe. 
+refinement recipe.
 
 Instructions
 
@@ -61,7 +61,7 @@ def main():
 
     # Get the results in a FitResults object. The FitResults object stores the
     # current state of the recipe, and uses it to calculate useful statistics
-    # about the fit.  
+    # about the fit.
     res = FitResults(recipe)
 
     # Print the results.
@@ -83,12 +83,12 @@ def makeRecipe():
     function and the initial variable values that an optimizer can use to
     refine the variables to minimize the disagreement between the calculated
     profile and the data.
-    
+
     Once we define the FitRecipe, we can send it an optimizer to be optimized.
     See the 'scipyOptimize' function.
-    
+
     """
-        
+
     ## The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
@@ -138,7 +138,7 @@ def makeRecipe():
     # Specify which Parameters we want to vary in the fit.  This will add
     # Variables to the FitRecipe that directly modify the Parameters of the
     # FitContribution.
-    # 
+    #
     # Here we create a Variable for the 'A' Parameter from our fit equation.
     # The resulting Variable will be named 'A' as well, but it will be accessed
     # via the FitRecipe.

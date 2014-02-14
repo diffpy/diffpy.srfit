@@ -25,7 +25,7 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 
 __all__ = ["constrainAsSpaceGroup"]
 
-def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None, 
+def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
         sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
         adpsymbols = stdUsymbols, isosymbol = "Uiso"):
     """Constrain the structure to the space group.
@@ -60,7 +60,7 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
     scatterers, lattice or ADPs if they are to be constrained.
 
     The lattice constraints are applied as following.
-    
+
     Crystal System:
     Triclinic       --  No constraints.
     Monoclinic      --  alpha and beta are fixed to 90 unless alpha != beta and
@@ -86,7 +86,7 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
 
     return sgp
 
-def _constrainAsSpaceGroup(phase, sg, scatterers = None, 
+def _constrainAsSpaceGroup(phase, sg, scatterers = None,
         sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
         adpsymbols = stdUsymbols, isosymbol = "Uiso"):
     """Restricted interface to constrainAsSpaceGroup.
@@ -255,7 +255,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
     def _makeConstraints(self):
         """Constrain the structure to the space group.
-        
+
         This works as described by the constrainAsSpaceGroup method.
 
         """
@@ -361,7 +361,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         """Constrain the positions.
 
         positions   --  The coordinates of the scatterers.
-        
+
         """
 
         sg = self.sg
@@ -399,7 +399,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         """Constrain the ADPs.
 
         positions   --  The coordinates of the scatterers.
-        
+
         """
 
         if not self.constrainadps: return
@@ -493,7 +493,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         par     --  Parameter to constrain
         idx     --  Index to identify scatterer from which par comes
-        
+
         """
         newpar = ParameterProxy(parname, par)
         self.addParameter(newpar)
@@ -513,7 +513,7 @@ def _constrainTriclinic(lattice):
 
 def _constrainMonoclinic(lattice):
     """Make constraints for Monoclinic systems.
-    
+
     alpha and beta are fixed to 90 unless alpha != beta and alpha == gamma, in
     which case alpha and gamma are constrained to 90.
 
@@ -533,7 +533,7 @@ def _constrainMonoclinic(lattice):
 
 def _constrainOrthorhombic(lattice):
     """Make constraints for Orthorhombic systems.
-    
+
     alpha, beta and gamma are constrained to 90
 
     """
@@ -622,7 +622,7 @@ def _constrainCubic(lattice):
 _constraintMap = {
   "Triclinic"  : _constrainTriclinic,
   "Monoclinic" : _constrainMonoclinic,
-  "Orthorhombic" : _constrainOrthorhombic, 
+  "Orthorhombic" : _constrainOrthorhombic,
   "Tetragonal" : _constrainTetragonal,
   "Trigonal"   : _constrainTrigonal,
   "Hexagonal"  : _constrainHexagonal,
@@ -639,7 +639,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
     ns          --  namespace to draw extra names from (default {})
 
     Returns the parameter if it is free.
-    
+
     """
     par = scatterer.get(parname)
 

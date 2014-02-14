@@ -69,7 +69,7 @@ class ProfileParser(object):
         None.
 
         This wipes out the currently loaded data and selected bank number.
-        
+
         Arguments
         patstring   --  A string containing the pattern
 
@@ -110,11 +110,11 @@ class ProfileParser(object):
 
     def selectBank(self, index):
         """Select which bank to use.
-        
+
         This method should only be called after the data has been parsed.  The
         chosen bank number is not persistent, and so must be re-selected if the
         parser is used to parse more data. This uses python list notation, so
-        index -n returns the nth bank from the end. 
+        index -n returns the nth bank from the end.
 
         Arguments:
         index  --  index of bank (integer, starting at 0).
@@ -122,7 +122,7 @@ class ProfileParser(object):
         Raises IndexError if requesting a bank that does not exist
 
         """
-        if index is None: 
+        if index is None:
             index = self._meta.get("bank", 0)
 
         numbanks = self.getNumBanks()
@@ -146,7 +146,7 @@ class ProfileParser(object):
         This method should only be called after the data has been parsed.  The
         chosen bank number is not persistent, and so must be re-selected if the
         parser is used to parse more data. This uses python list notation, so
-        index -n returns the nth bank from the end. 
+        index -n returns the nth bank from the end.
 
         Arguments:
         index  --   index of bank (integer, starting at 0, default None). If

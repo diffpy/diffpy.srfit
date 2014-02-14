@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Validatable class. 
+"""Validatable class.
 
 A Validatable has state that must be validated before a FitRecipe can first
 calculate the residual.

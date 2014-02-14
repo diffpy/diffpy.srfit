@@ -65,10 +65,10 @@ def makeRecipe(ciffile, datname):
     stru = Structure()
     stru.read(ciffile)
     generator.setStructure(stru)
-    
+
     ## The FitContribution
     # Here we associate the Profile and ProfileGenerator, as has been done
-    # before. 
+    # before.
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname = "r")

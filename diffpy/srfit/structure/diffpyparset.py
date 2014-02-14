@@ -77,7 +77,7 @@ class DiffpyAtomParSet(ParameterSet):
                     or ParameterProxy). Note that the Bij and Bji parameters
                     are the same. (Bij = 8*pi**2*Uij)
     Biso        --  Isotropic ADP (ParameterAdapter).
-    
+
     """
 
     def __init__(self, name, atom):
@@ -179,7 +179,7 @@ class DiffpyLatticeParSet(ParameterSet):
 
     Managed Parameters:
     a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterAdapter).
-    
+
     """
 
     def __init__(self, lattice):
@@ -228,7 +228,7 @@ class DiffpyStructureParSet(SrRealParSet):
                     starting from zero. Thus, for nickel in P1 symmetry, the
                     managed DiffpyAtomParSets will be named "Ni0", "Ni1", "Ni2"
                     and "Ni3".
-    
+
     """
 
     def __init__(self, name, stru):

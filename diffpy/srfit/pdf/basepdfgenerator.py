@@ -157,7 +157,7 @@ class BasePDFGenerator(ProfileGenerator):
 
     def setScatteringType(self, stype = "X"):
         """Set the scattering type.
-        
+
         stype   --   "X" for x-ray, "N" for neutron, "E" for electrons,
                      or any registered type from diffpy.srreal from
                      ScatteringFactorTable.getRegisteredTypes().
@@ -168,7 +168,7 @@ class BasePDFGenerator(ProfileGenerator):
         # update the meta dictionary only if there was no exception
         self.meta["stype"] = self.getScatteringType()
         return
-    
+
     def getScatteringType(self):
         """Get the scattering type. See 'setScatteringType'."""
         return self._calc.getRadiationType()
@@ -187,7 +187,7 @@ class BasePDFGenerator(ProfileGenerator):
         """Set the qmin value.
 
         This has no effect on the crystal PDF.
-        
+
         """
         self._calc.qmin = qmin
         self.meta["qmin"] = self.getQmin()
@@ -235,7 +235,7 @@ class BasePDFGenerator(ProfileGenerator):
         parset  --  A SrRealParSet that holds the structural information.
                     This can be used to share the phase between multiple
                     BasePDFGenerators, and have the changes in one reflect in
-                    another. 
+                    another.
         periodic -- The structure should be treated as periodic (default True).
                     Note that some structures do not support periodicity, in
                     which case this will be ignored.
@@ -267,7 +267,7 @@ class BasePDFGenerator(ProfileGenerator):
         This performs ProfileGenerator validations.
 
         Raises AttributeError if validation fails.
-        
+
         """
         if self._calc is None:
             raise AttributeError("_calc is None")

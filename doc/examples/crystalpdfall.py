@@ -79,7 +79,7 @@ def makeRecipe(ciffile_ni, ciffile_si, xdata_ni, ndata_ni, xdata_si,
 
     xgenerator_sini_si = PDFGenerator("xG_sini_si")
     xgenerator_sini_si.setPhase(phase_si)
-    
+
     ## The FitContributions
     # We one of these for each data set.
     xcontribution_ni = makeContribution("xnickel", xgenerator_ni, xprofile_ni)
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     recipe =  makeRecipe(ciffile_ni, ciffile_si, xdata_ni, ndata_ni, xdata_si,
             xdata_sini)
 
-    # Optimize 
+    # Optimize
     scipyOptimize(recipe)
 
     # Generate and print the FitResults

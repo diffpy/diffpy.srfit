@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""ParameterSet class. 
+"""ParameterSet class.
 
 ParameterSets organize Parameters, Constraints, Restraints and other
 ParameterSets. They provide attribute-access of other ParameterSets and
@@ -27,7 +27,7 @@ class ParameterSet(RecipeOrganizer):
     """Class for organizing Parameters and other ParameterSets.
 
     ParameterSets are hierarchical organizations of Parameters, Constraints,
-    Restraints and other ParameterSets. 
+    Restraints and other ParameterSets.
 
     Contained Parameters and other ParameterSets can be accessed by name as
     attributes in order to facilitate multi-level constraints and restraints.
@@ -76,7 +76,7 @@ class ParameterSet(RecipeOrganizer):
 
         parset  --  The ParameterSet to be stored.
 
-        Raises ValueError if the ParameterSet has no name.  
+        Raises ValueError if the ParameterSet has no name.
         Raises ValueError if the ParameterSet has the same name as some other
         managed object.
 

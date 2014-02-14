@@ -152,8 +152,8 @@ class SimpleRecipe(FitRecipe):
     def loadtxt(self, *args, **kw):
         """Use numpy.loadtxt to load data.
 
-        Arguments are passed to numpy.loadtxt. 
-        unpack = True is enforced. 
+        Arguments are passed to numpy.loadtxt.
+        unpack = True is enforced.
         The first two arrays returned by numpy.loadtxt are assumed to be x and
         y.  If there is a third array, it is assumed to by dy. Any other arrays
         are ignored. These are passed to setObservedProfile.
@@ -179,7 +179,7 @@ class SimpleRecipe(FitRecipe):
                     of 0.
         ns      --  A dictionary of Parameters, indexed by name, that are used
                     in the eqstr, but not registered (default {}).
-        
+
         Raises ValueError if ns uses a name that is already used for a
         variable.
 

@@ -147,7 +147,7 @@ class Equation(Operator):
 
     def __call__(self, *args, **kw):
         """Call the equation.
-        
+
         New Argument values are acceped as arguments or keyword assignments (or
         both).  The order of accepted arguments is given by the args
         attribute.  The Equation will remember values set in this way.

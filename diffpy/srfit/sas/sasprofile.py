@@ -59,9 +59,9 @@ class SASProfile(Profile):
 
     def __init__(self, datainfo):
         """Initialize the attributes.
-        
+
         datainfo   --  The DataInfo object this wraps.
-        
+
         """
         self._datainfo = datainfo
         Profile.__init__(self)

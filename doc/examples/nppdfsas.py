@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of combining PDF and SAS nanoparticles data. 
+"""Example of combining PDF and SAS nanoparticles data.
 
 This is an example of using both PDF and SAS data in the same fit. This fits a
 crystal model to the PDF while fitting a shape model to both the SAS profile
@@ -42,7 +42,7 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     The fit I(q) is fed into the calculation of G(r), which provides feedback
     for the fit parameters of both.
-    
+
     """
 
     # Create a PDF contribution as before

@@ -90,12 +90,12 @@ class TagManager(object):
         """Get all tags on an object.
 
         Returns list
-        
+
         """
         tags = [k for (k, v) in self._tagdict.iteritems() if obj in v]
         return tags
 
-    
+
     def hasTags(self, obj, *tags):
         """Determine if an object has all passed tags.
 
@@ -143,7 +143,7 @@ class TagManager(object):
 
         Raises KeyError if a passed tag does not exist. This ignores
         self.silent.
-        
+
         """
         keys = self._tagdict.keys()
         for tag in tags:

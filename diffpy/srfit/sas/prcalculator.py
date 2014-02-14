@@ -36,7 +36,7 @@ class PrCalculator(Calculator):
     form factor (characteristic function) for nanoparticle PDF refinements. For
     a crystal-like nanoparticle:
     Gnano(r) = f(r)Gcrystal(r),
-    where f(r) is the nanoparticle form factor. 
+    where f(r) is the nanoparticle form factor.
     This is obtained from P(r) as
     P(r) = 4 pi r**2 f(r).
 
@@ -58,7 +58,7 @@ class PrCalculator(Calculator):
         """Initialize the generator.
 
         name        --  A name for the PrCalculator
-        
+
         """
         Calculator.__init__(self, name)
 
@@ -94,7 +94,7 @@ class PrCalculator(Calculator):
 
 class CFCalculator(PrCalculator):
     """A class for calculating the characteristic function (CF) from data.
-    
+
     This calculator produces
     f(r) = P(r) / 4 pi r**2
     which is the nanoparticle form factor scaled by density.

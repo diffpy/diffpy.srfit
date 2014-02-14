@@ -50,7 +50,7 @@ def makeRecipe(datname):
 
     ## The FitContribution
     # Here we associate the Profile and ProfileGenerator, as has been done
-    # before. 
+    # before.
     contribution = FitContribution("ellipsoid")
     contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname = "q")
@@ -77,7 +77,7 @@ def makeRecipe(datname):
     recipe.addVar(generator.radius_a, 50)
     recipe.addVar(generator.radius_b, 500)
     recipe.addVar(generator.background, 0)
-    
+
     # Give the recipe away so it can be used!
     return recipe
 

@@ -17,10 +17,10 @@
 This will adapt a Crystal or Molecule object from pyobjcryst into the
 ParameterSet interface. The following classes are adapted.
 
-ObjCrystCrystalParSet   --  Adapter for pyobjcryst.crystal.Crystal 
-ObjCrystAtomParSet      --  Adapter for pyobjcryst.atom.Atom    
+ObjCrystCrystalParSet   --  Adapter for pyobjcryst.crystal.Crystal
+ObjCrystAtomParSet      --  Adapter for pyobjcryst.atom.Atom
 ObjCrystMoleculeParSet  --  Adapter for pyobjcryst.molecule.Molecule
-ObjCrystMolAtomParSet   --  Adapter for pyobjcryst.molecule.MolAtom 
+ObjCrystMolAtomParSet   --  Adapter for pyobjcryst.molecule.MolAtom
 
 Related to the adaptation of Molecule and MolAtom, there are adaptors for
 specifying molecule restraints.
@@ -67,7 +67,7 @@ class ObjCrystScattererParSet(ParameterSet):
     x, y, z     --  Scatterer position in crystal coordinates (ParameterWraper)
     occ         --  Occupancy of the scatterer on its crystal site
                     (ParameterWraper)
-    
+
     """
 
     def __init__(self, name, scat, parent):
@@ -120,7 +120,7 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
                 --  Anisotropic displacement factor for scatterer
                 (ParameterAdapter or ParameterProxy). Note that the Bij and Bji
                 parameters are the same.
-    
+
     """
 
     def __init__(self, name, atom, parent):
@@ -182,7 +182,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
     occ         --  Occupancy of the molecule on its crystal location
                     (ParameterAdapter)
     q0, q1, q2, q3  --  Orientational quaternion (ParameterAdapter)
-    
+
     Other attributes are inherited from
     diffpy.srfit.fitbase.parameterset.ParameterSet
 
@@ -236,7 +236,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         """Set this structure to use symmetry.
 
         This structure object does not support symmetry.
-        
+
         """
         return
 
@@ -618,7 +618,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
                 --  Anisotropic displacement factor for scatterer
                 (ParameterAdapter or ParameterProxy). Note that the Bij and Bji
                 parameters are the same.
-    
+
     """
 
     def __init__(self, name, scat, parent):
@@ -703,7 +703,7 @@ class ObjCrystMoleculeRestraint(object):
 
         w   --  The point-average chi^2 which is optionally used to scale the
                 penalty (default 1.0).
-        
+
         """
         penalty = self.res.GetLogLikelihood()
         if self.scaled:
@@ -889,7 +889,7 @@ class StretchModeParameter(Parameter):
 
     def __init__(self, name, value = None, const = False):
         """Initialization.
-        
+
         name    --  The name of this Parameter (must be a valid attribute
                     identifier)
         value   --  The initial value of this Parameter (default 0).
@@ -897,7 +897,7 @@ class StretchModeParameter(Parameter):
                     pi).
 
         Raises ValueError if the name is not a valid attribute identifier
-        
+
         """
         Parameter.__init__(self, name, value, const)
         self.keepcenter = True
@@ -987,7 +987,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
     effect on the residual. It is best practice to either modify MolAtom
     positions directly, or thorough BondLengthParameters, BondAngleParameters
     and DihedralAngleParameters (which are mutually orthogonal).
-    
+
     Note that by making a ObjCrystBondLengthParameter constant it also makes
     the underlying ObjCrystMolAtomParSets constant. When setting it as
     nonconstant, each ObjCrystMolAtomParSet is set nonconstant.  Changing the
@@ -1096,7 +1096,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
 
 
 # End class ObjCrystBondLengthParameter
-                     
+
 class ObjCrystBondAngleParameter(StretchModeParameter):
     """Class for abstracting a bond angle in a Molecule to a Parameter.
 
@@ -1214,7 +1214,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         return self._value
 
 # End class ObjCrystBondAngleParameter
-                     
+
 class ObjCrystDihedralAngleParameter(StretchModeParameter):
     """Class for abstracting a dihedral angle in a Molecule to a Parameter.
 

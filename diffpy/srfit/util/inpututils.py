@@ -24,7 +24,7 @@ def inputToString(inpt):
     This is useful when you want a method to accept a string, open file object
     or file name.
 
-    inpt    --  An open file-like object, name of a file 
+    inpt    --  An open file-like object, name of a file
                 or a string containing the input.
 
     Returns the input in a string

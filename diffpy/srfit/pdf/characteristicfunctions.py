@@ -39,16 +39,16 @@ from diffpy.srfit.fitbase.calculator import Calculator
 
 def sphericalCF(r, psize):
     """Spherical nanoparticle characteristic function.
-    
+
     r       --  distance of interaction
     psize   --  The particle diameter
-    
-    From Kodama et al., Acta Cryst. A, 62, 444-453 
+
+    From Kodama et al., Acta Cryst. A, 62, 444-453
     (converted from radius to diameter)
 
     """
     f = numpy.zeros(numpy.shape(r), dtype=float)
-    if psize > 0: 
+    if psize > 0:
         x = numpy.array(r, dtype=float) / psize
         inside = (x < 1.0)
         xin = x[inside]
@@ -76,17 +76,17 @@ def spheroidalCF2(r, psize, axrat):
     """Spheroidal nanoparticle characteristic function.
 
     Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)
-    
+
     r      --  distance of interaction
     psize  --  The equatorial diameter
     axrat  --  The ratio of axis lengths
 
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
-    
+
     """
     pelpt = 1.0 * axrat
 
-    if psize <= 0 or pelpt <= 0: 
+    if psize <= 0 or pelpt <= 0:
         return numpy.zeros_like(r)
 
     # to simplify the equations
@@ -95,7 +95,7 @@ def spheroidalCF2(r, psize, axrat):
     d2 = d*d
     v2 = v*v
 
-    if v == 1: 
+    if v == 1:
         return sphericalCF(r, psize)
 
     rx = r
@@ -142,24 +142,24 @@ def spheroidalCF2(r, psize, axrat):
 def lognormalSphericalCF(r, psize, psig):
     """Spherical nanoparticle characteristic function with lognormal size
     distribution.
-    
+
     r      --  distance of interaction
     psize  --  The mean particle diameter
     psig   --  The log-normal width of the particle diameter
-    
+
     Here, r is the independent variable, mu is the mean of the distrubution
     (not of the particle size), and s is the width of the distribution. This is
     the characteristic function for the lognormal distribution of particle
     diameter:
-    
+
     F(r, mu, s) = 0.5*Erfc((-mu-3*s^2+Log(r))/(sqrt(2)*s))
                + 0.25*r^3*Erfc((-mu+Log(r))/(sqrt(2)*s))*exp(-3*mu-4.5*s^2)
                - 0.75*r*Erfc((-mu-2*s^2+Log(r))/(sqrt(2)*s))*exp(-mu-2.5*s^2)
-    
+
     The expectation value of the distribution gives the average particle
     diameter, psize. The variance of the distribution gives psig^2. mu and s
     can be expressed in terms of these as:
-    
+
     s^2 = log((psig/psize)^2 + 1)
     mu = log(psize) - s^2/2
 
@@ -181,10 +181,10 @@ def lognormalSphericalCF(r, psize, psig):
 
 def sheetCF(r, sthick):
     """Nanosheet characteristic function.
-    
+
     r       --  distance of interaction
     sthick  --  Thickness of nanosheet
-    
+
     From Kodama et al., Acta Cryst. A, 62, 444-453
 
     """
@@ -268,7 +268,7 @@ class SASCF(Calculator):
 
         name    --  A name for the SASCF
         model   --  SASModel object this adapts.
-        
+
         """
         Calculator.__init__(self, name)
 
@@ -297,14 +297,14 @@ class SASCF(Calculator):
         # equates to having a large qmax so that the Fourier transform is
         # finely spaced. We also want the calculation to be fast, so we pick
         # qmax such that the number of q-points is a power of 2. This allows us
-        # to use the fft. 
-        # 
+        # to use the fft.
+        #
         # The initial dr is somewhat arbitrary, but using dr = 0.01 allows for
         # the f(r) calculated from a particle of diameter 50, over r =
         # arange(1, 60, 0.1) to agree with the sphericalCF with Rw < 1e-4%.
         #
         # We also have to make a q-spacing small enough to compute out to at
-        # least the size of the signal. 
+        # least the size of the signal.
         dr = min(0.01, r[1] - r[0])
         ed = 2 * self._model.calculate_ER()
 

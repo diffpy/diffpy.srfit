@@ -50,7 +50,7 @@ class CCTBXScattererParSet(ParameterSet):
     occupancy   --  Occupancy of the atom on its crystal location
                     (ParameterAdapter)
     Uiso        --  Isotropic scattering factor (ParameterAdapter).
-    
+
     """
 
     def __init__(self, name, strups, idx):
@@ -84,7 +84,7 @@ class CCTBXScattererParSet(ParameterSet):
 
         def f(dummy):
             return self.strups.stru.scatterers()[self.idx].site[i]
-        
+
         return f
 
     def _xyzsetter(self, i):
@@ -120,11 +120,11 @@ class CCTBXScattererParSet(ParameterSet):
 
 class CCTBXUnitCellParSet(ParameterSet):
     """A wrapper for cctbx unit_cell object.
-    
+
     Attributes:
     name    --  Always "unitcell".
     a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterAdapter).
-    
+
     """
 
     def __init__(self, strups):
@@ -181,7 +181,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     stru        --  The adapted cctbx structure object.
     scatterers  --  The list of ScattererParSets.
     unitcell    --  The UnitCellParSet for the structure.
-    
+
     """
 
     def __init__(self, name, stru):

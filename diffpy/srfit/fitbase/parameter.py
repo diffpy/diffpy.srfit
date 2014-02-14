@@ -35,7 +35,7 @@ from diffpy.srfit.fitbase.validatable import Validatable
 
 class Parameter(_parameter_interface, Argument, Validatable):
     """Parameter class.
-    
+
     Attributes
     name    --  A name for this Parameter.
     const   --  A flag indicating whether this is considered a constant.
@@ -51,7 +51,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
     def __init__(self, name, value = None, const = False):
         """Initialization.
-        
+
         name    --  The name of this Parameter (must be a valid attribute
                     identifier)
         value   --  The initial value of this Parameter (default 0).
@@ -59,7 +59,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
                     pi).
 
         Raises ValueError if the name is not a valid attribute identifier
-        
+
         """
         self.constrained = False
         self.bounds = [-inf, inf]
@@ -127,7 +127,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         This validates that value is not None.
 
         Raises AttributeError if validation fails.
-        
+
         """
         if self.value is None:
             raise AttributeError("value of '%s' is None"%self.name)
@@ -136,8 +136,8 @@ class Parameter(_parameter_interface, Argument, Validatable):
 # End class Parameter
 
 class ParameterProxy(_parameter_interface, Validatable):
-    """A Parameter proxy for another parameter. 
-    
+    """A Parameter proxy for another parameter.
+
     This allows for the same parameter to have multiple names.
 
     Attributes
@@ -179,7 +179,7 @@ class ParameterProxy(_parameter_interface, Validatable):
         This validates that value and par are not None.
 
         Raises AttributeError if validation fails.
-        
+
         """
         if self.value is None:
             raise AttributeError("value is None")
@@ -264,7 +264,7 @@ class ParameterAdapter(Parameter):
         if ub is not None: self.bounds[1] = ub
 
         return self
-                    
+
 # End class ParameterAdapter
 
 # End of file

@@ -76,13 +76,13 @@ def makeRecipe(strufile, datname1, datname2):
     # DiffyStructureParSet.  This will assure that both ProfileGenerators are
     # using the exact same Parameters, and underlying Structure object in the
     # calculation of the profile.
-    generator1 = IntensityGenerator("I") 
+    generator1 = IntensityGenerator("I")
     generator1.setStructure(strufile)
     generator2 = IntensityGenerator("I")
     generator2.addParameterSet(generator1.phase)
-    
+
     ## The FitContributions
-    # Create the FitContributions. 
+    # Create the FitContributions.
     contribution1 = FitContribution("bucky1")
     contribution1.addProfileGenerator(generator1)
     contribution1.setProfile(profile1, xname = "q")

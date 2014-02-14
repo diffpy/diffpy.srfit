@@ -40,7 +40,7 @@ def makeRecipe(ciffile, datname):
     stru = Structure()
     stru.read(ciffile)
     contribution.addStructure("nickel", stru)
-    
+
     ## Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
     recipe.addContribution(contribution)

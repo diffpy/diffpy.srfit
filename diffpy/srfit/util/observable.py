@@ -15,7 +15,7 @@ __all__ = ["Observable"]
 class Observable(object):
     """
     Provide notification support for classes that maintain dynamic associations with multiple
-    clients. 
+    clients.
 
     Observers, i.e. clients of the observable, register event handlers that will be invoked to
     notify them whenever something interesting happens to the observable. The nature of what is
@@ -31,7 +31,7 @@ class Observable(object):
       addObserver: registers its callable argument with the list of handlers to invoke
       removeObserver: remove an event handler from the list of handlers to invoke
       notify: invoke the registered handlers in the order in which they were registered
-    
+
     """
 
 
@@ -45,7 +45,7 @@ class Observable(object):
             callable(self)
 
         return
-            
+
 
     # callback management
     def addObserver(self, callable):
@@ -73,6 +73,6 @@ class Observable(object):
 
     # private data
     _observers = None
-    
 
-# end of file 
+
+# end of file

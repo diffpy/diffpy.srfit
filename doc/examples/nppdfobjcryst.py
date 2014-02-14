@@ -40,19 +40,19 @@ def makeRecipe(molecule, datname):
     profile.setCalculationRange(xmin=1.2, xmax=8)
 
     ## The ProfileGenerator
-    # Create a DebyePDFGenerator named "G". 
+    # Create a DebyePDFGenerator named "G".
     generator = DebyePDFGenerator("G")
     generator.setStructure(molecule)
     # These are metadata needed by the generator
     generator.setQmin(0.68)
     generator.setQmax(22)
-    
+
     ## The FitContribution
     contribution = FitContribution("bucky")
     contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname = "r")
 
-    # Make a FitRecipe. 
+    # Make a FitRecipe.
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
@@ -137,7 +137,7 @@ def main():
     recipe = makeRecipe(molecule, "data/C60.gr")
     # Tell the fithook that we want very verbose output.
     recipe.fithooks[0].verbose = 3
-    
+
     # Optimize
     from scipy.optimize import leastsq
     leastsq(recipe.residual, recipe.getValues())

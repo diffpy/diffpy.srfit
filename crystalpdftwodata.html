@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>crystalpdftwodata.py &mdash; SrFit 1.0b1.dev-15 documentation</title>
+    <title>crystalpdftwodata.py &mdash; SrFit 1.0b2-6 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.0b1.dev-15',
+        URL_ROOT:    './',
+        VERSION:     '1.0b2-6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b1.dev-15 documentation" href="index.html" />
+    <link rel="top" title="SrFit 1.0b2-6 documentation" href="index.html" />
     <link rel="up" title="Examples" href="examples.html" />
     <link rel="next" title="crystalpdfall.py" href="crystalpdfall.html" />
     <link rel="prev" title="simplepdftwophase.py" href="simplepdftwophase.html" /> 
@@ -44,7 +42,7 @@
         <li class="right" >
           <a href="simplepdftwophase.html" title="simplepdftwophase.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SrFit 1.0b1.dev-15 documentation</a> &raquo;</li>
+        <li><a href="index.html">SrFit 1.0b2-6 documentation</a> &raquo;</li>
           <li><a href="examples.html" accesskey="U">Examples</a> &raquo;</li> 
       </ul>
     </div>  
@@ -56,7 +54,7 @@
             
   <div class="section" id="crystalpdftwodata-py">
 <span id="id1"></span><h1>crystalpdftwodata.py<a class="headerlink" href="#crystalpdftwodata-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python"><pre>#!/usr/bin/env python
+<div class="highlight-python"><div class="highlight"><pre>#!/usr/bin/env python
 ########################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
@@ -70,14 +68,14 @@
 # See LICENSE.txt for license information.
 #
 ########################################################################
-"""Example of a PDF refinement of two-phase structure.
+&quot;&quot;&quot;Example of a PDF refinement of two-phase structure.
 
 This example uses PDFGenerator to refine a single structure two profiles.
 This will require setting up two FitContribution, each with its own
 PDFGenerator. However, the PDFGenerators will refer to the same underlying
 ObjCrystCrystalParSet.
 
-"""
+&quot;&quot;&quot;
 
 import numpy
 
@@ -94,7 +92,7 @@ from crystalpdf import plotResults
 ####### Example Code
 
 def makeRecipe(ciffile, xdatname, ndatname):
-    """Create a fitting recipe for crystalline PDF data."""
+    &quot;&quot;&quot;Create a fitting recipe for crystalline PDF data.&quot;&quot;&quot;
 
     ## The Profiles
     # We need a profile for each data set. This means that we will need two
@@ -115,18 +113,18 @@ def makeRecipe(ciffile, xdatname, ndatname):
 
     ## The ProfileGenerators
     # We need one of these for the x-ray data.
-    xgenerator = PDFGenerator("G")
+    xgenerator = PDFGenerator(&quot;G&quot;)
     stru = CreateCrystalFromCIF(file(ciffile))
     xgenerator.setStructure(stru)
 
     # And we need one for the neutron data. We want to refine the same
     # structure object in each PDFGenerator. This would suggest that we add the
     # same Crystal to each. However, if we do that then we will have two
-    # Parameters for each Crystal data member (two Parameters for the "a"
+    # Parameters for each Crystal data member (two Parameters for the &quot;a&quot;
     # lattice parameter, etc.), held in different ObjCrystCrystalParSets, each
     # managed by its own PDFGenerator. Thus, changes made to the Crystal
     # through one PDFGenerator will not be known to the other PDFGenerator
-    # since their ObjCrystCrystalParSets don't know about each other. The
+    # since their ObjCrystCrystalParSets don&#39;t know about each other. The
     # solution is to share ObjCrystCrystalParSets rather than Crystals. This
     # way there is only one Parameter for each Crystal data member. (An
     # alternative to this is to constrain each structure Parameter to be varied
@@ -135,17 +133,17 @@ def makeRecipe(ciffile, xdatname, ndatname):
     #
     # Tell the neutron PDFGenerator to use the phase from the x-ray
     # PDFGenerator.
-    ngenerator = PDFGenerator("G") ngenerator.setPhase(xgenerator.phase)
-    
+    ngenerator = PDFGenerator(&quot;G&quot;) ngenerator.setPhase(xgenerator.phase)
+
     ## The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
-    xcontribution = FitContribution("xnickel")
+    xcontribution = FitContribution(&quot;xnickel&quot;)
     xcontribution.addProfileGenerator(xgenerator)
-    xcontribution.setProfile(xprofile, xname = "r")
+    xcontribution.setProfile(xprofile, xname = &quot;r&quot;)
     # and the neutron objects in another.
-    ncontribution = FitContribution("nnickel")
+    ncontribution = FitContribution(&quot;nnickel&quot;)
     ncontribution.addProfileGenerator(ngenerator)
-    ncontribution.setProfile(nprofile, xname = "r")
+    ncontribution.setProfile(nprofile, xname = &quot;r&quot;)
 
     # This example is different than the previous ones in that we are composing
     # a residual function from other residuals (one for the x-ray contribution
@@ -154,15 +152,15 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # the fit. This is a problem in this case because the x-ray data has
     # uncertainty values associated with it (on the order of 1e-4), and the
     # chi^2 residual is proportional to 1 / uncertainty**2. The neutron has no
-    # uncertainty, so it's chi^2 is proportional to 1. Thus, my optimizing
+    # uncertainty, so it&#39;s chi^2 is proportional to 1. Thus, my optimizing
     # chi^2 we would give the neutron data practically no weight in the fit. To
-    # get around this, we will optimize a different metric. 
+    # get around this, we will optimize a different metric.
     #
-    # The contribution's residual can be either chi^2, Rw^2, or custom crafted.
+    # The contribution&#39;s residual can be either chi^2, Rw^2, or custom crafted.
     # In this case, we should minimize Rw^2 of each contribution so that each
     # one can contribute roughly equally to the fit.
-    xcontribution.setResidualEquation("resv")
-    ncontribution.setResidualEquation("resv")
+    xcontribution.setResidualEquation(&quot;resv&quot;)
+    ncontribution.setResidualEquation(&quot;resv&quot;)
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()
@@ -170,16 +168,16 @@ def makeRecipe(ciffile, xdatname, ndatname):
     recipe.addContribution(ncontribution)
 
     # Now we vary and constrain Parameters as before.
-    recipe.addVar(xgenerator.scale, 1, "xscale")
-    recipe.addVar(ngenerator.scale, 1, "nscale")
-    recipe.addVar(xgenerator.qdamp, 0.01, "xqdamp")
-    recipe.addVar(ngenerator.qdamp, 0.01, "nqdamp")
+    recipe.addVar(xgenerator.scale, 1, &quot;xscale&quot;)
+    recipe.addVar(ngenerator.scale, 1, &quot;nscale&quot;)
+    recipe.addVar(xgenerator.qdamp, 0.01, &quot;xqdamp&quot;)
+    recipe.addVar(ngenerator.qdamp, 0.01, &quot;nqdamp&quot;)
     # delta2 is a non-structual material propery. Thus, we constrain together
     # delta2 Parameter from each PDFGenerator.
-    delta2 = recipe.newVar("delta2", 2)
+    delta2 = recipe.newVar(&quot;delta2&quot;, 2)
     recipe.constrain(xgenerator.delta2, delta2)
     recipe.constrain(ngenerator.delta2, delta2)
-    
+
     # We only need to constrain phase properties once since there is a single
     # ObjCrystCrystalParSet for the Crystal.
     phase = xgenerator.phase
@@ -190,7 +188,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     return recipe
 
 def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
+    &quot;&quot;&quot;Plot the results contained within a refined FitRecipe.&quot;&quot;&quot;
 
     # All this should be pretty familiar by now.
     names = recipe.getNames()
@@ -210,30 +208,30 @@ def plotResults(recipe):
 
     import pylab
     pylab.subplot(2, 1, 1)
-    pylab.plot(xr,xg,'bo',label="G(r) x-ray Data")
-    pylab.plot(xr,xgcalc,'r-',label="G(r) x-ray Fit")
-    pylab.plot(xr,xdiff,'g-',label="G(r) x-ray diff")
-    pylab.plot(xr,xdiffzero,'k-')
+    pylab.plot(xr,xg,&#39;bo&#39;,label=&quot;G(r) x-ray Data&quot;)
+    pylab.plot(xr,xgcalc,&#39;r-&#39;,label=&quot;G(r) x-ray Fit&quot;)
+    pylab.plot(xr,xdiff,&#39;g-&#39;,label=&quot;G(r) x-ray diff&quot;)
+    pylab.plot(xr,xdiffzero,&#39;k-&#39;)
     pylab.legend(loc=1)
 
     pylab.subplot(2, 1, 2)
-    pylab.plot(nr,ng,'bo',label="G(r) neutron Data")
-    pylab.plot(nr,ngcalc,'r-',label="G(r) neutron Fit")
-    pylab.plot(nr,ndiff,'g-',label="G(r) neutron diff")
-    pylab.plot(nr,ndiffzero,'k-')
-    pylab.xlabel("$r (\AA)$")
-    pylab.ylabel("$G (\AA^{-2})$")
+    pylab.plot(nr,ng,&#39;bo&#39;,label=&quot;G(r) neutron Data&quot;)
+    pylab.plot(nr,ngcalc,&#39;r-&#39;,label=&quot;G(r) neutron Fit&quot;)
+    pylab.plot(nr,ndiff,&#39;g-&#39;,label=&quot;G(r) neutron diff&quot;)
+    pylab.plot(nr,ndiffzero,&#39;k-&#39;)
+    pylab.xlabel(&quot;$r (\AA)$&quot;)
+    pylab.ylabel(&quot;$G (\AA^{-2})$&quot;)
     pylab.legend(loc=1)
 
     pylab.show()
     return
 
-if __name__ == "__main__":
+if __name__ == &quot;__main__&quot;:
 
     # Make the data and the recipe
-    ciffile = "data/ni.cif"
-    xdata = "data/ni-q27r60-xray.gr"
-    ndata = "data/ni-q27r100-neutron.gr"
+    ciffile = &quot;data/ni.cif&quot;
+    xdata = &quot;data/ni-q27r60-xray.gr&quot;
+    ndata = &quot;data/ni-q27r100-neutron.gr&quot;
 
     # Make the recipe
     recipe = makeRecipe(ciffile, xdata, ndata)
@@ -249,7 +247,7 @@ if __name__ == "__main__":
     plotResults(recipe)
 
 # End of file
-</pre>
+</pre></div>
 </div>
 </div>
 
@@ -299,13 +297,13 @@ if __name__ == "__main__":
         <li class="right" >
           <a href="simplepdftwophase.html" title="simplepdftwophase.py"
              >previous</a> |</li>
-        <li><a href="index.html">SrFit 1.0b1.dev-15 documentation</a> &raquo;</li>
+        <li><a href="index.html">SrFit 1.0b2-6 documentation</a> &raquo;</li>
           <li><a href="examples.html" >Examples</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Christopher L. Farrow, Pavol Juhás.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>
 </html>

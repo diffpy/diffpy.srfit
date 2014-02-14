@@ -38,7 +38,7 @@ database structure to aid post analysis. We will also support CIF input and
 output of structure models. SrFit will support user-specified analytic math
 functions and numerical algorithms for rapid prototyping of new ideas. A
 contingent item will be to support experimental feedback to the
-data-acquisition system. 
+data-acquisition system.
 
 Features
 -----------
@@ -71,7 +71,7 @@ Major changes since last release
  * Various interface changes.
 
    * pdfnpgenerator module renamed debyepdfgenerator.
-   * nanoformfactors module renamed characteristicfunctions.  
+   * nanoformfactors module renamed characteristicfunctions.
    * Form factors renamed from xyzFF to xyzCF.
    * Structure adapters renamed for clarification. The monikers "Structure" and
      "stru" are reserved for structure representations from outside of SrFit

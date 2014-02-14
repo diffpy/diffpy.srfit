@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Extending SrFit &mdash; SrFit 1.0b1.dev-15 documentation</title>
+    <title>Extending SrFit &mdash; SrFit 1.0b2-6 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.0b1.dev-15',
+        URL_ROOT:    './',
+        VERSION:     '1.0b2-6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b1.dev-15 documentation" href="index.html" />
+    <link rel="top" title="SrFit 1.0b2-6 documentation" href="index.html" />
     <link rel="prev" title="anneal.py" href="anneal.html" /> 
   </head>
   <body>
@@ -39,7 +37,7 @@
         <li class="right" >
           <a href="anneal.html" title="anneal.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SrFit 1.0b1.dev-15 documentation</a> &raquo;</li> 
+        <li><a href="index.html">SrFit 1.0b2-6 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -249,9 +247,9 @@ customized Profile is the <tt class="docutils literal"><span class="pre">SASProf
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datainfo</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize the attributes.</span>
-<span class="sd">        </span>
+
 <span class="sd">        datainfo   --  The DataInfo object this wraps.</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span> <span class="o">=</span> <span class="n">datainfo</span>
         <span class="n">Profile</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -362,7 +360,7 @@ and calculated BVS of a structure.</p>
 
 <span class="sd">        w   --  The point-average chi^2 which is optionally used to scale the</span>
 <span class="sd">                penalty (float, default 1.0).</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Get the bvms from the BVSCalculator</span>
         <span class="n">stru</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parset</span><span class="o">.</span><span class="n">_getSrRealStructure</span><span class="p">()</span>
@@ -381,7 +379,7 @@ and calculated BVS of a structure.</p>
         <span class="sd">&quot;&quot;&quot;This evaluates the calculator.</span>
 
 <span class="sd">        Raises AttributeError if validation fails.</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">nan</span>
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">penalty</span><span class="p">()</span>
@@ -537,12 +535,12 @@ be used in sequence during a call to <tt class="docutils literal"><span class="p
         <li class="right" >
           <a href="anneal.html" title="anneal.py"
              >previous</a> |</li>
-        <li><a href="index.html">SrFit 1.0b1.dev-15 documentation</a> &raquo;</li> 
+        <li><a href="index.html">SrFit 1.0b2-6 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Christopher L. Farrow, Pavol Juhás.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>
 </html>

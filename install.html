@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installing SrFit &mdash; SrFit 1.0b1.dev-15 documentation</title>
+    <title>Installing SrFit &mdash; SrFit 1.0b2-6 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.0b1.dev-15',
+        URL_ROOT:    './',
+        VERSION:     '1.0b2-6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b1.dev-15 documentation" href="index.html" />
+    <link rel="top" title="SrFit 1.0b2-6 documentation" href="index.html" />
     <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="Introduction" href="intro.html" /> 
   </head>
@@ -43,7 +41,7 @@
         <li class="right" >
           <a href="intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SrFit 1.0b1.dev-15 documentation</a> &raquo;</li> 
+        <li><a href="index.html">SrFit 1.0b2-6 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -98,22 +96,26 @@ administrator, Pavol Juhas.</p>
 </li>
 <li><p class="first">Solution: You might not be using the default system environment. While
 logged into a target workstation, type</p>
-<div class="highlight-python"><pre>echo $PYTHONPATH</pre>
+<div class="highlight-python"><div class="highlight"><pre>echo $PYTHONPATH
+</pre></div>
 </div>
 <p>in a command terminal to check the value of this environment variable. Make
 sure that the first entry in the output reads</p>
-<div class="highlight-python"><pre>/u24/local/bgPrefix/arch/x86_64/lib/python2.6/site-packages</pre>
+<div class="highlight-python"><div class="highlight"><pre>/u24/local/bgPrefix/arch/x86_64/lib/python2.6/site-packages
+</pre></div>
 </div>
 <p>Note that there may be several entries separated by colons &#8216;:&#8217;.
 Also check the value of the LD_LIBRARY_PATH variable. The first entry
 should be</p>
-<div class="highlight-python"><pre>/u24/local/bgPrefix/arch/x86_64/lib</pre>
+<div class="highlight-python"><div class="highlight"><pre>/u24/local/bgPrefix/arch/x86_64/lib
+</pre></div>
 </div>
 <p>If either of these entries is incorrect, reset the environment variables
 before running the examples. This can be done by typing the following into
 the command terminal</p>
-<div class="highlight-python"><pre>export PYTHONPATH=/u24/local/bgPrefix/arch/x86_64/lib/python2.6/site-packages
-export LD_LIBRARY_PATH=/u24/local/bgPrefix/arch/x86_64/lib</pre>
+<div class="highlight-python"><div class="highlight"><pre>export PYTHONPATH=/u24/local/bgPrefix/arch/x86_64/lib/python2.6/site-packages
+export LD_LIBRARY_PATH=/u24/local/bgPrefix/arch/x86_64/lib
+</pre></div>
 </div>
 </li>
 <li><p class="first">Problem: The examples run, but I get errors about the GdkCursor or the
@@ -232,12 +234,12 @@ for examples)</li>
         <li class="right" >
           <a href="intro.html" title="Introduction"
              >previous</a> |</li>
-        <li><a href="index.html">SrFit 1.0b1.dev-15 documentation</a> &raquo;</li> 
+        <li><a href="index.html">SrFit 1.0b2-6 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Christopher L. Farrow, Pavol Juhás.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>
 </html>

@@ -62,7 +62,7 @@ API
 ======================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    
    api/diffpy.srfit.rst
 

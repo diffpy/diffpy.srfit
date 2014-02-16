@@ -1,0 +1,641 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>util Package &mdash; SrFit 1.0b2-10 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0b2-10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b2-10 documentation" href="../index.html" />
+    <link rel="up" title="srfit Package" href="diffpy.srfit.html" />
+    <link rel="prev" title="tests Package" href="diffpy.srfit.tests.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.tests.html" title="tests Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" accesskey="U">srfit Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="util-package">
+<h1>util Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-diffpy.srfit.util"></span><p>Utilities used throughout SrFit.</p>
+</div>
+<div class="section" id="module-diffpy.srfit.util._abc">
+<span id="abc-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">_abc</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.util._abc" title="Permalink to this headline">¶</a></h2>
+<p>Abstract Base Classes (ABCs) according to PEP 3119.</p>
+<dl class="function">
+<dt id="diffpy.srfit.util._abc.abstractmethod">
+<tt class="descclassname">diffpy.srfit.util._abc.</tt><tt class="descname">abstractmethod</tt><big>(</big><em>funcobj</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util._abc.abstractmethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator indicating abstract methods.</p>
+<p>Requires that the metaclass is ABCMeta or derived from it.  A
+class that has a metaclass derived from ABCMeta cannot be
+instantiated unless all of its abstract methods are overridden.
+The abstract methods can be called using any of the the normal
+&#8216;super&#8217; call mechanisms.</p>
+<p>Usage:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd><p class="first">__metaclass__ = ABCMeta
+&#64;abstractmethod
+def my_abstract_method(self, ...):</p>
+<blockquote class="last">
+<div>...</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.util._abc.abstractproperty">
+<tt class="descclassname">diffpy.srfit.util._abc.</tt><tt class="descname">abstractproperty</tt><a class="headerlink" href="#diffpy.srfit.util._abc.abstractproperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator indicating abstract properties.</p>
+<p>Requires that the metaclass is ABCMeta or derived from it.  A
+class that has a metaclass derived from ABCMeta cannot be
+instantiated unless all of its abstract properties are overridden.
+The abstract properties can be called using any of the the normal
+&#8216;super&#8217; call mechanisms.</p>
+<p>Usage:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd><p class="first">__metaclass__ = ABCMeta
+&#64;abstractproperty
+def my_abstract_property(self):</p>
+<blockquote class="last">
+<div>...</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p>This defines a read-only property; you can also define a read-write
+abstract property using the &#8216;long&#8217; form of property declaration:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd>__metaclass__ = ABCMeta
+def getx(self): ...
+def setx(self, value): ...
+x = abstractproperty(getx, setx)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.util._abc.ABCMeta">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.util._abc.</tt><tt class="descname">ABCMeta</tt><a class="headerlink" href="#diffpy.srfit.util._abc.ABCMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">type</span></tt></p>
+<p>Metaclass for defining Abstract Base Classes (ABCs).</p>
+<p>Use this metaclass to create an ABC.  An ABC can be subclassed
+directly, and then acts as a mix-in class.  You can also register
+unrelated concrete classes (even built-in classes) and unrelated
+ABCs as &#8216;virtual subclasses&#8217; &#8211; these and their descendants will
+be considered subclasses of the registering ABC by the built-in
+issubclass() function, but the registering ABC won&#8217;t show up in
+their MRO (Method Resolution Order) nor will method
+implementations defined by the registering ABC be callable (not
+even via super()).</p>
+<dl class="method">
+<dt id="diffpy.srfit.util._abc.ABCMeta.register">
+<tt class="descname">register</tt><big>(</big><em>subclass</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util._abc.ABCMeta.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a virtual subclass of an ABC.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.util._ordereddict">
+<span id="ordereddict-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">_ordereddict</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.util._ordereddict" title="Permalink to this headline">¶</a></h2>
+<p>Backport from python2.7 to python &lt;= 2.6.</p>
+<dl class="class">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.util._ordereddict.</tt><tt class="descname">OrderedDict</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.fromkeys">
+<em class="property">classmethod </em><tt class="descname">fromkeys</tt><big>(</big><em>iterable</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.fromkeys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.items">
+<tt class="descname">items</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.keys">
+<tt class="descname">keys</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.pop">
+<tt class="descname">pop</tt><big>(</big><em>key</em>, <em>default=&lt;object object at 0x52c8330&gt;</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.pop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.popitem">
+<tt class="descname">popitem</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.popitem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>key</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.update">
+<tt class="descname">update</tt><big>(</big><em>other=()</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util._ordereddict.OrderedDict.values">
+<tt class="descname">values</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util._ordereddict.OrderedDict.values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.util.abcport">
+<span id="abcport-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">abcport</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.util.abcport" title="Permalink to this headline">¶</a></h2>
+<p>Import abc module for python2.6 or before.</p>
+<p>This imports the abc module in python &gt; 2.6, or a modified abc module for
+earlier python versions. If the modified abc module is used,</p>
+<p>isinstance and issubclass are redefined here so that ABCs can be used in python
+&lt; 2.6. To assure backwards compatibility, import these methods from this
+module rather than using the built-in isinstance and issubclass.</p>
+<dl class="class">
+<dt id="diffpy.srfit.util.abcport.ABCMeta">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.util.abcport.</tt><tt class="descname">ABCMeta</tt><a class="headerlink" href="#diffpy.srfit.util.abcport.ABCMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">type</span></tt></p>
+<p>Metaclass for defining Abstract Base Classes (ABCs).</p>
+<p>Use this metaclass to create an ABC.  An ABC can be subclassed
+directly, and then acts as a mix-in class.  You can also register
+unrelated concrete classes (even built-in classes) and unrelated
+ABCs as &#8216;virtual subclasses&#8217; &#8211; these and their descendants will
+be considered subclasses of the registering ABC by the built-in
+issubclass() function, but the registering ABC won&#8217;t show up in
+their MRO (Method Resolution Order) nor will method
+implementations defined by the registering ABC be callable (not
+even via super()).</p>
+<dl class="method">
+<dt id="diffpy.srfit.util.abcport.ABCMeta.register">
+<tt class="descname">register</tt><big>(</big><em>subclass</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.abcport.ABCMeta.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a virtual subclass of an ABC.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.util.abcport.abstractmethod">
+<tt class="descclassname">diffpy.srfit.util.abcport.</tt><tt class="descname">abstractmethod</tt><big>(</big><em>funcobj</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.abcport.abstractmethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator indicating abstract methods.</p>
+<p>Requires that the metaclass is ABCMeta or derived from it.  A
+class that has a metaclass derived from ABCMeta cannot be
+instantiated unless all of its abstract methods are overridden.
+The abstract methods can be called using any of the normal
+&#8216;super&#8217; call mechanisms.</p>
+<p>Usage:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd><p class="first">__metaclass__ = ABCMeta
+&#64;abstractmethod
+def my_abstract_method(self, ...):</p>
+<blockquote class="last">
+<div>...</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.util.abcport.abstractproperty">
+<tt class="descclassname">diffpy.srfit.util.abcport.</tt><tt class="descname">abstractproperty</tt><a class="headerlink" href="#diffpy.srfit.util.abcport.abstractproperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator indicating abstract properties.</p>
+<p>Requires that the metaclass is ABCMeta or derived from it.  A
+class that has a metaclass derived from ABCMeta cannot be
+instantiated unless all of its abstract properties are overridden.
+The abstract properties can be called using any of the normal
+&#8216;super&#8217; call mechanisms.</p>
+<p>Usage:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd><p class="first">__metaclass__ = ABCMeta
+&#64;abstractproperty
+def my_abstract_property(self):</p>
+<blockquote class="last">
+<div>...</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p>This defines a read-only property; you can also define a read-write
+abstract property using the &#8216;long&#8217; form of property declaration:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd>__metaclass__ = ABCMeta
+def getx(self): ...
+def setx(self, value): ...
+x = abstractproperty(getx, setx)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.util.abcport.isinstance">
+<tt class="descclassname">diffpy.srfit.util.abcport.</tt><tt class="descname">isinstance</tt><big>(</big><em>object</em>, <em>class-or-type-or-tuple</em><big>)</big> &rarr; bool<a class="headerlink" href="#diffpy.srfit.util.abcport.isinstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether an object is an instance of a class or of a subclass thereof.
+With a type as second argument, return whether that is the object&#8217;s type.
+The form using a tuple, isinstance(x, (A, B, ...)), is a shortcut for
+isinstance(x, A) or isinstance(x, B) or ... (etc.).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.util.abcport.issubclass">
+<tt class="descclassname">diffpy.srfit.util.abcport.</tt><tt class="descname">issubclass</tt><big>(</big><em>C</em>, <em>B</em><big>)</big> &rarr; bool<a class="headerlink" href="#diffpy.srfit.util.abcport.issubclass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether class C is a subclass (i.e., a derived class) of class B.
+When using a tuple as the second argument issubclass(X, (A, B, ...)),
+is a shortcut for issubclass(X, A) or issubclass(X, B) or ... (etc.).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.util.inpututils">
+<span id="inpututils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">inpututils</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.util.inpututils" title="Permalink to this headline">¶</a></h2>
+<p>Input utilities.</p>
+<dl class="function">
+<dt id="diffpy.srfit.util.inpututils.inputToString">
+<tt class="descclassname">diffpy.srfit.util.inpututils.</tt><tt class="descname">inputToString</tt><big>(</big><em>inpt</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.inpututils.inputToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert input from various modes to a string.</p>
+<p>This is useful when you want a method to accept a string, open file object
+or file name.</p>
+<dl class="docutils">
+<dt>inpt    &#8211;  An open file-like object, name of a file</dt>
+<dd>or a string containing the input.</dd>
+</dl>
+<p>Returns the input in a string
+Raises IOError if the input is supected to be a file name, but the file
+cannot be found.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.util.nameutils">
+<span id="nameutils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">nameutils</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.util.nameutils" title="Permalink to this headline">¶</a></h2>
+<p>Name utilities.</p>
+<dl class="function">
+<dt id="diffpy.srfit.util.nameutils.isIdentifier">
+<tt class="descclassname">diffpy.srfit.util.nameutils.</tt><tt class="descname">isIdentifier</tt><big>(</big><em>s</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.nameutils.isIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check to see if a python string is a valid identifier.</p>
+<p>From <a class="reference external" href="http://code.activestate.com/recipes/413487/">http://code.activestate.com/recipes/413487/</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.util.nameutils.validateName">
+<tt class="descclassname">diffpy.srfit.util.nameutils.</tt><tt class="descname">validateName</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.nameutils.validateName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that a name is a valid identifier.</p>
+<p>Raises ValueError if the name is invalid.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.util.observable">
+<span id="observable-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">observable</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.util.observable" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="diffpy.srfit.util.observable.Observable">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.util.observable.</tt><tt class="descname">Observable</tt><big>(</big><em>**kwds</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.observable.Observable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Provide notification support for classes that maintain dynamic associations with multiple
+clients.</p>
+<p>Observers, i.e. clients of the observable, register event handlers that will be invoked to
+notify them whenever something interesting happens to the observable. The nature of what is
+being observed is defined by Observable descendants and their managers. For example,
+instances of pyre.calc.Node are observable by other nodes whose value depends on them so
+that the dependents can be notified about value changes and forced to recopute their own
+value.</p>
+<p>The event handlers are callables that take the observable instance as their single
+argument.</p>
+<dl class="docutils">
+<dt>interface:</dt>
+<dd>addObserver: registers its callable argument with the list of handlers to invoke
+removeObserver: remove an event handler from the list of handlers to invoke
+notify: invoke the registered handlers in the order in which they were registered</dd>
+</dl>
+<dl class="method">
+<dt id="diffpy.srfit.util.observable.Observable.addObserver">
+<tt class="descname">addObserver</tt><big>(</big><em>callable</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.addObserver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add callable to the set of observers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.observable.Observable.notify">
+<tt class="descname">notify</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Notify all observers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.observable.Observable.removeObserver">
+<tt class="descname">removeObserver</tt><big>(</big><em>callable</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.removeObserver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove callable from the set of observers</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.util.ordereddict">
+<span id="id2"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">ordereddict</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.util.ordereddict" title="Permalink to this headline">¶</a></h2>
+<p>Import OrderedDictionary from python &gt; 2.7/3.1 for earlier python versions.</p>
+<dl class="class">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.util.ordereddict.</tt><tt class="descname">OrderedDict</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></p>
+<p>Dictionary that remembers insertion order</p>
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.clear">
+<tt class="descname">clear</tt><big>(</big><big>)</big> &rarr; None.  Remove all items from od.<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.copy">
+<tt class="descname">copy</tt><big>(</big><big>)</big> &rarr; a shallow copy of od<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.fromkeys">
+<em class="property">classmethod </em><tt class="descname">fromkeys</tt><big>(</big><em>S</em><span class="optional">[</span>, <em>v</em><span class="optional">]</span><big>)</big> &rarr; New ordered dictionary with keys from S.<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.fromkeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>If not specified, the value defaults to None.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.items">
+<tt class="descname">items</tt><big>(</big><big>)</big> &rarr; list of (key, value) pairs in od<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.iteritems">
+<tt class="descname">iteritems</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.iteritems" title="Permalink to this definition">¶</a></dt>
+<dd><p>od.iteritems -&gt; an iterator over the (key, value) pairs in od</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.iterkeys">
+<tt class="descname">iterkeys</tt><big>(</big><big>)</big> &rarr; an iterator over the keys in od<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.iterkeys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.itervalues">
+<tt class="descname">itervalues</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.itervalues" title="Permalink to this definition">¶</a></dt>
+<dd><p>od.itervalues -&gt; an iterator over the values in od</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.keys">
+<tt class="descname">keys</tt><big>(</big><big>)</big> &rarr; list of keys in od<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.pop">
+<tt class="descname">pop</tt><big>(</big><em>k</em><span class="optional">[</span>, <em>d</em><span class="optional">]</span><big>)</big> &rarr; v, remove specified key and return the corresponding<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>value.  If key is not found, d is returned if given, otherwise KeyError
+is raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.popitem">
+<tt class="descname">popitem</tt><big>(</big><big>)</big> &rarr; (k, v), return and remove a (key, value) pair.<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.popitem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pairs are returned in LIFO order if last is true or FIFO order if false.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.setdefault">
+<tt class="descname">setdefault</tt><big>(</big><em>k</em><span class="optional">[</span>, <em>d</em><span class="optional">]</span><big>)</big> &rarr; od.get(k,d), also set od[k]=d if k not in od<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.setdefault" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.update">
+<tt class="descname">update</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.values">
+<tt class="descname">values</tt><big>(</big><big>)</big> &rarr; list of values in od<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.viewitems">
+<tt class="descname">viewitems</tt><big>(</big><big>)</big> &rarr; a set-like object providing a view on od's items<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.viewitems" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.viewkeys">
+<tt class="descname">viewkeys</tt><big>(</big><big>)</big> &rarr; a set-like object providing a view on od's keys<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.viewkeys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.ordereddict.OrderedDict.viewvalues">
+<tt class="descname">viewvalues</tt><big>(</big><big>)</big> &rarr; an object providing a view on od's values<a class="headerlink" href="#diffpy.srfit.util.ordereddict.OrderedDict.viewvalues" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.util.tagmanager">
+<span id="tagmanager-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">tagmanager</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.util.tagmanager" title="Permalink to this headline">¶</a></h2>
+<p>TagManager class.</p>
+<p>The TagManager class takes hashable objects and assigns tags to them. Objects
+can then be easily referenced via their assigned tags.</p>
+<dl class="class">
+<dt id="diffpy.srfit.util.tagmanager.TagManager">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.util.tagmanager.</tt><tt class="descname">TagManager</tt><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>TagManager class.</p>
+<p>Manage tags on hashable objects. Tags are strings that carry metadata.</p>
+<dl class="docutils">
+<dt>silent          &#8211;  Flag indicating whether to silently pass by when a tag</dt>
+<dd>cannot be found (bool, True). If this is False, then a
+KeyError will be thrown when a tag cannot be found.</dd>
+</dl>
+<p>_tagdict        &#8211;  A dictionary of tags to sets of tagged objects.</p>
+<dl class="method">
+<dt id="diffpy.srfit.util.tagmanager.TagManager.alltags">
+<tt class="descname">alltags</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.alltags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all tags managed by the TagManager.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.tagmanager.TagManager.hasTags">
+<tt class="descname">hasTags</tt><big>(</big><em>obj</em>, <em>*tags</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.hasTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if an object has all passed tags.</p>
+<p>Returns bool</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.tagmanager.TagManager.intersection">
+<tt class="descname">intersection</tt><big>(</big><em>*tags</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all objects that have all of the passed tags.</p>
+<p>Returns set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.tagmanager.TagManager.tag">
+<tt class="descname">tag</tt><big>(</big><em>obj</em>, <em>*tags</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tag an object.</p>
+<p>Tags are stored as strings.</p>
+<p>obj     &#8211;  Any hashable object to be untagged.
+<a href="#id3"><span class="problematic" id="id4">*</span></a>tags   &#8211;  Tags to apply to obj.</p>
+<p>Raises TypeError if obj is not hashable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.tagmanager.TagManager.tags">
+<tt class="descname">tags</tt><big>(</big><em>obj</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all tags on an object.</p>
+<p>Returns list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.tagmanager.TagManager.union">
+<tt class="descname">union</tt><big>(</big><em>*tags</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.union" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all objects that have any of the passed tags.</p>
+<p>Returns set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.tagmanager.TagManager.untag">
+<tt class="descname">untag</tt><big>(</big><em>obj</em>, <em>*tags</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.untag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove tags from an object.</p>
+<p>obj     &#8211;  Any hashable object to be untagged.
+<a href="#id5"><span class="problematic" id="id6">*</span></a>tags   &#8211;  Tags to remove from obj. If this is empty, then all</p>
+<blockquote>
+<div>tags will be removed from obj.</div></blockquote>
+<p>Raises KeyError if a passed tag does not apply to obj and self.silent
+is False</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.util.tagmanager.TagManager.verifyTags">
+<tt class="descname">verifyTags</tt><big>(</big><em>*tags</em><big>)</big><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.verifyTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that tags are all extant.</p>
+<p>Raises KeyError if a passed tag does not exist. This ignores
+self.silent.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">util Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.util._abc"><tt class="docutils literal"><span class="pre">_abc</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.util._ordereddict"><tt class="docutils literal"><span class="pre">_ordereddict</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.util.abcport"><tt class="docutils literal"><span class="pre">abcport</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.util.inpututils"><tt class="docutils literal"><span class="pre">inpututils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.util.nameutils"><tt class="docutils literal"><span class="pre">nameutils</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.util.observable"><tt class="docutils literal"><span class="pre">observable</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.util.ordereddict"><tt class="docutils literal"><span class="pre">ordereddict</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.util.tagmanager"><tt class="docutils literal"><span class="pre">tagmanager</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="diffpy.srfit.tests.html"
+                        title="previous chapter">tests Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/diffpy.srfit.util.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.tests.html" title="tests Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" >srfit Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>structure Package &mdash; SrFit 1.0b2-10 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0b2-10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b2-10 documentation" href="../index.html" />
+    <link rel="up" title="srfit Package" href="diffpy.srfit.html" />
+    <link rel="next" title="tests Package" href="diffpy.srfit.tests.html" />
+    <link rel="prev" title="sas Package" href="diffpy.srfit.sas.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.tests.html" title="tests Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.sas.html" title="sas Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" accesskey="U">srfit Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="structure-package">
+<h1>structure Package<a class="headerlink" href="#structure-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">structure</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-diffpy.srfit.structure"></span><p>Modules and classes that adapt structure representations to the ParameterSet
+interface and automatic structure constraint generation from space group
+information.</p>
+<dl class="function">
+<dt id="diffpy.srfit.structure.struToParameterSet">
+<tt class="descclassname">diffpy.srfit.structure.</tt><tt class="descname">struToParameterSet</tt><big>(</big><em>name</em>, <em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.struToParameterSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a ParameterSet from an structure.</p>
+<p>This returns a ParameterSet adapted for the structure depending on its
+type.</p>
+<p>stru    &#8211;  a structure object known by this module
+name    &#8211;  A name to give the structure.</p>
+<p>Raises TypeError if stru cannot be adapted</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.structure.basestructureparset">
+<span id="basestructureparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">basestructureparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.basestructureparset" title="Permalink to this headline">¶</a></h2>
+<p>Base class for adapting structures to a ParameterSet interface.</p>
+<p>The BaseStructureParSet is a ParameterSet with functionality required by all
+structure adapters.</p>
+<dl class="class">
+<dt id="diffpy.srfit.structure.basestructureparset.BaseStructureParSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.basestructureparset.</tt><tt class="descname">BaseStructureParSet</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.basestructureparset.BaseStructureParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<p>Base class for structure adapters.</p>
+<p>BaseStructureParSet derives from ParameterSet and provides methods that
+help interface the ParameterSet with the space group constraint methods in
+the sgconstraints module and to ProfileGenerators.</p>
+<p>Attributes:
+stru    &#8211;  The adapted object</p>
+<dl class="classmethod">
+<dt id="diffpy.srfit.structure.basestructureparset.BaseStructureParSet.canAdapt">
+<em class="property">classmethod </em><tt class="descname">canAdapt</tt><big>(</big><em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.basestructureparset.BaseStructureParSet.canAdapt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the structure can be adapted by this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.basestructureparset.BaseStructureParSet.getLattice">
+<tt class="descname">getLattice</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.basestructureparset.BaseStructureParSet.getLattice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a ParameterSet containing the lattice Parameters.</p>
+<p>The returned ParameterSet may contain other Parameters than the lattice
+Parameters. It is assumed that the lattice parameters are named &#8220;a&#8221;,
+&#8220;b&#8221;, &#8220;c&#8221;, &#8220;alpha&#8221;, &#8220;beta&#8221;, &#8220;gamma&#8221;.</p>
+<p>Lattice must also have the &#8220;angunits&#8221; attribute, which is either &#8220;deg&#8221;
+or &#8220;rad&#8221;, to signify degrees or radians.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.basestructureparset.BaseStructureParSet.getScatterers">
+<tt class="descname">getScatterers</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.basestructureparset.BaseStructureParSet.getScatterers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of ParameterSets that represents the scatterers.</p>
+<p>The site positions must be accessible from the list entries via the
+names &#8220;x&#8221;, &#8220;y&#8221;, and &#8220;z&#8221;. The ADPs must be accessible as well, but the
+name and nature of the ADPs (U-factors, B-factors, isotropic,
+anisotropic) depends on the adapted structure.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.structure.bvsrestraint">
+<span id="bvsrestraint-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bvsrestraint</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.bvsrestraint" title="Permalink to this headline">¶</a></h2>
+<p>Bond-valence sum calculator from SrReal wrapped as a Restraint.</p>
+<p>This can be used as an addition to a cost function during a structure
+refinement to keep the bond-valence sum within tolerable limits.</p>
+<dl class="class">
+<dt id="diffpy.srfit.structure.bvsrestraint.BVSRestraint">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.bvsrestraint.</tt><tt class="descname">BVSRestraint</tt><big>(</big><em>parset</em>, <em>sig=1</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.bvsrestraint.BVSRestraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.restraint.Restraint" title="diffpy.srfit.fitbase.restraint.Restraint"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.restraint.Restraint</span></tt></a></p>
+<p>Wrapping of BVSCalculator.bvmsdiff as a Restraint.</p>
+<p>The restraint penalty is the root-mean-square deviation of the theoretical
+and calculated bond-valence sum of a structure.</p>
+<p>Attributes:
+_calc   &#8211;  The SrReal BVSCalculator instance.
+_parset &#8211;  The SrRealParSet that created this BVSRestraint.
+sig     &#8211;  The uncertainty on the BVS (default 1).
+scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
+<blockquote>
+<div>by the unrestrained point-average chi^2 (chi^2/numpoints)
+(default False).</div></blockquote>
+<dl class="method">
+<dt id="diffpy.srfit.structure.bvsrestraint.BVSRestraint.penalty">
+<tt class="descname">penalty</tt><big>(</big><em>w=1.0</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.bvsrestraint.BVSRestraint.penalty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the penalty of the restraint.</p>
+<dl class="docutils">
+<dt>w   &#8211;  The point-average chi^2 which is optionally used to scale the</dt>
+<dd>penalty (float, default 1.0).</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cctbxparset-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">cctbxparset</span></tt> Module<a class="headerlink" href="#cctbxparset-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-diffpy.srfit.structure.diffpyparset">
+<span id="diffpyparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">diffpyparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.diffpyparset" title="Permalink to this headline">¶</a></h2>
+<p>Adapters for interfacing a diffpy.Structure.Structure with SrFit.</p>
+<p>A diffpy.Structure.Structure object is meant to be passed to a
+DiffpyStrucureParSet object from this module, which can then be used as a
+ParameterSet. (It has other methods for interfacing with SrReal calculator
+adapters.) Any change to the lattice or existing atoms will be registered with
+the Structure. Changes in the number of atoms will not be recognized.  Thus,
+the diffpy.Structure.Structure object should be fully configured before passing
+it to DiffpyStrucureParSet.</p>
+<p>DiffpyStructureParSet &#8211;  Adapter for diffpy.Structure.Structure
+DiffpyLatticeParSet   &#8211;  Adapter for diffpy.Structure.Lattice
+DiffpyAtomParSet      &#8211;  Adapter for diffpy.Structure.Atom</p>
+<dl class="class">
+<dt id="diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.diffpyparset.</tt><tt class="descname">DiffpyStructureParSet</tt><big>(</big><em>name</em>, <em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.structure.srrealparset.SrRealParSet" title="diffpy.srfit.structure.srrealparset.SrRealParSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.structure.srrealparset.SrRealParSet</span></tt></a></p>
+<p>A wrapper for diffpy.Structure.Structure.</p>
+<p>This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
+this class for base attributes.</p>
+<p>Attributes:
+atoms   &#8211;  The list of DiffpyAtomParSets, provided for convenience.
+stru    &#8211;  The diffpy.Structure.Structure this is adapting</p>
+<p>Managed ParameterSets:
+lattice     &#8211;  The managed DiffpyLatticeParSet
+&lt;el&gt;&lt;idx&gt;   &#8211;  A managed DiffpyAtomParSets. &lt;el&gt; is the atomic element and</p>
+<blockquote>
+<div>&lt;idx&gt; is the index of that element in the structure,
+starting from zero. Thus, for nickel in P1 symmetry, the
+managed DiffpyAtomParSets will be named &#8220;Ni0&#8221;, &#8220;Ni1&#8221;, &#8220;Ni2&#8221;
+and &#8220;Ni3&#8221;.</div></blockquote>
+<dl class="classmethod">
+<dt id="diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.canAdapt">
+<em class="property">classmethod </em><tt class="descname">canAdapt</tt><big>(</big><em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.canAdapt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the structure can be adapted by this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.getLattice">
+<tt class="descname">getLattice</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.getLattice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ParameterSet containing the lattice Parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.getScatterers">
+<tt class="descname">getScatterers</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.getScatterers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of ParameterSets that represents the scatterers.</p>
+<p>The site positions must be accessible from the list entries via the
+names &#8220;x&#8221;, &#8220;y&#8221;, and &#8220;z&#8221;. The ADPs must be accessible as well, but the
+name and nature of the ADPs (U-factors, B-factors, isotropic,
+anisotropic) depends on the adapted structure.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.structure.objcrystparset">
+<span id="objcrystparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">objcrystparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.objcrystparset" title="Permalink to this headline">¶</a></h2>
+<p>Wrappers for adapting pyobjcryst.crystal.Crystal to a srfit ParameterSet.</p>
+<p>This will adapt a Crystal or Molecule object from pyobjcryst into the
+ParameterSet interface. The following classes are adapted.</p>
+<p>ObjCrystCrystalParSet   &#8211;  Adapter for pyobjcryst.crystal.Crystal
+ObjCrystAtomParSet      &#8211;  Adapter for pyobjcryst.atom.Atom
+ObjCrystMoleculeParSet  &#8211;  Adapter for pyobjcryst.molecule.Molecule
+ObjCrystMolAtomParSet   &#8211;  Adapter for pyobjcryst.molecule.MolAtom</p>
+<p>Related to the adaptation of Molecule and MolAtom, there are adaptors for
+specifying molecule restraints.
+ObjCrystBondLengthRestraint
+ObjCrystBondAngleRestraint
+ObjCrystDihedralAngleRestraint</p>
+<p>There are also Parameters for encapsulating and modifying atoms via their
+relative positions. These Parameters can also act like constraints, and can
+modify the positions of multiple MolAtoms.
+ObjCrystBondLengthParameter
+ObjCrystBondAngleParameter
+ObjCrystDihedralAngleParameter</p>
+<dl class="class">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.objcrystparset.</tt><tt class="descname">ObjCrystMoleculeParSet</tt><big>(</big><em>name</em>, <em>molecule</em>, <em>parent=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.structure.objcrystparset.ObjCrystScattererParSet</span></tt></p>
+<p>A adaptor for a pyobjcryst.Molecule.</p>
+<p>This class derives from ObjCrystScattererParSet.</p>
+<p>Attributes:
+scat        &#8211;  The adapted pyobjcryst.molecule.Molecule.
+stru        &#8211;  The adapted pyobjcryst.molecule.Molecule.
+parent      &#8211;  The ObjCrystCrystalParSet this belongs to.</p>
+<blockquote>
+<div>ObjCrystMoleculeParSets can be used on their own, in which
+case this is None.</div></blockquote>
+<p>Managed Parameters:
+x, y, z     &#8211;  Molecule position in crystal coordinates (ParameterAdapter)
+occ         &#8211;  Occupancy of the molecule on its crystal location</p>
+<blockquote>
+<div>(ParameterAdapter)</div></blockquote>
+<p>q0, q1, q2, q3  &#8211;  Orientational quaternion (ParameterAdapter)</p>
+<p>Other attributes are inherited from
+diffpy.srfit.fitbase.parameterset.ParameterSet</p>
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addBondAngleParameter">
+<tt class="descname">addBondAngleParameter</tt><big>(</big><em>name</em>, <em>atom1</em>, <em>atom2</em>, <em>atom3</em>, <em>value=None</em>, <em>const=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addBondAngleParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a bond angle to the Molecule.</p>
+<p>This creates a ObjCrystBondAngleParameter to the ObjCrystMoleculeParSet
+that can be adjusted during the fit.</p>
+<p>name    &#8211;  The name of the ObjCrystBondAngleParameter
+atom1   &#8211;  The first atom (ObjCrystMolAtomParSet) in the bond angle
+atom2   &#8211;  The second (central) atom (ObjCrystMolAtomParSet) in the</p>
+<blockquote>
+<div>bond angle</div></blockquote>
+<dl class="docutils">
+<dt>atom3   &#8211;  The third (mutated) atom (ObjCrystMolAtomParSet) in the</dt>
+<dd>bond angle</dd>
+<dt>value   &#8211;  An initial value for the bond angle. If this is None</dt>
+<dd>(default), then the current bond angle between the atoms
+will be used.</dd>
+<dt>const   &#8211;  A flag indicating whether the Parameter is constant</dt>
+<dd>(default False).</dd>
+</dl>
+<p>Returns the new ObjCrystBondAngleParameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addBondLengthParameter">
+<tt class="descname">addBondLengthParameter</tt><big>(</big><em>name</em>, <em>atom1</em>, <em>atom2</em>, <em>value=None</em>, <em>const=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addBondLengthParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a bond length to the Molecule.</p>
+<p>This creates a ObjCrystBondLengthParameter to the
+ObjCrystMoleculeParSet that can be adjusted during the fit.</p>
+<p>name    &#8211;  The name of the ObjCrystBondLengthParameter
+atom1   &#8211;  The first atom (ObjCrystMolAtomParSet) in the bond
+atom2   &#8211;  The second (mutated) atom (ObjCrystMolAtomParSet) in the</p>
+<blockquote>
+<div>bond</div></blockquote>
+<dl class="docutils">
+<dt>value   &#8211;  An initial value for the bond length. If this is None</dt>
+<dd>(default), then the current distance between the atoms will
+be used.</dd>
+<dt>const   &#8211;  A flag indicating whether the Parameter is constant</dt>
+<dd>(default False)</dd>
+</dl>
+<p>Returns the new ObjCrystBondLengthParameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addDihedralAngleParameter">
+<tt class="descname">addDihedralAngleParameter</tt><big>(</big><em>name</em>, <em>atom1</em>, <em>atom2</em>, <em>atom3</em>, <em>atom4</em>, <em>value=None</em>, <em>const=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addDihedralAngleParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dihedral angle to the Molecule.</p>
+<p>This creates a ObjCrystDihedralAngleParameter to the
+ObjCrystMoleculeParSet that can be adjusted during the fit.</p>
+<p>name    &#8211;  The name of the ObjCrystDihedralAngleParameter.
+atom1   &#8211;  The first atom (ObjCrystMolAtomParSet) in the dihderal angle
+atom2   &#8211;  The second (central) atom (ObjCrystMolAtomParSet) in the</p>
+<blockquote>
+<div>dihderal angle</div></blockquote>
+<dl class="docutils">
+<dt>atom3   &#8211;  The third (central) atom (ObjCrystMolAtomParSet) in the</dt>
+<dd>dihderal angle</dd>
+<dt>atom4   &#8211;  The fourth (mutated) atom (ObjCrystMolAtomParSet) in the</dt>
+<dd>dihderal angle</dd>
+<dt>value   &#8211;  An initial value for the dihedral angle. If this is None</dt>
+<dd>(default), then the current dihedral angle between atoms
+will be used.</dd>
+<dt>const   &#8211;  A flag indicating whether the Parameter is constant</dt>
+<dd>(default False).</dd>
+</dl>
+<p>Returns the new ObjCrystDihedralAngleParameter.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.canAdapt">
+<em class="property">classmethod </em><tt class="descname">canAdapt</tt><big>(</big><em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.canAdapt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the structure can be adapted by this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.getLattice">
+<tt class="descname">getLattice</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.getLattice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ParameterSet containing the lattice Parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.getScatterers">
+<tt class="descname">getScatterers</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.getScatterers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of ParameterSets that represents the scatterers.</p>
+<p>The site positions must be accessible from the list entries via the
+names &#8220;x&#8221;, &#8220;y&#8221;, and &#8220;z&#8221;. The ADPs must be accessible as well, but the
+name and nature of the ADPs (U-factors, B-factors, isotropic,
+anisotropic) depends on the adapted structure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondAngle">
+<tt class="descname">restrainBondAngle</tt><big>(</big><em>atom1</em>, <em>atom2</em>, <em>atom3</em>, <em>angle</em>, <em>sigma</em>, <em>delta</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a bond angle restraint.</p>
+<p>This creates an instance of ObjCrystBondAngleRestraint and adds it to
+the ObjCrystMoleculeParSet.</p>
+<p>atom1   &#8211;  First atom (ObjCrystMolAtomParSet) in the bond angle
+atom2   &#8211;  Second (central) atom (ObjCrystMolAtomParSet) in the bond</p>
+<blockquote>
+<div>angle</div></blockquote>
+<p>atom3   &#8211;  Third atom (ObjCrystMolAtomParSet) in the bond angle
+angle   &#8211;  The bond angle (radians)
+sigma   &#8211;  The uncertainty of the bond angle (radians)
+delta   &#8211;  The width of the bond angle (radians)
+scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
+<blockquote>
+<div>by the unrestrained point-average chi^2 (chi^2/numpoints)
+(default False).</div></blockquote>
+<p>Returns the ObjCrystBondAngleRestraint object for use with the
+&#8216;unrestrain&#8217; method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondAngleParameter">
+<tt class="descname">restrainBondAngleParameter</tt><big>(</big><em>par</em>, <em>angle</em>, <em>sigma</em>, <em>delta</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondAngleParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a bond angle restraint.</p>
+<p>This creates an instance of ObjCrystBondAngleRestraint and adds it to
+the ObjCrystMoleculeParSet.</p>
+<p>par     &#8211;  A ObjCrystBondAngleParameter (see addBondAngleParameter)
+angle   &#8211;  The bond angle (radians)
+sigma   &#8211;  The uncertainty of the bond angle (radians)
+delta   &#8211;  The width of the bond angle (radians)
+scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
+<blockquote>
+<div>by the unrestrained point-average chi^2 (chi^2/numpoints)
+(default False).</div></blockquote>
+<p>Returns the ObjCrystBondAngleRestraint object for use with the
+&#8216;unrestrain&#8217; method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondLength">
+<tt class="descname">restrainBondLength</tt><big>(</big><em>atom1</em>, <em>atom2</em>, <em>length</em>, <em>sigma</em>, <em>delta</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a bond length restraint.</p>
+<p>This creates an instance of ObjCrystBondLengthRestraint and adds it to
+the ObjCrystMoleculeParSet.</p>
+<p>atom1   &#8211;  First atom (ObjCrystMolAtomParSet) in the bond
+atom2   &#8211;  Second atom (ObjCrystMolAtomParSet) in the bond
+length  &#8211;  The length of the bond (Angstroms)
+sigma   &#8211;  The uncertainty of the bond length (Angstroms)
+delta   &#8211;  The width of the bond (Angstroms)
+scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
+<blockquote>
+<div>by the unrestrained point-average chi^2 (chi^2/numpoints)
+(default False)</div></blockquote>
+<p>Returns the ObjCrystBondLengthRestraint object for use with the &#8216;unrestrain&#8217;
+method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondLengthParameter">
+<tt class="descname">restrainBondLengthParameter</tt><big>(</big><em>par</em>, <em>length</em>, <em>sigma</em>, <em>delta</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondLengthParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a bond length restraint.</p>
+<p>This creates an instance of ObjCrystBondLengthRestraint and adds it to
+the ObjCrystMoleculeParSet.</p>
+<p>par     &#8211;  A ObjCrystBondLengthParameter (see addBondLengthParameter)
+length  &#8211;  The length of the bond (Angstroms)
+sigma   &#8211;  The uncertainty of the bond length (Angstroms)
+delta   &#8211;  The width of the bond (Angstroms)
+scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
+<blockquote>
+<div>by the unrestrained point-average chi^2 (chi^2/numpoints)
+(default False)</div></blockquote>
+<p>Returns the ObjCrystBondLengthRestraint object for use with the
+&#8216;unrestrain&#8217; method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainDihedralAngle">
+<tt class="descname">restrainDihedralAngle</tt><big>(</big><em>atom1</em>, <em>atom2</em>, <em>atom3</em>, <em>atom4</em>, <em>angle</em>, <em>sigma</em>, <em>delta</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainDihedralAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dihedral angle restraint.</p>
+<p>This creates an instance of ObjCrystDihedralAngleRestraint and adds it
+to the ObjCrystMoleculeParSet.</p>
+<p>atom1   &#8211;  First atom (ObjCrystMolAtomParSet) in the angle
+atom2   &#8211;  Second (central) atom (ObjCrystMolAtomParSet) in the angle
+atom3   &#8211;  Third (central) atom (ObjCrystMolAtomParSet) in the angle
+atom4   &#8211;  Fourth atom in the angle (ObjCrystMolAtomParSet)
+angle   &#8211;  The dihedral angle (radians)
+sigma   &#8211;  The uncertainty of the dihedral angle (radians)
+delta   &#8211;  The width of the dihedral angle (radians)
+scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
+<blockquote>
+<div>by the unrestrained point-average chi^2 (chi^2/numpoints)
+(default False).</div></blockquote>
+<p>Returns the ObjCrystDihedralAngleRestraint object for use with the
+&#8216;unrestrain&#8217; method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainDihedralAngleParameter">
+<tt class="descname">restrainDihedralAngleParameter</tt><big>(</big><em>par</em>, <em>angle</em>, <em>sigma</em>, <em>delta</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainDihedralAngleParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a dihedral angle restraint.</p>
+<p>This creates an instance of ObjCrystDihedralAngleRestraint and adds it
+to the ObjCrystMoleculeParSet.</p>
+<dl class="docutils">
+<dt>par     &#8211;  A ObjCrystDihedralAngleParameter (see</dt>
+<dd>addDihedralAngleParameter)</dd>
+</dl>
+<p>angle   &#8211;  The dihedral angle (radians)
+sigma   &#8211;  The uncertainty of the dihedral angle (radians)
+delta   &#8211;  The width of the dihedral angle (radians)
+scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
+<blockquote>
+<div>by the unrestrained point-average chi^2 (chi^2/numpoints)
+(default False).</div></blockquote>
+<p>Returns the ObjCrystDihedralAngleRestraint object for use with the
+&#8216;unrestrain&#8217; method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.useSymmetry">
+<tt class="descname">useSymmetry</tt><big>(</big><em>use=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.useSymmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this structure to use symmetry.</p>
+<p>This structure object does not support symmetry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.usingSymmetry">
+<tt class="descname">usingSymmetry</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.usingSymmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if symmetry is being used.</p>
+<p>This structure object does not support symmetry.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.wrapRestraints">
+<tt class="descname">wrapRestraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.wrapRestraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap the restraints implicit to the molecule.</p>
+<p>This will wrap MolBonds, MolBondAngles and MolDihedralAngles of the
+Molecule as ObjCrystMoleculeRestraint objects.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.wrapStretchModeParameters">
+<tt class="descname">wrapStretchModeParameters</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.wrapStretchModeParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap the stretch modes implicit to the Molecule as Parameters.</p>
+<p>This will wrap StretchModeBondLengths and StretchModeBondAngles of the
+Molecule as Parameters. Note that this requires that the MolBondAtoms
+in the Molecule came in with unique names.  Torsion angles are not
+wrapped, as there is not enough information to determine each MolAtom
+in the angle.</p>
+<p>The Parameters will be given the concatenated name of its constituents.
+bond lengths: &#8220;bl_aname1_aname2&#8221;
+bond angles: &#8220;ba_aname1_aname2_aname3&#8221;</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.objcrystparset.</tt><tt class="descname">ObjCrystCrystalParSet</tt><big>(</big><em>name</em>, <em>cryst</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.structure.srrealparset.SrRealParSet" title="diffpy.srfit.structure.srrealparset.SrRealParSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.structure.srrealparset.SrRealParSet</span></tt></a></p>
+<p>A adaptor for pyobjcryst.crystal.Crystal instance.</p>
+<p>This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
+this class for base attributes.</p>
+<p>Attributes:
+stru        &#8211;  The adapted pyobjcryst.Crystal.
+scatterers  &#8211;  The list of aggregated ScattererParSets (either</p>
+<blockquote>
+<div>ObjCrystAtomParSet or ObjCrystMoleculeParSet), provided for
+convenience.</div></blockquote>
+<dl class="docutils">
+<dt>_sgpars     &#8211;  A BaseSpaceGroupParameters object containing free structure</dt>
+<dd>Parameters. See the diffpy.srfit.structure.sgconstraints
+module.</dd>
+</dl>
+<p>sgpars      &#8211;  property that creates _sgpars when it is needed.
+angunits    &#8211;  &#8220;rad&#8221;, the units of angle</p>
+<p>Managed Parameters:
+a, b, c, alpha, beta, gamma &#8211;  Lattice parameters (ParameterAdapter)</p>
+<p>Managed ParameterSets:
+&lt;sname&gt;     &#8211;  A ObjCrystScattererParSet (either ObjCrystAtomParSet or</p>
+<blockquote>
+<div>ObjCrystMoleculeParSet), where &lt;sname&gt; is the name of the
+adapted pyobjcryst.atom.Atom or
+pyobjcryst.molecule.Molecule.</div></blockquote>
+<dl class="classmethod">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.canAdapt">
+<em class="property">classmethod </em><tt class="descname">canAdapt</tt><big>(</big><em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.canAdapt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the structure can be adapted by this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.getLattice">
+<tt class="descname">getLattice</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.getLattice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ParameterSet containing the lattice Parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.getScatterers">
+<tt class="descname">getScatterers</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.getScatterers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of ParameterSets that represents the scatterers.</p>
+<p>The site positions must be accessible from the list entries via the
+names &#8220;x&#8221;, &#8220;y&#8221;, and &#8220;z&#8221;. The ADPs must be accessible as well, but the
+name and nature of the ADPs (U-factors, B-factors, isotropic,
+anisotropic) depends on the adapted structure.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.sgpars">
+<tt class="descname">sgpars</tt><a class="headerlink" href="#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.sgpars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrain the space group.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.structure.sgconstraints">
+<span id="sgconstraints-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">sgconstraints</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.sgconstraints" title="Permalink to this headline">¶</a></h2>
+<p>Code to set space group constraints for a crystal structure.</p>
+<dl class="function">
+<dt id="diffpy.srfit.structure.sgconstraints.constrainAsSpaceGroup">
+<tt class="descclassname">diffpy.srfit.structure.sgconstraints.</tt><tt class="descname">constrainAsSpaceGroup</tt><big>(</big><em>phase, sgsymbol, scatterers=None, sgoffset=[0, 0, 0], constrainlat=True, constrainadps=True, adpsymbols=['U11', 'U22', 'U33', 'U12', 'U13', 'U23'], isosymbol='Uiso'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.sgconstraints.constrainAsSpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrain the structure to the space group.</p>
+<p>This applies space group constraints to a StructureParSet with P1
+symmetry.  Passed scatterers are explicitly constrained to the
+specified space group. The ADPs and lattice may be constrained as well.</p>
+<p>Arguments:
+phase       &#8211;  A BaseStructure object.
+sgsymbol    &#8211;  The space group number or symbol (compatible with</p>
+<blockquote>
+<div>diffpy.Structure.SpaceGroups.GetSpaceGroup.</div></blockquote>
+<p>sgoffset    &#8211;  Optional offset for sg origin (default [0, 0, 0]).
+scatterers  &#8211;  The scatterer ParameterSets to constrain. If scatterers</p>
+<blockquote>
+<div>is None (default), then all scatterers accessible from
+phase.getScatterers will be constrained.</div></blockquote>
+<dl class="docutils">
+<dt>constrainlat    &#8211;  Flag indicating whether to constrain the lattice</dt>
+<dd>(default True).</dd>
+<dt>constrainadps   &#8211;  Flag indicating whether to constrain the ADPs</dt>
+<dd>(default True).</dd>
+<dt>adpsymbols  &#8211;  A list of the ADP names. By default this is equal to</dt>
+<dd>diffpy.Structure.SymmetryUtilities.stdUsymbols (U11,
+U22, etc.). The names must be given in the same order
+as stdUsymbols.</dd>
+<dt>isosymbol   &#8211;  Symbol for isotropic ADP (default &#8220;Uiso&#8221;). If None,</dt>
+<dd>isotropic ADPs will be constrainted via the anisotropic ADPs.</dd>
+</dl>
+<p>New Parameters that are used in constraints are created within a
+SpaceGroupParameters object, which is returned from this function.
+Constraints are created in ParameterSet that contains the constrained
+Parameter.  This will erase any constraints or constant flags on the
+scatterers, lattice or ADPs if they are to be constrained.</p>
+<p>The lattice constraints are applied as following.</p>
+<p>Crystal System:
+Triclinic       &#8211;  No constraints.
+Monoclinic      &#8211;  alpha and beta are fixed to 90 unless alpha != beta and</p>
+<blockquote>
+<div>alpha == gamma, in which case alpha and gamma are fixed
+to 90.</div></blockquote>
+<p>Orthorhombic    &#8211;  alpha, beta and gamma are fixed to 90.
+Tetragonal      &#8211;  b is constrained to a and alpha, beta and gamma are</p>
+<blockquote>
+<div>fixed to 90.</div></blockquote>
+<dl class="docutils">
+<dt>Trigonal        &#8211;  If gamma == 120, then b is constrained to a, alpha</dt>
+<dd>and beta are fixed to 90 and gamma is fixed to 120.
+Otherwise, b and c are constrained to a, beta and gamma
+are fixed to alpha.</dd>
+<dt>Hexagonal       &#8211;  b is constrained to a, alpha and beta are fixed to 90</dt>
+<dd>and gamma is fixed to 120.</dd>
+<dt>Cubic           &#8211;  b and c are constrained to a, and alpha, beta and</dt>
+<dd>gamma are fixed to 90.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.structure.srrealparset">
+<span id="srrealparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">srrealparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.srrealparset" title="Permalink to this headline">¶</a></h2>
+<p>Structure wrapper class for structures compatible with SrReal.</p>
+<dl class="class">
+<dt id="diffpy.srfit.structure.srrealparset.SrRealParSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.srrealparset.</tt><tt class="descname">SrRealParSet</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.srrealparset.SrRealParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.structure.basestructureparset.BaseStructureParSet" title="diffpy.srfit.structure.basestructureparset.BaseStructureParSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.structure.basestructureparset.BaseStructureParSet</span></tt></a></p>
+<p>Base class for SrReal-compatible structure adapters.</p>
+<p>This derives from BaseStructureParSet and provides some extended
+functionality provided by SrReal.</p>
+<p>Attributes:
+stru            &#8211;  The adapted object
+_usesymmetry    &#8211;  A flag indicating if SrReal calculators that operate on</p>
+<blockquote>
+<div>this object should use symmetry. By default this is
+True.</div></blockquote>
+<dl class="method">
+<dt id="diffpy.srfit.structure.srrealparset.SrRealParSet.restrainBVS">
+<tt class="descname">restrainBVS</tt><big>(</big><em>sig=1</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.srrealparset.SrRealParSet.restrainBVS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrain the bond-valence sum to zero.</p>
+<p>This adds a penalty to the cost function equal to
+bvmsdiff / sig**2
+where bvmsdiff is the mean-squared difference between the calculated
+and expected bond valence sums for the structure. If scaled is True,
+this is also scaled by the current point-averaged chi^2 value so the
+restraint is roughly equally weighted in the fit.</p>
+<p>sig     &#8211;  The uncertainty on the BVS (default 1).
+scaled  &#8211;  A flag indicating if the restraint is scaled</p>
+<blockquote>
+<div>(multiplied) by the unrestrained point-average chi^2
+(chi^2/numpoints) (default False).</div></blockquote>
+<p>Returns the BVSRestraint object for use with the &#8216;unrestrain&#8217; method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.srrealparset.SrRealParSet.useSymmetry">
+<tt class="descname">useSymmetry</tt><big>(</big><em>use=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.srrealparset.SrRealParSet.useSymmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set this structure to use symmetry.</p>
+<p>This determines how the structure is treated by SrReal calculators.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.srrealparset.SrRealParSet.usingSymmetry">
+<tt class="descname">usingSymmetry</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.srrealparset.SrRealParSet.usingSymmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if symmetry is being used.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">structure Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">structure</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.basestructureparset"><tt class="docutils literal"><span class="pre">basestructureparset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.bvsrestraint"><tt class="docutils literal"><span class="pre">bvsrestraint</span></tt> Module</a></li>
+<li><a class="reference internal" href="#cctbxparset-module"><tt class="docutils literal"><span class="pre">cctbxparset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.diffpyparset"><tt class="docutils literal"><span class="pre">diffpyparset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.objcrystparset"><tt class="docutils literal"><span class="pre">objcrystparset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.sgconstraints"><tt class="docutils literal"><span class="pre">sgconstraints</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.srrealparset"><tt class="docutils literal"><span class="pre">srrealparset</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="diffpy.srfit.sas.html"
+                        title="previous chapter">sas Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="diffpy.srfit.tests.html"
+                        title="next chapter">tests Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/diffpy.srfit.structure.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.tests.html" title="tests Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.sas.html" title="sas Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" >srfit Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

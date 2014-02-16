@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>equation Package &mdash; SrFit 1.0b2-10 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0b2-10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b2-10 documentation" href="../index.html" />
+    <link rel="up" title="srfit Package" href="diffpy.srfit.html" />
+    <link rel="next" title="literals Package" href="diffpy.srfit.equation.literals.html" />
+    <link rel="prev" title="srfit Package" href="diffpy.srfit.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.equation.literals.html" title="literals Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.html" title="srfit Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" accesskey="U">srfit Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="equation-package">
+<h1>equation Package<a class="headerlink" href="#equation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">equation</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-diffpy.srfit.equation"></span><p>The core equation evaluator for diffpy.srfit.</p>
+<p>This package contains modules and subpackages that are used to create Equation
+objects. The Equation class is an encapsulation of a lazy evaluation network
+that is used throughout SrFit. The EquationsFactory class is used to create
+Equation objects from strings and can incorporate user-defined functions as
+well as default operations.</p>
+<p>The subpackages define various pieces of the evaluation network.</p>
+<dl class="class">
+<dt id="diffpy.srfit.equation.Equation">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.</tt><tt class="descname">Equation</tt><big>(</big><em>name=None</em>, <em>root=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.Equation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Class for holding and evaluating a Literal tree.</p>
+<p>Instances have attributes that are the non-const Arguments of the tree
+(accessed by name) and a __call__ method that evaluates the tree.  It is
+assumed, but not enforced that Arguments have unique names.  If this is not
+the case, then one should keep its own list of Arguments.</p>
+<p>The tree is scanned for errors when it is added. Thus, the tree should be
+complete before putting it inside an Equation.</p>
+<p>Equations can act as Operator nodes within a literal tree. In this context,
+they evaluate as the root node, but provide a calling interface that
+accepts new argument values for the literal tree.</p>
+<p>Attributes
+root    &#8211;  The root Literal of the equation tree
+argdict &#8211;  An OrderedDict of Arguments from the root.
+args    &#8211;  Property that gets the values of argdict.</p>
+<p>Operator Attributes
+args    &#8211;  List of Literal arguments, set with &#8216;addLiteral&#8217;
+name    &#8211;  A name for this operator. e.g. &#8220;add&#8221; or &#8220;sin&#8221;
+nin     &#8211;  Number of inputs (&lt;1 means this is variable)
+nout    &#8211;  Number of outputs
+operation   &#8211;  Function that performs the operation. e.g. numpy.add.
+symbol  &#8211;  The symbolic representation. e.g. &#8220;+&#8221; or &#8220;sin&#8221;.
+_value  &#8211;  The value of the Operator.
+value   &#8211;  Property for &#8216;getValue&#8217;.</p>
+<dl class="method">
+<dt id="diffpy.srfit.equation.Equation.addLiteral">
+<tt class="descname">addLiteral</tt><big>(</big><em>literal</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.Equation.addLiteral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cannot add a literal to an Equation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.Equation.args">
+<tt class="descname">args</tt><a class="headerlink" href="#diffpy.srfit.equation.Equation.args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.Equation.identify">
+<tt class="descname">identify</tt><big>(</big><em>visitor</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.Equation.identify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify self to a visitor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.Equation.setRoot">
+<tt class="descname">setRoot</tt><big>(</big><em>root</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.Equation.setRoot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the root of the Literal tree.</p>
+<p>Raises:
+ValueError if errors are found in the Literal tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.Equation.swap">
+<tt class="descname">swap</tt><big>(</big><em>oldlit</em>, <em>newlit</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.Equation.swap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap a literal in the equation for another.</p>
+<p>Note that this may change the root and the operation interface</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.equation.builder">
+<span id="builder-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">builder</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.equation.builder" title="Permalink to this headline">¶</a></h2>
+<p>Classes and utilities for creating equations.</p>
+<p>The EquationFactory class is used to create an equation (an Equation instance)
+from a string equation.  User-defined Literals can be registered with the
+factory so that they are used in the equation. Registered Literals are
+referenced by name, and when a new Literal of the same name is registered, the
+factory will swap out the old Literal for the new one in all equations built by
+the factory.</p>
+<p>An example using the EquationFactory:
+The makeEquation method turns the string-representation of an equation into
+a callable object.
+&gt; factory = EquationFactory()
+&gt; eq = factory.makeEquation(&#8220;A*sin(a*x)&#8221;)
+will create an equation that evaluates as &#8220;A*sin(a*x)&#8221;. The equation takes no
+arguments.</p>
+<p>Custom Arguments and constants can be included in the equation:
+&gt; factory.registerConstant(&#8220;offset&#8221;, 3)
+&gt; A = Argument(name = &#8220;A&#8221;, value = 1.0)
+&gt; factory.registerArgument(&#8220;A&#8221;, A)
+&gt; eq = factory.makeEquation(&#8220;A*sin(a*x) + offset&#8221;)
+This includes a constant offset in the equation and makes sure that the
+user-defined Argument is in the equation. This is can be used to assure that
+the same instance of an Argument appears in multiple equations. Other literals
+can be registered in a similar fashion.</p>
+<p>The BaseBuilder class does the hard work of making an equation from a string in
+EquationFactory.makeEquation. BaseBuilder can be used directly to create
+equations. BaseBuilder is specified in the ArgumentBuilder and OperatorBuilder
+classes.  You can create builders from Literals or equations by using the
+&#8220;wrap&#8221; methods within this module or by using the builder classes directly.</p>
+<p>With a collection of BaseBuilder objects, one can simply write the equation
+using normal python syntax:
+&gt; A = ArgumentBuilder(name = &#8220;A&#8221;)
+&gt; a = ArgumentBuilder(name = &#8220;a&#8221;)
+&gt; x = ArgumentBuilder(name = &#8220;x&#8221;)
+&gt; # sin is defined in this module as an OperatorBuilder
+&gt; sin = getBuilder(&#8220;sin&#8221;)
+&gt; beq = A*sin(a*x)
+&gt; eq = beq.getEquation()</p>
+<p>The equation builder can also handle scalar constants. Staring with the above
+setup:
+&gt; beq2 = A*sin(a*x) + 3
+&gt; eq2 = beq2.getEquation()
+Here, we didn&#8217;t have to wrap &#8216;3&#8217; in an ArgumentBuilder. Non scalars, constant
+or otherwise, must be wrapped as ArgumentBuilders in order to be used in this
+way.</p>
+<p>BaseBuilder can make use of user-defined functions.  Any callable python
+object can be wrapped as an OperatorBuilder with the wrapFunction method. For
+example.
+&gt; _f = lambda a, b : (a-b)/(a+b)
+&gt; f = wrapFunction(&#8220;f&#8221;, _f)
+&gt; # Using BaseBuilder
+&gt; a = ArgumentBuilder(name = &#8220;a&#8221;)
+&gt; b = ArgumentBuilder(name = &#8220;b&#8221;)
+&gt; c = ArgumentBuilder(name = &#8220;c&#8221;)
+&gt; beq = c*f(a,b)
+&gt; eq = beq.makeEquation()</p>
+<dl class="class">
+<dt id="diffpy.srfit.equation.builder.EquationFactory">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.builder.</tt><tt class="descname">EquationFactory</tt><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A Factory for equations.</p>
+<dl class="docutils">
+<dt>builders    &#8211;  A dictionary of BaseBuilders registered with the</dt>
+<dd>factory, indexed by name.</dd>
+<dt>newargs     &#8211;  A set of new arguments created by makeEquation. This is</dt>
+<dd>redefined whenever makeEquation is called.</dd>
+</dl>
+<p>equations   &#8211;  Set of equations that have been built by the EquationFactory.</p>
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.deRegisterBuilder">
+<tt class="descname">deRegisterBuilder</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.deRegisterBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>De-register a builder by name.</p>
+<p>This does not change the equations that use the Literal wrapped by the
+builder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.detach">
+<tt class="descname">detach</tt><big>(</big><em>eq</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.detach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detach an equation from the factory.</p>
+<p>This will remove an equation from the purview of the factory. Thus,
+changes made to the builders will not affect the equation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.ignore">
+<tt class="descname">ignore</tt><em class="property"> = ('(', ',', ')')</em><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.ignore" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.makeEquation">
+<tt class="descname">makeEquation</tt><big>(</big><em>eqstr</em>, <em>buildargs=True</em>, <em>argclass=&lt;class 'diffpy.srfit.equation.literals.argument.Argument'&gt;</em>, <em>argkw={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.makeEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make an equation from an equation string.</p>
+<p>Arguments
+eqstr       &#8211;  An equation in string form using standard python</p>
+<blockquote>
+<div>syntax.  The equation string can use any function
+registered literal or function, including numpy ufuncs
+that are automatically registered.</div></blockquote>
+<dl class="docutils">
+<dt>buildargs   &#8211;  A flag indicating whether missing arguments can be</dt>
+<dd>created by the Factory (default True). If False, then
+the a ValueError will be raised if there are undefined
+arguments in the eqstr. Built arguments will be of type
+argclass.</dd>
+<dt>argclass    &#8211;  Class to use when creating new Arguments (default</dt>
+<dd>diffpy.srfit.equation.literals.Argument). The class
+constructor must accept the &#8216;name&#8217; key word.</dd>
+<dt>argkw       &#8211;  Key word dictionary to pass to the argclass constructor</dt>
+<dd>(default {}).</dd>
+</dl>
+<p>Returns a callable Literal representing the equation string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.registerArgument">
+<tt class="descname">registerArgument</tt><big>(</big><em>name</em>, <em>arg</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerArgument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a named Argument with the factory.</p>
+<p>Returns the registered builder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.registerBuilder">
+<tt class="descname">registerBuilder</tt><big>(</big><em>name</em>, <em>builder</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register builder in this module so it can be used in makeEquation.</p>
+<p>If an extant builder with the given name is already registered, this
+will replace all instances of the old builder&#8217;s literal in the
+factory&#8217;s equation set with the new builder&#8217;s literal. Note that this
+may lead to errors if one of the replacements causes a self-reference.</p>
+<p>Raises ValueError if the new builder&#8217;s literal causes a self-reference
+in an existing equation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.registerConstant">
+<tt class="descname">registerConstant</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerConstant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a named constant with the factory.</p>
+<p>Returns the registered builder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.registerFunction">
+<tt class="descname">registerFunction</tt><big>(</big><em>name</em>, <em>func</em>, <em>argnames</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a named function with the factory.</p>
+<p>This will register a builder for the function.</p>
+<p>name    &#8211;  The name of the function
+func    &#8211;  A callable python object
+argnames&#8211;  The argument names for func. If these names do not</p>
+<blockquote>
+<div>correspond to builders, then new constants with value 0
+will be created for each name.</div></blockquote>
+<p>Returns the registered builder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.registerOperator">
+<tt class="descname">registerOperator</tt><big>(</big><em>name</em>, <em>op</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register an Operator literal with the factory.</p>
+<p>Operators can be used with or without arguments (or parentheses) in an
+equation string.  If used with arguments, then the Operator will use
+the passed arguments as arguments for the operation. If used without
+arguments, it is assumed that the operator is already populated with
+arguments, and those will be used.</p>
+<p>Returns the registered builder.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.symbols">
+<tt class="descname">symbols</tt><em class="property"> = ('+', '-', '*', '/', '**', '%', '|')</em><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.symbols" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.builder.BaseBuilder">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.builder.</tt><tt class="descname">BaseBuilder</tt><a class="headerlink" href="#diffpy.srfit.equation.builder.BaseBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Class for building equations.</p>
+<p>Equation builder objects can be composed like a normal function where the
+arguments can be other BaseBuilder instances or constants.</p>
+<p>Attributes
+literal     &#8211;  The equation Literal being built by this instance.</p>
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.BaseBuilder.getEquation">
+<tt class="descname">getEquation</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.BaseBuilder.getEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the equation built by this object.</p>
+<p>The equation will given the name &#8220;_eq_&lt;root&gt;&#8221; where &#8220;&lt;root&gt;&#8221; is the
+name of the root node.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.builder.ArgumentBuilder">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.builder.</tt><tt class="descname">ArgumentBuilder</tt><big>(</big><em>value=None</em>, <em>name=None</em>, <em>const=False</em>, <em>arg=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.ArgumentBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.builder.BaseBuilder" title="diffpy.srfit.equation.builder.BaseBuilder"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.builder.BaseBuilder</span></tt></a></p>
+<p>BaseBuilder wrapper around an Argument literal.</p>
+<p>Equation builder objects can be composed like a normal function where the
+arguments can be other BaseBuilder instances or constants.</p>
+<p>Attributes
+literal     &#8211;  The Argument wrapped by this instance.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.builder.OperatorBuilder">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.builder.</tt><tt class="descname">OperatorBuilder</tt><big>(</big><em>name</em>, <em>op=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.OperatorBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.builder.BaseBuilder" title="diffpy.srfit.equation.builder.BaseBuilder"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.builder.BaseBuilder</span></tt></a></p>
+<p>BaseBuilder wrapper around an Operator literal.</p>
+<p>Attributes
+literal     &#8211;  The Operator wrapped by this instance.
+name        &#8211;  The name of the operator to be wrapped</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.equation.builder.wrapArgument">
+<tt class="descclassname">diffpy.srfit.equation.builder.</tt><tt class="descname">wrapArgument</tt><big>(</big><em>name</em>, <em>arg</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapArgument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap an Argument as a builder.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.equation.builder.wrapOperator">
+<tt class="descclassname">diffpy.srfit.equation.builder.</tt><tt class="descname">wrapOperator</tt><big>(</big><em>name</em>, <em>op</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap an Operator as a builder.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.equation.builder.wrapFunction">
+<tt class="descclassname">diffpy.srfit.equation.builder.</tt><tt class="descname">wrapFunction</tt><big>(</big><em>name</em>, <em>func</em>, <em>nin=2</em>, <em>nout=1</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap a function in an OperatorBuilder instance.</p>
+<p>name    &#8211;  The name of the function
+func    &#8211;  A callable python object
+nin     &#8211;  The number of input arguments (default 2)
+nout    &#8211;  The number of return values (default 1)</p>
+<p>Returns the OperatorBuilder instance that wraps the function.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.equation.builder.getBuilder">
+<tt class="descclassname">diffpy.srfit.equation.builder.</tt><tt class="descname">getBuilder</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.builder.getBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an operator from the global builders dictionary.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.equation.equationmod">
+<span id="equationmod-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">equationmod</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.equation.equationmod" title="Permalink to this headline">¶</a></h2>
+<p>The Equation class for holding and evaluating an equation.</p>
+<p>Equation is a functor that holds a Literal tree that defines an equation. It&#8217;s
+__call__ method evaluates the equation at the most recent value of its
+Arguments. The non-constant arguments are accessible as attributes of the
+Equation instance and can be passed as arguments to __call__.</p>
+<p>Example
+&gt; # make a Literal tree. Here&#8217;s a simple one
+&gt; add = AdditionOperator()
+&gt; a = Argument(name=&#8221;a&#8221;) # Don&#8217;t forget to name these!
+&gt; b = Argument(name=&#8221;b&#8221;)
+&gt; add.addLiteral(a)
+&gt; add.addLiteral(b)
+&gt; # make an Equation instance and pass the root
+&gt; eq = Equation(root = add)
+&gt; eq(a=3, b=4) # returns 7
+&gt; eq(a=2) # remembers b=4, returns 6
+&gt; eq.a.setValue(-3)
+&gt; eq.b.setValue(3)
+&gt; eq() # uses last assignment of a and b, returns 0</p>
+<p>See the class documentation for more information.</p>
+<dl class="class">
+<dt id="diffpy.srfit.equation.equationmod.Equation">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.equationmod.</tt><tt class="descname">Equation</tt><big>(</big><em>name=None</em>, <em>root=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Class for holding and evaluating a Literal tree.</p>
+<p>Instances have attributes that are the non-const Arguments of the tree
+(accessed by name) and a __call__ method that evaluates the tree.  It is
+assumed, but not enforced that Arguments have unique names.  If this is not
+the case, then one should keep its own list of Arguments.</p>
+<p>The tree is scanned for errors when it is added. Thus, the tree should be
+complete before putting it inside an Equation.</p>
+<p>Equations can act as Operator nodes within a literal tree. In this context,
+they evaluate as the root node, but provide a calling interface that
+accepts new argument values for the literal tree.</p>
+<p>Attributes
+root    &#8211;  The root Literal of the equation tree
+argdict &#8211;  An OrderedDict of Arguments from the root.
+args    &#8211;  Property that gets the values of argdict.</p>
+<p>Operator Attributes
+args    &#8211;  List of Literal arguments, set with &#8216;addLiteral&#8217;
+name    &#8211;  A name for this operator. e.g. &#8220;add&#8221; or &#8220;sin&#8221;
+nin     &#8211;  Number of inputs (&lt;1 means this is variable)
+nout    &#8211;  Number of outputs
+operation   &#8211;  Function that performs the operation. e.g. numpy.add.
+symbol  &#8211;  The symbolic representation. e.g. &#8220;+&#8221; or &#8220;sin&#8221;.
+_value  &#8211;  The value of the Operator.
+value   &#8211;  Property for &#8216;getValue&#8217;.</p>
+<dl class="method">
+<dt id="diffpy.srfit.equation.equationmod.Equation.addLiteral">
+<tt class="descname">addLiteral</tt><big>(</big><em>literal</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.addLiteral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cannot add a literal to an Equation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.equationmod.Equation.args">
+<tt class="descname">args</tt><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.equationmod.Equation.identify">
+<tt class="descname">identify</tt><big>(</big><em>visitor</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.identify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify self to a visitor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.equationmod.Equation.setRoot">
+<tt class="descname">setRoot</tt><big>(</big><em>root</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.setRoot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the root of the Literal tree.</p>
+<p>Raises:
+ValueError if errors are found in the Literal tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.equationmod.Equation.swap">
+<tt class="descname">swap</tt><big>(</big><em>oldlit</em>, <em>newlit</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.swap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Swap a literal in the equation for another.</p>
+<p>Note that this may change the root and the operation interface</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="diffpy.srfit.equation.literals.html">literals Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.literals.html#id1"><tt class="docutils literal"><span class="pre">literals</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.literals.html#module-diffpy.srfit.equation.literals.abcs"><tt class="docutils literal"><span class="pre">abcs</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.literals.html#module-diffpy.srfit.equation.literals.argument"><tt class="docutils literal"><span class="pre">argument</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.literals.html#module-diffpy.srfit.equation.literals.literal"><tt class="docutils literal"><span class="pre">literal</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.literals.html#module-diffpy.srfit.equation.literals.operators"><tt class="docutils literal"><span class="pre">operators</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="diffpy.srfit.equation.visitors.html">visitors Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.visitors.html#id1"><tt class="docutils literal"><span class="pre">visitors</span></tt> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.visitors.html#module-diffpy.srfit.equation.visitors.argfinder"><tt class="docutils literal"><span class="pre">argfinder</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.visitors.html#module-diffpy.srfit.equation.visitors.printer"><tt class="docutils literal"><span class="pre">printer</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.visitors.html#module-diffpy.srfit.equation.visitors.swapper"><tt class="docutils literal"><span class="pre">swapper</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.visitors.html#module-diffpy.srfit.equation.visitors.validator"><tt class="docutils literal"><span class="pre">validator</span></tt> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.visitors.html#module-diffpy.srfit.equation.visitors.visitor"><tt class="docutils literal"><span class="pre">visitor</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">equation Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">equation</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.equation.builder"><tt class="docutils literal"><span class="pre">builder</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.equation.equationmod"><tt class="docutils literal"><span class="pre">equationmod</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="diffpy.srfit.html"
+                        title="previous chapter">srfit Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="diffpy.srfit.equation.literals.html"
+                        title="next chapter">literals Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/diffpy.srfit.equation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.equation.literals.html" title="literals Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.html" title="srfit Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" >srfit Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1203 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tests Package &mdash; SrFit 1.0b2-10 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0b2-10',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b2-10 documentation" href="../index.html" />
+    <link rel="up" title="srfit Package" href="diffpy.srfit.html" />
+    <link rel="next" title="util Package" href="diffpy.srfit.util.html" />
+    <link rel="prev" title="structure Package" href="diffpy.srfit.structure.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.util.html" title="util Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.structure.html" title="structure Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" accesskey="U">srfit Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tests-package">
+<h1>tests Package<a class="headerlink" href="#tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">tests</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-diffpy.srfit.tests"></span><p>Unit tests for diffpy.srfit.</p>
+<dl class="function">
+<dt id="diffpy.srfit.tests.test">
+<tt class="descclassname">diffpy.srfit.tests.</tt><tt class="descname">test</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute all unit tests for the diffpy.srfit package.
+Return a unittest TestResult object.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.testsuite">
+<tt class="descclassname">diffpy.srfit.tests.</tt><tt class="descname">testsuite</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsuite" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a unit tests suite for the diffpy.srfit package.</p>
+<p>Return a unittest.TestSuite object.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.run">
+<span id="run-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">run</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.run" title="Permalink to this headline">¶</a></h2>
+<p>Convenience module for executing all unit tests with</p>
+<p>python -m diffpy.srfit.tests.run</p>
+</div>
+<div class="section" id="module-diffpy.srfit.tests.speedtest">
+<span id="speedtest-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">speedtest</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.speedtest" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.makeEquation1">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">makeEquation1</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.makeEquation1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make the same equation as the lazy one.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.makeLazyEquation">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">makeLazyEquation</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.makeLazyEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a lazy equation and see how fast it is.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.profileTest">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">profileTest</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.profileTest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.speedTest1">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">speedTest1</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.speedTest1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.speedTest2">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">speedTest2</tt><big>(</big><em>mutate=2</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.speedTest2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.speedTest3">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">speedTest3</tt><big>(</big><em>mutate=2</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.speedTest3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test wrt sympy.</p>
+<dl class="docutils">
+<dt>Results - sympy is 10 to 24 times faster without using arrays (ouch!).</dt>
+<dd><ul class="first last simple">
+<li>diffpy.srfit.equation is slightly slower when using arrays, but
+not considerably worse than versus numpy alone.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.speedTest4">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">speedTest4</tt><big>(</big><em>mutate=2</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.speedTest4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test wrt sympy.</p>
+<dl class="docutils">
+<dt>Results - sympy is 10 to 24 times faster without using arrays (ouch!).</dt>
+<dd><ul class="first last simple">
+<li>diffpy.srfit.equation is slightly slower when using arrays, but
+not considerably worse than versus numpy alone.</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.timeFunction">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">timeFunction</tt><big>(</big><em>f</em>, <em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.timeFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time a function in ms.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.speedtest.weightedTest">
+<tt class="descclassname">diffpy.srfit.tests.speedtest.</tt><tt class="descname">weightedTest</tt><big>(</big><em>mutate=2</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.speedtest.weightedTest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the benefits of a properly balanced equation tree.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testbuilder">
+<span id="testbuilder-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testbuilder</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testbuilder" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testbuilder.TestBuilder">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testbuilder.</tt><tt class="descname">TestBuilder</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testbuilder.TestBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testbuilder.TestBuilder.testBuildEquation">
+<tt class="descname">testBuildEquation</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testbuilder.TestBuilder.testBuildEquation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testbuilder.TestBuilder.testParseEquation">
+<tt class="descname">testParseEquation</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testbuilder.TestBuilder.testParseEquation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testbuilder.TestBuilder.testRegisterArg">
+<tt class="descname">testRegisterArg</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testbuilder.TestBuilder.testRegisterArg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testbuilder.TestBuilder.testRegisterOperator">
+<tt class="descname">testRegisterOperator</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testbuilder.TestBuilder.testRegisterOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to use an operator without arguments in an equation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testbuilder.TestBuilder.testSwapping">
+<tt class="descname">testSwapping</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testbuilder.TestBuilder.testSwapping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testcharacteristicfunctions">
+<span id="testcharacteristicfunctions-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testcharacteristicfunctions</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testcharacteristicfunctions" title="Permalink to this headline">¶</a></h2>
+<p>Tests for sas package.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testcharacteristicfunctions.</tt><tt class="descname">TestSASCF</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF.testCylinder">
+<tt class="descname">testCylinder</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF.testCylinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure cylinder works over different r-ranges</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF.testShell">
+<tt class="descname">testShell</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF.testShell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF.testSphere">
+<tt class="descname">testSphere</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF.testSphere" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF.testSpheroid">
+<tt class="descname">testSpheroid</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcharacteristicfunctions.TestSASCF.testSpheroid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testconstraint">
+<span id="testconstraint-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testconstraint</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testconstraint" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testconstraint.TestConstraint">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testconstraint.</tt><tt class="descname">TestConstraint</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testconstraint.TestConstraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testconstraint.TestConstraint.testConstraint">
+<tt class="descname">testConstraint</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testconstraint.TestConstraint.testConstraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the Constraint class.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testcontribution">
+<span id="testcontribution-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testcontribution</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testcontribution" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testcontribution.TestContribution">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testcontribution.</tt><tt class="descname">TestContribution</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcontribution.TestContribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcontribution.TestContribution.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcontribution.TestContribution.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcontribution.TestContribution.testAddProfileGenerator">
+<tt class="descname">testAddProfileGenerator</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcontribution.TestContribution.testAddProfileGenerator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcontribution.TestContribution.testInteraction">
+<tt class="descname">testInteraction</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcontribution.TestContribution.testInteraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the interaction between the profile and profile generator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcontribution.TestContribution.testReplacements">
+<tt class="descname">testReplacements</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcontribution.TestContribution.testReplacements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test attribute integrity when objects get replaced.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcontribution.TestContribution.testResidual">
+<tt class="descname">testResidual</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcontribution.TestContribution.testResidual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the residual, which requires all other methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testcontribution.TestContribution.testSetProfile">
+<tt class="descname">testSetProfile</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testcontribution.TestContribution.testSetProfile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testdiffpyparset">
+<span id="testdiffpyparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testdiffpyparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testdiffpyparset" title="Permalink to this headline">¶</a></h2>
+<p>Tests for diffpy.srfit.structure package.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testdiffpyparset.TestParameterAdapter">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testdiffpyparset.</tt><tt class="descname">TestParameterAdapter</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testdiffpyparset.TestParameterAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testdiffpyparset.TestParameterAdapter.testDiffpyStructureParSet">
+<tt class="descname">testDiffpyStructureParSet</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testdiffpyparset.TestParameterAdapter.testDiffpyStructureParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the structure conversion.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testequation">
+<span id="testequation-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testequation</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testequation" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testequation.TestEquation">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testequation.</tt><tt class="descname">TestEquation</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testequation.TestEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testequation.TestEquation.testEmbeddedEquation">
+<tt class="descname">testEmbeddedEquation</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testequation.TestEquation.testEmbeddedEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test a simple function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testequation.TestEquation.testSimpleFunction">
+<tt class="descname">testSimpleFunction</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testequation.TestEquation.testSimpleFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test a simple function.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testfitrecipe">
+<span id="testfitrecipe-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testfitrecipe</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testfitrecipe" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testfitrecipe.TestFitRecipe">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testfitrecipe.</tt><tt class="descname">TestFitRecipe</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitrecipe.TestFitRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testfitrecipe.TestFitRecipe.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitrecipe.TestFitRecipe.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testfitrecipe.TestFitRecipe.testFixFree">
+<tt class="descname">testFixFree</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitrecipe.TestFitRecipe.testFixFree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testfitrecipe.TestFitRecipe.testResidual">
+<tt class="descname">testResidual</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitrecipe.TestFitRecipe.testResidual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the residual and everything that can change it.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testfitrecipe.TestFitRecipe.testVars">
+<tt class="descname">testVars</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitrecipe.TestFitRecipe.testVars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test to see if variables are added and removed properly.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testfitresults">
+<span id="testfitresults-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testfitresults</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testfitresults" title="Permalink to this headline">¶</a></h2>
+<p>Tests for fitresults module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testfitresults.TestInitializeRecipe">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testfitresults.</tt><tt class="descname">TestInitializeRecipe</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitresults.TestInitializeRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testfitresults.TestInitializeRecipe.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitresults.TestInitializeRecipe.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testfitresults.TestInitializeRecipe.testInitializeFromFileName">
+<tt class="descname">testInitializeFromFileName</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitresults.TestInitializeRecipe.testInitializeFromFileName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testfitresults.TestInitializeRecipe.testInitializeFromFileObj">
+<tt class="descname">testInitializeFromFileObj</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitresults.TestInitializeRecipe.testInitializeFromFileObj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testfitresults.TestInitializeRecipe.testInitializeFromString">
+<tt class="descname">testInitializeFromString</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testfitresults.TestInitializeRecipe.testInitializeFromString" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testliterals">
+<span id="testliterals-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testliterals</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testliterals" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testliterals.TestArgument">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testliterals.</tt><tt class="descname">TestArgument</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestArgument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testliterals.TestArgument.testIdentity">
+<tt class="descname">testIdentity</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestArgument.testIdentity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure an Argument is an Argument.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testliterals.TestArgument.testInit">
+<tt class="descname">testInit</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestArgument.testInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that everthing initializes as expected.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testliterals.TestArgument.testValue">
+<tt class="descname">testValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestArgument.testValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test value setting.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testliterals.TestConvolutionOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testliterals.</tt><tt class="descname">TestConvolutionOperator</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestConvolutionOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testliterals.TestConvolutionOperator.testValue">
+<tt class="descname">testValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestConvolutionOperator.testValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure the convolution operator is working properly.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testliterals.TestOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testliterals.</tt><tt class="descname">TestOperator</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testliterals.TestOperator.testAddLiteral">
+<tt class="descname">testAddLiteral</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestOperator.testAddLiteral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test adding a literal to an operator node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testliterals.TestOperator.testIdentity">
+<tt class="descname">testIdentity</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestOperator.testIdentity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure an Argument is an Argument.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testliterals.TestOperator.testInit">
+<tt class="descname">testInit</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestOperator.testInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that everthing initializes as expected.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testliterals.TestOperator.testValue">
+<tt class="descname">testValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testliterals.TestOperator.testValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test value.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testobjcrystparset">
+<span id="testobjcrystparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testobjcrystparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testobjcrystparset" title="Permalink to this headline">¶</a></h2>
+<p>Tests for diffpy.srfit.structure package.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testobjcrystparset.</tt><tt class="descname">TestCreateSpaceGroup</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<p>Test space group creation from pyobjcryst structures.</p>
+<p>This makes sure that the space groups created by the structure parameter
+set are correct.</p>
+<dl class="staticmethod">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup.getObjCrystParSetSpaceGroup">
+<em class="property">static </em><tt class="descname">getObjCrystParSetSpaceGroup</tt><big>(</big><em>sg</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup.getObjCrystParSetSpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make an ObjCrystCrystalParSet with the proper space group.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup.hashDiffPySpaceGroup">
+<em class="property">static </em><tt class="descname">hashDiffPySpaceGroup</tt><big>(</big><em>sg</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup.hashDiffPySpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup.sgsEquivalent">
+<tt class="descname">sgsEquivalent</tt><big>(</big><em>sg1</em>, <em>sg2</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup.sgsEquivalent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check to see if two space group objects are the same.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup.xtestCreateSpaceGroup">
+<tt class="descname">xtestCreateSpaceGroup</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestCreateSpaceGroup.xtestCreateSpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check all sgtbx space groups for proper conversion to SpaceGroup.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testobjcrystparset.</tt><tt class="descname">TestParameterAdapter</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.tearDown">
+<tt class="descname">tearDown</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitBondAngleParameter">
+<tt class="descname">testExplicitBondAngleParameter</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitBondAngleParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test adding bond angle parameters to the molecule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitBondAngleRestraints">
+<tt class="descname">testExplicitBondAngleRestraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitBondAngleRestraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the structure with explicit bond angles.</p>
+<p>Note that this cannot work with co-linear points as the direction of
+rotation cannot be defined in this case.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitBondLengthParameter">
+<tt class="descname">testExplicitBondLengthParameter</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitBondLengthParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test adding bond length parameters to the molecule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitBondLengthRestraints">
+<tt class="descname">testExplicitBondLengthRestraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitBondLengthRestraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the structure with explicit bond lengths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitDihedralAngleParameter">
+<tt class="descname">testExplicitDihedralAngleParameter</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitDihedralAngleParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test adding dihedral angle parameters to the molecule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitDihedralAngleRestraints">
+<tt class="descname">testExplicitDihedralAngleRestraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testExplicitDihedralAngleRestraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the structure with explicit dihedral angles.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testImplicitBondAngleRestraints">
+<tt class="descname">testImplicitBondAngleRestraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testImplicitBondAngleRestraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the structure with implicit bond angles.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testImplicitBondLengthRestraints">
+<tt class="descname">testImplicitBondLengthRestraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testImplicitBondLengthRestraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the structure with implicit bond lengths.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testImplicitDihedralAngleRestraints">
+<tt class="descname">testImplicitDihedralAngleRestraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testImplicitDihedralAngleRestraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the structure with implicit dihedral angles.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testImplicitStretchModes">
+<tt class="descname">testImplicitStretchModes</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testImplicitStretchModes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the molecule with implicit stretch modes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testObjCrystParSet">
+<tt class="descname">testObjCrystParSet</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.TestParameterAdapter.testObjCrystParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the structure conversion.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.testobjcrystparset.makeC60">
+<tt class="descclassname">diffpy.srfit.tests.testobjcrystparset.</tt><tt class="descname">makeC60</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testobjcrystparset.makeC60" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a crystal containing the C60 molecule using pyobjcryst.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testordereddict">
+<span id="testordereddict-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testordereddict</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testordereddict" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testordereddict.</tt><tt class="descname">TestOrderedDict</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_clear">
+<tt class="descname">test_clear</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_clear" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_copying">
+<tt class="descname">test_copying</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_copying" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_delitem">
+<tt class="descname">test_delitem</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_delitem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_equality">
+<tt class="descname">test_equality</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_equality" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_init">
+<tt class="descname">test_init</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_iterators">
+<tt class="descname">test_iterators</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_iterators" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_pop">
+<tt class="descname">test_pop</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_pop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_popitem">
+<tt class="descname">test_popitem</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_popitem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_reinsert">
+<tt class="descname">test_reinsert</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_reinsert" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_repr">
+<tt class="descname">test_repr</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_repr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_setdefault">
+<tt class="descname">test_setdefault</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_setdefault" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_setitem">
+<tt class="descname">test_setitem</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_setitem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testordereddict.TestOrderedDict.test_update">
+<tt class="descname">test_update</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testordereddict.TestOrderedDict.test_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testparameter">
+<span id="testparameter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testparameter</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testparameter" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testparameter.TestParameter">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testparameter.</tt><tt class="descname">TestParameter</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameter.TestParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testparameter.TestParameter.testSetValue">
+<tt class="descname">testSetValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameter.TestParameter.testSetValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test initialization.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testparameter.TestParameterAdapter">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testparameter.</tt><tt class="descname">TestParameterAdapter</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameter.TestParameterAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testparameter.TestParameterAdapter.testWrapper">
+<tt class="descname">testWrapper</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameter.TestParameterAdapter.testWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the adapter.</p>
+<p>This adapts a Parameter to the Parameter interface. :)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testparameter.TestParameterProxy">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testparameter.</tt><tt class="descname">TestParameterProxy</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameter.TestParameterProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testparameter.TestParameterProxy.testProxy">
+<tt class="descname">testProxy</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameter.TestParameterProxy.testProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the ParameterProxy class.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testparameterset">
+<span id="testparameterset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testparameterset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testparameterset" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testparameterset.TestParameterSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testparameterset.</tt><tt class="descname">TestParameterSet</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameterset.TestParameterSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testparameterset.TestParameterSet.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameterset.TestParameterSet.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testparameterset.TestParameterSet.testAddParameterSet">
+<tt class="descname">testAddParameterSet</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testparameterset.TestParameterSet.testAddParameterSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the addParameterSet method.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testpdf">
+<span id="testpdf-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testpdf</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testpdf" title="Permalink to this headline">¶</a></h2>
+<p>Tests for pdf package.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testpdf.TestPDFGenerator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testpdf.</tt><tt class="descname">TestPDFGenerator</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testpdf.TestPDFGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testpdf.TestPDFGenerator.testGenerator">
+<tt class="descname">testGenerator</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testpdf.TestPDFGenerator.testGenerator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testpdf.TestPDFParser">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testpdf.</tt><tt class="descname">TestPDFParser</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testpdf.TestPDFParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testpdf.TestPDFParser.testParser1">
+<tt class="descname">testParser1</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testpdf.TestPDFParser.testParser1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testpdf.TestPDFParser.testParser2">
+<tt class="descname">testParser2</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testpdf.TestPDFParser.testParser2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testprofile">
+<span id="testprofile-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testprofile</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testprofile" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testprofile.TestProfile">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testprofile.</tt><tt class="descname">TestProfile</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofile.TestProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testprofile.TestProfile.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofile.TestProfile.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testprofile.TestProfile.testInit">
+<tt class="descname">testInit</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofile.TestProfile.testInit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testprofile.TestProfile.testLoadtxt">
+<tt class="descname">testLoadtxt</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofile.TestProfile.testLoadtxt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the loadtxt method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testprofile.TestProfile.testSetCalculationRange">
+<tt class="descname">testSetCalculationRange</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofile.TestProfile.testSetCalculationRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the setCalculationRange method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testprofile.TestProfile.testSetObservedProfile">
+<tt class="descname">testSetObservedProfile</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofile.TestProfile.testSetObservedProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the setObservedProfile method.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testprofilegenerator">
+<span id="testprofilegenerator-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testprofilegenerator</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testprofilegenerator" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testprofilegenerator.TestProfileGenerator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testprofilegenerator.</tt><tt class="descname">TestProfileGenerator</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofilegenerator.TestProfileGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testprofilegenerator.TestProfileGenerator.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofilegenerator.TestProfileGenerator.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testprofilegenerator.TestProfileGenerator.testOperation">
+<tt class="descname">testOperation</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofilegenerator.TestProfileGenerator.testOperation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the operation method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testprofilegenerator.TestProfileGenerator.testUpdate">
+<tt class="descname">testUpdate</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testprofilegenerator.TestProfileGenerator.testUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update and change the profile to make sure generator is flushed.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testrecipeorganizer">
+<span id="testrecipeorganizer-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testrecipeorganizer</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testrecipeorganizer" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestEquationFromString">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testrecipeorganizer.</tt><tt class="descname">TestEquationFromString</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestEquationFromString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestEquationFromString.testEquationFromString">
+<tt class="descname">testEquationFromString</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestEquationFromString.testEquationFromString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the equationFromString method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeContainer">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testrecipeorganizer.</tt><tt class="descname">TestRecipeContainer</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeContainer.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeContainer.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeContainer.testAccessors">
+<tt class="descname">testAccessors</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeContainer.testAccessors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test accessors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeContainer.testLocateManagedObject">
+<tt class="descname">testLocateManagedObject</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeContainer.testLocateManagedObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the locateManagedObject method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testrecipeorganizer.</tt><tt class="descname">TestRecipeOrganizer</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testAddParameter">
+<tt class="descname">testAddParameter</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testAddParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the addParameter method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testConstrain">
+<tt class="descname">testConstrain</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testConstrain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the constrain method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testGetConstraints">
+<tt class="descname">testGetConstraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testGetConstraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the _getConstraints method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testGetRestraints">
+<tt class="descname">testGetRestraints</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testGetRestraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the _getRestraints method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testNewParameter">
+<tt class="descname">testNewParameter</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testNewParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the addParameter method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRegisterCalculator">
+<tt class="descname">testRegisterCalculator</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRegisterCalculator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRegisterFunction">
+<tt class="descname">testRegisterFunction</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRegisterFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test registering various functions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRegisterStringFunction">
+<tt class="descname">testRegisterStringFunction</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRegisterStringFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test registering string functions in various ways.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRemoveParameter">
+<tt class="descname">testRemoveParameter</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRemoveParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test removeParameter method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRestrain">
+<tt class="descname">testRestrain</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrecipeorganizer.TestRecipeOrganizer.testRestrain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the restrain method.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testrestraint">
+<span id="testrestraint-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testrestraint</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testrestraint" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testrestraint.TestRestraint">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testrestraint.</tt><tt class="descname">TestRestraint</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrestraint.TestRestraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testrestraint.TestRestraint.testRestraint">
+<tt class="descname">testRestraint</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testrestraint.TestRestraint.testRestraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the Restraint class.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testsas">
+<span id="testsas-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testsas</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testsas" title="Permalink to this headline">¶</a></h2>
+<p>Tests for sas package.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testsas.TestSASGenerator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testsas.</tt><tt class="descname">TestSASGenerator</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsas.TestSASGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testsas.TestSASGenerator.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsas.TestSASGenerator.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testsas.TestSASGenerator.testGenerator">
+<tt class="descname">testGenerator</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsas.TestSASGenerator.testGenerator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testsas.TestSASGenerator.testGenerator2">
+<tt class="descname">testGenerator2</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsas.TestSASGenerator.testGenerator2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testsas.TestSASParser">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testsas.</tt><tt class="descname">TestSASParser</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsas.TestSASParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testsas.TestSASParser.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsas.TestSASParser.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testsas.TestSASParser.testParser">
+<tt class="descname">testParser</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsas.TestSASParser.testParser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testsgconstriants">
+<span id="testsgconstriants-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testsgconstriants</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testsgconstriants" title="Permalink to this headline">¶</a></h2>
+<p>Tests space group constraints.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testsgconstriants.TestSGConstraints">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testsgconstriants.</tt><tt class="descname">TestSGConstraints</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsgconstriants.TestSGConstraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testsgconstriants.TestSGConstraints.testConstrainAsSpaceGroup">
+<tt class="descname">testConstrainAsSpaceGroup</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsgconstriants.TestSGConstraints.testConstrainAsSpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the constrainAsSpaceGroup function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testsgconstriants.TestSGConstraints.testConstrainSpaceGroup">
+<tt class="descname">testConstrainSpaceGroup</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsgconstriants.TestSGConstraints.testConstrainSpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure that all Parameters are constrained properly.</p>
+<p>This tests constrainSpaceGroup from
+diffpy.srfit.structure.sgconstraints, which is performed automatically
+when an ObjCrystCrystalParSet is created.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.testsgconstriants.makeLaMnO3">
+<tt class="descclassname">diffpy.srfit.tests.testsgconstriants.</tt><tt class="descname">makeLaMnO3</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsgconstriants.makeLaMnO3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="diffpy.srfit.tests.testsgconstriants.makeLaMnO3_P1">
+<tt class="descclassname">diffpy.srfit.tests.testsgconstriants.</tt><tt class="descname">makeLaMnO3_P1</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testsgconstriants.makeLaMnO3_P1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testtagmanager">
+<span id="testtagmanager-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testtagmanager</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testtagmanager" title="Permalink to this headline">¶</a></h2>
+<p>Unit tests for tagmanager.py</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testtagmanager.TestTagManager">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testtagmanager.</tt><tt class="descname">TestTagManager</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testtagmanager.TestTagManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testtagmanager.TestTagManager.setUp">
+<tt class="descname">setUp</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testtagmanager.TestTagManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testtagmanager.TestTagManager.tearDown">
+<tt class="descname">tearDown</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testtagmanager.TestTagManager.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testtagmanager.TestTagManager.test_hasTags">
+<tt class="descname">test_hasTags</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testtagmanager.TestTagManager.test_hasTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>check TagManager.hasTags()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testtagmanager.TestTagManager.test_tag">
+<tt class="descname">test_tag</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testtagmanager.TestTagManager.test_tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>check TagManager.tag()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testtagmanager.TestTagManager.test_union_and_intersection">
+<tt class="descname">test_union_and_intersection</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testtagmanager.TestTagManager.test_union_and_intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>check TagManager.union() and TagManager.intersection()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testtagmanager.TestTagManager.test_untag">
+<tt class="descname">test_untag</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testtagmanager.TestTagManager.test_untag" title="Permalink to this definition">¶</a></dt>
+<dd><p>check TagManager.untag()</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.testvisitors">
+<span id="testvisitors-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">testvisitors</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.testvisitors" title="Permalink to this headline">¶</a></h2>
+<p>Tests for refinableobj module.</p>
+<dl class="class">
+<dt id="diffpy.srfit.tests.testvisitors.TestArgFinder">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testvisitors.</tt><tt class="descname">TestArgFinder</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testvisitors.TestArgFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testvisitors.TestArgFinder.testArg">
+<tt class="descname">testArg</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testvisitors.TestArgFinder.testArg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test just an Argument equation.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.tests.testvisitors.TestArgFinder.testSimpleFunction">
+<tt class="descname">testSimpleFunction</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testvisitors.TestArgFinder.testSimpleFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test a simple function.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testvisitors.TestSwapper">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testvisitors.</tt><tt class="descname">TestSwapper</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testvisitors.TestSwapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testvisitors.TestSwapper.testSimpleFunction">
+<tt class="descname">testSimpleFunction</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testvisitors.TestSwapper.testSimpleFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test a simple function.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.tests.testvisitors.TestValidator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.tests.testvisitors.</tt><tt class="descname">TestValidator</tt><big>(</big><em>methodName='runTest'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testvisitors.TestValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></tt></p>
+<dl class="method">
+<dt id="diffpy.srfit.tests.testvisitors.TestValidator.testSimpleFunction">
+<tt class="descname">testSimpleFunction</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.testvisitors.TestValidator.testSimpleFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test a simple function.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diffpy.srfit.tests.utils">
+<span id="utils-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">utils</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.tests.utils" title="Permalink to this headline">¶</a></h2>
+<p>Helper routines for testing.</p>
+<dl class="function">
+<dt id="diffpy.srfit.tests.utils.datafile">
+<tt class="descclassname">diffpy.srfit.tests.utils.</tt><tt class="descname">datafile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#diffpy.srfit.tests.utils.datafile" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">tests Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">tests</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.run"><tt class="docutils literal"><span class="pre">run</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.speedtest"><tt class="docutils literal"><span class="pre">speedtest</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testbuilder"><tt class="docutils literal"><span class="pre">testbuilder</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testcharacteristicfunctions"><tt class="docutils literal"><span class="pre">testcharacteristicfunctions</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testconstraint"><tt class="docutils literal"><span class="pre">testconstraint</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testcontribution"><tt class="docutils literal"><span class="pre">testcontribution</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testdiffpyparset"><tt class="docutils literal"><span class="pre">testdiffpyparset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testequation"><tt class="docutils literal"><span class="pre">testequation</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testfitrecipe"><tt class="docutils literal"><span class="pre">testfitrecipe</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testfitresults"><tt class="docutils literal"><span class="pre">testfitresults</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testliterals"><tt class="docutils literal"><span class="pre">testliterals</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testobjcrystparset"><tt class="docutils literal"><span class="pre">testobjcrystparset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testordereddict"><tt class="docutils literal"><span class="pre">testordereddict</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testparameter"><tt class="docutils literal"><span class="pre">testparameter</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testparameterset"><tt class="docutils literal"><span class="pre">testparameterset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testpdf"><tt class="docutils literal"><span class="pre">testpdf</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testprofile"><tt class="docutils literal"><span class="pre">testprofile</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testprofilegenerator"><tt class="docutils literal"><span class="pre">testprofilegenerator</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testrecipeorganizer"><tt class="docutils literal"><span class="pre">testrecipeorganizer</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testrestraint"><tt class="docutils literal"><span class="pre">testrestraint</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testsas"><tt class="docutils literal"><span class="pre">testsas</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testsgconstriants"><tt class="docutils literal"><span class="pre">testsgconstriants</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testtagmanager"><tt class="docutils literal"><span class="pre">testtagmanager</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.testvisitors"><tt class="docutils literal"><span class="pre">testvisitors</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.tests.utils"><tt class="docutils literal"><span class="pre">utils</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="diffpy.srfit.structure.html"
+                        title="previous chapter">structure Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="diffpy.srfit.util.html"
+                        title="next chapter">util Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/api/diffpy.srfit.tests.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.util.html" title="util Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="diffpy.srfit.structure.html" title="structure Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" >srfit Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

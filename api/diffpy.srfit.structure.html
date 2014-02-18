@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>structure Package &mdash; SrFit 1.0b2-10 documentation</title>
+    <title>structure Package &mdash; SrFit 1.0b2-14 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b2-10',
+        VERSION:     '1.0b2-14',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +26,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b2-10 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.0b2-14 documentation" href="../index.html" />
     <link rel="up" title="srfit Package" href="diffpy.srfit.html" />
-    <link rel="next" title="tests Package" href="diffpy.srfit.tests.html" />
+    <link rel="next" title="util Package" href="diffpy.srfit.util.html" />
     <link rel="prev" title="sas Package" href="diffpy.srfit.sas.html" /> 
   </head>
   <body>
@@ -42,12 +42,12 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.tests.html" title="tests Package"
+          <a href="diffpy.srfit.util.html" title="util Package"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="diffpy.srfit.sas.html" title="sas Package"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+        <li><a href="../index.html">SrFit 1.0b2-14 documentation</a> &raquo;</li>
           <li><a href="diffpy.srfit.html" accesskey="U">srfit Package</a> &raquo;</li> 
       </ul>
     </div>  
@@ -154,8 +154,99 @@ scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
 </dd></dl>
 
 </div>
-<div class="section" id="cctbxparset-module">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">cctbxparset</span></tt> Module<a class="headerlink" href="#cctbxparset-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-diffpy.srfit.structure.cctbxparset">
+<span id="cctbxparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cctbxparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.cctbxparset" title="Permalink to this headline">¶</a></h2>
+<p>Wrappers for interfacing cctbx crystal with SrFit.</p>
+<p>This wraps a cctbx.crystal as a ParameterSet with a similar hierarchy, which
+can then be used within a FitRecipe. Note that all manipulations to the
+cctbx.crystal should be done before wrapping. Changes made to the cctbx.crystal
+object after wrapping may not be reflected within the wrapper, which can have
+unpredictable results during a structure refinement.</p>
+<p>Classes:</p>
+<p>CCTBXCrystalParSet  &#8211;  Wrapper for cctbx.crystal
+UnitCellParSet      &#8211;  Wrapper for the unit cell of cctbx.crystal
+ScattererParSet     &#8211;  Wrapper for cctbx.xray.scatterer</p>
+<dl class="class">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXScattererParSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.cctbxparset.</tt><tt class="descname">CCTBXScattererParSet</tt><big>(</big><em>name</em>, <em>strups</em>, <em>idx</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXScattererParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<p>A wrapper for cctbx.xray.scatterer</p>
+<p>This class derives from ParameterSet.</p>
+<p>Attributes:
+name        &#8211;  Name of the scatterer. The name is always of the form</p>
+<blockquote>
+<div>&#8220;%s%i&#8221; % (element, number), where the number is the running
+index of that element type (starting at 0).</div></blockquote>
+<p>x (y, z)    &#8211;  Atom position in crystal coordinates (ParameterAdapter)
+occupancy   &#8211;  Occupancy of the atom on its crystal location</p>
+<blockquote>
+<div>(ParameterAdapter)</div></blockquote>
+<p>Uiso        &#8211;  Isotropic scattering factor (ParameterAdapter).</p>
+<dl class="attribute">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXScattererParSet.element">
+<tt class="descname">element</tt><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXScattererParSet.element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXUnitCellParSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.cctbxparset.</tt><tt class="descname">CCTBXUnitCellParSet</tt><big>(</big><em>strups</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXUnitCellParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<p>A wrapper for cctbx unit_cell object.</p>
+<p>Attributes:
+name    &#8211;  Always &#8220;unitcell&#8221;.
+a, b, c, alpha, beta, gamma &#8211;  Unit cell parameters (ParameterAdapter).</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.structure.cctbxparset.</tt><tt class="descname">CCTBXCrystalParSet</tt><big>(</big><em>name</em>, <em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.structure.basestructureparset.BaseStructureParSet" title="diffpy.srfit.structure.basestructureparset.BaseStructureParSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.structure.basestructureparset.BaseStructureParSet</span></tt></a></p>
+<p>A wrapper for CCTBX structure.</p>
+<p>Attributes:
+stru        &#8211;  The adapted cctbx structure object.
+scatterers  &#8211;  The list of ScattererParSets.
+unitcell    &#8211;  The UnitCellParSet for the structure.</p>
+<dl class="classmethod">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.canAdapt">
+<em class="property">classmethod </em><tt class="descname">canAdapt</tt><big>(</big><em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.canAdapt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return whether the structure can be adapted by this class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.getLattice">
+<tt class="descname">getLattice</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.getLattice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the ParameterSet containing the lattice Parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.getScatterers">
+<tt class="descname">getScatterers</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.getScatterers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of ParameterSets that represents the scatterers.</p>
+<p>The site positions must be accessible from the list entries via the
+names &#8220;x&#8221;, &#8220;y&#8221;, and &#8220;z&#8221;. The ADPs must be accessible as well, but the
+name and nature of the ADPs (U-factors, B-factors, isotropic,
+anisotropic) depends on the adapted structure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.getSpaceGroup">
+<tt class="descname">getSpaceGroup</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.getSpaceGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the HM space group symbol for the structure.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.update">
+<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the unit_cell to a change in lattice parameters.</p>
+<p>This remakes the unit cell according to a change in the lattice
+parameters. Call this function before using the CCTBXCrystalParSet.
+The unit_cell will only be remade if necessary.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-diffpy.srfit.structure.diffpyparset">
 <span id="diffpyparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">diffpyparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.diffpyparset" title="Permalink to this headline">¶</a></h2>
@@ -686,7 +777,7 @@ scaled  &#8211;  A flag indicating if the restraint is scaled</p>
 <li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">structure</span></tt> Package</a></li>
 <li><a class="reference internal" href="#module-diffpy.srfit.structure.basestructureparset"><tt class="docutils literal"><span class="pre">basestructureparset</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-diffpy.srfit.structure.bvsrestraint"><tt class="docutils literal"><span class="pre">bvsrestraint</span></tt> Module</a></li>
-<li><a class="reference internal" href="#cctbxparset-module"><tt class="docutils literal"><span class="pre">cctbxparset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.cctbxparset"><tt class="docutils literal"><span class="pre">cctbxparset</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-diffpy.srfit.structure.diffpyparset"><tt class="docutils literal"><span class="pre">diffpyparset</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-diffpy.srfit.structure.objcrystparset"><tt class="docutils literal"><span class="pre">objcrystparset</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-diffpy.srfit.structure.sgconstraints"><tt class="docutils literal"><span class="pre">sgconstraints</span></tt> Module</a></li>
@@ -699,8 +790,8 @@ scaled  &#8211;  A flag indicating if the restraint is scaled</p>
   <p class="topless"><a href="diffpy.srfit.sas.html"
                         title="previous chapter">sas Package</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="diffpy.srfit.tests.html"
-                        title="next chapter">tests Package</a></p>
+  <p class="topless"><a href="diffpy.srfit.util.html"
+                        title="next chapter">util Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/api/diffpy.srfit.structure.txt"
@@ -733,12 +824,12 @@ scaled  &#8211;  A flag indicating if the restraint is scaled</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.tests.html" title="tests Package"
+          <a href="diffpy.srfit.util.html" title="util Package"
              >next</a> |</li>
         <li class="right" >
           <a href="diffpy.srfit.sas.html" title="sas Package"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b2-10 documentation</a> &raquo;</li>
+        <li><a href="../index.html">SrFit 1.0b2-14 documentation</a> &raquo;</li>
           <li><a href="diffpy.srfit.html" >srfit Package</a> &raquo;</li> 
       </ul>
     </div>

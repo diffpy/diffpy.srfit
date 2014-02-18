@@ -9,6 +9,14 @@ srfit Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`version` Module
+---------------------
+
+.. automodule:: diffpy.srfit.version
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 

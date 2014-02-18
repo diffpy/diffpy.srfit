@@ -219,4 +219,3 @@ class PlotFitHook(FitHook):
 
         pylab.draw()
         return
-

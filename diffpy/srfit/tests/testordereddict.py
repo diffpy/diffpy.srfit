@@ -180,7 +180,6 @@ class TestOrderedDict(unittest.TestCase):
         od['a'] = 1
         self.assertEqual(list(od.items()), [('b', 2), ('a', 1)])
 
+
 if __name__ == "__main__":
-
     unittest.main()
-

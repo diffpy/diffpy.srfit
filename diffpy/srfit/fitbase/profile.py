@@ -345,4 +345,3 @@ def rebinArray(A, xold, xnew):
     from scipy.interpolate import splrep, splev
     finterp = splrep(xold, A, s=0)
     return splev(xnew, finterp, der=0)
-

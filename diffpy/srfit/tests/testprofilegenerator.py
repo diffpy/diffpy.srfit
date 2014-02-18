@@ -61,7 +61,6 @@ class TestProfileGenerator(unittest.TestCase):
         self.assertTrue(array_equal(gen._value, prof.ycalc))
         return
 
+
 if __name__ == "__main__":
-
     unittest.main()
-

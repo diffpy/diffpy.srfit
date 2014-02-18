@@ -93,4 +93,3 @@ class SrRealParSet(BaseStructureParSet):
         if self._usesymmetry:
             return self.stru
         return nosymmetry(self.stru)
-

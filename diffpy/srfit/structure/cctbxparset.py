@@ -249,7 +249,8 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     @classmethod
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
-        return isinstance(stru, crystal)
+        from cctbx.crystal import special_position_settings
+        return isinstance(stru, special_position_settings)
 
     def getLattice(self):
         """Get the ParameterSet containing the lattice Parameters."""

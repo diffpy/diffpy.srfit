@@ -63,26 +63,31 @@ setup_args = dict(
             'numpy>=1.0',
             'scipy>=0.7.0',
             ],
-
+        zip_safe = False,
         author = "Simon J.L. Billinge",
         author_email = "sb2896@columbia.edu",
-        maintainer = 'Christopher L. Farrow',
-        maintainer_email = 'farrowch@gmail.com',
+        maintainer = "Pavol Juhas",
+        maintainer_email = "pavol.juhas@gmail.com",
         description = "SrFit - Structure refinement from diffraction data",
-        license = "BSD",
-        url = "http://www.diffpy.org/",
+        license = "BSD, see LICENSE.txt",
+        url = "https://github.com/diffpy/diffpy.srfit",
         keywords = "complex modeling calculator utilities",
         classifiers = [
             # List of possible values at
             # http://pypi.python.org/pypi?:action=list_classifiers
-            'Development Status :: 3 - Alpha',
+            'Development Status :: 5 - Production/Stable',
             'Environment :: Console',
+            'Intended Audience :: Developers',
+            'Intended Audience :: Education',
             'Intended Audience :: Science/Research',
+            'License :: OSI Approved :: BSD License',
             'Operating System :: MacOS',
-            'Operating System :: Microsoft :: Windows',
             'Operating System :: POSIX',
             'Programming Language :: Python :: 2.6',
+            'Programming Language :: Python :: 2.7',
+            'Topic :: Scientific/Engineering :: Chemistry',
             'Topic :: Scientific/Engineering :: Physics',
+            'Topic :: Software Development :: Libraries',
         ],
 )
 

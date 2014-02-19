@@ -28,8 +28,6 @@ ScattererParSet     --  Wrapper for cctbx.xray.scatterer
 
 """
 
-from cctbx import crystal
-
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
@@ -231,7 +229,8 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         sgn = stru.space_group().match_tabulated_settings().number()
 
         # Create the symmetry object
-        symm = crystal.symmetry(
+        from cctbx.crystal import symmetry
+        symm = symmetry(
                 unit_cell = self.unitcell._latpars,
                 space_group_symbol = sgn
                 )
@@ -250,7 +249,8 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     @classmethod
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
-        return isinstance(stru, crystal)
+        from cctbx.crystal import special_position_settings
+        return isinstance(stru, special_position_settings)
 
     def getLattice(self):
         """Get the ParameterSet containing the lattice Parameters."""
@@ -276,4 +276,3 @@ class CCTBXCrystalParSet(BaseStructureParSet):
 
 
 # End class CCTBXCrystalParSet
-

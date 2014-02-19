@@ -47,7 +47,6 @@ class TestConstraint(unittest.TestCase):
         self.assertEquals(16.2, p1.getValue())
         return
 
+
 if __name__ == "__main__":
-
     unittest.main()
-

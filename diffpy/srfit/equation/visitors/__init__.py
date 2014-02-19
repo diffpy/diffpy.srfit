@@ -77,4 +77,3 @@ def swap(literal, oldlit, newlit):
     literal.identify(v)
 
     return literal
-

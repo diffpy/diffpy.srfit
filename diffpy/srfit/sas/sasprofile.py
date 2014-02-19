@@ -96,4 +96,3 @@ class SASProfile(Profile):
         self._datainfo.y = self._yobs
         self._datainfo.dy = self._dyobs
         return
-

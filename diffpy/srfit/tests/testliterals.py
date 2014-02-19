@@ -163,7 +163,6 @@ class TestConvolutionOperator(unittest.TestCase):
         self.assertAlmostEquals(0, sum((g3-g3c)**2))
         return
 
+
 if __name__ == "__main__":
-
     unittest.main()
-

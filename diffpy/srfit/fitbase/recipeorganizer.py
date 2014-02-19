@@ -981,4 +981,3 @@ def equationFromString(eqstr, factory, ns = {}, buildargs = False,
         factory.deRegisterBuilder(name)
 
     return eq
-

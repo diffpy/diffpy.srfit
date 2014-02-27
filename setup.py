@@ -55,11 +55,7 @@ setup_args = dict(
         test_suite = 'diffpy.srfit.tests',
         include_package_data = True,
         entry_points = {},
-        install_requires = [
-#           'numpy>=1.0',
-#           'scipy>=0.7.0',
-#           'matplotlib>=0.9',
-            ],
+        install_requires = [],
         zip_safe = False,
         author = "Simon J.L. Billinge",
         author_email = "sb2896@columbia.edu",

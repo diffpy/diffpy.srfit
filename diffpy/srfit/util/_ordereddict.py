@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+#
+# Derived from v2.7 of collections.py at http://svn.python.org/projects/python
+# See python2.7 for full copyright and license information
 """Backport from python2.7 to python <= 2.6."""
 
 __all__ = ["OrderedDict"]

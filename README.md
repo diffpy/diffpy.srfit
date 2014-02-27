@@ -120,6 +120,11 @@ copied to a package directory, use
 python setup.py develop --user
 ```
 
+## ACKNOWLEDGEMENT
+
+Part of the source code (_abc.py and _ordereddict.py) was derived from
+python2.7 at http://svn.python.org/; while other code (observable.py)
+was derived the 1.0 version of the Caltech 'pyre' project.
 
 
 ## CONTACTS

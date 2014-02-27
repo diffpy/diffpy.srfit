@@ -1,3 +1,8 @@
-Chris Farrow
-Pavol Juhas
-Simon J. L. Billinge
+AUTHORS:
+ Chris Farrow
+ Pavol Juhas
+ Simon J. L. Billinge
+
+CONTRIBUTORS:
+ https://github.com/diffpy/diffpy.srfit/graphs/contributors 
+ http://danse.us/trac/diffraction/browser/diffraction/diffpy.srfit

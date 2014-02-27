@@ -5,12 +5,20 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.tests.utils import datafile
 
+from utils import testcase, TestCasePdf, TestCaseStructure
 
-class TestPDFParser(unittest.TestCase):
+# Global variables to be assigned in setUp
+PDFGenerator = PDFParser = None
+
+
+class TestPDFParset(testcase(TestCasePdf)):
+
+    def setUp(self):
+        global PDFParser
+        from diffpy.srfit.pdf import PDFParser
 
     def testParser1(self):
         data = datafile("ni-q27r100-neutron.gr")
@@ -87,7 +95,11 @@ class TestPDFParser(unittest.TestCase):
         self.assertTrue(dx is None)
         return
 
-class TestPDFGenerator(unittest.TestCase):
+class TestPDFGenerator(testcase(TestCaseStructure)):
+
+    def setUp(self):
+        global PDFGenerator
+        from diffpy.srfit.pdf import PDFGenerator
 
     def testGenerator(self):
         qmax = 27.0

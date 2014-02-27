@@ -5,10 +5,18 @@ import unittest
 
 import numpy
 
-from diffpy.Structure import Atom, Lattice, Structure
-from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+from utils import testcase, TestCaseStructure
 
-class TestParameterAdapter(unittest.TestCase):
+# Global variables to be assigned in setUp
+Atom = Lattice = Structure = DiffpyStructureParSet = None
+
+
+class TestParameterAdapter(testcase(TestCaseStructure)):
+
+    def setUp(self):
+        global Atom, Lattice, Structure, DiffpyStructureParSet
+        from diffpy.Structure import Atom, Lattice, Structure
+        from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
     def testDiffpyStructureParSet(self):
         """Test the structure conversion."""

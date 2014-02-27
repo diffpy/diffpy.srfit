@@ -7,7 +7,7 @@ import unittest
 import numpy
 
 from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.tests.utils import TestCaseSaSOptional, datafile
+from utils import TestCaseSaS, datafile
 
 # Global variable for the sas module.
 # If available, it will be assign by the setUp method.
@@ -18,7 +18,7 @@ warnings.filterwarnings('ignore', module='sans.models.*',
         category=DeprecationWarning)
 
 
-class TestSASParser(TestCaseSaSOptional):
+class TestSASParser(TestCaseSaS):
 
     def setUp(self):
         global sas
@@ -61,7 +61,7 @@ class TestSASParser(TestCaseSaSOptional):
         return
 
 
-class TestSASGenerator(TestCaseSaSOptional):
+class TestSASGenerator(TestCaseSaS):
 
     def setUp(self):
         global sas

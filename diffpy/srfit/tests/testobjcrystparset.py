@@ -5,12 +5,12 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
+from utils import testcase, TestCaseStructure
 
-from pyobjcryst.crystal import Crystal
-from pyobjcryst.atom import Atom
-from pyobjcryst.molecule import Molecule
-from pyobjcryst.scatteringpower import ScatteringPowerAtom
+# Global variables to be assigned in setUp
+ObjCrystCrystalParSet = SpaceGroups = None
+Crystal = Atom = Molecule = ScatteringPowerAtom = None
+
 
 c60xyz = \
 """
@@ -95,9 +95,17 @@ def makeC60():
 
     return c
 
-class TestParameterAdapter(unittest.TestCase):
+
+class TestParameterAdapter(testcase(TestCaseStructure)):
 
     def setUp(self):
+        global ObjCrystCrystalParSet, Crystal, Atom, Molecule
+        global ScatteringPowerAtom
+        from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
+        from pyobjcryst.crystal import Crystal
+        from pyobjcryst.atom import Atom
+        from pyobjcryst.molecule import Molecule
+        from pyobjcryst.scatteringpower import ScatteringPowerAtom
         self.occryst = makeC60()
         self.ocmol = self.occryst.GetScatterer("c60")
         return
@@ -560,15 +568,19 @@ class TestParameterAdapter(unittest.TestCase):
         return
 
 
-from diffpy.Structure import SpaceGroups
 
-class TestCreateSpaceGroup(unittest.TestCase):
+class TestCreateSpaceGroup(testcase(TestCaseStructure)):
     """Test space group creation from pyobjcryst structures.
 
     This makes sure that the space groups created by the structure parameter
     set are correct.
 
     """
+
+    def setUp(self):
+        global ObjCrystCrystalParSet, SpaceGroups
+        from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
+        from diffpy.Structure import SpaceGroups
 
     @staticmethod
     def getObjCrystParSetSpaceGroup(sg):

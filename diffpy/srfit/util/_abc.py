@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+#
+# Derived from v2.7 of abs.py at http://svn.python.org/projects/python
 # Copyright 2007 Google, Inc. All Rights Reserved.
 # Licensed to PSF under a Contributor Agreement.
 """Abstract Base Classes (ABCs) according to PEP 3119."""

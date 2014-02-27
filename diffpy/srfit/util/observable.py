@@ -8,7 +8,8 @@
 #                      (c) 1998-2009  all rights reserved
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
+# Derived from pyre-1.0/packages/pyre/patterns/Observable.py
+# See pyre-1.0 for full copyright and license information
 
 __all__ = ["Observable"]
 

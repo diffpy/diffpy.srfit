@@ -22,7 +22,7 @@ from unittest import TestCase
 TestCaseOptional = object
 def isinstalled(*TestCases):
     'check for optional dependencies'
-    return not TestCaseOptional in TestCases 
+    return not TestCaseOptional in TestCases
 def testcase(*TestCases):
     'get appropriate TestCase object for optional dependencies'
     return TestCase if isinstalled(*TestCases) else TestCaseOptional

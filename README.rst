@@ -9,7 +9,7 @@ different data spectra), regression algorithms and structure models.  The
 software is capable of co-refinement using multiple information sources or
 models. It provides a uniform interface for various regression algorithms. The
 target function being optimized can be specified by the user according to the
-data available.  
+data available.
 
 Within the diffpy.srfit framework, any parameter used in describing the
 structure of a material can be passed as a refinable variable to the global
@@ -23,7 +23,7 @@ customized by the user. If the refinement contains multiple models, each model
 can have its own cost function which will be properly weighted and combined to
 obtain the total cost function. Additionaly, diffpy.srfit is designed to be
 extensible, allowing the user to integrate external calculators to perform
-corefinements with other techniques. 
+corefinements with other techniques.
 
 For more information about the diffpy.srfit library, see the users manual at
 http://diffpy.github.io/diffpy.srfit.

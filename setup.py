@@ -68,7 +68,7 @@ setup_args = dict(
         description = "SrFit - Structure refinement from diffraction data",
         license = "BSD, see LICENSE.txt",
         url = "https://github.com/diffpy/diffpy.srfit",
-        keywords = "complex modeling calculator utilities",
+        keywords = "optimization constraints restraints structure refinement complex modeling",
         classifiers = [
             # List of possible values at
             # http://pypi.python.org/pypi?:action=list_classifiers

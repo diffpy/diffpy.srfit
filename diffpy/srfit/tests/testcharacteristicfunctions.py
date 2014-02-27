@@ -5,10 +5,17 @@ import unittest
 
 import numpy
 
-import diffpy.srfit.pdf.characteristicfunctions as cf
-from utils import TestCaseSaSOptional
+from utils import testcase, TestCaseSaS, TestCasePdf
 
-class TestSASCF(TestCaseSaSOptional):
+# Global variables to be assigned in setUp
+cf = None
+
+
+class TestSASCF(testcase(TestCaseSaS,TestCasePdf)):
+
+    def setUp(self):
+        global cf
+        import diffpy.srfit.pdf.characteristicfunctions as cf
 
     def testSphere(self):
         radius = 25

@@ -3,15 +3,41 @@
 
 import logging
 import diffpy.srfit.equation.literals as literals
+from unittest import TestCase
 
-# Resolve the TestCaseSaSOptional class
+# Create a singleton and a test for optional test cases
+TestCaseOptional = object
+def isinstalled(*TestCases):
+    'check for optional dependencies'
+    return not TestCaseOptional in TestCases 
+def testcase(*TestCases):
+    'get appropriate TestCase object for optional dependencies'
+    return TestCase if isinstalled(*TestCases) else TestCaseOptional
+
+# Resolve the TestCase*Optional classes
 try:
     import sans.pr.invertor
     import sans.models
-    from unittest import TestCase as TestCaseSaSOptional
+    TestCaseSaS = TestCase
 except ImportError, e:
-    TestCaseSaSOptional = object
+    TestCaseSaS = TestCaseOptional
     logging.warning('%s, SaS tests skipped.', e)
+
+try:
+    import diffpy.Structure
+    import pyobjcryst
+    import diffpy.srreal
+    TestCaseStructure = TestCase
+except ImportError, e:
+    TestCaseStructure = TestCaseOptional
+    logging.warning('%s, Structure tests skipped.', e)
+
+try:
+    import diffpy.srreal
+    TestCasePdf = TestCase
+except ImportError, e:
+    TestCasePdf = TestCaseOptional
+    logging.warning('%s, Pdf tests skipped.', e)
 
 
 def _makeArgs(num):

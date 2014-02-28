@@ -18,7 +18,7 @@ import unittest
 
 import numpy
 
-from utils import testcase, TestCaseStructure
+from diffpy.srfit.tests.utils import testcase, TestCaseStructure
 
 # Global variables to be assigned in setUp
 ObjCrystCrystalParSet = DiffpyStructureParSet = None

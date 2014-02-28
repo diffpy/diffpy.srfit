@@ -47,10 +47,10 @@ except ImportError, e:
 
 try:
     import diffpy.srreal
-    TestCasePdf = TestCase
+    TestCasePDF = TestCase
 except ImportError, e:
-    TestCasePdf = TestCaseOptional
-    logging.warning('%s, Pdf tests skipped.', e)
+    TestCasePDF = _TestCaseDisabled
+    logging.warning('%s, PDF tests skipped.', e)
 
 
 def _makeArgs(num):

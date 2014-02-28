@@ -18,7 +18,7 @@ import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation import Equation
 import unittest
 
-from utils import _makeArgs
+from diffpy.srfit.tests.utils import _makeArgs
 
 class TestEquation(unittest.TestCase):
 

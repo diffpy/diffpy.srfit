@@ -20,7 +20,7 @@ import unittest
 import numpy
 
 from diffpy.srfit.fitbase import Profile
-from utils import TestCaseSaS, datafile
+from diffpy.srfit.tests.utils import TestCaseSaS, datafile
 
 # Global variable for the sas module.
 # If available, it will be assign by the setUp method.

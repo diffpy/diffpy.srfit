@@ -19,7 +19,7 @@ import diffpy.srfit.equation.literals as literals
 
 import numpy
 
-from utils import _makeArgs
+from diffpy.srfit.tests.utils import _makeArgs
 
 x = numpy.arange(0, 20, 0.05)
 

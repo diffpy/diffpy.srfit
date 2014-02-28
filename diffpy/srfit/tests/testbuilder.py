@@ -22,7 +22,7 @@ import unittest
 
 import numpy
 
-from utils import _makeArgs
+from diffpy.srfit.tests.utils import _makeArgs
 
 class TestBuilder(unittest.TestCase):
 

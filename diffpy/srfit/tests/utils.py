@@ -42,23 +42,23 @@ except ImportError, e:
 try:
     import diffpy.Structure
     TestCaseStructure = TestCase
-except ImportError, e:
+except ImportError:
     TestCaseStructure = _TestCaseDisabled
-    logging.warning('%s, Structure tests skipped.', e)
+    logging.warning('Cannot import diffpy.Structure, Structure tests skipped.')
 
 try:
     import pyobjcryst
     TestCaseObjCryst = TestCase
-except ImportError, e:
+except ImportError:
     TestCaseObjCryst = _TestCaseDisabled
-    logging.warning('%s, Structure tests skipped.', e)
+    logging.warning('Cannot import pyobjcryst, pyobjcryst tests skipped.')
 
 try:
     import diffpy.srreal.pdfcalculator
     TestCasePDF = TestCase
-except ImportError, e:
+except ImportError:
     TestCasePDF = _TestCaseDisabled
-    logging.warning('%s, PDF tests skipped.', e)
+    logging.warning('Cannot import diffpy.srreal, PDF tests skipped.')
 
 
 def _makeArgs(num):

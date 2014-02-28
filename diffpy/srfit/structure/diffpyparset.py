@@ -34,7 +34,6 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
-from diffpy.srreal.structureadapter import nometa
 
 # Accessor for xyz of atoms
 def _xyzgetter(i):
@@ -289,6 +288,7 @@ class DiffpyStructureParSet(SrRealParSet):
         the structure in a nometa wrapper.
 
         """
+        from diffpy.srreal.structureadapter import nometa
         stru = SrRealParSet._getSrRealStructure(self)
         return nometa(stru)
 

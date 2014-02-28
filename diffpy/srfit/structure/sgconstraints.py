@@ -17,9 +17,6 @@
 
 import numpy
 
-from diffpy.Structure import SpaceGroups
-from diffpy.Structure.SymmetryUtilities import GeneratorSite, stdUsymbols
-from diffpy.Structure.SymmetryUtilities import SymmetryConstraints
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 
@@ -27,7 +24,7 @@ __all__ = ["constrainAsSpaceGroup"]
 
 def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
         sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
-        adpsymbols = stdUsymbols, isosymbol = "Uiso"):
+        adpsymbols = None, isosymbol = "Uiso"):
     """Constrain the structure to the space group.
 
     This applies space group constraints to a StructureParSet with P1
@@ -80,7 +77,9 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
 
     """
 
-    sg = SpaceGroups.GetSpaceGroup(sgsymbol)
+    from diffpy.Structure.SpaceGroups import GetSpaceGroup
+
+    sg = GetSpaceGroup(sgsymbol)
     sgp = _constrainAsSpaceGroup(phase, sg, scatterers, sgoffset,
             constrainlat, constrainadps, adpsymbols, isosymbol)
 
@@ -88,7 +87,7 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
 
 def _constrainAsSpaceGroup(phase, sg, scatterers = None,
         sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
-        adpsymbols = stdUsymbols, isosymbol = "Uiso"):
+        adpsymbols = None, isosymbol = "Uiso"):
     """Restricted interface to constrainAsSpaceGroup.
 
     Arguments: As constrainAsSpaceGroup, except
@@ -96,8 +95,12 @@ def _constrainAsSpaceGroup(phase, sg, scatterers = None,
 
     """
 
+    from diffpy.Structure.SymmetryUtilities import stdUsymbols
+
     if scatterers is None:
         scatterers = phase.getScatterers()
+    if adpsymbols is None:
+        adpsymbols = stdUsymbols
 
     sgp = SpaceGroupParameters(phase, sg, scatterers, sgoffset,
             constrainlat, constrainadps, adpsymbols, isosymbol)
@@ -364,6 +367,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         """
 
+        from diffpy.Structure.SymmetryUtilities import SymmetryConstraints
+
         sg = self.sg
         sgoffset = self.sgoffset
 
@@ -401,6 +406,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         positions   --  The coordinates of the scatterers.
 
         """
+
+        from diffpy.Structure.SymmetryUtilities import stdUsymbols
+        from diffpy.Structure.SymmetryUtilities import SymmetryConstraints
 
         if not self.constrainadps: return
 

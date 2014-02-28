@@ -23,7 +23,6 @@ __all__ = ["BVSRestraint"]
 
 from diffpy.srfit.fitbase.restraint import Restraint
 
-from diffpy.srreal.bvscalculator import BVSCalculator
 
 class BVSRestraint(Restraint):
     """Wrapping of BVSCalculator.bvmsdiff as a Restraint.
@@ -51,6 +50,7 @@ class BVSRestraint(Restraint):
                     (chi^2/numpoints) (bool, default False).
 
         """
+        from diffpy.srreal.bvscalculator import BVSCalculator
         self._calc = BVSCalculator()
         self._parset = parset
         self.sig = float(sig)

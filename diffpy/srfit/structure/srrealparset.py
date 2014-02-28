@@ -17,7 +17,6 @@
 
 __all__ = ["SrRealParSet"]
 
-from diffpy.srreal.structureadapter import nosymmetry
 
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 from diffpy.srfit.structure.bvsrestraint import BVSRestraint
@@ -90,6 +89,7 @@ class SrRealParSet(BaseStructureParSet):
         inside of a nosymmetry wrapper.
 
         """
+        from diffpy.srreal.structureadapter import nosymmetry
         if self._usesymmetry:
             return self.stru
         return nosymmetry(self.stru)

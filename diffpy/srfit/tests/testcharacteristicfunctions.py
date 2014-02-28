@@ -18,13 +18,13 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import testcase, TestCaseSaS, TestCasePDF
+from diffpy.srfit.tests.utils import testoptional, TestCaseSaS, TestCasePDF
 
 # Global variables to be assigned in setUp
 cf = None
 
 
-class TestSASCF(testcase(TestCaseSaS, TestCasePDF)):
+class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
 
     def setUp(self):
         global cf

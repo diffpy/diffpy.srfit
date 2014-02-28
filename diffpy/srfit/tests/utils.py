@@ -19,13 +19,16 @@ import diffpy.srfit.equation.literals as literals
 from unittest import TestCase
 
 # Create a singleton and a test for optional test cases
-TestCaseOptional = object
-def isinstalled(*TestCases):
-    'check for optional dependencies'
-    return not TestCaseOptional in TestCases
-def testcase(*TestCases):
-    'get appropriate TestCase object for optional dependencies'
-    return TestCase if isinstalled(*TestCases) else TestCaseOptional
+_TestCaseDisabled = object
+
+def _allactive(*testcaseclasses):
+    'True if none of the testcaseclasses has been disabled.'
+    return not _TestCaseDisabled in testcaseclasses
+
+def testoptional(*testcaseclasses):
+    'Return unittest.TestCase only if all testcaseclasses are active.'
+    if _allactive(*testcaseclasses):  return TestCase
+    return _TestCaseDisabled
 
 # Resolve the TestCase*Optional classes
 try:
@@ -33,7 +36,7 @@ try:
     import sans.models
     TestCaseSaS = TestCase
 except ImportError, e:
-    TestCaseSaS = TestCaseOptional
+    TestCaseSaS = _TestCaseDisabled
     logging.warning('%s, SaS tests skipped.', e)
 
 try:
@@ -42,7 +45,7 @@ try:
     import diffpy.srreal
     TestCaseStructure = TestCase
 except ImportError, e:
-    TestCaseStructure = TestCaseOptional
+    TestCaseStructure = _TestCaseDisabled
     logging.warning('%s, Structure tests skipped.', e)
 
 try:

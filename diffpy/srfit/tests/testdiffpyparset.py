@@ -18,13 +18,13 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import testcase, TestCaseStructure
+from diffpy.srfit.tests.utils import testoptional, TestCaseStructure
 
 # Global variables to be assigned in setUp
 Atom = Lattice = Structure = DiffpyStructureParSet = None
 
 
-class TestParameterAdapter(testcase(TestCaseStructure)):
+class TestParameterAdapter(testoptional(TestCaseStructure)):
 
     def setUp(self):
         global Atom, Lattice, Structure, DiffpyStructureParSet

@@ -20,13 +20,14 @@ import numpy
 
 from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import testcase, TestCasePDF, TestCaseStructure
+from diffpy.srfit.tests.utils import testoptional
+from diffpy.srfit.tests.utils import TestCasePDF, TestCaseStructure
 
 # Global variables to be assigned in setUp
 PDFGenerator = PDFParser = None
 
 
-class TestPDFParset(testcase(TestCasePDF)):
+class TestPDFParset(testoptional(TestCasePDF)):
 
     def setUp(self):
         global PDFParser
@@ -107,7 +108,7 @@ class TestPDFParset(testcase(TestCasePDF)):
         self.assertTrue(dx is None)
         return
 
-class TestPDFGenerator(testcase(TestCaseStructure)):
+class TestPDFGenerator(testoptional(TestCaseStructure)):
 
     def setUp(self):
         global PDFGenerator

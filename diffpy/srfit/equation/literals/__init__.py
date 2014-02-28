@@ -4,7 +4,7 @@
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
-#                   (c) 2008 Trustees of the Columbia University
+#                   (c) 2008 The Trustees of Columbia University
 #                   in the City of New York.  All rights reserved.
 #
 # File coded by:    Chris Farrow

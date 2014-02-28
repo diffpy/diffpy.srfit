@@ -9,7 +9,7 @@
 # File coded by:    Chris Farrow
 #
 # See AUTHORS.txt for a list of people who contributed.
-# See LICENSE.txt for license information.
+# See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
 """Visitor for extracting the Argument entries in a Literal tree.

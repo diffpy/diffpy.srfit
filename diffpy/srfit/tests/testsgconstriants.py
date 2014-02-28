@@ -18,7 +18,8 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import testoptional, TestCaseStructure
+from diffpy.srfit.tests.utils import testoptional
+from diffpy.srfit.tests.utils import TestCaseStructure, TestCaseObjCryst
 
 # Global variables to be assigned in setUp
 ObjCrystCrystalParSet = DiffpyStructureParSet = None
@@ -67,7 +68,7 @@ def makeLaMnO3():
 
     return crystal
 
-class TestSGConstraints(testoptional(TestCaseStructure)):
+class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
 
     def setUp(self):
         global ObjCrystCrystalParSet, DiffpyStructureParSet

@@ -18,7 +18,7 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import testoptional, TestCaseStructure
+from diffpy.srfit.tests.utils import testoptional, TestCaseObjCryst
 
 # Global variables to be assigned in setUp
 ObjCrystCrystalParSet = SpaceGroups = None
@@ -109,7 +109,7 @@ def makeC60():
     return c
 
 
-class TestParameterAdapter(testoptional(TestCaseStructure)):
+class TestParameterAdapter(TestCaseObjCryst):
 
     def setUp(self):
         global ObjCrystCrystalParSet, Crystal, Atom, Molecule
@@ -582,7 +582,7 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
 
 
 
-class TestCreateSpaceGroup(testoptional(TestCaseStructure)):
+class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
     """Test space group creation from pyobjcryst structures.
 
     This makes sure that the space groups created by the structure parameter

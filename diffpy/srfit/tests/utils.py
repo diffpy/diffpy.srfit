@@ -41,15 +41,20 @@ except ImportError, e:
 
 try:
     import diffpy.Structure
-    import pyobjcryst
-    import diffpy.srreal
     TestCaseStructure = TestCase
 except ImportError, e:
     TestCaseStructure = _TestCaseDisabled
     logging.warning('%s, Structure tests skipped.', e)
 
 try:
-    import diffpy.srreal
+    import pyobjcryst
+    TestCaseObjCryst = TestCase
+except ImportError, e:
+    TestCaseObjCryst = _TestCaseDisabled
+    logging.warning('%s, Structure tests skipped.', e)
+
+try:
+    import diffpy.srreal.pdfcalculator
     TestCasePDF = TestCase
 except ImportError, e:
     TestCasePDF = _TestCaseDisabled

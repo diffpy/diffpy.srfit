@@ -108,7 +108,7 @@ class TestPDFParset(testoptional(TestCasePDF)):
         self.assertTrue(dx is None)
         return
 
-class TestPDFGenerator(testoptional(TestCaseStructure)):
+class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
 
     def setUp(self):
         global PDFGenerator

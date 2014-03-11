@@ -55,13 +55,19 @@ Python 2.7 at http://www.python.org/download/source; while other code
 project.
 
 ======================================
+Installation
+======================================
+
+See the `README.rst <https://github.com/diffpy/diffpy.srfit#requirements>`_
+file included with the distribution.
+
+======================================
 Where next?
 ======================================
 
 .. toctree::
    :maxdepth: 2
 
-   install.rst
    examples.rst
    extending.rst
    

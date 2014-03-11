@@ -4,4 +4,4 @@
 npintensityII.py
 ========================
 
-.. literalinclude:: ../../examples/npintensityII.py
+.. literalinclude:: ../../../examples/npintensityII.py

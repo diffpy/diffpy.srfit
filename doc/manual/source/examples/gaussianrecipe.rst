@@ -4,4 +4,4 @@
 gaussianrecipe.py
 ========================
 
-.. literalinclude:: ../../examples/gaussianrecipe.py
+.. literalinclude:: ../../../examples/gaussianrecipe.py

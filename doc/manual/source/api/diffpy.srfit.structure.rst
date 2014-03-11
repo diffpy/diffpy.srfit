@@ -1,67 +1,70 @@
-structure Package
-=================
+diffpy.srfit.structure package
+==============================
 
-:mod:`structure` Package
-------------------------
+Submodules
+----------
 
-.. automodule:: diffpy.srfit.structure
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`basestructureparset` Module
----------------------------------
+diffpy.srfit.structure.basestructureparset module
+-------------------------------------------------
 
 .. automodule:: diffpy.srfit.structure.basestructureparset
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`bvsrestraint` Module
---------------------------
+diffpy.srfit.structure.bvsrestraint module
+------------------------------------------
 
 .. automodule:: diffpy.srfit.structure.bvsrestraint
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`cctbxparset` Module
--------------------------
+diffpy.srfit.structure.cctbxparset module
+-----------------------------------------
 
 .. automodule:: diffpy.srfit.structure.cctbxparset
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`diffpyparset` Module
---------------------------
+diffpy.srfit.structure.diffpyparset module
+------------------------------------------
 
 .. automodule:: diffpy.srfit.structure.diffpyparset
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`objcrystparset` Module
-----------------------------
+diffpy.srfit.structure.objcrystparset module
+--------------------------------------------
 
 .. automodule:: diffpy.srfit.structure.objcrystparset
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`sgconstraints` Module
----------------------------
+diffpy.srfit.structure.sgconstraints module
+-------------------------------------------
 
 .. automodule:: diffpy.srfit.structure.sgconstraints
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`srrealparset` Module
---------------------------
+diffpy.srfit.structure.srrealparset module
+------------------------------------------
 
 .. automodule:: diffpy.srfit.structure.srrealparset
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: diffpy.srfit.structure
+    :members:
+    :undoc-members:
+    :show-inheritance:

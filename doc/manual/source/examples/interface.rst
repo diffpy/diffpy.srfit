@@ -4,4 +4,4 @@
 interface.py
 ========================
 
-.. literalinclude:: ../../examples/interface.py
+.. literalinclude:: ../../../examples/interface.py

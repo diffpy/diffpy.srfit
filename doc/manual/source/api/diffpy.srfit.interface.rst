@@ -1,19 +1,22 @@
-interface Package
-=================
+diffpy.srfit.interface package
+==============================
 
-:mod:`interface` Package
-------------------------
+Submodules
+----------
 
-.. automodule:: diffpy.srfit.interface
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`interface` Module
------------------------
+diffpy.srfit.interface.interface module
+---------------------------------------
 
 .. automodule:: diffpy.srfit.interface.interface
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: diffpy.srfit.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:

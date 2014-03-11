@@ -8,13 +8,35 @@ Software version |release|.
 
 Last updated |today|.
 
-.. include:: ../../../README.txt
+Configurable code for solving atomic structures.
+
+The diffpy.srfit package provides the framework for building a global optimizer
+on the fly from components such as function calculators (that calculate
+different data spectra), regression algorithms and structure models.  The
+software is capable of co-refinement using multiple information sources or
+models. It provides a uniform interface for various regression algorithms. The
+target function being optimized can be specified by the user according to the
+data available.
+
+Within the diffpy.srfit framework, any parameter used in describing the
+structure of a material can be passed as a refinable variable to the global
+optimizer.  Once parameters are declared as variables they can easily be turned
+"on" or "off", i.e. fixed or allowed to vary. Additionally, variables may be
+constrained to obey mathematical relationships with other parameters or
+variables used in the structural model. Restraints can be applied to
+variables, which adds a penalty to the refinement process commensurate with the
+deviation from the known value or range. The cost function can also be
+customized by the user. If the refinement contains multiple models, each model
+can have its own cost function which will be properly weighted and combined to
+obtain the total cost function. Additionally, diffpy.srfit is designed to be
+extensible, allowing the user to integrate external calculators to perform
+co-refinements with other techniques.
 
 ===================
 Disclaimer
 ===================
 
-.. include:: ../../../LICENSE.txt
+.. literalinclude:: ../../../LICENSE.txt
 
 ================
 Acknowledgments
@@ -23,27 +45,14 @@ Acknowledgments
 Developers
 -----------
 
-The active DiffPy team is Simon Billinge, Emil Božin, Timur Dykhne, Chris
-Farrow, Pavol Juhás, Jiwu Liu, Peng Tian and Yingrui Shang.  Former members of
-the project are Dmitriy Bryndin and Wenduo Zhou.  The project was started at
-the Department of Physics and Astronomy, Michigan State University and is now
-centered at the Department of Applied Physics and Applied Mathematics at
-Columbia University in the city of New York.
-
-SrFit is developed and maintained by
+diffpy.sifit is developed and maintained by
 
 .. literalinclude:: ../../../AUTHORS.txt
 
-Funding
------------
-
-This software was developed as part of the Distributed Data Analysis of Neutron
-Scattering Experiments (DANSE) project funded by the US National Science
-Foundation under grant DMR-0520547. More information on DANSE can be found at
-http://danse.us. Any opinions, findings, and conclusions or recommendations
-expressed in this material are those of the author(s) and do not necessarily
-reflect the views of the respective funding bodies.
-
+Part of the source code in *_abc.py* and *_ordereddict.py* was derived from
+Python 2.7 at http://www.python.org/download/source; while other code
+*observable.py* was derived from the 1.0 version of the Caltech "Pyre"
+project.
 
 ======================================
 Where next?
@@ -52,7 +61,6 @@ Where next?
 .. toctree::
    :maxdepth: 2
 
-   intro.rst
    install.rst
    examples.rst
    extending.rst

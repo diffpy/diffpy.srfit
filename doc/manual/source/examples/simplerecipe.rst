@@ -4,4 +4,4 @@
 simplerecipe.py
 ========================
 
-.. literalinclude:: ../../examples/simplerecipe.py
+.. literalinclude:: ../../../examples/simplerecipe.py

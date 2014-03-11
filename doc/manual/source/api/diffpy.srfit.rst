@@ -1,21 +1,5 @@
-srfit Package
-=============
-
-:mod:`srfit` Package
---------------------
-
-.. automodule:: diffpy.srfit
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`version` Module
----------------------
-
-.. automodule:: diffpy.srfit.version
-    :members:
-    :undoc-members:
-    :show-inheritance:
+diffpy.srfit package
+====================
 
 Subpackages
 -----------
@@ -28,6 +12,24 @@ Subpackages
     diffpy.srfit.pdf
     diffpy.srfit.sas
     diffpy.srfit.structure
-    diffpy.srfit.tests
     diffpy.srfit.util
 
+Submodules
+----------
+
+diffpy.srfit.version module
+---------------------------
+
+.. automodule:: diffpy.srfit.version
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: diffpy.srfit
+    :members:
+    :undoc-members:
+    :show-inheritance:

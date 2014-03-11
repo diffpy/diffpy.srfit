@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; SrFit 1.0b2-14 documentation</title>
+    <title>Examples &mdash; SrFit 1.0b4-1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '1.0b2-14',
+        URL_ROOT:    './',
+        VERSION:     '1.0b4-1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,9 +24,9 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b2-14 documentation" href="index.html" />
-    <link rel="next" title="gaussianrecipe.py" href="gaussianrecipe.html" />
-    <link rel="prev" title="Installing SrFit" href="install.html" /> 
+    <link rel="top" title="SrFit 1.0b4-1 documentation" href="index.html" />
+    <link rel="next" title="gaussianrecipe.py" href="examples/gaussianrecipe.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
   </head>
   <body>
     <div class="related">
@@ -41,12 +39,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="gaussianrecipe.html" title="gaussianrecipe.py"
+          <a href="examples/gaussianrecipe.html" title="gaussianrecipe.py"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="install.html" title="Installing SrFit"
+          <a href="install.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">SrFit 1.0b2-14 documentation</a> &raquo;</li> 
+        <li><a href="index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -107,7 +105,8 @@ software.</li>
 SrFit source distribution.  They can be downloaded from
 <a class="reference external" href="http://dev.danse.us/packages/srfit_examples-alpha9.zip">http://dev.danse.us/packages/srfit_examples-alpha9.zip</a></p>
 <p>For each example, start by running the example by typing in the command line</p>
-<div class="highlight-python"><pre>python example.py</pre>
+<div class="highlight-python"><div class="highlight"><pre>python example.py
+</pre></div>
 </div>
 <p>where <em>example.py</em> represents the example file. The output will show on screen
 and a plot window will display. Once you&#8217;ve studied the output and plot, close
@@ -120,14 +119,14 @@ them in the order listed below.</p>
 <p>Basic:</p>
 <ul>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="gaussianrecipe.html">gaussianrecipe.py</a></dt>
+<dt><a class="reference external" href="examples/gaussianrecipe.html">gaussianrecipe.py</a></dt>
 <dd><p class="first last">Introductory recipe building and configuration. This introduces the
 fundamental classes in SrFit.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="debyemodel.html">debyemodel.py</a></dt>
+<dt><a class="reference external" href="examples/debyemodel.html">debyemodel.py</a></dt>
 <dd><p class="first last">Introductory recipe building and configuration. This shows how to use a
 function created by someone else in a refinement. This example also
 introduces restraints.</p>
@@ -135,7 +134,7 @@ introduces restraints.</p>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="debyemodelII.html">debyemodelII.py</a></dt>
+<dt><a class="reference external" href="examples/debyemodelII.html">debyemodelII.py</a></dt>
 <dd><p class="first last">Refine two different values of a variable from two different regions of a
 profile. This example introduces constraints and working with multiple
 contributions to a fit.</p>
@@ -146,21 +145,21 @@ contributions to a fit.</p>
 <p>Advanced:</p>
 <ul>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="gaussiangenerator.html">gaussiangenerator.py</a></dt>
+<dt><a class="reference external" href="examples/gaussiangenerator.html">gaussiangenerator.py</a></dt>
 <dd><p class="first last">Create a custom ProfileGenerator and use it in a refinement. This is an
-instructive extension to <a class="reference external" href="gaussianrecipe.html">gaussianrecipe.py</a>.</p>
+instructive extension to <a class="reference external" href="examples/gaussianrecipe.html">gaussianrecipe.py</a>.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="npintensity.html">npintensity.py</a></dt>
+<dt><a class="reference external" href="examples/npintensity.html">npintensity.py</a></dt>
 <dd><p class="first last">Use diffpy.Structure to build a nanoparticle intensity generator, and use
 it to refine a structure to simulated data.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="npintensityII.html">npintensityII.py</a></dt>
+<dt><a class="reference external" href="examples/npintensityII.html">npintensityII.py</a></dt>
 <dd><p class="first last">Use the calculator built in npintensity.py to simultaneously refine a
 structure to two data sets.</p>
 </dd>
@@ -176,83 +175,83 @@ should read through these use cases to gain an understanding of PDF and SAS
 refinement with SrFit.</p>
 <ul>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="crystalpdf.html">crystalpdf.py</a></dt>
+<dt><a class="reference external" href="examples/crystalpdf.html">crystalpdf.py</a></dt>
 <dd><p class="first last">Refine a diffpy.Structure crystal to PDF data using automatic explicit
 space group constraints.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="simplepdf.html">simplepdf.py</a></dt>
-<dd><p class="first last">As <a class="reference external" href="crystalpdf.html">crystalpdf.py</a>, but with a simplified interface.</p>
+<dt><a class="reference external" href="examples/simplepdf.html">simplepdf.py</a></dt>
+<dd><p class="first last">As <a class="reference external" href="examples/crystalpdf.html">crystalpdf.py</a>, but with a simplified interface.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></dt>
+<dt><a class="reference external" href="examples/crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></dt>
 <dd><p class="first last">Refine a pyobjcryst crystal to PDF data using automatic implicit space
 group constraints.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="crystalpdftwophase.html">crystalpdftwophase.py</a></dt>
+<dt><a class="reference external" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a></dt>
 <dd><p class="first last">Refine a two-phase structure to PDF data using two profile generators.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="simplepdftwophase.html">simplepdftwophase.py</a></dt>
-<dd><p class="first last"><a class="reference external" href="crystalpdftwophase.html">crystalpdftwophase.py</a> using the simplified PDFContribution interface.</p>
+<dt><a class="reference external" href="examples/simplepdftwophase.html">simplepdftwophase.py</a></dt>
+<dd><p class="first last"><a class="reference external" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a> using the simplified PDFContribution interface.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="crystalpdftwodata.html">crystalpdftwodata.py</a></dt>
+<dt><a class="reference external" href="examples/crystalpdftwodata.html">crystalpdftwodata.py</a></dt>
 <dd><p class="first last">Refine a single structure to x-ray and neutron data simultaneously.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="crystalpdfall.html">crystalpdfall.py</a></dt>
+<dt><a class="reference external" href="examples/crystalpdfall.html">crystalpdfall.py</a></dt>
 <dd><p class="first last">Refine a two-phase structure using four data sets.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="nppdfobjcryst.html">nppdfobjcryst.py</a></dt>
+<dt><a class="reference external" href="examples/nppdfobjcryst.html">nppdfobjcryst.py</a></dt>
 <dd><p class="first last">Refine the C60 structure to real data.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="nppdfcrystal.html">nppdfcrystal.py</a></dt>
+<dt><a class="reference external" href="examples/nppdfcrystal.html">nppdfcrystal.py</a></dt>
 <dd><p class="first last">Fit a nanoparticle PDF as a crystal PDF attenuated by a nanoparticle form
 factor.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="coreshellnp.html">coreshellnp.py</a></dt>
+<dt><a class="reference external" href="examples/coreshellnp.html">coreshellnp.py</a></dt>
 <dd><p class="first last">As above, but fit the PDF from core-shell nanoparticles.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="ellipsoidsas.html">ellipsoidsas.py</a></dt>
+<dt><a class="reference external" href="examples/ellipsoidsas.html">ellipsoidsas.py</a></dt>
 <dd><p class="first last">Refine an ellipsoid SAS model to ideal data.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="nppdfsas.html">nppdfsas.py</a></dt>
+<dt><a class="reference external" href="examples/nppdfsas.html">nppdfsas.py</a></dt>
 <dd><p class="first last">Refine PDF from nanoparticle of assumed shape using a crystal model and SAS
 data from the same system.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="anneal.html">anneal.py</a></dt>
+<dt><a class="reference external" href="examples/anneal.html">anneal.py</a></dt>
 <dd><p class="first last">Demonstration of effectively using a simulated annealing algorithm in a PDF
 structure refinement.</p>
 </dd>
@@ -266,7 +265,7 @@ structure refinement.</p>
 future versions.</p>
 <ul>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="simplerecipe.html">simplerecipe.py</a></dt>
+<dt><a class="reference external" href="examples/simplerecipe.html">simplerecipe.py</a></dt>
 <dd><p class="first last">This introduces the SimpleRecipe class that is a FitRecipe with an embedded
 Profile and FitContribution. SimpleRecipe exposes methods from the Profile
 and FitContribution, and adds other methods so it is easy to set up a
@@ -275,7 +274,7 @@ simple fit.</p>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><a class="reference external" href="interface.html">interface.py</a></dt>
+<dt><a class="reference external" href="examples/interface.html">interface.py</a></dt>
 <dd><p class="first last">This example introduces some interface enhancements that allow the SrFit
 recipes to be written with less code. This is not the same as a
 full-featured scripting interface, but rather somewhere in between a
@@ -289,27 +288,27 @@ scripting interface and the API.</p>
 <h2>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="gaussianrecipe.html">gaussianrecipe.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="debyemodel.html">debyemodel.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="debyemodelII.html">debyemodelII.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gaussiangenerator.html">gaussiangenerator.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="npintensity.html">npintensity.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="npintensityII.html">npintensityII.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nppdfobjcryst.html">nppdfobjcryst.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="crystalpdf.html">crystalpdf.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="simplepdf.html">simplepdf.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="crystalpdftwophase.html">crystalpdftwophase.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="simplepdftwophase.html">simplepdftwophase.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="crystalpdftwodata.html">crystalpdftwodata.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="crystalpdfall.html">crystalpdfall.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nppdfcrystal.html">nppdfcrystal.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="coreshellnp.html">coreshellnp.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ellipsoidsas.html">ellipsoidsas.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nppdfsas.html">nppdfsas.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="interface.html">interface.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="simplerecipe.html">simplerecipe.py</a></li>
-<li class="toctree-l1"><a class="reference internal" href="anneal.html">anneal.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/gaussianrecipe.html">gaussianrecipe.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/debyemodel.html">debyemodel.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/debyemodelII.html">debyemodelII.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/gaussiangenerator.html">gaussiangenerator.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/npintensity.html">npintensity.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/npintensityII.html">npintensityII.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/nppdfobjcryst.html">nppdfobjcryst.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/crystalpdf.html">crystalpdf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/simplepdf.html">simplepdf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/simplepdftwophase.html">simplepdftwophase.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/crystalpdftwodata.html">crystalpdftwodata.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/crystalpdfall.html">crystalpdfall.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/nppdfcrystal.html">nppdfcrystal.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/coreshellnp.html">coreshellnp.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ellipsoidsas.html">ellipsoidsas.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/nppdfsas.html">nppdfsas.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/interface.html">interface.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/simplerecipe.html">simplerecipe.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/anneal.html">anneal.py</a></li>
 </ul>
 </div>
 </div>
@@ -329,18 +328,16 @@ scripting interface and the API.</p>
 <li><a class="reference internal" href="#id1">Examples</a></li>
 <li><a class="reference internal" href="#use-cases">Use Cases</a></li>
 <li><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
-<li><a class="reference internal" href="#files">Files</a><ul>
-</ul>
-</li>
+<li><a class="reference internal" href="#files">Files</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="install.html"
-                        title="previous chapter">Installing SrFit</a></p>
+                        title="previous chapter">Installation</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="gaussianrecipe.html"
+  <p class="topless"><a href="examples/gaussianrecipe.html"
                         title="next chapter">gaussianrecipe.py</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
@@ -374,17 +371,17 @@ scripting interface and the API.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="gaussianrecipe.html" title="gaussianrecipe.py"
+          <a href="examples/gaussianrecipe.html" title="gaussianrecipe.py"
              >next</a> |</li>
         <li class="right" >
-          <a href="install.html" title="Installing SrFit"
+          <a href="install.html" title="Installation"
              >previous</a> |</li>
-        <li><a href="index.html">SrFit 1.0b2-14 documentation</a> &raquo;</li> 
+        <li><a href="index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>
 </html>

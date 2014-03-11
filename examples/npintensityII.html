@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>npintensityII.py &mdash; SrFit 1.0b4-1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0b4-1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b4-1 documentation" href="../index.html" />
+    <link rel="up" title="Examples" href="../examples.html" />
+    <link rel="next" title="nppdfobjcryst.py" href="nppdfobjcryst.html" />
+    <link rel="prev" title="npintensity.py" href="npintensity.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nppdfobjcryst.html" title="nppdfobjcryst.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="npintensity.html" title="npintensity.py"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="npintensityii-py">
+<span id="id1"></span><h1>npintensityII.py<a class="headerlink" href="#npintensityii-py" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="c">########################################################################</span>
+<span class="c">#</span>
+<span class="c"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c">#                   Simon J. L. Billinge</span>
+<span class="c">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c">#                   in the City of New York.  All rights reserved.</span>
+<span class="c">#</span>
+<span class="c"># File coded by:    Chris Farrow</span>
+<span class="c">#</span>
+<span class="c"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c">#</span>
+<span class="c">########################################################################</span>
+<span class="sd">&quot;&quot;&quot;Example of extracting information from multiple data sets simultaneously.</span>
+
+<span class="sd">This example builds on npintensitygenerator.py, and uses IntensityGenerator</span>
+<span class="sd">from that example to build a recipe that simultaneously refines two data sets</span>
+<span class="sd">generated from the same structure.</span>
+
+<span class="sd">Instructions</span>
+
+<span class="sd">Run the example and then read through the &#39;makeRecipe&#39; code. You will see how</span>
+<span class="sd">to refine a single structure to two data sets.</span>
+
+<span class="sd">Extensions</span>
+
+<span class="sd">- In &#39;makeRecipe&#39; the fit contributions are identically configured except for</span>
+<span class="sd">  the profile. Factor out that configuration code and apply it in the</span>
+<span class="sd">  &#39;makeRecipe&#39; method. This will reduce the amount of code required to get the</span>
+<span class="sd">  job done, make it clearer what is being done and therefore reduce potential</span>
+<span class="sd">  mistakes in the code. This encapsulation of configuration workflow is the</span>
+<span class="sd">  first step towards writing a user interface.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">FitContribution</span><span class="p">,</span> <span class="n">FitRecipe</span><span class="p">,</span> <span class="n">Profile</span><span class="p">,</span> <span class="n">FitResults</span>
+<span class="kn">from</span> <span class="nn">npintensity</span> <span class="kn">import</span> <span class="n">IntensityGenerator</span><span class="p">,</span> <span class="n">scipyOptimize</span>
+<span class="kn">from</span> <span class="nn">npintensity</span> <span class="kn">import</span> <span class="n">iofq</span><span class="p">,</span> <span class="n">makeData</span>
+
+<span class="kn">from</span> <span class="nn">gaussianrecipe</span> <span class="kn">import</span> <span class="n">scipyOptimize</span>
+
+<span class="c">####### Example Code</span>
+
+<span class="k">def</span> <span class="nf">makeRecipe</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="n">datname1</span><span class="p">,</span> <span class="n">datname2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a recipe that uses the IntensityGenerator.</span>
+
+<span class="sd">    We will create two FitContributions that use the IntensityGenerator from</span>
+<span class="sd">    npintensitygenerator.py and associate each of these with a Profile, and use</span>
+<span class="sd">    this to define a FitRecipe.</span>
+
+<span class="sd">    Both simulated data sets come from the same structure. We&#39;re going to make</span>
+<span class="sd">    two FitContributions that are identical, except for the profile that is</span>
+<span class="sd">    held in each. We&#39;re going to assure that the structures are identical by</span>
+<span class="sd">    using the same DiffpyStructureParSet (which is generated by the</span>
+<span class="sd">    IntensityGenerator when we load the structure) in both generators.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">## The Profiles</span>
+    <span class="c"># Create two Profiles for the two FitContributions.</span>
+    <span class="n">profile1</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
+    <span class="n">profile2</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
+
+    <span class="c"># Load data into the Profiles</span>
+    <span class="n">profile1</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">datname1</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span> <span class="o">=</span> <span class="n">profile2</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">datname2</span><span class="p">)</span>
+
+    <span class="c">## The ProfileGenerators</span>
+    <span class="c"># Create two IntensityGenerators named &quot;I&quot;. There will not be a name</span>
+    <span class="c"># conflict, since the name is only meaningful within the FitContribution</span>
+    <span class="c"># that holds the ProfileGenerator.  Load the structure into one and make</span>
+    <span class="c"># sure that the second ProfileGenerator is using the same</span>
+    <span class="c"># DiffyStructureParSet.  This will assure that both ProfileGenerators are</span>
+    <span class="c"># using the exact same Parameters, and underlying Structure object in the</span>
+    <span class="c"># calculation of the profile.</span>
+    <span class="n">generator1</span> <span class="o">=</span> <span class="n">IntensityGenerator</span><span class="p">(</span><span class="s">&quot;I&quot;</span><span class="p">)</span>
+    <span class="n">generator1</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">strufile</span><span class="p">)</span>
+    <span class="n">generator2</span> <span class="o">=</span> <span class="n">IntensityGenerator</span><span class="p">(</span><span class="s">&quot;I&quot;</span><span class="p">)</span>
+    <span class="n">generator2</span><span class="o">.</span><span class="n">addParameterSet</span><span class="p">(</span><span class="n">generator1</span><span class="o">.</span><span class="n">phase</span><span class="p">)</span>
+
+    <span class="c">## The FitContributions</span>
+    <span class="c"># Create the FitContributions.</span>
+    <span class="n">contribution1</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s">&quot;bucky1&quot;</span><span class="p">)</span>
+    <span class="n">contribution1</span><span class="o">.</span><span class="n">addProfileGenerator</span><span class="p">(</span><span class="n">generator1</span><span class="p">)</span>
+    <span class="n">contribution1</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile1</span><span class="p">,</span> <span class="n">xname</span> <span class="o">=</span> <span class="s">&quot;q&quot;</span><span class="p">)</span>
+    <span class="n">contribution2</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s">&quot;bucky2&quot;</span><span class="p">)</span>
+    <span class="n">contribution2</span><span class="o">.</span><span class="n">addProfileGenerator</span><span class="p">(</span><span class="n">generator2</span><span class="p">)</span>
+    <span class="n">contribution2</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile2</span><span class="p">,</span> <span class="n">xname</span> <span class="o">=</span> <span class="s">&quot;q&quot;</span><span class="p">)</span>
+
+    <span class="c"># Now we&#39;re ready to define the fitting equation for each FitContribution.</span>
+    <span class="c"># The functions registered below will be independent, even though they take</span>
+    <span class="c"># the same form and use the same Parameter names.  By default, Parameters</span>
+    <span class="c"># in different contributions are different Parameters even if they have the</span>
+    <span class="c"># same names.  FitContributions are isolated namespaces than only share</span>
+    <span class="c"># information if you tell them to by using addParameter or addParameterSet.</span>
+    <span class="n">bkgdstr</span> <span class="o">=</span> <span class="s">&quot;b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +</span><span class="se">\</span>
+<span class="s">               b7*q**7 +b8*q**8 + b9*q**9&quot;</span>
+
+    <span class="n">contribution1</span><span class="o">.</span><span class="n">registerStringFunction</span><span class="p">(</span><span class="n">bkgdstr</span><span class="p">,</span> <span class="s">&quot;bkgd&quot;</span><span class="p">)</span>
+    <span class="n">contribution2</span><span class="o">.</span><span class="n">registerStringFunction</span><span class="p">(</span><span class="n">bkgdstr</span><span class="p">,</span> <span class="s">&quot;bkgd&quot;</span><span class="p">)</span>
+
+    <span class="c"># We will create the broadening function by registering a python function.</span>
+    <span class="n">pi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span>
+    <span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">q0</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">width</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">q</span><span class="o">-</span><span class="n">q0</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">contribution1</span><span class="o">.</span><span class="n">registerFunction</span><span class="p">(</span><span class="n">gaussian</span><span class="p">)</span>
+    <span class="n">contribution2</span><span class="o">.</span><span class="n">registerFunction</span><span class="p">(</span><span class="n">gaussian</span><span class="p">)</span>
+    <span class="c"># Center the gaussian</span>
+    <span class="n">contribution1</span><span class="o">.</span><span class="n">q0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">contribution2</span><span class="o">.</span><span class="n">q0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="c"># Now we can incorporate the scale and bkgd into our calculation. We also</span>
+    <span class="c"># convolve the signal with the gaussian to broaden it.</span>
+    <span class="n">contribution1</span><span class="o">.</span><span class="n">setEquation</span><span class="p">(</span><span class="s">&quot;scale * convolve(I, gaussian) + bkgd&quot;</span><span class="p">)</span>
+    <span class="n">contribution2</span><span class="o">.</span><span class="n">setEquation</span><span class="p">(</span><span class="s">&quot;scale * convolve(I, gaussian) + bkgd&quot;</span><span class="p">)</span>
+
+    <span class="c"># Make a FitRecipe and associate the FitContributions.</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">contribution1</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">contribution2</span><span class="p">)</span>
+
+    <span class="c"># Specify which Parameters we want to refine. We want to refine the</span>
+    <span class="c"># background that we just defined in the FitContributions. We have to do</span>
+    <span class="c"># this separately for each FitContribution. We tag the variables so it is</span>
+    <span class="c"># easy to retrieve the background variables.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_0&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_1&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_2&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_3&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_4&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_5&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_6&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_7&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_8&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">b9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b1_9&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_0&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_1&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_2&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_3&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_4&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_5&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_6&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_7&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_8&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">b9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;b2_9&quot;</span><span class="p">,</span> <span class="n">tag</span> <span class="o">=</span> <span class="s">&quot;bcoeffs2&quot;</span><span class="p">)</span>
+
+    <span class="c"># We also want to adjust the scale and the convolution width</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;scale1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution1</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;width1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;scale2&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution2</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;width2&quot;</span><span class="p">)</span>
+
+    <span class="c"># We can also refine structural parameters. We only have to do this once,</span>
+    <span class="c"># since each generator holds the same DiffpyStructureParSet.</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">generator1</span><span class="o">.</span><span class="n">phase</span>
+    <span class="n">lattice</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">getLattice</span><span class="p">()</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">lattice</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
+    <span class="c"># We want to allow for isotropic expansion, so we&#39;ll make constraints for</span>
+    <span class="c"># that.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">lattice</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">lattice</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+    <span class="c"># We want to refine the thermal parameters as well. We will add a new</span>
+    <span class="c"># variable that we call &quot;Uiso&quot; and constrain the atomic Uiso values to</span>
+    <span class="c"># this. Note that we don&#39;t give Uiso an initial value. The initial value</span>
+    <span class="c"># will be inferred from the subsequent constraints.</span>
+    <span class="n">Uiso</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="s">&quot;Uiso&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">phase</span><span class="o">.</span><span class="n">getScatterers</span><span class="p">():</span>
+        <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">Uiso</span><span class="p">,</span> <span class="n">Uiso</span><span class="p">)</span>
+
+    <span class="c"># Give the recipe away so it can be used!</span>
+    <span class="k">return</span> <span class="n">recipe</span>
+
+<span class="k">def</span> <span class="nf">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
+
+    <span class="c"># plotting song and dance</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky1</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span>
+
+    <span class="c"># Plot this for fun.</span>
+    <span class="n">I1</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky1</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">Icalc1</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky1</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span>
+    <span class="n">bkgd1</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky1</span><span class="o">.</span><span class="n">evaluateEquation</span><span class="p">(</span><span class="s">&quot;bkgd&quot;</span><span class="p">)</span>
+    <span class="n">diff1</span> <span class="o">=</span> <span class="n">I1</span> <span class="o">-</span> <span class="n">Icalc1</span>
+    <span class="n">I2</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky2</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
+    <span class="n">Icalc2</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky2</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span>
+    <span class="n">bkgd2</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky2</span><span class="o">.</span><span class="n">evaluateEquation</span><span class="p">(</span><span class="s">&quot;bkgd&quot;</span><span class="p">)</span>
+    <span class="n">diff2</span> <span class="o">=</span> <span class="n">I2</span> <span class="o">-</span> <span class="n">Icalc2</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mf">1.2</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">I2</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">I2</span><span class="p">)</span>
+    <span class="n">I1</span> <span class="o">+=</span> <span class="n">offset</span>
+    <span class="n">Icalc1</span> <span class="o">+=</span> <span class="n">offset</span>
+    <span class="n">bkgd1</span> <span class="o">+=</span> <span class="n">offset</span>
+    <span class="n">diff1</span> <span class="o">+=</span> <span class="n">offset</span>
+
+    <span class="kn">import</span> <span class="nn">pylab</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">I1</span><span class="p">,</span><span class="s">&#39;bo&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I1(Q) Data&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">Icalc1</span><span class="p">,</span><span class="s">&#39;r-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I1(Q) Fit&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">diff1</span><span class="p">,</span><span class="s">&#39;g-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I1(Q) diff&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">bkgd1</span><span class="p">,</span><span class="s">&#39;c-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Bkgd1 Fit&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">I2</span><span class="p">,</span><span class="s">&#39;bo&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I2(Q) Data&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">Icalc2</span><span class="p">,</span><span class="s">&#39;r-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I2(Q) Fit&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">diff2</span><span class="p">,</span><span class="s">&#39;g-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I2(Q) diff&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">bkgd2</span><span class="p">,</span><span class="s">&#39;c-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Bkgd2 Fit&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;$Q (\AA^{-1})$&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Intensity (arb. units)&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="c"># Make two different data sets, each from the same structure, but with</span>
+    <span class="c"># different scale, noise, broadening and background.</span>
+    <span class="n">strufile</span> <span class="o">=</span> <span class="s">&quot;data/C60.stru&quot;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">makeData</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="s">&quot;C60_1.iq&quot;</span><span class="p">,</span> <span class="mf">8.1</span><span class="p">,</span> <span class="mf">101.68</span><span class="p">,</span> <span class="mf">0.008</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">makeData</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="s">&quot;C60_2.iq&quot;</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">101.68</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.003</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c"># Make the recipe</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="s">&quot;C60_1.iq&quot;</span><span class="p">,</span> <span class="s">&quot;C60_2.iq&quot;</span><span class="p">)</span>
+
+    <span class="c"># Optimize</span>
+    <span class="c"># Since the backgrounds have a large effect on the profile, we will refine</span>
+    <span class="c"># them first, but do so separately.</span>
+    <span class="c"># To refine the background from the first contribution, we will fix</span>
+    <span class="c"># all other parameters and give the second contribution no weight in the</span>
+    <span class="c"># fit.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="s">&quot;all&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">free</span><span class="p">(</span><span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">setWeight</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">bucky2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+    <span class="c"># Now do the same for the second background</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="s">&quot;all&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">free</span><span class="p">(</span><span class="s">&quot;bcoeffs1&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">setWeight</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">bucky2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">setWeight</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">bucky1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+    <span class="c"># Now refine everything with the structure parameters included</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">free</span><span class="p">(</span><span class="s">&quot;all&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">setWeight</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">bucky1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+
+    <span class="c"># Generate and print the FitResults</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">printResults</span><span class="p">()</span>
+
+    <span class="c"># Plot!</span>
+    <span class="n">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+
+    <span class="k">return</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">main</span><span class="p">()</span>
+
+<span class="c"># End of file</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="npintensity.html"
+                        title="previous chapter">npintensity.py</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nppdfobjcryst.html"
+                        title="next chapter">nppdfobjcryst.py</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/npintensityII.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="nppdfobjcryst.html" title="nppdfobjcryst.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="npintensity.html" title="npintensity.py"
+             >previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

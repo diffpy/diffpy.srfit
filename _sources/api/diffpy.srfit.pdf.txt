@@ -1,59 +1,62 @@
-pdf Package
-===========
+diffpy.srfit.pdf package
+========================
 
-:mod:`pdf` Package
-------------------
+Submodules
+----------
 
-.. automodule:: diffpy.srfit.pdf
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`basepdfgenerator` Module
-------------------------------
+diffpy.srfit.pdf.basepdfgenerator module
+----------------------------------------
 
 .. automodule:: diffpy.srfit.pdf.basepdfgenerator
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`characteristicfunctions` Module
--------------------------------------
+diffpy.srfit.pdf.characteristicfunctions module
+-----------------------------------------------
 
 .. automodule:: diffpy.srfit.pdf.characteristicfunctions
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`debyepdfgenerator` Module
--------------------------------
+diffpy.srfit.pdf.debyepdfgenerator module
+-----------------------------------------
 
 .. automodule:: diffpy.srfit.pdf.debyepdfgenerator
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`pdfcontribution` Module
------------------------------
+diffpy.srfit.pdf.pdfcontribution module
+---------------------------------------
 
 .. automodule:: diffpy.srfit.pdf.pdfcontribution
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`pdfgenerator` Module
---------------------------
+diffpy.srfit.pdf.pdfgenerator module
+------------------------------------
 
 .. automodule:: diffpy.srfit.pdf.pdfgenerator
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`pdfparser` Module
------------------------
+diffpy.srfit.pdf.pdfparser module
+---------------------------------
 
 .. automodule:: diffpy.srfit.pdf.pdfparser
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: diffpy.srfit.pdf
+    :members:
+    :undoc-members:
+    :show-inheritance:

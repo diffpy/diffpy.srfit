@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gaussianrecipe.py &mdash; SrFit 1.0b4-1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0b4-1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="SrFit 1.0b4-1 documentation" href="../index.html" />
+    <link rel="up" title="Examples" href="../examples.html" />
+    <link rel="next" title="debyemodel.py" href="debyemodel.html" />
+    <link rel="prev" title="Examples" href="../examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="debyemodel.html" title="debyemodel.py"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../examples.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="gaussianrecipe-py">
+<span id="id1"></span><h1>gaussianrecipe.py<a class="headerlink" href="#gaussianrecipe-py" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+<span class="c">########################################################################</span>
+<span class="c">#</span>
+<span class="c"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c">#                   Simon J. L. Billinge</span>
+<span class="c">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c">#                   in the City of New York.  All rights reserved.</span>
+<span class="c">#</span>
+<span class="c"># File coded by:    Chris Farrow</span>
+<span class="c">#</span>
+<span class="c"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c">#</span>
+<span class="c">########################################################################</span>
+<span class="sd">&quot;&quot;&quot;Example of fitting a Gaussian to simulated data.</span>
+
+<span class="sd">This is an example of building a fit recipe that can be driven by an optimizer</span>
+<span class="sd">to fit a Gaussian profile to simulated data.  The purpose of this example is</span>
+<span class="sd">familiarize the developer with the objects involved in defining a SrFit</span>
+<span class="sd">refinement recipe.</span>
+
+<span class="sd">Instructions</span>
+
+<span class="sd">If you have not yet run the example, run it and inspect the output. The example</span>
+<span class="sd">script is driven by the &#39;main&#39; method defined below. Take a look at that method</span>
+<span class="sd">to get an understanding of how a fit recipe can be used once created.  After</span>
+<span class="sd">that, read the &#39;makeRecipe&#39; code to see what goes into a fit recipe. After</span>
+<span class="sd">that, read the &#39;scipyOptimize&#39; code to see how the refinement is executed.</span>
+<span class="sd">Finally, read the &#39;plotResults&#39; code to see how to extracts the refined profile</span>
+<span class="sd">and plot it.</span>
+
+<span class="sd">Extensions</span>
+
+<span class="sd">After reading through the code, try to perform the folowing tasks. The process</span>
+<span class="sd">will leave you with a much better understanding of how SrFit works.</span>
+
+<span class="sd">- Play around with setting the values of the Variables and Parameters. What</span>
+<span class="sd">  happens to the associated Parameter when you change a variable value? What</span>
+<span class="sd">  happens to the variable when you change the Parameter value?</span>
+<span class="sd">- Modify the fitting equation by adding a constant. See if that improves the</span>
+<span class="sd">  fit.</span>
+<span class="sd">- Create a FitRecipe to fit the Lorentzian profile in the data/lorentzian.dat</span>
+<span class="sd">  file.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">FitContribution</span><span class="p">,</span> <span class="n">FitRecipe</span><span class="p">,</span> <span class="n">Profile</span><span class="p">,</span> <span class="n">FitResults</span>
+
+<span class="c">####### Example Code</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;The workflow of creating, running and inspecting a fit.&quot;&quot;&quot;</span>
+
+    <span class="c"># Start by creating the recipe. The recipe describes the data to be fit,</span>
+    <span class="c"># the profile generator used to simulate the data and the variables that</span>
+    <span class="c"># will be tuned by the optimizer.</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">()</span>
+
+    <span class="c"># Refine using the optimizer of your choice.</span>
+    <span class="n">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+
+    <span class="c"># Get the results in a FitResults object. The FitResults object stores the</span>
+    <span class="c"># current state of the recipe, and uses it to calculate useful statistics</span>
+    <span class="c"># about the fit.</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+
+    <span class="c"># Print the results.</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">printResults</span><span class="p">()</span>
+
+    <span class="c"># Plot the results.</span>
+    <span class="n">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+
+    <span class="k">return</span>
+
+
+<span class="k">def</span> <span class="nf">makeRecipe</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Make a FitRecipe for fitting a Gaussian curve to data.</span>
+
+<span class="sd">    The instructions for what we want to refine, and how to refine it will be</span>
+<span class="sd">    defined within a FitRecipe instance. The job of a FitRecipe is to collect</span>
+<span class="sd">    and associate all the data, the fitting equations, fitting variables,</span>
+<span class="sd">    constraints and restraints. The configured recipe provides a &#39;residual&#39;</span>
+<span class="sd">    function and the initial variable values that an optimizer can use to</span>
+<span class="sd">    refine the variables to minimize the disagreement between the calculated</span>
+<span class="sd">    profile and the data.</span>
+
+<span class="sd">    Once we define the FitRecipe, we can send it an optimizer to be optimized.</span>
+<span class="sd">    See the &#39;scipyOptimize&#39; function.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">## The Profile</span>
+    <span class="c"># Create a Profile to hold the experimental and calculated signal.</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
+
+    <span class="c"># Load data and add it to the profile. This uses the loadtxt function from</span>
+    <span class="c"># numpy.</span>
+    <span class="n">profile</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&quot;data/gaussian.dat&quot;</span><span class="p">)</span>
+
+    <span class="c">## The FitContribution</span>
+    <span class="c"># The FitContribution associates the Profile with a fitting equation. The</span>
+    <span class="c"># FitContribution also stores the parameters of the fitting equation. We</span>
+    <span class="c"># give our FitContribution then name &quot;g1&quot;. We will be able to access the</span>
+    <span class="c"># FitContribution by that name within the FitRecipe.</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s">&quot;g1&quot;</span><span class="p">)</span>
+    <span class="c"># Tell the FitContribution about the Profile. The FitContribution will give</span>
+    <span class="c"># us access to the data held within the Profile. Here, we can tell it what</span>
+    <span class="c"># name we want to use for the independent variable. We tell it to use the</span>
+    <span class="c"># name &quot;x&quot;.</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s">&quot;x&quot;</span><span class="p">)</span>
+
+    <span class="c"># Now we need to create a fitting equation. We do that by writing out the</span>
+    <span class="c"># equation as a string. The FitContribution will turn this into a callable</span>
+    <span class="c"># function internally. In the process, it extracts all the parameters from</span>
+    <span class="c"># the equation (A, x, x0, sigma) and turns them into Parameter objects</span>
+    <span class="c"># internally. These objects can be accessed as attributes of the</span>
+    <span class="c"># contribution by name.  Since we told the contribution that our</span>
+    <span class="c"># independent variable is named &quot;x&quot;, this value will be substituted into</span>
+    <span class="c"># the fitting equation whenever it is called.</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">setEquation</span><span class="p">(</span><span class="s">&quot;A * exp(-0.5*(x-x0)**2/sigma**2)&quot;</span><span class="p">)</span>
+
+    <span class="c"># To demonstrate how these parameters are used, we will give &quot;A&quot; an initial</span>
+    <span class="c"># value. Note that Parameters are not numbers, but are containers for</span>
+    <span class="c"># numbers. To get or modify the value of a parameter, use its &#39;value&#39;</span>
+    <span class="c"># attribute.  Parameters also have a &#39;name&#39; attribute.</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="c">## The FitRecipe</span>
+    <span class="c"># The FitRecipe lets us define what we want to fit. It is where we can</span>
+    <span class="c"># create variables, constraints and restraints.</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
+
+    <span class="c"># Here we tell the FitRecipe to use our FitContribution. When the FitRecipe</span>
+    <span class="c"># calculates its residual function, it will call on the FitContribution to</span>
+    <span class="c"># do part of the work.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
+
+    <span class="c"># Specify which Parameters we want to vary in the fit.  This will add</span>
+    <span class="c"># Variables to the FitRecipe that directly modify the Parameters of the</span>
+    <span class="c"># FitContribution.</span>
+    <span class="c">#</span>
+    <span class="c"># Here we create a Variable for the &#39;A&#39; Parameter from our fit equation.</span>
+    <span class="c"># The resulting Variable will be named &#39;A&#39; as well, but it will be accessed</span>
+    <span class="c"># via the FitRecipe.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">A</span><span class="p">)</span>
+    <span class="c"># Here we create the Variable for &#39;x0&#39; and give it an initial value of 5.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="c"># Here we create a Variable named &#39;sig&#39;, which is tied to the &#39;sigma&#39;</span>
+    <span class="c"># Parameter of our FitContribution. We give it an initial value through the</span>
+    <span class="c"># FitRecipe instance.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;sig&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">recipe</span>
+
+<span class="k">def</span> <span class="nf">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Optimize the recipe created above using scipy.</span>
+
+<span class="sd">    The FitRecipe we created in makeRecipe has a &#39;residual&#39; method that we can</span>
+<span class="sd">    be minimized using a scipy optimizer. The details are described in the</span>
+<span class="sd">    source.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># We&#39;re going to use the least-squares (Levenberg-Marquardt) optimizer from</span>
+    <span class="c"># scipy. We simply have to give it the function to minimize</span>
+    <span class="c"># (recipe.residual) and the starting values of the Variables</span>
+    <span class="c"># (recipe.getValues()).</span>
+    <span class="kn">from</span> <span class="nn">scipy.optimize.minpack</span> <span class="kn">import</span> <span class="n">leastsq</span>
+    <span class="k">print</span> <span class="s">&quot;Fit using scipy&#39;s LM optimizer&quot;</span>
+    <span class="n">leastsq</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">residual</span><span class="p">,</span> <span class="n">recipe</span><span class="o">.</span><span class="n">getValues</span><span class="p">())</span>
+
+    <span class="k">return</span>
+
+<span class="k">def</span> <span class="nf">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
+
+    <span class="c"># We can access the data and fit profile through the Profile we created</span>
+    <span class="c"># above. We get to it through our FitContribution, which we named &quot;g1&quot;.</span>
+    <span class="c">#</span>
+    <span class="c"># The independent variable. This is always under the &quot;x&quot; attribute.</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span>
+    <span class="c"># The observed profile that we loaded earlier, the &quot;y&quot; attribute.</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
+    <span class="c"># The calculated profile, the &quot;ycalc&quot; attribute.</span>
+    <span class="n">ycalc</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">g1</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span>
+
+    <span class="c"># This stuff is specific to pylab from the matplotlib distribution.</span>
+    <span class="kn">import</span> <span class="nn">pylab</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s">&#39;b.&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;observed Gaussian&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ycalc</span><span class="p">,</span> <span class="s">&#39;g-&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;calculated Gaussian&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">))</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;y&quot;</span><span class="p">)</span>
+
+    <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">main</span><span class="p">()</span>
+
+<span class="c"># End of file</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../examples.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="debyemodel.html"
+                        title="next chapter">debyemodel.py</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/examples/gaussianrecipe.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="debyemodel.html" title="debyemodel.py"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../examples.html" title="Examples"
+             >previous</a> |</li>
+        <li><a href="../index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

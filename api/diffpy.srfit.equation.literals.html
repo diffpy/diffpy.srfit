@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>literals Package &mdash; SrFit 1.0b2-14 documentation</title>
+    <title>diffpy.srfit.equation.literals package &mdash; SrFit 1.0b4-1 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b2-14',
+        VERSION:     '1.0b4-1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,10 +24,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b2-14 documentation" href="../index.html" />
-    <link rel="up" title="equation Package" href="diffpy.srfit.equation.html" />
-    <link rel="next" title="visitors Package" href="diffpy.srfit.equation.visitors.html" />
-    <link rel="prev" title="equation Package" href="diffpy.srfit.equation.html" /> 
+    <link rel="top" title="SrFit 1.0b4-1 documentation" href="../index.html" />
+    <link rel="up" title="diffpy.srfit.equation package" href="diffpy.srfit.equation.html" />
+    <link rel="next" title="diffpy.srfit.equation.visitors package" href="diffpy.srfit.equation.visitors.html" />
+    <link rel="prev" title="diffpy.srfit.equation package" href="diffpy.srfit.equation.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,14 +40,14 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.equation.visitors.html" title="visitors Package"
+          <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.equation.html" title="equation Package"
+          <a href="diffpy.srfit.equation.html" title="diffpy.srfit.equation package"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b2-14 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" >srfit Package</a> &raquo;</li>
-          <li><a href="diffpy.srfit.equation.html" accesskey="U">equation Package</a> &raquo;</li> 
+        <li><a href="../index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li>
+          <li><a href="diffpy.srfit.equation.html" accesskey="U">diffpy.srfit.equation package</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -58,240 +56,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="literals-package">
-<h1>literals Package<a class="headerlink" href="#literals-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">literals</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-diffpy.srfit.equation.literals"></span><p>Building blocks for defining a lazy evaluation network.</p>
-<p>Literals are the building blocks of the evaluation network. An Argument holds
-the name and value of an equation variable. Operators are used to compose
-other Literals to produce a new value.</p>
-<p>Literal networks can be evaluated or have other actions performed on them by
-Visitors (in diffpy.srfit.equation.visitors). The Literal-Visitor relationship
-is that described by the Visitor pattern
-(<a class="reference external" href="http://en.wikipedia.org/wiki/Visitor_pattern">http://en.wikipedia.org/wiki/Visitor_pattern</a>).</p>
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.Argument">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">Argument</tt><big>(</big><em>name=None</em>, <em>value=None</em>, <em>const=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.literal.Literal</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.equation.literals.abcs.ArgumentABC" title="diffpy.srfit.equation.literals.abcs.ArgumentABC"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.abcs.ArgumentABC</span></tt></a></p>
-<p>Argument class.</p>
-<p>Attributes
-name    &#8211;  A name for this Argument.
-const   &#8211;  A flag indicating whether this is considered a constant.</p>
-<blockquote>
-<div>Constants may be given special treatment by the Visitors.</div></blockquote>
-<p>_value  &#8211;  The value of the Argument. Modified with &#8216;setValue&#8217;.
-value   &#8211;  Property for &#8216;getValue&#8217; and &#8216;setValue&#8217;.</p>
-<dl class="attribute">
-<dt id="diffpy.srfit.equation.literals.Argument.const">
-<tt class="descname">const</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.const" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="diffpy.srfit.equation.literals.Argument.getValue">
-<tt class="descname">getValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.getValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of this Literal.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="diffpy.srfit.equation.literals.Argument.identify">
-<tt class="descname">identify</tt><big>(</big><em>visitor</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.identify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Identify self to a visitor.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="diffpy.srfit.equation.literals.Argument.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.setValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the value of the Literal.</p>
-<p>val &#8211;  The value to assign</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="diffpy.srfit.equation.literals.Argument.value">
-<tt class="descname">value</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.Operator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">Operator</tt><big>(</big><em>name=None</em>, <em>symbol=None</em>, <em>operation=None</em>, <em>nin=2</em>, <em>nout=1</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.literal.Literal</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.equation.literals.abcs.OperatorABC" title="diffpy.srfit.equation.literals.abcs.OperatorABC"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.abcs.OperatorABC</span></tt></a></p>
-<p>Class for holding a general operator.</p>
-<p>This holds a general operator and records its function, arguments, name and
-symbol.  The visitors should be able to process any Operator with this
-information alone.</p>
-<p>Attributes
-args    &#8211;  List of Literal arguments, set with &#8216;addLiteral&#8217;
-name    &#8211;  A name for this operator. e.g. &#8220;add&#8221; or &#8220;sin&#8221;
-nin     &#8211;  Number of inputs (&lt;1 means this is variable)
-nout    &#8211;  Number of outputs
-operation   &#8211;  Function that performs the operation. e.g. numpy.add.
-symbol  &#8211;  The symbolic representation. e.g. &#8220;+&#8221; or &#8220;sin&#8221;.
-_value  &#8211;  The value of the Operator.
-value   &#8211;  Property for &#8216;getValue&#8217;.</p>
-<dl class="method">
-<dt id="diffpy.srfit.equation.literals.Operator.addLiteral">
-<tt class="descname">addLiteral</tt><big>(</big><em>literal</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.addLiteral" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a literal to this operator.</p>
-<p>Note that order of operation matters. The first literal added is the
-leftmost argument. The last is the rightmost.</p>
-<p>Raises ValueError if the literal causes a self-reference.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="diffpy.srfit.equation.literals.Operator.args">
-<tt class="descname">args</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.args" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="diffpy.srfit.equation.literals.Operator.getValue">
-<tt class="descname">getValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.getValue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get or evaluate the value of the operator.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="diffpy.srfit.equation.literals.Operator.identify">
-<tt class="descname">identify</tt><big>(</big><em>visitor</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.identify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Identify self to a visitor.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="diffpy.srfit.equation.literals.Operator.nin">
-<tt class="descname">nin</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.nin" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="diffpy.srfit.equation.literals.Operator.nout">
-<tt class="descname">nout</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.nout" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="diffpy.srfit.equation.literals.Operator.operation">
-<tt class="descname">operation</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.operation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="diffpy.srfit.equation.literals.Operator.symbol">
-<tt class="descname">symbol</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.symbol" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="diffpy.srfit.equation.literals.Operator.value">
-<tt class="descname">value</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.AdditionOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">AdditionOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.AdditionOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Addition operator.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.SubtractionOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">SubtractionOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.SubtractionOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Subtraction operator.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.MultiplicationOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">MultiplicationOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.MultiplicationOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Multiplication operator.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.DivisionOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">DivisionOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.DivisionOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Division operator.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.ExponentiationOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">ExponentiationOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.ExponentiationOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Exponentiation operator.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.RemainderOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">RemainderOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.RemainderOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Remainder operator.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.NegationOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">NegationOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.NegationOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Negation operator.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.ConvolutionOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">ConvolutionOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.ConvolutionOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Convolve two signals.</p>
-<p>This convolves two signals such that centroid of the first array is not
-altered by the convolution. Furthermore, the integrated amplitude of the
-convolution is scaled to be that of the first signal. This is mean to act
-as a convolution of a signal by a probability distribution.</p>
-<p>Note that this is only possible when the signals are computed over the same
-range.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.SumOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">SumOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.SumOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>numpy.sum operator.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.UFuncOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">UFuncOperator</tt><big>(</big><em>op</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.UFuncOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>A operator wrapper around a numpy ufunc.</p>
-<p>The name and symbol attributes are set equal to the ufunc.__name__
-attribute. nin and nout are also taken from the ufunc.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.ListOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">ListOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.ListOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Operator that will take parameters and turn them into a list.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.SetOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">SetOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.SetOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Operator that will take parameters and turn them into a set.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.ArrayOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">ArrayOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.ArrayOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Operator that will take parameters and turn them into an array.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="diffpy.srfit.equation.literals.PolyvalOperator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">PolyvalOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.PolyvalOperator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
-<p>Operator for numpy polyval.</p>
-</dd></dl>
-
+  <div class="section" id="diffpy-srfit-equation-literals-package">
+<h1>diffpy.srfit.equation.literals package<a class="headerlink" href="#diffpy-srfit-equation-literals-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-diffpy.srfit.equation.literals.abcs">
-<span id="abcs-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">abcs</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.equation.literals.abcs" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-equation-literals-abcs-module"></span><h2>diffpy.srfit.equation.literals.abcs module<a class="headerlink" href="#module-diffpy.srfit.equation.literals.abcs" title="Permalink to this headline">¶</a></h2>
 <p>Abstract Base Classes for Literals.</p>
 <dl class="function">
 <dt id="diffpy.srfit.equation.literals.abcs.isinstance">
@@ -659,7 +430,7 @@ x = abstractproperty(getx, setx)</dd>
 
 </div>
 <div class="section" id="module-diffpy.srfit.equation.literals.argument">
-<span id="argument-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">argument</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.equation.literals.argument" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-equation-literals-argument-module"></span><h2>diffpy.srfit.equation.literals.argument module<a class="headerlink" href="#module-diffpy.srfit.equation.literals.argument" title="Permalink to this headline">¶</a></h2>
 <p>Argument class.</p>
 <p>Arguments are the leaves of an equation tree, in essense a variable or a
 constant.</p>
@@ -708,7 +479,7 @@ value   &#8211;  Property for &#8216;getValue&#8217; and &#8216;setValue&#8217;.
 
 </div>
 <div class="section" id="module-diffpy.srfit.equation.literals.literal">
-<span id="literal-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">literal</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.equation.literals.literal" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-equation-literals-literal-module"></span><h2>diffpy.srfit.equation.literals.literal module<a class="headerlink" href="#module-diffpy.srfit.equation.literals.literal" title="Permalink to this headline">¶</a></h2>
 <p>Literal base class used to construct equation trees.</p>
 <p>Literals are base pieces of the equation hierarchy. The &#8216;identify&#8217; method
 identifies the Literal to a visitor by calling the identifying method of the
@@ -743,7 +514,7 @@ _value  &#8211;  The value of the Literal.</p>
 
 </div>
 <div class="section" id="module-diffpy.srfit.equation.literals.operators">
-<span id="operators-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">operators</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.equation.literals.operators" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-equation-literals-operators-module"></span><h2>diffpy.srfit.equation.literals.operators module<a class="headerlink" href="#module-diffpy.srfit.equation.literals.operators" title="Permalink to this headline">¶</a></h2>
 <p>Operator classes.</p>
 <p>Operators are combined with other Literals to create an equation. Operators are
 non-leaf nodes on a Literal tree. These trees can be evaluated by the Evaluator
@@ -929,6 +700,236 @@ attribute. nin and nout are also taken from the ufunc.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-diffpy.srfit.equation.literals">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-diffpy.srfit.equation.literals" title="Permalink to this headline">¶</a></h2>
+<p>Building blocks for defining a lazy evaluation network.</p>
+<p>Literals are the building blocks of the evaluation network. An Argument holds
+the name and value of an equation variable. Operators are used to compose
+other Literals to produce a new value.</p>
+<p>Literal networks can be evaluated or have other actions performed on them by
+Visitors (in diffpy.srfit.equation.visitors). The Literal-Visitor relationship
+is that described by the Visitor pattern
+(<a class="reference external" href="http://en.wikipedia.org/wiki/Visitor_pattern">http://en.wikipedia.org/wiki/Visitor_pattern</a>).</p>
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.Argument">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">Argument</tt><big>(</big><em>name=None</em>, <em>value=None</em>, <em>const=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.literal.Literal</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.equation.literals.abcs.ArgumentABC" title="diffpy.srfit.equation.literals.abcs.ArgumentABC"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.abcs.ArgumentABC</span></tt></a></p>
+<p>Argument class.</p>
+<p>Attributes
+name    &#8211;  A name for this Argument.
+const   &#8211;  A flag indicating whether this is considered a constant.</p>
+<blockquote>
+<div>Constants may be given special treatment by the Visitors.</div></blockquote>
+<p>_value  &#8211;  The value of the Argument. Modified with &#8216;setValue&#8217;.
+value   &#8211;  Property for &#8216;getValue&#8217; and &#8216;setValue&#8217;.</p>
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.literals.Argument.const">
+<tt class="descname">const</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.const" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.literals.Argument.getValue">
+<tt class="descname">getValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of this Literal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.literals.Argument.identify">
+<tt class="descname">identify</tt><big>(</big><em>visitor</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.identify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify self to a visitor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.literals.Argument.setValue">
+<tt class="descname">setValue</tt><big>(</big><em>val</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.setValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of the Literal.</p>
+<p>val &#8211;  The value to assign</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.literals.Argument.value">
+<tt class="descname">value</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.Argument.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.Operator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">Operator</tt><big>(</big><em>name=None</em>, <em>symbol=None</em>, <em>operation=None</em>, <em>nin=2</em>, <em>nout=1</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.literal.Literal</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.equation.literals.abcs.OperatorABC" title="diffpy.srfit.equation.literals.abcs.OperatorABC"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.abcs.OperatorABC</span></tt></a></p>
+<p>Class for holding a general operator.</p>
+<p>This holds a general operator and records its function, arguments, name and
+symbol.  The visitors should be able to process any Operator with this
+information alone.</p>
+<p>Attributes
+args    &#8211;  List of Literal arguments, set with &#8216;addLiteral&#8217;
+name    &#8211;  A name for this operator. e.g. &#8220;add&#8221; or &#8220;sin&#8221;
+nin     &#8211;  Number of inputs (&lt;1 means this is variable)
+nout    &#8211;  Number of outputs
+operation   &#8211;  Function that performs the operation. e.g. numpy.add.
+symbol  &#8211;  The symbolic representation. e.g. &#8220;+&#8221; or &#8220;sin&#8221;.
+_value  &#8211;  The value of the Operator.
+value   &#8211;  Property for &#8216;getValue&#8217;.</p>
+<dl class="method">
+<dt id="diffpy.srfit.equation.literals.Operator.addLiteral">
+<tt class="descname">addLiteral</tt><big>(</big><em>literal</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.addLiteral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a literal to this operator.</p>
+<p>Note that order of operation matters. The first literal added is the
+leftmost argument. The last is the rightmost.</p>
+<p>Raises ValueError if the literal causes a self-reference.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.literals.Operator.args">
+<tt class="descname">args</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.args" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.literals.Operator.getValue">
+<tt class="descname">getValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get or evaluate the value of the operator.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.literals.Operator.identify">
+<tt class="descname">identify</tt><big>(</big><em>visitor</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.identify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify self to a visitor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.literals.Operator.nin">
+<tt class="descname">nin</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.nin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.literals.Operator.nout">
+<tt class="descname">nout</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.nout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.literals.Operator.operation">
+<tt class="descname">operation</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.operation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.literals.Operator.symbol">
+<tt class="descname">symbol</tt><em class="property"> = None</em><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.symbol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.literals.Operator.value">
+<tt class="descname">value</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.Operator.value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.AdditionOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">AdditionOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.AdditionOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Addition operator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.SubtractionOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">SubtractionOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.SubtractionOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Subtraction operator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.MultiplicationOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">MultiplicationOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.MultiplicationOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Multiplication operator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.DivisionOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">DivisionOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.DivisionOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Division operator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.ExponentiationOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">ExponentiationOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.ExponentiationOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Exponentiation operator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.RemainderOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">RemainderOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.RemainderOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Remainder operator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.NegationOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">NegationOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.NegationOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Negation operator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.ConvolutionOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">ConvolutionOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.ConvolutionOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Convolve two signals.</p>
+<p>This convolves two signals such that centroid of the first array is not
+altered by the convolution. Furthermore, the integrated amplitude of the
+convolution is scaled to be that of the first signal. This is mean to act
+as a convolution of a signal by a probability distribution.</p>
+<p>Note that this is only possible when the signals are computed over the same
+range.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.SumOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">SumOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.SumOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>numpy.sum operator.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.UFuncOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">UFuncOperator</tt><big>(</big><em>op</em><big>)</big><a class="headerlink" href="#diffpy.srfit.equation.literals.UFuncOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>A operator wrapper around a numpy ufunc.</p>
+<p>The name and symbol attributes are set equal to the ufunc.__name__
+attribute. nin and nout are also taken from the ufunc.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.ListOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">ListOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.ListOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Operator that will take parameters and turn them into a list.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.SetOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">SetOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.SetOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Operator that will take parameters and turn them into a set.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.ArrayOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">ArrayOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.ArrayOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Operator that will take parameters and turn them into an array.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="diffpy.srfit.equation.literals.PolyvalOperator">
+<em class="property">class </em><tt class="descclassname">diffpy.srfit.equation.literals.</tt><tt class="descname">PolyvalOperator</tt><a class="headerlink" href="#diffpy.srfit.equation.literals.PolyvalOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a></p>
+<p>Operator for numpy polyval.</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -939,22 +940,23 @@ attribute. nin and nout are also taken from the ufunc.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">literals Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">literals</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals.abcs"><tt class="docutils literal"><span class="pre">abcs</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals.argument"><tt class="docutils literal"><span class="pre">argument</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals.literal"><tt class="docutils literal"><span class="pre">literal</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals.operators"><tt class="docutils literal"><span class="pre">operators</span></tt> Module</a></li>
+<li><a class="reference internal" href="#">diffpy.srfit.equation.literals package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals.abcs">diffpy.srfit.equation.literals.abcs module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals.argument">diffpy.srfit.equation.literals.argument module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals.literal">diffpy.srfit.equation.literals.literal module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals.operators">diffpy.srfit.equation.literals.operators module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.equation.literals">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="diffpy.srfit.equation.html"
-                        title="previous chapter">equation Package</a></p>
+                        title="previous chapter">diffpy.srfit.equation package</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="diffpy.srfit.equation.visitors.html"
-                        title="next chapter">visitors Package</a></p>
+                        title="next chapter">diffpy.srfit.equation.visitors package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/api/diffpy.srfit.equation.literals.txt"
@@ -987,19 +989,19 @@ attribute. nin and nout are also taken from the ufunc.</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.equation.visitors.html" title="visitors Package"
+          <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
              >next</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.equation.html" title="equation Package"
+          <a href="diffpy.srfit.equation.html" title="diffpy.srfit.equation package"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b2-14 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" >srfit Package</a> &raquo;</li>
-          <li><a href="diffpy.srfit.equation.html" >equation Package</a> &raquo;</li> 
+        <li><a href="../index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li>
+          <li><a href="diffpy.srfit.equation.html" >diffpy.srfit.equation package</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>
 </html>

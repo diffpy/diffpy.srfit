@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>structure Package &mdash; SrFit 1.0b2-14 documentation</title>
+    <title>diffpy.srfit.structure package &mdash; SrFit 1.0b4-1 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -16,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b2-14',
+        VERSION:     '1.0b4-1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,10 +24,10 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b2-14 documentation" href="../index.html" />
-    <link rel="up" title="srfit Package" href="diffpy.srfit.html" />
-    <link rel="next" title="util Package" href="diffpy.srfit.util.html" />
-    <link rel="prev" title="sas Package" href="diffpy.srfit.sas.html" /> 
+    <link rel="top" title="SrFit 1.0b4-1 documentation" href="../index.html" />
+    <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
+    <link rel="next" title="diffpy.srfit.util package" href="diffpy.srfit.util.html" />
+    <link rel="prev" title="diffpy.srfit.sas package" href="diffpy.srfit.sas.html" /> 
   </head>
   <body>
     <div class="related">
@@ -42,13 +40,13 @@
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.util.html" title="util Package"
+          <a href="diffpy.srfit.util.html" title="diffpy.srfit.util package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.sas.html" title="sas Package"
+          <a href="diffpy.srfit.sas.html" title="diffpy.srfit.sas package"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b2-14 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" accesskey="U">srfit Package</a> &raquo;</li> 
+        <li><a href="../index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -57,27 +55,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="structure-package">
-<h1>structure Package<a class="headerlink" href="#structure-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">structure</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-diffpy.srfit.structure"></span><p>Modules and classes that adapt structure representations to the ParameterSet
-interface and automatic structure constraint generation from space group
-information.</p>
-<dl class="function">
-<dt id="diffpy.srfit.structure.struToParameterSet">
-<tt class="descclassname">diffpy.srfit.structure.</tt><tt class="descname">struToParameterSet</tt><big>(</big><em>name</em>, <em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.struToParameterSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a ParameterSet from an structure.</p>
-<p>This returns a ParameterSet adapted for the structure depending on its
-type.</p>
-<p>stru    &#8211;  a structure object known by this module
-name    &#8211;  A name to give the structure.</p>
-<p>Raises TypeError if stru cannot be adapted</p>
-</dd></dl>
-
+  <div class="section" id="diffpy-srfit-structure-package">
+<h1>diffpy.srfit.structure package<a class="headerlink" href="#diffpy-srfit-structure-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-diffpy.srfit.structure.basestructureparset">
-<span id="basestructureparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">basestructureparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.basestructureparset" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-structure-basestructureparset-module"></span><h2>diffpy.srfit.structure.basestructureparset module<a class="headerlink" href="#module-diffpy.srfit.structure.basestructureparset" title="Permalink to this headline">¶</a></h2>
 <p>Base class for adapting structures to a ParameterSet interface.</p>
 <p>The BaseStructureParSet is a ParameterSet with functionality required by all
 structure adapters.</p>
@@ -122,7 +106,7 @@ anisotropic) depends on the adapted structure.</p>
 
 </div>
 <div class="section" id="module-diffpy.srfit.structure.bvsrestraint">
-<span id="bvsrestraint-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">bvsrestraint</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.bvsrestraint" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-structure-bvsrestraint-module"></span><h2>diffpy.srfit.structure.bvsrestraint module<a class="headerlink" href="#module-diffpy.srfit.structure.bvsrestraint" title="Permalink to this headline">¶</a></h2>
 <p>Bond-valence sum calculator from SrReal wrapped as a Restraint.</p>
 <p>This can be used as an addition to a cost function during a structure
 refinement to keep the bond-valence sum within tolerable limits.</p>
@@ -155,7 +139,7 @@ scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
 
 </div>
 <div class="section" id="module-diffpy.srfit.structure.cctbxparset">
-<span id="cctbxparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">cctbxparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.cctbxparset" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-structure-cctbxparset-module"></span><h2>diffpy.srfit.structure.cctbxparset module<a class="headerlink" href="#module-diffpy.srfit.structure.cctbxparset" title="Permalink to this headline">¶</a></h2>
 <p>Wrappers for interfacing cctbx crystal with SrFit.</p>
 <p>This wraps a cctbx.crystal as a ParameterSet with a similar hierarchy, which
 can then be used within a FitRecipe. Note that all manipulations to the
@@ -249,7 +233,7 @@ The unit_cell will only be remade if necessary.</p>
 
 </div>
 <div class="section" id="module-diffpy.srfit.structure.diffpyparset">
-<span id="diffpyparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">diffpyparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.diffpyparset" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-structure-diffpyparset-module"></span><h2>diffpy.srfit.structure.diffpyparset module<a class="headerlink" href="#module-diffpy.srfit.structure.diffpyparset" title="Permalink to this headline">¶</a></h2>
 <p>Adapters for interfacing a diffpy.Structure.Structure with SrFit.</p>
 <p>A diffpy.Structure.Structure object is meant to be passed to a
 DiffpyStrucureParSet object from this module, which can then be used as a
@@ -305,7 +289,7 @@ anisotropic) depends on the adapted structure.</p>
 
 </div>
 <div class="section" id="module-diffpy.srfit.structure.objcrystparset">
-<span id="objcrystparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">objcrystparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.objcrystparset" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-structure-objcrystparset-module"></span><h2>diffpy.srfit.structure.objcrystparset module<a class="headerlink" href="#module-diffpy.srfit.structure.objcrystparset" title="Permalink to this headline">¶</a></h2>
 <p>Wrappers for adapting pyobjcryst.crystal.Crystal to a srfit ParameterSet.</p>
 <p>This will adapt a Crystal or Molecule object from pyobjcryst into the
 ParameterSet interface. The following classes are adapted.</p>
@@ -653,11 +637,11 @@ anisotropic) depends on the adapted structure.</p>
 
 </div>
 <div class="section" id="module-diffpy.srfit.structure.sgconstraints">
-<span id="sgconstraints-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">sgconstraints</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.sgconstraints" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-structure-sgconstraints-module"></span><h2>diffpy.srfit.structure.sgconstraints module<a class="headerlink" href="#module-diffpy.srfit.structure.sgconstraints" title="Permalink to this headline">¶</a></h2>
 <p>Code to set space group constraints for a crystal structure.</p>
 <dl class="function">
 <dt id="diffpy.srfit.structure.sgconstraints.constrainAsSpaceGroup">
-<tt class="descclassname">diffpy.srfit.structure.sgconstraints.</tt><tt class="descname">constrainAsSpaceGroup</tt><big>(</big><em>phase, sgsymbol, scatterers=None, sgoffset=[0, 0, 0], constrainlat=True, constrainadps=True, adpsymbols=['U11', 'U22', 'U33', 'U12', 'U13', 'U23'], isosymbol='Uiso'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.sgconstraints.constrainAsSpaceGroup" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">diffpy.srfit.structure.sgconstraints.</tt><tt class="descname">constrainAsSpaceGroup</tt><big>(</big><em>phase, sgsymbol, scatterers=None, sgoffset=[0, 0, 0], constrainlat=True, constrainadps=True, adpsymbols=None, isosymbol='Uiso'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.sgconstraints.constrainAsSpaceGroup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constrain the structure to the space group.</p>
 <p>This applies space group constraints to a StructureParSet with P1
 symmetry.  Passed scatterers are explicitly constrained to the
@@ -714,7 +698,7 @@ are fixed to alpha.</dd>
 
 </div>
 <div class="section" id="module-diffpy.srfit.structure.srrealparset">
-<span id="srrealparset-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">srrealparset</span></tt> Module<a class="headerlink" href="#module-diffpy.srfit.structure.srrealparset" title="Permalink to this headline">¶</a></h2>
+<span id="diffpy-srfit-structure-srrealparset-module"></span><h2>diffpy.srfit.structure.srrealparset module<a class="headerlink" href="#module-diffpy.srfit.structure.srrealparset" title="Permalink to this headline">¶</a></h2>
 <p>Structure wrapper class for structures compatible with SrReal.</p>
 <dl class="class">
 <dt id="diffpy.srfit.structure.srrealparset.SrRealParSet">
@@ -763,6 +747,23 @@ scaled  &#8211;  A flag indicating if the restraint is scaled</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-diffpy.srfit.structure">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-diffpy.srfit.structure" title="Permalink to this headline">¶</a></h2>
+<p>Modules and classes that adapt structure representations to the ParameterSet
+interface and automatic structure constraint generation from space group
+information.</p>
+<dl class="function">
+<dt id="diffpy.srfit.structure.struToParameterSet">
+<tt class="descclassname">diffpy.srfit.structure.</tt><tt class="descname">struToParameterSet</tt><big>(</big><em>name</em>, <em>stru</em><big>)</big><a class="headerlink" href="#diffpy.srfit.structure.struToParameterSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a ParameterSet from an structure.</p>
+<p>This returns a ParameterSet adapted for the structure depending on its
+type.</p>
+<p>stru    &#8211;  a structure object known by this module
+name    &#8211;  A name to give the structure.</p>
+<p>Raises TypeError if stru cannot be adapted</p>
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -773,25 +774,26 @@ scaled  &#8211;  A flag indicating if the restraint is scaled</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">structure Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">structure</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.structure.basestructureparset"><tt class="docutils literal"><span class="pre">basestructureparset</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.structure.bvsrestraint"><tt class="docutils literal"><span class="pre">bvsrestraint</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.structure.cctbxparset"><tt class="docutils literal"><span class="pre">cctbxparset</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.structure.diffpyparset"><tt class="docutils literal"><span class="pre">diffpyparset</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.structure.objcrystparset"><tt class="docutils literal"><span class="pre">objcrystparset</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.structure.sgconstraints"><tt class="docutils literal"><span class="pre">sgconstraints</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.structure.srrealparset"><tt class="docutils literal"><span class="pre">srrealparset</span></tt> Module</a></li>
+<li><a class="reference internal" href="#">diffpy.srfit.structure package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.basestructureparset">diffpy.srfit.structure.basestructureparset module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.bvsrestraint">diffpy.srfit.structure.bvsrestraint module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.cctbxparset">diffpy.srfit.structure.cctbxparset module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.diffpyparset">diffpy.srfit.structure.diffpyparset module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.objcrystparset">diffpy.srfit.structure.objcrystparset module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.sgconstraints">diffpy.srfit.structure.sgconstraints module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure.srrealparset">diffpy.srfit.structure.srrealparset module</a></li>
+<li><a class="reference internal" href="#module-diffpy.srfit.structure">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="diffpy.srfit.sas.html"
-                        title="previous chapter">sas Package</a></p>
+                        title="previous chapter">diffpy.srfit.sas package</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="diffpy.srfit.util.html"
-                        title="next chapter">util Package</a></p>
+                        title="next chapter">diffpy.srfit.util package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/api/diffpy.srfit.structure.txt"
@@ -824,18 +826,18 @@ scaled  &#8211;  A flag indicating if the restraint is scaled</p>
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.util.html" title="util Package"
+          <a href="diffpy.srfit.util.html" title="diffpy.srfit.util package"
              >next</a> |</li>
         <li class="right" >
-          <a href="diffpy.srfit.sas.html" title="sas Package"
+          <a href="diffpy.srfit.sas.html" title="diffpy.srfit.sas package"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b2-14 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" >srfit Package</a> &raquo;</li> 
+        <li><a href="../index.html">SrFit 1.0b4-1 documentation</a> &raquo;</li>
+          <li><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>
 </html>

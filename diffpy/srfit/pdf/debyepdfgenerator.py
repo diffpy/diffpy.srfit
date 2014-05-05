@@ -74,7 +74,7 @@ class DebyePDFGenerator(BasePDFGenerator):
         used. The resulting ParameterSet will be managed by this generator.
 
         stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
-                    pyobjcryst.molecule.Molecule instance . Default None.
+                    pyobjcryst.molecule.Molecule instance.  Default None.
         name    --  A name to give to the managed ParameterSet that adapts stru
                     (default "phase").
         periodic -- The structure should be treated as periodic (default

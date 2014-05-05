@@ -34,22 +34,26 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
+from diffpy.srfit.util.argbinders import bind2nd
 
 # Accessor for xyz of atoms
-def _xyzgetter(i):
+class _xyzgetter(object):
 
-    def f(atom):
-        return atom.xyz[i]
+    def __init__(self, i):
+        self.i = i
 
-    return f
+    def __call__(self, atom):
+        return atom.xyz[self.i]
 
-def _xyzsetter(i):
 
-    def f(atom, value):
-        atom.xyz[i] = value
-        return
+class _xyzsetter(object):
 
-    return f
+    def __init__(self, i):
+        self.i = i
+
+    def __call__(self, atom, value):
+        atom.xyz[self.i] = value
+
 
 class DiffpyAtomParSet(ParameterSet):
     """A wrapper for diffpy.Structure.Atom.
@@ -149,20 +153,10 @@ class DiffpyAtomParSet(ParameterSet):
 
 
 def _latgetter(par):
-
-    def f(lat):
-        return getattr(lat, par)
-
-    return f
+    return bind2nd(getattr, par)
 
 def _latsetter(par):
-
-    def f(lat, value):
-        setattr(lat, par, value)
-        lat.setLatPar()
-        return
-
-    return f
+    return bind2nd(setattr, par)
 
 
 class DiffpyLatticeParSet(ParameterSet):
@@ -255,9 +249,10 @@ class DiffpyStructureParSet(SrRealParSet):
             self.addParameterSet(atom)
             self.atoms.append(atom)
 
-        # other setup
-        self.__repr__ = stru.__repr__
         return
+
+    def __repr__(self):
+        return repr(self.stru)
 
     def getLattice(self):
         """Get the ParameterSet containing the lattice Parameters."""

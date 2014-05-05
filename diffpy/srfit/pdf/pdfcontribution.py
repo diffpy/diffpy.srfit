@@ -156,7 +156,7 @@ class PDFContribution(FitContribution):
                     contribution and 'name' is passed name.
                     (default), then the name will be set as "phase".
         stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
-                    pyobjcryst.molecule.Molecule instance . Default None.
+                    pyobjcryst.molecule.Molecule instance.  Default None.
         periodic -- The structure should be treated as periodic.  If this is
                     True (default), then a PDFGenerator will be used to
                     calculate the PDF from the phase. Otherwise, a

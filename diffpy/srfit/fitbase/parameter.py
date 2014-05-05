@@ -29,6 +29,7 @@ from numpy import inf
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.util.argbinders import bind2nd
 from diffpy.srfit.interface import _parameter_interface
 from diffpy.srfit.fitbase.validatable import Validatable
 
@@ -237,14 +238,14 @@ class ParameterAdapter(Parameter):
 
         if attr is not None:
             if getter is None:
-                self.getter = lambda obj: getattr(obj, self.attr)
+                self.getter = bind2nd(getattr, self.attr)
             else:
-                self.getter = lambda obj: getter(obj, self.attr)
+                self.getter = bind2nd(getter, self.attr)
 
             if setter is None:
-                self.setter = lambda obj, val: setattr(obj, self.attr, val)
+                self.setter = bind2nd(setattr, self.attr)
             else:
-                self.setter = lambda obj, val: setter(obj, self.attr, val)
+                self.setter = bind2nd(setter, self.attr)
 
         value = self.getValue()
         Parameter.__init__(self, name, value)

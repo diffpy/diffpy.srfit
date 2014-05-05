@@ -142,7 +142,7 @@ class EquationFactory(object):
         Returns a callable Literal representing the equation string.
         """
         self._prepareBuilders(eqstr, buildargs, argclass, argkw)
-        beq = eval(eqstr, self.builders)
+        beq = eval(eqstr, {}, self.builders)
         eq = beq.getEquation()
         self.equations.add(eq)
         return eq

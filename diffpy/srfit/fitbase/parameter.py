@@ -166,7 +166,8 @@ class ParameterProxy(_parameter_interface, Validatable):
 
     def __getattr__(self, attrname):
         """Redirect accessors and attributes to the reference Parameter."""
-        return getattr(self.par, attrname)
+        par = object.__getattribute__(self, 'par')
+        return getattr(par, attrname)
 
     value = property( lambda self: self.par.getValue(),
             lambda self, val: self.par.setValue(val) )

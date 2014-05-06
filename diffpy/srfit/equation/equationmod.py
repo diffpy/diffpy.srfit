@@ -75,7 +75,6 @@ class Equation(Operator):
     symbol  --  The symbolic representation. e.g. "+" or "sin".
     _value  --  The value of the Operator.
     value   --  Property for 'getValue'.
-
     """
 
     def __init__(self, name = None, root = None):
@@ -111,10 +110,11 @@ class Equation(Operator):
 
     def __getattr__(self, name):
         """Gives access to the Arguments as attributes."""
-        arg = self.argdict.get(name)
-        if arg is None:
-            raise AttributeError("No argument named '%s' here"%name)
-        return arg
+        # Avoid infinite loop on argdict lookup.
+        argdict = object.__getattribute__(self, 'argdict')
+        if not name in argdict:
+            raise AttributeError("No argument named '%s' here" % name)
+        return argdict[name]
 
     def setRoot(self, root):
         """Set the root of the Literal tree.

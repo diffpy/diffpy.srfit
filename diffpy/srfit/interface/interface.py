@@ -160,7 +160,8 @@ class ParameterFactory(object):
         self._pclass = parclass
 
     def __getattr__(self, name):
-        par = self._pclass(name = name)
+        pcls = object.__getattribute__(self, '_pclass')
+        par = pcls(name=name)
         setattr(self, name, par)
         return par
 

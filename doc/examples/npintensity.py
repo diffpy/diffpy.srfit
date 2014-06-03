@@ -281,7 +281,7 @@ def makeRecipe(strufile, datname):
     recipe.addVar(a)
     recipe.constrain(lattice.b, a)
     recipe.constrain(lattice.c, a)
-    # We want to refine the thermal paramters as well. We will add a new
+    # We want to refine the thermal parameters as well. We will add a new
     # Variable that we call "Uiso" and constrain the atomic Uiso values to
     # this. Note that we don't give Uiso an initial value. The initial value
     # will be inferred from the following constraints.

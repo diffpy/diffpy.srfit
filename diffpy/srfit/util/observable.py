@@ -22,7 +22,7 @@ class Observable(object):
     notify them whenever something interesting happens to the observable. The nature of what is
     being observed is defined by Observable descendants and their managers. For example,
     instances of pyre.calc.Node are observable by other nodes whose value depends on them so
-    that the dependents can be notified about value changes and forced to recopute their own
+    that the dependents can be notified about value changes and forced to recompute their own
     value.
 
     The event handlers are callables that take the observable instance as their single

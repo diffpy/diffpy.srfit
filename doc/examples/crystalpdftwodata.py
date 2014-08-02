@@ -77,7 +77,8 @@ def makeRecipe(ciffile, xdatname, ndatname):
     #
     # Tell the neutron PDFGenerator to use the phase from the x-ray
     # PDFGenerator.
-    ngenerator = PDFGenerator("G") ngenerator.setPhase(xgenerator.phase)
+    ngenerator = PDFGenerator("G")
+    ngenerator.setPhase(xgenerator.phase)
 
     ## The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
@@ -127,6 +128,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     phase = xgenerator.phase
     for par in phase.sgpars:
         recipe.addVar(par)
+    recipe.B11_0 = 0.1
 
     # Give the recipe away so it can be used!
     return recipe

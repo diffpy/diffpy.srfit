@@ -516,7 +516,9 @@ class ContributionResults(object):
                 (default None).
     residual    --  The scalar residual of the FitContribution.
     chi2        --  The chi2 of the FitContribution.
+    cumchi2     --  The cumulative chi2 of the FitContribution.
     rw          --  The Rw of the FitContribution.
+    cumrw       --  The cumulative Rw of the FitContribution.
     weight      --  The weight of the FitContribution in the recipe.
     conlocs     --  The location of the constrained parameters in the
                     FitContribution (see the
@@ -585,14 +587,21 @@ class ContributionResults(object):
 
         return
 
+    # FIXME: factor rw, chi2, cumrw, cumchi2 to separate functions.
     def _calculateMetrics(self):
         """Calculte chi2 and Rw of the recipe."""
         # We take absolute values in case the signal is complex
         num = numpy.abs(self.y - self.ycalc)
         y = numpy.abs(self.y)
         chiv = num/self.dy
-        self.chi2 = numpy.dot(chiv, chiv)
-        self.rw = (numpy.dot(num, num) / numpy.dot(y, y))**0.5
+        self.cumchi2 = numpy.cumsum(chiv**2)
+        # avoid index error for empty array
+        self.chi2 = self.cumchi2[-1:].sum()
+        yw = y / self.dy
+        yw2tot = numpy.dot(yw, yw)
+        self.cumrw = numpy.sqrt(self.cumchi2 / yw2tot)
+        # avoid index error for empty array
+        self.rw = self.cumrw[-1:].sum()
         return
 
 

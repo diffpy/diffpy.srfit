@@ -176,7 +176,7 @@ if __name__ == "__main__":
 
     # Make the data and the recipe
     ciffile = "data/ni.cif"
-    xdata = "data/ni-q27r60-xray.gr"
+    xdata = "data/ni-q27r60nodg-xray.gr"
     ndata = "data/ni-q27r100-neutron.gr"
 
     # Make the recipe

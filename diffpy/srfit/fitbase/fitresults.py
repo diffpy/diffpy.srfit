@@ -48,8 +48,10 @@ class FitResults(object):
     residual    --  The scalar residual of the recipe.
     penalty     --  The penalty to residual from the restraints.
     chi2        --  The chi2 of the recipe.
+    cumchi2     --  The cumulative chi2 of the recipe.
     rchi2       --  The reduced chi2 of the recipe.
     rw          --  The Rw of the recipe.
+    cumrw       --  The cumulative Rw of the recipe.
     messages    --  A list of messages about the results.
     precision   --  The precision of numeric output (default 8).
     _dcon       --  The derivatives of the constraint equations with respect to
@@ -237,23 +239,30 @@ class FitResults(object):
         return jac
 
     def _calculateMetrics(self):
-        """Calculate chi2, rchi2 and Rw for the recipe."""
-        # FIXME the total Rw should take into account the total sum of squares.
-        chi2 = 0
-        rw = 0
+        """Calculate chi2, cumchi2, rchi2, rw and cumrw for the recipe."""
+        cumchi2 = numpy.array([], dtype=float)
+        # total weighed denominator for the ratio in the Rw formula
+        yw2tot = 0.0
         numpoints = 0
         for con in self.conresults.values():
-            chi2 += con.weight * con.chi2
-            rw += con.weight * con.rw
+            cc2w = con.weight * con.cumchi2
+            c2last = cumchi2[-1:].sum()
+            cumchi2 = numpy.concatenate([cumchi2, c2last + cc2w])
+            yw2tot += con.weight * (con.chi2 / con.rw**2)
             numpoints += len(con.x)
 
-        numpoints += len(self.recipe._restraintlist)
+        chi2 = cumchi2[-1:].sum()
+        cumrw = numpy.sqrt(cumchi2 / yw2tot)
+        rw = cumrw[-1:].sum()
 
+        numpoints += len(self.recipe._restraintlist)
         rchi2 = chi2 / (numpoints - len(self.varnames))
 
         self.chi2 = chi2
         self.rchi2 = rchi2
         self.rw = rw
+        self.cumchi2 = cumchi2
+        self.cumrw = cumrw
         return
 
     def _calculateConstraintUncertainties(self):

@@ -24,6 +24,7 @@ __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 import numpy
 
 from diffpy.srfit.util.inpututils import inputToString
+from diffpy.srfit.util.ordereddict import OrderedDict
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
@@ -31,7 +32,7 @@ class FitResults(object):
     Attributes
     recipe      --  The recipe containing the results.
     cov         --  The covariance matrix from the recipe.
-    conresults  --  A dictionary of ContributionResults for each
+    conresults  --  An ordered dictionary of ContributionResults for each
                     FitContribution, indexed by the FitContribution name.
     derivstep   --  The fractional step size for calculating numeric
                     derivatives. Default 1e-8.
@@ -74,7 +75,7 @@ class FitResults(object):
 
         """
         self.recipe = recipe
-        self.conresults = {}
+        self.conresults = OrderedDict()
         self.derivstep = 1e-8
         self.varnames = []
         self.varvals = []
@@ -138,7 +139,7 @@ class FitResults(object):
             self._calculateConstraintUncertainties()
 
         # Store the fitting arrays and metrics for each FitContribution.
-        self.conresults = {}
+        self.conresults = OrderedDict()
         for con, weight in zip(recipe._contributions.values(), recipe._weights):
             self.conresults[con.name] = ContributionResults(con, weight, self)
 

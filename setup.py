@@ -10,10 +10,15 @@ Packages:   diffpy.srfit
 import os
 from setuptools import setup, find_packages
 
+# Use this version when git data are not available, like in git zip archive.
+# Update when tagging a new release.
+FALLBACK_VERSION = '1.0-x'
+
 # versioncfgfile holds version data for git commit hash and date.
 # It must reside in the same directory as version.py.
 MYDIR = os.path.dirname(os.path.abspath(__file__))
 versioncfgfile = os.path.join(MYDIR, 'diffpy/srfit/version.cfg')
+gitarchivecfgfile = versioncfgfile.replace('version.cfg', 'gitarchive.cfg')
 
 def gitinfo():
     from subprocess import Popen, PIPE
@@ -29,9 +34,9 @@ def gitinfo():
 
 
 def getversioncfg():
-    from ConfigParser import SafeConfigParser
-    cp = SafeConfigParser()
-    cp.read(versioncfgfile)
+    from ConfigParser import RawConfigParser
+    cp = RawConfigParser(dict(version=FALLBACK_VERSION))
+    cp.read(versioncfgfile) or cp.read(gitarchivecfgfile)
     gitdir = os.path.join(MYDIR, '.git')
     if not os.path.isdir(gitdir):  return cp
     try:

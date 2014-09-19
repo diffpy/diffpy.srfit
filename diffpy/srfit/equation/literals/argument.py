@@ -59,7 +59,7 @@ class Argument(Literal, ArgumentABC):
         val --  The value to assign
 
         """
-        notequiv = (val != self._value)
+        notequiv = self._value is None or val is None or (val != self._value)
         if notequiv is False:
             return
         if notequiv is True or notequiv.any():

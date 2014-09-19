@@ -318,7 +318,9 @@ class Profile(Observable, Validatable):
         Raises AttributeError if validation fails.
 
         """
-        if None in [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs]:
+        datanotset = any(v is None for v in
+                [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs])
+        if datanotset:
             raise AttributeError("Missing data")
         if len(self.x) != len(self.y) or len(self.x) != len(self.dy):
             raise AttributeError("Data are different lengths")

@@ -306,7 +306,7 @@ class Profile(Observable, Validatable):
 
         """
         self.ycalc = None
-        self.notify()
+        self.notify(other)
         return
 
     def _validate(self):

@@ -36,14 +36,15 @@ class Observable(object):
     """
 
 
-    def notify(self):
+    def notify(self, other=()):
         """
         Notify all observers
         """
         # build a list before notification, just in case the observer's callback behavior
         # involves removing itself from our callback set
+        semaphors = (self,) + other
         for callable in tuple(self._observers):
-            callable(self)
+            callable(semaphors)
 
         return
 

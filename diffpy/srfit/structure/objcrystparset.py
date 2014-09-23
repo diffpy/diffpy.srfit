@@ -943,7 +943,7 @@ class StretchModeParameter(Parameter):
         self.mode.AddAtoms(scatlist)
         return self
 
-    def notify(self):
+    def notify(self, other=()):
         """Notify all mutated Parameters and observers.
 
         Some of the mutated parameters will be observing us. At the same time
@@ -951,18 +951,20 @@ class StretchModeParameter(Parameter):
         the Parameters that we mutate directly.
 
         """
+        noneother = ()
         # Notify the atoms that have moved
         for a in self.matoms:
-            a.x._flush(None)
-            a.y._flush(None)
-            a.z._flush(None)
+            a.x._flush(noneother)
+            a.y._flush(noneother)
+            a.z._flush(noneother)
         # Notify the molecule position
-        self.molecule.x._flush(None)
-        self.molecule.y._flush(None)
-        self.molecule.z._flush(None)
+        self.molecule.x._flush(noneother)
+        self.molecule.y._flush(noneother)
+        self.molecule.z._flush(noneother)
 
         # Notify observers
-        Parameter.notify(self)
+        semaphors = (self,) + other
+        Parameter.notify(semaphors)
         return
 
 # End class StretchModeParameter

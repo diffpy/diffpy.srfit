@@ -59,7 +59,7 @@ class Literal(Observable,LiteralABC):
         if self._value is None:
             return
         self._value = None
-        self.notify()
+        self.notify(other)
         return
 
     def __str__(self):

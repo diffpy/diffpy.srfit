@@ -300,7 +300,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         This will force any observer to invalidate its state. By default this
         does nothing.
         """
-        self.notify()
+        self.notify(other)
         return
 
     def _validate(self):

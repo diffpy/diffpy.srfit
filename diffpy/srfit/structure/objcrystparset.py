@@ -963,8 +963,7 @@ class StretchModeParameter(Parameter):
         self.molecule.z._flush(noneother)
 
         # Notify observers
-        semaphors = (self,) + other
-        Parameter.notify(semaphors)
+        Parameter.notify(self, other)
         return
 
 # End class StretchModeParameter

@@ -137,7 +137,7 @@ class ProfileGenerator(Operator, ParameterSet):
 
         self.profile = profile
         self.profile.addObserver(self._flush)
-        self._flush(self)
+        self._flush(other=(self,))
 
         # Merge the profiles metadata with our own
         self.meta.update( self.profile.meta )

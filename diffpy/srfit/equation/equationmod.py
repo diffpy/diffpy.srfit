@@ -134,7 +134,7 @@ class Equation(Operator):
         # Add the new root
         self.root = root
         self.root.addObserver(self._flush)
-        self._flush(self)
+        self._flush(other=(self,))
 
         # Get the args
         args = getArgs(root, getconsts=False)

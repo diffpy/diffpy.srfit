@@ -609,6 +609,7 @@ class ContributionResults(object):
         self.chi2 = self.cumchi2[-1:].sum()
         yw = y / self.dy
         yw2tot = numpy.dot(yw, yw)
+        if yw2tot == 0.0:  yw2tot = 1.0
         self.cumrw = numpy.sqrt(self.cumchi2 / yw2tot)
         # avoid index error for empty array
         self.rw = self.cumrw[-1:].sum()

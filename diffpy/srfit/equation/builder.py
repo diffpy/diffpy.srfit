@@ -352,9 +352,10 @@ class EquationFactory(object):
         builders = dict(self.builders)
         # Do not store global builders
         for key, builder in _builders.iteritems():
-            if state.get(key) is builder:
+            if builders.get(key) is builder:
                 del builders[key]
         state['builders'] = builders
+        return state
 
     def __setstate__(self, state):
         self.newargs = state.get('newargs', set())

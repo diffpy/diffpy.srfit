@@ -447,11 +447,11 @@ class FitResults(object):
             for j in xrange(i+1, n):
                 name = "corr(%s, %s)"%(varnames[i], varnames[j])
                 val = (self.cov[i,j]/(self.cov[i,i] * self.cov[j,j])**0.5)
-                if val > corrmin:
+                if abs(val) > corrmin:
                     cornames.append(name)
                     tup.append((val, name))
 
-        tup.sort()
+        tup.sort(key=lambda vn : abs(vn[0]))
         tup.reverse()
 
         if cornames:

@@ -344,6 +344,4 @@ def rebinArray(A, xold, xnew):
     """
     if numpy.array_equal(xold, xnew):
         return A
-    from scipy.interpolate import splrep, splev
-    finterp = splrep(xold, A, s=0)
-    return splev(xnew, finterp, der=0)
+    return numpy.interp(xnew, xold, A)

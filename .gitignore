@@ -42,3 +42,6 @@ nosetests.xml
 # version information
 setup.cfg
 /diffpy/srfit/version.cfg
+
+*.pyc
+.coverage

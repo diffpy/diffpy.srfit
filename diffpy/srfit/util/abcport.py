@@ -32,14 +32,14 @@ __all__ = ["ABCMeta", "abstractmethod", "abstractproperty", "isinstance",
 try:
     # Import abc, and bring isinstance and issubclass into the module namespace
     from abc import ABCMeta, abstractmethod, abstractproperty
-    from __builtin__ import isinstance
-    from __builtin__ import issubclass
+    # why the hell is __builtins__ a dictionary here?????
+    isinstance = __builtins__['isinstance']
+    issubclass = __builtins__['issubclass']
 
 except ImportError:
-
-    # Not python2.6. Use the modifed abc, and redefine isinstance and
-    # issubclass so that MetaABC works.
-    from _abc import ABCMeta, abstractmethod, abstractproperty
+    # The ImportError is raised if we are in Python 2.6. Use the modifed abc,
+    # and redefine isinstance and issubclass so that MetaABC works.
+    from ._abc import ABCMeta, abstractmethod, abstractproperty
 
     import __builtin__
     isinstance_builtin = __builtin__.isinstance

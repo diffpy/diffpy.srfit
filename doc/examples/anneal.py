@@ -18,7 +18,8 @@ This example uses the anneal optimizer from scipy.optimize and tight bounds on
 the atom positions to determine the structure of C60.
 
 """
-
+from __future__ import print_function
+import six
 import random
 
 import numpy
@@ -153,10 +154,10 @@ def groupAnneal(recipe, groups):
     while 1:
 
         if niter >= maxiter:
-            print "*** Maximum interations exceeded ***"
+            print("*** Maximum interations exceeded ***")
             return
         if waitcount >= maxwait:
-            print "*** Improvement waiting period exceeded ***"
+            print("*** Improvement waiting period exceeded ***")
             return
 
         niter += 1
@@ -164,8 +165,8 @@ def groupAnneal(recipe, groups):
         # Pick an atom and get the names of its positions. Free these
         # variables.
         pars = random.choice(groups)
-        print "iter =", niter
-        print ("%s " * len(pars)) % pars
+        print("iter =", niter)
+        print(("%s " * len(pars)) % pars)
         recipe.free(*pars)
 
         # Get the bounds for the variables. These are used by anneal.
@@ -188,14 +189,14 @@ def groupAnneal(recipe, groups):
         # Update temperature
         if not niter%dwell:
             T = T0 / numpy.log(10 + niter * 1.0 / dwell)
-        print "T =", T
+        print("T =", T)
         if out[5]:
-            print "move accepted"
+            print("move accepted")
             reject = 0
         else:
-            print "move rejected"
+            print("move rejected")
             reject += 1
-        print "residual =", err
+        print("residual =", err)
 
         # Clean up for next iteration
         recipe._applyValues(out[0])

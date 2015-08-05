@@ -25,7 +25,7 @@ import six
 __all__ = [ "RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
-from itertools import chain, ifilter
+from six import itertools
 import re
 
 from diffpy.srfit.fitbase.constraint import Constraint
@@ -103,7 +103,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def _iterManaged(self):
         """Get iterator over managed objects."""
-        return chain(*(d.values() for d in self.__managed))
+        return six.itertools.chain(*(d.values() for d in self.__managed))
 
     def iterPars(self, name = ".", recurse = True):
         """Iterate over Parameters.
@@ -312,7 +312,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         Raises AttributeError if validation fails.
         """
-        iterable = chain(self.__iter__(), self._iterManaged())
+        iterable = six.itertools.chain(self.__iter__(), self._iterManaged())
         self._validateOthers(iterable)
         return
 
@@ -709,7 +709,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearConstraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in six.itertools.six.itertools.ifilter(f, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
@@ -793,7 +793,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearRestraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in six.itertools.ifilter(f, self._iterManaged()):
                 m.clearRestraints(recurse)
         return
 
@@ -802,7 +802,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         constraints = {}
         if recurse:
             f = lambda m : hasattr(m, "_getConstraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in six.itertools.ifilter(f, self._iterManaged()):
                 constraints.update( m._getConstraints(recurse) )
 
         constraints.update( self._constraints)
@@ -817,7 +817,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         restraints = set(self._restraints)
         if recurse:
             f = lambda m : hasattr(m, "_getRestraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in six.itertools.ifilter(f, self._iterManaged()):
                 restraints.update( m._getRestraints(recurse) )
 
         return restraints
@@ -831,7 +831,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises AttributeError if validation fails.
         """
         RecipeContainer._validate(self)
-        iterable = chain(iter(self._restraints),
+        iterable = six.itertools.chain(iter(self._restraints),
                 self._constraints.itervalues())
         self._validateOthers(iterable)
         return

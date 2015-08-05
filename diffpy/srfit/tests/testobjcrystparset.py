@@ -634,7 +634,7 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
                 sg = SpaceGroups.GetSpaceGroup(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
                 equiv = self.sgsEquivalent(sg, sgnew)
-                # print "dbsg: " + repr(self.sgsEquivalent(sg, sgnew))
+                #(print "dbsg: " + repr(self.sgsEquivalent(sg, sgnew)))
                 self.assertTrue( self.sgsEquivalent(sg, sgnew) )
         return
 

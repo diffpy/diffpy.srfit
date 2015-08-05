@@ -45,7 +45,7 @@ def getArgs(literal, getconsts = True):
 def prettyPrint(literal):
     """Print a Literal tree."""
     v = Printer()
-    print literal.identify(v)
+    print(literal.identify(v))
     return
 
 def validate(literal):

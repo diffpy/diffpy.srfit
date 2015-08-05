@@ -101,18 +101,18 @@ def speedTest1():
     total2 = 0
     for i in xrange(len(args)):
         args[i] = 10*random.random()
-        print "Changing argument %i"%(i+1)
+        print("Changing argument %i"%(i+1))
         t1 = timeFunction(f1, *args)
         t2 = timeFunction(f2, *args)
         total1 += t1
         total2 += t2
-        print "lazy", t1
-        print "regular", t2
+        print("lazy", t1)
+        print("regular", t2)
 
-    print "Totals:"
-    print "lazy", total1
-    print "regular", total2
-    print "Ratio (lazy/regular)", total1/total2
+    print("Totals:")
+    print("lazy", total1)
+    print("regular", total2)
+    print("Ratio (lazy/regular)", total1/total2)
 
 def speedTest2(mutate = 2):
 
@@ -173,11 +173,11 @@ def speedTest2(mutate = 2):
         tnpy += timeFunction(f, *args)
         teq += timeFunction(eq, *args)
 
-    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
-            mutate)
-    print "numpy: ", tnpy/numcalls
-    print "equation: ", teq/numcalls
-    print "ratio: ", teq/tnpy
+    print("Average call time (%i calls, %i mutations/call):" %
+          (numcalls, mutate))
+    print("numpy: ", tnpy/numcalls)
+    print("equation: ", teq/numcalls)
+    print("ratio: ", teq/tnpy)
 
     return
 
@@ -248,11 +248,11 @@ def speedTest3(mutate = 2):
         teq += timeFunction(eq, *(args[:-1]))
         tnpy += timeFunction(f, *args)
 
-    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
-            mutate)
-    print "sympy: ", tnpy/numcalls
-    print "equation: ", teq/numcalls
-    print "ratio: ", teq/tnpy
+    print("Average call time (%i calls, %i mutations/call):" %
+          (numcalls, mutate))
+    print("sympy: ", tnpy/numcalls)
+    print("equation: ", teq/numcalls)
+    print("ratio: ", teq/tnpy)
 
     return
 
@@ -310,11 +310,11 @@ def speedTest4(mutate = 2):
         teq += timeFunction(eq, *(args[:-1]))
         tnpy += timeFunction(f, *args)
 
-    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
-            mutate)
-    print "sympy: ", tnpy/numcalls
-    print "equation: ", teq/numcalls
-    print "ratio: ", teq/tnpy
+    print("Average call time (%i calls, %i mutations/call):" %
+          (numcalls, mutate))
+    print("sympy: ", tnpy/numcalls)
+    print("equation: ", teq/numcalls)
+    print("ratio: ", teq/tnpy)
 
     return
 
@@ -345,7 +345,7 @@ def weightedTest(mutate = 2):
 
     #scale = visitors.NodeWeigher()
     #eq.root.identify(scale)
-    #print scale.output
+    #print(scale.output)
 
     from numpy import polyval
     def f(b1, b2, b3, b4, b5, b6, b7, b8):
@@ -373,17 +373,17 @@ def weightedTest(mutate = 2):
             c.remove(idx)
             args[idx] = random.random()
 
-        #print args
+        #print(args)
 
         # Time the different functions with these arguments
         teq += timeFunction(eq, *args)
         tnpy += timeFunction(f, *args)
 
-    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
-            mutate)
-    print "numpy: ", tnpy/numcalls
-    print "equation: ", teq/numcalls
-    print "ratio: ", teq/tnpy
+    print("Average call time (%i calls, %i mutations/call):" %
+          (numcalls, mutate))
+    print("numpy: ", tnpy/numcalls)
+    print("equation: ", teq/numcalls)
+    print("ratio: ", teq/tnpy)
 
     return
 

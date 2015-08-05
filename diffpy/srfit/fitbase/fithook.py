@@ -111,7 +111,7 @@ class PrintFitHook(FitHook):
         """
         self.count += 1
         if self.verbose > 0:
-            print self.count
+            print(self.count)
         return
 
     def postcall(self, recipe, chiv):
@@ -135,21 +135,21 @@ class PrintFitHook(FitHook):
             chi2 = numpy.dot(chi, chi)
             res = numpy.dot(resv, resv)
 
-        print "Residual:", chi2tot
+        print("Residual:", chi2tot)
         if numres:
-            print "FitContributions:", chi2
-            print "Restraints:", res
+            print("FitContributions:", chi2)
+            print("Restraints:", res)
 
         if self.verbose >= 3:
 
-            print "Variables"
+            print("Variables")
 
             vnames = recipe.getNames()
             vals = recipe.getValues()
             items = zip(vnames, vals)
             items.sort()
             for name, val in items:
-                print "  %s = %f" % (name, val)
+                print("  %s = %f" % (name, val))
 
 # End class PrintFitHook
 

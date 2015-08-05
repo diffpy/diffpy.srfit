@@ -162,7 +162,7 @@ class IntensityGenerator(ProfileGenerator):
 
         """
         self.count += 1
-        print "iofq called", self.count
+        print("iofq called", self.count)
         return iofq(self.phase.stru, q)
 
 # End class IntensityGenerator

@@ -481,7 +481,7 @@ class FitResults(object):
         update  --  Flag indicating whether to call update() (default False).
 
         """
-        print self.formatResults(header, footer, update).rstrip()
+        print(self.formatResults(header, footer, update).rstrip())
         return
 
     def __str__(self):

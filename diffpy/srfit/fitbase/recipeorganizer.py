@@ -936,7 +936,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         lines.append("")
         lines.extend(tlines)
 
-        print "\n".join(lines)
+        print("\n".join(lines))
 
         return
 

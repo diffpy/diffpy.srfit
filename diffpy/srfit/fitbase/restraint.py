@@ -20,6 +20,8 @@ function for breaking a restraint. This penalty is added to the residual
 equation calculated by a FitRecipe.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Restraint"]
 
 from numpy import inf

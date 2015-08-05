@@ -40,6 +40,8 @@ very simple example is
 More examples can be found in the example directory of the documentation.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["ProfileGenerator"]
 
 from numpy import asarray

@@ -14,6 +14,8 @@
 ##############################################################################
 """Tests for refinableobj module."""
 
+from __future__ import print_function
+import six
 import unittest
 
 from diffpy.srfit.equation.builder import EquationFactory

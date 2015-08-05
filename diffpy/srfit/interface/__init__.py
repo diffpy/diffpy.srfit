@@ -21,6 +21,8 @@ scripting. To use the interface, import this module and call the 'use' method
 before importing any other part of SrFit.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["ParameterFactory"]
 

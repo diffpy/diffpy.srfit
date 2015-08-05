@@ -20,6 +20,8 @@ is the 'union' of these sets, and in general is used to combine different
 objects. See individual interface classes for specifics.
 """
 
+from __future__ import print_function
+import six
 __all__ = ["ParameterFactory", "ParameterInterface", "FitRecipeInterface",
         "RecipeOrganizerInterface"]
 

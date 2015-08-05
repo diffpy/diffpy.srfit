@@ -20,6 +20,8 @@ is used to compute its value. The Constraint.constrain method is used to create
 this association.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Constraint"]
 
 from diffpy.srfit.fitbase.validatable import Validatable

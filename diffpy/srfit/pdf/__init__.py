@@ -17,6 +17,8 @@
 """PDF calculation tools.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["PDFGenerator", "DebyePDFGenerator", "PDFContribution", "PDFParser"]
 

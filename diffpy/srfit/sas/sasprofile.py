@@ -15,6 +15,8 @@
 """Class for adapting a sans DataInfo objects to the Profile interface.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["SASProfile"]
 

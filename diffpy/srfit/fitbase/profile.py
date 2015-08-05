@@ -20,6 +20,8 @@ to store a calculated signal, and by FitContributions to help calculate a
 residual equation.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Parameter", "Profile"]
 
 import numpy

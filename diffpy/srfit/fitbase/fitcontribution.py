@@ -22,6 +22,8 @@ holds the observed and calculated signals.
 See the examples in the documention for how to use a FitContribution.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["FitContribution"]
 
 from diffpy.srfit.interface import _fitcontribution_interface

@@ -32,6 +32,8 @@ See the examples in the documentation for how to create an optimization problem
 using FitRecipe.
 """
 
+from __future__ import print_function
+import six
 __all__ = ["FitRecipe"]
 
 from numpy import array, concatenate, sqrt, dot

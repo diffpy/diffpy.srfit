@@ -18,6 +18,8 @@ This can be used as an addition to a cost function during a structure
 refinement to keep the bond-valence sum within tolerable limits.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["BVSRestraint"]
 

@@ -4,6 +4,8 @@
 # See python2.7 for full copyright and license information
 """Backport from python2.7 to python <= 2.6."""
 
+from __future__ import print_function
+import six
 __all__ = ["OrderedDict"]
 
 from itertools import repeat as _repeat, chain as _chain, starmap as _starmap

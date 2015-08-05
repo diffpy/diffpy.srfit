@@ -14,6 +14,8 @@
 ##############################################################################
 """Helper routines for testing."""
 
+from __future__ import print_function
+import six
 import logging
 import diffpy.srfit.equation.literals as literals
 from unittest import TestCase

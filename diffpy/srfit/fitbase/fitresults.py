@@ -19,6 +19,8 @@ stores the state, and uses it to calculate useful statistics, which can be
 displayed on screen or saved to file.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import numpy

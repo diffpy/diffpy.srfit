@@ -16,6 +16,8 @@
 """Unit tests for diffpy.srfit.
 """
 
+from __future__ import print_function
+import six
 def testsuite():
     '''Build a unit tests suite for the diffpy.srfit package.
 

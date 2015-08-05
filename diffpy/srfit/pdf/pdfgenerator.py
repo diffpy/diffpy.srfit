@@ -21,6 +21,8 @@ its attributes refinable. See the class definition for more details and the
 examples for its use.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["PDFGenerator"]
 
 from diffpy.srreal.pdfcalculator import PDFCalculator

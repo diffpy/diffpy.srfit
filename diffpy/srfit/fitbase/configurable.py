@@ -17,6 +17,8 @@
 A Configurable has state of which a FitRecipe must be aware.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Configurable"]
 
 

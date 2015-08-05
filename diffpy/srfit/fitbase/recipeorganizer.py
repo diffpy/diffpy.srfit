@@ -19,6 +19,8 @@ RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that
 incorporates equation building, constraints and Restraints.  equationFromString
 creates an Equation instance from a string.
 """
+from __future__ import print_function
+import six
 
 __all__ = [ "RecipeContainer", "RecipeOrganizer", "equationFromString"]
 

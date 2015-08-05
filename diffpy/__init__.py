@@ -20,6 +20,8 @@ This is the namespace package shared by all DiffPy software.
 
 """
 
+from __future__ import print_function
+import six
 __import__('pkg_resources').declare_namespace(__name__)
 
 

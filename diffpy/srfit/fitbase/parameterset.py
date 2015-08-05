@@ -19,6 +19,8 @@ ParameterSets. They provide attribute-access of other ParameterSets and
 embedded Parameters.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["ParameterSet"]
 
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer

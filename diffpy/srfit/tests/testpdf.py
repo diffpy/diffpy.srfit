@@ -14,6 +14,8 @@
 ##############################################################################
 """Tests for pdf package."""
 
+from __future__ import print_function
+import six
 import unittest
 
 import numpy

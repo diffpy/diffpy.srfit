@@ -19,6 +19,8 @@ PDFParser is suitable for parsing data generated from PDFGetN and PDFGetX.
 See the class documentation for more information.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["PDFParser"]
 
 import re

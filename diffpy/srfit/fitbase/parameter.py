@@ -17,6 +17,8 @@
 Parameters encapsulate an adjustable parameter within SrFit.
 
 """
+from __future__ import print_function
+import six
 # IDEA - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
 # can have more fine control over the construction of FitRecipes.
 # IDEA - Add tags to parameters so they can be easily retrieved.

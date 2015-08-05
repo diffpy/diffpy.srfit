@@ -26,6 +26,8 @@ Operator
 See the Visitor class for the required methods that each Visitor must overload.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Visitor"]
 
 class Visitor(object):

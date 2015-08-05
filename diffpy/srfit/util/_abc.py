@@ -5,6 +5,8 @@
 # Licensed to PSF under a Contributor Agreement.
 """Abstract Base Classes (ABCs) according to PEP 3119."""
 
+from __future__ import print_function
+import six
 __all__ = ["abstractmethod", "abstractproperty", "ABCMeta"]
 
 def abstractmethod(funcobj):

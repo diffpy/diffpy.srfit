@@ -14,6 +14,8 @@
 ##############################################################################
 """Tests for refinableobj module."""
 
+from __future__ import print_function
+import six
 import unittest
 
 from numpy import array, arange, array_equal, ones_like

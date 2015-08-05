@@ -76,6 +76,8 @@ example.
 > eq = beq.makeEquation()
 """
 
+from __future__ import print_function
+import six
 __all__ = [ "EquationFactory", "BaseBuilder", "ArgumentBuilder",
         "OperatorBuilder", "wrapArgument", "wrapOperator", "wrapFunction",
         "getBuilder"]

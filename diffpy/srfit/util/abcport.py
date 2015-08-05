@@ -23,6 +23,8 @@ isinstance and issubclass are redefined here so that ABCs can be used in python
 module rather than using the built-in isinstance and issubclass.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["ABCMeta", "abstractmethod", "abstractproperty", "isinstance",
         "issubclass"]

@@ -16,6 +16,8 @@
 """Import OrderedDictionary from python > 2.7/3.1 for earlier python versions.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["OrderedDict"]
 

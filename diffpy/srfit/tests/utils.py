@@ -37,9 +37,9 @@ try:
     import sans.pr.invertor
     import sans.models
     TestCaseSaS = TestCase
-except ImportError, e:
+except ImportError as ie:
     TestCaseSaS = _TestCaseDisabled
-    logging.warning('%s, SaS tests skipped.', e)
+    logging.warning('%s, SaS tests skipped.', ie)
 
 try:
     import diffpy.Structure

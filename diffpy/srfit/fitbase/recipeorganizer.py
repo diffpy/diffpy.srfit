@@ -25,7 +25,6 @@ import six
 __all__ = [ "RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
-from six import itertools
 import re
 
 from diffpy.srfit.fitbase.constraint import Constraint

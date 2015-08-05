@@ -87,8 +87,10 @@ class SASParser(ProfileParser):
 
         try:
             data = loader.load(filename)
-        except (RuntimeError, ValueError), e:
-            raise ParseError(e)
+        except RuntimeError as re:
+            raise ParseError(re)
+        except ValueError as ve:
+            raise ParseError(ve)
 
         self._banks = []
         self._meta = {}

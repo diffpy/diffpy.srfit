@@ -101,14 +101,15 @@ class Constraint(Validatable):
         from diffpy.srfit.equation.visitors import validate
         try:
             validate(self.eq)
-        except ValueError, e:
-            raise AttributeError(e)
+        except ValueError as ve:
+            raise AttributeError(ve)
 
         # Try to get the value of eq.
         try:
             val = self.eq()
             self.par.setValue(val)
-        except TypeError, e:
+        except TypeError as te:
+            # eeeeek why is the error being changed??
             raise AttributeError("eq cannot be evaluated")
         finally:
             if val is None:

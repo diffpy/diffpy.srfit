@@ -15,9 +15,9 @@
 
 """Unit tests for diffpy.srfit.
 """
-
 from __future__ import print_function
 import six
+
 def testsuite():
     '''Build a unit tests suite for the diffpy.srfit package.
 
@@ -25,35 +25,33 @@ def testsuite():
     '''
     import unittest
     modulenames = '''
-        diffpy.srfit.tests.testbuilder
-        diffpy.srfit.tests.testcharacteristicfunctions
-        diffpy.srfit.tests.testconstraint
-        diffpy.srfit.tests.testcontribution
-        diffpy.srfit.tests.testdiffpyparset
-        diffpy.srfit.tests.testequation
-        diffpy.srfit.tests.testfitrecipe
-        diffpy.srfit.tests.testfitresults
-        diffpy.srfit.tests.testliterals
-        diffpy.srfit.tests.testobjcrystparset
-        diffpy.srfit.tests.testordereddict
-        diffpy.srfit.tests.testparameter
-        diffpy.srfit.tests.testparameterset
-        diffpy.srfit.tests.testpdf
-        diffpy.srfit.tests.testprofile
-        diffpy.srfit.tests.testprofilegenerator
-        diffpy.srfit.tests.testrecipeorganizer
-        diffpy.srfit.tests.testrestraint
-        diffpy.srfit.tests.testsas
-        diffpy.srfit.tests.testsgconstriants
-        diffpy.srfit.tests.testtagmanager
-        diffpy.srfit.tests.testvisitors
+        testbuilder
+        testcharacteristicfunctions
+        testconstraint
+        testcontribution
+        testdiffpyparset
+        testequation
+        testfitrecipe
+        testfitresults
+        testliterals
+        testobjcrystparset
+        testordereddict
+        testparameter
+        testparameterset
+        testpdf
+        testprofile
+        testprofilegenerator
+        testrecipeorganizer
+        testrestraint
+        testsas
+        testsgconstriants
+        testtagmanager
+        testvisitors
     '''.split()
     suite = unittest.TestSuite()
     loader = unittest.defaultTestLoader
-    for mname in modulenames:
-        exec ('import %s as mobj' % mname)
-        suite.addTests(loader.loadTestsFromModule(mobj))
-    return suite
+    return unittest.defaultTestLoader.loadTestsFromNames(
+        modulenames)
 
 
 def test():

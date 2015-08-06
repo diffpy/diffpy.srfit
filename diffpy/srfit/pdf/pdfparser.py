@@ -204,7 +204,7 @@ class PDFParser(ProfileParser):
                     v3 = float(v[3])
                     has_dGobs = v3 > 0.0
                     dGobs.append(v3)
-        except (ValueError, IndexError), err:
+        except (ValueError, IndexError) as err:
             raise ParseError(err)
         if has_drobs:
             drobs = numpy.asarray(drobs)

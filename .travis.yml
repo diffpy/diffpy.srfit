@@ -19,8 +19,9 @@ install:
   - conda update conda --yes
   - conda create -n testenv --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy coverage matplotlib setuptools
   - source activate testenv
-  - git clone https://github.com/diffpy/diffpy.Structure
+  - git clone https://github.com/ericdill/diffpy.Structure
   - cd diffpy.Structure
+  - git checkout py3compat
   - python setup.py install
   - cd ..
   # - git clone https://github.com/diffpy/diffpy.srreal

@@ -18,6 +18,8 @@ This example uses PDFGenerator to refine a the two phase nickel-silicon
 structure to all the available data.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

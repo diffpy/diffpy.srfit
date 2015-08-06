@@ -29,6 +29,13 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
 
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
+
 ####### Example Code
 
 def makeRecipe(molecule, datname):

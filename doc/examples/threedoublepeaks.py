@@ -15,6 +15,8 @@
 """Example of fitting a three double peaks to simulated data.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

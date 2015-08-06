@@ -33,6 +33,8 @@ Extensions
   done.
 
 """
+from __future__ import print_function
+import six
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults
 

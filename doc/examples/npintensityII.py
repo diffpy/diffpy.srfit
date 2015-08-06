@@ -33,6 +33,8 @@ Extensions
   first step towards writing a user interface.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

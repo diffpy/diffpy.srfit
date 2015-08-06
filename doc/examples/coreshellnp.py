@@ -20,6 +20,8 @@ use is to refine the core and shell as two different phases, each with an
 appropriate characteristic function.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 from scipy.optimize import leastsq

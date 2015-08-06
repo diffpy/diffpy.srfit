@@ -43,6 +43,8 @@ will leave you with a much better understanding of how SrFit works.
   file.
 
 """
+from __future__ import print_function
+import six
 
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 

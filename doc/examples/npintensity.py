@@ -41,6 +41,14 @@ Extensions
   everything still refines.
 
 """
+from __future__ import print_function
+import six
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
 
 import numpy
 

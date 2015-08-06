@@ -20,6 +20,8 @@ PDFGenerator. However, the PDFGenerators will refer to the same underlying
 ObjCrystCrystalParSet.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

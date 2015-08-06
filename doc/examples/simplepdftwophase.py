@@ -14,6 +14,8 @@
 ########################################################################
 """Example of a simplified PDF refinement of two-phase structure."""
 
+from __future__ import print_function
+import six
 import numpy
 
 from pyobjcryst.crystal import CreateCrystalFromCIF

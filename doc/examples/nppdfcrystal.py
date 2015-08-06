@@ -24,6 +24,8 @@ shape. Functions for calculating the characteristic function in the
 diffpy.srfit.pdf.characteristicfunctions module.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

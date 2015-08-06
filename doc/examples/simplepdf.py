@@ -18,6 +18,8 @@ This is example of fitting the fcc nickel structure to measured PDF data. It
 uses the PDFContribution class to simplify fit setup.
 
 """
+from __future__ import print_function
+import six
 
 from diffpy.Structure import Structure
 from diffpy.srfit.pdf import PDFContribution

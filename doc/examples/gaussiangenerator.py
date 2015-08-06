@@ -38,6 +38,8 @@ Extensions
   GaussianGenerator will be accessible by its name, "g".
 
 """
+from __future__ import print_function
+import six
 
 from numpy import exp
 

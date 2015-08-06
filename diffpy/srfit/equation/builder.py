@@ -308,9 +308,13 @@ class EquationFactory(object):
         """
         import tokenize
         import token
-        import cStringIO
+        try:
+            from cStringIO import StringIO
+        except ImportError:
+            # python 3 does not have cStringIO
+            from io import StringIO
 
-        interface = cStringIO.StringIO(eqstr).readline
+        interface = StringIO(eqstr).readline
         # output is an iterator. Each entry (token) is a 5-tuple
         # token[0] = token type
         # token[1] = token string

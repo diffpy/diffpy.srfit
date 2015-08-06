@@ -433,9 +433,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._addObject(f, self._calculators)
         # Register arguments of the calculator
         if argnames is None:
-            func_code = f.__call__.im_func.func_code
-            argnames = list(func_code.co_varnames)
-            argnames = argnames[1:func_code.co_argcount]
+            __code__ = f.__call__.__func__.__code__
+            argnames = list(__code__.co_varnames)
+            argnames = argnames[1:__code__.co_argcount]
 
         for pname in argnames:
             if pname not in self._eqfactory.builders:
@@ -492,21 +492,21 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
             import inspect
 
-            func_code = None
+            __code__ = None
 
             # This will let us offset the argument list to eliminate 'self'
             offset = 0
 
             # check regular functions
             if inspect.isfunction(f):
-                func_code = f.func_code
+                __code__ = f.__code__
             # check class method
             elif inspect.ismethod(f):
-                    func_code = f.im_func.func_code
+                    __code__ = f.__func__.__code__
                     offset = 1
             # check functor
-            elif hasattr(f, "__call__") and hasattr(f.__call__, 'im_func'):
-                    func_code = f.__call__.im_func.func_code
+            elif hasattr(f, "__call__") and hasattr(f.__call__, '__func__'):
+                    __code__ = f.__call__.__func__.__code__
                     offset = 1
             else:
                 m = "Cannot extract name or argnames"
@@ -514,15 +514,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
             # Extract the name
             if name is None:
-                name = func_code.co_name
+                name = __code__.co_name
                 if name == '<lambda>':
                     m = "You must supply a name name for a lambda function"
                     raise ValueError(m)
 
             # Extract the arguments
             if argnames is None:
-                argnames = list(func_code.co_varnames)
-                argnames = argnames[offset:func_code.co_argcount]
+                argnames = list(__code__.co_varnames)
+                argnames = argnames[offset:__code__.co_argcount]
 
         #### End introspection code
 

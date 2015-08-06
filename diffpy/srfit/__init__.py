@@ -40,9 +40,9 @@ from diffpy.srfit.version import __version__
 
 # Support for method and ufunc pickling.
 def _pickle_method(method):
-    name = method.im_func.__name__
-    obj = method.im_self
-    cls = method.im_class
+    name = method.__func__.__name__
+    obj = method.__self__
+    cls = method.__self__.__class__
     return _unpickle_method, (name, obj, cls)
 
 def _unpickle_method(name, obj, cls):

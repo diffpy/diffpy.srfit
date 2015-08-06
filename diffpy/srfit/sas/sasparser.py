@@ -117,7 +117,7 @@ class SASParser(ProfileParser):
         # This calls on parseFile, as that is how the sans data loader works.
         import tempfile
         fh, fn = tempfile.mkstemp()
-        outfile = file(fn, 'w')
+        outfile = open(fn, 'w')
         fn.write(patstring)
         outfile.close()
         self.parseFile(fn)

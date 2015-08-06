@@ -106,7 +106,9 @@ class Equation(Operator):
         return
 
     def _getArgs(self):
-        return self.argdict.values()
+        # .values() returns a generator in python 3. Need to wrap this in a list
+        # wrap this in a six.itervalues call first to avoid double-listifying it
+        return list(six.itervalues(self.argdict))
 
     args = property(_getArgs)
 

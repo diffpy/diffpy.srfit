@@ -19,6 +19,7 @@ Parameters encapsulate an adjustable parameter within SrFit.
 """
 from __future__ import print_function
 import six
+import sys
 # IDEA - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
 #        can have more fine control over the construction of FitRecipes.
 # IDEA - Add tags to parameters so they can be easily retrieved.
@@ -193,8 +194,10 @@ class ParameterProxy(_parameter_interface, Validatable):
 
 # End class ParameterProxy
 
-# Make sure that this is registered as an Argument class
-ArgumentABC.register(ParameterProxy)
+# I'm not sure that this is needed in python 3...
+if sys.version_info.major == 2:
+    # Make sure that this is registered as an Argument class
+    ArgumentABC.register(ParameterProxy)
 
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.

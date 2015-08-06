@@ -28,6 +28,13 @@ import numpy
 from diffpy.srfit.util.inpututils import inputToString
 from diffpy.srfit.util.ordereddict import OrderedDict
 
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
 

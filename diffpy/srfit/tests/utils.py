@@ -16,10 +16,18 @@
 
 from __future__ import print_function
 import six
+
 import logging
 import diffpy.srfit.equation.literals as literals
 from unittest import TestCase
 
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 # Create a singleton and a test for optional test cases
 _TestCaseDisabled = object
 

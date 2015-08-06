@@ -22,6 +22,13 @@ import numpy
 
 from diffpy.srfit.tests.utils import testoptional, TestCaseStructure
 
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 # Global variables to be assigned in setUp
 Atom = Lattice = Structure = DiffpyStructureParSet = None
 

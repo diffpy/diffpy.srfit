@@ -23,6 +23,13 @@ import numpy
 
 from diffpy.srfit.tests.utils import _makeArgs
 
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 x = numpy.arange(0, 20, 0.05)
 
 def makeLazyEquation():

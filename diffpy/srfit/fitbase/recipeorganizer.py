@@ -40,6 +40,12 @@ from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.interface import _recipeorganizer_interface
 
+try:
+    from itertools import ifilter
+except ImportError:
+    # itertools.ifilter (python2) == filter (python3)
+    ifilter = filter
+
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
 
@@ -709,7 +715,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearConstraints")
-            for m in six.itertools.six.itertools.ifilter(f, self._iterManaged()):
+            for m in ifilter(f, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
@@ -793,7 +799,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearRestraints")
-            for m in six.itertools.ifilter(f, self._iterManaged()):
+            for m in ifilter(f, self._iterManaged()):
                 m.clearRestraints(recurse)
         return
 
@@ -802,7 +808,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         constraints = {}
         if recurse:
             f = lambda m : hasattr(m, "_getConstraints")
-            for m in six.itertools.ifilter(f, self._iterManaged()):
+            for m in ifilter(f, self._iterManaged()):
                 constraints.update( m._getConstraints(recurse) )
 
         constraints.update( self._constraints)
@@ -817,7 +823,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         restraints = set(self._restraints)
         if recurse:
             f = lambda m : hasattr(m, "_getRestraints")
-            for m in six.itertools.ifilter(f, self._iterManaged()):
+            for m in ifilter(f, self._iterManaged()):
                 restraints.update( m._getRestraints(recurse) )
 
         return restraints

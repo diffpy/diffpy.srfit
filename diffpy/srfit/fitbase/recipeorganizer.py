@@ -131,7 +131,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __iter__(self):
         """Iterate over top-level parameters."""
-        return self._parameters.itervalues()
+        return six.itervalues(self._parameters)
 
     def __len__(self):
         """Get number of top-level parameters."""
@@ -139,7 +139,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __getitem__(self, idx):
         """Get top-level parameters by index."""
-        return self._parameters.values()[idx]
+        # need to wrap this in a list for python 3 compatibility.
+        return list(self._parameters.values())[idx]
 
     def __getattr__(self, name):
         """Gives access to the contained objects as attributes."""

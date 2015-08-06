@@ -195,7 +195,7 @@ class ParameterProxy(_parameter_interface, Validatable):
 # End class ParameterProxy
 
 # I'm not sure that this is needed in python 3...
-if sys.version_info.major == 2:
+if sys.version_info[0] == 2:
     # Make sure that this is registered as an Argument class
     ArgumentABC.register(ParameterProxy)
 

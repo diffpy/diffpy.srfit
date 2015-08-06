@@ -22,6 +22,8 @@ holds the observed and calculated signals.
 See the examples in the documention for how to use a FitContribution.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["FitContribution"]
 
 from diffpy.srfit.interface import _fitcontribution_interface
@@ -290,16 +292,17 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         from diffpy.srfit.equation.visitors import validate
         try:
             validate(self._eq)
-        except ValueError, e:
-            raise AttributeError(e)
+        except ValueError as ve:
+            raise AttributeError(ve)
         if self._eq is None:
             raise AttributeError("_eq is None")
 
         val = None
         try:
             val = self._eq()
-        except TypeError, e:
-            raise AttributeError("_eq cannot be evaluated: %s"%e)
+        except TypeError as te:
+            # Why are we change the exceptoin type here??
+            raise AttributeError("_eq cannot be evaluated: %s" % te)
 
         if val is None:
             raise AttributeError("_eq evaluates to None")
@@ -307,11 +310,11 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         # Try to get the value for residual
         try:
             validate(self._reseq)
-        except ValueError, e:
+        except ValueError as ve:
             raise AttributeError(e)
         try:
             val = self.residual()
-        except TypeError, e:
+        except TypeError as te:
             raise AttributeError("residual cannot be evaluated")
         if val is None:
             raise AttributeError("residual evaluates to None")

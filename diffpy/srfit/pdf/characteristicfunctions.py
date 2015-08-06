@@ -24,6 +24,8 @@ These functions are meant to be imported and added to a FitContribution using
 the 'registerFunction' method of that class.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["sphericalCF", "spheroidalCF", "spheroidalCF2",
 "lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASCF"]

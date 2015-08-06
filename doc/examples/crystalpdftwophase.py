@@ -20,6 +20,8 @@ PDFGenerators. This example refines a physical mixture of nickel and silicon to
 find the structures and phase fractions.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

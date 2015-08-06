@@ -14,6 +14,8 @@
 ########################################################################
 """Abstract Base Classes for Literals."""
 
+from __future__ import print_function
+import six
 __all__ = ["isinstance", "issubclass", "LiteralABC", "ArgumentABC",
         "OperatorABC"]
 

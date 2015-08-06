@@ -14,6 +14,8 @@
 ##############################################################################
 """Tests for diffpy.srfit.structure package."""
 
+from __future__ import print_function
+import six
 import unittest
 
 import numpy
@@ -632,7 +634,7 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
                 sg = SpaceGroups.GetSpaceGroup(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
                 equiv = self.sgsEquivalent(sg, sgnew)
-                # print "dbsg: " + repr(self.sgsEquivalent(sg, sgnew))
+                #(print "dbsg: " + repr(self.sgsEquivalent(sg, sgnew)))
                 self.assertTrue( self.sgsEquivalent(sg, sgnew) )
         return
 

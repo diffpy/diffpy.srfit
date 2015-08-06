@@ -5,6 +5,8 @@
 # Licensed to PSF under a Contributor Agreement.
 """Abstract Base Classes (ABCs) according to PEP 3119."""
 
+from __future__ import print_function
+import six
 __all__ = ["abstractmethod", "abstractproperty", "ABCMeta"]
 
 def abstractmethod(funcobj):
@@ -113,6 +115,8 @@ class ABCMeta(type):
 
     def _dump_registry(cls, file=None):
         """Debug helper to print the ABC registry."""
+        # print >> is not python3 compatible, but this import is wrapped in a
+        # try: import abc except Import Error, so this is ok.
         print >> file, "Class: %s.%s" % (cls.__module__, cls.__name__)
         print >> file, "Inv.counter: %s" % ABCMeta._abc_invalidation_counter
         for name in sorted(cls.__dict__.keys()):

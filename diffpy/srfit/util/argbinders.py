@@ -14,9 +14,11 @@
 ##############################################################################
 
 
-"""\
+"""
 Functions for binding arguments of callable objects.
 """
+from __future__ import print_function
+import six
 
 class bind2nd(object):
 

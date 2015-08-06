@@ -25,8 +25,12 @@ def gitinfo():
     kw = dict(stdout=PIPE, cwd=MYDIR)
     proc = Popen(['git', 'describe', '--match=v[[:digit:]]*'], **kw)
     desc = proc.stdout.read()
+    desc = desc.decode('utf8')
+    # stdout.read() returns a byte string in python3 and thus needs to be
+    # converted to a unicode string
     proc = Popen(['git', 'log', '-1', '--format=%H %at %ai'], **kw)
     glog = proc.stdout.read()
+    glog = glog.decode('utf8')
     rv = {}
     rv['version'] = '.post'.join(desc.strip().split('-')[:2]).lstrip('v')
     rv['commit'], rv['timestamp'], rv['date'] = glog.strip().split(None, 2)
@@ -34,7 +38,12 @@ def gitinfo():
 
 
 def getversioncfg():
-    from ConfigParser import RawConfigParser
+    try:
+        # python 2 import
+        from ConfigParser import RawConfigParser
+    except ImportError:
+        # python 3 import
+        from configparser import RawConfigParser
     vd0 = dict(version=FALLBACK_VERSION, commit='', date='', timestamp=0)
     # first fetch data from gitarchivecfgfile, ignore if it is unexpanded
     g = vd0.copy()

@@ -18,6 +18,8 @@ This example is similar to crystalpdfobjcryst.py, except that it uses the
 DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

@@ -19,6 +19,8 @@ pyobjcryst crystal object. In this example we use internal constraints provided
 by the ObjCrystCrystalParSet structure adapter.
 
 """
+from __future__ import print_function
+import six
 
 from pyobjcryst.crystal import CreateCrystalFromCIF
 

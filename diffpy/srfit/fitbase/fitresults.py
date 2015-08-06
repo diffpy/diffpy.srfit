@@ -19,6 +19,8 @@ stores the state, and uses it to calculate useful statistics, which can be
 displayed on screen or saved to file.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import numpy
@@ -26,6 +28,13 @@ import numpy
 from diffpy.srfit.util.inpututils import inputToString
 from diffpy.srfit.util.ordereddict import OrderedDict
 
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
 
@@ -479,7 +488,7 @@ class FitResults(object):
         update  --  Flag indicating whether to call update() (default False).
 
         """
-        print self.formatResults(header, footer, update).rstrip()
+        print(self.formatResults(header, footer, update).rstrip())
         return
 
     def __str__(self):
@@ -503,7 +512,7 @@ class FitResults(object):
         header = myheader + header
 
         res = self.formatResults(header, footer, update)
-        f = file(filename, 'w')
+        f = open(filename, 'w')
         f.write(res)
         f.close()
         return

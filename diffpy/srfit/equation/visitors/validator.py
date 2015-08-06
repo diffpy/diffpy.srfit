@@ -23,6 +23,8 @@ output count of its arguments. It also checks that each object has the proper
 interface.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["Validator"]
 

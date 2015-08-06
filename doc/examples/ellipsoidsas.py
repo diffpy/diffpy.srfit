@@ -15,6 +15,8 @@
 """Example of a refinement of SAS I(Q) data to an ellipsoidal model.
 
 """
+from __future__ import print_function
+import six
 
 from diffpy.srfit.sas import SASGenerator, SASParser
 from diffpy.srfit.fitbase import FitContribution, FitRecipe

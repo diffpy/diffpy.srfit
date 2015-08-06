@@ -17,6 +17,8 @@
 SASParser uses the sas DataLoader class to load data.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["SASParser"]
 
 import numpy
@@ -85,8 +87,10 @@ class SASParser(ProfileParser):
 
         try:
             data = loader.load(filename)
-        except (RuntimeError, ValueError), e:
-            raise ParseError(e)
+        except RuntimeError as re:
+            raise ParseError(re)
+        except ValueError as ve:
+            raise ParseError(ve)
 
         self._banks = []
         self._meta = {}
@@ -113,7 +117,7 @@ class SASParser(ProfileParser):
         # This calls on parseFile, as that is how the sans data loader works.
         import tempfile
         fh, fn = tempfile.mkstemp()
-        outfile = file(fn, 'w')
+        outfile = open(fn, 'w')
         fn.write(patstring)
         outfile.close()
         self.parseFile(fn)

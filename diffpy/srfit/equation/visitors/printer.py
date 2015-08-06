@@ -18,6 +18,8 @@ The Printer visitor creates a one-line representation of the Literal tree,
 which is valid as a string equivalent of the equation.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Printer"]
 
 from diffpy.srfit.equation.visitors.visitor import Visitor

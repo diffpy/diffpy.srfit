@@ -18,6 +18,8 @@ The BasePDFGenerator class interfaces with SrReal PDF calculators and is used
 as a base for the PDFGenerator and DebyePDFGenerator classes.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["BasePDFGenerator"]
 
 import numpy

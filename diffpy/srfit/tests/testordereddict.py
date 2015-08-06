@@ -13,6 +13,8 @@
 #
 ##############################################################################
 
+from __future__ import print_function
+import six
 from random import shuffle
 import copy
 import inspect

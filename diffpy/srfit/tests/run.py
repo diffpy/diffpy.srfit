@@ -17,6 +17,8 @@
 
 python -m diffpy.srfit.tests.run
 """
+from __future__ import print_function
+import six
 
 if __name__ == '__main__':
     import sys

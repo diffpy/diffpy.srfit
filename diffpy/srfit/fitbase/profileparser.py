@@ -21,6 +21,8 @@ format must be encapsulated in a ProfileParser subclass.
 See the class documentation for more information.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["ProfileParser", "ParseError"]
 
 
@@ -103,7 +105,7 @@ class ProfileParser(object):
         Raises ParseError if the file cannot be parsed
 
         """
-        infile = file(filename, 'r')
+        infile = open(filename, 'r')
         self._banks = []
         self._meta = {}
         filestring = infile.read()

@@ -18,6 +18,8 @@ This is like gaussianrecipe.py, but it uses a shorthand interface defined in
 the diffpy.srfit.interface.interface.py module.
 
 """
+from __future__ import print_function
+import six
 
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 

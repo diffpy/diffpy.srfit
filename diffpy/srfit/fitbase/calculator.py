@@ -23,6 +23,8 @@ Calculator can be added to another RecipeOrganizer with the
 'registerCalculator' method.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Calculator"]
 
 from diffpy.srfit.fitbase.parameterset import ParameterSet

@@ -20,6 +20,8 @@ the PDF from it. This generator is especially appropriate for isolated
 scatterers, such as nanoparticles and molecules.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["DebyePDFGenerator"]
 
 from diffpy.srreal.pdfcalculator import DebyePDFCalculator

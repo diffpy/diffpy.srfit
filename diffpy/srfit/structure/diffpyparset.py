@@ -27,6 +27,8 @@ DiffpyLatticeParSet   --  Adapter for diffpy.Structure.Lattice
 DiffpyAtomParSet      --  Adapter for diffpy.Structure.Atom
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["DiffpyStructureParSet"]
 

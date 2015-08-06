@@ -18,9 +18,16 @@ The TagManager class takes hashable objects and assigns tags to them. Objects
 can then be easily referenced via their assigned tags.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["TagManager"]
 
 import re
+try:
+    reduce
+except NameError:
+    # reduce does not exist in python 3, it lives in functools
+    from functools import reduce
 
 class TagManager(object):
     """TagManager class.
@@ -92,7 +99,7 @@ class TagManager(object):
         Returns list
 
         """
-        tags = [k for (k, v) in self._tagdict.iteritems() if obj in v]
+        tags = [k for (k, v) in six.iteritems(self._tagdict) if obj in v]
         return tags
 
 

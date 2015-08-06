@@ -17,6 +17,8 @@
 This is a custom FitContribution that simplifies the creation of PDF fits.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["PDFContribution"]
 
 from diffpy.srfit.fitbase import FitContribution

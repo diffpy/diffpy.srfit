@@ -31,7 +31,8 @@ are encouraged to work through the examples described in the documentation to
 learn how to use and customize the various parts of SrFit.
 
 """
-
+from __future__ import print_function
+import six
 __all__ = ["__version__"]
 
 # package version
@@ -39,9 +40,9 @@ from diffpy.srfit.version import __version__
 
 # Support for method and ufunc pickling.
 def _pickle_method(method):
-    name = method.im_func.__name__
-    obj = method.im_self
-    cls = method.im_class
+    name = method.__func__.__name__
+    obj = method.__self__
+    cls = method.__self__.__class__
     return _unpickle_method, (name, obj, cls)
 
 def _unpickle_method(name, obj, cls):
@@ -66,9 +67,13 @@ def _unpickle_ufunc(name):
     return func
 
 import types
-import copy_reg
-copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
-copy_reg.pickle(numpy.ufunc, _pickle_ufunc, _unpickle_ufunc)
+try:
+    from copy_reg import pickle
+except ImportError:
+    # python 3 path
+    from copyreg import pickle
+pickle(types.MethodType, _pickle_method, _unpickle_method)
+pickle(numpy.ufunc, _pickle_ufunc, _unpickle_ufunc)
 
 
 # End of file

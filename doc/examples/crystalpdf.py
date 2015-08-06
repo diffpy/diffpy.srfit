@@ -23,6 +23,8 @@ ability to simultaneously refine a structure to PDF data and data from other
 sources. This example demonstrates only the basic configuration.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

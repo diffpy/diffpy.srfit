@@ -22,6 +22,8 @@ one another, and in the end gives the shape of the nanoparticle that agrees
 best with both the PDF and SAS data.
 
 """
+from __future__ import print_function
+import six
 
 import numpy
 

@@ -15,6 +15,8 @@
 """Swapper for replacing a Literal in an equation with another Literals.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Swapper"]
 
 from diffpy.srfit.equation.visitors.visitor import Visitor

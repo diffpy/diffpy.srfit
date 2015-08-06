@@ -20,6 +20,8 @@ function for breaking a restraint. This penalty is added to the residual
 equation calculated by a FitRecipe.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Restraint"]
 
 from numpy import inf
@@ -98,13 +100,13 @@ class Restraint(Validatable):
         from diffpy.srfit.equation.visitors import validate
         try:
             validate(self.eq)
-        except ValueError, e:
-            raise AttributeError(e)
+        except ValueError as ve:
+            raise AttributeError(ve)
 
         # Try to get the value of eq.
         try:
             val = self.eq()
-        except TypeError, e:
+        except TypeError as te:
             raise AttributeError("eq cannot be evaluated")
         finally:
             if val is None:

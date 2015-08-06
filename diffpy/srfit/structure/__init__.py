@@ -17,6 +17,8 @@ interface and automatic structure constraint generation from space group
 information.
 
 """
+from __future__ import print_function
+import six
 
 def struToParameterSet(name, stru):
     """Creates a ParameterSet from an structure.

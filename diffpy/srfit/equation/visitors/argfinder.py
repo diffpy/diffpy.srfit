@@ -17,6 +17,8 @@
 ArgFinder extracts all Arguments from a literal true.
 
 """
+from __future__ import print_function
+import six
 
 __all__ = ["ArgFinder"]
 

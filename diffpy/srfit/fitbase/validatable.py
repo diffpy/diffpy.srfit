@@ -18,6 +18,8 @@ A Validatable has state that must be validated before a FitRecipe can first
 calculate the residual.
 
 """
+from __future__ import print_function
+import six
 __all__ = ["Validatable"]
 
 

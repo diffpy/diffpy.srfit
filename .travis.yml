@@ -1,0 +1,43 @@
+language: python
+sudo: false
+
+python:
+  - 2.6
+  - 2.7
+  - 3.3
+  - 3.4
+  - "3.5.0b4"
+
+before_install:
+  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then wget http://repo.continuum.io/miniconda/Miniconda-3.5.5-Linux-x86_64.sh -O miniconda.sh; else wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh; fi
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p /home/travis/mc
+  - export PATH=/home/travis/mc/bin:$PATH
+
+install:
+  - export GIT_FULL_HASH=`git rev-parse HEAD`
+  - conda update conda --yes
+  - conda create -n testenv --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy coverage matplotlib setuptools
+  - source activate testenv
+  - git clone https://github.com/ericdill/diffpy.Structure
+  - cd diffpy.Structure
+  - git checkout py3compat
+  - python setup.py install
+  - cd ..
+  # - git clone https://github.com/diffpy/diffpy.srreal
+  # - cd diffpy.srreal
+  # - python setup.py install
+  # - cd ..
+  - python setup.py install
+  - pip install coveralls
+  - pip install codecov
+
+script:
+  - pwd
+  - ls
+  - ls diffpy/srfit/tests
+  - coverage run --source diffpy.srfit diffpy/srfit/tests/run.py
+
+after_success:
+  - coveralls
+  - codecov

@@ -211,8 +211,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         m._addParameter(p4)
 
         # Check order
-        self.assertEquals(m._parameters.keys(), ["p1", "xyz"])
-        self.assertEquals(m._parameters.values(), [p2, p4])
+        self.assertEquals(list(m._parameters.keys()), ["p1", "xyz"])
+        self.assertEquals(list(m._parameters.values()), [p2, p4])
 
         return
 

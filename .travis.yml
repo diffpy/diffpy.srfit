@@ -32,7 +32,10 @@ install:
   - pip install codecov
 
 script:
-  - coverage run --source diffpy.srfit diffpy.srfit.tests.py
+  - pwd
+  - ls
+  - ls diffpy/srfit/tests
+  - coverage run --source diffpy.srfit diffpy/srfit/tests/run.py
 
 after_success:
   - coveralls

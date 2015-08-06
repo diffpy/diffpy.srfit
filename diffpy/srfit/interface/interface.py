@@ -77,7 +77,7 @@ class RecipeOrganizerInterface(object):
         """
         # Want to detect _addParameter or _newParameter
         def f(*args):
-            if isinstance(args[0], basestring):
+            if isinstance(args[0], six.string_types):
                 self._newParameter(*args)
             else:
                 self._addParameter(*args)
@@ -105,7 +105,7 @@ class FitContributionInterface(object):
                 self.setProfile(*args)
             elif isinstance(args[0], ProfileGenerator):
                 self.addProfileGenerator(*args)
-            elif isinstance(args[0], basestring):
+            elif isinstance(args[0], six.string_types):
                 self.setEquation(*args)
             else:
                 raise TypeError("Invalid argument")
@@ -139,7 +139,7 @@ class FitRecipeInterface(object):
         """
         # Want to detect addVar or newVar
         def f(*args):
-            if isinstance(args[0], basestring):
+            if isinstance(args[0], six.string_types):
                 self.newVar(*args)
             else:
                 self.addVar(*args)

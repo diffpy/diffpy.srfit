@@ -214,7 +214,7 @@ class EquationFactory(object):
         Raises ValueError if the new builder's literal causes a self-reference
         in an existing equation.
         """
-        if not isinstance(name, basestring):
+        if not isinstance(name, six.string_types):
             raise TypeError("Name must be a string")
         if not isinstance(builder, BaseBuilder):
             raise TypeError("builder must be a BaseBuilder instance")

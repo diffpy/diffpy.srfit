@@ -27,7 +27,7 @@ try:
     xrange
 except NameError:
     xrange = range
-    
+
 # Create a singleton and a test for optional test cases
 _TestCaseDisabled = object
 

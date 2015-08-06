@@ -23,6 +23,11 @@ import six
 __all__ = ["TagManager"]
 
 import re
+try:
+    reduce
+except NameError:
+    # reduce does not exist in python 3, it lives in functools
+    from functools import reduce
 
 class TagManager(object):
     """TagManager class.

@@ -43,5 +43,4 @@ nosetests.xml
 setup.cfg
 /diffpy/srfit/version.cfg
 
-*.pyc
 .coverage

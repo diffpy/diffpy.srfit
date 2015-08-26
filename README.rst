@@ -1,11 +1,8 @@
 .. image:: https://travis-ci.org/diffpy/diffpy.srfit.svg?branch=master
-  :target: https://travis-ci.org/diffpy/diffpy.srfit
-
-.. image:: https://coveralls.io/repos/diffpy/diffpy.srfit/badge.svg?branch=master&service=github
-  :target: https://coveralls.io/github/diffpy/diffpy.srfit?branch=master
+   :target: https://travis-ci.org/diffpy/diffpy.srfit
 
 .. image:: http://codecov.io/github/diffpy/diffpy.srfit/coverage.svg?branch=master
-  :target: http://codecov.io/github/diffpy/diffpy.srfit?branch=master
+   :target: http://codecov.io/github/diffpy/diffpy.srfit?branch=master
 
 
 diffpy.srfit

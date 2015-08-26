@@ -1,5 +1,7 @@
-language: python
+# Use container-based travis workers
 sudo: false
+
+language: python
 
 python:
   - 2.6
@@ -9,31 +11,35 @@ python:
 # - "3.5.0b4"
 
 before_install:
-  - if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then wget http://repo.continuum.io/miniconda/Miniconda-3.5.5-Linux-x86_64.sh -O miniconda.sh; else wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh; fi
-  - chmod +x miniconda.sh
-  - ./miniconda.sh -b -p /home/travis/mc
-  - export PATH=/home/travis/mc/bin:$PATH
+  - MYMCREPO=https://repo.continuum.io/miniconda
+  - MYMCBUNDLE=Miniconda-latest-Linux-x86_64.sh
+  - mkdir -p ~/pkgs/
+  - pushd ~/pkgs/
+  - wget --timestamping ${MYMCREPO}/${MYMCBUNDLE}
+  - test -x ~/mc/bin/conda || bash ${MYMCBUNDLE} -b -f -p ~/mc
+  - export PATH="${HOME}/mc/bin:${PATH}"
+  - conda update conda --yes
+  - conda remove --name=testenv --yes --offline --all
+  - conda create --name=testenv --yes
+      python=$TRAVIS_PYTHON_VERSION pip setuptools numpy scipy coverage
+  - source activate testenv
+  - popd
 
 install:
-  - export GIT_FULL_HASH=`git rev-parse HEAD`
-  - conda update conda --yes
-  - conda create -n testenv --yes pip python=$TRAVIS_PYTHON_VERSION numpy scipy coverage matplotlib setuptools
-  - source activate testenv
+  - pushd ..
   - git clone https://github.com/diffpy/diffpy.Structure
-  - cd diffpy.Structure
-  - python setup.py install
-  - cd ..
+  - (cd diffpy.Structure && python setup.py install)
   # - git clone https://github.com/diffpy/diffpy.srreal
   # - cd diffpy.srreal
   # - python setup.py install
   # - cd ..
+  - popd
+  - git fetch origin --tags
   - python setup.py install
-  - pip install coveralls
-  - pip install codecov
 
 script:
   - coverage run --source diffpy.srfit -m diffpy.srfit.tests.run
 
 after_success:
-  - coveralls
+  - pip install codecov
   - codecov

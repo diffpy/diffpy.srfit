@@ -72,7 +72,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     sascontribution = FitContribution("sas")
     sascontribution.setProfile(sasprofile)
 
-    from sans.models.EllipsoidModel import EllipsoidModel
+    from sas.models.EllipsoidModel import EllipsoidModel
     model = EllipsoidModel()
     sasgenerator = SASGenerator("generator", model)
     sascontribution.addProfileGenerator(sasgenerator)

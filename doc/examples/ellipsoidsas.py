@@ -39,12 +39,12 @@ def makeRecipe(datname):
 
     ## The ProfileGenerator
     # The SASGenerator is for configuring and calculating a SAS profile. We use
-    # a sans model to configure and serve as the calculation engine of the
-    # generator. This allows us to use the full sans model creation
+    # a sas model to configure and serve as the calculation engine of the
+    # generator. This allows us to use the full sas model creation
     # capabilities, and tie this into SrFit when we want to fit a model to
-    # data. The documentation for the various sans models can be found at
-    # http://danse.chem.utk.edu/sansview.html.
-    from sans.models.EllipsoidModel import EllipsoidModel
+    # data. The documentation for the various sas models can be found at
+    # http://www.sasview.org.
+    from sas.models.EllipsoidModel import EllipsoidModel
     model = EllipsoidModel()
     generator = SASGenerator("generator", model)
 

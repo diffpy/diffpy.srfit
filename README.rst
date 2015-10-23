@@ -63,7 +63,7 @@ sums require
 Optimizations involving small angle scattering or shape characteristic
 functions from the diffpy.srfit.sas module require
 
-* ``sans.pr`` - module for calculation of P(R) in small-angle scattering
+* ``sas.pr`` - module for calculation of P(R) in small-angle scattering
   from the SasView project, http://www.sasview.org
 
 On Ubuntu Linux, the required software can easily be installed using

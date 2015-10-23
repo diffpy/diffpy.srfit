@@ -12,8 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Class for adapting a sans DataInfo objects to the Profile interface.
 
+"""Class for adapting a sas DataInfo objects to the Profile interface.
 """
 
 __all__ = ["SASProfile"]
@@ -25,7 +25,7 @@ from diffpy.srfit.fitbase.profile import Profile
 class SASProfile(Profile):
     """Observed and calculated profile container for SAS data.
 
-    This wraps a sans DataInfo object as a Profile object. Use this when you
+    This wraps a sas DataInfo object as a Profile object. Use this when you
     want to use and manipulate a DataProfile before using it with SrFit.
     Otherwise, use the SASParser class and load the data into a base Profile
     object.

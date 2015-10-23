@@ -16,6 +16,7 @@
 
 import logging
 import diffpy.srfit.equation.literals as literals
+from diffpy.srfit.sas.sasimport import sasimport
 from unittest import TestCase
 
 # Create a singleton and a test for optional test cases
@@ -32,8 +33,8 @@ def testoptional(*testcaseclasses):
 
 # Resolve the TestCase*Optional classes
 try:
-    import sans.pr.invertor
-    import sans.models
+    sasimport('sas.pr.invertor')
+    sasimport('sas.models')
     TestCaseSaS = TestCase
 except ImportError, e:
     TestCaseSaS = _TestCaseDisabled

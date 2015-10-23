@@ -14,33 +14,20 @@
 ##############################################################################
 """Tests for sas package."""
 
-import warnings
 import unittest
 
 import numpy
 
-from diffpy.srfit.fitbase import Profile
+from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
 from diffpy.srfit.tests.utils import TestCaseSaS, datafile
-
-# Global variable for the sas module.
-# If available, it will be assign by the setUp method.
-sas = None
-
-# suppress the annoying DeprecationWarning warnings.
-warnings.filterwarnings('ignore', module='sans.models.*',
-        category=DeprecationWarning)
+from diffpy.srfit.sas.sasimport import sasimport
 
 
 class TestSASParser(TestCaseSaS):
 
-    def setUp(self):
-        global sas
-        import diffpy.srfit.sas as sas
-
-
     def testParser(self):
         data = datafile("sas_ascii_test_1.txt")
-        parser = sas.SASParser()
+        parser = SASParser()
         parser.parseFile(data)
 
         meta = parser._meta
@@ -76,17 +63,12 @@ class TestSASParser(TestCaseSaS):
 
 class TestSASGenerator(TestCaseSaS):
 
-    def setUp(self):
-        global sas
-        import diffpy.srfit.sas as sas
-
-
     def testGenerator(self):
 
         # Test generator output
-        from sans.models.SphereModel import SphereModel
+        SphereModel = sasimport('sas.models.SphereModel').SphereModel
         model = SphereModel()
-        gen = sas.SASGenerator("sphere", model)
+        gen = SASGenerator("sphere", model)
 
         for pname in model.params:
             defval = model.getParam(pname)
@@ -113,17 +95,16 @@ class TestSASGenerator(TestCaseSaS):
     def testGenerator2(self):
 
         # Test generator with a profile
-        from sans.models.EllipsoidModel import EllipsoidModel
+        EllipsoidModel = sasimport('sas.models.EllipsoidModel').EllipsoidModel
         model = EllipsoidModel()
-        gen = sas.SASGenerator("ellipsoid", model)
+        gen = SASGenerator("ellipsoid", model)
 
         # Load the data using SAS tools
-        from diffpy.srfit.sas.sasparser import _import_sans_Loader
-        Loader = _import_sans_Loader()
+        Loader = sasimport('sas.dataloader.loader').Loader
         loader = Loader()
         data = datafile("sas_ellipsoid_testdata.txt")
         datainfo = loader.load(data)
-        profile = sas.SASProfile(datainfo)
+        profile = SASProfile(datainfo)
 
         gen.setProfile(profile)
         gen.scale.value = 1.0

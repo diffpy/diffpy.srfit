@@ -14,7 +14,7 @@
 ########################################################################
 """SAS profile generator.
 
-The SASGenerator class wraps a sans.models.BaseModel object as a
+The SASGenerator class wraps a sas.models.BaseModel object as a
 ProfileGenerator.
 
 """
@@ -24,7 +24,7 @@ __all__ = ["SASParameter"]
 from diffpy.srfit.fitbase.parameter import Parameter
 
 class SASParameter(Parameter):
-    """Class adapting a sansmodel parameter to srfit Parameter.
+    """Class adapting a sasmodel parameter to srfit Parameter.
 
     Attributes
     name    --  A name for this Parameter.

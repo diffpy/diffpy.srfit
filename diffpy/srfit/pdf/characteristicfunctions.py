@@ -244,9 +244,9 @@ def shellCF2(r, a, delta):
 
 
 class SASCF(Calculator):
-    """Calculator class for characteristic functions from sans-models.
+    """Calculator class for characteristic functions from sas-models.
 
-    This class wraps a sans.models.BaseModel to calculate I(Q) related to
+    This class wraps a sas.models.BaseModel to calculate I(Q) related to
     nanoparticle shape. This I(Q) is inverted to f(r) according to:
     f(r) = 1 / (4 pi r) * SINFT(I(Q)),
     where "SINFT" represents the sine Fourier transform.

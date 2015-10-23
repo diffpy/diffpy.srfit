@@ -14,7 +14,7 @@
 ########################################################################
 """SAS profile generator.
 
-The SASGenerator class wraps a sans.models.BaseModel object as a
+The SASGenerator class wraps a sas.models.BaseModel object as a
 ProfileGenerator.
 
 """

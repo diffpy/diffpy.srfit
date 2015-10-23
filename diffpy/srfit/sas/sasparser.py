@@ -22,6 +22,7 @@ __all__ = ["SASParser"]
 import numpy
 
 from diffpy.srfit.fitbase.profileparser import ProfileParser, ParseError
+from diffpy.srfit.sas.sasimport import sasimport
 
 class SASParser(ProfileParser):
     """Class for parsing a sas profile.
@@ -80,7 +81,7 @@ class SASParser(ProfileParser):
 
         """
 
-        Loader = _import_sans_Loader()
+        Loader = sasimport('sas.dataloader.loader').Loader
         loader = Loader()
 
         try:
@@ -110,7 +111,7 @@ class SASParser(ProfileParser):
         Raises ParseError if the string cannot be parsed
 
         """
-        # This calls on parseFile, as that is how the sans data loader works.
+        # This calls on parseFile, as that is how the sas data loader works.
         import tempfile
         fh, fn = tempfile.mkstemp()
         outfile = file(fn, 'w')
@@ -128,29 +129,3 @@ class SASParser(ProfileParser):
 
 
 # End of class SASParser
-
-# Local Helpers --------------------------------------------------------------
-
-def _import_sans_Loader():
-    """Return the Loader class from SANS DataLoader package.
-
-    This is a workaround for a recent change in dataloader package name.
-    """
-    global _the_Loader
-    if _the_Loader is not None:  return _the_Loader
-    # first try to import from the latest interface:
-    try:
-        from sans.dataloader.loader import Loader as _the_Loader
-        return _import_sans_Loader()
-    except ImportError:
-        pass
-    # try to import from the old interface:
-    try:
-        from DataLoader.loader import Loader as _the_Loader
-        return _import_sans_Loader()
-    except ImportError:
-        pass
-    # finally use the latest interface again and let it raise ImportError
-    from sans.dataloader.loader import Loader as _the_Loader
-    return _import_sans_Loader()
-_the_Loader = None

@@ -14,7 +14,7 @@
 ########################################################################
 """Nanoparticle form factor P(r) calculator.
 
-The PrCalculator class wraps a sans.pr.invertor.Invertor object as a
+The PrCalculator class wraps a sas.pr.invertor.Invertor object as a
 Calculator. This is not wrapped as a ProfileGenerator because it will be used
 to share information between SAS I(Q) to PDF G(r), but it does not use the same
 profile as the PDF, which is where the calculator will be applied.
@@ -27,7 +27,7 @@ import numpy
 
 from diffpy.srfit.fitbase import Calculator
 
-from sans.pr.invertor import Invertor
+Invertor = None
 
 class PrCalculator(Calculator):
     """A class for calculating P(r) from data.
@@ -41,7 +41,7 @@ class PrCalculator(Calculator):
     P(r) = 4 pi r**2 f(r).
 
     Attributes:
-    _invertor   --  sans.pr.invertor.Invertor object. This object is internal,
+    _invertor   --  sas.pr.invertor.Invertor object. This object is internal,
                     but can be configured by the user after initialization.
                     Note that the 'x', 'y' and 'err' attributes get overwritten
                     every time the invertor is used.
@@ -61,6 +61,12 @@ class PrCalculator(Calculator):
 
         """
         Calculator.__init__(self, name)
+
+        # delayed import of Invertor
+        global Invertor
+        if Invertor is None:
+            from diffpy.srfit.sas.sasimport import sasimport
+            Invertor = sasimport('sas.pr.invertor').Invertor
 
         self._invertor = Invertor()
 
@@ -100,7 +106,7 @@ class CFCalculator(PrCalculator):
     which is the nanoparticle form factor scaled by density.
 
     Attributes:
-    _invertor   --  sans.pr.invertor.Invertor object. This object is internal,
+    _invertor   --  sas.pr.invertor.Invertor object. This object is internal,
                     but can be configured by the user after initialization.
                     Note that the 'x', 'y' and 'err' attributes get overwritten
                     every time the invertor is used.

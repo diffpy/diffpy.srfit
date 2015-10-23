@@ -19,6 +19,7 @@ import unittest
 import numpy
 
 from diffpy.srfit.tests.utils import testoptional, TestCaseSaS, TestCasePDF
+from diffpy.srfit.sas.sasimport import sasimport
 
 # Global variables to be assigned in setUp
 cf = None
@@ -33,7 +34,7 @@ class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
     def testSphere(self):
         radius = 25
         # Calculate sphere cf from SphereModel
-        from sans.models.SphereModel import SphereModel
+        SphereModel = sasimport('sas.models.SphereModel').SphereModel
         model = SphereModel()
         model.setParam("radius", radius)
         ff = cf.SASCF("sphere", model)
@@ -52,7 +53,7 @@ class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
         prad = 20.9
         erad = 33.114
         # Calculate cf from EllipsoidModel
-        from sans.models.EllipsoidModel import EllipsoidModel
+        EllipsoidModel = sasimport('sas.models.EllipsoidModel').EllipsoidModel
         model = EllipsoidModel()
         model.setParam("radius_a", prad)
         model.setParam("radius_b", erad)
@@ -72,7 +73,7 @@ class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
         radius = 19.2
         thickness = 7.8
         # Calculate cf from VesicleModel
-        from sans.models.VesicleModel import VesicleModel
+        VesicleModel = sasimport('sas.models.VesicleModel').VesicleModel
         model = VesicleModel()
         model.setParam("radius", radius)
         model.setParam("thickness", thickness)
@@ -93,7 +94,7 @@ class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
         radius = 100
         length = 30
 
-        from sans.models.CylinderModel import CylinderModel
+        CylinderModel = sasimport('sas.models.CylinderModel').CylinderModel
         model = CylinderModel()
         model.setParam("radius", radius)
         model.setParam("length", length)

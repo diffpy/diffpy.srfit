@@ -10,6 +10,10 @@ python:
 # - 3.4
 # - "3.5.0b4"
 
+branches:
+  except:
+    - /^v[0-9]/
+
 before_install:
   - MYMCREPO=https://repo.continuum.io/miniconda
   - MYMCBUNDLE=Miniconda-latest-Linux-x86_64.sh

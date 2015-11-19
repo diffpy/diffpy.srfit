@@ -1,49 +1,93 @@
 # Use container-based travis workers
 sudo: false
 
-language: python
+language: generic
 
-python:
-  - 2.6
-  - 2.7
-# - 3.3
-# - 3.4
-# - "3.5.0b4"
+os:
+  - linux
+  - osx
+
+env:
+  global:
+    - MYPYTHON_VERSION=2.7
+  matrix:
+    - MYUSEMC=true
+    - MYUSEMC=false
+
+matrix:
+  exclude:
+    - os: osx
+      env: MYUSEMC=false
 
 branches:
   except:
     - /^v[0-9]/
 
+addons:
+  apt:
+    packages:
+    - python-numpy
+    - python-setuptools
+
 before_install:
+  - umask 022
+  - git fetch origin --unshallow --tags
+  - if ${MYUSEMC}; then
+        NOAPT=true; NOMC=false;
+    else
+        NOAPT=false; NOMC=true;
+        MYPIPFLAGS="--user";
+    fi
   - MYMCREPO=https://repo.continuum.io/miniconda
-  - MYMCBUNDLE=Miniconda-latest-Linux-x86_64.sh
+  - case ${TRAVIS_OS_NAME} in
+    linux)
+        MYMCBUNDLE=Miniconda-latest-Linux-x86_64.sh ;;
+    osx)
+        MYMCBUNDLE=Miniconda-latest-MacOSX-x86_64.sh ;;
+    *)
+        echo "Unsupported operating system." >&2
+        exit 2 ;;
+    esac
+
   - mkdir -p ~/pkgs/
-  - pushd ~/pkgs/
-  - wget --timestamping ${MYMCREPO}/${MYMCBUNDLE}
-  - test -x ~/mc/bin/conda || bash ${MYMCBUNDLE} -b -f -p ~/mc
-  - export PATH="${HOME}/mc/bin:${PATH}"
-  - conda update conda --yes
-  - conda remove --name=testenv --yes --offline --all
-  - conda create --name=testenv --yes
-      python=$TRAVIS_PYTHON_VERSION pip setuptools numpy scipy coverage
-  - source activate testenv
-  - popd
+
+  - $NOMC || pushd ~/pkgs/
+  - $NOMC || wget --timestamping ${MYMCREPO}/${MYMCBUNDLE}
+  - $NOMC || test -x ~/mc/bin/conda || bash ${MYMCBUNDLE} -b -f -p ~/mc
+  - $NOMC || popd
+  - $NOMC || export PATH="${HOME}/mc/bin:${PATH}"
+  - $NOMC || conda update --yes conda
+  - $NOMC || conda install --yes conda-build jinja2
+  - $NOMC || conda config --add channels pavoljuhas/channel/dev
+  - $NOMC || conda config --add channels pavoljuhas
+  - $NOMC || conda create --name=testenv --yes python=${MYPYTHON_VERSION} coverage
+
+  - $NOAPT || test "${TRAVIS_OS_NAME}" = "linux" || exit $?
+  - $NOAPT || devutils/makesdist
+  - $NOAPT || MYTARBUNDLE="$(ls -t "${PWD}"/dist/*.tar.gz | head -1)"
 
 install:
-  - pushd ..
-  - git clone https://github.com/diffpy/diffpy.Structure
-  - (cd diffpy.Structure && python setup.py install)
-  # - git clone https://github.com/diffpy/diffpy.srreal
-  # - cd diffpy.srreal
-  # - python setup.py install
-  # - cd ..
-  - popd
-  - git fetch origin --tags
-  - python setup.py install
+  - $NOMC || CONDA_PY=${MYPYTHON_VERSION} conda build conda-recipe
+  - $NOMC || conda list --name=_test --export diffpy.srfit > /tmp/mypackage.txt
+  - $NOMC || source activate testenv
+  - $NOMC || conda install --yes --use-local --file=/tmp/mypackage.txt
+  - $NOMC || conda install --yes
+                diffpy.structure pyobjcryst diffpy.srreal srfit-sasview
+
+  - $NOAPT || pip install $MYPIPFLAGS coverage
+  - $NOAPT || easy_install --user "${MYTARBUNDLE}"
+
+  - cd
+  - MYGIT_REV=$(python -c "import diffpy.srfit.version as v; print(v.__gitsha__)")
+  - if [[ "${TRAVIS_COMMIT}" != "${MYGIT_REV}" ]]; then
+        echo "Version mismatch ${TRAVIS_COMMIT} vs ${MYGIT_REV}.";
+        exit 1;
+    fi
 
 script:
   - coverage run --source diffpy.srfit -m diffpy.srfit.tests.run
 
 after_success:
-  - pip install codecov
-  - codecov
+  # do not post coverage reports when testing with system Python.
+  - $NOMC || pip install $MYPIPFLAGS codecov
+  - $NOMC || codecov

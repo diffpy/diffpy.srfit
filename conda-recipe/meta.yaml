@@ -1,21 +1,17 @@
 package:
   name: diffpy.srfit
   ## Use __conda_version__.txt.
-  # version: 1.0.post32
+  # version: "1.1a0"
 
 source:
-  git_url: https://github.com/diffpy/diffpy.srfit
-  git_rev: e130b6bcc582ce44a9132fed38c96d5da625772b
-#  patches:
-   # List any patch files here
-   # - fix.patch
+  git_url: ..
 
 build:
   preserve_egg_dir: True
 
   # If this is a new build for the same version, increment the build
   # number. If you do not include this key, it defaults to 0.
-  number: 0
+  # number: 0
 
 requirements:
   build:
@@ -37,7 +33,7 @@ test:
     - diffpy.srfit.fitbase
     - diffpy.srfit.interface
     - diffpy.srfit.pdf
-    # - diffpy.srfit.sas
+    - diffpy.srfit.sas
     - diffpy.srfit.structure
     - diffpy.srfit.tests
     - diffpy.srfit.util
@@ -54,6 +50,7 @@ test:
     - diffpy.structure
     - pyobjcryst
     - diffpy.srreal
+    - srfit-sasview
 
 about:
   home: https://github.com/diffpy/diffpy.srfit/

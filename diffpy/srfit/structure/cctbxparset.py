@@ -23,8 +23,8 @@ unpredictable results during a structure refinement.
 Classes:
 
 CCTBXCrystalParSet  --  Wrapper for cctbx.crystal
-UnitCellParSet      --  Wrapper for the unit cell of cctbx.crystal
-ScattererParSet     --  Wrapper for cctbx.xray.scatterer
+CCTBXUnitCellParSet --  Wrapper for the unit cell of cctbx.crystal
+CCTBXScattererParSet --  Wrapper for cctbx.xray.scatterer
 
 """
 
@@ -33,7 +33,7 @@ from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 
 __all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet",
-"CCTBXCrystalParSet"]
+           "CCTBXCrystalParSet"]
 
 class CCTBXScattererParSet(ParameterSet):
     """A wrapper for cctbx.xray.scatterer
@@ -114,7 +114,7 @@ class CCTBXScattererParSet(ParameterSet):
 
     element = property(_getElem)
 
-# End class ScattererParSet
+# End class CCTBXScattererParSet
 
 class CCTBXUnitCellParSet(ParameterSet):
     """A wrapper for cctbx unit_cell object.
@@ -168,7 +168,7 @@ class CCTBXUnitCellParSet(ParameterSet):
         return f
 
 
-# End class UnitCellParSet
+# End class CCTBXUnitCellParSet
 
 # FIXME - Special positions should be constant.
 
@@ -178,7 +178,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     Attributes:
     stru        --  The adapted cctbx structure object.
     scatterers  --  The list of ScattererParSets.
-    unitcell    --  The UnitCellParSet for the structure.
+    unitcell    --  The CCTBXUnitCellParSet for the structure.
 
     """
 
@@ -191,7 +191,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         """
         ParameterSet.__init__(self, name)
         self.stru = stru
-        self.addParameterSet(UnitCellParSet(self))
+        self.addParameterSet(CCTBXUnitCellParSet(self))
         self.scatterers = []
 
         self._update = False
@@ -202,7 +202,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
             i = cdict.get(el, 0)
             sname = "%s%i"%(el,i)
             cdict[el] = i+1
-            scatterer = ScattererParSet(sname, self, i)
+            scatterer = CCTBXScattererParSet(sname, self, i)
             self.addParameterSet(scatterer)
             self.scatterers.append(scatterer)
 
@@ -249,7 +249,10 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     @classmethod
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
-        from cctbx.crystal import special_position_settings
+        try:
+            from cctbx.crystal import special_position_settings
+        except ImportError:
+            return False
         return isinstance(stru, special_position_settings)
 
     def getLattice(self):

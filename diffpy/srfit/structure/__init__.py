@@ -42,9 +42,9 @@ def struToParameterSet(name, stru):
     if ObjCrystMoleculeParSet.canAdapt(stru):
         return ObjCrystMoleculeParSet(name, stru)
 
-    from diffpy.srfit.structure.cctbxparset import CCTBXStructureParSet
-    if CCTBXStructureParSet.canAdapt(stru):
-        return CCTBXStructureParSet(name, stru)
+    from diffpy.srfit.structure.cctbxparset import CCTBXCrystalParSet
+    if CCTBXCrystalParSet.canAdapt(stru):
+        return CCTBXCrystalParSet(name, stru)
 
     raise TypeError("Unadaptable structure format")
 

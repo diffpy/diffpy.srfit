@@ -33,7 +33,7 @@ class DebyePDFGenerator(BasePDFGenerator):
     are not created until the structure is added.
 
     Attributes:
-    _calc   --  DebyePDFCalculator_ext instance for calculating the PDF
+    _calc   --  DebyePDFCalculator instance for calculating the PDF
     _phase  --  The structure ParameterSets used to calculate the profile.
     stru    --  The structure objected adapted by _phase.
     _lastr  --  The last value of r over which the PDF was calculated. This is

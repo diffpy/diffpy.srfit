@@ -14,9 +14,9 @@
 ##############################################################################
 """Helper routines for testing."""
 
-import logging
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
+from diffpy.srfit.tests import logger
 from unittest import TestCase
 
 # Create a singleton and a test for optional test cases
@@ -38,28 +38,28 @@ try:
     TestCaseSaS = TestCase
 except ImportError, e:
     TestCaseSaS = _TestCaseDisabled
-    logging.warning('%s, SaS tests skipped.', e)
+    logger.warning('%s, SaS tests skipped.', e)
 
 try:
     import diffpy.Structure
     TestCaseStructure = TestCase
 except ImportError:
     TestCaseStructure = _TestCaseDisabled
-    logging.warning('Cannot import diffpy.Structure, Structure tests skipped.')
+    logger.warning('Cannot import diffpy.Structure, Structure tests skipped.')
 
 try:
     import pyobjcryst
     TestCaseObjCryst = TestCase
 except ImportError:
     TestCaseObjCryst = _TestCaseDisabled
-    logging.warning('Cannot import pyobjcryst, pyobjcryst tests skipped.')
+    logger.warning('Cannot import pyobjcryst, pyobjcryst tests skipped.')
 
 try:
     import diffpy.srreal.pdfcalculator
     TestCasePDF = TestCase
 except ImportError:
     TestCasePDF = _TestCaseDisabled
-    logging.warning('Cannot import diffpy.srreal, PDF tests skipped.')
+    logger.warning('Cannot import diffpy.srreal, PDF tests skipped.')
 
 
 def _makeArgs(num):

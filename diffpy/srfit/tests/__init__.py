@@ -16,6 +16,14 @@
 """Unit tests for diffpy.srfit.
 """
 
+# create logger instance for the tests subpackage
+import logging
+
+logging.basicConfig()
+logger = logging.getLogger('diffpy.srfit.tests')
+del logging
+
+
 def testsuite():
     '''Build a unit tests suite for the diffpy.srfit package.
 

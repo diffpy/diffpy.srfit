@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """The ProfileGenerator class for generating a profile.
 
 ProfileGenerators encapsulate the evaluation and required Parameters and
@@ -38,15 +39,16 @@ very simple example is
 >        return a * exp(-0.5*((x-x0)/w)**2)
 
 More examples can be found in the example directory of the documentation.
-
 """
+
 __all__ = ["ProfileGenerator"]
 
 from numpy import asarray
 
 from diffpy.srfit.equation.literals.operators import Operator
-
 from diffpy.srfit.fitbase.parameterset import ParameterSet
+from diffpy.srfit.exceptions import SrFitError
+
 
 class ProfileGenerator(Operator, ParameterSet):
     """Base class for profile generators.
@@ -161,16 +163,14 @@ class ProfileGenerator(Operator, ParameterSet):
         This does not validate the operation, since this could be costly. The
         operation should be validated with a containing equation.
 
-        Raises AttributeError if validation fails.
+        Raises SrFitError if validation fails.
 
         """
         if self.profile is None:
-            raise AttributeError("profile is None")
+            raise SrFitError("profile is None")
         self.profile._validate()
         ParameterSet._validate(self)
-
         return
-
 
 
 # End class ProfileGenerator

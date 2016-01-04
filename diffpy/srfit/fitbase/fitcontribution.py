@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """FitContribution class.
 
 FitContributions generate a residual function for a FitRecipe. A
@@ -20,14 +21,15 @@ or more ProfileGenerators or Calculators that help in this, and a Profile that
 holds the observed and calculated signals.
 
 See the examples in the documention for how to use a FitContribution.
-
 """
+
 __all__ = ["FitContribution"]
 
 from diffpy.srfit.interface import _fitcontribution_interface
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.exceptions import SrFitError
 
 class FitContribution(_fitcontribution_interface, ParameterSet):
     """FitContribution class.
@@ -224,15 +226,15 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         Keep that in mind when defining a new residual or using the built-in
         ones.
 
-        Raises AttributeError if the Profile is not yet defined.
+        Raises SrFitError if the Profile is not yet defined.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the FitContribution.
 
         """
         if self.profile is None:
-            raise AttributeError("Assign the Profile first")
+            raise SrFitError("Assign the Profile first")
         if self._eq is None:
-            raise AttributeError("Assign the Equation first")
+            raise SrFitError("Assign the Equation first")
 
         chivstr = "(eq - %s)/%s" % (self._yname, self._dyname)
         resvstr = "(eq - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)
@@ -280,7 +282,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         This validates _eq.
         This validates _reseq and residual.
 
-        Raises AttributeError if validation fails.
+        Raises SrFitError if validation fails.
 
         """
         self.profile._validate()
@@ -291,30 +293,30 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         try:
             validate(self._eq)
         except ValueError, e:
-            raise AttributeError(e)
+            raise SrFitError(e)
         if self._eq is None:
-            raise AttributeError("_eq is None")
+            raise SrFitError("_eq is None")
 
         val = None
         try:
             val = self._eq()
         except TypeError, e:
-            raise AttributeError("_eq cannot be evaluated: %s"%e)
+            raise SrFitError("_eq cannot be evaluated: %s"%e)
 
         if val is None:
-            raise AttributeError("_eq evaluates to None")
+            raise SrFitError("_eq evaluates to None")
 
         # Try to get the value for residual
         try:
             validate(self._reseq)
         except ValueError, e:
-            raise AttributeError(e)
+            raise SrFitError(e)
         try:
             val = self.residual()
         except TypeError, e:
-            raise AttributeError("residual cannot be evaluated")
+            raise SrFitError("residual cannot be evaluated")
         if val is None:
-            raise AttributeError("residual evaluates to None")
+            raise SrFitError("residual evaluates to None")
         return
 
 # End of file

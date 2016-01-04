@@ -12,12 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """PDF profile generator base class.
 
 The BasePDFGenerator class interfaces with SrReal PDF calculators and is used
 as a base for the PDFGenerator and DebyePDFGenerator classes.
-
 """
+
 __all__ = ["BasePDFGenerator"]
 
 import numpy
@@ -25,6 +26,7 @@ import numpy
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import struToParameterSet
+from diffpy.srfit.exceptions import SrFitError
 
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
@@ -266,13 +268,13 @@ class BasePDFGenerator(ProfileGenerator):
         This validates that the phase is not None.
         This performs ProfileGenerator validations.
 
-        Raises AttributeError if validation fails.
+        Raises SrFitError if validation fails.
 
         """
         if self._calc is None:
-            raise AttributeError("_calc is None")
+            raise SrFitError("_calc is None")
         if self._phase is None:
-            raise AttributeError("_phase is None")
+            raise SrFitError("_phase is None")
         ProfileGenerator._validate(self)
         return
 

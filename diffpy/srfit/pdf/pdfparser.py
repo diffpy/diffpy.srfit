@@ -178,7 +178,7 @@ class PDFParser(ProfileParser):
         inf_or_nan = re.compile('(?i)^[+-]?(NaN|Inf)\\b')
         has_drobs = True
         has_dGobs = True
-        # raise PDFDataFormatError if something goes wrong
+        # raise ParseError if something goes wrong
         robs = []
         Gobs = []
         drobs = []

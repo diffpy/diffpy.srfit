@@ -12,14 +12,15 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """The Profile class containing the physical and calculated data.
 
 Profile holds the arrays representing an observed profile, a selected subset of
 the observed profile and a calculated profile. Profiles are used by Calculators
 to store a calculated signal, and by FitContributions to help calculate a
 residual equation.
-
 """
+
 __all__ = ["Parameter", "Profile"]
 
 import numpy
@@ -27,6 +28,7 @@ import numpy
 from diffpy.srfit.util.observable import Observable
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.validatable import Validatable
+from diffpy.srfit.exceptions import SrFitError
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8
@@ -315,15 +317,15 @@ class Profile(Observable, Validatable):
         This validates that x, y, dy, xobx, yobs and dyobs are not None.
         This validates that x, y, and dy are the same length.
 
-        Raises AttributeError if validation fails.
+        Raises SrFitError if validation fails.
 
         """
         datanotset = any(v is None for v in
                 [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs])
         if datanotset:
-            raise AttributeError("Missing data")
+            raise SrFitError("Missing data")
         if len(self.x) != len(self.y) or len(self.x) != len(self.dy):
-            raise AttributeError("Data are different lengths")
+            raise SrFitError("Data are different lengths")
         return
 
 

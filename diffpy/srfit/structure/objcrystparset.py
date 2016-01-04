@@ -1399,9 +1399,9 @@ class ObjCrystCrystalParSet(SrRealParSet):
             s = self.stru.GetScatt(j)
             name = s.GetName()
             if not name:
-                raise AttributeError("Each Scatterer must have a name")
+                raise ValueError("Each Scatterer must have a name")
             if name in snames:
-                raise AttributeError("Scatterer name '%s' is duplicated"%name)
+                raise ValueError("Scatterer name '%s' is duplicated"%name)
 
             # Now create the proper object
             cname = s.GetClassName()
@@ -1410,7 +1410,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
             elif cname == "Molecule":
                 parset = ObjCrystMoleculeParSet(name, s, self)
             else:
-                raise AttributeError("Unrecognized scatterer '%s'"%cname)
+                raise TypeError("Unrecognized scatterer '%s'"%cname)
 
             self.addParameterSet(parset)
             self.scatterers.append(parset)

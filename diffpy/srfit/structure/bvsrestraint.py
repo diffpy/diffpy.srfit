@@ -12,16 +12,18 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Bond-valence sum calculator from SrReal wrapped as a Restraint.
 
 This can be used as an addition to a cost function during a structure
 refinement to keep the bond-valence sum within tolerable limits.
-
 """
 
 __all__ = ["BVSRestraint"]
 
+
 from diffpy.srfit.fitbase.restraint import Restraint
+from diffpy.srfit.exceptions import SrFitError
 
 
 class BVSRestraint(Restraint):
@@ -80,13 +82,13 @@ class BVSRestraint(Restraint):
     def _validate(self):
         """This evaluates the calculator.
 
-        Raises AttributeError if validation fails.
+        Raises SrFitError if validation fails.
 
         """
         from numpy import nan
         p = self.penalty()
         if p is None or p is nan:
-            raise AttributeError("Cannot evaluate penalty")
+            raise SrFitError("Cannot evaluate penalty")
 
         return
 

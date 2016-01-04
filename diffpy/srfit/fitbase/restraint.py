@@ -12,19 +12,22 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Restraints class.
 
 Restraints are used by RecipeOrganizers to organize restraint equations.
 Restraints store an Equation, bounds on its value, and the form of the penalty
 function for breaking a restraint. This penalty is added to the residual
 equation calculated by a FitRecipe.
-
 """
+
 __all__ = ["Restraint"]
 
 from numpy import inf
 
 from diffpy.srfit.fitbase.validatable import Validatable
+from diffpy.srfit.exceptions import SrFitError
+
 
 class Restraint(Validatable):
     """Restraint class.
@@ -90,25 +93,25 @@ class Restraint(Validatable):
 
         This validates eq.
 
-        Raises AttributeError if validation fails.
+        Raises SrFitError if validation fails.
 
         """
         if self.eq is None:
-            raise AttributeError("eq is None")
+            raise SrFitError("eq is None")
         from diffpy.srfit.equation.visitors import validate
         try:
             validate(self.eq)
         except ValueError, e:
-            raise AttributeError(e)
+            raise SrFitError(e)
 
         # Try to get the value of eq.
         try:
             val = self.eq()
         except TypeError, e:
-            raise AttributeError("eq cannot be evaluated")
+            raise SrFitError("eq cannot be evaluated")
         finally:
             if val is None:
-                raise AttributeError("eq evaluates to None")
+                raise SrFitError("eq evaluates to None")
 
         return
 

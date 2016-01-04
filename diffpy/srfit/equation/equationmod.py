@@ -187,7 +187,7 @@ class Equation(Operator):
 
     def addLiteral(self, literal):
         """Cannot add a literal to an Equation."""
-        raise AttributeError("Cannot add literals to an Equation.")
+        raise RuntimeError("Cannot add literals to an Equation.")
 
     # Visitors can treat us differently than an Operator.
 

@@ -26,6 +26,7 @@ __all__ = [ "Parameter", "ParameterProxy", "ParameterAdapter"]
 
 from numpy import inf
 
+from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.util.nameutils import validateName
@@ -127,11 +128,11 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
         This validates that value is not None.
 
-        Raises AttributeError if validation fails.
+        Raises SrFitError if validation fails.
 
         """
         if self.value is None:
-            raise AttributeError("value of '%s' is None"%self.name)
+            raise SrFitError("value of '%s' is None"%self.name)
         return
 
 # End class Parameter
@@ -180,13 +181,13 @@ class ParameterProxy(_parameter_interface, Validatable):
 
         This validates that value and par are not None.
 
-        Raises AttributeError if validation fails.
+        Raises SrFitError if validation fails.
 
         """
         if self.value is None:
-            raise AttributeError("value is None")
+            raise SrFitError("value is None")
         if self.par is None:
-            raise AttributeError("par is None")
+            raise SrFitError("par is None")
         return
 
 # End class ParameterProxy

@@ -33,7 +33,7 @@ def sasimport(modname):
     # standard import
     try:
         exec('import %s as mobj' % modname)
-    except ImportError, elastapi:
+    except ImportError:
         pass
     else:
         return mobj

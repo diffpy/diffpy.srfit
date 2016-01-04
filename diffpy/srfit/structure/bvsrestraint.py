@@ -89,7 +89,11 @@ class BVSRestraint(Restraint):
         p = self.penalty()
         if p is None or p is nan:
             raise SrFitError("Cannot evaluate penalty")
-
+        v = self._calc.value
+        if len(v) > 1 and not v.any():
+            emsg = ("Bond valence sums are all zero.  Check atom symbols in "
+                    "the structure or define custom bond-valence parameters.")
+            raise SrFitError(emsg)
         return
 
     # End of class BVSRestraint

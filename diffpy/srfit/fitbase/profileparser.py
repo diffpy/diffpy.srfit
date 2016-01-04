@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """This module contains classes for parsing profiles from files.
 
 ProfileParser is a base class for parsing data. It can interact with a Profile
@@ -19,9 +20,10 @@ object to automatically set the Profile's data and metadata. Each specific file
 format must be encapsulated in a ProfileParser subclass.
 
 See the class documentation for more information.
-
 """
-__all__ = ["ProfileParser", "ParseError"]
+
+
+from diffpy.srfit.exceptions import ParseError
 
 
 class ProfileParser(object):
@@ -178,9 +180,3 @@ class ProfileParser(object):
         return self._meta
 
 # End of ProfileParser
-
-class ParseError(Exception):
-    """Exception used by ProfileParsers."""
-    pass
-
-# End of ParseError

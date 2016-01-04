@@ -21,7 +21,8 @@ __all__ = ["SASParser"]
 
 import numpy
 
-from diffpy.srfit.fitbase.profileparser import ProfileParser, ParseError
+from diffpy.srfit.exceptions import ParseError
+from diffpy.srfit.fitbase.profileparser import ProfileParser
 from diffpy.srfit.sas.sasimport import sasimport
 
 class SASParser(ProfileParser):

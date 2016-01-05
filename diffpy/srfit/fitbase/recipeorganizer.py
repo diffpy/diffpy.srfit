@@ -157,7 +157,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def __dir__(self):
         "Return sorted list of attributes for this object."
         rv = set(dir(type(self)))
-        rv.update(self.__dict__.keys())
+        rv.update(self.__dict__)
         # self.get fetches looks up for items in all managed dictionaries.
         # Add keys from each dictionary in self.__managed.
         rv.update(*self.__managed)

@@ -125,7 +125,7 @@ class Equation(Operator):
     def __dir__(self):
         "Return sorted list of attributes for this object."
         rv = set(dir(type(self)))
-        rv.update(self.__dict__.keys() + self.argdict.keys())
+        rv.update(self.__dict__, self.argdict)
         rv = sorted(rv)
         return rv
 

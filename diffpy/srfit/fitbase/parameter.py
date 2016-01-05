@@ -180,7 +180,7 @@ class ParameterProxy(_parameter_interface, Validatable):
     def __dir__(self):
         "Return sorted list of attributes for this object."
         rv = set(dir(type(self)))
-        rv.update(self.__dict__.keys() + dir(self.par))
+        rv.update(self.__dict__, dir(self.par))
         rv = sorted(rv)
         return rv
 

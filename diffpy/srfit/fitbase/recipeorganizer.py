@@ -147,6 +147,24 @@ class RecipeContainer(Observable, Configurable, Validatable):
             raise AttributeError(name)
         return arg
 
+
+    # Ensure there is no __dir__ override in the base class.
+    assert (getattr(Observable, '__dir__', None) is
+            getattr(Configurable, '__dir__', None) is
+            getattr(Validatable, '__dir__', None) is
+            getattr(object, '__dir__', None))
+
+    def __dir__(self):
+        "Return sorted list of attributes for this object."
+        rv = set(dir(type(self)))
+        rv.update(self.__dict__.keys())
+        # self.get fetches looks up for items in all managed dictionaries.
+        # Add keys from each dictionary in self.__managed.
+        rv.update(*self.__managed)
+        rv = sorted(rv)
+        return rv
+
+
     # Needed by __setattr__
     _parameters = {}
     __managed = {}

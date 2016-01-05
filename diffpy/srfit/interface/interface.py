@@ -20,7 +20,7 @@ is the 'union' of these sets, and in general is used to combine different
 objects. See individual interface classes for specifics.
 """
 
-__all__ = ["ParameterFactory", "ParameterInterface", "FitRecipeInterface",
+__all__ = ["ParameterInterface", "FitRecipeInterface",
         "RecipeOrganizerInterface"]
 
 from diffpy.srfit.equation.literals.abcs import isinstance, ArgumentABC
@@ -147,25 +147,6 @@ class FitRecipeInterface(object):
         return self
 
 # End class FitRecipeInterface
-
-class ParameterFactory(object):
-    """This class is used to create Parameters on demand."""
-
-    def __init__(self, parclass):
-        """Initialize the factory.
-
-        parclass    --  The class used to create new parameters (default
-                        diffpy.srfit.fitbase.parameter.Parameter)
-        """
-        self._pclass = parclass
-
-    def __getattr__(self, name):
-        pcls = object.__getattribute__(self, '_pclass')
-        par = pcls(name=name)
-        setattr(self, name, par)
-        return par
-
-# End class ParameterFactory
 
 def _applymanyargs(args, f):
     """Apply arguments to a function.

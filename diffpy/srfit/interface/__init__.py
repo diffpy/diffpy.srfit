@@ -17,12 +17,9 @@
 
 The classes and functions in this package are designed to unobtrusively mix
 with base SrFit objects and provide them with interface enhancements for
-scripting. To use the interface, import this module and call the 'use' method
-before importing any other part of SrFit.
-
+scripting.
 """
 
-__all__ = ["ParameterFactory"]
 
 from diffpy.srfit.interface.interface import ParameterInterface
 _parameter_interface = ParameterInterface
@@ -36,6 +33,5 @@ _fitcontribution_interface = FitContributionInterface
 from diffpy.srfit.interface.interface import FitRecipeInterface
 _fitrecipe_interface = FitRecipeInterface
 
-from diffpy.srfit.interface.interface import ParameterFactory
 
 # End of file

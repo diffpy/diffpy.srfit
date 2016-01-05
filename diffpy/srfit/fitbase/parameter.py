@@ -170,6 +170,21 @@ class ParameterProxy(_parameter_interface, Validatable):
         par = object.__getattribute__(self, 'par')
         return getattr(par, attrname)
 
+
+    # Ensure there is no __dir__ override in the base classes.
+    assert (getattr(_parameter_interface, '__dir__', None) is
+            getattr(Validatable, '__dir__', None) is
+            getattr(object, '__dir__', None))
+
+
+    def __dir__(self):
+        "Return sorted list of attributes for this object."
+        rv = set(dir(type(self)))
+        rv.update(self.__dict__.keys() + dir(self.par))
+        rv = sorted(rv)
+        return rv
+
+
     value = property( lambda self: self.par.getValue(),
             lambda self, val: self.par.setValue(val) )
 

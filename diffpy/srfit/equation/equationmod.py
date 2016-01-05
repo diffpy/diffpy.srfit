@@ -116,6 +116,20 @@ class Equation(Operator):
             raise AttributeError("No argument named '%s' here" % name)
         return argdict[name]
 
+
+    # Ensure there is no __dir__ override in the base class.
+    assert (getattr(Operator, '__dir__', None) is
+            getattr(object, '__dir__', None))
+
+
+    def __dir__(self):
+        "Return sorted list of attributes for this object."
+        rv = set(dir(type(self)))
+        rv.update(self.__dict__.keys() + self.argdict.keys())
+        rv = sorted(rv)
+        return rv
+
+
     def setRoot(self, root):
         """Set the root of the Literal tree.
 

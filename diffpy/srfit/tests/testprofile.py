@@ -73,6 +73,7 @@ class TestProfile(unittest.TestCase):
 
         return
 
+
     def testSetCalculationRange(self):
         """Test the setCalculationRange method."""
         x = arange(2, 10, 0.5)
@@ -101,48 +102,45 @@ class TestProfile(unittest.TestCase):
         prof.setCalculationRange(xmin = 0)
         self.assertTrue( array_equal(x, prof.x) )
         self.assertTrue( array_equal(y, prof.y) )
-        self.assertTrue( array_equal(dy, dprof.y) )
+        self.assertTrue( array_equal(dy, prof.dy) )
 
         # Test an upper bound > xmax
         prof.setCalculationRange(xmax = 100)
-        prof.x, prof.y, dprof.y = prof.getRangedProfile()
         self.assertTrue( array_equal(x, prof.x) )
         self.assertTrue( array_equal(y, prof.y) )
-        self.assertTrue( array_equal(dy, dprof.y) )
+        self.assertTrue( array_equal(dy, prof.dy) )
 
         # Test xmin > xmax
-        self.assertRaises(ValueError, profile.setCalculationRange, xmin = 10,
+        self.assertRaises(ValueError, prof.setCalculationRange, xmin = 10,
                 xmax = 3)
 
         # Test xmax - xmin < dx
-        self.assertRaises(ValueError, profile.setCalculationRange, xmin = 3,
+        self.assertRaises(ValueError, prof.setCalculationRange, xmin = 3,
                 xmax = 3 + 0.4, dx = 0.5)
 
         # Test dx <= 0
-        self.assertRaises(ValueError, profile.setCalculationRange, dx = 0)
-        self.assertRaises(ValueError, profile.setCalculationRange, dx =
+        self.assertRaises(ValueError, prof.setCalculationRange, dx = 0)
+        self.assertRaises(ValueError, prof.setCalculationRange, dx =
                 -0.000001)
         # This should be alright
-        profile.setCalculationRange(dx = 0.000001)
+        prof.setCalculationRange(dx = 0.000001)
 
         # Test an internal bound
         prof.setCalculationRange(4, 7)
-        prof.x, prof.y, dprof.y = prof.getRangedProfile()
         self.assertTrue( array_equal(prof.x, arange(4, 7.5, 0.5) ) )
         self.assertTrue( array_equal(prof.y, arange(4, 7.5, 0.5) ) )
-        self.assertTrue( array_equal(dprof.y, arange(4, 7.5, 0.5) ) )
+        self.assertTrue( array_equal(prof.y, arange(4, 7.5, 0.5) ) )
 
         # Test a new grid
         prof.setCalculationRange(4, 7, 0.1)
-        prof.x, prof.y, dprof.y = prof.getRangedProfile()
         self.assertTrue( array_equal(prof.x, arange(4, 7.1, 0.1) ) )
-        self.assertAlmostEqual( 0, sum(prof.y- arange(4, 7.1, 0.1))**2 )
-        self.assertAlmostEqual( 0, sum(dprof.y- arange(4, 7.1, 0.1))**2 )
-
+        self.assertAlmostEqual( 0, sum(prof.y - arange(4, 7.1, 0.1))**2 )
+        self.assertAlmostEqual( 0, sum(prof.y - arange(4, 7.1, 0.1))**2 )
         return
 
-    def testSetCalculationRange(self):
-        """Test the setCalculationRange method."""
+
+    def testSetCalculationPoints(self):
+        """Test the setCalculationPoints method."""
         prof = self.profile
 
         x = arange(2, 10.5, 0.5)

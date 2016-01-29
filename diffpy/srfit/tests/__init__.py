@@ -20,7 +20,7 @@
 import logging
 
 logging.basicConfig()
-logger = logging.getLogger('diffpy.srfit.tests')
+logger = logging.getLogger(__name__)
 del logging
 
 

@@ -182,7 +182,6 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(fc._reseq._value is None)
         from numpy import sin
         xobs = arange(0, 10, 0.5)
-        from numpy import sin
         yobs = 9*sin(xobs)
         profile.setObservedProfile(xobs, yobs)
         self.assertTrue(fc._eq._value is None)

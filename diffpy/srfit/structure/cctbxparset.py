@@ -28,7 +28,7 @@ CCTBXScattererParSet --  Wrapper for cctbx.xray.scatterer
 
 """
 
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
+from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 

@@ -16,7 +16,6 @@
 
 import diffpy.srfit.equation.builder as builder
 import diffpy.srfit.equation.literals as literals
-import diffpy.srfit.equation.visitors as visitors
 
 import unittest
 
@@ -84,7 +83,6 @@ class TestBuilder(unittest.TestCase):
 
     def testSwapping(self):
 
-        import numpy
         def g1(v1, v2, v3, v4):
             return (v1 + v2) * (v3 + v4)
         def g2(v1):
@@ -144,7 +142,7 @@ class TestBuilder(unittest.TestCase):
 
     def testParseEquation(self):
 
-        from numpy import exp, sin, divide, sqrt, array_equal, e
+        from numpy import sin, divide, sqrt, array_equal, e
 
         factory = builder.EquationFactory()
 

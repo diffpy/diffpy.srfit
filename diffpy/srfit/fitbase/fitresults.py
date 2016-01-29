@@ -150,7 +150,7 @@ class FitResults(object):
 
         # Calcualte the restraints penalty
         w = self.chi2 / len(res)
-        self.penalty = sum([res.penalty(w) for res in recipe._restraintlist])
+        self.penalty = sum([r.penalty(w) for r in recipe._restraintlist])
 
         return
 

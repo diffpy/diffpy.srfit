@@ -30,8 +30,6 @@ class TestSASParser(TestCaseSaS):
         parser = SASParser()
         parser.parseFile(data)
 
-        meta = parser._meta
-
         x, y, dx, dy = parser.getData()
 
         testx = numpy.array([0.002618, 0.007854, 0.01309, 0.01832, 0.02356,

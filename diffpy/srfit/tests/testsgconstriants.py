@@ -34,7 +34,6 @@ def makeLaMnO3_P1():
 def makeLaMnO3():
     from pyobjcryst.crystal import Crystal
     from pyobjcryst.atom import Atom
-    from pyobjcryst.molecule import Molecule
     from pyobjcryst.scatteringpower import ScatteringPowerAtom
 
     pi = numpy.pi

@@ -18,7 +18,7 @@
 import numpy
 
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
+from diffpy.srfit.fitbase.parameter import ParameterProxy
 
 __all__ = ["constrainAsSpaceGroup"]
 

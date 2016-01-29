@@ -145,8 +145,6 @@ class TestConvolutionOperator(unittest.TestCase):
     def testValue(self):
         """Make sure the convolution operator is working properly."""
 
-        import numpy
-        pi = numpy.pi
         exp = numpy.exp
 
         x = numpy.linspace(0, 10, 1000)

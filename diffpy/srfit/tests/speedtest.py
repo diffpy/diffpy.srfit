@@ -387,6 +387,7 @@ def weightedTest(mutate = 2):
 
 def profileTest():
 
+    from diffpy.srfit.builder import EquationFactory
     factory = EquationFactory()
 
     x = numpy.arange(0, 10, 0.001)

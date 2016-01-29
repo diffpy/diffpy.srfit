@@ -48,7 +48,6 @@ from pyobjcryst.molecule import StretchModeTorsion
 from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
-from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.structure.srrealparset import SrRealParSet
 
 class ObjCrystScattererParSet(ParameterSet):

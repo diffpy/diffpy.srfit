@@ -30,7 +30,7 @@ DiffpyAtomParSet      --  Adapter for diffpy.Structure.Atom
 
 __all__ = ["DiffpyStructureParSet"]
 
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
+from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet

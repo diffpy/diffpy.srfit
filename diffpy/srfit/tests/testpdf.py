@@ -18,7 +18,6 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.tests.utils import datafile
 from diffpy.srfit.tests.utils import testoptional
 from diffpy.srfit.tests.utils import TestCasePDF, TestCaseStructure

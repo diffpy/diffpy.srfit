@@ -19,11 +19,11 @@ SASParser uses the sas DataLoader class to load data.
 """
 __all__ = ["SASParser"]
 
-import numpy
 
 from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
 from diffpy.srfit.sas.sasimport import sasimport
+
 
 class SASParser(ProfileParser):
     """Class for parsing a sas profile.

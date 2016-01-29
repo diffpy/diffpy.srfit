@@ -20,7 +20,6 @@ can then be easily referenced via their assigned tags.
 """
 __all__ = ["TagManager"]
 
-import re
 
 class TagManager(object):
     """TagManager class.

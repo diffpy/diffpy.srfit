@@ -374,7 +374,6 @@ class TestParameterAdapter(TestCaseObjCryst):
     def testExplicitBondLengthParameter(self):
         """Test adding bond length parameters to the molecule."""
         occryst = self.occryst
-        ocmol = self.ocmol
 
         # make our crystal
         cryst = ObjCrystCrystalParSet("bucky", occryst)
@@ -435,7 +434,6 @@ class TestParameterAdapter(TestCaseObjCryst):
     def testExplicitBondAngleParameter(self):
         """Test adding bond angle parameters to the molecule."""
         occryst = self.occryst
-        ocmol = self.ocmol
 
         # make our crystal
         cryst = ObjCrystCrystalParSet("bucky", occryst)
@@ -503,7 +501,6 @@ class TestParameterAdapter(TestCaseObjCryst):
     def testExplicitDihedralAngleParameter(self):
         """Test adding dihedral angle parameters to the molecule."""
         occryst = self.occryst
-        ocmol = self.ocmol
 
         # make our crystal
         cryst = ObjCrystCrystalParSet("bucky", occryst)
@@ -631,9 +628,8 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
             if SpaceGroups.IsSpaceGroupIdentifier(short_name):
                 sg = SpaceGroups.GetSpaceGroup(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
-                equiv = self.sgsEquivalent(sg, sgnew)
                 # print "dbsg: " + repr(self.sgsEquivalent(sg, sgnew))
-                self.assertTrue( self.sgsEquivalent(sg, sgnew) )
+                self.assertTrue(self.sgsEquivalent(sg, sgnew))
         return
 
 

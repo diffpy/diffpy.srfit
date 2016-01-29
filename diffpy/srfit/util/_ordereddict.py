@@ -6,7 +6,7 @@
 
 __all__ = ["OrderedDict"]
 
-from itertools import repeat as _repeat, chain as _chain, starmap as _starmap
+from itertools import repeat as _repeat, chain as _chain
 
 
 try:

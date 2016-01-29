@@ -22,7 +22,7 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterProxy
 
 __all__ = ["constrainAsSpaceGroup"]
 
-def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
+def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
         sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
         adpsymbols = None, isosymbol = "Uiso"):
     """Constrain the structure to the space group.
@@ -33,8 +33,8 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
 
     Arguments:
     phase       --  A BaseStructure object.
-    sgsymbol    --  The space group number or symbol (compatible with
-                    diffpy.Structure.SpaceGroups.GetSpaceGroup.
+    spacegroup  --  The space group number, symbol or an instance of
+                    SpaceGroup class from diffpy.Structure package.
     sgoffset    --  Optional offset for sg origin (default [0, 0, 0]).
     scatterers  --  The scatterer ParameterSets to constrain. If scatterers
                     is None (default), then all scatterers accessible from
@@ -77,9 +77,11 @@ def constrainAsSpaceGroup(phase, sgsymbol, scatterers = None,
 
     """
 
-    from diffpy.Structure.SpaceGroups import GetSpaceGroup
+    from diffpy.Structure.SpaceGroups import GetSpaceGroup, SpaceGroup
 
-    sg = GetSpaceGroup(sgsymbol)
+    sg = spacegroup
+    if not isinstance(spacegroup, SpaceGroup):
+        sg = GetSpaceGroup(spacegroup)
     sgp = _constrainAsSpaceGroup(phase, sg, scatterers, sgoffset,
             constrainlat, constrainadps, adpsymbols, isosymbol)
 

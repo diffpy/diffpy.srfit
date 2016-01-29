@@ -202,6 +202,24 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
 
         return
 
+
+    def test_ConstrainAsSpaceGroup_args(self):
+        """Test the arguments processing of constrainAsSpaceGroup function.
+        """
+        from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
+        from diffpy.Structure.SpaceGroups import GetSpaceGroup
+        stru = makeLaMnO3_P1()
+        parset = DiffpyStructureParSet("LaMnO3", stru)
+        sgpars = constrainAsSpaceGroup(parset, "P b n m")
+        sg = GetSpaceGroup('P b n m')
+        parset2 = DiffpyStructureParSet("LMO", makeLaMnO3_P1())
+        sgpars2 = constrainAsSpaceGroup(parset2, sg)
+        list(sgpars)
+        list(sgpars2)
+        self.assertEquals(sgpars.names, sgpars2.names)
+        return
+
+
 lamno3stru =\
 """\
 title  Cell structure file of LaMnO3.0

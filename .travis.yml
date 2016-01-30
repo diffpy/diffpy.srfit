@@ -29,8 +29,10 @@ branches:
 addons:
   apt:
     packages:
+    - python-dev
     - python-numpy
     - python-setuptools
+    - build-essential
 
 before_install:
   - umask 022
@@ -53,6 +55,7 @@ before_install:
     esac
 
   - mkdir -p ~/pkgs/
+  - mkdir -p ~/rundir/
 
   - $NOMC || pushd ~/pkgs/
   - $NOMC || wget --timestamping ${MYMCREPO}/${MYMCBUNDLE}
@@ -61,9 +64,8 @@ before_install:
   - $NOMC || export PATH="${HOME}/mc/bin:${PATH}"
   - $NOMC || conda update --yes conda
   - $NOMC || conda install --yes conda-build jinja2
-  - $NOMC || conda config --add channels pavoljuhas/channel/dev
-  - $NOMC || conda config --add channels pavoljuhas
   - $NOMC || conda create --name=testenv --yes python=${MYPYTHON_VERSION} coverage
+  - $NOMC || conda config --add channels diffpy
 
   - $NOAPT || test "${TRAVIS_OS_NAME}" = "linux" || exit $?
   - $NOAPT || devutils/makesdist
@@ -78,9 +80,10 @@ install:
                 diffpy.structure pyobjcryst diffpy.srreal srfit-sasview
 
   - $NOAPT || pip install $MYPIPFLAGS coverage
+  - $NOAPT || easy_install --user diffpy.Structure
   - $NOAPT || easy_install --user "${MYTARBUNDLE}"
 
-  - cd
+  - cd ~/rundir
   - MYGIT_REV=$(python -c "import diffpy.srfit.version as v; print(v.__gitsha__)")
   - if [[ "${TRAVIS_COMMIT}" != "${MYGIT_REV}" ]]; then
         echo "Version mismatch ${TRAVIS_COMMIT} vs ${MYGIT_REV}.";

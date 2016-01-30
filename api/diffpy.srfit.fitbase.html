@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>diffpy.srfit.fitbase package &mdash; SrFit 1.0b4-2 documentation</title>
+    <title>diffpy.srfit.fitbase package &mdash; SrFit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b4-2',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b4-2 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
     <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" />
     <link rel="prev" title="diffpy.srfit.equation.visitors package" href="diffpy.srfit.equation.visitors.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,15 +45,15 @@
         <li class="right" >
           <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="diffpy-srfit-fitbase-package">
 <h1>diffpy.srfit.fitbase package<a class="headerlink" href="#diffpy-srfit-fitbase-package" title="Permalink to this headline">¶</a></h1>
@@ -72,8 +72,8 @@ Calculator can be added to another RecipeOrganizer with the
 &#8216;registerCalculator&#8217; method.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.calculator.Calculator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.calculator.</tt><tt class="descname">Calculator</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.calculator.</code><code class="descname">Calculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>Base class for calculators.</p>
 <p>A Calculator organizes Parameters and has a __call__ method that can
 calculate a generic signal.</p>
@@ -106,7 +106,7 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.calculator.Calculator.operation">
-<tt class="descname">operation</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.operation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operation</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.operation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -118,8 +118,8 @@ values          &#8211;  Variable values (read only). See getValues.</p>
 <p>A Configurable has state of which a FitRecipe must be aware.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.configurable.Configurable">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.configurable.</tt><tt class="descname">Configurable</tt><a class="headerlink" href="#diffpy.srfit.fitbase.configurable.Configurable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.configurable.</code><code class="descname">Configurable</code><a class="headerlink" href="#diffpy.srfit.fitbase.configurable.Configurable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Configurable class.</p>
 <p>A Configurable has state of which a FitRecipe must be aware.</p>
 <p>Attributes
@@ -139,8 +139,8 @@ is used to compute its value. The Constraint.constrain method is used to create
 this association.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.constraint.Constraint">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.constraint.</tt><tt class="descname">Constraint</tt><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.constraint.</code><code class="descname">Constraint</code><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Constraint class.</p>
 <p>Constraints are designed to be stored in only one place. (The holder of the
 constraint owns it).</p>
@@ -151,7 +151,7 @@ eq      &#8211;  An equation whose evaluation is used to set the value of the</p
 <div>constraint.</div></blockquote>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.constraint.Constraint.constrain">
-<tt class="descname">constrain</tt><big>(</big><em>par</em>, <em>eq</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint.constrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">constrain</code><span class="sig-paren">(</span><em>par</em>, <em>eq</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint.constrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constrain a Parameter according to an Equation.</p>
 <p>The parameter will be set constant once it is constrained. This will
 keep it from being constrained multiple times.</p>
@@ -160,13 +160,13 @@ keep it from being constrained multiple times.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.constraint.Constraint.unconstrain">
-<tt class="descname">unconstrain</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint.unconstrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">unconstrain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint.unconstrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the constraint.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.constraint.Constraint.update">
-<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint.update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the parameter according to the equation.</p>
 </dd></dl>
 
@@ -183,8 +183,8 @@ holds the observed and calculated signals.</p>
 <p>See the examples in the documention for how to use a FitContribution.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.fitcontribution.</tt><tt class="descname">FitContribution</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitContributionInterface</span></tt>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitcontribution.</code><code class="descname">FitContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitContributionInterface</span></code>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>FitContribution class.</p>
 <p>FitContributions organize an Equation that calculates the signal, and a
 Profile that holds the signal. ProfileGenerators and Calculators can be
@@ -219,7 +219,7 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.addProfileGenerator">
-<tt class="descname">addProfileGenerator</tt><big>(</big><em>gen</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.addProfileGenerator" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addProfileGenerator</code><span class="sig-paren">(</span><em>gen</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.addProfileGenerator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ProfileGenerator to be used by this FitContribution.</p>
 <p>The ProfileGenerator is given a name so that it can be used as part of
 the profile equation (see setEquation). This can be different from the
@@ -239,13 +239,13 @@ other managed object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.evaluate">
-<tt class="descname">evaluate</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.evaluate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the contribution equation.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.residual">
-<tt class="descname">residual</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.residual" title="Permalink to this definition">¶</a></dt>
+<code class="descname">residual</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.residual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the residual for this fitcontribution.</p>
 <p>When this method is called, it is assumed that all parameters have been
 assigned their most current values by the FitRecipe. This will be the
@@ -259,7 +259,7 @@ method.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.setEquation">
-<tt class="descname">setEquation</tt><big>(</big><em>eqstr</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setEquation</code><span class="sig-paren">(</span><em>eqstr</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the profile equation for the FitContribution.</p>
 <p>This sets the equation that will be used when generating the residual
 for this FitContribution.  The equation will be usable within
@@ -280,7 +280,7 @@ variable.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.setProfile">
-<tt class="descname">setProfile</tt><big>(</big><em>profile</em>, <em>xname=None</em>, <em>yname=None</em>, <em>dyname=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setProfile</code><span class="sig-paren">(</span><em>profile</em>, <em>xname=None</em>, <em>yname=None</em>, <em>dyname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign the Profile for this FitContribution.</p>
 <dl class="docutils">
 <dt>profile &#8211;  A Profile that specifies the calculation points and that</dt>
@@ -302,7 +302,7 @@ usable within string equations with the specified name.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.setResidualEquation">
-<tt class="descname">setResidualEquation</tt><big>(</big><em>eqstr=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setResidualEquation</code><span class="sig-paren">(</span><em>eqstr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the residual equation for the FitContribution.</p>
 <dl class="docutils">
 <dt>eqstr   &#8211;  A string representation of the residual. If eqstr is None</dt>
@@ -317,7 +317,7 @@ You can call on these in your residual equation. Note that the quantity
 that will be optimized is the summed square of the residual equation.
 Keep that in mind when defining a new residual or using the built-in
 ones.</p>
-<p>Raises AttributeError if the Profile is not yet defined.
+<p>Raises SrFitError if the Profile is not yet defined.
 Raises ValueError if eqstr depends on a Parameter that is not part of
 the FitContribution.</p>
 </dd></dl>
@@ -337,8 +337,8 @@ variable values.</p>
 method.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fithook.FitHook">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.fithook.</tt><tt class="descname">FitHook</tt><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fithook.</code><code class="descname">FitHook</code><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Base class for inspecting the progress of a FitRecipe refinement.</p>
 <p>Can serve as a fithook for the FitRecipe class (see FitRecipe.pushFitHook
 method.) The methods in this class are called during the preparation of the
@@ -346,7 +346,7 @@ FitRecipe for refinement, and during the residual call. See the class
 methods for a description of their purpose.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fithook.FitHook.postcall">
-<tt class="descname">postcall</tt><big>(</big><em>recipe</em>, <em>chiv</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.postcall" title="Permalink to this definition">¶</a></dt>
+<code class="descname">postcall</code><span class="sig-paren">(</span><em>recipe</em>, <em>chiv</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.postcall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, after the calculation.</p>
 <p>recipe  &#8211;  The FitRecipe instance
 chiv    &#8211;  The residual vector</p>
@@ -354,14 +354,14 @@ chiv    &#8211;  The residual vector</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fithook.FitHook.precall">
-<tt class="descname">precall</tt><big>(</big><em>recipe</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.precall" title="Permalink to this definition">¶</a></dt>
+<code class="descname">precall</code><span class="sig-paren">(</span><em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.precall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, before the calculation.</p>
 <p>recipe  &#8211;  The FitRecipe instance</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fithook.FitHook.reset">
-<tt class="descname">reset</tt><big>(</big><em>recipe</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.reset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset</code><span class="sig-paren">(</span><em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the hook data.</p>
 <p>This is called whenever FitRecipe._prepare is called, which is whenever
 a configurational change to the fit hierarchy takes place, such as
@@ -389,8 +389,8 @@ reserved.</p>
 using FitRecipe.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.fitrecipe.</tt><tt class="descname">FitRecipe</tt><big>(</big><em>name='fit'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitrecipe.</code><code class="descname">FitRecipe</code><span class="sig-paren">(</span><em>name='fit'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
 <p>FitRecipe class.</p>
 <p>Attributes
 name            &#8211;  A name for this FitRecipe.
@@ -441,7 +441,7 @@ bounds          &#8211;  Bounds on parameters (read only). See getBounds.
 bounds2         &#8211;  Bounds on parameters (read only). See getBounds2.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.addContribution">
-<tt class="descname">addContribution</tt><big>(</big><em>con</em>, <em>weight=1.0</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addContribution" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addContribution</code><span class="sig-paren">(</span><em>con</em>, <em>weight=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addContribution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a FitContribution to the FitRecipe.</p>
 <p>con     &#8211;  The FitContribution to be stored.</p>
 <p>Raises ValueError if the FitContribution has no name
@@ -451,7 +451,7 @@ other managed object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.addParameterSet">
-<tt class="descname">addParameterSet</tt><big>(</big><em>parset</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addParameterSet" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ParameterSet to the hierarchy.</p>
 <p>parset  &#8211;  The ParameterSet to be stored.</p>
 <p>Raises ValueError if the ParameterSet has no name.
@@ -461,7 +461,7 @@ managed object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.addVar">
-<tt class="descname">addVar</tt><big>(</big><em>par</em>, <em>value=None</em>, <em>name=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addVar" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addVar</code><span class="sig-paren">(</span><em>par</em>, <em>value=None</em>, <em>name=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a variable to be refined.</p>
 <p>par     &#8211;  A Parameter that will be varied during a fit.
 value   &#8211;  An initial value for the variable. If this is None</p>
@@ -489,17 +489,17 @@ Raises ValueError if par is constrained.</p>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.bounds">
-<tt class="descname">bounds</tt><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.bounds" title="Permalink to this definition">¶</a></dt>
+<code class="descname">bounds</code><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.bounds" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.bounds2">
-<tt class="descname">bounds2</tt><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.bounds2" title="Permalink to this definition">¶</a></dt>
+<code class="descname">bounds2</code><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.bounds2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.boundsToRestraints">
-<tt class="descname">boundsToRestraints</tt><big>(</big><em>sig=1</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.boundsToRestraints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">boundsToRestraints</code><span class="sig-paren">(</span><em>sig=1</em>, <em>scaled=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.boundsToRestraints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn all bounded parameters into restraints.</p>
 <p>The bounds become limits on the restraint.</p>
 <dl class="docutils">
@@ -511,13 +511,13 @@ Raises ValueError if par is constrained.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.clearFitHooks">
-<tt class="descname">clearFitHooks</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.clearFitHooks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clearFitHooks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.clearFitHooks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the FitHook sequence.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.constrain">
-<tt class="descname">constrain</tt><big>(</big><em>par</em>, <em>con</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.constrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">constrain</code><span class="sig-paren">(</span><em>par</em>, <em>con</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.constrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constrain a parameter to an equation.</p>
 <p>Note that only one constraint can exist on a Parameter at a time.</p>
 <p>This is overloaded to set the value of con if it represents a variable
@@ -543,7 +543,7 @@ Raises ValueError if par is marked as constant.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.delVar">
-<tt class="descname">delVar</tt><big>(</big><em>var</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.delVar" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delVar</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.delVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a variable.</p>
 <p>Note that constraints and restraints involving the variable are not
 modified.</p>
@@ -553,7 +553,7 @@ modified.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.fix">
-<tt class="descname">fix</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.fix" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fix</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.fix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix a parameter by reference, name or tag.</p>
 <p>A fixed variable is not refined.  Variables are free by default.</p>
 <p>This method accepts string or variable arguments. An argument of &#8220;all&#8221;
@@ -565,19 +565,19 @@ a tag is passed in a keyword.</p>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.fixednames">
-<tt class="descname">fixednames</tt><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.fixednames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixednames</code><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.fixednames" title="Permalink to this definition">¶</a></dt>
 <dd><p>names of the fixed refinable variables</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.fixedvalues">
-<tt class="descname">fixedvalues</tt><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.fixedvalues" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixedvalues</code><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.fixedvalues" title="Permalink to this definition">¶</a></dt>
 <dd><p>values of the fixed refinable variables</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.free">
-<tt class="descname">free</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.free" title="Permalink to this definition">¶</a></dt>
+<code class="descname">free</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.free" title="Permalink to this definition">¶</a></dt>
 <dd><p>Free a parameter by reference, name or tag.</p>
 <p>A free variable is refined.  Variables are free by default. Constrained
 variables are not free.</p>
@@ -590,7 +590,7 @@ a tag is passed in a keyword.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.getBounds">
-<tt class="descname">getBounds</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getBounds" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getBounds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getBounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the bounds on variables in a list.</p>
 <p>Returns a list of (lb, ub) pairs, where lb is the lower bound and ub is
 the upper bound.</p>
@@ -598,38 +598,38 @@ the upper bound.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.getBounds2">
-<tt class="descname">getBounds2</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getBounds2" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getBounds2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getBounds2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the bounds on variables in two lists.</p>
 <p>Returns lower- and upper-bound lists of variable bounds.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.getFitHooks">
-<tt class="descname">getFitHooks</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getFitHooks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getFitHooks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getFitHooks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the sequence of FitHook instances.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.getNames">
-<tt class="descname">getNames</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getNames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getNames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the names of the variables in a list.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.getValues">
-<tt class="descname">getValues</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getValues" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.getValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the current values of the variables in a list.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.isFree">
-<tt class="descname">isFree</tt><big>(</big><em>var</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.isFree" title="Permalink to this definition">¶</a></dt>
+<code class="descname">isFree</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.isFree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if a variable is fixed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.newVar">
-<tt class="descname">newVar</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.newVar" title="Permalink to this definition">¶</a></dt>
+<code class="descname">newVar</code><span class="sig-paren">(</span><em>name</em>, <em>value=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.newVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new variable of the fit.</p>
 <p>This method lets new variables be created that are not tied to a
 Parameter.  Orphan variables may cause a fit to fail, depending on the
@@ -655,7 +655,7 @@ automatically tagged with its name and &#8220;all&#8221;.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.popFitHook">
-<tt class="descname">popFitHook</tt><big>(</big><em>fithook=None</em>, <em>index=-1</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.popFitHook" title="Permalink to this definition">¶</a></dt>
+<code class="descname">popFitHook</code><span class="sig-paren">(</span><em>fithook=None</em>, <em>index=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.popFitHook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a FitHook by index or reference.</p>
 <dl class="docutils">
 <dt>fithook &#8211;  FitHook instance to remove from the sequence. If this is</dt>
@@ -669,7 +669,7 @@ Raises IndexError if the sequence is empty or index is out of range.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.pushFitHook">
-<tt class="descname">pushFitHook</tt><big>(</big><em>fithook</em>, <em>index=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.pushFitHook" title="Permalink to this definition">¶</a></dt>
+<code class="descname">pushFitHook</code><span class="sig-paren">(</span><em>fithook</em>, <em>index=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.pushFitHook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a FitHook to be called within the residual method.</p>
 <p>The hook is an object for reporting updates, or more fundamentally,
 passing information out of the system during a refinement. See the
@@ -683,14 +683,14 @@ index   &#8211;  Index for inserting fithook into the list of fit hooks.  If</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.removeParameterSet">
-<tt class="descname">removeParameterSet</tt><big>(</big><em>parset</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.removeParameterSet" title="Permalink to this definition">¶</a></dt>
+<code class="descname">removeParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.removeParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a ParameterSet from the hierarchy.</p>
 <p>Raises ValueError if parset is not managed by this object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.residual">
-<tt class="descname">residual</tt><big>(</big><em>p=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.residual" title="Permalink to this definition">¶</a></dt>
+<code class="descname">residual</code><span class="sig-paren">(</span><em>p=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.residual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the vector residual to be optimized.</p>
 <p>Arguments
 p   &#8211;  The list of current variable values, provided in the same order</p>
@@ -707,7 +707,7 @@ dot(chiv, chiv) = chi^2 + restraints.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.scalarResidual">
-<tt class="descname">scalarResidual</tt><big>(</big><em>p=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.scalarResidual" title="Permalink to this definition">¶</a></dt>
+<code class="descname">scalarResidual</code><span class="sig-paren">(</span><em>p=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.scalarResidual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the scalar residual to be optimized.</p>
 <p>Arguments
 p   &#8211;  The list of current variable values, provided in the same order</p>
@@ -724,13 +724,13 @@ dot(chiv, chiv) = chi^2 + restraints.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.setWeight">
-<tt class="descname">setWeight</tt><big>(</big><em>con</em>, <em>weight</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.setWeight" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setWeight</code><span class="sig-paren">(</span><em>con</em>, <em>weight</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.setWeight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the weight of a FitContribution.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.unconstrain">
-<tt class="descname">unconstrain</tt><big>(</big><em>*pars</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.unconstrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">unconstrain</code><span class="sig-paren">(</span><em>*pars</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.unconstrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unconstrain a Parameter.</p>
 <p>This removes any constraints on a Parameter. If the Parameter is also a
 variable of the recipe, it will be freed as well.</p>
@@ -749,13 +749,13 @@ stores the state, and uses it to calculate useful statistics, which can be
 displayed on screen or saved to file.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitresults.FitResults">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.fitresults.</tt><tt class="descname">FitResults</tt><big>(</big><em>recipe</em>, <em>update=True</em>, <em>showfixed=True</em>, <em>showcon=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitresults.</code><code class="descname">FitResults</code><span class="sig-paren">(</span><em>recipe</em>, <em>update=True</em>, <em>showfixed=True</em>, <em>showcon=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class for processing, presenting and storing results of a fit.</p>
 <p>Attributes
 recipe      &#8211;  The recipe containing the results.
 cov         &#8211;  The covariance matrix from the recipe.
-conresults  &#8211;  A dictionary of ContributionResults for each</p>
+conresults  &#8211;  An ordered dictionary of ContributionResults for each</p>
 <blockquote>
 <div>FitContribution, indexed by the FitContribution name.</div></blockquote>
 <dl class="docutils">
@@ -775,8 +775,10 @@ conunc      &#8211;  Uncertainties in the constraint values.
 residual    &#8211;  The scalar residual of the recipe.
 penalty     &#8211;  The penalty to residual from the restraints.
 chi2        &#8211;  The chi2 of the recipe.
+cumchi2     &#8211;  The cumulative chi2 of the recipe.
 rchi2       &#8211;  The reduced chi2 of the recipe.
 rw          &#8211;  The Rw of the recipe.
+cumrw       &#8211;  The cumulative Rw of the recipe.
 messages    &#8211;  A list of messages about the results.
 precision   &#8211;  The precision of numeric output (default 8).
 _dcon       &#8211;  The derivatives of the constraint equations with respect to</p>
@@ -786,7 +788,7 @@ _dcon       &#8211;  The derivatives of the constraint equations with respect to
 the update method is called.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitresults.FitResults.formatResults">
-<tt class="descname">formatResults</tt><big>(</big><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.formatResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">formatResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.formatResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the results and return them in a string.</p>
 <p>This function is called by printResults and saveResults. Overloading
 the formatting here will change all three functions.</p>
@@ -798,7 +800,7 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitresults.FitResults.printResults">
-<tt class="descname">printResults</tt><big>(</big><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.printResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">printResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.printResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and print the results.</p>
 <p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
 footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)
@@ -807,7 +809,7 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitresults.FitResults.saveResults">
-<tt class="descname">saveResults</tt><big>(</big><em>filename</em>, <em>header=''</em>, <em>footer=''</em>, <em>update=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.saveResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">saveResults</code><span class="sig-paren">(</span><em>filename</em>, <em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.saveResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and save the results.</p>
 <p>filename -  Name of the save file.
 header  &#8211;  A header to add to the output (default &#8220;&#8221;)
@@ -817,7 +819,7 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitresults.FitResults.update">
-<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the results according to the current state of the recipe.</p>
 </dd></dl>
 
@@ -825,8 +827,8 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitresults.ContributionResults">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.fitresults.</tt><tt class="descname">ContributionResults</tt><big>(</big><em>con</em>, <em>weight</em>, <em>fitres</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.ContributionResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitresults.</code><code class="descname">ContributionResults</code><span class="sig-paren">(</span><em>con</em>, <em>weight</em>, <em>fitres</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.ContributionResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class for processing, storing FitContribution results.</p>
 <p>This does not store the FitContribution.</p>
 <p>Attributes
@@ -843,7 +845,9 @@ y       &#8211;  The FitContribution&#8217;s profile over the calculation range<
 </dl>
 <p>residual    &#8211;  The scalar residual of the FitContribution.
 chi2        &#8211;  The chi2 of the FitContribution.
+cumchi2     &#8211;  The cumulative chi2 of the FitContribution.
 rw          &#8211;  The Rw of the FitContribution.
+cumrw       &#8211;  The cumulative Rw of the FitContribution.
 weight      &#8211;  The weight of the FitContribution in the recipe.
 conlocs     &#8211;  The location of the constrained parameters in the</p>
 <blockquote>
@@ -855,7 +859,7 @@ conunc      &#8211;  Uncertainties in the constraint values.</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.fitbase.fitresults.initializeRecipe">
-<tt class="descclassname">diffpy.srfit.fitbase.fitresults.</tt><tt class="descname">initializeRecipe</tt><big>(</big><em>recipe</em>, <em>results</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.initializeRecipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.fitbase.fitresults.</code><code class="descname">initializeRecipe</code><span class="sig-paren">(</span><em>recipe</em>, <em>results</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.initializeRecipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the variables of a recipe from a results file.</p>
 <p>This reads the results from file and initializes any variables (fixed or
 free) in the recipe to the results values. Note that the recipe has to be
@@ -873,8 +877,8 @@ results &#8211;  An open file-like object, name of a file that contains</p>
 <p>Parameters encapsulate an adjustable parameter within SrFit.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameter.Parameter">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.parameter.</tt><tt class="descname">Parameter</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>const=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></tt></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameter.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>value=None</em>, <em>const=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Parameter class.</p>
 <p>Attributes
 name    &#8211;  A name for this Parameter.
@@ -891,7 +895,7 @@ FitRecipe.getBounds and FitRecipe.boundsToRestraints.</dd>
 </dl>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.Parameter.boundWindow">
-<tt class="descname">boundWindow</tt><big>(</big><em>lr=0</em>, <em>ur=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.boundWindow" title="Permalink to this definition">¶</a></dt>
+<code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.boundWindow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create bounds centered on the current value of the Parameter.</p>
 <dl class="docutils">
 <dt>lr  &#8211;  The radius of the lower bound (default 0). The lower bound is</dt>
@@ -905,7 +909,7 @@ lower radius is used.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.Parameter.setConst">
-<tt class="descname">setConst</tt><big>(</big><em>const=True</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setConst" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setConst</code><span class="sig-paren">(</span><em>const=True</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setConst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the Parameter as constant.</p>
 <dl class="docutils">
 <dt>const   &#8211;  Flag indicating if the parameter is constant (default</dt>
@@ -919,7 +923,7 @@ constant or otherwise.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.Parameter.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em>, <em>lb=None</em>, <em>ub=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter and the bounds.</p>
 <p>val     &#8211;  The value to assign.
 lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
@@ -936,8 +940,8 @@ lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterProxy">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.parameter.</tt><tt class="descname">ParameterProxy</tt><big>(</big><em>name</em>, <em>par</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameter.</code><code class="descname">ParameterProxy</code><span class="sig-paren">(</span><em>name</em>, <em>par</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>A Parameter proxy for another parameter.</p>
 <p>This allows for the same parameter to have multiple names.</p>
 <p>Attributes
@@ -947,27 +951,27 @@ name    &#8211;  A name for this ParameterProxy. Names should be unique within a
 <p>par     &#8211;  The Parameter this is a proxy for.</p>
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.value">
-<tt class="descname">value</tt><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">value</code><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterAdapter">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.parameter.</tt><tt class="descname">ParameterAdapter</tt><big>(</big><em>name</em>, <em>obj</em>, <em>getter=None</em>, <em>setter=None</em>, <em>attr=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameter.</code><code class="descname">ParameterAdapter</code><span class="sig-paren">(</span><em>name</em>, <em>obj</em>, <em>getter=None</em>, <em>setter=None</em>, <em>attr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></code></a></p>
 <p>An adapter for parameter-like objects.</p>
 <p>This class wraps an object as a Parameter. The getValue and setValue
 methods defer to the data of the wrapped object.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterAdapter.getValue">
-<tt class="descname">getValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.getValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.getValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the value of the Parameter.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterAdapter.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>value</em>, <em>lb=None</em>, <em>ub=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.setValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>value</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter.</p>
 </dd></dl>
 
@@ -982,8 +986,8 @@ ParameterSets. They provide attribute-access of other ParameterSets and
 embedded Parameters.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.parameterset.</tt><tt class="descname">ParameterSet</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameterset.</code><code class="descname">ParameterSet</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
 <p>Class for organizing Parameters and other ParameterSets.</p>
 <p>ParameterSets are hierarchical organizations of Parameters, Constraints,
 Restraints and other ParameterSets.</p>
@@ -1012,7 +1016,7 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet.addParameter">
-<tt class="descname">addParameter</tt><big>(</big><em>par</em>, <em>check=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.addParameter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addParameter</code><span class="sig-paren">(</span><em>par</em>, <em>check=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.addParameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store a Parameter.</p>
 <p>Parameters added in this way are registered with the _eqfactory.</p>
 <p>par     &#8211;  The Parameter to be stored.
@@ -1026,7 +1030,7 @@ RecipeContainer.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet.addParameterSet">
-<tt class="descname">addParameterSet</tt><big>(</big><em>parset</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.addParameterSet" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.addParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ParameterSet to the hierarchy.</p>
 <p>parset  &#8211;  The ParameterSet to be stored.</p>
 <p>Raises ValueError if the ParameterSet has no name.
@@ -1036,7 +1040,7 @@ managed object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet.newParameter">
-<tt class="descname">newParameter</tt><big>(</big><em>name</em>, <em>value</em>, <em>check=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.newParameter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">newParameter</code><span class="sig-paren">(</span><em>name</em>, <em>value</em>, <em>check=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.newParameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new Parameter to the container.</p>
 <p>This creates a new Parameter and adds it to the container using the
 _addParameter method.</p>
@@ -1045,7 +1049,7 @@ _addParameter method.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet.removeParameter">
-<tt class="descname">removeParameter</tt><big>(</big><em>par</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.removeParameter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">removeParameter</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.removeParameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a parameter.</p>
 <p>This de-registers the Parameter with the _eqfactory. The Parameter will
 remain part of built equations.</p>
@@ -1056,14 +1060,14 @@ modified.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet.removeParameterSet">
-<tt class="descname">removeParameterSet</tt><big>(</big><em>parset</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.removeParameterSet" title="Permalink to this definition">¶</a></dt>
+<code class="descname">removeParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.removeParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a ParameterSet from the hierarchy.</p>
 <p>Raises ValueError if parset is not managed by this object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet.setConst">
-<tt class="descname">setConst</tt><big>(</big><em>const=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.setConst" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setConst</code><span class="sig-paren">(</span><em>const=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.setConst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set every parameter within the set to a constant.</p>
 <dl class="docutils">
 <dt>const   &#8211;  Flag indicating if the parameter is constant (default</dt>
@@ -1083,8 +1087,8 @@ to store a calculated signal, and by FitContributions to help calculate a
 residual equation.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.profile.Parameter">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.profile.</tt><tt class="descname">Parameter</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>const=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></tt></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.profile.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>value=None</em>, <em>const=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Parameter class.</p>
 <p>Attributes
 name    &#8211;  A name for this Parameter.
@@ -1101,7 +1105,7 @@ FitRecipe.getBounds and FitRecipe.boundsToRestraints.</dd>
 </dl>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Parameter.boundWindow">
-<tt class="descname">boundWindow</tt><big>(</big><em>lr=0</em>, <em>ur=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.boundWindow" title="Permalink to this definition">¶</a></dt>
+<code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.boundWindow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create bounds centered on the current value of the Parameter.</p>
 <dl class="docutils">
 <dt>lr  &#8211;  The radius of the lower bound (default 0). The lower bound is</dt>
@@ -1115,7 +1119,7 @@ lower radius is used.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Parameter.setConst">
-<tt class="descname">setConst</tt><big>(</big><em>const=True</em>, <em>value=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setConst" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setConst</code><span class="sig-paren">(</span><em>const=True</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setConst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the Parameter as constant.</p>
 <dl class="docutils">
 <dt>const   &#8211;  Flag indicating if the parameter is constant (default</dt>
@@ -1129,7 +1133,7 @@ constant or otherwise.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Parameter.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>val</em>, <em>lb=None</em>, <em>ub=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter and the bounds.</p>
 <p>val     &#8211;  The value to assign.
 lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
@@ -1146,8 +1150,8 @@ lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.profile.Profile">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.profile.</tt><tt class="descname">Profile</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.profile.</code><code class="descname">Profile</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Observed and calculated profile container.</p>
 <p>Profile is an Observable. The xpar, ypar and dypar attributes are observed
 by the Profile, which can in turn be observed by some other object.</p>
@@ -1186,24 +1190,24 @@ constrained to.</div></blockquote>
 </dl>
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.profile.Profile.dy">
-<tt class="descname">dy</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.dy" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dy</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.dy" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.profile.Profile.dyobs">
-<tt class="descname">dyobs</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.dyobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dyobs</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.dyobs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Profile.loadParsedData">
-<tt class="descname">loadParsedData</tt><big>(</big><em>parser</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.loadParsedData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadParsedData</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.loadParsedData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load parsed data from a ProfileParser.</p>
 <p>This sets the xobs, yobs, dyobs arrays as well as the metadata.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Profile.loadtxt">
-<tt class="descname">loadtxt</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.loadtxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadtxt</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.loadtxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use numpy.loadtxt to load data.</p>
 <p>Arguments are passed to numpy.loadtxt.
 unpack = True is enforced.
@@ -1217,14 +1221,14 @@ arrays.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Profile.savetxt">
-<tt class="descname">savetxt</tt><big>(</big><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.savetxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.savetxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call numpy.savetxt with x, ycalc, y, dy</p>
 <p>Arguments are passed to numpy.savetxt.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Profile.setCalculationPoints">
-<tt class="descname">setCalculationPoints</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationPoints</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation points.</p>
 <p>Arguments
 x   &#8211;  A non-empty numpy array containing the calculation points. If</p>
@@ -1236,7 +1240,7 @@ dyobs exist.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Profile.setCalculationRange">
-<tt class="descname">setCalculationRange</tt><big>(</big><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setCalculationRange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation range</p>
 <p>Arguments
 xmin    &#8211;  The minimum value of the independent variable.</p>
@@ -1261,7 +1265,7 @@ raises ValueError if dx &lt;= 0</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Profile.setObservedProfile">
-<tt class="descname">setObservedProfile</tt><big>(</big><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>Arguments
 xobs    &#8211;  Numpy array of the independent variable
@@ -1276,27 +1280,27 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.profile.Profile.x">
-<tt class="descname">x</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.x" title="Permalink to this definition">¶</a></dt>
+<code class="descname">x</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.x" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.profile.Profile.xobs">
-<tt class="descname">xobs</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.xobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">xobs</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.xobs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.profile.Profile.y">
-<tt class="descname">y</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.y" title="Permalink to this definition">¶</a></dt>
+<code class="descname">y</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.y" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.profile.Profile.ycalc">
-<tt class="descname">ycalc</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.ycalc" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ycalc</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.ycalc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.profile.Profile.yobs">
-<tt class="descname">yobs</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.yobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">yobs</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.yobs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1329,8 +1333,8 @@ very simple example is
 <p>More examples can be found in the example directory of the documentation.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.profilegenerator.</tt><tt class="descname">ProfileGenerator</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.profilegenerator.</code><code class="descname">ProfileGenerator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>Base class for profile generators.</p>
 <p>A ProfileGenerator organizes Parameters and has a __call__ method that can
 generate a profile. ProfileGenerator is also an Operator
@@ -1375,7 +1379,7 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.operation">
-<tt class="descname">operation</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.operation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the profile.</p>
 <p>This calls __call__ and passes in profile.x. It also stores the output
 in profile.ycalc. The calculated value is then returned.</p>
@@ -1383,7 +1387,7 @@ in profile.ycalc. The calculated value is then returned.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.processMetaData">
-<tt class="descname">processMetaData</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.processMetaData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">processMetaData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.processMetaData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the metadata.</p>
 <p>This can be used to configure a ProfileGenerator upon a change in the
 metadata. This method gets called whenever the Profile is set.</p>
@@ -1391,7 +1395,7 @@ metadata. This method gets called whenever the Profile is set.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.setProfile">
-<tt class="descname">setProfile</tt><big>(</big><em>profile</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.setProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setProfile</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.setProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign the profile.</p>
 <dl class="docutils">
 <dt>profile &#8211;  A Profile that specifies the calculation points and which</dt>
@@ -1411,8 +1415,8 @@ format must be encapsulated in a ProfileParser subclass.</p>
 <p>See the class documentation for more information.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.profileparser.</tt><tt class="descname">ProfileParser</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.profileparser.</code><code class="descname">ProfileParser</code><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class for parsing data from a or string.</p>
 <p>Attributes</p>
 <dl class="docutils">
@@ -1450,7 +1454,7 @@ _meta       &#8211;  A dictionary containing metadata read from the file.</p>
 bank        &#8211;  The chosen bank number.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser.getData">
-<tt class="descname">getData</tt><big>(</big><em>index=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getData</code><span class="sig-paren">(</span><em>index=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the data.</p>
 <p>This method should only be called after the data has been parsed.  The
 chosen bank number is not persistent, and so must be re-selected if the
@@ -1466,25 +1470,25 @@ be determined from the data format.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser.getFormat">
-<tt class="descname">getFormat</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getFormat" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getFormat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getFormat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the format string.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser.getMetaData">
-<tt class="descname">getMetaData</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getMetaData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getMetaData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getMetaData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the parsed metadata.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser.getNumBanks">
-<tt class="descname">getNumBanks</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getNumBanks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getNumBanks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getNumBanks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number of banks read by the parser.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser.parseFile">
-<tt class="descname">parseFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.parseFile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parseFile</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.parseFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a file and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
@@ -1495,7 +1499,7 @@ Raises ParseError if the file cannot be parsed</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser.parseString">
-<tt class="descname">parseString</tt><big>(</big><em>patstring</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.parseString" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parseString</code><span class="sig-paren">(</span><em>patstring</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.parseString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a string and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to
 None.</p>
@@ -1507,7 +1511,7 @@ patstring   &#8211;  A string containing the pattern</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser.selectBank">
-<tt class="descname">selectBank</tt><big>(</big><em>index</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.selectBank" title="Permalink to this definition">¶</a></dt>
+<code class="descname">selectBank</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.selectBank" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select which bank to use.</p>
 <p>This method should only be called after the data has been parsed.  The
 chosen bank number is not persistent, and so must be re-selected if the
@@ -1520,13 +1524,6 @@ index  &#8211;  index of bank (integer, starting at 0).</p>
 
 </dd></dl>
 
-<dl class="exception">
-<dt id="diffpy.srfit.fitbase.profileparser.ParseError">
-<em class="property">exception </em><tt class="descclassname">diffpy.srfit.fitbase.profileparser.</tt><tt class="descname">ParseError</tt><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ParseError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
-<p>Exception used by ProfileParsers.</p>
-</dd></dl>
-
 </div>
 <div class="section" id="module-diffpy.srfit.fitbase.recipeorganizer">
 <span id="diffpy-srfit-fitbase-recipeorganizer-module"></span><h2>diffpy.srfit.fitbase.recipeorganizer module<a class="headerlink" href="#module-diffpy.srfit.fitbase.recipeorganizer" title="Permalink to this headline">¶</a></h2>
@@ -1537,8 +1534,8 @@ incorporates equation building, constraints and Restraints.  equationFromString
 creates an Equation instance from a string.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</tt><tt class="descname">RecipeContainer</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.configurable.Configurable" title="diffpy.srfit.fitbase.configurable.Configurable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.configurable.Configurable</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</code><code class="descname">RecipeContainer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.configurable.Configurable" title="diffpy.srfit.fitbase.configurable.Configurable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.configurable.Configurable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Base class for organizing pieces of a FitRecipe.</p>
 <p>RecipeContainers are hierarchical organizations of Parameters and other
 RecipeContainers. This class provides attribute-access to these contained
@@ -1573,25 +1570,25 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get">
-<tt class="descname">get</tt><big>(</big><em>name</em>, <em>default=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>name</em>, <em>default=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a managed object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.getNames">
-<tt class="descname">getNames</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.getNames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.getNames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the names of managed parameters.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.getValues">
-<tt class="descname">getValues</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.getValues" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.getValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the values of managed parameters.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterPars">
-<tt class="descname">iterPars</tt><big>(</big><em>name='.'</em>, <em>recurse=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterPars" title="Permalink to this definition">¶</a></dt>
+<code class="descname">iterPars</code><span class="sig-paren">(</span><em>name='.'</em>, <em>recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterPars" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over Parameters.</p>
 <dl class="docutils">
 <dt>name    &#8211;  Select parameters with this name (regular expression,</dt>
@@ -1602,20 +1599,20 @@ values          &#8211;  Variable values (read only). See getValues.</p>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.names">
-<tt class="descname">names</tt><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.names" title="Permalink to this definition">¶</a></dt>
+<code class="descname">names</code><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.names" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.values">
-<tt class="descname">values</tt><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.values" title="Permalink to this definition">¶</a></dt>
+<code class="descname">values</code><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</tt><tt class="descname">RecipeOrganizer</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="diffpy.srfit.interface.interface.RecipeOrganizerInterface"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.RecipeOrganizerInterface</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeContainer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</code><code class="descname">RecipeOrganizer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="diffpy.srfit.interface.interface.RecipeOrganizerInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.RecipeOrganizerInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeContainer</span></code></a></p>
 <p>Extended base class for organizing pieces of a FitRecipe.</p>
 <p>This class extends RecipeContainer by organizing constraints and
 Restraints, as well as Equations that can be used in Constraint and
@@ -1645,14 +1642,14 @@ values          &#8211;  Variable values (read only). See getValues.</p>
 <p>Raises ValueError if the name is not a valid attribute identifier</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.addRestraint">
-<tt class="descname">addRestraint</tt><big>(</big><em>res</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.addRestraint" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addRestraint</code><span class="sig-paren">(</span><em>res</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.addRestraint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a Restraint instance to the RecipeOrganizer.</p>
 <p>res     &#8211;  A Restraint instance.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearConstraints">
-<tt class="descname">clearConstraints</tt><big>(</big><em>recurse=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearConstraints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clearConstraints</code><span class="sig-paren">(</span><em>recurse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearConstraints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear all constraints managed by this organizer.</p>
 <dl class="docutils">
 <dt>recurse &#8211;  Recurse into managed objects and clear all constraints</dt>
@@ -1664,7 +1661,7 @@ where the constrained parameters are from.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearRestraints">
-<tt class="descname">clearRestraints</tt><big>(</big><em>recurse=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearRestraints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clearRestraints</code><span class="sig-paren">(</span><em>recurse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearRestraints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear all restraints.</p>
 <dl class="docutils">
 <dt>recurse &#8211;  Recurse into managed objects and clear all restraints</dt>
@@ -1674,7 +1671,7 @@ where the constrained parameters are from.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.constrain">
-<tt class="descname">constrain</tt><big>(</big><em>par</em>, <em>con</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.constrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">constrain</code><span class="sig-paren">(</span><em>par</em>, <em>con</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.constrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constrain a parameter to an equation.</p>
 <p>Note that only one constraint can exist on a Parameter at a time.</p>
 <p>par     &#8211;  The name of a Parameter or a Parameter to constrain.
@@ -1697,7 +1694,7 @@ Raises ValueError if par is marked as constant.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.evaluateEquation">
-<tt class="descname">evaluateEquation</tt><big>(</big><em>eqstr</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.evaluateEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">evaluateEquation</code><span class="sig-paren">(</span><em>eqstr</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.evaluateEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate a string equation.</p>
 <dl class="docutils">
 <dt>eqstr   &#8211;  A string equation to evaluate. The equation is evaluated at</dt>
@@ -1711,7 +1708,7 @@ variable.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.getConstrainedPars">
-<tt class="descname">getConstrainedPars</tt><big>(</big><em>recurse=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.getConstrainedPars" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getConstrainedPars</code><span class="sig-paren">(</span><em>recurse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.getConstrainedPars" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of constrained managed Parameters in this object.</p>
 <dl class="docutils">
 <dt>recurse &#8211;  Recurse into managed objects and retrive their constrained</dt>
@@ -1721,14 +1718,14 @@ variable.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.isConstrained">
-<tt class="descname">isConstrained</tt><big>(</big><em>par</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.isConstrained" title="Permalink to this definition">¶</a></dt>
+<code class="descname">isConstrained</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.isConstrained" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if a Parameter is constrained in this object.</p>
 <p>par     &#8211;  The name of a Parameter or a Parameter to check.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerCalculator">
-<tt class="descname">registerCalculator</tt><big>(</big><em>f</em>, <em>argnames=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerCalculator" title="Permalink to this definition">¶</a></dt>
+<code class="descname">registerCalculator</code><span class="sig-paren">(</span><em>f</em>, <em>argnames=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerCalculator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a Calculator so it can be used within equation strings.</p>
 <p>A Calculator is an elaborate function that can organize Parameters.
 This creates a function with this class that can be used within string
@@ -1744,7 +1741,7 @@ extracted from the function.</div></blockquote>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerFunction">
-<tt class="descname">registerFunction</tt><big>(</big><em>f</em>, <em>name=None</em>, <em>argnames=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerFunction" title="Permalink to this definition">¶</a></dt>
+<code class="descname">registerFunction</code><span class="sig-paren">(</span><em>f</em>, <em>name=None</em>, <em>argnames=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a function so it can be used within equation strings.</p>
 <p>This creates a function with this class that can be used within string
 equations.  The resulting equation does not require the arguments to be
@@ -1771,7 +1768,7 @@ Raises ValueError if f is an Equation object and name is None.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerStringFunction">
-<tt class="descname">registerStringFunction</tt><big>(</big><em>fstr</em>, <em>name</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerStringFunction" title="Permalink to this definition">¶</a></dt>
+<code class="descname">registerStringFunction</code><span class="sig-paren">(</span><em>fstr</em>, <em>name</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.registerStringFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a string function.</p>
 <p>This creates a function with this class that can be used within string
 equations.  The resulting equation does not require the arguments to be
@@ -1791,7 +1788,7 @@ object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.restrain">
-<tt class="descname">restrain</tt><big>(</big><em>res</em>, <em>lb=-inf</em>, <em>ub=inf</em>, <em>sig=1</em>, <em>scaled=False</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.restrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">restrain</code><span class="sig-paren">(</span><em>res</em>, <em>lb=-inf</em>, <em>ub=inf</em>, <em>sig=1</em>, <em>scaled=False</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.restrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restrain an expression to specified bounds</p>
 <p>res     &#8211;  An equation string or Parameter to restrain.
 lb      &#8211;  The lower bound on the restraint evaluation (default -inf).
@@ -1819,14 +1816,14 @@ the RecipeOrganizer and that is not defined in ns.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.show">
-<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.show" title="Permalink to this definition">¶</a></dt>
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the configuration on screen.</p>
 <p>This will print a summary of all contained objects.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unconstrain">
-<tt class="descname">unconstrain</tt><big>(</big><em>*pars</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unconstrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">unconstrain</code><span class="sig-paren">(</span><em>*pars</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unconstrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unconstrain a Parameter.</p>
 <p>This removes any constraints on a Parameter.</p>
 <p><a href="#id3"><span class="problematic" id="id4">*</span></a>pars   &#8211;  The names of Parameters or Parameters to unconstrain.</p>
@@ -1835,7 +1832,7 @@ the RecipeOrganizer and that is not defined in ns.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unrestrain">
-<tt class="descname">unrestrain</tt><big>(</big><em>*ress</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unrestrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">unrestrain</code><span class="sig-paren">(</span><em>*ress</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unrestrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a Restraint from the RecipeOrganizer.</p>
 <dl class="docutils">
 <dt><a href="#id5"><span class="problematic" id="id6">*</span></a>ress   &#8211;  Restraints returned from the &#8216;restrain&#8217; method or added</dt>
@@ -1847,7 +1844,7 @@ the RecipeOrganizer and that is not defined in ns.</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.equationFromString">
-<tt class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</tt><tt class="descname">equationFromString</tt><big>(</big><em>eqstr</em>, <em>factory</em>, <em>ns={}</em>, <em>buildargs=False</em>, <em>argclass=&lt;class 'diffpy.srfit.fitbase.parameter.Parameter'&gt;</em>, <em>argkw={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.equationFromString" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</code><code class="descname">equationFromString</code><span class="sig-paren">(</span><em>eqstr</em>, <em>factory</em>, <em>ns={}</em>, <em>buildargs=False</em>, <em>argclass=&lt;class 'diffpy.srfit.fitbase.parameter.Parameter'&gt;</em>, <em>argkw={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.equationFromString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an equation from a string.</p>
 <dl class="docutils">
 <dt>eqstr   &#8211;  A string representation of the equation. The equation must</dt>
@@ -1883,8 +1880,8 @@ function for breaking a restraint. This penalty is added to the residual
 equation calculated by a FitRecipe.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.restraint.Restraint">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.restraint.</tt><tt class="descname">Restraint</tt><big>(</big><em>eq</em>, <em>lb=-inf</em>, <em>ub=inf</em>, <em>sig=1</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.restraint.Restraint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.restraint.</code><code class="descname">Restraint</code><span class="sig-paren">(</span><em>eq</em>, <em>lb=-inf</em>, <em>ub=inf</em>, <em>sig=1</em>, <em>scaled=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.restraint.Restraint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Restraint class.</p>
 <p>Attributes
 eq      &#8211;  An equation whose evaluation is compared against the restraint</p>
@@ -1903,7 +1900,7 @@ and val is the value of the calculated equation.  This is multipled by the
 average chi^2 if scaled is True.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.restraint.Restraint.penalty">
-<tt class="descname">penalty</tt><big>(</big><em>w=1.0</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.restraint.Restraint.penalty" title="Permalink to this definition">¶</a></dt>
+<code class="descname">penalty</code><span class="sig-paren">(</span><em>w=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.restraint.Restraint.penalty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the penalty of the restraint.</p>
 <dl class="docutils">
 <dt>w   &#8211;  The point-average chi^2 which is optionally used to scale the</dt>
@@ -1920,8 +1917,8 @@ average chi^2 if scaled is True.</p>
 <p>Simple FitRecipe class that includes a FitContribution and Profile.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.simplerecipe.</tt><tt class="descname">SimpleRecipe</tt><big>(</big><em>name='fit'</em>, <em>conclass=&lt;class 'diffpy.srfit.fitbase.fitcontribution.FitContribution'&gt;</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.simplerecipe.</code><code class="descname">SimpleRecipe</code><span class="sig-paren">(</span><em>name='fit'</em>, <em>conclass=&lt;class 'diffpy.srfit.fitbase.fitcontribution.FitContribution'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></code></a></p>
 <p>SimpleRecipe class.</p>
 <p>This is a FitRecipe with a built-in Profile (the &#8216;profile&#8217; attribute) and
 FitContribution (the &#8216;contribution&#8217; attribute). Unique methods from each of
@@ -1972,14 +1969,14 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadParsedData">
-<tt class="descname">loadParsedData</tt><big>(</big><em>parser</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadParsedData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadParsedData</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadParsedData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load parsed data from a ProfileParser.</p>
 <p>This sets the xobs, yobs, dyobs arrays as well as the metadata.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadtxt">
-<tt class="descname">loadtxt</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadtxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadtxt</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadtxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use numpy.loadtxt to load data.</p>
 <p>Arguments are passed to numpy.loadtxt.
 unpack = True is enforced.
@@ -1993,7 +1990,7 @@ arrays.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.printResults">
-<tt class="descname">printResults</tt><big>(</big><em>header=''</em>, <em>footer=''</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.printResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">printResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.printResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and print the results.</p>
 <p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
 footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
@@ -2001,7 +1998,7 @@ footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.saveResults">
-<tt class="descname">saveResults</tt><big>(</big><em>filename</em>, <em>header=''</em>, <em>footer=''</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.saveResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">saveResults</code><span class="sig-paren">(</span><em>filename</em>, <em>header=''</em>, <em>footer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.saveResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and save the results.</p>
 <p>filename -  Name of the save file.
 header  &#8211;  A header to add to the output (default &#8220;&#8221;)
@@ -2010,7 +2007,7 @@ footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationPoints">
-<tt class="descname">setCalculationPoints</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationPoints</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation points.</p>
 <p>Arguments
 x   &#8211;  A non-empty numpy array containing the calculation points. If</p>
@@ -2022,7 +2019,7 @@ dyobs exist.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationRange">
-<tt class="descname">setCalculationRange</tt><big>(</big><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationRange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation range</p>
 <p>Arguments
 xmin    &#8211;  The minimum value of the independent variable.</p>
@@ -2047,7 +2044,7 @@ raises ValueError if dx &lt;= 0</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setEquation">
-<tt class="descname">setEquation</tt><big>(</big><em>eqstr</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setEquation</code><span class="sig-paren">(</span><em>eqstr</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the profile equation for the FitContribution.</p>
 <p>This sets the equation that will be used when generating the residual.
 The equation will be usable within setResidualEquation as &#8220;eq&#8221;, and it
@@ -2065,7 +2062,7 @@ variable.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setObservedProfile">
-<tt class="descname">setObservedProfile</tt><big>(</big><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setObservedProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>Arguments
 xobs    &#8211;  Numpy array of the independent variable
@@ -2088,8 +2085,8 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 calculate the residual.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.validatable.Validatable">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.validatable.</tt><tt class="descname">Validatable</tt><a class="headerlink" href="#diffpy.srfit.fitbase.validatable.Validatable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.validatable.</code><code class="descname">Validatable</code><a class="headerlink" href="#diffpy.srfit.fitbase.validatable.Validatable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Validatable class.</p>
 <p>A Validatable has state that must be validated by a FitRecipe.</p>
 </dd></dl>
@@ -2110,8 +2107,8 @@ FitContribution, Profile and FitRecipe classes.</p>
 <a class="reference external" href="http://www.reflectometry.org/danse/park.html">http://www.reflectometry.org/danse/park.html</a></p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.Calculator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">Calculator</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">Calculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>Base class for calculators.</p>
 <p>A Calculator organizes Parameters and has a __call__ method that can
 calculate a generic signal.</p>
@@ -2144,15 +2141,15 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Calculator.operation">
-<tt class="descname">operation</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.operation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operation</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.operation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitContribution">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">FitContribution</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitContributionInterface</span></tt>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitContributionInterface</span></code>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>FitContribution class.</p>
 <p>FitContributions organize an Equation that calculates the signal, and a
 Profile that holds the signal. ProfileGenerators and Calculators can be
@@ -2187,7 +2184,7 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.addProfileGenerator">
-<tt class="descname">addProfileGenerator</tt><big>(</big><em>gen</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.addProfileGenerator" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addProfileGenerator</code><span class="sig-paren">(</span><em>gen</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.addProfileGenerator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ProfileGenerator to be used by this FitContribution.</p>
 <p>The ProfileGenerator is given a name so that it can be used as part of
 the profile equation (see setEquation). This can be different from the
@@ -2207,13 +2204,13 @@ other managed object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.evaluate">
-<tt class="descname">evaluate</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.evaluate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the contribution equation.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.residual">
-<tt class="descname">residual</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.residual" title="Permalink to this definition">¶</a></dt>
+<code class="descname">residual</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.residual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the residual for this fitcontribution.</p>
 <p>When this method is called, it is assumed that all parameters have been
 assigned their most current values by the FitRecipe. This will be the
@@ -2227,7 +2224,7 @@ method.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.setEquation">
-<tt class="descname">setEquation</tt><big>(</big><em>eqstr</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setEquation</code><span class="sig-paren">(</span><em>eqstr</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the profile equation for the FitContribution.</p>
 <p>This sets the equation that will be used when generating the residual
 for this FitContribution.  The equation will be usable within
@@ -2248,7 +2245,7 @@ variable.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.setProfile">
-<tt class="descname">setProfile</tt><big>(</big><em>profile</em>, <em>xname=None</em>, <em>yname=None</em>, <em>dyname=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setProfile</code><span class="sig-paren">(</span><em>profile</em>, <em>xname=None</em>, <em>yname=None</em>, <em>dyname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign the Profile for this FitContribution.</p>
 <dl class="docutils">
 <dt>profile &#8211;  A Profile that specifies the calculation points and that</dt>
@@ -2270,7 +2267,7 @@ usable within string equations with the specified name.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.setResidualEquation">
-<tt class="descname">setResidualEquation</tt><big>(</big><em>eqstr=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setResidualEquation</code><span class="sig-paren">(</span><em>eqstr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the residual equation for the FitContribution.</p>
 <dl class="docutils">
 <dt>eqstr   &#8211;  A string representation of the residual. If eqstr is None</dt>
@@ -2285,7 +2282,7 @@ You can call on these in your residual equation. Note that the quantity
 that will be optimized is the summed square of the residual equation.
 Keep that in mind when defining a new residual or using the built-in
 ones.</p>
-<p>Raises AttributeError if the Profile is not yet defined.
+<p>Raises SrFitError if the Profile is not yet defined.
 Raises ValueError if eqstr depends on a Parameter that is not part of
 the FitContribution.</p>
 </dd></dl>
@@ -2294,8 +2291,8 @@ the FitContribution.</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitHook">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">FitHook</tt><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitHook</code><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Base class for inspecting the progress of a FitRecipe refinement.</p>
 <p>Can serve as a fithook for the FitRecipe class (see FitRecipe.pushFitHook
 method.) The methods in this class are called during the preparation of the
@@ -2303,7 +2300,7 @@ FitRecipe for refinement, and during the residual call. See the class
 methods for a description of their purpose.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitHook.postcall">
-<tt class="descname">postcall</tt><big>(</big><em>recipe</em>, <em>chiv</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.postcall" title="Permalink to this definition">¶</a></dt>
+<code class="descname">postcall</code><span class="sig-paren">(</span><em>recipe</em>, <em>chiv</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.postcall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, after the calculation.</p>
 <p>recipe  &#8211;  The FitRecipe instance
 chiv    &#8211;  The residual vector</p>
@@ -2311,14 +2308,14 @@ chiv    &#8211;  The residual vector</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitHook.precall">
-<tt class="descname">precall</tt><big>(</big><em>recipe</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.precall" title="Permalink to this definition">¶</a></dt>
+<code class="descname">precall</code><span class="sig-paren">(</span><em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.precall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, before the calculation.</p>
 <p>recipe  &#8211;  The FitRecipe instance</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitHook.reset">
-<tt class="descname">reset</tt><big>(</big><em>recipe</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.reset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset</code><span class="sig-paren">(</span><em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the hook data.</p>
 <p>This is called whenever FitRecipe._prepare is called, which is whenever
 a configurational change to the fit hierarchy takes place, such as
@@ -2329,8 +2326,8 @@ adding a new ParameterSet, constraint or restraint.</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitRecipe">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">FitRecipe</tt><big>(</big><em>name='fit'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitRecipe</code><span class="sig-paren">(</span><em>name='fit'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
 <p>FitRecipe class.</p>
 <p>Attributes
 name            &#8211;  A name for this FitRecipe.
@@ -2381,7 +2378,7 @@ bounds          &#8211;  Bounds on parameters (read only). See getBounds.
 bounds2         &#8211;  Bounds on parameters (read only). See getBounds2.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.addContribution">
-<tt class="descname">addContribution</tt><big>(</big><em>con</em>, <em>weight=1.0</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addContribution" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addContribution</code><span class="sig-paren">(</span><em>con</em>, <em>weight=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addContribution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a FitContribution to the FitRecipe.</p>
 <p>con     &#8211;  The FitContribution to be stored.</p>
 <p>Raises ValueError if the FitContribution has no name
@@ -2391,7 +2388,7 @@ other managed object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.addParameterSet">
-<tt class="descname">addParameterSet</tt><big>(</big><em>parset</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addParameterSet" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ParameterSet to the hierarchy.</p>
 <p>parset  &#8211;  The ParameterSet to be stored.</p>
 <p>Raises ValueError if the ParameterSet has no name.
@@ -2401,7 +2398,7 @@ managed object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.addVar">
-<tt class="descname">addVar</tt><big>(</big><em>par</em>, <em>value=None</em>, <em>name=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addVar" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addVar</code><span class="sig-paren">(</span><em>par</em>, <em>value=None</em>, <em>name=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a variable to be refined.</p>
 <p>par     &#8211;  A Parameter that will be varied during a fit.
 value   &#8211;  An initial value for the variable. If this is None</p>
@@ -2429,17 +2426,17 @@ Raises ValueError if par is constrained.</p>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.FitRecipe.bounds">
-<tt class="descname">bounds</tt><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.bounds" title="Permalink to this definition">¶</a></dt>
+<code class="descname">bounds</code><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.bounds" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.FitRecipe.bounds2">
-<tt class="descname">bounds2</tt><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.bounds2" title="Permalink to this definition">¶</a></dt>
+<code class="descname">bounds2</code><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.bounds2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.boundsToRestraints">
-<tt class="descname">boundsToRestraints</tt><big>(</big><em>sig=1</em>, <em>scaled=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.boundsToRestraints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">boundsToRestraints</code><span class="sig-paren">(</span><em>sig=1</em>, <em>scaled=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.boundsToRestraints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn all bounded parameters into restraints.</p>
 <p>The bounds become limits on the restraint.</p>
 <dl class="docutils">
@@ -2451,13 +2448,13 @@ Raises ValueError if par is constrained.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.clearFitHooks">
-<tt class="descname">clearFitHooks</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.clearFitHooks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clearFitHooks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.clearFitHooks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear the FitHook sequence.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.constrain">
-<tt class="descname">constrain</tt><big>(</big><em>par</em>, <em>con</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.constrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">constrain</code><span class="sig-paren">(</span><em>par</em>, <em>con</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.constrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constrain a parameter to an equation.</p>
 <p>Note that only one constraint can exist on a Parameter at a time.</p>
 <p>This is overloaded to set the value of con if it represents a variable
@@ -2483,7 +2480,7 @@ Raises ValueError if par is marked as constant.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.delVar">
-<tt class="descname">delVar</tt><big>(</big><em>var</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.delVar" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delVar</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.delVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a variable.</p>
 <p>Note that constraints and restraints involving the variable are not
 modified.</p>
@@ -2493,7 +2490,7 @@ modified.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.fix">
-<tt class="descname">fix</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.fix" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fix</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.fix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix a parameter by reference, name or tag.</p>
 <p>A fixed variable is not refined.  Variables are free by default.</p>
 <p>This method accepts string or variable arguments. An argument of &#8220;all&#8221;
@@ -2505,19 +2502,19 @@ a tag is passed in a keyword.</p>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.FitRecipe.fixednames">
-<tt class="descname">fixednames</tt><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.fixednames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixednames</code><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.fixednames" title="Permalink to this definition">¶</a></dt>
 <dd><p>names of the fixed refinable variables</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.FitRecipe.fixedvalues">
-<tt class="descname">fixedvalues</tt><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.fixedvalues" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixedvalues</code><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.fixedvalues" title="Permalink to this definition">¶</a></dt>
 <dd><p>values of the fixed refinable variables</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.free">
-<tt class="descname">free</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.free" title="Permalink to this definition">¶</a></dt>
+<code class="descname">free</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.free" title="Permalink to this definition">¶</a></dt>
 <dd><p>Free a parameter by reference, name or tag.</p>
 <p>A free variable is refined.  Variables are free by default. Constrained
 variables are not free.</p>
@@ -2530,7 +2527,7 @@ a tag is passed in a keyword.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.getBounds">
-<tt class="descname">getBounds</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getBounds" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getBounds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getBounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the bounds on variables in a list.</p>
 <p>Returns a list of (lb, ub) pairs, where lb is the lower bound and ub is
 the upper bound.</p>
@@ -2538,38 +2535,38 @@ the upper bound.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.getBounds2">
-<tt class="descname">getBounds2</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getBounds2" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getBounds2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getBounds2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the bounds on variables in two lists.</p>
 <p>Returns lower- and upper-bound lists of variable bounds.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.getFitHooks">
-<tt class="descname">getFitHooks</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getFitHooks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getFitHooks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getFitHooks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the sequence of FitHook instances.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.getNames">
-<tt class="descname">getNames</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getNames" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getNames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the names of the variables in a list.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.getValues">
-<tt class="descname">getValues</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getValues" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getValues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.getValues" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the current values of the variables in a list.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.isFree">
-<tt class="descname">isFree</tt><big>(</big><em>var</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.isFree" title="Permalink to this definition">¶</a></dt>
+<code class="descname">isFree</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.isFree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if a variable is fixed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.newVar">
-<tt class="descname">newVar</tt><big>(</big><em>name</em>, <em>value=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.newVar" title="Permalink to this definition">¶</a></dt>
+<code class="descname">newVar</code><span class="sig-paren">(</span><em>name</em>, <em>value=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.newVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new variable of the fit.</p>
 <p>This method lets new variables be created that are not tied to a
 Parameter.  Orphan variables may cause a fit to fail, depending on the
@@ -2595,7 +2592,7 @@ automatically tagged with its name and &#8220;all&#8221;.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.popFitHook">
-<tt class="descname">popFitHook</tt><big>(</big><em>fithook=None</em>, <em>index=-1</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.popFitHook" title="Permalink to this definition">¶</a></dt>
+<code class="descname">popFitHook</code><span class="sig-paren">(</span><em>fithook=None</em>, <em>index=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.popFitHook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a FitHook by index or reference.</p>
 <dl class="docutils">
 <dt>fithook &#8211;  FitHook instance to remove from the sequence. If this is</dt>
@@ -2609,7 +2606,7 @@ Raises IndexError if the sequence is empty or index is out of range.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.pushFitHook">
-<tt class="descname">pushFitHook</tt><big>(</big><em>fithook</em>, <em>index=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.pushFitHook" title="Permalink to this definition">¶</a></dt>
+<code class="descname">pushFitHook</code><span class="sig-paren">(</span><em>fithook</em>, <em>index=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.pushFitHook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a FitHook to be called within the residual method.</p>
 <p>The hook is an object for reporting updates, or more fundamentally,
 passing information out of the system during a refinement. See the
@@ -2623,14 +2620,14 @@ index   &#8211;  Index for inserting fithook into the list of fit hooks.  If</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.removeParameterSet">
-<tt class="descname">removeParameterSet</tt><big>(</big><em>parset</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.removeParameterSet" title="Permalink to this definition">¶</a></dt>
+<code class="descname">removeParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.removeParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a ParameterSet from the hierarchy.</p>
 <p>Raises ValueError if parset is not managed by this object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.residual">
-<tt class="descname">residual</tt><big>(</big><em>p=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.residual" title="Permalink to this definition">¶</a></dt>
+<code class="descname">residual</code><span class="sig-paren">(</span><em>p=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.residual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the vector residual to be optimized.</p>
 <p>Arguments
 p   &#8211;  The list of current variable values, provided in the same order</p>
@@ -2647,7 +2644,7 @@ dot(chiv, chiv) = chi^2 + restraints.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.scalarResidual">
-<tt class="descname">scalarResidual</tt><big>(</big><em>p=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.scalarResidual" title="Permalink to this definition">¶</a></dt>
+<code class="descname">scalarResidual</code><span class="sig-paren">(</span><em>p=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.scalarResidual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the scalar residual to be optimized.</p>
 <p>Arguments
 p   &#8211;  The list of current variable values, provided in the same order</p>
@@ -2664,13 +2661,13 @@ dot(chiv, chiv) = chi^2 + restraints.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.setWeight">
-<tt class="descname">setWeight</tt><big>(</big><em>con</em>, <em>weight</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.setWeight" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setWeight</code><span class="sig-paren">(</span><em>con</em>, <em>weight</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.setWeight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the weight of a FitContribution.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.unconstrain">
-<tt class="descname">unconstrain</tt><big>(</big><em>*pars</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.unconstrain" title="Permalink to this definition">¶</a></dt>
+<code class="descname">unconstrain</code><span class="sig-paren">(</span><em>*pars</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.unconstrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unconstrain a Parameter.</p>
 <p>This removes any constraints on a Parameter. If the Parameter is also a
 variable of the recipe, it will be freed as well.</p>
@@ -2682,13 +2679,13 @@ variable of the recipe, it will be freed as well.</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitResults">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">FitResults</tt><big>(</big><em>recipe</em>, <em>update=True</em>, <em>showfixed=True</em>, <em>showcon=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitResults</code><span class="sig-paren">(</span><em>recipe</em>, <em>update=True</em>, <em>showfixed=True</em>, <em>showcon=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class for processing, presenting and storing results of a fit.</p>
 <p>Attributes
 recipe      &#8211;  The recipe containing the results.
 cov         &#8211;  The covariance matrix from the recipe.
-conresults  &#8211;  A dictionary of ContributionResults for each</p>
+conresults  &#8211;  An ordered dictionary of ContributionResults for each</p>
 <blockquote>
 <div>FitContribution, indexed by the FitContribution name.</div></blockquote>
 <dl class="docutils">
@@ -2708,8 +2705,10 @@ conunc      &#8211;  Uncertainties in the constraint values.
 residual    &#8211;  The scalar residual of the recipe.
 penalty     &#8211;  The penalty to residual from the restraints.
 chi2        &#8211;  The chi2 of the recipe.
+cumchi2     &#8211;  The cumulative chi2 of the recipe.
 rchi2       &#8211;  The reduced chi2 of the recipe.
 rw          &#8211;  The Rw of the recipe.
+cumrw       &#8211;  The cumulative Rw of the recipe.
 messages    &#8211;  A list of messages about the results.
 precision   &#8211;  The precision of numeric output (default 8).
 _dcon       &#8211;  The derivatives of the constraint equations with respect to</p>
@@ -2719,7 +2718,7 @@ _dcon       &#8211;  The derivatives of the constraint equations with respect to
 the update method is called.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitResults.formatResults">
-<tt class="descname">formatResults</tt><big>(</big><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.formatResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">formatResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.formatResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format the results and return them in a string.</p>
 <p>This function is called by printResults and saveResults. Overloading
 the formatting here will change all three functions.</p>
@@ -2731,7 +2730,7 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitResults.printResults">
-<tt class="descname">printResults</tt><big>(</big><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.printResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">printResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.printResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and print the results.</p>
 <p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
 footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)
@@ -2740,7 +2739,7 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitResults.saveResults">
-<tt class="descname">saveResults</tt><big>(</big><em>filename</em>, <em>header=''</em>, <em>footer=''</em>, <em>update=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.saveResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">saveResults</code><span class="sig-paren">(</span><em>filename</em>, <em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.saveResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and save the results.</p>
 <p>filename -  Name of the save file.
 header  &#8211;  A header to add to the output (default &#8220;&#8221;)
@@ -2750,7 +2749,7 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitResults.update">
-<tt class="descname">update</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the results according to the current state of the recipe.</p>
 </dd></dl>
 
@@ -2758,7 +2757,7 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.fitbase.initializeRecipe">
-<tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">initializeRecipe</tt><big>(</big><em>recipe</em>, <em>results</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.initializeRecipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">initializeRecipe</code><span class="sig-paren">(</span><em>recipe</em>, <em>results</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.initializeRecipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the variables of a recipe from a results file.</p>
 <p>This reads the results from file and initializes any variables (fixed or
 free) in the recipe to the results values. Note that the recipe has to be
@@ -2771,12 +2770,12 @@ results &#8211;  An open file-like object, name of a file that contains</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.PlotFitHook">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">PlotFitHook</tt><a class="headerlink" href="#diffpy.srfit.fitbase.PlotFitHook" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fithook.FitHook" title="diffpy.srfit.fitbase.fithook.FitHook"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fithook.FitHook</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">PlotFitHook</code><a class="headerlink" href="#diffpy.srfit.fitbase.PlotFitHook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fithook.FitHook" title="diffpy.srfit.fitbase.fithook.FitHook"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fithook.FitHook</span></code></a></p>
 <p>This FitHook has live plotting of whatever is being refined.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.PlotFitHook.postcall">
-<tt class="descname">postcall</tt><big>(</big><em>recipe</em>, <em>chiv</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.PlotFitHook.postcall" title="Permalink to this definition">¶</a></dt>
+<code class="descname">postcall</code><span class="sig-paren">(</span><em>recipe</em>, <em>chiv</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.PlotFitHook.postcall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, after the calculation.</p>
 <p>Find data and plot it.</p>
 <p>recipe  &#8211;  The FitRecipe instance
@@ -2785,7 +2784,7 @@ chiv    &#8211;  The residual vector</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.PlotFitHook.reset">
-<tt class="descname">reset</tt><big>(</big><em>recipe</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.PlotFitHook.reset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset</code><span class="sig-paren">(</span><em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.PlotFitHook.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up the plot.</p>
 </dd></dl>
 
@@ -2793,8 +2792,8 @@ chiv    &#8211;  The residual vector</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.Profile">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">Profile</tt><a class="headerlink" href="#diffpy.srfit.fitbase.Profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">Profile</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Observed and calculated profile container.</p>
 <p>Profile is an Observable. The xpar, ypar and dypar attributes are observed
 by the Profile, which can in turn be observed by some other object.</p>
@@ -2833,24 +2832,24 @@ constrained to.</div></blockquote>
 </dl>
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.Profile.dy">
-<tt class="descname">dy</tt><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.dy" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dy</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.dy" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.Profile.dyobs">
-<tt class="descname">dyobs</tt><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.dyobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dyobs</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.dyobs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Profile.loadParsedData">
-<tt class="descname">loadParsedData</tt><big>(</big><em>parser</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.loadParsedData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadParsedData</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.loadParsedData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load parsed data from a ProfileParser.</p>
 <p>This sets the xobs, yobs, dyobs arrays as well as the metadata.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Profile.loadtxt">
-<tt class="descname">loadtxt</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.loadtxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadtxt</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.loadtxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use numpy.loadtxt to load data.</p>
 <p>Arguments are passed to numpy.loadtxt.
 unpack = True is enforced.
@@ -2864,14 +2863,14 @@ arrays.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Profile.savetxt">
-<tt class="descname">savetxt</tt><big>(</big><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.savetxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.savetxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call numpy.savetxt with x, ycalc, y, dy</p>
 <p>Arguments are passed to numpy.savetxt.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Profile.setCalculationPoints">
-<tt class="descname">setCalculationPoints</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationPoints</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation points.</p>
 <p>Arguments
 x   &#8211;  A non-empty numpy array containing the calculation points. If</p>
@@ -2883,7 +2882,7 @@ dyobs exist.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Profile.setCalculationRange">
-<tt class="descname">setCalculationRange</tt><big>(</big><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setCalculationRange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation range</p>
 <p>Arguments
 xmin    &#8211;  The minimum value of the independent variable.</p>
@@ -2908,7 +2907,7 @@ raises ValueError if dx &lt;= 0</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Profile.setObservedProfile">
-<tt class="descname">setObservedProfile</tt><big>(</big><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>Arguments
 xobs    &#8211;  Numpy array of the independent variable
@@ -2923,35 +2922,35 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.Profile.x">
-<tt class="descname">x</tt><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.x" title="Permalink to this definition">¶</a></dt>
+<code class="descname">x</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.x" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.Profile.xobs">
-<tt class="descname">xobs</tt><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.xobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">xobs</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.xobs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.Profile.y">
-<tt class="descname">y</tt><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.y" title="Permalink to this definition">¶</a></dt>
+<code class="descname">y</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.y" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.Profile.ycalc">
-<tt class="descname">ycalc</tt><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.ycalc" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ycalc</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.ycalc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.Profile.yobs">
-<tt class="descname">yobs</tt><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.yobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">yobs</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.yobs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.ProfileGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">ProfileGenerator</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></tt></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">ProfileGenerator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>Base class for profile generators.</p>
 <p>A ProfileGenerator organizes Parameters and has a __call__ method that can
 generate a profile. ProfileGenerator is also an Operator
@@ -2996,7 +2995,7 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.ProfileGenerator.operation">
-<tt class="descname">operation</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.operation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the profile.</p>
 <p>This calls __call__ and passes in profile.x. It also stores the output
 in profile.ycalc. The calculated value is then returned.</p>
@@ -3004,7 +3003,7 @@ in profile.ycalc. The calculated value is then returned.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.ProfileGenerator.processMetaData">
-<tt class="descname">processMetaData</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.processMetaData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">processMetaData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.processMetaData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the metadata.</p>
 <p>This can be used to configure a ProfileGenerator upon a change in the
 metadata. This method gets called whenever the Profile is set.</p>
@@ -3012,7 +3011,7 @@ metadata. This method gets called whenever the Profile is set.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.ProfileGenerator.setProfile">
-<tt class="descname">setProfile</tt><big>(</big><em>profile</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.setProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setProfile</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.setProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign the profile.</p>
 <dl class="docutils">
 <dt>profile &#8211;  A Profile that specifies the calculation points and which</dt>
@@ -3024,8 +3023,8 @@ metadata. This method gets called whenever the Profile is set.</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.fitbase.</tt><tt class="descname">SimpleRecipe</tt><big>(</big><em>name='fit'</em>, <em>conclass=&lt;class 'diffpy.srfit.fitbase.fitcontribution.FitContribution'&gt;</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">SimpleRecipe</code><span class="sig-paren">(</span><em>name='fit'</em>, <em>conclass=&lt;class 'diffpy.srfit.fitbase.fitcontribution.FitContribution'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></code></a></p>
 <p>SimpleRecipe class.</p>
 <p>This is a FitRecipe with a built-in Profile (the &#8216;profile&#8217; attribute) and
 FitContribution (the &#8216;contribution&#8217; attribute). Unique methods from each of
@@ -3076,14 +3075,14 @@ names           &#8211;  Variable names (read only). See getNames.
 values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.loadParsedData">
-<tt class="descname">loadParsedData</tt><big>(</big><em>parser</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.loadParsedData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadParsedData</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.loadParsedData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load parsed data from a ProfileParser.</p>
 <p>This sets the xobs, yobs, dyobs arrays as well as the metadata.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.loadtxt">
-<tt class="descname">loadtxt</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.loadtxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadtxt</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.loadtxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use numpy.loadtxt to load data.</p>
 <p>Arguments are passed to numpy.loadtxt.
 unpack = True is enforced.
@@ -3097,7 +3096,7 @@ arrays.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.printResults">
-<tt class="descname">printResults</tt><big>(</big><em>header=''</em>, <em>footer=''</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.printResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">printResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.printResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and print the results.</p>
 <p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
 footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
@@ -3105,7 +3104,7 @@ footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.saveResults">
-<tt class="descname">saveResults</tt><big>(</big><em>filename</em>, <em>header=''</em>, <em>footer=''</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.saveResults" title="Permalink to this definition">¶</a></dt>
+<code class="descname">saveResults</code><span class="sig-paren">(</span><em>filename</em>, <em>header=''</em>, <em>footer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.saveResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and save the results.</p>
 <p>filename -  Name of the save file.
 header  &#8211;  A header to add to the output (default &#8220;&#8221;)
@@ -3114,7 +3113,7 @@ footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.setCalculationPoints">
-<tt class="descname">setCalculationPoints</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationPoints</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation points.</p>
 <p>Arguments
 x   &#8211;  A non-empty numpy array containing the calculation points. If</p>
@@ -3126,7 +3125,7 @@ dyobs exist.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.setCalculationRange">
-<tt class="descname">setCalculationRange</tt><big>(</big><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setCalculationRange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation range</p>
 <p>Arguments
 xmin    &#8211;  The minimum value of the independent variable.</p>
@@ -3151,7 +3150,7 @@ raises ValueError if dx &lt;= 0</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.setEquation">
-<tt class="descname">setEquation</tt><big>(</big><em>eqstr</em>, <em>ns={}</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setEquation</code><span class="sig-paren">(</span><em>eqstr</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the profile equation for the FitContribution.</p>
 <p>This sets the equation that will be used when generating the residual.
 The equation will be usable within setResidualEquation as &#8220;eq&#8221;, and it
@@ -3169,7 +3168,7 @@ variable.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.setObservedProfile">
-<tt class="descname">setObservedProfile</tt><big>(</big><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setObservedProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>Arguments
 xobs    &#8211;  Numpy array of the independent variable
@@ -3191,7 +3190,7 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -3224,12 +3223,14 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="diffpy.srfit.interface.html"
                         title="next chapter">diffpy.srfit.interface package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/diffpy.srfit.fitbase.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/diffpy.srfit.fitbase.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -3246,7 +3247,7 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -3261,13 +3262,13 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
         <li class="right" >
           <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

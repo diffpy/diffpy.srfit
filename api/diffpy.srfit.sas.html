@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>diffpy.srfit.sas package &mdash; SrFit 1.0b4-2 documentation</title>
+    <title>diffpy.srfit.sas package &mdash; SrFit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b4-2',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b4-2 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
     <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.structure package" href="diffpy.srfit.structure.html" />
     <link rel="prev" title="diffpy.srfit.pdf package" href="diffpy.srfit.pdf.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,15 +45,15 @@
         <li class="right" >
           <a href="diffpy.srfit.pdf.html" title="diffpy.srfit.pdf package"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="diffpy-srfit-sas-package">
 <h1>diffpy.srfit.sas package<a class="headerlink" href="#diffpy-srfit-sas-package" title="Permalink to this headline">¶</a></h1>
@@ -63,14 +63,14 @@
 <div class="section" id="module-diffpy.srfit.sas.prcalculator">
 <span id="diffpy-srfit-sas-prcalculator-module"></span><h2>diffpy.srfit.sas.prcalculator module<a class="headerlink" href="#module-diffpy.srfit.sas.prcalculator" title="Permalink to this headline">¶</a></h2>
 <p>Nanoparticle form factor P(r) calculator.</p>
-<p>The PrCalculator class wraps a sans.pr.invertor.Invertor object as a
+<p>The PrCalculator class wraps a sas.pr.invertor.Invertor object as a
 Calculator. This is not wrapped as a ProfileGenerator because it will be used
 to share information between SAS I(Q) to PDF G(r), but it does not use the same
 profile as the PDF, which is where the calculator will be applied.</p>
 <dl class="class">
 <dt id="diffpy.srfit.sas.prcalculator.PrCalculator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.prcalculator.</tt><tt class="descname">PrCalculator</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.prcalculator.PrCalculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.calculator.Calculator" title="diffpy.srfit.fitbase.calculator.Calculator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.calculator.Calculator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.prcalculator.</code><code class="descname">PrCalculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.prcalculator.PrCalculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.calculator.Calculator" title="diffpy.srfit.fitbase.calculator.Calculator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.calculator.Calculator</span></code></a></p>
 <p>A class for calculating P(r) from data.</p>
 <p>This is provided so that SAS data can be used to calculate a nanoparticle
 form factor (characteristic function) for nanoparticle PDF refinements. For
@@ -80,7 +80,7 @@ where f(r) is the nanoparticle form factor.
 This is obtained from P(r) as
 P(r) = 4 pi r**2 f(r).</p>
 <p>Attributes:
-_invertor   &#8211;  sans.pr.invertor.Invertor object. This object is internal,</p>
+_invertor   &#8211;  sas.pr.invertor.Invertor object. This object is internal,</p>
 <blockquote>
 <div>but can be configured by the user after initialization.
 Note that the &#8216;x&#8217;, &#8216;y&#8217; and &#8216;err&#8217; attributes get overwritten
@@ -94,14 +94,14 @@ diq         &#8211;  The uncertainty in I(q)</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.sas.prcalculator.CFCalculator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.prcalculator.</tt><tt class="descname">CFCalculator</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.prcalculator.CFCalculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.sas.prcalculator.PrCalculator" title="diffpy.srfit.sas.prcalculator.PrCalculator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.sas.prcalculator.PrCalculator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.prcalculator.</code><code class="descname">CFCalculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.prcalculator.CFCalculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.sas.prcalculator.PrCalculator" title="diffpy.srfit.sas.prcalculator.PrCalculator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.sas.prcalculator.PrCalculator</span></code></a></p>
 <p>A class for calculating the characteristic function (CF) from data.</p>
 <p>This calculator produces
 f(r) = P(r) / 4 pi r**2
 which is the nanoparticle form factor scaled by density.</p>
 <p>Attributes:
-_invertor   &#8211;  sans.pr.invertor.Invertor object. This object is internal,</p>
+_invertor   &#8211;  sas.pr.invertor.Invertor object. This object is internal,</p>
 <blockquote>
 <div>but can be configured by the user after initialization.
 Note that the &#8216;x&#8217;, &#8216;y&#8217; and &#8216;err&#8217; attributes get overwritten
@@ -117,12 +117,12 @@ diq         &#8211;  The uncertainty in I(q)</p>
 <div class="section" id="module-diffpy.srfit.sas.sasgenerator">
 <span id="diffpy-srfit-sas-sasgenerator-module"></span><h2>diffpy.srfit.sas.sasgenerator module<a class="headerlink" href="#module-diffpy.srfit.sas.sasgenerator" title="Permalink to this headline">¶</a></h2>
 <p>SAS profile generator.</p>
-<p>The SASGenerator class wraps a sans.models.BaseModel object as a
+<p>The SASGenerator class wraps a sas.models.BaseModel object as a
 ProfileGenerator.</p>
 <dl class="class">
 <dt id="diffpy.srfit.sas.sasgenerator.SASGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.sasgenerator.</tt><tt class="descname">SASGenerator</tt><big>(</big><em>name</em>, <em>model</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.sasgenerator.SASGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.sasgenerator.</code><code class="descname">SASGenerator</code><span class="sig-paren">(</span><em>name</em>, <em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasgenerator.SASGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></code></a></p>
 <p>A class for calculating I(Q) from a scattering type.</p>
 <p>Attributes:
 _model      &#8211;  BaseModel object this adapts.</p>
@@ -138,13 +138,13 @@ dispersion.</p>
 <div class="section" id="module-diffpy.srfit.sas.sasparameter">
 <span id="diffpy-srfit-sas-sasparameter-module"></span><h2>diffpy.srfit.sas.sasparameter module<a class="headerlink" href="#module-diffpy.srfit.sas.sasparameter" title="Permalink to this headline">¶</a></h2>
 <p>SAS profile generator.</p>
-<p>The SASGenerator class wraps a sans.models.BaseModel object as a
+<p>The SASGenerator class wraps a sas.models.BaseModel object as a
 ProfileGenerator.</p>
 <dl class="class">
 <dt id="diffpy.srfit.sas.sasparameter.SASParameter">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.sasparameter.</tt><tt class="descname">SASParameter</tt><big>(</big><em>name</em>, <em>model</em>, <em>parname=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></tt></a></p>
-<p>Class adapting a sansmodel parameter to srfit Parameter.</p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.sasparameter.</code><code class="descname">SASParameter</code><span class="sig-paren">(</span><em>name</em>, <em>model</em>, <em>parname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></code></a></p>
+<p>Class adapting a sasmodel parameter to srfit Parameter.</p>
 <p>Attributes
 name    &#8211;  A name for this Parameter.
 const   &#8211;  A flag indicating whether this is considered a constant.
@@ -162,13 +162,13 @@ bounds are unrelated to restraints on a Parameter.</dd>
 _parname    &#8211;  The name of the underlying BaseModel parameter.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.sasparameter.SASParameter.getValue">
-<tt class="descname">getValue</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter.getValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter.getValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the value of the Parameter.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.sas.sasparameter.SASParameter.setValue">
-<tt class="descname">setValue</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter.setValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter.</p>
 </dd></dl>
 
@@ -181,8 +181,8 @@ _parname    &#8211;  The name of the underlying BaseModel parameter.</p>
 <p>SASParser uses the sas DataLoader class to load data.</p>
 <dl class="class">
 <dt id="diffpy.srfit.sas.sasparser.SASParser">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.sasparser.</tt><tt class="descname">SASParser</tt><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.sasparser.</code><code class="descname">SASParser</code><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
 <p>Class for parsing a sas profile.</p>
 <p>This uses a sas DataLoader to load the data. The DataInfo object it returns
 is held in the metadata under the name &#8220;datainfo&#8221;.</p>
@@ -224,7 +224,7 @@ bank        &#8211;  The chosen bank number.</p>
 <p>datainfo    &#8211;  The DataInfo object used to do the data parsing.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.sasparser.SASParser.parseFile">
-<tt class="descname">parseFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser.parseFile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parseFile</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser.parseFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a file and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
@@ -235,7 +235,7 @@ Raises ParseError if the file cannot be parsed</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.sas.sasparser.SASParser.parseString">
-<tt class="descname">parseString</tt><big>(</big><em>patstring</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser.parseString" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parseString</code><span class="sig-paren">(</span><em>patstring</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser.parseString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a string and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to 0.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
@@ -249,13 +249,13 @@ patstring   &#8211;  A string containing the pattern</p>
 </div>
 <div class="section" id="module-diffpy.srfit.sas.sasprofile">
 <span id="diffpy-srfit-sas-sasprofile-module"></span><h2>diffpy.srfit.sas.sasprofile module<a class="headerlink" href="#module-diffpy.srfit.sas.sasprofile" title="Permalink to this headline">¶</a></h2>
-<p>Class for adapting a sans DataInfo objects to the Profile interface.</p>
+<p>Class for adapting a sas DataInfo objects to the Profile interface.</p>
 <dl class="class">
 <dt id="diffpy.srfit.sas.sasprofile.SASProfile">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.sasprofile.</tt><tt class="descname">SASProfile</tt><big>(</big><em>datainfo</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.sasprofile.SASProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile" title="diffpy.srfit.fitbase.profile.Profile"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profile.Profile</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.sasprofile.</code><code class="descname">SASProfile</code><span class="sig-paren">(</span><em>datainfo</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasprofile.SASProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile" title="diffpy.srfit.fitbase.profile.Profile"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profile.Profile</span></code></a></p>
 <p>Observed and calculated profile container for SAS data.</p>
-<p>This wraps a sans DataInfo object as a Profile object. Use this when you
+<p>This wraps a sas DataInfo object as a Profile object. Use this when you
 want to use and manipulate a DataProfile before using it with SrFit.
 Otherwise, use the SASParser class and load the data into a base Profile
 object.</p>
@@ -290,7 +290,7 @@ meta    &#8211;  A dictionary of metadata. This is only set if provided by a</p>
 <p>_datainfo   &#8211;  The DataInfo object this wraps.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.sasprofile.SASProfile.setObservedProfile">
-<tt class="descname">setObservedProfile</tt><big>(</big><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.sasprofile.SASProfile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasprofile.SASProfile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>This is overloaded to change the value within the datainfo object.</p>
 <p>Arguments
@@ -312,8 +312,8 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 <p>SAS calculation tools.</p>
 <dl class="class">
 <dt id="diffpy.srfit.sas.SASGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.</tt><tt class="descname">SASGenerator</tt><big>(</big><em>name</em>, <em>model</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.SASGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.</code><code class="descname">SASGenerator</code><span class="sig-paren">(</span><em>name</em>, <em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.SASGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></code></a></p>
 <p>A class for calculating I(Q) from a scattering type.</p>
 <p>Attributes:
 _model      &#8211;  BaseModel object this adapts.</p>
@@ -327,8 +327,8 @@ dispersion.</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.sas.SASParser">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.</tt><tt class="descname">SASParser</tt><a class="headerlink" href="#diffpy.srfit.sas.SASParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.</code><code class="descname">SASParser</code><a class="headerlink" href="#diffpy.srfit.sas.SASParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
 <p>Class for parsing a sas profile.</p>
 <p>This uses a sas DataLoader to load the data. The DataInfo object it returns
 is held in the metadata under the name &#8220;datainfo&#8221;.</p>
@@ -370,7 +370,7 @@ bank        &#8211;  The chosen bank number.</p>
 <p>datainfo    &#8211;  The DataInfo object used to do the data parsing.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.SASParser.parseFile">
-<tt class="descname">parseFile</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.SASParser.parseFile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parseFile</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.SASParser.parseFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a file and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
@@ -381,7 +381,7 @@ Raises ParseError if the file cannot be parsed</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.sas.SASParser.parseString">
-<tt class="descname">parseString</tt><big>(</big><em>patstring</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.SASParser.parseString" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parseString</code><span class="sig-paren">(</span><em>patstring</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.SASParser.parseString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a string and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to 0.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
@@ -394,10 +394,10 @@ patstring   &#8211;  A string containing the pattern</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.sas.SASProfile">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.</tt><tt class="descname">SASProfile</tt><big>(</big><em>datainfo</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.SASProfile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile" title="diffpy.srfit.fitbase.profile.Profile"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profile.Profile</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.</code><code class="descname">SASProfile</code><span class="sig-paren">(</span><em>datainfo</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.SASProfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile" title="diffpy.srfit.fitbase.profile.Profile"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profile.Profile</span></code></a></p>
 <p>Observed and calculated profile container for SAS data.</p>
-<p>This wraps a sans DataInfo object as a Profile object. Use this when you
+<p>This wraps a sas DataInfo object as a Profile object. Use this when you
 want to use and manipulate a DataProfile before using it with SrFit.
 Otherwise, use the SASParser class and load the data into a base Profile
 object.</p>
@@ -432,7 +432,7 @@ meta    &#8211;  A dictionary of metadata. This is only set if provided by a</p>
 <p>_datainfo   &#8211;  The DataInfo object this wraps.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.SASProfile.setObservedProfile">
-<tt class="descname">setObservedProfile</tt><big>(</big><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.SASProfile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.SASProfile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>This is overloaded to change the value within the datainfo object.</p>
 <p>Arguments
@@ -450,8 +450,8 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.sas.PrCalculator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.</tt><tt class="descname">PrCalculator</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.PrCalculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.calculator.Calculator" title="diffpy.srfit.fitbase.calculator.Calculator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.calculator.Calculator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.</code><code class="descname">PrCalculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.PrCalculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.calculator.Calculator" title="diffpy.srfit.fitbase.calculator.Calculator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.calculator.Calculator</span></code></a></p>
 <p>A class for calculating P(r) from data.</p>
 <p>This is provided so that SAS data can be used to calculate a nanoparticle
 form factor (characteristic function) for nanoparticle PDF refinements. For
@@ -461,7 +461,7 @@ where f(r) is the nanoparticle form factor.
 This is obtained from P(r) as
 P(r) = 4 pi r**2 f(r).</p>
 <p>Attributes:
-_invertor   &#8211;  sans.pr.invertor.Invertor object. This object is internal,</p>
+_invertor   &#8211;  sas.pr.invertor.Invertor object. This object is internal,</p>
 <blockquote>
 <div>but can be configured by the user after initialization.
 Note that the &#8216;x&#8217;, &#8216;y&#8217; and &#8216;err&#8217; attributes get overwritten
@@ -475,14 +475,14 @@ diq         &#8211;  The uncertainty in I(q)</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.sas.CFCalculator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.sas.</tt><tt class="descname">CFCalculator</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.sas.CFCalculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.sas.prcalculator.PrCalculator" title="diffpy.srfit.sas.prcalculator.PrCalculator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.sas.prcalculator.PrCalculator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.sas.</code><code class="descname">CFCalculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.CFCalculator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.sas.prcalculator.PrCalculator" title="diffpy.srfit.sas.prcalculator.PrCalculator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.sas.prcalculator.PrCalculator</span></code></a></p>
 <p>A class for calculating the characteristic function (CF) from data.</p>
 <p>This calculator produces
 f(r) = P(r) / 4 pi r**2
 which is the nanoparticle form factor scaled by density.</p>
 <p>Attributes:
-_invertor   &#8211;  sans.pr.invertor.Invertor object. This object is internal,</p>
+_invertor   &#8211;  sas.pr.invertor.Invertor object. This object is internal,</p>
 <blockquote>
 <div>but can be configured by the user after initialization.
 Note that the &#8216;x&#8217;, &#8216;y&#8217; and &#8216;err&#8217; attributes get overwritten
@@ -501,7 +501,7 @@ diq         &#8211;  The uncertainty in I(q)</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -523,12 +523,14 @@ diq         &#8211;  The uncertainty in I(q)</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="diffpy.srfit.structure.html"
                         title="next chapter">diffpy.srfit.structure package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/diffpy.srfit.sas.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/diffpy.srfit.sas.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -545,7 +547,7 @@ diq         &#8211;  The uncertainty in I(q)</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -560,13 +562,13 @@ diq         &#8211;  The uncertainty in I(q)</p>
         <li class="right" >
           <a href="diffpy.srfit.pdf.html" title="diffpy.srfit.pdf package"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

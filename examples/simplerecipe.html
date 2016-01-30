@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>simplerecipe.py &mdash; SrFit 1.0b4-2 documentation</title>
+    <title>simplerecipe.py &mdash; SrFit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b4-2',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b4-2 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
     <link rel="up" title="Examples" href="../examples.html" />
     <link rel="next" title="anneal.py" href="anneal.html" />
     <link rel="prev" title="interface.py" href="interface.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,32 +45,32 @@
         <li class="right" >
           <a href="interface.html" title="interface.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="simplerecipe-py">
 <span id="id1"></span><h1>simplerecipe.py<a class="headerlink" href="#simplerecipe-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
-<span class="c">########################################################################</span>
-<span class="c">#</span>
-<span class="c"># diffpy.srfit      by DANSE Diffraction group</span>
-<span class="c">#                   Simon J. L. Billinge</span>
-<span class="c">#                   (c) 2009 The Trustees of Columbia University</span>
-<span class="c">#                   in the City of New York.  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c"># File coded by:    Chris Farrow</span>
-<span class="c">#</span>
-<span class="c"># See AUTHORS.txt for a list of people who contributed.</span>
-<span class="c"># See LICENSE_DANSE.txt for license information.</span>
-<span class="c">#</span>
-<span class="c">########################################################################</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">########################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">########################################################################</span>
 <span class="sd">&quot;&quot;&quot;Example of simplified fitting .</span>
 
 <span class="sd">This is like gaussianrecipe.py, but it uses the SimpleRecipe, which integrates</span>
@@ -80,42 +80,42 @@
 
 <span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">SimpleRecipe</span>
 
-<span class="c">####### Example Code</span>
+<span class="c1">####### Example Code</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Set up a simple recipe in a few lines.&quot;&quot;&quot;</span>
 
-    <span class="c"># The SimpleRecipe class is a type of FitRecipe. It provides attribute-like</span>
-    <span class="c"># access to variables and a residual function that can be minimized.</span>
+    <span class="c1"># The SimpleRecipe class is a type of FitRecipe. It provides attribute-like</span>
+    <span class="c1"># access to variables and a residual function that can be minimized.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">SimpleRecipe</span><span class="p">()</span>
 
-    <span class="c"># Load text from file.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">&quot;data/gaussian.dat&quot;</span><span class="p">)</span>
+    <span class="c1"># Load text from file.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;data/gaussian.dat&quot;</span><span class="p">)</span>
 
-    <span class="c"># Set the equation. The variable &quot;x&quot; is taken from the data that was just</span>
-    <span class="c"># loaded. The other variables, &quot;A&quot;, &quot;x0&quot; and &quot;sigma&quot; are turned into</span>
-    <span class="c"># attributes with an initial value of 0.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">setEquation</span><span class="p">(</span><span class="s">&quot;A * exp(-0.5*(x-x0)**2/sigma**2)&quot;</span><span class="p">)</span>
+    <span class="c1"># Set the equation. The variable &quot;x&quot; is taken from the data that was just</span>
+    <span class="c1"># loaded. The other variables, &quot;A&quot;, &quot;x0&quot; and &quot;sigma&quot; are turned into</span>
+    <span class="c1"># attributes with an initial value of 0.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">setEquation</span><span class="p">(</span><span class="s2">&quot;A * exp(-0.5*(x-x0)**2/sigma**2)&quot;</span><span class="p">)</span>
 
-    <span class="c"># We can give them other values here.</span>
+    <span class="c1"># We can give them other values here.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">x0</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="mi">1</span>
 
-    <span class="c"># We explicitly optimize the residual method of the SimpleRecipe</span>
+    <span class="c1"># We explicitly optimize the residual method of the SimpleRecipe</span>
     <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">leastsq</span>
     <span class="n">leastsq</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">residual</span><span class="p">,</span> <span class="n">recipe</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
-    <span class="c"># Print the results</span>
+    <span class="c1"># Print the results</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">printResults</span><span class="p">()</span>
 
     <span class="k">return</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 
-<span class="c"># End of file</span>
+<span class="c1"># End of file</span>
 </pre></div>
 </div>
 </div>
@@ -124,7 +124,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="interface.html"
@@ -132,12 +132,14 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="anneal.html"
                         title="next chapter">anneal.py</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/examples/simplerecipe.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/simplerecipe.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -154,7 +156,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -169,13 +171,13 @@
         <li class="right" >
           <a href="interface.html" title="interface.py"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="../examples.html" >Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

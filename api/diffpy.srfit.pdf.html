@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>diffpy.srfit.pdf package &mdash; SrFit 1.0b4-2 documentation</title>
+    <title>diffpy.srfit.pdf package &mdash; SrFit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b4-2',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b4-2 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
     <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.sas package" href="diffpy.srfit.sas.html" />
     <link rel="prev" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,15 +45,15 @@
         <li class="right" >
           <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="diffpy-srfit-pdf-package">
 <h1>diffpy.srfit.pdf package<a class="headerlink" href="#diffpy-srfit-pdf-package" title="Permalink to this headline">¶</a></h1>
@@ -67,8 +67,8 @@
 as a base for the PDFGenerator and DebyePDFGenerator classes.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.basepdfgenerator.</tt><tt class="descname">BasePDFGenerator</tt><big>(</big><em>name='pdf'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.basepdfgenerator.</code><code class="descname">BasePDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></code></a></p>
 <p>Base class for calculating PDF profiles using SrReal.</p>
 <p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
@@ -109,25 +109,25 @@ qbroad  &#8211;  See Managed Parameters.
 qdamp   &#8211;  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getQmax">
-<tt class="descname">getQmax</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getQmax" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getQmax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getQmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the qmax value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getQmin">
-<tt class="descname">getQmin</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getQmin" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getQmin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the qmin value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getScatteringType">
-<tt class="descname">getScatteringType</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getScatteringType" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getScatteringType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the scattering type. See &#8216;setScatteringType&#8217;.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.parallel">
-<tt class="descname">parallel</tt><big>(</big><em>ncpu</em>, <em>mapfunc=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.parallel" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parallel</code><span class="sig-paren">(</span><em>ncpu</em>, <em>mapfunc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.parallel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run calculation in parallel.</p>
 <p>ncpu    &#8211; Number of parallel processes.  Revert to serial mode when 1.
 mapfunc &#8211; A mapping function to use. If this is None (default),</p>
@@ -138,13 +138,13 @@ mapfunc &#8211; A mapping function to use. If this is None (default),</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.processMetaData">
-<tt class="descname">processMetaData</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.processMetaData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">processMetaData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.processMetaData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the metadata once it gets set.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setPhase">
-<tt class="descname">setPhase</tt><big>(</big><em>parset</em>, <em>periodic=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setPhase" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setPhase</code><span class="sig-paren">(</span><em>parset</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setPhase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the phase that will be used to calculate the PDF.</p>
 <p>Set the phase directly with a DiffpyStructureParSet,
 ObjCrystCrystalParSet or ObjCrystMoleculeParSet that adapts a structure
@@ -163,20 +163,20 @@ which case this will be ignored.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setQmax">
-<tt class="descname">setQmax</tt><big>(</big><em>qmax</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setQmax" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setQmax</code><span class="sig-paren">(</span><em>qmax</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setQmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmax value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setQmin">
-<tt class="descname">setQmin</tt><big>(</big><em>qmin</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmin value.</p>
 <p>This has no effect on the crystal PDF.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setScatteringType">
-<tt class="descname">setScatteringType</tt><big>(</big><em>stype='X'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setScatteringType" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setScatteringType</code><span class="sig-paren">(</span><em>stype='X'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the scattering type.</p>
 <dl class="docutils">
 <dt>stype   &#8211;   &#8220;X&#8221; for x-ray, &#8220;N&#8221; for neutron, &#8220;E&#8221; for electrons,</dt>
@@ -188,7 +188,7 @@ ScatteringFactorTable.getRegisteredTypes().</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setStructure">
-<tt class="descname">setStructure</tt><big>(</big><em>stru</em>, <em>name='phase'</em>, <em>periodic=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setStructure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setStructure</code><span class="sig-paren">(</span><em>stru</em>, <em>name='phase'</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setStructure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the structure that will be used to calculate the PDF.</p>
 <p>This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
 ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
@@ -196,7 +196,7 @@ See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
 <dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
-<dd>pyobjcryst.molecule.Molecule instance . Default None.</dd>
+<dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>name    &#8211;  A name to give to the managed ParameterSet that adapts stru</dt>
 <dd>(default &#8220;phase&#8221;).</dd>
 <dt>periodic &#8211; The structure should be treated as periodic (default</dt>
@@ -221,7 +221,7 @@ Gcryst(f) is the crystal PDF.</p>
 the &#8216;registerFunction&#8217; method of that class.</p>
 <dl class="function">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.sphericalCF">
-<tt class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</tt><tt class="descname">sphericalCF</tt><big>(</big><em>r</em>, <em>psize</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.sphericalCF" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">sphericalCF</code><span class="sig-paren">(</span><em>r</em>, <em>psize</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.sphericalCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical nanoparticle characteristic function.</p>
 <p>r       &#8211;  distance of interaction
 psize   &#8211;  The particle diameter</p>
@@ -231,7 +231,7 @@ psize   &#8211;  The particle diameter</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.spheroidalCF">
-<tt class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</tt><tt class="descname">spheroidalCF</tt><big>(</big><em>r</em>, <em>erad</em>, <em>prad</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">spheroidalCF</code><span class="sig-paren">(</span><em>r</em>, <em>erad</em>, <em>prad</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spheroidal characteristic function specified using radii.</p>
 <p>Spheroid with radii (erad, erad, prad)</p>
 <p>prad    &#8211;  polar radius
@@ -243,7 +243,7 @@ erad == prad is a sphere</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.spheroidalCF2">
-<tt class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</tt><tt class="descname">spheroidalCF2</tt><big>(</big><em>r</em>, <em>psize</em>, <em>axrat</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF2" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">spheroidalCF2</code><span class="sig-paren">(</span><em>r</em>, <em>psize</em>, <em>axrat</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spheroidal nanoparticle characteristic function.</p>
 <p>Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)</p>
 <p>r      &#8211;  distance of interaction
@@ -254,7 +254,7 @@ axrat  &#8211;  The ratio of axis lengths</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.lognormalSphericalCF">
-<tt class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</tt><tt class="descname">lognormalSphericalCF</tt><big>(</big><em>r</em>, <em>psize</em>, <em>psig</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.lognormalSphericalCF" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">lognormalSphericalCF</code><span class="sig-paren">(</span><em>r</em>, <em>psize</em>, <em>psig</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.lognormalSphericalCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical nanoparticle characteristic function with lognormal size
 distribution.</p>
 <p>r      &#8211;  distance of interaction
@@ -284,7 +284,7 @@ mu = log(psize) - s^2/2</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.sheetCF">
-<tt class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</tt><tt class="descname">sheetCF</tt><big>(</big><em>r</em>, <em>sthick</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.sheetCF" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">sheetCF</code><span class="sig-paren">(</span><em>r</em>, <em>sthick</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.sheetCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Nanosheet characteristic function.</p>
 <p>r       &#8211;  distance of interaction
 sthick  &#8211;  Thickness of nanosheet</p>
@@ -293,7 +293,7 @@ sthick  &#8211;  Thickness of nanosheet</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.shellCF">
-<tt class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</tt><tt class="descname">shellCF</tt><big>(</big><em>r</em>, <em>radius</em>, <em>thickness</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.shellCF" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">shellCF</code><span class="sig-paren">(</span><em>r</em>, <em>radius</em>, <em>thickness</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.shellCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical shell characteristic function.</p>
 <p>radius      &#8211;  Inner radius
 thickness   &#8211;  Thickness of shell</p>
@@ -303,7 +303,7 @@ thickness   &#8211;  Thickness of shell</p>
 
 <dl class="function">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.shellCF2">
-<tt class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</tt><tt class="descname">shellCF2</tt><big>(</big><em>r</em>, <em>a</em>, <em>delta</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.shellCF2" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">shellCF2</code><span class="sig-paren">(</span><em>r</em>, <em>a</em>, <em>delta</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.shellCF2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical shell characteristic function.</p>
 <p>a       &#8211;  Central radius
 delta   &#8211;  Thickness of shell</p>
@@ -313,10 +313,10 @@ delta   &#8211;  Thickness of shell</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.SASCF">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</tt><tt class="descname">SASCF</tt><big>(</big><em>name</em>, <em>model</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.SASCF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.calculator.Calculator" title="diffpy.srfit.fitbase.calculator.Calculator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.calculator.Calculator</span></tt></a></p>
-<p>Calculator class for characteristic functions from sans-models.</p>
-<p>This class wraps a sans.models.BaseModel to calculate I(Q) related to
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">SASCF</code><span class="sig-paren">(</span><em>name</em>, <em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.SASCF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.calculator.Calculator" title="diffpy.srfit.fitbase.calculator.Calculator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.calculator.Calculator</span></code></a></p>
+<p>Calculator class for characteristic functions from sas-models.</p>
+<p>This class wraps a sas.models.BaseModel to calculate I(Q) related to
 nanoparticle shape. This I(Q) is inverted to f(r) according to:
 f(r) = 1 / (4 pi r) * SINFT(I(Q)),
 where &#8220;SINFT&#8221; represents the sine Fourier transform.</p>
@@ -340,14 +340,14 @@ the PDF from it. This generator is especially appropriate for isolated
 scatterers, such as nanoparticles and molecules.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.debyepdfgenerator.</tt><tt class="descname">DebyePDFGenerator</tt><big>(</big><em>name='pdf'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.debyepdfgenerator.</code><code class="descname">DebyePDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
 <p>A class for calculating the PDF from an isolated scatterer.</p>
 <p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
-_calc   &#8211;  DebyePDFCalculator_ext instance for calculating the PDF
+_calc   &#8211;  DebyePDFCalculator instance for calculating the PDF
 _phase  &#8211;  The structure ParameterSets used to calculate the profile.
 stru    &#8211;  The structure objected adapted by _phase.
 _lastr  &#8211;  The last value of r over which the PDF was calculated. This is</p>
@@ -379,7 +379,7 @@ qbroad  &#8211;  See Managed Parameters.
 qdamp   &#8211;  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator.setPhase">
-<tt class="descname">setPhase</tt><big>(</big><em>parset</em>, <em>periodic=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator.setPhase" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setPhase</code><span class="sig-paren">(</span><em>parset</em>, <em>periodic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator.setPhase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the phase that will be used to calculate the PDF.</p>
 <p>Set the phase directly with a DiffpyStructureParSet,
 ObjCrystCrystalParSet or ObjCrystMoleculeParSet that adapts a structure
@@ -398,7 +398,7 @@ which case this will be ignored.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator.setStructure">
-<tt class="descname">setStructure</tt><big>(</big><em>stru</em>, <em>name='phase'</em>, <em>periodic=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator.setStructure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setStructure</code><span class="sig-paren">(</span><em>stru</em>, <em>name='phase'</em>, <em>periodic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator.setStructure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the structure that will be used to calculate the PDF.</p>
 <p>This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
 ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
@@ -406,7 +406,7 @@ See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
 <dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
-<dd>pyobjcryst.molecule.Molecule instance . Default None.</dd>
+<dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>name    &#8211;  A name to give to the managed ParameterSet that adapts stru</dt>
 <dd>(default &#8220;phase&#8221;).</dd>
 <dt>periodic &#8211; The structure should be treated as periodic (default</dt>
@@ -425,8 +425,8 @@ PDF calculation.</dd>
 <p>This is a custom FitContribution that simplifies the creation of PDF fits.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.pdfcontribution.</tt><tt class="descname">PDFContribution</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="diffpy.srfit.fitbase.fitcontribution.FitContribution"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitcontribution.FitContribution</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.pdfcontribution.</code><code class="descname">PDFContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="diffpy.srfit.fitbase.fitcontribution.FitContribution"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitcontribution.FitContribution</span></code></a></p>
 <p>PDFContribution class.</p>
 <p>PDFContribution is a FitContribution that is customized for PDF fits. Data
 and phases can be added directly to the PDFContribution. Setup of
@@ -467,7 +467,7 @@ qbroad  &#8211;  Resolution peak broadening term
 qdamp   &#8211;  Resolution peak dampening term</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.addPhase">
-<tt class="descname">addPhase</tt><big>(</big><em>name</em>, <em>parset</em>, <em>periodic=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.addPhase" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addPhase</code><span class="sig-paren">(</span><em>name</em>, <em>parset</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.addPhase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a phase that goes into the PDF calculation.</p>
 <dl class="docutils">
 <dt>name    &#8211;  A name to give the generator that will manage the PDF</dt>
@@ -493,7 +493,7 @@ stru.)</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.addStructure">
-<tt class="descname">addStructure</tt><big>(</big><em>name</em>, <em>stru</em>, <em>periodic=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.addStructure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addStructure</code><span class="sig-paren">(</span><em>name</em>, <em>stru</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.addStructure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a phase that goes into the PDF calculation.</p>
 <dl class="docutils">
 <dt>name    &#8211;  A name to give the generator that will manage the PDF</dt>
@@ -504,7 +504,7 @@ contribution.name.phase, where &#8216;contribution&#8217; is this
 contribution and &#8216;name&#8217; is passed name.
 (default), then the name will be set as &#8220;phase&#8221;.</dd>
 <dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
-<dd>pyobjcryst.molecule.Molecule instance . Default None.</dd>
+<dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>periodic &#8211; The structure should be treated as periodic.  If this is</dt>
 <dd>True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
@@ -518,25 +518,25 @@ stru.)</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.getQmax">
-<tt class="descname">getQmax</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.getQmax" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getQmax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.getQmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the qmax value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.getQmin">
-<tt class="descname">getQmin</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.getQmin" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getQmin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.getQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the qmin value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.getScatteringType">
-<tt class="descname">getScatteringType</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.getScatteringType" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getScatteringType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.getScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the scattering type. See &#8216;setScatteringType&#8217;.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.loadData">
-<tt class="descname">loadData</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.loadData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadData</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.loadData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the data in various formats.</p>
 <p>This uses the PDFParser to load the data and then passes it to the
 build-in profile with loadParsedData.</p>
@@ -548,7 +548,7 @@ build-in profile with loadParsedData.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.savetxt">
-<tt class="descname">savetxt</tt><big>(</big><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.savetxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.savetxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call numpy.savetxt with x, ycalc, y, dy</p>
 <p>This calls on the built-in Profile.</p>
 <p>Arguments are passed to numpy.savetxt.</p>
@@ -556,7 +556,7 @@ build-in profile with loadParsedData.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.setCalculationRange">
-<tt class="descname">setCalculationRange</tt><big>(</big><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setCalculationRange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation range</p>
 <p>This calls on the built-in Profile.</p>
 <p>Arguments
@@ -582,20 +582,20 @@ raises ValueError if dx &lt;= 0</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.setQmax">
-<tt class="descname">setQmax</tt><big>(</big><em>qmax</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setQmax" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setQmax</code><span class="sig-paren">(</span><em>qmax</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setQmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmax value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.setQmin">
-<tt class="descname">setQmin</tt><big>(</big><em>qmin</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setQmin" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmin value.</p>
 <p>This has no effect on the crystal PDF.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.setScatteringType">
-<tt class="descname">setScatteringType</tt><big>(</big><em>type='X'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setScatteringType" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setScatteringType</code><span class="sig-paren">(</span><em>type='X'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the scattering type.</p>
 <p>type    &#8211;   &#8220;X&#8221; for x-ray or &#8220;N&#8221; for neutron</p>
 <p>Raises ValueError if type is not &#8220;X&#8221; or &#8220;N&#8221;</p>
@@ -614,8 +614,8 @@ its attributes refinable. See the class definition for more details and the
 examples for its use.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.pdfgenerator.PDFGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.pdfgenerator.</tt><tt class="descname">PDFGenerator</tt><big>(</big><em>name='pdf'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfgenerator.PDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.pdfgenerator.</code><code class="descname">PDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfgenerator.PDFGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
 <p>A class for calculating the PDF from a single crystal structure.</p>
 <p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
@@ -652,7 +652,7 @@ qbroad  &#8211;  See Managed Parameters.
 qdamp   &#8211;  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfgenerator.PDFGenerator.setQmin">
-<tt class="descname">setQmin</tt><big>(</big><em>qmin</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfgenerator.PDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfgenerator.PDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmin value.</p>
 <p>This has no effect on the crystal PDF.</p>
 </dd></dl>
@@ -667,8 +667,8 @@ qdamp   &#8211;  See Managed Parameters.</p>
 <p>See the class documentation for more information.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.pdfparser.PDFParser">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.pdfparser.</tt><tt class="descname">PDFParser</tt><a class="headerlink" href="#diffpy.srfit.pdf.pdfparser.PDFParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.pdfparser.</code><code class="descname">PDFParser</code><a class="headerlink" href="#diffpy.srfit.pdf.pdfparser.PDFParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
 <p>Class for holding a diffraction pattern.</p>
 <p>Attributes</p>
 <dl class="docutils">
@@ -716,7 +716,7 @@ temperature &#8211;  Temperature (float)
 doping      &#8211;  Doping (float)</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfparser.PDFParser.parseString">
-<tt class="descname">parseString</tt><big>(</big><em>patstring</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.pdfparser.PDFParser.parseString" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parseString</code><span class="sig-paren">(</span><em>patstring</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfparser.PDFParser.parseString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a string and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to 0.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
@@ -733,8 +733,8 @@ patstring   &#8211;  A string containing the pattern</p>
 <p>PDF calculation tools.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.PDFGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.</tt><tt class="descname">PDFGenerator</tt><big>(</big><em>name='pdf'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.</code><code class="descname">PDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
 <p>A class for calculating the PDF from a single crystal structure.</p>
 <p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
@@ -771,7 +771,7 @@ qbroad  &#8211;  See Managed Parameters.
 qdamp   &#8211;  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFGenerator.setQmin">
-<tt class="descname">setQmin</tt><big>(</big><em>qmin</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmin value.</p>
 <p>This has no effect on the crystal PDF.</p>
 </dd></dl>
@@ -780,14 +780,14 @@ qdamp   &#8211;  See Managed Parameters.</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.pdf.DebyePDFGenerator">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.</tt><tt class="descname">DebyePDFGenerator</tt><big>(</big><em>name='pdf'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.DebyePDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.</code><code class="descname">DebyePDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.DebyePDFGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
 <p>A class for calculating the PDF from an isolated scatterer.</p>
 <p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
-_calc   &#8211;  DebyePDFCalculator_ext instance for calculating the PDF
+_calc   &#8211;  DebyePDFCalculator instance for calculating the PDF
 _phase  &#8211;  The structure ParameterSets used to calculate the profile.
 stru    &#8211;  The structure objected adapted by _phase.
 _lastr  &#8211;  The last value of r over which the PDF was calculated. This is</p>
@@ -819,7 +819,7 @@ qbroad  &#8211;  See Managed Parameters.
 qdamp   &#8211;  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.DebyePDFGenerator.setPhase">
-<tt class="descname">setPhase</tt><big>(</big><em>parset</em>, <em>periodic=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.DebyePDFGenerator.setPhase" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setPhase</code><span class="sig-paren">(</span><em>parset</em>, <em>periodic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.DebyePDFGenerator.setPhase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the phase that will be used to calculate the PDF.</p>
 <p>Set the phase directly with a DiffpyStructureParSet,
 ObjCrystCrystalParSet or ObjCrystMoleculeParSet that adapts a structure
@@ -838,7 +838,7 @@ which case this will be ignored.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.DebyePDFGenerator.setStructure">
-<tt class="descname">setStructure</tt><big>(</big><em>stru</em>, <em>name='phase'</em>, <em>periodic=False</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.DebyePDFGenerator.setStructure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setStructure</code><span class="sig-paren">(</span><em>stru</em>, <em>name='phase'</em>, <em>periodic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.DebyePDFGenerator.setStructure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the structure that will be used to calculate the PDF.</p>
 <p>This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
 ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
@@ -846,7 +846,7 @@ See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
 <dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
-<dd>pyobjcryst.molecule.Molecule instance . Default None.</dd>
+<dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>name    &#8211;  A name to give to the managed ParameterSet that adapts stru</dt>
 <dd>(default &#8220;phase&#8221;).</dd>
 <dt>periodic &#8211; The structure should be treated as periodic (default</dt>
@@ -860,8 +860,8 @@ PDF calculation.</dd>
 
 <dl class="class">
 <dt id="diffpy.srfit.pdf.PDFContribution">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.</tt><tt class="descname">PDFContribution</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="diffpy.srfit.fitbase.fitcontribution.FitContribution"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitcontribution.FitContribution</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.</code><code class="descname">PDFContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="diffpy.srfit.fitbase.fitcontribution.FitContribution"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitcontribution.FitContribution</span></code></a></p>
 <p>PDFContribution class.</p>
 <p>PDFContribution is a FitContribution that is customized for PDF fits. Data
 and phases can be added directly to the PDFContribution. Setup of
@@ -902,7 +902,7 @@ qbroad  &#8211;  Resolution peak broadening term
 qdamp   &#8211;  Resolution peak dampening term</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.addPhase">
-<tt class="descname">addPhase</tt><big>(</big><em>name</em>, <em>parset</em>, <em>periodic=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.addPhase" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addPhase</code><span class="sig-paren">(</span><em>name</em>, <em>parset</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.addPhase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a phase that goes into the PDF calculation.</p>
 <dl class="docutils">
 <dt>name    &#8211;  A name to give the generator that will manage the PDF</dt>
@@ -928,7 +928,7 @@ stru.)</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.addStructure">
-<tt class="descname">addStructure</tt><big>(</big><em>name</em>, <em>stru</em>, <em>periodic=True</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.addStructure" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addStructure</code><span class="sig-paren">(</span><em>name</em>, <em>stru</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.addStructure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a phase that goes into the PDF calculation.</p>
 <dl class="docutils">
 <dt>name    &#8211;  A name to give the generator that will manage the PDF</dt>
@@ -939,7 +939,7 @@ contribution.name.phase, where &#8216;contribution&#8217; is this
 contribution and &#8216;name&#8217; is passed name.
 (default), then the name will be set as &#8220;phase&#8221;.</dd>
 <dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
-<dd>pyobjcryst.molecule.Molecule instance . Default None.</dd>
+<dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>periodic &#8211; The structure should be treated as periodic.  If this is</dt>
 <dd>True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
@@ -953,25 +953,25 @@ stru.)</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.getQmax">
-<tt class="descname">getQmax</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.getQmax" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getQmax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.getQmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the qmax value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.getQmin">
-<tt class="descname">getQmin</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.getQmin" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getQmin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.getQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the qmin value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.getScatteringType">
-<tt class="descname">getScatteringType</tt><big>(</big><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.getScatteringType" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getScatteringType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.getScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the scattering type. See &#8216;setScatteringType&#8217;.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.loadData">
-<tt class="descname">loadData</tt><big>(</big><em>data</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.loadData" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadData</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.loadData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the data in various formats.</p>
 <p>This uses the PDFParser to load the data and then passes it to the
 build-in profile with loadParsedData.</p>
@@ -983,7 +983,7 @@ build-in profile with loadParsedData.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.savetxt">
-<tt class="descname">savetxt</tt><big>(</big><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.savetxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.savetxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call numpy.savetxt with x, ycalc, y, dy</p>
 <p>This calls on the built-in Profile.</p>
 <p>Arguments are passed to numpy.savetxt.</p>
@@ -991,7 +991,7 @@ build-in profile with loadParsedData.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.setCalculationRange">
-<tt class="descname">setCalculationRange</tt><big>(</big><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setCalculationRange" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation range</p>
 <p>This calls on the built-in Profile.</p>
 <p>Arguments
@@ -1017,20 +1017,20 @@ raises ValueError if dx &lt;= 0</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.setQmax">
-<tt class="descname">setQmax</tt><big>(</big><em>qmax</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setQmax" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setQmax</code><span class="sig-paren">(</span><em>qmax</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setQmax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmax value.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.setQmin">
-<tt class="descname">setQmin</tt><big>(</big><em>qmin</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setQmin" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmin value.</p>
 <p>This has no effect on the crystal PDF.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.setScatteringType">
-<tt class="descname">setScatteringType</tt><big>(</big><em>type='X'</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setScatteringType" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setScatteringType</code><span class="sig-paren">(</span><em>type='X'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the scattering type.</p>
 <p>type    &#8211;   &#8220;X&#8221; for x-ray or &#8220;N&#8221; for neutron</p>
 <p>Raises ValueError if type is not &#8220;X&#8221; or &#8220;N&#8221;</p>
@@ -1040,8 +1040,8 @@ raises ValueError if dx &lt;= 0</p>
 
 <dl class="class">
 <dt id="diffpy.srfit.pdf.PDFParser">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.pdf.</tt><tt class="descname">PDFParser</tt><a class="headerlink" href="#diffpy.srfit.pdf.PDFParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><tt class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.</code><code class="descname">PDFParser</code><a class="headerlink" href="#diffpy.srfit.pdf.PDFParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
 <p>Class for holding a diffraction pattern.</p>
 <p>Attributes</p>
 <dl class="docutils">
@@ -1089,7 +1089,7 @@ temperature &#8211;  Temperature (float)
 doping      &#8211;  Doping (float)</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFParser.parseString">
-<tt class="descname">parseString</tt><big>(</big><em>patstring</em><big>)</big><a class="headerlink" href="#diffpy.srfit.pdf.PDFParser.parseString" title="Permalink to this definition">¶</a></dt>
+<code class="descname">parseString</code><span class="sig-paren">(</span><em>patstring</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFParser.parseString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a string and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to 0.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
@@ -1107,7 +1107,7 @@ patstring   &#8211;  A string containing the pattern</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -1130,12 +1130,14 @@ patstring   &#8211;  A string containing the pattern</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="diffpy.srfit.sas.html"
                         title="next chapter">diffpy.srfit.sas package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/diffpy.srfit.pdf.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/diffpy.srfit.pdf.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -1152,7 +1154,7 @@ patstring   &#8211;  A string containing the pattern</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1167,13 +1169,13 @@ patstring   &#8211;  A string containing the pattern</p>
         <li class="right" >
           <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

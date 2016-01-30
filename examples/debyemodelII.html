@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>debyemodelII.py &mdash; SrFit 1.0b4-2 documentation</title>
+    <title>debyemodelII.py &mdash; SrFit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b4-2',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b4-2 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
     <link rel="up" title="Examples" href="../examples.html" />
     <link rel="next" title="gaussiangenerator.py" href="gaussiangenerator.html" />
     <link rel="prev" title="debyemodel.py" href="debyemodel.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,32 +45,32 @@
         <li class="right" >
           <a href="debyemodel.html" title="debyemodel.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="debyemodelii-py">
 <span id="id1"></span><h1>debyemodelII.py<a class="headerlink" href="#debyemodelii-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
-<span class="c">########################################################################</span>
-<span class="c">#</span>
-<span class="c"># diffpy.srfit      by DANSE Diffraction group</span>
-<span class="c">#                   Simon J. L. Billinge</span>
-<span class="c">#                   (c) 2009 The Trustees of Columbia University</span>
-<span class="c">#                   in the City of New York.  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c"># File coded by:    Chris Farrow</span>
-<span class="c">#</span>
-<span class="c"># See AUTHORS.txt for a list of people who contributed.</span>
-<span class="c"># See LICENSE_DANSE.txt for license information.</span>
-<span class="c">#</span>
-<span class="c">########################################################################</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">########################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">########################################################################</span>
 <span class="sd">&quot;&quot;&quot;Example of fitting the Debye recipe to experimental Debye-Waller factors.</span>
 
 <span class="sd">This is an extension of example in debyemodel.py. The recipe we create will</span>
@@ -97,7 +97,7 @@
 
 <span class="kn">from</span> <span class="nn">debyemodel</span> <span class="kn">import</span> <span class="n">makeRecipe</span><span class="p">,</span> <span class="n">scipyOptimize</span>
 
-<span class="c">####### Example Code</span>
+<span class="c1">####### Example Code</span>
 
 <span class="k">def</span> <span class="nf">makeRecipeII</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Make a recipe for fitting low and high temperature regions.</span>
@@ -112,74 +112,74 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c"># We&#39;ll throw these away. We just want the FitContributions that are</span>
-    <span class="c"># configured within the recipes.</span>
+    <span class="c1"># We&#39;ll throw these away. We just want the FitContributions that are</span>
+    <span class="c1"># configured within the recipes.</span>
     <span class="n">m1</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">()</span>
     <span class="n">m2</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">()</span>
-    <span class="c"># These are the FitContributions (we named them &quot;pb&quot; in the debyemodel</span>
-    <span class="c"># example).</span>
+    <span class="c1"># These are the FitContributions (we named them &quot;pb&quot; in the debyemodel</span>
+    <span class="c1"># example).</span>
     <span class="n">lowT</span> <span class="o">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">pb</span>
     <span class="n">highT</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">pb</span>
-    <span class="c"># Let&#39;s rename the FitContributions to something more meaningful for this</span>
-    <span class="c"># example.</span>
-    <span class="n">lowT</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;lowT&quot;</span>
-    <span class="n">highT</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;highT&quot;</span>
+    <span class="c1"># Let&#39;s rename the FitContributions to something more meaningful for this</span>
+    <span class="c1"># example.</span>
+    <span class="n">lowT</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;lowT&quot;</span>
+    <span class="n">highT</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;highT&quot;</span>
 
-    <span class="c"># Now create a fresh FitRecipe to work with and add to it the two</span>
-    <span class="c"># FitContributions.</span>
+    <span class="c1"># Now create a fresh FitRecipe to work with and add to it the two</span>
+    <span class="c1"># FitContributions.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">lowT</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">highT</span><span class="p">)</span>
 
-    <span class="c"># Change the fit ranges of the Profiles embedded within the</span>
-    <span class="c"># FitContributions. We want to fit one of the contributions at low</span>
-    <span class="c"># temperature, and one at high.</span>
+    <span class="c1"># Change the fit ranges of the Profiles embedded within the</span>
+    <span class="c1"># FitContributions. We want to fit one of the contributions at low</span>
+    <span class="c1"># temperature, and one at high.</span>
     <span class="n">lowT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
     <span class="n">highT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
 
-    <span class="c"># Vary the offset from each FitContribution separately, while keeping the</span>
-    <span class="c"># Debye temperatures the same. We give each offset variable a different</span>
-    <span class="c"># name in the recipe so it retains its identity.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;lowToffset&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;highToffset&quot;</span><span class="p">)</span>
-    <span class="c"># We create a new Variable and use the recipe&#39;s &quot;constrain&quot; method to</span>
-    <span class="c"># associate the Debye temperature parameters with that variable.</span>
-    <span class="n">par</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="s">&quot;thetaD&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="s">&quot;thetaD&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="s">&quot;thetaD&quot;</span><span class="p">)</span>
+    <span class="c1"># Vary the offset from each FitContribution separately, while keeping the</span>
+    <span class="c1"># Debye temperatures the same. We give each offset variable a different</span>
+    <span class="c1"># name in the recipe so it retains its identity.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;lowToffset&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;highToffset&quot;</span><span class="p">)</span>
+    <span class="c1"># We create a new Variable and use the recipe&#39;s &quot;constrain&quot; method to</span>
+    <span class="c1"># associate the Debye temperature parameters with that variable.</span>
+    <span class="n">par</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="s2">&quot;thetaD&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="s2">&quot;thetaD&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="s2">&quot;thetaD&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
 <span class="k">def</span> <span class="nf">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Display the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
 
-    <span class="c"># The variable values are returned in the order in which the variables were</span>
-    <span class="c"># added to the FitRecipe.</span>
+    <span class="c1"># The variable values are returned in the order in which the variables were</span>
+    <span class="c1"># added to the FitRecipe.</span>
     <span class="n">lowToffset</span><span class="p">,</span> <span class="n">highToffset</span><span class="p">,</span> <span class="n">thetaD</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">getValues</span><span class="p">()</span>
 
-    <span class="c"># We want to extend the fitting range to its full extent so we can get a</span>
-    <span class="c"># nice full plot.</span>
+    <span class="c1"># We want to extend the fitting range to its full extent so we can get a</span>
+    <span class="c1"># nice full plot.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">()</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">()</span>
     <span class="n">T</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span>
     <span class="n">U</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
-    <span class="c"># We can use a FitContribution&#39;s &#39;evaluateEquation&#39; method to evaluate</span>
-    <span class="c"># expressions involving the Parameters and other aspects of the</span>
-    <span class="c"># FitContribution. Here we evaluate the fitting equation, which is always</span>
-    <span class="c"># accessed using the name &quot;eq&quot;. We access it this way (rather than through</span>
-    <span class="c"># the Profile&#39;s ycalc attribute) because we changed the calculation range</span>
-    <span class="c"># above, and we therefore need to recalculate the profile.</span>
-    <span class="n">lowU</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">evaluateEquation</span><span class="p">(</span><span class="s">&quot;eq&quot;</span><span class="p">)</span>
-    <span class="n">highU</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">evaluateEquation</span><span class="p">(</span><span class="s">&quot;eq&quot;</span><span class="p">)</span>
+    <span class="c1"># We can use a FitContribution&#39;s &#39;evaluateEquation&#39; method to evaluate</span>
+    <span class="c1"># expressions involving the Parameters and other aspects of the</span>
+    <span class="c1"># FitContribution. Here we evaluate the fitting equation, which is always</span>
+    <span class="c1"># accessed using the name &quot;eq&quot;. We access it this way (rather than through</span>
+    <span class="c1"># the Profile&#39;s ycalc attribute) because we changed the calculation range</span>
+    <span class="c1"># above, and we therefore need to recalculate the profile.</span>
+    <span class="n">lowU</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">evaluateEquation</span><span class="p">(</span><span class="s2">&quot;eq&quot;</span><span class="p">)</span>
+    <span class="n">highU</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">evaluateEquation</span><span class="p">(</span><span class="s2">&quot;eq&quot;</span><span class="p">)</span>
 
-    <span class="c"># Now we can plot this.</span>
+    <span class="c1"># Now we can plot this.</span>
     <span class="kn">import</span> <span class="nn">pylab</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">U</span><span class="p">,</span><span class="s">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Pb $U_{iso}$ Data&quot;</span><span class="p">)</span>
-    <span class="n">lbl1</span> <span class="o">=</span> <span class="s">&quot;$T_d$=</span><span class="si">%3.1f</span><span class="s"> K, lowToff=</span><span class="si">%1.5f</span><span class="s"> $\AA^2$&quot;</span><span class="o">%</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">thetaD</span><span class="p">),</span><span class="n">lowToffset</span><span class="p">)</span>
-    <span class="n">lbl2</span> <span class="o">=</span> <span class="s">&quot;$T_d$=</span><span class="si">%3.1f</span><span class="s"> K, highToff=</span><span class="si">%1.5f</span><span class="s"> $\AA^2$&quot;</span><span class="o">%</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">thetaD</span><span class="p">),</span><span class="n">highToffset</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">U</span><span class="p">,</span><span class="s1">&#39;o&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Pb $U_{iso}$ Data&quot;</span><span class="p">)</span>
+    <span class="n">lbl1</span> <span class="o">=</span> <span class="s2">&quot;$T_d$=</span><span class="si">%3.1f</span><span class="s2"> K, lowToff=</span><span class="si">%1.5f</span><span class="s2"> $\AA^2$&quot;</span><span class="o">%</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">thetaD</span><span class="p">),</span><span class="n">lowToffset</span><span class="p">)</span>
+    <span class="n">lbl2</span> <span class="o">=</span> <span class="s2">&quot;$T_d$=</span><span class="si">%3.1f</span><span class="s2"> K, highToff=</span><span class="si">%1.5f</span><span class="s2"> $\AA^2$&quot;</span><span class="o">%</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">thetaD</span><span class="p">),</span><span class="n">highToffset</span><span class="p">)</span>
     <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">lowU</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">lbl1</span><span class="p">)</span>
     <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span><span class="n">highU</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">lbl2</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;T (K)&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;$U_{iso} (\AA^2)$&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;T (K)&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$U_{iso} (\AA^2)$&quot;</span><span class="p">)</span>
     <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">))</span>
 
     <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -187,29 +187,29 @@
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 
-    <span class="c"># Create the recipe</span>
+    <span class="c1"># Create the recipe</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipeII</span><span class="p">()</span>
 
-    <span class="c"># Refine using the optimizer of your choice</span>
+    <span class="c1"># Refine using the optimizer of your choice</span>
     <span class="n">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
-    <span class="c"># Get the results in a FitResults object.</span>
+    <span class="c1"># Get the results in a FitResults object.</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
-    <span class="c"># Print the results</span>
+    <span class="c1"># Print the results</span>
     <span class="n">res</span><span class="o">.</span><span class="n">printResults</span><span class="p">()</span>
 
-    <span class="c"># Plot the results</span>
+    <span class="c1"># Plot the results</span>
     <span class="n">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
     <span class="k">return</span>
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 
-<span class="c"># End of file</span>
+<span class="c1"># End of file</span>
 </pre></div>
 </div>
 </div>
@@ -218,7 +218,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="debyemodel.html"
@@ -226,12 +226,14 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="gaussiangenerator.html"
                         title="next chapter">gaussiangenerator.py</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/examples/debyemodelII.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/debyemodelII.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -248,7 +250,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -263,13 +265,13 @@
         <li class="right" >
           <a href="debyemodel.html" title="debyemodel.py"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="../examples.html" >Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

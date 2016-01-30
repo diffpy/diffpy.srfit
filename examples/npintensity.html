@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>npintensity.py &mdash; SrFit 1.0b4-2 documentation</title>
+    <title>npintensity.py &mdash; SrFit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b4-2',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b4-2 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
     <link rel="up" title="Examples" href="../examples.html" />
     <link rel="next" title="npintensityII.py" href="npintensityII.html" />
     <link rel="prev" title="gaussiangenerator.py" href="gaussiangenerator.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,32 +45,32 @@
         <li class="right" >
           <a href="gaussiangenerator.html" title="gaussiangenerator.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="npintensity-py">
 <span id="id1"></span><h1>npintensity.py<a class="headerlink" href="#npintensity-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
-<span class="c">########################################################################</span>
-<span class="c">#</span>
-<span class="c"># diffpy.srfit      by DANSE Diffraction group</span>
-<span class="c">#                   Simon J. L. Billinge</span>
-<span class="c">#                   (c) 2009 The Trustees of Columbia University</span>
-<span class="c">#                   in the City of New York.  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c"># File coded by:    Chris Farrow</span>
-<span class="c">#</span>
-<span class="c"># See AUTHORS.txt for a list of people who contributed.</span>
-<span class="c"># See LICENSE_DANSE.txt for license information.</span>
-<span class="c">#</span>
-<span class="c">########################################################################</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">########################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">########################################################################</span>
 <span class="sd">&quot;&quot;&quot;Example of using ProfileGenerators in FitContributions.</span>
 
 <span class="sd">This is an example of building a ProfileGenerator and using it in a</span>
@@ -110,7 +110,7 @@
 
 <span class="kn">from</span> <span class="nn">gaussianrecipe</span> <span class="kn">import</span> <span class="n">scipyOptimize</span>
 
-<span class="c">####### Example Code</span>
+<span class="c1">####### Example Code</span>
 
 <span class="k">class</span> <span class="nc">IntensityGenerator</span><span class="p">(</span><span class="n">ProfileGenerator</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A class for calculating intensity using the Debye equation.</span>
@@ -142,7 +142,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ProfileGenerator</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-        <span class="c"># Count the calls</span>
+        <span class="c1"># Count the calls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span>
 
@@ -191,21 +191,21 @@
 <span class="sd">        DiffpyStructureParSet as the &#39;stru&#39; attribute.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># Load the structure from file</span>
+        <span class="c1"># Load the structure from file</span>
         <span class="kn">from</span> <span class="nn">diffpy.Structure</span> <span class="kn">import</span> <span class="n">Structure</span>
         <span class="n">stru</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
         <span class="n">stru</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">strufile</span><span class="p">)</span>
 
-        <span class="c"># Create a ParameterSet designed to interface with</span>
-        <span class="c"># diffpy.Structure.Structure objects that organizes the Parameter</span>
-        <span class="c"># hierarchy. Note that the DiffpyStructureParSet holds a handle to the</span>
-        <span class="c"># loaded structure that we use in the __call__ method below.</span>
-        <span class="c">#</span>
-        <span class="c"># We pass the diffpy.Structure.Structure instance, and give the</span>
-        <span class="c"># DiffpyStructureParSet the name &quot;phase&quot;.</span>
-        <span class="n">parset</span> <span class="o">=</span> <span class="n">DiffpyStructureParSet</span><span class="p">(</span><span class="s">&quot;phase&quot;</span><span class="p">,</span> <span class="n">stru</span><span class="p">)</span>
+        <span class="c1"># Create a ParameterSet designed to interface with</span>
+        <span class="c1"># diffpy.Structure.Structure objects that organizes the Parameter</span>
+        <span class="c1"># hierarchy. Note that the DiffpyStructureParSet holds a handle to the</span>
+        <span class="c1"># loaded structure that we use in the __call__ method below.</span>
+        <span class="c1">#</span>
+        <span class="c1"># We pass the diffpy.Structure.Structure instance, and give the</span>
+        <span class="c1"># DiffpyStructureParSet the name &quot;phase&quot;.</span>
+        <span class="n">parset</span> <span class="o">=</span> <span class="n">DiffpyStructureParSet</span><span class="p">(</span><span class="s2">&quot;phase&quot;</span><span class="p">,</span> <span class="n">stru</span><span class="p">)</span>
 
-        <span class="c"># Put this ParameterSet in the ProfileGenerator.</span>
+        <span class="c1"># Put this ParameterSet in the ProfileGenerator.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addParameterSet</span><span class="p">(</span><span class="n">parset</span><span class="p">)</span>
 
         <span class="k">return</span>
@@ -221,10 +221,10 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">print</span> <span class="s">&quot;iofq called&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span>
+        <span class="k">print</span> <span class="s2">&quot;iofq called&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span>
         <span class="k">return</span> <span class="n">iofq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
 
-<span class="c"># End class IntensityGenerator</span>
+<span class="c1"># End class IntensityGenerator</span>
 
 
 <span class="k">def</span> <span class="nf">makeRecipe</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="n">datname</span><span class="p">):</span>
@@ -235,82 +235,82 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c">## The Profile</span>
-    <span class="c"># Create a Profile. This will hold the experimental and calculated signal.</span>
+    <span class="c1">## The Profile</span>
+    <span class="c1"># Create a Profile. This will hold the experimental and calculated signal.</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
 
-    <span class="c"># Load data and add it to the profile</span>
+    <span class="c1"># Load data and add it to the profile</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span> <span class="o">=</span> <span class="n">profile</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">datname</span><span class="p">)</span>
 
-    <span class="c">## The ProfileGenerator</span>
-    <span class="c"># Create an IntensityGenerator named &quot;I&quot;. This will be the name we use to</span>
-    <span class="c"># refer to the generator from within the FitContribution equation.  We also</span>
-    <span class="c"># need to load the model structure we&#39;re using.</span>
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">IntensityGenerator</span><span class="p">(</span><span class="s">&quot;I&quot;</span><span class="p">)</span>
+    <span class="c1">## The ProfileGenerator</span>
+    <span class="c1"># Create an IntensityGenerator named &quot;I&quot;. This will be the name we use to</span>
+    <span class="c1"># refer to the generator from within the FitContribution equation.  We also</span>
+    <span class="c1"># need to load the model structure we&#39;re using.</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">IntensityGenerator</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">strufile</span><span class="p">)</span>
 
-    <span class="c">## The FitContribution</span>
-    <span class="c"># Create a FitContribution, that will associate the Profile with the</span>
-    <span class="c"># ProfileGenerator.  The ProfileGenerator will be accessible as an</span>
-    <span class="c"># attribute of the FitContribution by its name (&quot;I&quot;).  We also want to tell</span>
-    <span class="c"># the FitContribution to name the x-variable of the profile &quot;q&quot;, so we can</span>
-    <span class="c"># use it in equations with this name.</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s">&quot;bucky&quot;</span><span class="p">)</span>
+    <span class="c1">## The FitContribution</span>
+    <span class="c1"># Create a FitContribution, that will associate the Profile with the</span>
+    <span class="c1"># ProfileGenerator.  The ProfileGenerator will be accessible as an</span>
+    <span class="c1"># attribute of the FitContribution by its name (&quot;I&quot;).  We also want to tell</span>
+    <span class="c1"># the FitContribution to name the x-variable of the profile &quot;q&quot;, so we can</span>
+    <span class="c1"># use it in equations with this name.</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;bucky&quot;</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">addProfileGenerator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span> <span class="o">=</span> <span class="s">&quot;q&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span> <span class="o">=</span> <span class="s2">&quot;q&quot;</span><span class="p">)</span>
 
-    <span class="c"># Now we&#39;re ready to define the fitting equation for the FitContribution.</span>
-    <span class="c"># We need to modify the intensity calculation, and we&#39;ll do that from</span>
-    <span class="c"># within the fitting equation for the sake of instruction. We want to</span>
-    <span class="c"># modify the calculation in three ways.  We want to scale it, add a</span>
-    <span class="c"># polynomial background, and broaden the peaks.</span>
-    <span class="c">#</span>
-    <span class="c"># There is added benefit for defining these operations outside of the</span>
-    <span class="c"># IntensityGenerator. By combining the different parts of the calculation</span>
-    <span class="c"># within the fitting equation, the time-consuming iofq calculation is only</span>
-    <span class="c"># performed when a structural Parameter is changed. If only non-structural</span>
-    <span class="c"># parameters are changed, such as the background and broadening Parameters,</span>
-    <span class="c"># then then previously computed iofq value will be used to compute the</span>
-    <span class="c"># contribution equation.  The benefit in this is very apparent when</span>
-    <span class="c"># refining the recipe with the LM optimizer, which only changes two</span>
-    <span class="c"># variables at a time most of the time. Note in the refinement output how</span>
-    <span class="c"># many times the residual is calculated, versus how many times iofq is</span>
-    <span class="c"># called when using the scipyOptimize function.</span>
+    <span class="c1"># Now we&#39;re ready to define the fitting equation for the FitContribution.</span>
+    <span class="c1"># We need to modify the intensity calculation, and we&#39;ll do that from</span>
+    <span class="c1"># within the fitting equation for the sake of instruction. We want to</span>
+    <span class="c1"># modify the calculation in three ways.  We want to scale it, add a</span>
+    <span class="c1"># polynomial background, and broaden the peaks.</span>
+    <span class="c1">#</span>
+    <span class="c1"># There is added benefit for defining these operations outside of the</span>
+    <span class="c1"># IntensityGenerator. By combining the different parts of the calculation</span>
+    <span class="c1"># within the fitting equation, the time-consuming iofq calculation is only</span>
+    <span class="c1"># performed when a structural Parameter is changed. If only non-structural</span>
+    <span class="c1"># parameters are changed, such as the background and broadening Parameters,</span>
+    <span class="c1"># then then previously computed iofq value will be used to compute the</span>
+    <span class="c1"># contribution equation.  The benefit in this is very apparent when</span>
+    <span class="c1"># refining the recipe with the LM optimizer, which only changes two</span>
+    <span class="c1"># variables at a time most of the time. Note in the refinement output how</span>
+    <span class="c1"># many times the residual is calculated, versus how many times iofq is</span>
+    <span class="c1"># called when using the scipyOptimize function.</span>
 
-    <span class="c"># We will define the background as a string.</span>
+    <span class="c1"># We will define the background as a string.</span>
 
-    <span class="n">bkgdstr</span> <span class="o">=</span> <span class="s">&quot;b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +</span><span class="se">\</span>
-<span class="s">               b7*q**7 + b8*q**8 + b9*q**9&quot;</span>
+    <span class="n">bkgdstr</span> <span class="o">=</span> <span class="s2">&quot;b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +</span><span class="se">\</span>
+<span class="s2">               b7*q**7 + b8*q**8 + b9*q**9&quot;</span>
 
-    <span class="c"># This creates a callable equation named &quot;bkgd&quot; within the FitContribution,</span>
-    <span class="c"># and turns the polynomial coefficients into Parameters.</span>
-    <span class="n">eq</span> <span class="o">=</span> <span class="n">contribution</span><span class="o">.</span><span class="n">registerStringFunction</span><span class="p">(</span><span class="n">bkgdstr</span><span class="p">,</span> <span class="s">&quot;bkgd&quot;</span><span class="p">)</span>
+    <span class="c1"># This creates a callable equation named &quot;bkgd&quot; within the FitContribution,</span>
+    <span class="c1"># and turns the polynomial coefficients into Parameters.</span>
+    <span class="n">eq</span> <span class="o">=</span> <span class="n">contribution</span><span class="o">.</span><span class="n">registerStringFunction</span><span class="p">(</span><span class="n">bkgdstr</span><span class="p">,</span> <span class="s2">&quot;bkgd&quot;</span><span class="p">)</span>
 
-    <span class="c"># We will create the broadening function that we need by creating a python</span>
-    <span class="c"># function and registering it with the FitContribution.</span>
+    <span class="c1"># We will create the broadening function that we need by creating a python</span>
+    <span class="c1"># function and registering it with the FitContribution.</span>
     <span class="n">pi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">exp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span>
     <span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">q0</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
         <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">width</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">q</span><span class="o">-</span><span class="n">q0</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="c"># This registers the python function and extracts the name and creates</span>
-    <span class="c"># Parameters from the arguments.</span>
+    <span class="c1"># This registers the python function and extracts the name and creates</span>
+    <span class="c1"># Parameters from the arguments.</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">registerFunction</span><span class="p">(</span><span class="n">gaussian</span><span class="p">)</span>
 
-    <span class="c"># Center the Gaussian so it is not truncated.</span>
+    <span class="c1"># Center the Gaussian so it is not truncated.</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">q0</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
 
-    <span class="c"># Now we can incorporate the scale and bkgd into our calculation. We also</span>
-    <span class="c"># convolve the signal with the Gaussian to broaden it. Recall that we don&#39;t</span>
-    <span class="c"># need to supply arguments to the registered functions unless we want to</span>
-    <span class="c"># make changes to their input values.</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">setEquation</span><span class="p">(</span><span class="s">&quot;scale * convolve(I, gaussian) + bkgd&quot;</span><span class="p">)</span>
+    <span class="c1"># Now we can incorporate the scale and bkgd into our calculation. We also</span>
+    <span class="c1"># convolve the signal with the Gaussian to broaden it. Recall that we don&#39;t</span>
+    <span class="c1"># need to supply arguments to the registered functions unless we want to</span>
+    <span class="c1"># make changes to their input values.</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">setEquation</span><span class="p">(</span><span class="s2">&quot;scale * convolve(I, gaussian) + bkgd&quot;</span><span class="p">)</span>
 
-    <span class="c"># Make the FitRecipe and add the FitContribution.</span>
+    <span class="c1"># Make the FitRecipe and add the FitContribution.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
 
-    <span class="c"># Specify which parameters we want to refine.</span>
+    <span class="c1"># Specify which parameters we want to refine.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">b0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">b1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">b2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -322,60 +322,60 @@
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">b8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">b9</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-    <span class="c"># We also want to adjust the scale and the convolution width</span>
+    <span class="c1"># We also want to adjust the scale and the convolution width</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
 
-    <span class="c"># We can also refine structural parameters. Here we extract the</span>
-    <span class="c"># DiffpyStructureParSet from the intensity generator and use the parameters</span>
-    <span class="c"># like we would any others.</span>
+    <span class="c1"># We can also refine structural parameters. Here we extract the</span>
+    <span class="c1"># DiffpyStructureParSet from the intensity generator and use the parameters</span>
+    <span class="c1"># like we would any others.</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">phase</span>
 
-    <span class="c"># We want to allow for isotropic expansion, so we&#39;ll constrain the lattice</span>
-    <span class="c"># parameters to the same value (the lattice is cubic). Note that we</span>
-    <span class="c"># constrain to the &quot;a&quot; Parameter directly. In previous examples, we</span>
-    <span class="c"># constrained to a Variable by name. This has the same effect.</span>
+    <span class="c1"># We want to allow for isotropic expansion, so we&#39;ll constrain the lattice</span>
+    <span class="c1"># parameters to the same value (the lattice is cubic). Note that we</span>
+    <span class="c1"># constrain to the &quot;a&quot; Parameter directly. In previous examples, we</span>
+    <span class="c1"># constrained to a Variable by name. This has the same effect.</span>
     <span class="n">lattice</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">getLattice</span><span class="p">()</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">a</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">lattice</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">lattice</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
-    <span class="c"># We want to refine the thermal paramters as well. We will add a new</span>
-    <span class="c"># Variable that we call &quot;Uiso&quot; and constrain the atomic Uiso values to</span>
-    <span class="c"># this. Note that we don&#39;t give Uiso an initial value. The initial value</span>
-    <span class="c"># will be inferred from the following constraints.</span>
-    <span class="n">Uiso</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="s">&quot;Uiso&quot;</span><span class="p">)</span>
+    <span class="c1"># We want to refine the thermal parameters as well. We will add a new</span>
+    <span class="c1"># Variable that we call &quot;Uiso&quot; and constrain the atomic Uiso values to</span>
+    <span class="c1"># this. Note that we don&#39;t give Uiso an initial value. The initial value</span>
+    <span class="c1"># will be inferred from the following constraints.</span>
+    <span class="n">Uiso</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="s2">&quot;Uiso&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">phase</span><span class="o">.</span><span class="n">getScatterers</span><span class="p">():</span>
         <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">Uiso</span><span class="p">,</span> <span class="n">Uiso</span><span class="p">)</span>
 
-    <span class="c"># Give the recipe away so it can be used!</span>
+    <span class="c1"># Give the recipe away so it can be used!</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 
-    <span class="c"># Make the data and the recipe</span>
-    <span class="n">strufile</span> <span class="o">=</span> <span class="s">&quot;data/C60.stru&quot;</span>
+    <span class="c1"># Make the data and the recipe</span>
+    <span class="n">strufile</span> <span class="o">=</span> <span class="s2">&quot;data/C60.stru&quot;</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
-    <span class="n">makeData</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="s">&quot;C60.iq&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">100.68</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.13</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">makeData</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="s2">&quot;C60.iq&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">100.68</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.13</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 
-    <span class="c"># Make the recipe</span>
-    <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="s">&quot;C60.iq&quot;</span><span class="p">)</span>
+    <span class="c1"># Make the recipe</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">strufile</span><span class="p">,</span> <span class="s2">&quot;C60.iq&quot;</span><span class="p">)</span>
 
-    <span class="c"># Optimize</span>
+    <span class="c1"># Optimize</span>
     <span class="n">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
-    <span class="c"># Generate and print the FitResults</span>
+    <span class="c1"># Generate and print the FitResults</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
-    <span class="c"># We want to see how much speed-up we get from bringing the scale and</span>
-    <span class="c"># background outside of the intensity generator.  Get the number of calls</span>
-    <span class="c"># to the residual function from the FitRecipe, and the number of calls to</span>
-    <span class="c"># &#39;iofq&#39; from the IntensityGenerator.</span>
+    <span class="c1"># We want to see how much speed-up we get from bringing the scale and</span>
+    <span class="c1"># background outside of the intensity generator.  Get the number of calls</span>
+    <span class="c1"># to the residual function from the FitRecipe, and the number of calls to</span>
+    <span class="c1"># &#39;iofq&#39; from the IntensityGenerator.</span>
     <span class="n">rescount</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">fithooks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">count</span>
     <span class="n">calcount</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">I</span><span class="o">.</span><span class="n">count</span>
-    <span class="n">footer</span> <span class="o">=</span> <span class="s">&quot;iofq called </span><span class="si">%i%%</span><span class="s"> of the time&quot;</span><span class="o">%</span><span class="nb">int</span><span class="p">(</span><span class="mf">100.0</span><span class="o">*</span><span class="n">calcount</span><span class="o">/</span><span class="n">rescount</span><span class="p">)</span>
+    <span class="n">footer</span> <span class="o">=</span> <span class="s2">&quot;iofq called </span><span class="si">%i%%</span><span class="s2"> of the time&quot;</span><span class="o">%</span><span class="nb">int</span><span class="p">(</span><span class="mf">100.0</span><span class="o">*</span><span class="n">calcount</span><span class="o">/</span><span class="n">rescount</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">printResults</span><span class="p">(</span><span class="n">footer</span> <span class="o">=</span> <span class="n">footer</span><span class="p">)</span>
 
-    <span class="c"># Plot!</span>
+    <span class="c1"># Plot!</span>
     <span class="n">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
     <span class="k">return</span>
@@ -383,21 +383,21 @@
 <span class="k">def</span> <span class="nf">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Plot the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
 
-    <span class="c"># All this should be pretty familiar by now.</span>
+    <span class="c1"># All this should be pretty familiar by now.</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span>
 
     <span class="n">I</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
     <span class="n">Icalc</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span>
-    <span class="n">bkgd</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">evaluateEquation</span><span class="p">(</span><span class="s">&quot;bkgd&quot;</span><span class="p">)</span>
+    <span class="n">bkgd</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">bucky</span><span class="o">.</span><span class="n">evaluateEquation</span><span class="p">(</span><span class="s2">&quot;bkgd&quot;</span><span class="p">)</span>
     <span class="n">diff</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="n">Icalc</span>
 
     <span class="kn">import</span> <span class="nn">pylab</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="s">&#39;ob&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I(Q) Data&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">Icalc</span><span class="p">,</span><span class="s">&#39;r-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I(Q) Fit&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="s">&#39;g-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;I(Q) diff&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">bkgd</span><span class="p">,</span><span class="s">&#39;c-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">&quot;Bkgd. Fit&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&quot;$Q (\AA^{-1})$&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&quot;Intensity (arb. units)&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="s1">&#39;ob&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;I(Q) Data&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">Icalc</span><span class="p">,</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;I(Q) Fit&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">diff</span><span class="p">,</span><span class="s1">&#39;g-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;I(Q) diff&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">bkgd</span><span class="p">,</span><span class="s1">&#39;c-&#39;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Bkgd. Fit&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;$Q (\AA^{-1})$&quot;</span><span class="p">)</span>
+    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Intensity (arb. units)&quot;</span><span class="p">)</span>
     <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -419,14 +419,14 @@
 <span class="sd">    otherwise f_i = 1.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># The functions we need</span>
+    <span class="c1"># The functions we need</span>
     <span class="n">sinc</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sinc</span>
     <span class="n">exp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span>
     <span class="n">pi</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span>
 
-    <span class="c"># The brute-force calculation is very slow. Thus we optimize a little bit.</span>
+    <span class="c1"># The brute-force calculation is very slow. Thus we optimize a little bit.</span>
 
-    <span class="c"># The precision of distance measurements</span>
+    <span class="c1"># The precision of distance measurements</span>
     <span class="n">deltad</span> <span class="o">=</span> <span class="mf">1e-6</span>
     <span class="n">dmult</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">deltad</span><span class="p">)</span>
     <span class="n">deltau</span> <span class="o">=</span> <span class="n">deltad</span><span class="o">**</span><span class="mi">2</span>
@@ -437,7 +437,7 @@
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
 
-        <span class="c"># count the number of each element</span>
+        <span class="c1"># count the number of each element</span>
         <span class="n">eli</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">element</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">elcount</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">eli</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">elcount</span><span class="p">[</span><span class="n">eli</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
@@ -446,32 +446,32 @@
 
             <span class="n">elj</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">element</span>
 
-            <span class="c"># Get the pair</span>
+            <span class="c1"># Get the pair</span>
             <span class="n">els</span> <span class="o">=</span> <span class="p">[</span><span class="n">eli</span><span class="p">,</span> <span class="n">elj</span><span class="p">]</span>
             <span class="n">els</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
 
-            <span class="c"># Get the distance to the desired precision</span>
+            <span class="c1"># Get the distance to the desired precision</span>
             <span class="n">d</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
             <span class="n">D</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="o">*</span><span class="n">dmult</span><span class="p">)</span>
 
-            <span class="c"># Get the DW factor to the same precision</span>
+            <span class="c1"># Get the DW factor to the same precision</span>
             <span class="n">ss</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">Uisoequiv</span> <span class="o">+</span> <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">Uisoequiv</span>
             <span class="n">SS</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ss</span><span class="o">*</span><span class="n">umult</span><span class="p">)</span>
 
-            <span class="c"># Record the multiplicity of this pair</span>
+            <span class="c1"># Record the multiplicity of this pair</span>
             <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">els</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">els</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">D</span><span class="p">,</span> <span class="n">SS</span><span class="p">)</span>
             <span class="n">mult</span> <span class="o">=</span> <span class="n">pairdict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="n">pairdict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">mult</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="c"># Now we can calculate IofQ from the pair dictionary. Making the dictionary</span>
-    <span class="c"># first reduces the amount of calls to sinc and exp we have to make.</span>
+    <span class="c1"># Now we can calculate IofQ from the pair dictionary. Making the dictionary</span>
+    <span class="c1"># first reduces the amount of calls to sinc and exp we have to make.</span>
 
-    <span class="c"># First we must cache the scattering factors</span>
+    <span class="c1"># First we must cache the scattering factors</span>
     <span class="n">fdict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">elcount</span><span class="p">:</span>
         <span class="n">fdict</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">=</span> <span class="n">getXScatteringFactor</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
 
-    <span class="c"># Now we can compute I(Q) for the i != j pairs</span>
+    <span class="c1"># Now we can compute I(Q) for the i != j pairs</span>
     <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">deltad</span> <span class="o">/</span> <span class="n">pi</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">mult</span> <span class="ow">in</span> <span class="n">pairdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -482,17 +482,17 @@
         <span class="n">D</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">SS</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
 
-        <span class="c"># Note that numpy&#39;s sinc(x) = sin(x*pi)/(x*pi)</span>
+        <span class="c1"># Note that numpy&#39;s sinc(x) = sin(x*pi)/(x*pi)</span>
         <span class="n">y</span> <span class="o">+=</span> <span class="n">fi</span> <span class="o">*</span> <span class="n">fj</span> <span class="o">*</span> <span class="n">mult</span> <span class="o">*</span> <span class="n">sinc</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">D</span><span class="p">)</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">SS</span> <span class="o">*</span> <span class="n">deltau</span> <span class="o">*</span> <span class="n">q</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
-    <span class="c"># We must multiply by 2 since we only counted j &gt; i pairs.</span>
+    <span class="c1"># We must multiply by 2 since we only counted j &gt; i pairs.</span>
     <span class="n">y</span> <span class="o">*=</span> <span class="mi">2</span>
 
-    <span class="c"># Now we must add in the i == j pairs.</span>
+    <span class="c1"># Now we must add in the i == j pairs.</span>
     <span class="k">for</span> <span class="n">el</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">y</span> <span class="o">+=</span> <span class="n">f</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">elcount</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
 
-    <span class="c"># And that&#39;s it!</span>
+    <span class="c1"># And that&#39;s it!</span>
 
     <span class="k">return</span> <span class="n">y</span>
 
@@ -506,7 +506,7 @@
         <span class="kn">import</span> <span class="nn">cctbx.eltbx.xray_scattering</span> <span class="kn">as</span> <span class="nn">xray</span>
         <span class="n">wk1995</span> <span class="o">=</span> <span class="n">xray</span><span class="o">.</span><span class="n">wk1995</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
         <span class="n">g</span> <span class="o">=</span> <span class="n">wk1995</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
-        <span class="c"># at_stol - at sin(theta)/lambda = Q/(4*pi)</span>
+        <span class="c1"># at_stol - at sin(theta)/lambda = Q/(4*pi)</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span> <span class="nb">map</span><span class="p">(</span> <span class="n">g</span><span class="o">.</span><span class="n">at_stol</span><span class="p">,</span> <span class="n">q</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
         <span class="k">return</span> <span class="n">f</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -534,45 +534,45 @@
     <span class="n">S</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
     <span class="n">S</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">strufile</span><span class="p">)</span>
 
-    <span class="c"># Set the lattice parameters</span>
+    <span class="c1"># Set the lattice parameters</span>
     <span class="n">S</span><span class="o">.</span><span class="n">lattice</span><span class="o">.</span><span class="n">setLatPar</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
 
-    <span class="c"># Set a DW factor</span>
+    <span class="c1"># Set a DW factor</span>
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">S</span><span class="p">:</span>
         <span class="n">a</span><span class="o">.</span><span class="n">Uisoequiv</span> <span class="o">=</span> <span class="n">Uiso</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">iofq</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
 
-    <span class="c"># We want to broaden the peaks as well. This simulates instrument effects.</span>
+    <span class="c1"># We want to broaden the peaks as well. This simulates instrument effects.</span>
     <span class="n">q0</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">g</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">q</span><span class="o">-</span><span class="n">q0</span><span class="p">)</span><span class="o">/</span><span class="n">sig</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">&#39;same&#39;</span><span class="p">)</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
 
-    <span class="c"># Add a polynomial background.</span>
+    <span class="c1"># Add a polynomial background.</span>
     <span class="n">bkgd</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="n">bkgc</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.5</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">-</span> <span class="n">q</span><span class="p">)</span><span class="o">**</span><span class="mi">5</span>
     <span class="n">bkgd</span> <span class="o">*=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">bkgd</span><span class="p">)</span>
 
     <span class="n">y</span> <span class="o">+=</span> <span class="n">bkgd</span>
 
-    <span class="c"># Multipy by a scale factor</span>
+    <span class="c1"># Multipy by a scale factor</span>
     <span class="n">y</span> <span class="o">*=</span> <span class="n">scale</span>
 
-    <span class="c"># Calculate the uncertainty</span>
+    <span class="c1"># Calculate the uncertainty</span>
     <span class="n">u</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">nl</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
 
-    <span class="c"># And apply the noise</span>
+    <span class="c1"># And apply the noise</span>
     <span class="k">if</span> <span class="n">nl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="n">nl</span><span class="p">)</span> <span class="o">/</span> <span class="n">nl</span>
 
-    <span class="c"># Now save it</span>
+    <span class="c1"># Now save it</span>
     <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">datname</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span>
     <span class="k">return</span>
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 
-<span class="c"># End of file</span>
+<span class="c1"># End of file</span>
 </pre></div>
 </div>
 </div>
@@ -581,7 +581,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="gaussiangenerator.html"
@@ -589,12 +589,14 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="npintensityII.html"
                         title="next chapter">npintensityII.py</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/examples/npintensity.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/npintensity.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -611,7 +613,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -626,13 +628,13 @@
         <li class="right" >
           <a href="gaussiangenerator.html" title="gaussiangenerator.py"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="../examples.html" >Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

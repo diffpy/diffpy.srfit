@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>diffpy.srfit.interface package &mdash; SrFit 1.0b4-2 documentation</title>
+    <title>diffpy.srfit.interface package &mdash; SrFit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b4-2',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b4-2 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
     <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.pdf package" href="diffpy.srfit.pdf.html" />
     <link rel="prev" title="diffpy.srfit.fitbase package" href="diffpy.srfit.fitbase.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,15 +45,15 @@
         <li class="right" >
           <a href="diffpy.srfit.fitbase.html" title="diffpy.srfit.fitbase package"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="diffpy-srfit-interface-package">
 <h1>diffpy.srfit.interface package<a class="headerlink" href="#diffpy-srfit-interface-package" title="Permalink to this headline">¶</a></h1>
@@ -68,30 +68,23 @@ be sets of parameters. &#8220;+=&#8221; adds a new parameter, when that makes se
 is the &#8216;union&#8217; of these sets, and in general is used to combine different
 objects. See individual interface classes for specifics.</p>
 <dl class="class">
-<dt id="diffpy.srfit.interface.interface.ParameterFactory">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.interface.interface.</tt><tt class="descname">ParameterFactory</tt><big>(</big><em>parclass</em><big>)</big><a class="headerlink" href="#diffpy.srfit.interface.interface.ParameterFactory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>This class is used to create Parameters on demand.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="diffpy.srfit.interface.interface.ParameterInterface">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.interface.interface.</tt><tt class="descname">ParameterInterface</tt><a class="headerlink" href="#diffpy.srfit.interface.interface.ParameterInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.interface.interface.</code><code class="descname">ParameterInterface</code><a class="headerlink" href="#diffpy.srfit.interface.interface.ParameterInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Mix-in class for enhancing the Parameter interface.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="diffpy.srfit.interface.interface.FitRecipeInterface">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.interface.interface.</tt><tt class="descname">FitRecipeInterface</tt><a class="headerlink" href="#diffpy.srfit.interface.interface.FitRecipeInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.interface.interface.</code><code class="descname">FitRecipeInterface</code><a class="headerlink" href="#diffpy.srfit.interface.interface.FitRecipeInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Mix-in class for enhancing the FitRecipe interface.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="diffpy.srfit.interface.interface.RecipeOrganizerInterface">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.interface.interface.</tt><tt class="descname">RecipeOrganizerInterface</tt><a class="headerlink" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<em class="property">class </em><code class="descclassname">diffpy.srfit.interface.interface.</code><code class="descname">RecipeOrganizerInterface</code><a class="headerlink" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Mix-in class for enhancing the RecipeOrganizer interface.</p>
 </dd></dl>
 
@@ -101,15 +94,7 @@ objects. See individual interface classes for specifics.</p>
 <p>Usability interface for SrFit.</p>
 <p>The classes and functions in this package are designed to unobtrusively mix
 with base SrFit objects and provide them with interface enhancements for
-scripting. To use the interface, import this module and call the &#8216;use&#8217; method
-before importing any other part of SrFit.</p>
-<dl class="class">
-<dt id="diffpy.srfit.interface.ParameterFactory">
-<em class="property">class </em><tt class="descclassname">diffpy.srfit.interface.</tt><tt class="descname">ParameterFactory</tt><big>(</big><em>parclass</em><big>)</big><a class="headerlink" href="#diffpy.srfit.interface.ParameterFactory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>This class is used to create Parameters on demand.</p>
-</dd></dl>
-
+scripting.</p>
 </div>
 </div>
 
@@ -117,7 +102,7 @@ before importing any other part of SrFit.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
@@ -135,12 +120,14 @@ before importing any other part of SrFit.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="diffpy.srfit.pdf.html"
                         title="next chapter">diffpy.srfit.pdf package</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/api/diffpy.srfit.interface.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/diffpy.srfit.interface.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -157,7 +144,7 @@ before importing any other part of SrFit.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -172,13 +159,13 @@ before importing any other part of SrFit.</p>
         <li class="right" >
           <a href="diffpy.srfit.fitbase.html" title="diffpy.srfit.fitbase package"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

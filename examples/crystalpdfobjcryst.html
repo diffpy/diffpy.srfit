@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>crystalpdfobjcryst.py &mdash; SrFit 1.0b4-2 documentation</title>
+    <title>crystalpdfobjcryst.py &mdash; SrFit 1.1 documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.0b4-2',
+        VERSION:     '1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,13 +24,13 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.0b4-2 documentation" href="../index.html" />
+    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
     <link rel="up" title="Examples" href="../examples.html" />
     <link rel="next" title="crystalpdftwophase.py" href="crystalpdftwophase.html" />
     <link rel="prev" title="simplepdf.py" href="simplepdf.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -45,32 +45,32 @@
         <li class="right" >
           <a href="simplepdf.html" title="simplepdf.py"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="crystalpdfobjcryst-py">
 <span id="id1"></span><h1>crystalpdfobjcryst.py<a class="headerlink" href="#crystalpdfobjcryst-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
-<span class="c">########################################################################</span>
-<span class="c">#</span>
-<span class="c"># diffpy.srfit      by DANSE Diffraction group</span>
-<span class="c">#                   Simon J. L. Billinge</span>
-<span class="c">#                   (c) 2009 The Trustees of Columbia University</span>
-<span class="c">#                   in the City of New York.  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c"># File coded by:    Chris Farrow</span>
-<span class="c">#</span>
-<span class="c"># See AUTHORS.txt for a list of people who contributed.</span>
-<span class="c"># See LICENSE_DANSE.txt for license information.</span>
-<span class="c">#</span>
-<span class="c">########################################################################</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">########################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">########################################################################</span>
 <span class="sd">&quot;&quot;&quot;Example of a PDF refinement using pyobjcryst and PDFGenerator.</span>
 
 <span class="sd">This example is similar to crystalpdf.py, except that here we refine a</span>
@@ -89,99 +89,99 @@
 <span class="kn">from</span> <span class="nn">gaussianrecipe</span> <span class="kn">import</span> <span class="n">scipyOptimize</span>
 <span class="kn">from</span> <span class="nn">crystalpdf</span> <span class="kn">import</span> <span class="n">plotResults</span>
 
-<span class="c">####### Example Code</span>
+<span class="c1">####### Example Code</span>
 
 <span class="k">def</span> <span class="nf">makeRecipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">datname</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create a fitting recipe for crystalline PDF data.&quot;&quot;&quot;</span>
 
-    <span class="c">## The Profile</span>
-    <span class="c"># This will be used to store the observed and calculated PDF profile.</span>
+    <span class="c1">## The Profile</span>
+    <span class="c1"># This will be used to store the observed and calculated PDF profile.</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
 
-    <span class="c"># Load data and add it to the Profile. As before we use a PDFParser. The</span>
-    <span class="c"># metadata is still passed to the PDFGenerator later on. The interaction</span>
-    <span class="c"># between the PDFGenerator and the metadata does not depend on type of</span>
-    <span class="c"># structure being refined.</span>
+    <span class="c1"># Load data and add it to the Profile. As before we use a PDFParser. The</span>
+    <span class="c1"># metadata is still passed to the PDFGenerator later on. The interaction</span>
+    <span class="c1"># between the PDFGenerator and the metadata does not depend on type of</span>
+    <span class="c1"># structure being refined.</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">PDFParser</span><span class="p">()</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">parseFile</span><span class="p">(</span><span class="n">datname</span><span class="p">)</span>
     <span class="n">profile</span><span class="o">.</span><span class="n">loadParsedData</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
     <span class="n">profile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">(</span><span class="n">xmax</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
 
-    <span class="c">## The ProfileGenerator</span>
-    <span class="c"># This time we use the CreateCrystalFromCIF method of pyobjcryst.crystal to</span>
-    <span class="c"># create a Crystal object. That object is passed to the PDFGenerator as in</span>
-    <span class="c"># the previous example.</span>
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s">&quot;G&quot;</span><span class="p">)</span>
+    <span class="c1">## The ProfileGenerator</span>
+    <span class="c1"># This time we use the CreateCrystalFromCIF method of pyobjcryst.crystal to</span>
+    <span class="c1"># create a Crystal object. That object is passed to the PDFGenerator as in</span>
+    <span class="c1"># the previous example.</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
     <span class="n">stru</span> <span class="o">=</span> <span class="n">CreateCrystalFromCIF</span><span class="p">(</span><span class="nb">file</span><span class="p">(</span><span class="n">ciffile</span><span class="p">))</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setQmax</span><span class="p">(</span><span class="mf">40.0</span><span class="p">)</span>
 
-    <span class="c">## The FitContribution</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s">&quot;nickel&quot;</span><span class="p">)</span>
+    <span class="c1">## The FitContribution</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;nickel&quot;</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">addProfileGenerator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span> <span class="o">=</span> <span class="s">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span> <span class="o">=</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
 
-    <span class="c"># Make the FitRecipe and add the FitContribution.</span>
+    <span class="c1"># Make the FitRecipe and add the FitContribution.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
 
-    <span class="c">## Configure the fit variables</span>
+    <span class="c1">## Configure the fit variables</span>
 
-    <span class="c"># As before, we get a handle to the structure parameter set. In this case,</span>
-    <span class="c"># it is a ObjCrystCrystalParSet instance that was created when we called</span>
-    <span class="c"># &#39;setStructure&#39; above. The ObjCrystCrystalParSet has different Parameters</span>
-    <span class="c"># and options than the DiffpyStructureParSet used in the last example. See</span>
-    <span class="c"># its documentation in diffpy.srfit.structure.objcrystparset.</span>
+    <span class="c1"># As before, we get a handle to the structure parameter set. In this case,</span>
+    <span class="c1"># it is a ObjCrystCrystalParSet instance that was created when we called</span>
+    <span class="c1"># &#39;setStructure&#39; above. The ObjCrystCrystalParSet has different Parameters</span>
+    <span class="c1"># and options than the DiffpyStructureParSet used in the last example. See</span>
+    <span class="c1"># its documentation in diffpy.srfit.structure.objcrystparset.</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">phase</span>
 
-    <span class="c"># Here is where we created space group constraints in the previous example.</span>
-    <span class="c"># The difference in this example is that the ObjCrystCrystalParSet is aware</span>
-    <span class="c"># of space groups, and the DiffpyStructureParSet is not. Constraints are</span>
-    <span class="c"># created internally when &quot;sgpars&quot; attribute is called for. These</span>
-    <span class="c"># constriants get enforced within the ObjCrystCrystalParSet. Free</span>
-    <span class="c"># Parameters are stored within the &#39;sgpars&#39; member of the</span>
-    <span class="c"># ObjCrystCrystalParSet, which is the same as the object returned from</span>
-    <span class="c"># &#39;constrainAsSpaceGroup&#39;.</span>
-    <span class="c">#</span>
-    <span class="c"># As before, we have one free lattice parameter (&#39;a&#39;). We can simplify</span>
-    <span class="c"># things by iterating through all the sgpars.</span>
+    <span class="c1"># Here is where we created space group constraints in the previous example.</span>
+    <span class="c1"># The difference in this example is that the ObjCrystCrystalParSet is aware</span>
+    <span class="c1"># of space groups, and the DiffpyStructureParSet is not. Constraints are</span>
+    <span class="c1"># created internally when &quot;sgpars&quot; attribute is called for. These</span>
+    <span class="c1"># constriants get enforced within the ObjCrystCrystalParSet. Free</span>
+    <span class="c1"># Parameters are stored within the &#39;sgpars&#39; member of the</span>
+    <span class="c1"># ObjCrystCrystalParSet, which is the same as the object returned from</span>
+    <span class="c1"># &#39;constrainAsSpaceGroup&#39;.</span>
+    <span class="c1">#</span>
+    <span class="c1"># As before, we have one free lattice parameter (&#39;a&#39;). We can simplify</span>
+    <span class="c1"># things by iterating through all the sgpars.</span>
     <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">phase</span><span class="o">.</span><span class="n">sgpars</span><span class="p">:</span>
         <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
-    <span class="c"># set the initial thermal factor to a non-zero value</span>
-    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="s">&#39;B11_0&#39;</span><span class="p">)</span>
+    <span class="c1"># set the initial thermal factor to a non-zero value</span>
+    <span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="s1">&#39;B11_0&#39;</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">B11_0</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-    <span class="c"># We now select non-structural parameters to refine.</span>
-    <span class="c"># This controls the scaling of the PDF.</span>
+    <span class="c1"># We now select non-structural parameters to refine.</span>
+    <span class="c1"># This controls the scaling of the PDF.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="c"># This is a peak-damping resolution term.</span>
+    <span class="c1"># This is a peak-damping resolution term.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">qdamp</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
-    <span class="c"># This is a vibrational correlation term that sharpens peaks at low-r.</span>
+    <span class="c1"># This is a vibrational correlation term that sharpens peaks at low-r.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
-    <span class="c"># Give the recipe away so it can be used!</span>
+    <span class="c1"># Give the recipe away so it can be used!</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
-    <span class="c"># Make the data and the recipe</span>
-    <span class="n">ciffile</span> <span class="o">=</span> <span class="s">&quot;data/si.cif&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="s">&quot;data/si-q27r60-xray.gr&quot;</span>
+    <span class="c1"># Make the data and the recipe</span>
+    <span class="n">ciffile</span> <span class="o">=</span> <span class="s2">&quot;data/si.cif&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;data/si-q27r60-xray.gr&quot;</span>
 
-    <span class="c"># Make the recipe</span>
+    <span class="c1"># Make the recipe</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
-    <span class="c"># Optimize</span>
+    <span class="c1"># Optimize</span>
     <span class="n">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
-    <span class="c"># Generate and print the FitResults</span>
+    <span class="c1"># Generate and print the FitResults</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">printResults</span><span class="p">()</span>
 
-    <span class="c"># Plot!</span>
+    <span class="c1"># Plot!</span>
     <span class="n">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
-<span class="c"># End of file</span>
+<span class="c1"># End of file</span>
 </pre></div>
 </div>
 </div>
@@ -190,7 +190,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="simplepdf.html"
@@ -198,12 +198,14 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="crystalpdftwophase.html"
                         title="next chapter">crystalpdftwophase.py</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/examples/crystalpdfobjcryst.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/crystalpdfobjcryst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -220,7 +222,7 @@
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -235,13 +237,13 @@
         <li class="right" >
           <a href="simplepdf.html" title="simplepdf.py"
              >previous</a> |</li>
-        <li><a href="../index.html">SrFit 1.0b4-2 documentation</a> &raquo;</li>
-          <li><a href="../examples.html" >Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
     </div>
   </body>
 </html>

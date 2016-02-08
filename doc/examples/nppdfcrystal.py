@@ -30,7 +30,6 @@ import numpy
 from pyobjcryst.crystal import CreateCrystalFromCIF
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.sas import PrCalculator, SASParser, SASGenerator
 from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults

@@ -14,10 +14,11 @@
 ##############################################################################
 """Tests for refinableobj module."""
 
+import random
+import numpy
+
 import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
-
-import numpy
 
 from diffpy.srfit.tests.utils import _makeArgs
 
@@ -89,7 +90,6 @@ def timeFunction(f, *args, **kw):
     return (t2-t1)*1000
 
 def speedTest1():
-    import random
     f1 = makeLazyEquation()
     f2 = makeEquation1()
 
@@ -147,7 +147,6 @@ def speedTest2(mutate = 2):
 
     tnpy = 0
     teq = 0
-    import random
     # Randomly change variables
     numargs = len(eq.args)
     choices = range(numargs)
@@ -221,7 +220,6 @@ def speedTest3(mutate = 2):
 
     tnpy = 0
     teq = 0
-    import random
     # Randomly change variables
     numargs = len(eq.args)
     choices = range(numargs)
@@ -283,7 +281,6 @@ def speedTest4(mutate = 2):
 
     tnpy = 0
     teq = 0
-    import random
     # Randomly change variables
     numargs = len(eq.args)
     choices = range(numargs)
@@ -351,7 +348,6 @@ def weightedTest(mutate = 2):
 
     tnpy = 0
     teq = 0
-    import random
     # Randomly change variables
     numargs = len(eq.args)
     choices = range(numargs)
@@ -432,10 +428,9 @@ def profileTest():
 
     return
 
-if __name__ == "__main__":
 
-    for i in range(1,13):
-    #for i in range(1,2):
+if __name__ == "__main__":
+    for i in range(1, 13):
         speedTest2(i)
     """
     for i in range(1, 9):

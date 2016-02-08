@@ -19,7 +19,6 @@
 import numpy
 
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
-from diffpy.srfit.pdf import PDFParser
 
 ####### Example Code
 

@@ -21,11 +21,10 @@ DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.
 
 import numpy
 
-from diffpy.srfit.fitbase import ProfileGenerator, Profile
+from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
-from diffpy.srfit.pdf import PDFGenerator
+from diffpy.srfit.pdf import DebyePDFGenerator
 
 ####### Example Code
 
@@ -221,8 +220,6 @@ def makeC60():
     from pyobjcryst.crystal import Crystal
     from pyobjcryst.molecule import Molecule
     from pyobjcryst.scatteringpower import ScatteringPowerAtom
-
-    pi = numpy.pi
 
     # make a crystal box to put the molecule in
     c = Crystal(1, 1, 1, "P1")

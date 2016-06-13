@@ -115,6 +115,7 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(array_equal(gen.value, xobs))
         self.assertTrue(array_equal(fc._eq(), xobs))
         self.assertAlmostEquals(0, sum(fc._reseq()))
+        self.assertEqual(len(xobs), len(fc.residual()))
         eq = fc._eq
         reseq = fc._reseq
 
@@ -130,6 +131,7 @@ class TestContribution(unittest.TestCase):
         # Validate equations
         self.assertTrue(array_equal(xobs2, gen.value))
         self.assertTrue(array_equal(fc._eq(), gen.value))
+        self.assertEqual(len(xobs2), len(fc.residual()))
         return
 
     def testResidual(self):

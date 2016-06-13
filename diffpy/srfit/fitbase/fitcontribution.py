@@ -29,6 +29,7 @@ from diffpy.srfit.interface import _fitcontribution_interface
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.exceptions import SrFitError
 
 class FitContribution(_fitcontribution_interface, ParameterSet):
@@ -99,6 +100,10 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
                     usable within string equations with the specified name.
 
         """
+        # Enforce type of the profile argument
+        if not isinstance(profile, Profile):
+            emsg = "Argument must be an instance of the Profile class."
+            raise TypeError(emsg)
 
         # Set the Profile and add its parameters to this organizer.
         self.profile = profile
@@ -127,9 +132,10 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
 
         # If we have _eq, but not _reseq, set the residual
         if self._eq is not None and self._reseq is None:
-            self.setResidualEquation()
+            self.setResidualEquation('chiv')
 
         return
+
 
     def addProfileGenerator(self, gen, name = None):
         """Add a ProfileGenerator to be used by this FitContribution.
@@ -206,11 +212,12 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
 
         # Set the residual if we need to
         if self.profile is not None and self._reseq is None:
-            self.setResidualEquation()
+            self.setResidualEquation('chiv')
 
         return
 
-    def setResidualEquation(self, eqstr = None):
+
+    def setResidualEquation(self, eqstr):
         """Set the residual equation for the FitContribution.
 
         eqstr   --  A string representation of the residual. If eqstr is None
@@ -240,7 +247,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         resvstr = "(eq - %s)/sum(%s**2)**0.5" % (self._yname, self._yname)
 
         # Get the equation string if it is not defined
-        if eqstr == "chiv" or eqstr is None:
+        if eqstr == "chiv":
             eqstr = chivstr
         elif eqstr == "resv":
             eqstr = resvstr
@@ -248,6 +255,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         self._reseq = equationFromString(eqstr, self._eqfactory)
 
         return
+
 
     def residual(self):
         """Calculate the residual for this fitcontribution.

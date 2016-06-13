@@ -24,6 +24,8 @@ Parameters encapsulate an adjustable parameter within SrFit.
 
 __all__ = [ "Parameter", "ParameterProxy", "ParameterAdapter"]
 
+from functools import wraps
+
 from numpy import inf
 
 from diffpy.srfit.exceptions import SrFitError
@@ -137,7 +139,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
 # End class Parameter
 
-class ParameterProxy(_parameter_interface, Validatable):
+class ParameterProxy(Parameter):
     """A Parameter proxy for another parameter.
 
     This allows for the same parameter to have multiple names.
@@ -165,10 +167,59 @@ class ParameterProxy(_parameter_interface, Validatable):
         self.par = par
         return
 
-    def __getattr__(self, attrname):
-        """Redirect accessors and attributes to the reference Parameter."""
-        par = object.__getattribute__(self, 'par')
-        return getattr(par, attrname)
+    # define properties to use attributes of the proxied Parameter -----------
+
+    @property
+    def constrained(self):
+        """A flag indicating if the proxied Parameter is constrained.
+        """
+        return self.par.constrained
+
+    @constrained.setter
+    def constrained(self, value):
+        self.par.constrained = bool(value)
+        return
+
+
+    @property
+    def bounds(self):
+        """List of lower and upper bounds of the proxied Parameter.
+
+        This can be used by some optimizers when the Parameter is varied.
+        See FitRecipe.getBounds and FitRecipe.boundsToRestraints.
+        """
+        return self.par.bounds
+
+    @bounds.setter
+    def bounds(self, value):
+        self.par.bounds = value
+        return
+
+
+    @property
+    def _observers(self):
+        return self.par._observers
+
+    # wrap Parameter methods to use the target object ------------------------
+
+    @wraps(Parameter.setValue)
+    def setValue(self, val, lb=None, ub=None):
+        return self.par.setValue(val, lb, ub)
+
+
+    @wraps(Parameter.getValue)
+    def getValue(self):
+        return self.par.getValue()
+
+
+    @wraps(Parameter.setConst)
+    def setConst(self, const=True, value=None):
+        return self.par.setConst(const, value)
+
+
+    @wraps(Parameter.boundWindow)
+    def boundWindow(self, lr=0, ur=None):
+        return self.par.boundWindow(lr, ur)
 
 
     # Ensure there is no __dir__ override in the base classes.
@@ -185,12 +236,6 @@ class ParameterProxy(_parameter_interface, Validatable):
         return rv
 
 
-    value = property( lambda self: self.par.getValue(),
-            lambda self, val: self.par.setValue(val) )
-
-    def __str__(self):
-        return "%s(%s)"%(self.__class__.__name__, self.name)
-
     def _validate(self):
         """Validate my state.
 
@@ -199,16 +244,13 @@ class ParameterProxy(_parameter_interface, Validatable):
         Raises SrFitError if validation fails.
 
         """
-        if self.value is None:
-            raise SrFitError("value is None")
         if self.par is None:
             raise SrFitError("par is None")
+        self.par._validate()
         return
 
 # End class ParameterProxy
 
-# Make sure that this is registered as an Argument class
-ArgumentABC.register(ParameterProxy)
 
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.

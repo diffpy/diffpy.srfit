@@ -222,20 +222,6 @@ class ParameterProxy(Parameter):
         return self.par.boundWindow(lr, ur)
 
 
-    # Ensure there is no __dir__ override in the base classes.
-    assert (getattr(_parameter_interface, '__dir__', None) is
-            getattr(Validatable, '__dir__', None) is
-            getattr(object, '__dir__', None))
-
-
-    def __dir__(self):
-        "Return sorted list of attributes for this object."
-        rv = set(dir(type(self)))
-        rv.update(self.__dict__, dir(self.par))
-        rv = sorted(rv)
-        return rv
-
-
     def _validate(self):
         """Validate my state.
 

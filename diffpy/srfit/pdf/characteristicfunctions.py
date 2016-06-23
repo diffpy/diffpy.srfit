@@ -192,7 +192,7 @@ def sheetCF(r, sthick):
     if sthick < 0:
         return 0 * sthick
     # process scalar r
-    if numpy.isscalar(sthick):
+    if numpy.isscalar(r):
         rv = 1 - 0.5 * r / sthick if r < sthick else 0.5 * sthick / r
         return rv
     # handle array-type r

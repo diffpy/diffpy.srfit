@@ -188,12 +188,22 @@ def sheetCF(r, sthick):
     From Kodama et al., Acta Cryst. A, 62, 444-453
 
     """
-    if sthick <= 0: return numpy.zeros_like(r)
-
-    f = 0.5*sthick/r
-    sel = (r <= sthick)
-    f[sel] = 1 - f[sel]
+    # handle negative sthick.  make it work for scalars and arrays.
+    if sthick < 0:
+        return 0 * sthick
+    # process scalar r
+    if numpy.isscalar(sthick):
+        rv = 1 - 0.5 * r / sthick if r < sthick else 0.5 * sthick / r
+        return rv
+    # handle array-type r
+    ra = numpy.asarray(r)
+    lo = ra < sthick
+    hi = ~lo
+    f = numpy.empty_like(ra, dtype=float)
+    f[lo] = 1 - 0.5 * ra[lo] / sthick
+    f[hi] = 0.5 * sthick / ra[hi]
     return f
+
 
 def shellCF(r, radius, thickness):
     """Spherical shell characteristic function.

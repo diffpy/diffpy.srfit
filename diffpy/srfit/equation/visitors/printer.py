@@ -57,7 +57,7 @@ class Printer(Visitor):
         # We have to deal with infix operators
         if op.name != op.symbol and op.nin == 2:
             self._onInfix(op)
-            return
+            return self.output
 
         self.output += str(op.name) + "("
 

@@ -28,6 +28,7 @@ from diffpy.srfit.equation.visitors.printer import Printer
 from diffpy.srfit.equation.visitors.validator import Validator
 from diffpy.srfit.equation.visitors.swapper import Swapper
 
+
 def getArgs(literal, getconsts = True):
     """Get the Arguments of a Literal tree.
 
@@ -35,22 +36,29 @@ def getArgs(literal, getconsts = True):
                     are also retrieved.
 
     Returns a list of Arguments searched for depth-first.
-
     """
     v = ArgFinder(getconsts)
     return literal.identify(v)
 
+
+def getExpression(literal):
+    """Get math expression string from the Literal tree object.
+    """
+    v = Printer()
+    rv = literal.identify(v)
+    return rv
+
+
 def prettyPrint(literal):
     """Print a Literal tree."""
-    v = Printer()
-    print literal.identify(v)
+    print getExpression(literal)
     return
+
 
 def validate(literal):
     """Validate a Literal tree.
 
     Raises ValueError if the tree contains errors.
-
     """
     v = Validator()
     errors = literal.identify(v)
@@ -60,6 +68,7 @@ def validate(literal):
         raise ValueError(m)
     return
 
+
 def swap(literal, oldlit, newlit):
     """Swap one literal for another in a Literal tree.
 
@@ -67,13 +76,9 @@ def swap(literal, oldlit, newlit):
     return value is newlit.
 
     Returns the literal tree with oldlit swapped for newlit.
-
     """
-
     if literal is oldlit:
         return newlit
-
     v = Swapper(oldlit, newlit)
     literal.identify(v)
-
     return literal

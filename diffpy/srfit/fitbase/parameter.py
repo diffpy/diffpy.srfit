@@ -30,7 +30,6 @@ from numpy import inf
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.equation.literals import Argument
-from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.argbinders import bind2nd
 from diffpy.srfit.interface import _parameter_interface

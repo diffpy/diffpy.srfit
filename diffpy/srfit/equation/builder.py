@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Classes and utilities for creating equations.
 
 The EquationFactory class is used to create an equation (an Equation instance)
@@ -35,7 +36,7 @@ Custom Arguments and constants can be included in the equation:
 > factory.registerArgument("A", A)
 > eq = factory.makeEquation("A*sin(a*x) + offset")
 This includes a constant offset in the equation and makes sure that the
-user-defined Argument is in the equation. This is can be used to assure that
+user-defined Argument is in the equation. This can be used to assure that
 the same instance of an Argument appears in multiple equations. Other literals
 can be registered in a similar fashion.
 
@@ -76,9 +77,9 @@ example.
 > eq = beq.makeEquation()
 """
 
-__all__ = [ "EquationFactory", "BaseBuilder", "ArgumentBuilder",
-        "OperatorBuilder", "wrapArgument", "wrapOperator", "wrapFunction",
-        "getBuilder"]
+__all__ = ["EquationFactory", "BaseBuilder", "ArgumentBuilder",
+           "OperatorBuilder", "wrapArgument", "wrapOperator", "wrapFunction",
+           "getBuilder"]
 
 # NOTE - the builder cannot handle numpy arrays on the left of a binary
 # operation because the array will automatically loop the operator of the

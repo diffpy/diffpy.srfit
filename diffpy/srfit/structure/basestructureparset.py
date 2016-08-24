@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,12 +11,12 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Base class for adapting structures to a ParameterSet interface.
 
 The BaseStructureParSet is a ParameterSet with functionality required by all
 structure adapters.
-
 """
 
 __all__ = ["BaseStructureParSet"]

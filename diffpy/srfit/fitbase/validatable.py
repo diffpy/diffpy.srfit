@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,13 +11,14 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Validatable class.
 
 A Validatable has state that must be validated before a FitRecipe can first
 calculate the residual.
-
 """
+
 __all__ = ["Validatable"]
 
 

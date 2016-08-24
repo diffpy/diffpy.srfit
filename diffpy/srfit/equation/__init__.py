@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,7 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 """The core equation evaluator for diffpy.srfit.
 
@@ -22,7 +22,6 @@ Equation objects from strings and can incorporate user-defined functions as
 well as default operations.
 
 The subpackages define various pieces of the evaluation network.
-
 """
 
 __all__ = ["Equation"]

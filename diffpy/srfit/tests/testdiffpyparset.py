@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
+
 """Tests for diffpy.srfit.structure package."""
 
 import unittest

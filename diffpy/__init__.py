@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy            by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,13 +11,12 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 
 """diffpy - tools for structure analysis by diffraction.
 
 This is the namespace package shared by all DiffPy software.
-
 """
 
 __import__('pkg_resources').declare_namespace(__name__)

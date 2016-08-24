@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,18 +11,19 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Parameter classes.
 
 Parameters encapsulate an adjustable parameter within SrFit.
-
 """
+
 # IDEA - Add onConstrain, onRestrain, onVary so that adaptors to Parameters
 # can have more fine control over the construction of FitRecipes.
 # IDEA - Add tags to parameters so they can be easily retrieved.
 # IDEA - Consider scaling parameters to avoid precision issues in optimizers.
 
-__all__ = [ "Parameter", "ParameterProxy", "ParameterAdapter"]
+__all__ = ["Parameter", "ParameterProxy", "ParameterAdapter"]
 
 from functools import wraps
 

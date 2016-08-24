@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
+
 """Tests space group constraints."""
 
 import unittest

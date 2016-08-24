@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,7 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 """Complex modeling framework for structure refinement and solution.
 
@@ -29,7 +29,6 @@ information.
 The subpackages herein define various pieces of the SrFit framework. Developers
 are encouraged to work through the examples described in the documentation to
 learn how to use and customize the various parts of SrFit.
-
 """
 
 __all__ = ["__version__"]

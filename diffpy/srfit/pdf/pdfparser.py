@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,14 +11,15 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """This module contains parsers for PDF data.
 
 PDFParser is suitable for parsing data generated from PDFGetN and PDFGetX.
 
 See the class documentation for more information.
-
 """
+
 __all__ = ["PDFParser"]
 
 import re

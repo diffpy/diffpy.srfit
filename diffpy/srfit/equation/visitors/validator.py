@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Validator visitor for validating a tree of Literals.
 
 The Validator walks an equation tree composed of Literals and checks the
@@ -21,7 +22,6 @@ collects errors in a list.
 The Validator checks that the input count of each Operator is equal to the
 output count of its arguments. It also checks that each object has the proper
 interface.
-
 """
 
 __all__ = ["Validator"]

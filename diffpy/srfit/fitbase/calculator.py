@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """The Calculator for Parameter-aware functions.
 
 Calculator is a functor class for producing a signal from embedded Parameters.
@@ -21,8 +22,8 @@ Calculators are used to wrap registered functions so that the function's
 Parameters are contained in an object specific to the function.  A custom
 Calculator can be added to another RecipeOrganizer with the
 'registerCalculator' method.
-
 """
+
 __all__ = ["Calculator"]
 
 from diffpy.srfit.fitbase.parameterset import ParameterSet

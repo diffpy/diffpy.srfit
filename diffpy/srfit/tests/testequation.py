@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
+
 """Tests for refinableobj module."""
 
 import diffpy.srfit.equation.literals as literals

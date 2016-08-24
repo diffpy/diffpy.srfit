@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,15 +11,16 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """PDF profile generator using the Debye equation.
 
 The DebyePDFGenerator class can take a diffpy.Structure,
 pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and calculate
 the PDF from it. This generator is especially appropriate for isolated
 scatterers, such as nanoparticles and molecules.
-
 """
+
 __all__ = ["DebyePDFGenerator"]
 
 from diffpy.srreal.pdfcalculator import DebyePDFCalculator

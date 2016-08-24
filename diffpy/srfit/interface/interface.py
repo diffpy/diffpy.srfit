@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Interface enhancements for Parameter-type classes.
 
 Most interface additions can thought of by considering the classes in SrFit to
@@ -21,7 +22,7 @@ objects. See individual interface classes for specifics.
 """
 
 __all__ = ["ParameterInterface", "FitRecipeInterface",
-        "RecipeOrganizerInterface"]
+           "RecipeOrganizerInterface"]
 
 from diffpy.srfit.equation.literals.abcs import isinstance, ArgumentABC
 

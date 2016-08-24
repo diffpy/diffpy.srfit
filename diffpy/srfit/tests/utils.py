@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
+
 """Helper routines for testing."""
 
 import diffpy.srfit.equation.literals as literals

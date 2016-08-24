@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """PDF profile generator.
 
 The PDFGenerator class can take a diffpy.Structure, pyobjcryst.crystal.Crystal
@@ -19,8 +20,8 @@ or pyobjcryst.molecule.Molecule object and calculate the crystal PDF from it.
 The passed structure object is wrapped in a StructureParameter set, which makes
 its attributes refinable. See the class definition for more details and the
 examples for its use.
-
 """
+
 __all__ = ["PDFGenerator"]
 
 from diffpy.srreal.pdfcalculator import PDFCalculator

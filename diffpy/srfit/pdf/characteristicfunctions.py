@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Form factors (characteristic functions) used in PDF nanoshape fitting.
 
 These are used to calculate the attenuation of the PDF due to a finite size.
@@ -22,11 +23,10 @@ Gcryst(f) is the crystal PDF.
 
 These functions are meant to be imported and added to a FitContribution using
 the 'registerFunction' method of that class.
-
 """
 
 __all__ = ["sphericalCF", "spheroidalCF", "spheroidalCF2",
-"lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASCF"]
+           "lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASCF"]
 
 import numpy
 from numpy import pi, sqrt, log, exp, log2, ceil, sign

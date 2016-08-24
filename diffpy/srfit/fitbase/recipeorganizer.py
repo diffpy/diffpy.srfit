@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Base classes and tools for constructing a FitRecipe.
 
 RecipeContainer is the base class for organizing Parameters, and other
@@ -20,7 +21,7 @@ incorporates equation building, constraints and Restraints.  equationFromString
 creates an Equation instance from a string.
 """
 
-__all__ = [ "RecipeContainer", "RecipeOrganizer", "equationFromString"]
+__all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
 from itertools import chain, ifilter

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -12,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Building blocks for defining a lazy evaluation network.
 
 Literals are the building blocks of the evaluation network. An Argument holds
@@ -23,14 +23,13 @@ Literal networks can be evaluated or have other actions performed on them by
 Visitors (in diffpy.srfit.equation.visitors). The Literal-Visitor relationship
 is that described by the Visitor pattern
 (http://en.wikipedia.org/wiki/Visitor_pattern).
-
 """
 
 __all__ = ["Argument", "Operator", "AdditionOperator", "SubtractionOperator",
-        "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
-        "RemainderOperator", "NegationOperator", "ConvolutionOperator",
-        "SumOperator", "UFuncOperator", "ListOperator", "SetOperator",
-        "ArrayOperator", "PolyvalOperator"]
+           "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
+           "RemainderOperator", "NegationOperator", "ConvolutionOperator",
+           "SumOperator", "UFuncOperator", "ListOperator", "SetOperator",
+           "ArrayOperator", "PolyvalOperator"]
 
 
 # Import the operators

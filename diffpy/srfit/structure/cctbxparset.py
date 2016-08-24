@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Wrappers for interfacing cctbx crystal with SrFit.
 
 This wraps a cctbx.crystal as a ParameterSet with a similar hierarchy, which
@@ -25,7 +26,6 @@ Classes:
 CCTBXCrystalParSet  --  Wrapper for cctbx.crystal
 CCTBXUnitCellParSet --  Wrapper for the unit cell of cctbx.crystal
 CCTBXScattererParSet --  Wrapper for cctbx.xray.scatterer
-
 """
 
 from diffpy.srfit.fitbase.parameter import ParameterAdapter

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,12 +11,12 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """SAS profile generator.
 
 The SASGenerator class wraps a sas.models.BaseModel object as a
 ProfileGenerator.
-
 """
 
 __all__ = ["SASParameter"]

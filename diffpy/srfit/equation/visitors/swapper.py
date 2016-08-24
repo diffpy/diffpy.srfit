@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,10 +11,11 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
-"""Swapper for replacing a Literal in an equation with another Literals.
+##############################################################################
 
+"""Swapper for replacing a Literal in an equation with another Literals.
 """
+
 __all__ = ["Swapper"]
 
 from diffpy.srfit.equation.visitors.visitor import Visitor

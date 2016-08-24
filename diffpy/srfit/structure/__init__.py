@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,11 +11,11 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Modules and classes that adapt structure representations to the ParameterSet
 interface and automatic structure constraint generation from space group
 information.
-
 """
 
 def struToParameterSet(name, stru):

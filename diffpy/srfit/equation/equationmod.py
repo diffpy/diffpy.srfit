@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """The Equation class for holding and evaluating an equation.
 
 Equation is a functor that holds a Literal tree that defines an equation. It's
@@ -35,7 +36,6 @@ Example
 > eq() # uses last assignment of a and b, returns 0
 
 See the class documentation for more information.
-
 """
 
 __all__ = ["Equation"]

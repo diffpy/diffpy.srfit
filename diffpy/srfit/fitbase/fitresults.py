@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,14 +11,15 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """The FitResults and ContributionResults classes for storing results of a fit.
 
 The FitResults class is used to display the current state of a FitRecipe. It
 stores the state, and uses it to calculate useful statistics, which can be
 displayed on screen or saved to file.
-
 """
+
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import numpy

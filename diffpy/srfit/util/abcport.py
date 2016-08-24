@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,7 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 """Import abc module for python2.6 or before.
 
@@ -21,11 +21,10 @@ earlier python versions. If the modified abc module is used,
 isinstance and issubclass are redefined here so that ABCs can be used in python
 < 2.6. To assure backwards compatibility, import these methods from this
 module rather than using the built-in isinstance and issubclass.
-
 """
 
 __all__ = ["ABCMeta", "abstractmethod", "abstractproperty", "isinstance",
-        "issubclass"]
+           "issubclass"]
 
 try:
     # Import abc, and bring isinstance and issubclass into the module namespace

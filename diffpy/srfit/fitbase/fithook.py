@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """The FitHook class for inspecting the progress of a FitRecipe refinement.
 
 FitHooks are called by a FitRecipe during various times of the residual is
@@ -22,8 +23,8 @@ variable values.
 
 Custom FitHooks can be added to a FitRecipe with the FitRecipe.setFitHook
 method.
-
 """
+
 __all__ = ["FitHook"]
 
 import numpy

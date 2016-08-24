@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,12 +11,13 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """PDFContribution class.
 
 This is a custom FitContribution that simplifies the creation of PDF fits.
-
 """
+
 __all__ = ["PDFContribution"]
 
 from diffpy.srfit.fitbase import FitContribution

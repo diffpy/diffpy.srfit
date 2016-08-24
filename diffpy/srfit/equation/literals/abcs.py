@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,11 +11,12 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Abstract Base Classes for Literals."""
 
 __all__ = ["isinstance", "issubclass", "LiteralABC", "ArgumentABC",
-        "OperatorABC"]
+           "OperatorABC"]
 
 from diffpy.srfit.util.abcport import ABCMeta
 from diffpy.srfit.util.abcport import abstractmethod, abstractproperty

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,14 +11,14 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Nanoparticle form factor P(r) calculator.
 
 The PrCalculator class wraps a sas.pr.invertor.Invertor object as a
 Calculator. This is not wrapped as a ProfileGenerator because it will be used
 to share information between SAS I(Q) to PDF G(r), but it does not use the same
 profile as the PDF, which is where the calculator will be applied.
-
 """
 
 __all__ = ["PrCalculator", "CFCalculator"]

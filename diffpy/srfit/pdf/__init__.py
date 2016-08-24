@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,11 +11,10 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 
 """PDF calculation tools.
-
 """
 
 __all__ = ["PDFGenerator", "DebyePDFGenerator", "PDFContribution", "PDFParser"]

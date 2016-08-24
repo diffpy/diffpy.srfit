@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Adapters for interfacing a diffpy.Structure.Structure with SrFit.
 
 A diffpy.Structure.Structure object is meant to be passed to a
@@ -25,7 +26,6 @@ it to DiffpyStrucureParSet.
 DiffpyStructureParSet --  Adapter for diffpy.Structure.Structure
 DiffpyLatticeParSet   --  Adapter for diffpy.Structure.Lattice
 DiffpyAtomParSet      --  Adapter for diffpy.Structure.Atom
-
 """
 
 __all__ = ["DiffpyStructureParSet"]

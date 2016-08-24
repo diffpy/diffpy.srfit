@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,7 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
 
 """The base fitting classes for diffpy.srfit.
 
@@ -26,12 +26,11 @@ FitContribution, Profile and FitRecipe classes.
 
 Various code and design taken from Paul Kienzle's PARK package.
 http://www.reflectometry.org/danse/park.html
-
 """
 
 __all__ = ['Calculator', 'FitContribution', 'FitHook', 'FitRecipe',
-'FitResults', 'initializeRecipe', 'PlotFitHook', 'Profile', 'ProfileGenerator',
-'SimpleRecipe']
+           'FitResults', 'initializeRecipe', 'PlotFitHook', 'Profile',
+           'ProfileGenerator', 'SimpleRecipe']
 
 from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.fitcontribution import FitContribution

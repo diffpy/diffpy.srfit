@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Base visitor class.
 
 Visitors work with Literal trees to perform a specified action. They are
@@ -24,8 +25,8 @@ Argument
 Operator
 
 See the Visitor class for the required methods that each Visitor must overload.
-
 """
+
 __all__ = ["Visitor"]
 
 class Visitor(object):

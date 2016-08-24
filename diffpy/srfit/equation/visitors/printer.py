@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,13 +11,14 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Printer visitor for printing the equation represented by a Literal tree.
 
 The Printer visitor creates a one-line representation of the Literal tree,
 which is valid as a string equivalent of the equation.
-
 """
+
 __all__ = ["Printer"]
 
 from diffpy.srfit.equation.visitors.visitor import Visitor

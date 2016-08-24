@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,11 +11,11 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Visitor for extracting the Argument entries in a Literal tree.
 
 ArgFinder extracts all Arguments from a literal true.
-
 """
 
 __all__ = ["ArgFinder"]

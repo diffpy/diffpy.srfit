@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,13 +11,14 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """TagManager class.
 
 The TagManager class takes hashable objects and assigns tags to them. Objects
 can then be easily referenced via their assigned tags.
-
 """
+
 __all__ = ["TagManager"]
 
 

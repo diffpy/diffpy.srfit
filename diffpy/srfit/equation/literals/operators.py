@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,7 +11,8 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """Operator classes.
 
 Operators are combined with other Literals to create an equation. Operators are
@@ -22,14 +23,13 @@ The Operator class contains all the information necessary to be identified and
 evaluated by a Visitor. Thus, a single onOperator method exists in the Visitor
 base class. Other Operators can be derived from Operator (see AdditionOperator),
 but they all identify themselves with the Visitor.onOperator method.
-
 """
 
 __all__ = ["Operator", "AdditionOperator", "SubtractionOperator",
-        "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
-        "RemainderOperator", "NegationOperator", "ConvolutionOperator",
-        "SumOperator", "UFuncOperator", "ListOperator", "SetOperator",
-        "ArrayOperator", "PolyvalOperator"]
+           "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
+           "RemainderOperator", "NegationOperator", "ConvolutionOperator",
+           "SumOperator", "UFuncOperator", "ListOperator", "SetOperator",
+           "ArrayOperator", "PolyvalOperator"]
 
 import numpy
 

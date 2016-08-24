@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-########################################################################
+##############################################################################
 #
 # diffpy.srfit      by DANSE Diffraction group
 #                   Simon J. L. Billinge
@@ -11,14 +11,15 @@
 # See AUTHORS.txt for a list of people who contributed.
 # See LICENSE_DANSE.txt for license information.
 #
-########################################################################
+##############################################################################
+
 """ParameterSet class.
 
 ParameterSets organize Parameters, Constraints, Restraints and other
 ParameterSets. They provide attribute-access of other ParameterSets and
 embedded Parameters.
-
 """
+
 __all__ = ["ParameterSet"]
 
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer

@@ -217,6 +217,17 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         return
 
 
+    def getEquation(self):
+        """Get math expression string for the active profile equation.
+
+        Return normalized math expression or an empty string if profile
+        equation has not been set yet.
+        """
+        from diffpy.srfit.equation.visitors import getExpression
+        rv = getExpression(self._eq) if self._eq is not None else ""
+        return rv
+
+
     def setResidualEquation(self, eqstr):
         """Set the residual equation for the FitContribution.
 
@@ -255,6 +266,17 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         self._reseq = equationFromString(eqstr, self._eqfactory)
 
         return
+
+
+    def getResidualEquation(self):
+        """Get math expression string for the active residual equation.
+
+        Return normalized math formula or an empty string if residual
+        equation has not been configured yet.
+        """
+        from diffpy.srfit.equation.visitors import getExpression
+        rv = getExpression(self._reseq) if self._reseq is not None else ""
+        return rv
 
 
     def residual(self):

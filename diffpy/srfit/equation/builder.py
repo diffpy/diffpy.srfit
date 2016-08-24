@@ -92,6 +92,7 @@ _builders = {}
 import numpy
 
 import diffpy.srfit.equation.literals as literals
+from diffpy.srfit.equation.literals.literal import Literal
 from diffpy.srfit.equation.equationmod import Equation
 
 
@@ -399,10 +400,12 @@ class BaseBuilder(object):
             op.addLiteral(self.literal)
 
         # Deal with constants
-        if not isinstance(other, BaseBuilder):
-            literal = literals.Argument(value=other, const=True)
-        else:
+        if isinstance(other, BaseBuilder):
             literal = other.literal
+        elif isinstance(other, Literal):
+            literal = other
+        else:
+            literal = literals.Argument(value=other, const=True)
         op.addLiteral(literal)
 
         if not onleft:

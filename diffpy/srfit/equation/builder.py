@@ -115,10 +115,10 @@ class EquationFactory(object):
         This registers "pi" and "e" as constants within the factory.
         """
         self.builders = dict(_builders)
-        self.registerConstant("pi", numpy.pi)
-        self.registerConstant("e", numpy.e)
         self.newargs = set()
         self.equations = set()
+        self.registerConstant("pi", numpy.pi)
+        self.registerConstant("e", numpy.e)
         return
 
     def makeEquation(self, eqstr, buildargs = True, argclass =
@@ -219,14 +219,19 @@ class EquationFactory(object):
         if not isinstance(builder, BaseBuilder):
             raise TypeError("builder must be a BaseBuilder instance")
         # Swap out the old builder's literal, if necessary
-        oldbuilder = self.builders.get(name)
-        if oldbuilder is not None:
-            oldlit = oldbuilder.literal
-            newlit = builder.literal
-            if oldlit is not newlit:
-                for eq in self.equations:
-                    eq.swap(oldlit, newlit)
-
+        newlit = builder.literal
+        swapbyname = isinstance(builder, ArgumentBuilder)
+        bloldlits = set()
+        if name in self.builders:
+            bloldlits.add(self.builders[name].literal)
+        for eq in self.equations:
+            eqoldlits = bloldlits
+            if swapbyname and name in eq.argdict:
+                eqoldlits = bloldlits.union((eq.argdict[name],))
+            for oldlit in eqoldlits:
+                if oldlit is newlit:
+                    continue
+                eq.swap(oldlit, newlit)
         # Now store the new builder
         self.builders[name] = builder
         return builder

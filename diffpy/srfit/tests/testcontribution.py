@@ -208,5 +208,18 @@ class TestContribution(unittest.TestCase):
         return
 
 
+    def test_setEquation(self):
+        """Check replacement of removed parameters."""
+        fc = self.fitcontribution
+        fc.setEquation("x + 5")
+        fc.x.setValue(2)
+        self.assertEqual(7, fc.evaluate())
+        fc.removeParameter(fc.x)
+        x = arange(0, 10, 0.5)
+        fc.newParameter('x', x)
+        self.assertTrue(array_equal(5 + x, fc.evaluate()))
+        return
+
+
 if __name__ == "__main__":
     unittest.main()

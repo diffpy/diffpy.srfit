@@ -17,12 +17,13 @@
 
 import unittest
 
-from numpy import arange, dot, array_equal
+from numpy import arange, dot, array_equal, sin
 
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.exceptions import SrFitError
 
 
 class TestContribution(unittest.TestCase):
@@ -37,15 +38,23 @@ class TestContribution(unittest.TestCase):
         fc = self.fitcontribution
         profile = self.profile
         fc.setProfile(self.profile)
-
+        # verify standard profile setup
         self.assertTrue(fc.profile is profile)
         self.assertTrue(fc.x.par is profile.xpar)
         self.assertTrue(fc.y.par is profile.ypar)
         self.assertTrue(fc.dy.par is profile.dypar)
-
         self.assertTrue(fc._eq is None)
         self.assertTrue(fc._reseq is None)
+        # check type checking
+        fc1 = FitContribution('test1')
+        self.assertRaises(TypeError, fc.setProfile, 'invalid')
+        # check if residual equation is set up when possible
+        fc2 = FitContribution('test2')
+        fc2.setEquation('A * x')
+        fc2.setProfile(profile)
+        self.assertFalse(fc2._reseq is None)
         return
+
 
     def testAddProfileGenerator(self):
         fc = self.fitcontribution
@@ -183,7 +192,6 @@ class TestContribution(unittest.TestCase):
         fc.setEquation("c**2*sin(I)")
         self.assertTrue(fc._eq._value is None)
         self.assertTrue(fc._reseq._value is None)
-        from numpy import sin
         xobs = arange(0, 10, 0.5)
         yobs = 9*sin(xobs)
         profile.setObservedProfile(xobs, yobs)
@@ -205,6 +213,13 @@ class TestContribution(unittest.TestCase):
         chiv = fc.residual()
         self.assertEqual(sum(abs(2*xobs-yobs)), dot(chiv, chiv))
 
+        # Test configuration checks
+        fc1 = FitContribution('test1')
+        self.assertRaises(SrFitError, fc1.setResidualEquation, 'chiv')
+        fc1.setProfile(self.profile)
+        self.assertRaises(SrFitError, fc1.setResidualEquation, 'chiv')
+        fc1.setEquation('A * x')
+        fc1.setResidualEquation('chiv')
         return
 
 

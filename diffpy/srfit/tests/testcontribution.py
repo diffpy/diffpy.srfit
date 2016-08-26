@@ -236,5 +236,26 @@ class TestContribution(unittest.TestCase):
         return
 
 
+    def test_getEquation(self):
+        """Check getting the current profile simulation formula."""
+        fc = self.fitcontribution
+        self.assertEqual('', fc.getEquation())
+        fc.setEquation("A * sin(x + 5)")
+        self.assertEqual('(A * sin((x + 5)))', fc.getEquation())
+        return
+
+
+    def test_getResidualEquation(self):
+        """Check getting the current formula for residual equation."""
+        fc = self.fitcontribution
+        self.assertEqual('', fc.getResidualEquation())
+        fc.setProfile(self.profile)
+        fc.setEquation('A * x + B')
+        self.assertEqual('((eq - y) / dy)', fc.getResidualEquation())
+        fc.setResidualEquation('2 * (eq - y)')
+        self.assertEqual('(2 * (eq - y))', fc.getResidualEquation())
+        return
+
+
 if __name__ == "__main__":
     unittest.main()

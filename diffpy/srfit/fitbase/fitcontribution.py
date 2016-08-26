@@ -224,7 +224,9 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         equation has not been set yet.
         """
         from diffpy.srfit.equation.visitors import getExpression
-        rv = getExpression(self._eq) if self._eq is not None else ""
+        rv = ""
+        if self._eq is not None:
+            rv = getExpression(self._eq)
         return rv
 
 
@@ -275,7 +277,9 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         equation has not been configured yet.
         """
         from diffpy.srfit.equation.visitors import getExpression
-        rv = getExpression(self._reseq) if self._reseq is not None else ""
+        rv = ""
+        if self._reseq is not None:
+            rv = getExpression(self._reseq, eqskip='eq$')
         return rv
 
 

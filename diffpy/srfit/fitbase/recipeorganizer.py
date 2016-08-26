@@ -591,6 +591,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         argnames = eq.argdict.keys()
         return self.registerFunction(eq, name, argnames)
 
+
     def evaluateEquation(self, eqstr, ns = {}):
         """Evaluate a string equation.
 
@@ -603,7 +604,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         variable.
         """
         eq = equationFromString(eqstr, self._eqfactory, ns)
+        self._eqfactory.detach(eq)
         return eq()
+
 
     def constrain(self, par, con, ns = {}):
         """Constrain a parameter to an equation.

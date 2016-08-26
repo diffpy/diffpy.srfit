@@ -257,5 +257,20 @@ class TestContribution(unittest.TestCase):
         return
 
 
+    def test_releaseOldEquations(self):
+        """Ensure EquationFactory does not hold to obsolete Equations.
+        """
+        fc = self.fitcontribution
+        self.assertEqual(0, len(fc._eqfactory.equations))
+        for i in range(5):
+            fc.setEquation('A * x + B')
+        self.assertEqual(1, len(fc._eqfactory.equations))
+        fc.setProfile(self.profile)
+        for i in range(5):
+            fc.setResidualEquation('chiv')
+        self.assertEqual(2, len(fc._eqfactory.equations))
+        return
+
+
 if __name__ == "__main__":
     unittest.main()

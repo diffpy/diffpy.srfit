@@ -198,8 +198,8 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
 
         """
         # Build the equation instance.
-        eq = equationFromString(eqstr, self._eqfactory, buildargs = True, ns =
-                ns)
+        eq = equationFromString(eqstr, self._eqfactory,
+                                buildargs=True, ns=ns)
         eq.name = "eq"
 
         # Register any new Parameters.
@@ -208,6 +208,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
 
         # Register eq as an operator
         self._eqfactory.registerOperator("eq", eq)
+        self._eqfactory.detach(self._eq)
         self._eq = eq
 
         # Set the residual if we need to
@@ -265,6 +266,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         elif eqstr == "resv":
             eqstr = resvstr
 
+        self._eqfactory.detach(self._reseq)
         self._reseq = equationFromString(eqstr, self._eqfactory)
 
         return

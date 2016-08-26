@@ -41,10 +41,17 @@ def getArgs(literal, getconsts = True):
     return literal.identify(v)
 
 
-def getExpression(literal):
+def getExpression(literal, eqskip=None):
     """Get math expression string from the Literal tree object.
+
+    eqskip  --  regular expression pattern for Equation objects that should
+                be printed under their own name.  Expand all Equation objects
+                when None.
+
+    Return string.
     """
     v = Printer()
+    v.eqskip = eqskip
     rv = literal.identify(v)
     return rv
 

@@ -23,7 +23,6 @@ See the class documentation for more information.
 __all__ = ["PDFParser"]
 
 import re
-
 import numpy
 
 from diffpy.srfit.exceptions import ParseError

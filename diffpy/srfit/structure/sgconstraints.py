@@ -16,6 +16,7 @@
 """Code to set space group constraints for a crystal structure."""
 
 
+import re
 import numpy
 
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
@@ -660,7 +661,6 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
     compname = "%s_%i"%(parname, idx)
 
     # Check to see if this parameter is free
-    import re
     pat = '%s *((\+|-) *\d+)?$'%compname
     if re.match(pat, formula):
         return par

@@ -19,8 +19,8 @@ __all__ = ["isIdentifier", "validateName"]
 
 import re
 
-
 reident = re.compile(r'^[a-zA-Z_]\w*$')
+
 def isIdentifier(s):
     """Check to see if a python string is a valid identifier.
 

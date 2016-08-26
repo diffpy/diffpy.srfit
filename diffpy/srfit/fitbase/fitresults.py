@@ -22,6 +22,7 @@ displayed on screen or saved to file.
 
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
+import re
 import numpy
 
 from diffpy.srfit.util.inpututils import inputToString
@@ -631,7 +632,6 @@ def resultsDictionary(results):
     """
     resstr = inputToString(results)
 
-    import re
     rx = {'f' : r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?",
           'n' : r'[a-zA-Z_]\w*'}
     pat = r"(%(n)s)\s+(%(f)s)" % rx
@@ -681,7 +681,6 @@ def numericStringSort(lst):
     No return value to highlight inplace sorting.
 
     """
-    import re
     rx = re.compile(r'(\d+)')
     keys = [ rx.split(s) for s in lst ]
     for k in keys:  k[1::2] = [ int(i) for i in k[1::2] ]

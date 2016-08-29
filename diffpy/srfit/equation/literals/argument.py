@@ -21,6 +21,7 @@ constant.
 
 __all__ = ["Argument"]
 
+from numpy import ndarray, array_equal
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.equation.literals.literal import Literal
 
@@ -59,13 +60,13 @@ class Argument(Literal, ArgumentABC):
         val --  The value to assign
 
         """
-        notequiv = self._value is None or val is None or (val != self._value)
-        if notequiv is False:
-            return
-        if notequiv is True or notequiv.any():
-            self.notify()
+        if isinstance(self._value, ndarray) or isinstance(val, ndarray):
+            notequiv = not array_equal(self._value, val)
+        else:
+            notequiv = self._value != val
+        if notequiv:
             self._value = val
-        # if not notequiv.any(): falls through
+            self.notify()
         return
 
     value = property( lambda self: self.getValue(),

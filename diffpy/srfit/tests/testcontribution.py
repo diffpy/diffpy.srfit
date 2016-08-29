@@ -24,6 +24,7 @@ from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.tests.utils import noObserversInGlobalBuilders
 
 
 class TestContribution(unittest.TestCase):
@@ -220,6 +221,7 @@ class TestContribution(unittest.TestCase):
         self.assertRaises(SrFitError, fc1.setResidualEquation, 'chiv')
         fc1.setEquation('A * x')
         fc1.setResidualEquation('chiv')
+        self.assertTrue(noObserversInGlobalBuilders())
         return
 
 
@@ -233,6 +235,7 @@ class TestContribution(unittest.TestCase):
         x = arange(0, 10, 0.5)
         fc.newParameter('x', x)
         self.assertTrue(array_equal(5 + x, fc.evaluate()))
+        self.assertTrue(noObserversInGlobalBuilders())
         return
 
 
@@ -242,6 +245,7 @@ class TestContribution(unittest.TestCase):
         self.assertEqual('', fc.getEquation())
         fc.setEquation("A * sin(x + 5)")
         self.assertEqual('(A * sin((x + 5)))', fc.getEquation())
+        self.assertTrue(noObserversInGlobalBuilders())
         return
 
 

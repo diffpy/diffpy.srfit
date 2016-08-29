@@ -71,6 +71,20 @@ def _makeArgs(num):
     return args
 
 
+def noObserversInGlobalBuilders():
+    """True if no observer function leaks to global builder objects.
+
+    Ensure objects are not immortal due to a reference from static value.
+    """
+    from diffpy.srfit.equation.builder import _builders
+    rv = True
+    for n, b in _builders.items():
+        if b.literal and b.literal._observers:
+            rv = False
+            break
+    return rv
+
+
 def datafile(filename):
     from pkg_resources import resource_filename
     rv = resource_filename(__name__, "testdata/" + filename)

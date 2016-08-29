@@ -23,6 +23,7 @@ import unittest
 import numpy
 
 from diffpy.srfit.tests.utils import _makeArgs
+from diffpy.srfit.tests.utils import noObserversInGlobalBuilders
 
 class TestBuilder(unittest.TestCase):
 
@@ -48,7 +49,9 @@ class TestBuilder(unittest.TestCase):
         eq = factory.makeEquation("v1 + 2", False)
         self.assertTrue(v1 is eq.args[0])
         self.assertEquals(1, len(eq.args))
+        self.assertTrue(noObserversInGlobalBuilders())
         return
+
 
     def testRegisterOperator(self):
         """Try to use an operator without arguments in an equation."""
@@ -80,7 +83,9 @@ class TestBuilder(unittest.TestCase):
         eq = factory.makeEquation("op")
         self.assertAlmostEquals(3, eq())
 
+        self.assertTrue(noObserversInGlobalBuilders())
         return
+
 
     def testSwapping(self):
 
@@ -139,6 +144,7 @@ class TestBuilder(unittest.TestCase):
         self.assertAlmostEquals(3, op.value)
         self.assertAlmostEquals(3, eq1())
 
+        self.assertTrue(noObserversInGlobalBuilders())
         return
 
     def testParseEquation(self):
@@ -192,7 +198,7 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue("c" in eq2.argdict)
         self.assertEquals(eq2.args, [eq2.c, eq2.sigma])
 
-        # Equation with partition
+        self.assertTrue(noObserversInGlobalBuilders())
         return
 
     def testBuildEquation(self):
@@ -264,6 +270,7 @@ class TestBuilder(unittest.TestCase):
         self.assertRaises(ValueError, E, A)
         self.assertRaises(ValueError, E, A, B, C)
 
+        self.assertTrue(noObserversInGlobalBuilders())
         return
 
 

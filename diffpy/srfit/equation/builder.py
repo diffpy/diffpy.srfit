@@ -541,18 +541,16 @@ class OperatorBuilder(BaseBuilder):
         # numpy operator, and we use the corresponding Operator.
         if self.literal is None:
             ufunc = getattr(numpy, self.name)
-            newobj.literal = literals.UFuncOperator(ufunc)
-            self.literal = newobj.literal
-        # If the Operator is already specified, then copy its attributes to a
-        # new Operator inside of the new OperatorBuilder.
-        else:
-            op = literals.Operator()
-            op.name = self.literal.name
-            op.symbol = self.literal.symbol
-            op.nin = self.literal.nin
-            op.nout = self.literal.nout
-            op.operation = self.literal.operation
-            newobj.literal = op
+            self.literal = literals.UFuncOperator(ufunc)
+        # Here the Operator is already specified.  We can copy its attributes
+        # to a new Operator inside of the new OperatorBuilder.
+        op = literals.Operator()
+        op.name = self.literal.name
+        op.symbol = self.literal.symbol
+        op.nin = self.literal.nin
+        op.nout = self.literal.nout
+        op.operation = self.literal.operation
+        newobj.literal = op
 
         # Now that we have a literal, let's check our inputs
         literal = newobj.literal

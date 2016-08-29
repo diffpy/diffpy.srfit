@@ -20,6 +20,7 @@ from diffpy.srfit.equation import Equation
 import unittest
 
 from diffpy.srfit.tests.utils import _makeArgs
+from diffpy.srfit.tests.utils import noObserversInGlobalBuilders
 
 class TestEquation(unittest.TestCase):
 
@@ -99,6 +100,7 @@ class TestEquation(unittest.TestCase):
         self.assertTrue(eq._value is None)
         self.assertEqual(v1.value, eq())
 
+        self.assertTrue(noObserversInGlobalBuilders())
         return
 
     def testEmbeddedEquation(self):
@@ -184,6 +186,7 @@ class TestEquation(unittest.TestCase):
         self.assertTrue(eq._value is None)
         self.assertEqual(v1.value, eq())
 
+        self.assertTrue(noObserversInGlobalBuilders())
         return
 
 

@@ -548,7 +548,7 @@ class OperatorBuilder(BaseBuilder):
         else:
             op = literals.Operator()
             op.name = self.literal.name
-            op.symbol = self.literal.name
+            op.symbol = self.literal.symbol
             op.nin = self.literal.nin
             op.nout = self.literal.nout
             op.operation = self.literal.operation

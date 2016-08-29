@@ -33,7 +33,7 @@ class PDFContribution(FitContribution):
 
     Attributes
     name            --  A name for this FitContribution.
-    profile         --  A Profile that holds the measured (and calcuated)
+    profile         --  A Profile that holds the measured (and calculated)
                         signal.
     _meta           --  Metadata dictionary. This is specific to this object,
                         and not shared with the profile. This is used to record

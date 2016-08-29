@@ -42,7 +42,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
 
     Attributes
     name            --  A name for this FitContribution.
-    profile         --  A Profile that holds the measured (and calcuated)
+    profile         --  A Profile that holds the measured (and calculated)
                         signal.
     _calculators    --  A managed dictionary of Calculators, indexed by name.
     _constraints    --  A set of constrained Parameters. Constraints can be

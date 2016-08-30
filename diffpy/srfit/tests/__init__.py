@@ -41,7 +41,6 @@ def testsuite():
         diffpy.srfit.tests.testfitresults
         diffpy.srfit.tests.testliterals
         diffpy.srfit.tests.testobjcrystparset
-        diffpy.srfit.tests.testordereddict
         diffpy.srfit.tests.testparameter
         diffpy.srfit.tests.testparameterset
         diffpy.srfit.tests.testpdf

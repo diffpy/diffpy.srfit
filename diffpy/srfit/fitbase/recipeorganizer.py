@@ -24,6 +24,7 @@ creates an Equation instance from a string.
 __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
+from collections import OrderedDict
 from itertools import chain, ifilter
 import re
 
@@ -37,7 +38,6 @@ from diffpy.srfit.util.observable import Observable
 from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.util.nameutils import validateName
-from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.interface import _recipeorganizer_interface
 
 class RecipeContainer(Observable, Configurable, Validatable):

@@ -24,9 +24,9 @@ __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import re
 import numpy
+from collections import OrderedDict
 
 from diffpy.srfit.util.inpututils import inputToString
-from diffpy.srfit.util.ordereddict import OrderedDict
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.

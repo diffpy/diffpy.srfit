@@ -40,7 +40,7 @@ See the class documentation for more information.
 
 __all__ = ["Equation"]
 
-from diffpy.srfit.util.ordereddict import OrderedDict
+from collections import OrderedDict
 
 from diffpy.srfit.equation.visitors import validate, getArgs, swap
 from diffpy.srfit.equation.literals.operators import Operator

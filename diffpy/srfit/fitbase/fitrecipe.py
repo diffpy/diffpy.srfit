@@ -34,10 +34,10 @@ using FitRecipe.
 
 __all__ = ["FitRecipe"]
 
+from collections import OrderedDict
 from numpy import array, concatenate, sqrt, dot
 
 from diffpy.srfit.interface import _fitrecipe_interface
-from diffpy.srfit.util.ordereddict import OrderedDict
 from diffpy.srfit.util.tagmanager import TagManager
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer

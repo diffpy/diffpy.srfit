@@ -36,14 +36,6 @@ diffpy.srfit.util.observable module
     :undoc-members:
     :show-inheritance:
 
-diffpy.srfit.util.ordereddict module
-------------------------------------
-
-.. automodule:: diffpy.srfit.util.ordereddict
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 diffpy.srfit.util.tagmanager module
 -----------------------------------
 

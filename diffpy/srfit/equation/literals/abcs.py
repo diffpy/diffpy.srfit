@@ -15,12 +15,11 @@
 
 """Abstract Base Classes for Literals."""
 
-__all__ = ["isinstance", "issubclass", "LiteralABC", "ArgumentABC",
-           "OperatorABC"]
+__all__ = ["LiteralABC", "ArgumentABC", "OperatorABC"]
 
-from diffpy.srfit.util.abcport import ABCMeta
-from diffpy.srfit.util.abcport import abstractmethod, abstractproperty
-from diffpy.srfit.util.abcport import isinstance, issubclass
+
+from abc import ABCMeta, abstractmethod, abstractproperty
+
 
 class LiteralABC(object):
     """Abstract Base Class for Literal. See Literal for usage."""

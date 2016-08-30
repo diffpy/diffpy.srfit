@@ -131,9 +131,8 @@ rather than copied to a package directory, use ::
 ACKNOWLEDGEMENT
 ------------------------------------------------------------------------
 
-Part of the source code in *_abc.py* was derived from Python 2.7 at
-http://www.python.org/download/source; while other code *observable.py*
-was derived from the 1.0 version of the Caltech "Pyre" project.
+The source code in *observable.py* was derived from the 1.0 version
+of the Caltech "Pyre" project.
 
 
 CONTACTS

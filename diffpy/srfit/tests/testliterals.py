@@ -36,8 +36,8 @@ class TestArgument(unittest.TestCase):
     def testIdentity(self):
         """Make sure an Argument is an Argument."""
         a = literals.Argument()
-        self.assertTrue(abcs.issubclass(literals.Argument, abcs.ArgumentABC))
-        self.assertTrue(abcs.isinstance(a, abcs.ArgumentABC))
+        self.assertTrue(issubclass(literals.Argument, abcs.ArgumentABC))
+        self.assertTrue(isinstance(a, abcs.ArgumentABC))
         return
 
     def testValue(self):
@@ -73,8 +73,8 @@ class TestOperator(unittest.TestCase):
     def testIdentity(self):
         """Make sure an Argument is an Argument."""
         op = literals.Operator(symbol = "+", operation = numpy.add, nin = 2)
-        self.assertTrue(abcs.issubclass(literals.Operator, abcs.OperatorABC))
-        self.assertTrue(abcs.isinstance(op, abcs.OperatorABC))
+        self.assertTrue(issubclass(literals.Operator, abcs.OperatorABC))
+        self.assertTrue(isinstance(op, abcs.OperatorABC))
         return
 
     def testValue(self):

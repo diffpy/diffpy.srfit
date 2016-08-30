@@ -4,14 +4,6 @@ diffpy.srfit.util package
 Submodules
 ----------
 
-diffpy.srfit.util.abcport module
---------------------------------
-
-.. automodule:: diffpy.srfit.util.abcport
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 diffpy.srfit.util.inpututils module
 -----------------------------------
 

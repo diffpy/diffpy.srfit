@@ -26,7 +26,6 @@ interface.
 
 __all__ = ["Validator"]
 
-from diffpy.srfit.equation.literals.abcs import isinstance
 from diffpy.srfit.equation.literals.abcs import ArgumentABC, OperatorABC
 from diffpy.srfit.equation.visitors.visitor import Visitor
 

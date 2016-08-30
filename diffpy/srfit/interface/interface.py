@@ -24,7 +24,7 @@ objects. See individual interface classes for specifics.
 __all__ = ["ParameterInterface", "FitRecipeInterface",
            "RecipeOrganizerInterface"]
 
-from diffpy.srfit.equation.literals.abcs import isinstance, ArgumentABC
+from diffpy.srfit.equation.literals.abcs import ArgumentABC
 
 class ParameterInterface(object):
     """Mix-in class for enhancing the Parameter interface."""

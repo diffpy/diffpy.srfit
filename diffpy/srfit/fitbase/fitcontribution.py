@@ -306,9 +306,15 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         # the following will not recompute the equation.
         return self._reseq()
 
+
     def evaluate(self):
-        """Evaluate the contribution equation."""
-        return self._eq()
+        """Evaluate the contribution equation and update profile.ycalc.
+        """
+        yc = self._eq()
+        if self.profile is not None:
+            self.profile.ycalc = yc
+        return yc
+
 
     def _validate(self):
         """Validate my state.

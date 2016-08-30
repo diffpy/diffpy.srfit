@@ -38,12 +38,12 @@ class TestProfileGenerator(unittest.TestCase):
         prof = self.profile
 
         # Try the direct evaluation
-        gen.operation()
-        self.assertTrue(array_equal(prof.x, prof.ycalc))
+        val = gen.operation()
+        self.assertTrue(array_equal(prof.x, val))
 
         # Try evaluation through __call__
-        gen(prof.x)
-        self.assertTrue(array_equal(prof.x, prof.ycalc))
+        val = gen(2 * prof.x)
+        self.assertTrue(array_equal(2 * prof.x, val))
         return
 
     def testUpdate(self):
@@ -57,10 +57,12 @@ class TestProfileGenerator(unittest.TestCase):
         prof.setCalculationPoints(x)
         self.assertTrue(gen._value is None)
         val = gen.value
-        self.assertTrue(array_equal(x, prof.ycalc))
-        self.assertTrue(array_equal(prof.x, prof.ycalc))
-        self.assertTrue(array_equal(val, prof.ycalc))
-        self.assertTrue(array_equal(gen._value, prof.ycalc))
+        self.assertTrue(array_equal(x, val))
+
+        # Verify generated value listens to changes in profile.x.
+        x3 = x + 3
+        prof.x = x3
+        self.assertTrue(array_equal(x3, gen.value))
 
         # Make sure attributes get updated with a new profile.
         x = arange(0, 8, 0.1)
@@ -68,11 +70,7 @@ class TestProfileGenerator(unittest.TestCase):
         prof.setCalculationPoints(x)
         gen.setProfile(prof)
         self.assertTrue(gen._value is None)
-        val = gen.value
-        self.assertTrue(array_equal(x, prof.ycalc))
-        self.assertTrue(array_equal(prof.x, prof.ycalc))
-        self.assertTrue(array_equal(val, prof.ycalc))
-        self.assertTrue(array_equal(gen._value, prof.ycalc))
+        self.assertTrue(array_equal(x, gen.value))
         return
 
 

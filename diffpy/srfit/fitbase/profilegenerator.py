@@ -43,7 +43,6 @@ More examples can be found in the example directory of the documentation.
 
 __all__ = ["ProfileGenerator"]
 
-from numpy import asarray
 
 from diffpy.srfit.equation.literals.operators import Operator
 from diffpy.srfit.fitbase.parameterset import ParameterSet
@@ -124,7 +123,6 @@ class ProfileGenerator(Operator, ParameterSet):
 
         """
         y = self.__call__(self.profile.x)
-        self.profile.ycalc = asarray(y)
         return y
 
     def setProfile(self, profile):

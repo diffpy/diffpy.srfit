@@ -48,6 +48,11 @@ def struToParameterSet(name, stru):
 
     raise TypeError("Unadaptable structure format")
 
+
 from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
+
+# silence pyflakes checker
+assert constrainAsSpaceGroup
+
 
 # End of file

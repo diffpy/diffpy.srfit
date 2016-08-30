@@ -69,7 +69,7 @@ class TestEquationFromString(unittest.TestCase):
 
         # Try to overload a registered parameter
         self.assertRaises(ValueError, equationFromString, "p1+p2",
-                factory, {"p2":p3})
+                factory, {"p2":p4})
 
         return
 

@@ -48,7 +48,7 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(fc._reseq is None)
         # check type checking
         fc1 = FitContribution('test1')
-        self.assertRaises(TypeError, fc.setProfile, 'invalid')
+        self.assertRaises(TypeError, fc1.setProfile, 'invalid')
         # check if residual equation is set up when possible
         fc2 = FitContribution('test2')
         fc2.setEquation('A * x')

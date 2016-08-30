@@ -42,21 +42,21 @@ except ImportError, e:
     logger.warning('%s, SaS tests skipped.', e)
 
 try:
-    import diffpy.Structure
+    import diffpy.Structure as m; del m
     TestCaseStructure = TestCase
 except ImportError:
     TestCaseStructure = _TestCaseDisabled
     logger.warning('Cannot import diffpy.Structure, Structure tests skipped.')
 
 try:
-    import pyobjcryst
+    import pyobjcryst as m; del m
     TestCaseObjCryst = TestCase
 except ImportError:
     TestCaseObjCryst = _TestCaseDisabled
     logger.warning('Cannot import pyobjcryst, pyobjcryst tests skipped.')
 
 try:
-    import diffpy.srreal.pdfcalculator
+    import diffpy.srreal.pdfcalculator as m; del m
     TestCasePDF = TestCase
 except ImportError:
     TestCasePDF = _TestCaseDisabled

@@ -94,7 +94,6 @@ class Equation(Operator):
         self.symbol = name
         self.nin = None
         self.nout = 1
-        self.operation = self.__call__
 
         self.root = None
         self.argdict = OrderedDict()
@@ -102,6 +101,16 @@ class Equation(Operator):
             self.setRoot(root)
 
         return
+
+
+    @property
+    def operation(self):
+        """The bound __call__ method of this Equation object.
+
+        This can be called as is to perform the operation.
+        """
+        return self.__call__
+
 
     def _getArgs(self):
         return self.argdict.values()

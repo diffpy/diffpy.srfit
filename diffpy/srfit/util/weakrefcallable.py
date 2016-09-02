@@ -20,6 +20,7 @@ Picklable storage of callable objects using weak references.
 
 
 import weakref
+import types
 
 
 class WeakBoundMethod(object):
@@ -121,3 +122,29 @@ class WeakBoundMethod(object):
         return
 
 # end of class WeakBoundMethod
+
+# ----------------------------------------------------------------------------
+
+def weak_ref(f, holder=None):
+    """Create weak-reference wrapper to a bound method.
+
+    Parameters
+    ----------
+    f : callable
+        object-bound method or a plain function.
+    holder : set, optional
+        set that should drop the returned wrapper when the `f`
+        gets deallocated.
+
+    Returns
+    -------
+    WeakBoundMethod
+        when `f` is a bound method.  If `f` is a plain function,
+        return `f` and ignore the `holder` argument.
+    """
+    # NOTE Weak referencing plain functions is probably not needed,
+    # because they are already bound to the defining modules.
+    rv = f
+    if isinstance(f, (types.MethodType, types.BuiltinMethodType)):
+        rv = WeakBoundMethod(f, holder=holder)
+    return rv

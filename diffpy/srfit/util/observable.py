@@ -13,6 +13,10 @@
 
 __all__ = ["Observable"]
 
+
+from diffpy.srfit.util.weakrefcallable import weak_ref
+
+
 class Observable(object):
     """
     Provide notification support for classes that maintain dynamic associations with multiple
@@ -54,7 +58,8 @@ class Observable(object):
         """
         Add callable to the set of observers
         """
-        self._observers.add(callable)
+        f = weak_ref(callable, holder=self._observers)
+        self._observers.add(f)
         return callable
 
 
@@ -62,7 +67,8 @@ class Observable(object):
         """
         Remove callable from the set of observers
         """
-        self._observers.remove(callable)
+        f = weak_ref(callable)
+        self._observers.remove(f)
         return callable
 
 

@@ -49,7 +49,6 @@ class Observable(object):
         semaphors = (self,) + other
         for callable in tuple(self._observers):
             callable(semaphors)
-
         return
 
 
@@ -70,6 +69,15 @@ class Observable(object):
         f = weak_ref(callable)
         self._observers.remove(f)
         return
+
+
+    def hasObserver(self, callable):
+        """
+        True if `callable` is present in the set of observers.
+        """
+        f = weak_ref(callable)
+        rv = f in self._observers
+        return rv
 
 
     # meta methods

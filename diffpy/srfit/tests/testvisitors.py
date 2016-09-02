@@ -171,8 +171,8 @@ class TestSwapper(unittest.TestCase):
 
         # Check that the operator value is invalidated
         self.assertTrue(mult._value is None)
-        self.assertTrue(minus._flush not in v2._observers)
-        self.assertTrue(minus._flush in v5._observers)
+        self.assertFalse(v2.hasObserver(minus._flush))
+        self.assertTrue(v5.hasObserver(minus._flush))
 
         # now get the args
         args = visitors.getArgs(mult)
@@ -190,8 +190,8 @@ class TestSwapper(unittest.TestCase):
         plus2 = literals.AdditionOperator()
         visitors.swap(mult, minus, plus2)
         self.assertTrue(mult._value is None)
-        self.assertTrue(mult._flush not in minus._observers)
-        self.assertTrue(mult._flush in plus2._observers)
+        self.assertFalse(minus.hasObserver(mult._flush))
+        self.assertTrue(plus2.hasObserver(mult._flush))
 
         # plus2 has no arguments yet. Verify this.
         self.assertRaises(ValueError, mult.getValue)

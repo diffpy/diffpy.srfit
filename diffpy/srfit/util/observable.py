@@ -60,7 +60,7 @@ class Observable(object):
         """
         f = weak_ref(callable, holder=self._observers)
         self._observers.add(f)
-        return callable
+        return
 
 
     def removeObserver(self, callable):
@@ -69,7 +69,7 @@ class Observable(object):
         """
         f = weak_ref(callable)
         self._observers.remove(f)
-        return callable
+        return
 
 
     # meta methods

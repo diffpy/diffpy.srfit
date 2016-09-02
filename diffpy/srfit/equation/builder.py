@@ -365,6 +365,25 @@ class EquationFactory(object):
 
         return args
 
+    def __getstate__(self):
+        """ Provided to not store, and leak, module-level state. """
+        state = {'newargs': set(self.newargs),
+                 'equations': set(self.equations)}
+        builders = dict(self.builders)
+        # Do not store global builders
+        for key, builder in _builders.iteritems():
+            if builders.get(key) is builder:
+                del builders[key]
+        state['builders'] = builders
+        return state
+
+    def __setstate__(self, state):
+        self.newargs = state.get('newargs', set())
+        self.equations = state.get('equations', set())
+        self.builders = state.get('builders', {})
+        self.builders.update(_builders)
+
+
 # End class EquationFactory
 
 class BaseBuilder(object):

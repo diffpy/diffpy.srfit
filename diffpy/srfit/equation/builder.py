@@ -249,10 +249,23 @@ class EquationFactory(object):
     def detach(self, eq):
         """Detach an equation from the factory.
 
-        This will remove an equation from the purview of the factory. Thus,
-        changes made to the builders will not affect the equation.
+        This will remove the equation from the purview of the factory and
+        also decouple its arguments so that eq does not observe any objects
+        in the factory.  This avoids indirect pickling of detached equations
+        with the factory through their observer callback functions.
+        Changes made to the builders will not affect detached equations.
         """
+        if eq is None:
+            assert eq not in self.equations
+            return
         self.equations.discard(eq)
+        # replace all arguments to decouple from this factory and also
+        # unregister any observer callbacks to the Equation eq.
+        oldargs = eq.args
+        newargs = [literals.Argument(value=a.value, name=a.name, const=a.const)
+                   for a in oldargs]
+        for oldarg, newarg in zip(oldargs, newargs):
+            eq.swap(oldarg, newarg)
         return
 
     def _prepareBuilders(self, eqstr, buildargs, argclass, argkw):

@@ -90,7 +90,9 @@ class WeakBoundMethod(object):
 
 
     def __eq__(self, other):
-        rv = (self.function == other.function and self._wref == other._wref)
+        rv = (self.function == other.function and
+              (self._wref == other._wref or
+               None is self._wref() is other._wref()))
         return rv
 
 
@@ -113,13 +115,18 @@ class WeakBoundMethod(object):
         (self.function, self.holder, mobj) = state
         if mobj is None:
             # use a fake weak reference that mimics deallocated object.
-            self._wref = lambda : None
+            self._wref = self.__mimic_empty_ref
             return
         # Here the referred object exists.
         cb = (lambda ignore_argument : self.holder.discard(self)
               if self.holder is not None else None)
         self._wref = weakref.ref(mobj, cb)
         return
+
+
+    @staticmethod
+    def __mimic_empty_ref():
+        return None
 
 # end of class WeakBoundMethod
 

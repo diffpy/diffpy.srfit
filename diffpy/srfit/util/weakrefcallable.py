@@ -58,8 +58,7 @@ class WeakBoundMethod(object):
         # if necessary.
         self.function = f.__func__.__get__(None, f.im_class)
         self.holder = holder
-        cb = (lambda ignore_argument : self.holder.discard(self)
-              if self.holder is not None else None)
+        cb = self.__make_callback(self.holder)
         self._wref = weakref.ref(f.__self__, cb)
         return
 
@@ -118,8 +117,7 @@ class WeakBoundMethod(object):
             self._wref = self.__mimic_empty_ref
             return
         # Here the referred object exists.
-        cb = (lambda ignore_argument : self.holder.discard(self)
-              if self.holder is not None else None)
+        cb = self.__make_callback(self.holder)
         self._wref = weakref.ref(mobj, cb)
         return
 
@@ -127,6 +125,17 @@ class WeakBoundMethod(object):
     @staticmethod
     def __mimic_empty_ref():
         return None
+
+
+    @staticmethod
+    def __make_callback(holder):
+        if holder is None:
+            return None
+        def cb(wref):
+            holder.difference_update([
+                m for m in holder
+                if isinstance(m, WeakBoundMethod) and m._wref == wref])
+        return cb
 
 # end of class WeakBoundMethod
 

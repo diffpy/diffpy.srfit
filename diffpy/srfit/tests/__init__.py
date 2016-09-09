@@ -52,6 +52,7 @@ def testsuite():
         diffpy.srfit.tests.testsgconstriants
         diffpy.srfit.tests.testtagmanager
         diffpy.srfit.tests.testvisitors
+        diffpy.srfit.tests.testweakrefcallable
     '''.split()
     suite = unittest.TestSuite()
     loader = unittest.defaultTestLoader

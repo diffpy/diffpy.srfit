@@ -51,9 +51,4 @@ from diffpy.srfit.equation.literals.operators import SetOperator
 from diffpy.srfit.equation.literals.operators import ArrayOperator
 from diffpy.srfit.equation.literals.operators import PolyvalOperator
 
-# Try some optimizations on these classes
-try:
-    import psyco
-    psyco.profile()
-except ImportError:
-    pass
+# End of file

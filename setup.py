@@ -77,7 +77,6 @@ setup_args = dict(
         packages = find_packages(),
         test_suite = 'diffpy.srfit.tests',
         include_package_data = True,
-        entry_points = {},
         install_requires = [],
         zip_safe = False,
         author = "Simon J.L. Billinge",

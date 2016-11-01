@@ -290,9 +290,6 @@ class PDFContribution(FitContribution):
 
     def setQmin(self, qmin):
         """Set the qmin value.
-
-        This has no effect on the crystal PDF.
-
         """
         self._meta["qmin"] = qmin
         for gen in self._generators.values():

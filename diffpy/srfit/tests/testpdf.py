@@ -113,10 +113,13 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
     def setUp(self):
         global PDFGenerator
         from diffpy.srfit.pdf import PDFGenerator
+        self.gen = PDFGenerator()
+        return
+
 
     def testGenerator(self):
         qmax = 27.0
-        gen = PDFGenerator()
+        gen = self.gen
         gen.setScatteringType('N')
         self.assertEqual('N', gen.getScatteringType())
         gen.setQmax(qmax)
@@ -160,6 +163,18 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
         diff = y - yref
         res = numpy.dot(diff, diff)
         self.assertAlmostEquals(0, res)
+        return
+
+
+    def test_setQmin(self):
+        """Verify qmin is propagated to the calculator object.
+        """
+        gen = self.gen
+        self.assertEquals(0, gen.getQmin())
+        self.assertEquals(0, gen._calc.qmin)
+        gen.setQmin(0.93)
+        self.assertEquals(0.93, gen.getQmin())
+        self.assertEquals(0.93, gen._calc.qmin)
         return
 
 

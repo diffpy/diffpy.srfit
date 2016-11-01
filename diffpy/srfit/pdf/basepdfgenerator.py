@@ -187,9 +187,6 @@ class BasePDFGenerator(ProfileGenerator):
 
     def setQmin(self, qmin):
         """Set the qmin value.
-
-        This has no effect on the crystal PDF.
-
         """
         self._calc.qmin = qmin
         self.meta["qmin"] = self.getQmin()

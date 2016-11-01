@@ -75,15 +75,4 @@ class PDFGenerator(BasePDFGenerator):
         self._setCalculator(PDFCalculator())
         return
 
-    def setQmin(self, qmin):
-        """Set the qmin value.
-
-        This has no effect on the crystal PDF.
-
-        """
-        # This is overloaded here so that the qmin value does not get
-        # propagated to the calculator.
-        self.meta["qmin"] = self.getQmin()
-        return
-
 # End class PDFGenerator

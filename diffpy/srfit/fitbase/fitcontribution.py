@@ -208,7 +208,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
 
         # Register eq as an operator
         self._eqfactory.registerOperator("eq", eq)
-        self._eqfactory.detach(self._eq)
+        self._eqfactory.wipeout(self._eq)
         self._eq = eq
 
         # Set the residual if we need to
@@ -267,7 +267,7 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
             eqstr = resvstr
 
         reseq = equationFromString(eqstr, self._eqfactory)
-        self._eqfactory.detach(self._reseq)
+        self._eqfactory.wipeout(self._reseq)
         self._reseq = reseq
 
         return

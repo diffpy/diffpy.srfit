@@ -604,8 +604,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         variable.
         """
         eq = equationFromString(eqstr, self._eqfactory, ns)
-        self._eqfactory.detach(eq)
-        return eq()
+        try:
+            rv = eq()
+        finally:
+            self._eqfactory.wipeout(eq)
+        return rv
 
 
     def constrain(self, par, con, ns = {}):

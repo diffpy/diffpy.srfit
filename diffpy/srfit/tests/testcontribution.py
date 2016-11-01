@@ -276,5 +276,23 @@ class TestContribution(unittest.TestCase):
         return
 
 
+    def test_registerFunction(self):
+        """Ensure registered function works after second setEquation call.
+        """
+        fc = self.fitcontribution
+        fsquare = lambda x : x**2
+        fc.registerFunction(fsquare, name='fsquare')
+        fc.setEquation('fsquare')
+        fc.x.setValue(5)
+        self.assertEqual(25, fc.evaluate())
+        fc.x << 6
+        self.assertEqual(36, fc.evaluate())
+        fc.setEquation('fsquare + 5')
+        self.assertEqual(41, fc.evaluate())
+        fc.x << -1
+        self.assertEqual(6, fc.evaluate())
+        return
+
+
 if __name__ == "__main__":
     unittest.main()

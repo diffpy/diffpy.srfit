@@ -246,27 +246,27 @@ class EquationFactory(object):
             del self.builders[name]
         return
 
-    def detach(self, eq):
-        """Detach an equation from the factory.
+
+    def wipeout(self, eq):
+        """Invalidate the specified equation and remove it from the factory.
 
         This will remove the equation from the purview of the factory and
-        also decouple its arguments so that eq does not observe any objects
-        in the factory.  This avoids indirect pickling of detached equations
-        with the factory through their observer callback functions.
-        Changes made to the builders will not affect detached equations.
+        also change its formula to return NaN.  This ensures that eq does
+        not observe any object in the factory and thus prevents its indirect
+        pickling with the factory because of observer callback function.
+
+        No return value.
         """
         if eq is None:
             assert eq not in self.equations
             return
         self.equations.discard(eq)
-        # replace all arguments to decouple from this factory and also
-        # unregister any observer callbacks to the Equation eq.
-        oldargs = eq.args
-        newargs = [literals.Argument(value=a.value, name=a.name, const=a.const)
-                   for a in oldargs]
-        for oldarg, newarg in zip(oldargs, newargs):
-            eq.swap(oldarg, newarg)
+        # invalidate this equation to clean up any observer relations of
+        # objects in the factory towards its literals tree.
+        nan = literals.Argument('nan', value=numpy.nan, const=True)
+        eq.setRoot(nan)
         return
+
 
     def _prepareBuilders(self, eqstr, buildargs, argclass, argkw):
         """Prepare builders so that equation string can be evaluated.

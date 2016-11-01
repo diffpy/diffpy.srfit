@@ -266,8 +266,9 @@ class FitContribution(_fitcontribution_interface, ParameterSet):
         elif eqstr == "resv":
             eqstr = resvstr
 
+        reseq = equationFromString(eqstr, self._eqfactory)
         self._eqfactory.detach(self._reseq)
-        self._reseq = equationFromString(eqstr, self._eqfactory)
+        self._reseq = reseq
 
         return
 

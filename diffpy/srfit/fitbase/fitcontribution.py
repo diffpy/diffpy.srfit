@@ -25,14 +25,13 @@ See the examples in the documention for how to use a FitContribution.
 
 __all__ = ["FitContribution"]
 
-from diffpy.srfit.interface import _fitcontribution_interface
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.exceptions import SrFitError
 
-class FitContribution(_fitcontribution_interface, ParameterSet):
+class FitContribution(ParameterSet):
     """FitContribution class.
 
     FitContributions organize an Equation that calculates the signal, and a

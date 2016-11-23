@@ -27,9 +27,6 @@ _parameter_interface = ParameterInterface
 from diffpy.srfit.interface.interface import RecipeOrganizerInterface
 _recipeorganizer_interface = RecipeOrganizerInterface
 
-from diffpy.srfit.interface.interface import FitContributionInterface
-_fitcontribution_interface = FitContributionInterface
-
 from diffpy.srfit.interface.interface import FitRecipeInterface
 _fitrecipe_interface = FitRecipeInterface
 

@@ -44,6 +44,8 @@ class ParameterInterface(object):
 
 # End class ParameterInterface
 
+# ----------------------------------------------------------------------------
+
 class RecipeOrganizerInterface(object):
     """Mix-in class for enhancing the RecipeOrganizer interface."""
 
@@ -87,33 +89,7 @@ class RecipeOrganizerInterface(object):
 
 # End class RecipeOrganizerInterface
 
-class FitContributionInterface(object):
-    """Mix-in class for enhancing the FitContribution interface."""
-
-    def __ior__(self, args):
-        """setProfile, addProfileGenerator or setEquation with |=
-
-        Think of "|" as the union of components.
-
-        This accepts arguments for a single Profile or ProfileGenerator.
-        """
-        def f(*args):
-            from diffpy.srfit.fitbase.profile import Profile
-            from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
-            if isinstance(args[0], Profile):
-                self.setProfile(*args)
-            elif isinstance(args[0], ProfileGenerator):
-                self.addProfileGenerator(*args)
-            elif isinstance(args[0], basestring):
-                self.setEquation(*args)
-            else:
-                raise TypeError("Invalid argument")
-            return
-        _applyargs(args, f)
-        return self
-
-
-# End class FitContributionInterface
+# ----------------------------------------------------------------------------
 
 class FitRecipeInterface(object):
     """Mix-in class for enhancing the FitRecipe interface."""
@@ -148,6 +124,8 @@ class FitRecipeInterface(object):
         return self
 
 # End class FitRecipeInterface
+
+# Local helper functions -----------------------------------------------------
 
 def _applymanyargs(args, f):
     """Apply arguments to a function.

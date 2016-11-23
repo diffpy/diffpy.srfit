@@ -99,8 +99,8 @@ def plotResults(recipe):
 
     # We want to extend the fitting range to its full extent so we can get a
     # nice full plot.
-    recipe.lowT.profile.setCalculationRange()
-    recipe.highT.profile.setCalculationRange()
+    recipe.lowT.profile.setCalculationRange(xmin='obs', xmax='obs')
+    recipe.highT.profile.setCalculationRange(xmin='obs', xmax='obs')
     T = recipe.lowT.profile.x
     U = recipe.lowT.profile.y
     # We can use a FitContribution's 'evaluateEquation' method to evaluate

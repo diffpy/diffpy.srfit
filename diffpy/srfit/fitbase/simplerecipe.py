@@ -111,31 +111,41 @@ class SimpleRecipe(FitRecipe):
         """
         return self.profile.setObservedProfile(xobs, yobs, dyobs)
 
-    def setCalculationRange(self, xmin = None, xmax = None, dx = None):
-        """Set the calculation range
 
-        Arguments
-        xmin    --  The minimum value of the independent variable.
-                    If xmin is None (default), the minimum observed value will
-                    be used. This is clipped to the minimum observed x.
-        xmax    --  The maximum value of the independent variable.
-                    If xmax is None (default), the maximum observed value will
-                    be used. This is clipped to the maximum observed x.
-        dx      --  The sample spacing in the independent variable. If dx is
-                    None (default), then the spacing in the observed points
-                    will be preserved.
+    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+        """Set epsilon-inclusive calculation range.
+
+        Adhere to the observed ``xobs`` points when ``dx`` is the same
+        as in the data.  ``xmin`` and ``xmax`` are clipped at the bounds
+        of the observed data.
+
+        Parameters
+        ----------
+
+        xmin : float or "obs", optional
+            The minimum value of the independent variable.  Keep the
+            current minimum when not specified.  If specified as "obs"
+            reset to the minimum observed value.
+        xmax : float or "obs", optional
+            The maximum value of the independent variable.  Keep the
+            current maximum when not specified.  If specified as "obs"
+            reset to the maximum observed value.
+        dx : float or "obs", optional
+            The sample spacing in the independent variable.  When different
+            from the data, resample the ``x`` as anchored at ``xmin``.
 
         Note that xmin is always inclusive (unless clipped). xmax is inclusive
         if it is within the bounds of the observed data.
 
-        raises AttributeError if there is no observed profile
-        raises ValueError if xmin > xmax
-        raises ValueError if dx > xmax-xmin
-        raises ValueError if dx <= 0
-
+        Raises
+        ------
+        AttributeError
+            If there is no observed data.
+        ValueError
+            When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
         """
-        return self.profile.setCalculationRange(xmin = None, xmax = None,
-                dx = None)
+        return self.profile.setCalculationRange(xmin, xmax, dx)
+
 
     def setCalculationPoints(self, x):
         """Set the calculation points.

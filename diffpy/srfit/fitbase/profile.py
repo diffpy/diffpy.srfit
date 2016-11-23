@@ -146,73 +146,102 @@ class Profile(Observable, Validatable):
 
         return
 
-    def setCalculationRange(self, xmin = None, xmax = None, dx = None):
-        """Set the calculation range
+    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+        """Set epsilon-inclusive calculation range.
 
-        Arguments
-        xmin    --  The minimum value of the independent variable.
-                    If xmin is None (default), the minimum observed value will
-                    be used. This is clipped to the minimum observed x.
-        xmax    --  The maximum value of the independent variable.
-                    If xmax is None (default), the maximum observed value will
-                    be used. This is clipped to the maximum observed x.
-        dx      --  The sample spacing in the independent variable. If dx is
-                    None (default), then the spacing in the observed points
-                    will be preserved.
+        Adhere to the observed ``xobs`` points when ``dx`` is the same
+        as in the data.  ``xmin`` and ``xmax`` are clipped at the bounds
+        of the observed data.
+
+        Parameters
+        ----------
+
+        xmin : float or "obs", optional
+            The minimum value of the independent variable.  Keep the
+            current minimum when not specified.  If specified as "obs"
+            reset to the minimum observed value.
+        xmax : float or "obs", optional
+            The maximum value of the independent variable.  Keep the
+            current maximum when not specified.  If specified as "obs"
+            reset to the maximum observed value.
+        dx : float or "obs", optional
+            The sample spacing in the independent variable.  When different
+            from the data, resample the ``x`` as anchored at ``xmin``.
 
         Note that xmin is always inclusive (unless clipped). xmax is inclusive
         if it is within the bounds of the observed data.
 
-        raises AttributeError if there is no observed profile
-        raises ValueError if xmin > xmax
-        raises ValueError if dx > xmax-xmin
-        raises ValueError if dx <= 0
-
+        Raises
+        ------
+        AttributeError
+            If there is no observed data.
+        ValueError
+            When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
         """
-        clip = dx is None
-
         if self.xobs is None:
             raise AttributeError("No observed profile")
-
-        if xmin is None and xmax is None and dx is None:
-            self.x = self.xobs
-            self.y = self.yobs
-            self.dy = self.dyobs
-            return
-
-        if xmin is None:
-            xmin = self.xobs[0]
-        else:
-            xmin = float(xmin)
-
-        if xmax is None:
-            xmax = self.xobs[-1]
-        else:
-            xmax = float(xmax)
-
+        # local helper function
+        def _isobs(a):
+            if not isinstance(a, basestring):
+                return False
+            if a != 'obs':
+                raise ValueError('Must be either float or "obs".')
+            return True
+        # resolve new low and high bounds for x
+        lo = (self.x[0] if xmin is None else
+              self.xobs[0] if _isobs(xmin) else float(xmin))
+        lo = max(lo, self.xobs[0])
+        hi = (self.x[-1] if xmax is None else
+              self.xobs[-1] if _isobs(xmax) else float(xmax))
+        hi = min(hi, self.xobs[-1])
+        # determine if we need to clip the original grid
+        clip = True
+        step = None
+        ncur = len(self.x)
+        stepcur = (1 if ncur < 2
+                   else (self.x[-1] - self.x[0]) / (ncur - 1.0))
+        nobs = len(self.xobs)
+        stepobs = (1 if nobs < 2
+                   else (self.xobs[-1] - self.xobs[0]) / (nobs - 1.0))
         if dx is None:
-            dx = (self.xobs[-1] - self.xobs[0]) / len(self.xobs)
+            # check if xobs overlaps with x
+            i0 = numpy.fabs(self.xobs - self.x[0]).argmin()
+            n0 = min(len(self.x), len(self.xobs) - i0)
+            if not numpy.allclose(self.xobs[i0 : i0 + n0], self.x[:n0]):
+                clip = False
+                step = stepcur if ncur > 1 else stepobs
+        elif _isobs(dx):
+            assert clip and step is None
+        elif numpy.allclose(stepobs, dx):
+            assert clip and step is None
         else:
-            dx = float(dx)
-
-        if xmin > xmax:
-            raise ValueError("xmax must be greater than xmin")
-        if dx > xmax - xmin:
-            raise ValueError("dx must be less than xmax-xmin")
-        if dx <= 0:
-            raise ValueError("dx must be positive")
-
+            clip = False
+            step = float(dx)
+        # verify that we either clip or have the step defined.
+        assert clip or step is not None
+        # hi, lo, step, clip all resolved here.
+        # validate arguments
+        if lo > hi:
+            raise ValueError("xmax must be greater than xmin.")
+        if not clip:
+            if step > hi - lo:
+                raise ValueError("dx must be less than (xmax - xmin).")
+            if step <= 0:
+                raise ValueError("dx must be positive.")
+        # determine epsilon extensions to the lower and upper bounds.
+        epslo = abs(lo) * epsilon + epsilon
+        epshi = abs(hi) * epsilon + epsilon
+        # process the new grid.
         if clip:
-            x = self.xobs
-            indices = numpy.logical_and( xmin - epsilon <= x , x <= xmax +
-                    epsilon )
+            indices = (lo - epslo <= self.xobs) & (self.xobs <= hi + epshi)
             self.x = self.xobs[indices]
             self.y = self.yobs[indices]
             self.dy = self.dyobs[indices]
         else:
-            self.setCalculationPoints(numpy.arange(xmin, xmax+0.5*dx, dx))
-
+            x1 = numpy.arange(lo, hi + epshi, step)
+            self.setCalculationPoints(x1)
         return
+
 
     def setCalculationPoints(self, x):
         """Set the calculation points.

@@ -150,10 +150,6 @@ refinement with SrFit.
     Refine PDF from nanoparticle of assumed shape using a crystal model and SAS
     data from the same system.
 
-* anneal.py_
-    Demonstration of effectively using a simulated annealing algorithm in a PDF
-    structure refinement.
-
 Miscellaneous
 --------------
 
@@ -171,5 +167,3 @@ future versions.
     recipes to be written with less code. This is not the same as a
     full-featured scripting interface, but rather somewhere in between a
     scripting interface and the API.
-
-

@@ -167,8 +167,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
 
     # Needed by __setattr__
-    _parameters = {}
-    __managed = {}
+    _parameters = OrderedDict()
+    __managed = []
 
     def __setattr__(self, name, value):
         """Parameter access and object checking."""

@@ -134,7 +134,7 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
 
         calc = gen._calc
         # Test parameters
-        for par in gen.iterPars(recurse = False):
+        for par in gen.iterPars(recurse=False):
             pname = par.name
             defval = calc._getDoubleAttr(pname)
             self.assertEquals(defval, par.getValue())

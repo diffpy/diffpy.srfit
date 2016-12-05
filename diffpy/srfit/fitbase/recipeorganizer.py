@@ -106,30 +106,34 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
-    def iterPars(self, name = ".", recurse = True):
-        """Iterate over Parameters.
 
-        name    --  Select parameters with this name (regular expression,
-                    default ".").
-        recurse --  Recurse into managed objects (default True)
+    def iterPars(self, pattern="", recurse=True):
+        """Iterate over the Parameters contained in this object.
+
+        Parameters
+        ----------
+        pattern : str
+            Iterate over parameters with names matching this regular
+            expression (all parameters by default).
+        recurse : bool
+            Recurse into managed objects when True (default).
         """
-        for par in self._parameters.itervalues():
-            if re.match(name, par.name):
+        regexp = re.compile(pattern)
+        for par in list(self._parameters.values()):
+            if regexp.search(par.name):
                 yield par
-
         if not recurse:
             return
-
         # Iterate over objects within the managed dictionaries.
         managed = self.__managed[:]
         managed.remove(self._parameters)
         for m in managed:
             for obj in m.values():
                 if hasattr(obj, "iterPars"):
-                    for par in obj.iterPars(name = name):
+                    for par in obj.iterPars(pattern=pattern):
                         yield par
-
         return
+
 
     def __iter__(self):
         """Iterate over top-level parameters."""

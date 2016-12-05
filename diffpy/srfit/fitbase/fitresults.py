@@ -27,6 +27,8 @@ import numpy
 from collections import OrderedDict
 
 from diffpy.srfit.util.inpututils import inputToString
+from diffpy.srfit.util import _DASHEDLINE
+
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
@@ -333,8 +335,7 @@ class FitResults(object):
         if not certain:
             l += " (Chi2 and Reduced Chi2 invalid)"
         lines.append(l)
-        dashedline = 79 * '-'
-        lines.append(dashedline)
+        lines.append(_DASHEDLINE)
         formatstr = "%-14s %.8f"
         lines.append(formatstr%("Residual",self.residual))
         lines.append(formatstr%("Contributions", self.residual - self.penalty))
@@ -353,7 +354,7 @@ class FitResults(object):
             if not certain:
                 l += " (Chi2 and Reduced Chi2 invalid)"
             lines.append(l)
-            lines.append(dashedline)
+            lines.append(_DASHEDLINE)
             formatstr = "%-10s %-42.8f"
             for name in keys:
                 res = self.conresults[name]
@@ -373,7 +374,7 @@ class FitResults(object):
                 m = "Uncertainties invalid"
                 l += " (%s)"%m
             lines.append(l)
-            lines.append(dashedline)
+            lines.append(_DASHEDLINE)
 
             varnames = self.varnames
             varvals = self.varvals
@@ -395,7 +396,7 @@ class FitResults(object):
             varlines = []
             lines.append("")
             lines.append("Fixed Variables")
-            lines.append(dashedline)
+            lines.append(_DASHEDLINE)
             w = max(map(len, self.fixednames))
             w = str(w+1)
             formatstr = "%-"+w+"s " + pet
@@ -412,7 +413,7 @@ class FitResults(object):
             if not certain:
                 l += " (Uncertainties invalid)"
             lines.append(l)
-            lines.append(dashedline)
+            lines.append(_DASHEDLINE)
 
             w = 0
             keys = []
@@ -441,7 +442,7 @@ class FitResults(object):
         if not certain:
             l += " (Correlations invalid)"
         lines.append(l)
-        lines.append(dashedline)
+        lines.append(_DASHEDLINE)
         tup = []
         cornames = []
         n = len(self.varnames)

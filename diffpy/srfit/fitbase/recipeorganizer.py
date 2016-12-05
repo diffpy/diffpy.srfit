@@ -39,6 +39,8 @@ from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.interface import _recipeorganizer_interface
+from diffpy.srfit.util import _DASHEDLINE
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -866,14 +868,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Returns the lines of the formatted string in a list.
         """
-        dashedline = 79 * '-'
         lines = []
         formatstr = "%-20s %s"
 
         lines.append((indent + self.name)[:79])
         # Show parameters
         if self._parameters:
-            lines.append((indent + dashedline)[:79])
+            lines.append((indent + _DASHEDLINE)[:79])
             items = self._parameters.items()
             items.sort()
             lines.extend((indent + formatstr%(n, p.value))[:79] for n,p in
@@ -910,8 +911,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if clines:
             clines.sort()
-            dashedline = 79 * '-'
-            clines.insert(0, dashedline)
+            clines.insert(0, _DASHEDLINE)
             clines.insert(0, "Constraints")
         return clines
 
@@ -932,8 +932,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if rlines:
             rlines.sort()
-            dashedline = 79 * '-'
-            rlines.insert(0, dashedline)
+            rlines.insert(0, _DASHEDLINE)
             rlines.insert(0, "Restraints")
         return rlines
 

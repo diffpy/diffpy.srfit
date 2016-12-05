@@ -14,6 +14,10 @@
 ##############################################################################
 
 
-"""Utilities used throughout SrFit."""
+"""\
+Utilities and constants used throughout SrFit.
+"""
+
+_DASHEDLINE = 78 * '-'
 
 # End of file

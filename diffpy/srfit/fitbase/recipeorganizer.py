@@ -867,32 +867,43 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     # For printing the configured recipe to screen
 
-    def _formatManaged(self, indent = ""):
-        """Format fit hierarchy for showing.
+    def _formatManaged(self, prefix=""):
+        """Format hierarchy of managed parameters for showing.
 
-        Returns the lines of the formatted string in a list.
+        Parameters
+        ----------
+        prefix : str
+            The leading string to be prefixed to each parameter name.
+
+        Returns
+        -------
+        list
+            List of formatted lines per each Parameter together with
+            a leading header and separator lines.  Return empty list
+            when no parameters were defined.
         """
         lines = []
-        formatstr = "%-20s %s"
-
-        lines.append((indent + self.name)[:79])
-        # Show parameters
+        formatstr = "{:<W}{}"
+        toplevel = not prefix
+        # Format own parameters.
         if self._parameters:
-            lines.append((indent + _DASHEDLINE)[:79])
-            items = self._parameters.items()
-            items.sort()
-            lines.extend((indent + formatstr%(n, p.value))[:79] for n,p in
-                    items)
-
-        indent += "  "
-
+            w0 = max(len(n) for n in self._parameters)
+            w1 = ((w0 + len(prefix) + 1) // 4 + 1) * 4
+            fmt = formatstr.replace('W', str(w1))
+            lines.extend(fmt.format(prefix + n, p.value)
+                         for n, p in self._parameters.items())
+        # Recurse into managed objects.
         for obj in self._iterManaged():
             if hasattr(obj, "_formatManaged"):
-                tlines = obj._formatManaged(indent)
-                lines.append("")
+                oprefix = prefix + obj.name + "."
+                tlines = obj._formatManaged(prefix=oprefix)
+                lines.extend([""] if lines and tlines else [])
                 lines.extend(tlines)
-
+        # Insert header lines if there are defined parameters.
+        if toplevel and lines:
+            lines[:0] = ["Parameters", _DASHEDLINE]
         return lines
+
 
     def _formatConstraints(self):
         """Format constraints for showing.
@@ -900,7 +911,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         This collects constraints on all levels of the hierarchy and displays
         them with respect to this level.
 
-        Returns the lines of the formatted string in a list.
+        Returns
+        -------
+        list
+            List of formatted lines displaying the defined constraints
+            together with a leading header.  Return empty list when no
+            constraints were defined.
         """
         cdict = self._getConstraints()
         # Find each constraint and format the equation
@@ -908,16 +924,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         for par, con in cdict.items():
             loc = self._locateManagedObject(par)
             if loc:
-                locstr = ".".join(o.name for o in loc)
+                locstr = ".".join(o.name for o in loc[1:])
                 clines.append("%s <-- %s" % (locstr, con.eqstr))
             else:
                 clines.append("%s <-- %s" % (par.name, con.eqstr))
-
         if clines:
+            # FIXME try to reuse constraints ordering as in FitRecipe._prepare
             clines.sort()
-            clines.insert(0, _DASHEDLINE)
-            clines.insert(0, "Constraints")
+            clines[:0] = ["Constraints", _DASHEDLINE]
         return clines
+
 
     def _formatRestraints(self):
         """Format restraints for showing.
@@ -925,7 +941,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         This collects restraints on all levels of the hierarchy and displays
         them with respect to this level.
 
-        Returns the lines of the formatted string in a list.
+        Returns
+        -------
+        list
+            List of formatted lines displaying the defined restraints
+            together with a leading header.  Return empty list when no
+            restraints were defined.
         """
         rset = self._getRestraints()
         rlines = []
@@ -933,12 +954,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s"%\
                     (res.eqstr, res.lb, res.ub, res.sig, res.scaled)
             rlines.append(line)
-
         if rlines:
             rlines.sort()
-            rlines.insert(0, _DASHEDLINE)
-            rlines.insert(0, "Restraints")
+            rlines[:0] = ["Restraints", _DASHEDLINE]
         return rlines
+
 
     def show(self):
         """Show the configuration on screen.
@@ -953,13 +973,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # FIXME - parameter names in equations not particularly informative
         # Show constraints
         tlines = self._formatConstraints()
-        lines.append("")
+        if lines and tlines:
+            lines.append("")
         lines.extend(tlines)
 
         # FIXME - parameter names in equations not particularly informative
         # Show restraints
         tlines = self._formatRestraints()
-        lines.append("")
+        if lines and tlines:
+            lines.append("")
         lines.extend(tlines)
 
         print "\n".join(lines)

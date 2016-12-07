@@ -15,7 +15,9 @@
 
 """Tests for refinableobj module."""
 
+import sys
 import unittest
+import cStringIO
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.calculator import Calculator
@@ -25,6 +27,8 @@ from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 
 import numpy
+
+# ----------------------------------------------------------------------------
 
 class TestEquationFromString(unittest.TestCase):
 
@@ -72,6 +76,8 @@ class TestEquationFromString(unittest.TestCase):
                 factory, {"p2":p4})
 
         return
+
+# ----------------------------------------------------------------------------
 
 class TestRecipeContainer(unittest.TestCase):
 
@@ -150,15 +156,21 @@ class TestRecipeContainer(unittest.TestCase):
 
         return
 
+# ----------------------------------------------------------------------------
+
 class TestRecipeOrganizer(unittest.TestCase):
 
     def setUp(self):
         self.m = RecipeOrganizer("test")
-
         # Add a managed container so we can do more in-depth tests.
         self.m._containers = {}
         self.m._manage(self.m._containers)
         return
+
+    def tearDown(self):
+        sys.stdout = sys.__stdout__
+        return
+
 
     def testNewParameter(self):
         """Test the addParameter method."""
@@ -174,8 +186,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         # Add a new Parameter
         p2 = m._newParameter("p2", 0)
         self.assertTrue(p2 is m.p2)
-
         return
+
 
     def testAddParameter(self):
         """Test the addParameter method."""
@@ -493,7 +505,54 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEqual(0, len(self.m._eqfactory.equations))
         return
 
-#
+
+    def test_show(self):
+        """Verify output from the show function.
+        """
+        sys.stdout = cStringIO.StringIO()
+        self.m.show()
+        self.assertEqual('', sys.stdout.getvalue())
+        sys.stdout = cStringIO.StringIO()
+        self.m._newParameter('x', 1)
+        self.m._newParameter('y', 2)
+        self.m.show()
+        out1 = sys.stdout.getvalue()
+        lines1 = out1.strip().split('\n')
+        self.assertEqual(4, len(lines1))
+        self.assertTrue('Parameters' in lines1)
+        self.assertFalse('Constraints' in lines1)
+        self.assertFalse('Restraints' in lines1)
+        self.m._newParameter('z', 7)
+        self.m.constrain('y', '3 * z')
+        sys.stdout = cStringIO.StringIO()
+        self.m.show()
+        out2 = sys.stdout.getvalue()
+        lines2 = out2.strip().split('\n')
+        self.assertEqual(9, len(lines2))
+        self.assertTrue('Parameters' in lines2)
+        self.assertTrue('Constraints' in lines2)
+        self.assertFalse('Restraints' in lines2)
+        self.m.restrain('z', lb=2, ub=3, sig=0.001)
+        sys.stdout = cStringIO.StringIO()
+        self.m.show()
+        out3 = sys.stdout.getvalue()
+        lines3 = out3.strip().split('\n')
+        self.assertEqual(13, len(lines3))
+        self.assertTrue('Parameters' in lines3)
+        self.assertTrue('Constraints' in lines3)
+        self.assertTrue('Restraints' in lines3)
+        sys.stdout = cStringIO.StringIO()
+        self.m.show(pattern='x')
+        out4 = sys.stdout.getvalue()
+        lines4 = out4.strip().split('\n')
+        self.assertEqual(9, len(lines4))
+        sys.stdout = cStringIO.StringIO()
+        self.m.show(pattern='^')
+        out5 = sys.stdout.getvalue()
+        self.assertEqual(out3, out5)
+        return
+
+# ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     unittest.main()

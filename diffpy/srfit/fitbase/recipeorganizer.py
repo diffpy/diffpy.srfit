@@ -25,7 +25,7 @@ __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
 from collections import OrderedDict
-from itertools import chain, ifilter
+from itertools import chain, ifilter, groupby
 import re
 
 from diffpy.srfit.fitbase.constraint import Constraint
@@ -970,7 +970,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         tlines = self._formatManaged()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
-            lines.extend(filter(pmatch, tlines))
+            linesok = filter(pmatch, tlines)
+            lastnotblank = False
+            # squeeze repeated blank lines
+            for lastnotblank, g in groupby(linesok, bool):
+                lines.extend(g if lastnotblank else [""])
+            # remove trailing blank line
+            if not lastnotblank:
+                lines.pop(-1)
 
         # FIXME - parameter names in equations not particularly informative
         # Show constraints

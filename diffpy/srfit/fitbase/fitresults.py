@@ -28,6 +28,7 @@ from collections import OrderedDict
 
 from diffpy.srfit.util.inpututils import inputToString
 from diffpy.srfit.util import _DASHEDLINE
+from diffpy.srfit.util import sortKeyForNumericString as numstr
 
 
 class FitResults(object):
@@ -347,7 +348,7 @@ class FitResults(object):
         ## Per-FitContribution results
         if len(self.conresults) > 1:
             keys = self.conresults.keys()
-            numericStringSort(keys)
+            keys.sort(key=numstr)
 
             lines.append("")
             l = "Contributions"
@@ -428,7 +429,7 @@ class FitResults(object):
                     keys.append(name)
                     vals[name] = (val, unc)
 
-            numericStringSort(keys)
+            keys.sort(key=numstr)
             w = str(w+1)
             formatstr = "%-"+w+"s %- 15f +/- %-15f"
             for name in keys:
@@ -668,24 +669,4 @@ def initializeRecipe(recipe, results):
             var = recipe.get(vname)
             var.value = float(value)
 
-    return
-
-
-def numericStringSort(lst):
-    """Sort list of strings inplace according to general numeric value.
-
-    Each string gets split to string and integer segments to create keys
-    for comparison.  Signs, decimal points and exponents are ignored.
-
-    lst  -- sorted list of strings
-
-    No return value to highlight inplace sorting.
-
-    """
-    rx = re.compile(r'(\d+)')
-    keys = [ rx.split(s) for s in lst ]
-    for k in keys:  k[1::2] = [ int(i) for i in k[1::2] ]
-    newlst = zip(keys, lst)
-    newlst.sort()
-    lst[:] = [kv[1] for kv in newlst]
     return

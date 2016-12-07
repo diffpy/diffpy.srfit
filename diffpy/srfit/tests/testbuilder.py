@@ -201,6 +201,19 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue(noObserversInGlobalBuilders())
         return
 
+
+    def test_parse_constant(self):
+        """Verify parsing of constant numeric expressions.
+        """
+        factory = builder.EquationFactory()
+        eq = factory.makeEquation('3.12 + 2')
+        self.assertTrue(isinstance(eq, builder.Equation))
+        self.assertEqual(set(), factory.equations)
+        self.assertEqual(5.12, eq())
+        self.assertRaises(ValueError, eq, 3)
+        return
+
+
     def testBuildEquation(self):
 
         from numpy import array_equal

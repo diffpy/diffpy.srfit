@@ -89,6 +89,7 @@ __all__ = ["EquationFactory", "BaseBuilder", "ArgumentBuilder",
 _builders = {}
 
 
+import numbers
 import numpy
 
 import diffpy.srfit.equation.literals as literals
@@ -145,8 +146,13 @@ class EquationFactory(object):
         """
         self._prepareBuilders(eqstr, buildargs, argclass, argkw)
         beq = eval(eqstr, {}, self.builders)
-        eq = beq.getEquation()
-        self.equations.add(eq)
+        # handle scalar numbers or numpy arrays
+        if isinstance(beq, (numbers.Number, numpy.ndarray)):
+            lit = literals.Argument(value=beq, const=True)
+            eq = Equation(name='', root=lit)
+        else:
+            eq = beq.getEquation()
+            self.equations.add(eq)
         return eq
 
     def registerConstant(self, name, value):

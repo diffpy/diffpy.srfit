@@ -181,7 +181,7 @@ class Equation(Operator):
         """
         # Process args
         for idx, val in enumerate(args):
-            if idx > len(self.argdict):
+            if idx >= len(self.argdict):
                 raise ValueError("Too many arguments")
             arg = self.args[idx]
             arg.setValue(val)

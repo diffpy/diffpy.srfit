@@ -40,6 +40,7 @@ from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.interface import _recipeorganizer_interface
 from diffpy.srfit.util import _DASHEDLINE
+from diffpy.srfit.util import sortKeyForNumericString as numstr
 
 
 class RecipeContainer(Observable, Configurable, Validatable):
@@ -878,13 +879,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns
         -------
         list
-            List of formatted lines per each Parameter together with
-            a leading header and separator lines.  Return empty list
-            when no parameters were defined.
+            List of formatted lines, one per each Parameter.
         """
         lines = []
         formatstr = "{:<W}{}"
-        toplevel = not prefix
         # Format own parameters.
         if self._parameters:
             w0 = max(len(n) for n in self._parameters)
@@ -899,9 +897,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 tlines = obj._formatManaged(prefix=oprefix)
                 lines.extend([""] if lines and tlines else [])
                 lines.extend(tlines)
-        # Insert header lines if there are defined parameters.
-        if toplevel and lines:
-            lines[:0] = ["Parameters", _DASHEDLINE]
         return lines
 
 
@@ -914,9 +909,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns
         -------
         list
-            List of formatted lines displaying the defined constraints
-            together with a leading header.  Return empty list when no
-            constraints were defined.
+            List of formatted lines displaying the defined constraints.
+            Return empty list when no constraints were defined.
         """
         cdict = self._getConstraints()
         # Find each constraint and format the equation
@@ -928,10 +922,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 clines.append("%s <-- %s" % (locstr, con.eqstr))
             else:
                 clines.append("%s <-- %s" % (par.name, con.eqstr))
-        if clines:
-            # FIXME try to reuse constraints ordering as in FitRecipe._prepare
-            clines.sort()
-            clines[:0] = ["Constraints", _DASHEDLINE]
+        clines.sort(key=numstr)
         return clines
 
 
@@ -944,9 +935,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns
         -------
         list
-            List of formatted lines displaying the defined restraints
-            together with a leading header.  Return empty list when no
-            restraints were defined.
+            List of formatted lines displaying the defined restraints.
+            Return empty list when no restraints were defined.
         """
         rset = self._getRestraints()
         rlines = []
@@ -954,38 +944,57 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s"%\
                     (res.eqstr, res.lb, res.ub, res.sig, res.scaled)
             rlines.append(line)
-        if rlines:
-            rlines.sort()
-            rlines[:0] = ["Restraints", _DASHEDLINE]
+        rlines.sort(key=numstr)
         return rlines
 
 
-    def show(self):
-        """Show the configuration on screen.
+    def show(self, pattern="", textwidth=78):
+        """Show the configuration hierarchy on the screen.
 
-        This will print a summary of all contained objects.
+        This will print out a summary of all contained objects.
+
+        Parameters
+        ----------
+        pattern : str, optional
+            Limit output to only those parameters that match this regular
+            expression (match all by default).
+        textwidth : int, optional
+            Trim formatted lines at this text width to avoid folding at
+            the screen width.  Do not trim when negative or 0.
         """
+        regexp = re.compile(pattern)
+        pmatch = lambda s : (len(s.split(None, 1)) < 2 or
+                             regexp.search(s.split(None, 1)[0]))
         # Show sub objects and their parameters
         lines = []
         tlines = self._formatManaged()
-        lines.extend(tlines)
+        if tlines:
+            lines.extend(["Parameters", _DASHEDLINE])
+            lines.extend(filter(pmatch, tlines))
 
         # FIXME - parameter names in equations not particularly informative
         # Show constraints
         tlines = self._formatConstraints()
-        if lines and tlines:
-            lines.append("")
-        lines.extend(tlines)
+        if tlines:
+            if lines:
+                lines.append("")
+            lines.extend(["Constraints", _DASHEDLINE])
+            lines.extend(filter(pmatch, tlines))
 
         # FIXME - parameter names in equations not particularly informative
         # Show restraints
         tlines = self._formatRestraints()
-        if lines and tlines:
-            lines.append("")
-        lines.extend(tlines)
+        if tlines:
+            if lines:
+                lines.append("")
+            lines.extend(["Restraints", _DASHEDLINE])
+            lines.extend(filter(pmatch, tlines))
 
-        print "\n".join(lines)
-
+        # Determine effective text width tw.
+        tw = textwidth if (textwidth is not None and textwidth > 0) else None
+        # Avoid outputting "\n" when there is no output.
+        if lines:
+            print("\n".join(s[:tw] for s in lines))
         return
 
 # End RecipeOrganizer

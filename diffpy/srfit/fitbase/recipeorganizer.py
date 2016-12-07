@@ -981,12 +981,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # FIXME - parameter names in equations not particularly informative
         # Show constraints
+        cmatch = regexp.search
         tlines = self._formatConstraints()
         if tlines:
             if lines:
                 lines.append("")
             lines.extend(["Constraints", _DASHEDLINE])
-            lines.extend(filter(pmatch, tlines))
+            lines.extend(filter(cmatch, tlines))
 
         # FIXME - parameter names in equations not particularly informative
         # Show restraints

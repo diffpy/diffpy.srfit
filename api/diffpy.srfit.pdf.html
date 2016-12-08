@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>diffpy.srfit.pdf package &mdash; SrFit 1.1 documentation</title>
+    <title>diffpy.srfit.pdf package &#8212; SrFit 1.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="SrFit 1.2 documentation" href="../index.html" />
     <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.sas package" href="diffpy.srfit.sas.html" />
     <link rel="prev" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" /> 
@@ -45,8 +47,8 @@
         <li class="right" >
           <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -171,7 +173,6 @@ which case this will be ignored.</dd>
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setQmin">
 <code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmin value.</p>
-<p>This has no effect on the crystal PDF.</p>
 </dd></dl>
 
 <dl class="method">
@@ -434,7 +435,7 @@ constraints and restraints requires direct interaction with the generator
 attributes (see setPhase).</p>
 <p>Attributes
 name            &#8211;  A name for this FitContribution.
-profile         &#8211;  A Profile that holds the measured (and calcuated)</p>
+profile         &#8211;  A Profile that holds the measured (and calculated)</p>
 <blockquote>
 <div>signal.</div></blockquote>
 <dl class="docutils">
@@ -557,27 +558,31 @@ build-in profile with loadParsedData.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setCalculationRange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the calculation range</p>
-<p>This calls on the built-in Profile.</p>
-<p>Arguments
-xmin    &#8211;  The minimum value of the independent variable.</p>
-<blockquote>
-<div>If xmin is None (default), the minimum observed value will
-be used. This is clipped to the minimum observed x.</div></blockquote>
+<dd><p>Set epsilon-inclusive calculation range.</p>
+<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+of the observed data.</p>
 <dl class="docutils">
-<dt>xmax    &#8211;  The maximum value of the independent variable.</dt>
-<dd>If xmax is None (default), the maximum observed value will
-be used. This is clipped to the maximum observed x.</dd>
-<dt>dx      &#8211;  The sample spacing in the independent variable. If dx is</dt>
-<dd>None (default), then the spacing in the observed points
-will be preserved.</dd>
+<dt>xmin</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as &#8220;obs&#8221;
+reset to the minimum observed value.</dd>
+<dt>xmax</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as &#8220;obs&#8221;
+reset to the maximum observed value.</dd>
+<dt>dx</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
 </dl>
 <p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
 if it is within the bounds of the observed data.</p>
-<p>raises AttributeError if there is no observed profile
-raises ValueError if xmin &gt; xmax
-raises ValueError if dx &gt; xmax-xmin
-raises ValueError if dx &lt;= 0</p>
+<dl class="docutils">
+<dt>AttributeError</dt>
+<dd>If there is no observed data.</dd>
+<dt>ValueError</dt>
+<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -590,7 +595,6 @@ raises ValueError if dx &lt;= 0</p>
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.setQmin">
 <code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmin value.</p>
-<p>This has no effect on the crystal PDF.</p>
 </dd></dl>
 
 <dl class="method">
@@ -650,13 +654,6 @@ delta1  &#8211;  See Managed Parameters.
 delta2  &#8211;  See Managed Parameters.
 qbroad  &#8211;  See Managed Parameters.
 qdamp   &#8211;  See Managed Parameters.</p>
-<dl class="method">
-<dt id="diffpy.srfit.pdf.pdfgenerator.PDFGenerator.setQmin">
-<code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfgenerator.PDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the qmin value.</p>
-<p>This has no effect on the crystal PDF.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -769,13 +766,6 @@ delta1  &#8211;  See Managed Parameters.
 delta2  &#8211;  See Managed Parameters.
 qbroad  &#8211;  See Managed Parameters.
 qdamp   &#8211;  See Managed Parameters.</p>
-<dl class="method">
-<dt id="diffpy.srfit.pdf.PDFGenerator.setQmin">
-<code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFGenerator.setQmin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the qmin value.</p>
-<p>This has no effect on the crystal PDF.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -869,7 +859,7 @@ constraints and restraints requires direct interaction with the generator
 attributes (see setPhase).</p>
 <p>Attributes
 name            &#8211;  A name for this FitContribution.
-profile         &#8211;  A Profile that holds the measured (and calcuated)</p>
+profile         &#8211;  A Profile that holds the measured (and calculated)</p>
 <blockquote>
 <div>signal.</div></blockquote>
 <dl class="docutils">
@@ -992,27 +982,31 @@ build-in profile with loadParsedData.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setCalculationRange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the calculation range</p>
-<p>This calls on the built-in Profile.</p>
-<p>Arguments
-xmin    &#8211;  The minimum value of the independent variable.</p>
-<blockquote>
-<div>If xmin is None (default), the minimum observed value will
-be used. This is clipped to the minimum observed x.</div></blockquote>
+<dd><p>Set epsilon-inclusive calculation range.</p>
+<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+of the observed data.</p>
 <dl class="docutils">
-<dt>xmax    &#8211;  The maximum value of the independent variable.</dt>
-<dd>If xmax is None (default), the maximum observed value will
-be used. This is clipped to the maximum observed x.</dd>
-<dt>dx      &#8211;  The sample spacing in the independent variable. If dx is</dt>
-<dd>None (default), then the spacing in the observed points
-will be preserved.</dd>
+<dt>xmin</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as &#8220;obs&#8221;
+reset to the minimum observed value.</dd>
+<dt>xmax</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as &#8220;obs&#8221;
+reset to the maximum observed value.</dd>
+<dt>dx</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
 </dl>
 <p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
 if it is within the bounds of the observed data.</p>
-<p>raises AttributeError if there is no observed profile
-raises ValueError if xmin &gt; xmax
-raises ValueError if dx &gt; xmax-xmin
-raises ValueError if dx &lt;= 0</p>
+<dl class="docutils">
+<dt>AttributeError</dt>
+<dd>If there is no observed data.</dd>
+<dt>ValueError</dt>
+<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1025,7 +1019,6 @@ raises ValueError if dx &lt;= 0</p>
 <dt id="diffpy.srfit.pdf.PDFContribution.setQmin">
 <code class="descname">setQmin</code><span class="sig-paren">(</span><em>qmin</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setQmin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the qmin value.</p>
-<p>This has no effect on the crystal PDF.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1140,14 +1133,11 @@ patstring   &#8211;  A string containing the pattern</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -1169,13 +1159,13 @@ patstring   &#8211;  A string containing the pattern</p>
         <li class="right" >
           <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
     </div>
   </body>
 </html>

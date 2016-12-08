@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>diffpy.srfit.equation package &mdash; SrFit 1.1 documentation</title>
+    <title>diffpy.srfit.equation package &#8212; SrFit 1.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="SrFit 1.2 documentation" href="../index.html" />
     <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.equation.literals package" href="diffpy.srfit.equation.literals.html" />
     <link rel="prev" title="diffpy.srfit package" href="diffpy.srfit.html" /> 
@@ -45,8 +47,8 @@
         <li class="right" >
           <a href="diffpy.srfit.html" title="diffpy.srfit package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -108,7 +110,7 @@ arguments.</p>
 &gt; factory.registerArgument(&#8220;A&#8221;, A)
 &gt; eq = factory.makeEquation(&#8220;A*sin(a*x) + offset&#8221;)
 This includes a constant offset in the equation and makes sure that the
-user-defined Argument is in the equation. This is can be used to assure that
+user-defined Argument is in the equation. This can be used to assure that
 the same instance of an Argument appears in multiple equations. Other literals
 can be registered in a similar fashion.</p>
 <p>The BaseBuilder class does the hard work of making an equation from a string in
@@ -161,14 +163,6 @@ example.
 <dd><p>De-register a builder by name.</p>
 <p>This does not change the equations that use the Literal wrapped by the
 builder.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="diffpy.srfit.equation.builder.EquationFactory.detach">
-<code class="descname">detach</code><span class="sig-paren">(</span><em>eq</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.detach" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detach an equation from the factory.</p>
-<p>This will remove an equation from the purview of the factory. Thus,
-changes made to the builders will not affect the equation.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -257,6 +251,17 @@ arguments, and those will be used.</p>
 <dt id="diffpy.srfit.equation.builder.EquationFactory.symbols">
 <code class="descname">symbols</code><em class="property"> = ('+', '-', '*', '/', '**', '%', '|')</em><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.symbols" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.equation.builder.EquationFactory.wipeout">
+<code class="descname">wipeout</code><span class="sig-paren">(</span><em>eq</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.wipeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invalidate the specified equation and remove it from the factory.</p>
+<p>This will remove the equation from the purview of the factory and
+also change its formula to return NaN.  This ensures that eq does
+not observe any object in the factory and thus prevents its indirect
+pickling with the factory because of observer callback function.</p>
+<p>No return value.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -396,6 +401,13 @@ value   &#8211;  Property for &#8216;getValue&#8217;.</p>
 <dd><p>Identify self to a visitor.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.equationmod.Equation.operation">
+<code class="descname">operation</code><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The bound __call__ method of this Equation object.</p>
+<p>This can be called as is to perform the operation.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.equation.equationmod.Equation.setRoot">
 <code class="descname">setRoot</code><span class="sig-paren">(</span><em>root</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.setRoot" title="Permalink to this definition">¶</a></dt>
@@ -467,6 +479,13 @@ value   &#8211;  Property for &#8216;getValue&#8217;.</p>
 <dd><p>Identify self to a visitor.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="diffpy.srfit.equation.Equation.operation">
+<code class="descname">operation</code><a class="headerlink" href="#diffpy.srfit.equation.Equation.operation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The bound __call__ method of this Equation object.</p>
+<p>This can be called as is to perform the operation.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.equation.Equation.setRoot">
 <code class="descname">setRoot</code><span class="sig-paren">(</span><em>root</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.Equation.setRoot" title="Permalink to this definition">¶</a></dt>
@@ -521,14 +540,11 @@ ValueError if errors are found in the Literal tree.</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -550,13 +566,13 @@ ValueError if errors are found in the Literal tree.</p>
         <li class="right" >
           <a href="diffpy.srfit.html" title="diffpy.srfit package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
     </div>
   </body>
 </html>

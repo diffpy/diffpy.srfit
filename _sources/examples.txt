@@ -27,7 +27,6 @@ Examples
 .. _nppdfsas.py: examples/nppdfsas.html
 .. _interface.py: examples/interface.html
 .. _simplerecipe.py: examples/simplerecipe.html
-.. _anneal.py: examples/anneal.html
 
 
 Files
@@ -55,4 +54,3 @@ Files
    examples/nppdfsas.rst
    examples/interface.rst
    examples/simplerecipe.rst
-   examples/anneal.rst

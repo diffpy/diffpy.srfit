@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>diffpy.srfit.fitbase package &mdash; SrFit 1.1 documentation</title>
+    <title>diffpy.srfit.fitbase package &#8212; SrFit 1.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="SrFit 1.2 documentation" href="../index.html" />
     <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" />
     <link rel="prev" title="diffpy.srfit.equation.visitors package" href="diffpy.srfit.equation.visitors.html" /> 
@@ -45,8 +47,8 @@
         <li class="right" >
           <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -184,7 +186,7 @@ holds the observed and calculated signals.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitcontribution.</code><code class="descname">FitContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitContributionInterface</span></code>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>FitContribution class.</p>
 <p>FitContributions organize an Equation that calculates the signal, and a
 Profile that holds the signal. ProfileGenerators and Calculators can be
@@ -192,7 +194,7 @@ used as well.  Contraints and Restraints can be created as part of a
 FitContribution.</p>
 <p>Attributes
 name            &#8211;  A name for this FitContribution.
-profile         &#8211;  A Profile that holds the measured (and calcuated)</p>
+profile         &#8211;  A Profile that holds the measured (and calculated)</p>
 <blockquote>
 <div>signal.</div></blockquote>
 <p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
@@ -240,7 +242,23 @@ other managed object.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.evaluate">
 <code class="descname">evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.evaluate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate the contribution equation.</p>
+<dd><p>Evaluate the contribution equation and update profile.ycalc.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.getEquation">
+<code class="descname">getEquation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.getEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get math expression string for the active profile equation.</p>
+<p>Return normalized math expression or an empty string if profile
+equation has not been set yet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.getResidualEquation">
+<code class="descname">getResidualEquation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.getResidualEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get math expression string for the active residual equation.</p>
+<p>Return normalized math formula or an empty string if residual
+equation has not been configured yet.</p>
 </dd></dl>
 
 <dl class="method">
@@ -302,7 +320,7 @@ usable within string equations with the specified name.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.setResidualEquation">
-<code class="descname">setResidualEquation</code><span class="sig-paren">(</span><em>eqstr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setResidualEquation</code><span class="sig-paren">(</span><em>eqstr</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the residual equation for the FitContribution.</p>
 <dl class="docutils">
 <dt>eqstr   &#8211;  A string representation of the residual. If eqstr is None</dt>
@@ -941,7 +959,7 @@ lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterProxy">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameter.</code><code class="descname">ParameterProxy</code><span class="sig-paren">(</span><em>name</em>, <em>par</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></code></a></p>
 <p>A Parameter proxy for another parameter.</p>
 <p>This allows for the same parameter to have multiple names.</p>
 <p>Attributes
@@ -949,10 +967,68 @@ name    &#8211;  A name for this ParameterProxy. Names should be unique within a
 <blockquote>
 <div>RecipeOrganizer and should be valid attribute names.</div></blockquote>
 <p>par     &#8211;  The Parameter this is a proxy for.</p>
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.boundWindow">
+<code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.boundWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create bounds centered on the current value of the Parameter.</p>
+<dl class="docutils">
+<dt>lr  &#8211;  The radius of the lower bound (default 0). The lower bound is</dt>
+<dd>computed as value - lr.</dd>
+<dt>ur  &#8211;  The radius of the upper bound. The upper bound is computed as</dt>
+<dd>value + ur. If this is None (default), then the value of the
+lower radius is used.</dd>
+</dl>
+<p>Returns self so that mutators can be chained.</p>
+</dd></dl>
+
 <dl class="attribute">
-<dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.value">
-<code class="descname">value</code><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.bounds">
+<code class="descname">bounds</code><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of lower and upper bounds of the proxied Parameter.</p>
+<p>This can be used by some optimizers when the Parameter is varied.
+See FitRecipe.getBounds and FitRecipe.boundsToRestraints.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.constrained">
+<code class="descname">constrained</code><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.constrained" title="Permalink to this definition">¶</a></dt>
+<dd><p>A flag indicating if the proxied Parameter is constrained.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.getValue">
+<code class="descname">getValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of this Literal.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.setConst">
+<code class="descname">setConst</code><span class="sig-paren">(</span><em>const=True</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.setConst" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggle the Parameter as constant.</p>
+<dl class="docutils">
+<dt>const   &#8211;  Flag indicating if the parameter is constant (default</dt>
+<dd>True).</dd>
+<dt>value   &#8211;  An optional value for the parameter (default None). If this</dt>
+<dd>is not None, then the parameter will get a new value,
+constant or otherwise.</dd>
+</dl>
+<p>Returns self so that mutators can be chained.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.setValue">
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.setValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of the Parameter and the bounds.</p>
+<p>val     &#8211;  The value to assign.
+lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
+<blockquote>
+<div>(default), then the lower bound will not be alterered.</div></blockquote>
+<dl class="docutils">
+<dt>ub      &#8211;  The upper bounds for the bounds list. If this is None</dt>
+<dd>(default), then the upper bound will not be alterered.</dd>
+</dl>
+<p>Returns self so that mutators can be chained.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1241,26 +1317,31 @@ dyobs exist.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Profile.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setCalculationRange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the calculation range</p>
-<p>Arguments
-xmin    &#8211;  The minimum value of the independent variable.</p>
-<blockquote>
-<div>If xmin is None (default), the minimum observed value will
-be used. This is clipped to the minimum observed x.</div></blockquote>
+<dd><p>Set epsilon-inclusive calculation range.</p>
+<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+of the observed data.</p>
 <dl class="docutils">
-<dt>xmax    &#8211;  The maximum value of the independent variable.</dt>
-<dd>If xmax is None (default), the maximum observed value will
-be used. This is clipped to the maximum observed x.</dd>
-<dt>dx      &#8211;  The sample spacing in the independent variable. If dx is</dt>
-<dd>None (default), then the spacing in the observed points
-will be preserved.</dd>
+<dt>xmin</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as &#8220;obs&#8221;
+reset to the minimum observed value.</dd>
+<dt>xmax</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as &#8220;obs&#8221;
+reset to the maximum observed value.</dd>
+<dt>dx</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
 </dl>
 <p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
 if it is within the bounds of the observed data.</p>
-<p>raises AttributeError if there is no observed profile
-raises ValueError if xmin &gt; xmax
-raises ValueError if dx &gt; xmax-xmin
-raises ValueError if dx &lt;= 0</p>
+<dl class="docutils">
+<dt>AttributeError</dt>
+<dd>If there is no observed data.</dd>
+<dt>ValueError</dt>
+<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -1588,13 +1669,15 @@ values          &#8211;  Variable values (read only). See getValues.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterPars">
-<code class="descname">iterPars</code><span class="sig-paren">(</span><em>name='.'</em>, <em>recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterPars" title="Permalink to this definition">¶</a></dt>
-<dd><p>Iterate over Parameters.</p>
+<code class="descname">iterPars</code><span class="sig-paren">(</span><em>pattern=''</em>, <em>recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterPars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over the Parameters contained in this object.</p>
 <dl class="docutils">
-<dt>name    &#8211;  Select parameters with this name (regular expression,</dt>
-<dd>default &#8221;.&#8221;).</dd>
+<dt>pattern</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>Iterate over parameters with names matching this regular
+expression (all parameters by default).</dd>
+<dt>recurse</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>Recurse into managed objects when True (default).</dd>
 </dl>
-<p>recurse &#8211;  Recurse into managed objects (default True)</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1816,9 +1899,17 @@ the RecipeOrganizer and that is not defined in ns.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show the configuration on screen.</p>
-<p>This will print a summary of all contained objects.</p>
+<code class="descname">show</code><span class="sig-paren">(</span><em>pattern=''</em>, <em>textwidth=78</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the configuration hierarchy on the screen.</p>
+<p>This will print out a summary of all contained objects.</p>
+<dl class="docutils">
+<dt>pattern</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span><dd>Limit output to only those parameters that match this regular
+expression (match all by default).</dd>
+<dt>textwidth</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span><dd>Trim formatted lines at this text width to avoid folding at
+the screen width.  Do not trim when negative or 0.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -2020,26 +2111,31 @@ dyobs exist.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationRange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the calculation range</p>
-<p>Arguments
-xmin    &#8211;  The minimum value of the independent variable.</p>
-<blockquote>
-<div>If xmin is None (default), the minimum observed value will
-be used. This is clipped to the minimum observed x.</div></blockquote>
+<dd><p>Set epsilon-inclusive calculation range.</p>
+<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+of the observed data.</p>
 <dl class="docutils">
-<dt>xmax    &#8211;  The maximum value of the independent variable.</dt>
-<dd>If xmax is None (default), the maximum observed value will
-be used. This is clipped to the maximum observed x.</dd>
-<dt>dx      &#8211;  The sample spacing in the independent variable. If dx is</dt>
-<dd>None (default), then the spacing in the observed points
-will be preserved.</dd>
+<dt>xmin</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as &#8220;obs&#8221;
+reset to the minimum observed value.</dd>
+<dt>xmax</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as &#8220;obs&#8221;
+reset to the maximum observed value.</dd>
+<dt>dx</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
 </dl>
 <p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
 if it is within the bounds of the observed data.</p>
-<p>raises AttributeError if there is no observed profile
-raises ValueError if xmin &gt; xmax
-raises ValueError if dx &gt; xmax-xmin
-raises ValueError if dx &lt;= 0</p>
+<dl class="docutils">
+<dt>AttributeError</dt>
+<dd>If there is no observed data.</dd>
+<dt>ValueError</dt>
+<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -2149,7 +2245,7 @@ values          &#8211;  Variable values (read only). See getValues.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitContribution">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitContributionInterface</span></code>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>FitContribution class.</p>
 <p>FitContributions organize an Equation that calculates the signal, and a
 Profile that holds the signal. ProfileGenerators and Calculators can be
@@ -2157,7 +2253,7 @@ used as well.  Contraints and Restraints can be created as part of a
 FitContribution.</p>
 <p>Attributes
 name            &#8211;  A name for this FitContribution.
-profile         &#8211;  A Profile that holds the measured (and calcuated)</p>
+profile         &#8211;  A Profile that holds the measured (and calculated)</p>
 <blockquote>
 <div>signal.</div></blockquote>
 <p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
@@ -2205,7 +2301,23 @@ other managed object.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.evaluate">
 <code class="descname">evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.evaluate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate the contribution equation.</p>
+<dd><p>Evaluate the contribution equation and update profile.ycalc.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.FitContribution.getEquation">
+<code class="descname">getEquation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.getEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get math expression string for the active profile equation.</p>
+<p>Return normalized math expression or an empty string if profile
+equation has not been set yet.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.FitContribution.getResidualEquation">
+<code class="descname">getResidualEquation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.getResidualEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get math expression string for the active residual equation.</p>
+<p>Return normalized math formula or an empty string if residual
+equation has not been configured yet.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2267,7 +2379,7 @@ usable within string equations with the specified name.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.setResidualEquation">
-<code class="descname">setResidualEquation</code><span class="sig-paren">(</span><em>eqstr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setResidualEquation</code><span class="sig-paren">(</span><em>eqstr</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the residual equation for the FitContribution.</p>
 <dl class="docutils">
 <dt>eqstr   &#8211;  A string representation of the residual. If eqstr is None</dt>
@@ -2883,26 +2995,31 @@ dyobs exist.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Profile.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setCalculationRange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the calculation range</p>
-<p>Arguments
-xmin    &#8211;  The minimum value of the independent variable.</p>
-<blockquote>
-<div>If xmin is None (default), the minimum observed value will
-be used. This is clipped to the minimum observed x.</div></blockquote>
+<dd><p>Set epsilon-inclusive calculation range.</p>
+<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+of the observed data.</p>
 <dl class="docutils">
-<dt>xmax    &#8211;  The maximum value of the independent variable.</dt>
-<dd>If xmax is None (default), the maximum observed value will
-be used. This is clipped to the maximum observed x.</dd>
-<dt>dx      &#8211;  The sample spacing in the independent variable. If dx is</dt>
-<dd>None (default), then the spacing in the observed points
-will be preserved.</dd>
+<dt>xmin</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as &#8220;obs&#8221;
+reset to the minimum observed value.</dd>
+<dt>xmax</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as &#8220;obs&#8221;
+reset to the maximum observed value.</dd>
+<dt>dx</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
 </dl>
 <p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
 if it is within the bounds of the observed data.</p>
-<p>raises AttributeError if there is no observed profile
-raises ValueError if xmin &gt; xmax
-raises ValueError if dx &gt; xmax-xmin
-raises ValueError if dx &lt;= 0</p>
+<dl class="docutils">
+<dt>AttributeError</dt>
+<dd>If there is no observed data.</dd>
+<dt>ValueError</dt>
+<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -3126,26 +3243,31 @@ dyobs exist.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setCalculationRange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the calculation range</p>
-<p>Arguments
-xmin    &#8211;  The minimum value of the independent variable.</p>
-<blockquote>
-<div>If xmin is None (default), the minimum observed value will
-be used. This is clipped to the minimum observed x.</div></blockquote>
+<dd><p>Set epsilon-inclusive calculation range.</p>
+<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+of the observed data.</p>
 <dl class="docutils">
-<dt>xmax    &#8211;  The maximum value of the independent variable.</dt>
-<dd>If xmax is None (default), the maximum observed value will
-be used. This is clipped to the maximum observed x.</dd>
-<dt>dx      &#8211;  The sample spacing in the independent variable. If dx is</dt>
-<dd>None (default), then the spacing in the observed points
-will be preserved.</dd>
+<dt>xmin</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as &#8220;obs&#8221;
+reset to the minimum observed value.</dd>
+<dt>xmax</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as &#8220;obs&#8221;
+reset to the maximum observed value.</dd>
+<dt>dx</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
 </dl>
 <p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
 if it is within the bounds of the observed data.</p>
-<p>raises AttributeError if there is no observed profile
-raises ValueError if xmin &gt; xmax
-raises ValueError if dx &gt; xmax-xmin
-raises ValueError if dx &lt;= 0</p>
+<dl class="docutils">
+<dt>AttributeError</dt>
+<dd>If there is no observed data.</dd>
+<dt>ValueError</dt>
+<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -3233,14 +3355,11 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -3262,13 +3381,13 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
         <li class="right" >
           <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
     </div>
   </body>
 </html>

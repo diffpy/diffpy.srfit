@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>npintensity.py &mdash; SrFit 1.1 documentation</title>
+    <title>npintensity.py &#8212; SrFit 1.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.1',
+        VERSION:     '1.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,9 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/sidebar.js"></script>
-    <link rel="top" title="SrFit 1.1 documentation" href="../index.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="top" title="SrFit 1.2 documentation" href="../index.html" />
     <link rel="up" title="Examples" href="../examples.html" />
     <link rel="next" title="npintensityII.py" href="npintensityII.html" />
     <link rel="prev" title="gaussiangenerator.py" href="gaussiangenerator.html" /> 
@@ -45,8 +47,8 @@
         <li class="right" >
           <a href="gaussiangenerator.html" title="gaussiangenerator.py"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -57,7 +59,7 @@
             
   <div class="section" id="npintensity-py">
 <span id="id1"></span><h1>npintensity.py<a class="headerlink" href="#npintensity-py" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-python"><div class="highlight"><pre><span class="ch">#!/usr/bin/env python</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1">########################################################################</span>
 <span class="c1">#</span>
 <span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
@@ -103,12 +105,12 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">ProfileGenerator</span><span class="p">,</span> <span class="n">Profile</span>
-<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">FitContribution</span><span class="p">,</span> <span class="n">FitRecipe</span>
-<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="kn">import</span> <span class="n">FitResults</span>
-<span class="kn">from</span> <span class="nn">diffpy.srfit.structure.diffpyparset</span> <span class="kn">import</span> <span class="n">DiffpyStructureParSet</span>
+<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="k">import</span> <span class="n">ProfileGenerator</span><span class="p">,</span> <span class="n">Profile</span>
+<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="k">import</span> <span class="n">FitContribution</span><span class="p">,</span> <span class="n">FitRecipe</span>
+<span class="kn">from</span> <span class="nn">diffpy.srfit.fitbase</span> <span class="k">import</span> <span class="n">FitResults</span>
+<span class="kn">from</span> <span class="nn">diffpy.srfit.structure.diffpyparset</span> <span class="k">import</span> <span class="n">DiffpyStructureParSet</span>
 
-<span class="kn">from</span> <span class="nn">gaussianrecipe</span> <span class="kn">import</span> <span class="n">scipyOptimize</span>
+<span class="kn">from</span> <span class="nn">gaussianrecipe</span> <span class="k">import</span> <span class="n">scipyOptimize</span>
 
 <span class="c1">####### Example Code</span>
 
@@ -192,7 +194,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Load the structure from file</span>
-        <span class="kn">from</span> <span class="nn">diffpy.Structure</span> <span class="kn">import</span> <span class="n">Structure</span>
+        <span class="kn">from</span> <span class="nn">diffpy.Structure</span> <span class="k">import</span> <span class="n">Structure</span>
         <span class="n">stru</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
         <span class="n">stru</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">strufile</span><span class="p">)</span>
 
@@ -221,7 +223,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">print</span> <span class="s2">&quot;iofq called&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span>
+        <span class="nb">print</span> <span class="s2">&quot;iofq called&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span>
         <span class="k">return</span> <span class="n">iofq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
 
 <span class="c1"># End class IntensityGenerator</span>
@@ -427,7 +429,7 @@
     <span class="c1"># The brute-force calculation is very slow. Thus we optimize a little bit.</span>
 
     <span class="c1"># The precision of distance measurements</span>
-    <span class="n">deltad</span> <span class="o">=</span> <span class="mf">1e-6</span>
+    <span class="n">deltad</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span>
     <span class="n">dmult</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">deltad</span><span class="p">)</span>
     <span class="n">deltau</span> <span class="o">=</span> <span class="n">deltad</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">umult</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">deltau</span><span class="p">)</span>
@@ -435,14 +437,14 @@
     <span class="n">pairdict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">elcount</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
 
         <span class="c1"># count the number of each element</span>
         <span class="n">eli</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">element</span>
         <span class="n">m</span> <span class="o">=</span> <span class="n">elcount</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">eli</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">elcount</span><span class="p">[</span><span class="n">eli</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span>
 
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
 
             <span class="n">elj</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">element</span>
 
@@ -503,7 +505,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">cctbx.eltbx.xray_scattering</span> <span class="kn">as</span> <span class="nn">xray</span>
+        <span class="kn">import</span> <span class="nn">cctbx.eltbx.xray_scattering</span> <span class="k">as</span> <span class="nn">xray</span>
         <span class="n">wk1995</span> <span class="o">=</span> <span class="n">xray</span><span class="o">.</span><span class="n">wk1995</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
         <span class="n">g</span> <span class="o">=</span> <span class="n">wk1995</span><span class="o">.</span><span class="n">fetch</span><span class="p">()</span>
         <span class="c1"># at_stol - at sin(theta)/lambda = Q/(4*pi)</span>
@@ -530,7 +532,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="kn">from</span> <span class="nn">diffpy.Structure</span> <span class="kn">import</span> <span class="n">Structure</span>
+    <span class="kn">from</span> <span class="nn">diffpy.Structure</span> <span class="k">import</span> <span class="n">Structure</span>
     <span class="n">S</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
     <span class="n">S</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">strufile</span><span class="p">)</span>
 
@@ -599,14 +601,11 @@
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -628,13 +627,13 @@
         <li class="right" >
           <a href="gaussiangenerator.html" title="gaussiangenerator.py"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.1 documentation</a> &raquo;</li>
-          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.4.
+        &#169; Copyright 2016, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
     </div>
   </body>
 </html>

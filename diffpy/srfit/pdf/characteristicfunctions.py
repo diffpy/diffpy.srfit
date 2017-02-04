@@ -188,8 +188,8 @@ def sheetCF(r, sthick):
     From Kodama et al., Acta Cryst. A, 62, 444-453
 
     """
-    # handle negative sthick.  make it work for scalars and arrays.
-    if sthick < 0:
+    # handle zero or negative sthick.  make it work for scalars and arrays.
+    if sthick <= 0:
         return 0 * sthick
     # process scalar r
     if numpy.isscalar(r):

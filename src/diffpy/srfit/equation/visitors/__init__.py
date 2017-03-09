@@ -23,6 +23,8 @@ The Literal-Visitor relationship is that described by the Visitor pattern
 (http://en.wikipedia.org/wiki/Visitor_pattern).
 """
 
+from __future__ import print_function
+
 from diffpy.srfit.equation.visitors.argfinder import ArgFinder
 from diffpy.srfit.equation.visitors.printer import Printer
 from diffpy.srfit.equation.visitors.validator import Validator
@@ -58,7 +60,7 @@ def getExpression(literal, eqskip=None):
 
 def prettyPrint(literal):
     """Print a Literal tree."""
-    print getExpression(literal)
+    print(getExpression(literal))
     return
 
 

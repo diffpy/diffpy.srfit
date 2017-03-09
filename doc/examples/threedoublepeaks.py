@@ -12,9 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of fitting a three double peaks to simulated data.
 
+"""Example of fitting a three double peaks to simulated data.
 """
+
+from __future__ import print_function
 
 import numpy
 
@@ -167,7 +169,7 @@ def scipyOptimize(recipe):
     # (recipe.residual) and the starting values of the Variables
     # (recipe.getValues()).
     from scipy.optimize.minpack import leastsq
-    print "Fit using scipy's LM optimizer"
+    print("Fit using scipy's LM optimizer")
     leastsq(recipe.residual, recipe.getValues())
 
     return

@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of fitting a Gaussian to simulated data.
 
 This is an example of building a fit recipe that can be driven by an optimizer
@@ -41,8 +42,9 @@ will leave you with a much better understanding of how SrFit works.
   fit.
 - Create a FitRecipe to fit the Lorentzian profile in the data/lorentzian.dat
   file.
-
 """
+
+from __future__ import print_function
 
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
 
@@ -167,7 +169,7 @@ def scipyOptimize(recipe):
     # (recipe.residual) and the starting values of the Variables
     # (recipe.getValues()).
     from scipy.optimize.minpack import leastsq
-    print "Fit using scipy's LM optimizer"
+    print("Fit using scipy's LM optimizer")
     leastsq(recipe.residual, recipe.getValues())
 
     return

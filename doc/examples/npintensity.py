@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of using ProfileGenerators in FitContributions.
 
 This is an example of building a ProfileGenerator and using it in a
@@ -39,8 +40,9 @@ Extensions
   objects used in the fit recipe. Create variables from the moved Parameters
   rather than from the 'phase' that lives in the IntensityGenerator and see if
   everything still refines.
-
 """
+
+from __future__ import print_function
 
 import numpy
 
@@ -162,7 +164,7 @@ class IntensityGenerator(ProfileGenerator):
 
         """
         self.count += 1
-        print "iofq called", self.count
+        print("iofq called", self.count)
         return iofq(self.phase.stru, q)
 
 # End class IntensityGenerator

@@ -15,6 +15,8 @@
 
 """Tests for refinableobj module."""
 
+from __future__ import print_function
+
 import random
 import numpy
 
@@ -100,18 +102,18 @@ def speedTest1():
     total2 = 0
     for i in xrange(len(args)):
         args[i] = 10*random.random()
-        print "Changing argument %i"%(i+1)
+        print("Changing argument %i" % (i + 1))
         t1 = timeFunction(f1, *args)
         t2 = timeFunction(f2, *args)
         total1 += t1
         total2 += t2
-        print "lazy", t1
-        print "regular", t2
+        print("lazy", t1)
+        print("regular", t2)
 
-    print "Totals:"
-    print "lazy", total1
-    print "regular", total2
-    print "Ratio (lazy/regular)", total1/total2
+    print("Totals:")
+    print("lazy", total1)
+    print("regular", total2)
+    print("Ratio (lazy/regular)", total1/total2)
 
 def speedTest2(mutate = 2):
 
@@ -171,11 +173,11 @@ def speedTest2(mutate = 2):
         tnpy += timeFunction(f, *args)
         teq += timeFunction(eq, *args)
 
-    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
-            mutate)
-    print "numpy: ", tnpy/numcalls
-    print "equation: ", teq/numcalls
-    print "ratio: ", teq/tnpy
+    print("Average call time (%i calls, %i mutations/call):" %
+          (numcalls, mutate))
+    print("numpy: ", tnpy/numcalls)
+    print("equation: ", teq/numcalls)
+    print("ratio: ", teq/tnpy)
 
     return
 
@@ -245,11 +247,11 @@ def speedTest3(mutate = 2):
         teq += timeFunction(eq, *(args[:-1]))
         tnpy += timeFunction(f, *args)
 
-    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
-            mutate)
-    print "sympy: ", tnpy/numcalls
-    print "equation: ", teq/numcalls
-    print "ratio: ", teq/tnpy
+    print("Average call time (%i calls, %i mutations/call):" %
+          (numcalls, mutate))
+    print("sympy: ", tnpy/numcalls)
+    print("equation: ", teq/numcalls)
+    print("ratio: ", teq/tnpy)
 
     return
 
@@ -306,11 +308,11 @@ def speedTest4(mutate = 2):
         teq += timeFunction(eq, *(args[:-1]))
         tnpy += timeFunction(f, *args)
 
-    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
-            mutate)
-    print "sympy: ", tnpy/numcalls
-    print "equation: ", teq/numcalls
-    print "ratio: ", teq/tnpy
+    print("Average call time (%i calls, %i mutations/call):" %
+          (numcalls, mutate))
+    print("sympy: ", tnpy/numcalls)
+    print("equation: ", teq/numcalls)
+    print("ratio: ", teq/tnpy)
 
     return
 
@@ -374,11 +376,11 @@ def weightedTest(mutate = 2):
         teq += timeFunction(eq, *args)
         tnpy += timeFunction(f, *args)
 
-    print "Average call time (%i calls, %i mutations/call):" % (numcalls,
-            mutate)
-    print "numpy: ", tnpy/numcalls
-    print "equation: ", teq/numcalls
-    print "ratio: ", teq/tnpy
+    print("Average call time (%i calls, %i mutations/call):" %
+          (numcalls, mutate))
+    print("numpy: ", tnpy/numcalls)
+    print("equation: ", teq/numcalls)
+    print("ratio: ", teq/tnpy)
 
     return
 

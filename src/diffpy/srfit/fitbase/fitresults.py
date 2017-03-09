@@ -20,6 +20,8 @@ stores the state, and uses it to calculate useful statistics, which can be
 displayed on screen or saved to file.
 """
 
+from __future__ import print_function
+
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import re
@@ -483,7 +485,7 @@ class FitResults(object):
         update  --  Flag indicating whether to call update() (default False).
 
         """
-        print self.formatResults(header, footer, update).rstrip()
+        print(self.formatResults(header, footer, update).rstrip())
         return
 
     def __str__(self):

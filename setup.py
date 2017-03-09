@@ -22,7 +22,7 @@ gitarchivecfgfile = versioncfgfile.replace('version.cfg', 'gitarchive.cfg')
 
 def gitinfo():
     from subprocess import Popen, PIPE
-    kw = dict(stdout=PIPE, cwd=MYDIR)
+    kw = dict(stdout=PIPE, cwd=MYDIR, universal_newlines=True)
     proc = Popen(['git', 'describe', '--match=v[[:digit:]]*'], **kw)
     desc = proc.stdout.read()
     proc = Popen(['git', 'log', '-1', '--format=%H %at %ai'], **kw)
@@ -73,8 +73,7 @@ versiondata = getversioncfg()
 setup_args = dict(
     name = "diffpy.srfit",
     version = versiondata.get('DEFAULT', 'version'),
-    namespace_packages = ['diffpy'],
-    packages = find_packages('src'),
+    packages = [('diffpy.' + p) for p in find_packages('src/diffpy')],
     package_dir = {'' : 'src'},
     test_suite = 'diffpy.srfit.tests',
     include_package_data = True,
@@ -99,7 +98,10 @@ setup_args = dict(
         'License :: OSI Approved :: BSD License',
         'Operating System :: MacOS',
         'Operating System :: POSIX',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Scientific/Engineering :: Chemistry',
         'Topic :: Scientific/Engineering :: Physics',
         'Topic :: Software Development :: Libraries',

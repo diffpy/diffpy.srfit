@@ -17,7 +17,7 @@ FALLBACK_VERSION = '1.2.post0'
 # versioncfgfile holds version data for git commit hash and date.
 # It must reside in the same directory as version.py.
 MYDIR = os.path.dirname(os.path.abspath(__file__))
-versioncfgfile = os.path.join(MYDIR, 'diffpy/srfit/version.cfg')
+versioncfgfile = os.path.join(MYDIR, 'src/diffpy/srfit/version.cfg')
 gitarchivecfgfile = versioncfgfile.replace('version.cfg', 'gitarchive.cfg')
 
 def gitinfo():
@@ -74,7 +74,8 @@ setup_args = dict(
         name = "diffpy.srfit",
         version = versiondata.get('DEFAULT', 'version'),
         namespace_packages = ['diffpy'],
-        packages = find_packages(),
+        packages = find_packages('src'),
+        package_dir = {'' : 'src'},
         test_suite = 'diffpy.srfit.tests',
         include_package_data = True,
         install_requires = [],

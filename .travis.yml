@@ -8,11 +8,8 @@ os:
   - osx
 
 env:
-  global:
-    - MYPYTHON_VERSION=2.7
-  matrix:
-    - MYUSEMC=true
-    - MYUSEMC=false
+  - MYUSEMC=true MYPYTHON_VERSION=2.7
+  - MYUSEMC=false
 
 matrix:
   exclude:
@@ -65,6 +62,12 @@ before_install:
   - $NOMC || test -x ~/mc/bin/conda || bash ${MYMCBUNDLE} -b -f -p ~/mc
   - $NOMC || popd
   - $NOMC || export PATH="${HOME}/mc/bin:${PATH}"
+
+  # Avoid failure due to a bug in conda-build 2.1.6,
+  # see https://github.com/conda/conda-build/issues/1825.
+  # Use tee to verify there is no expansion of "!".
+  - $NOMC || echo 'conda-build !=2.1.6' | tee ~/mc/conda-meta/pinned
+
   - $NOMC || conda update --yes conda
   - $NOMC || conda install --yes conda-build jinja2
   - $NOMC || conda create --name=testenv --yes python=${MYPYTHON_VERSION} coverage
@@ -76,7 +79,7 @@ before_install:
 
 install:
   - $NOMC || conda build --python=${MYPYTHON_VERSION} --dirty conda-recipe
-  - $NOMC || MYCONDATESTENV="$(ls -td ~/mc/conda-bld/${MYNAME}_*/_t_env | head -1)"
+  - $NOMC || MYCONDATESTENV="$(ls -td ~/mc/conda-bld/${MYNAME}_*/_t_env* | head -1)"
   - $NOMC || source activate ${MYCONDATESTENV:?"conda test environment not found"}
   - $NOMC || conda list  --export ${MYNAME} > /tmp/mypackage.txt
   - $NOMC || source activate testenv

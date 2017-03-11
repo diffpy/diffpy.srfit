@@ -28,7 +28,7 @@ __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
 from collections import OrderedDict
-from itertools import chain, ifilter, groupby
+from itertools import chain, groupby
 import re
 
 from diffpy.srfit.fitbase.constraint import Constraint
@@ -45,12 +45,6 @@ from diffpy.srfit.interface import _recipeorganizer_interface
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 
-
-try:
-    from itertools import ifilter
-except ImportError:
-    # itertools.ifilter (python2) == filter (python3)
-    ifilter = filter
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -749,7 +743,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearConstraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in six.filter(f, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
@@ -833,7 +827,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearRestraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in six.filter(f, self._iterManaged()):
                 m.clearRestraints(recurse)
         return
 
@@ -842,7 +836,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         constraints = {}
         if recurse:
             f = lambda m : hasattr(m, "_getConstraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in six.filter(f, self._iterManaged()):
                 constraints.update( m._getConstraints(recurse) )
 
         constraints.update( self._constraints)
@@ -857,7 +851,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         restraints = set(self._restraints)
         if recurse:
             f = lambda m : hasattr(m, "_getRestraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in six.filter(f, self._iterManaged()):
                 restraints.update( m._getRestraints(recurse) )
 
         return restraints
@@ -980,7 +974,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         tlines = self._formatManaged()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
-            linesok = filter(pmatch, tlines)
+            linesok = six.filter(pmatch, tlines)
             lastnotblank = False
             # squeeze repeated blank lines
             for lastnotblank, g in groupby(linesok, bool):
@@ -997,7 +991,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Constraints", _DASHEDLINE])
-            lines.extend(filter(cmatch, tlines))
+            lines.extend(six.filter(cmatch, tlines))
 
         # FIXME - parameter names in equations not particularly informative
         # Show restraints
@@ -1006,7 +1000,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Restraints", _DASHEDLINE])
-            lines.extend(filter(pmatch, tlines))
+            lines.extend(six.filter(pmatch, tlines))
 
         # Determine effective text width tw.
         tw = textwidth if (textwidth is not None and textwidth > 0) else None

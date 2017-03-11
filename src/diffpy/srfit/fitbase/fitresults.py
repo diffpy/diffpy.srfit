@@ -35,13 +35,6 @@ from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 
 
-# python2/3 compatible xrange. xrange was renamed to range in python 3 and
-# range was removed
-try:
-    xrange
-except NameError:
-    xrange = range
-
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
 
@@ -458,8 +451,8 @@ class FitResults(object):
         tup = []
         cornames = []
         n = len(self.varnames)
-        for i in xrange(n):
-            for j in xrange(i+1, n):
+        for i in six.range(n):
+            for j in six.range(i+1, n):
                 name = "corr(%s, %s)"%(varnames[i], varnames[j])
                 val = (self.cov[i,j]/(self.cov[i,i] * self.cov[j,j])**0.5)
                 if abs(val) > corrmin:

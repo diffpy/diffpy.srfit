@@ -43,6 +43,7 @@ Extensions
 """
 
 from __future__ import print_function
+import six
 
 import numpy
 
@@ -378,14 +379,14 @@ def iofq(S, q):
     pairdict = {}
     elcount = {}
     n = len(S)
-    for i in xrange(n):
+    for i in six.range(n):
 
         # count the number of each element
         eli = S[i].element
         m = elcount.get(eli, 0)
         elcount[eli] = m + 1
 
-        for j in xrange(i+1,n):
+        for j in six.range(i+1,n):
 
             elj = S[j].element
 

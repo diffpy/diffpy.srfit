@@ -15,9 +15,10 @@
 
 """Tests for refinableobj module."""
 
+import six
+
 import sys
 import unittest
-import cStringIO
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.calculator import Calculator
@@ -222,8 +223,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         m._addParameter(p4)
 
         # Check order
-        self.assertEquals(m._parameters.keys(), ["p1", "xyz"])
-        self.assertEquals(m._parameters.values(), [p2, p4])
+        self.assertEquals(list(m._parameters.keys()), ["p1", "xyz"])
+        self.assertEquals(list(m._parameters.values()), [p2, p4])
 
         return
 
@@ -510,7 +511,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         """Verify output from the show function.
         """
         def capture_show(*args, **kwargs):
-            sys.stdout = cStringIO.StringIO()
+            sys.stdout = six.StringIO()
             self.m.show(*args, **kwargs)
             rv = sys.stdout.getvalue()
             sys.stdout = sys.__stdout__

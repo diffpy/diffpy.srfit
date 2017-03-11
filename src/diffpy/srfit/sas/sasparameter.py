@@ -19,6 +19,8 @@ The SASGenerator class wraps a sas.models.BaseModel object as a
 ProfileGenerator.
 """
 
+from __future__ import print_function
+import six
 __all__ = ["SASParameter"]
 
 from diffpy.srfit.fitbase.parameter import Parameter

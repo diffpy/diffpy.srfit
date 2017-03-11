@@ -629,7 +629,7 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
             if SpaceGroups.IsSpaceGroupIdentifier(short_name):
                 sg = SpaceGroups.GetSpaceGroup(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
-                # print "dbsg: " + repr(self.sgsEquivalent(sg, sgnew))
+                # print("dbsg: " + repr(self.sgsEquivalent(sg, sgnew)))
                 self.assertTrue(self.sgsEquivalent(sg, sgnew))
         return
 

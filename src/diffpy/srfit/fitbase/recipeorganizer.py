@@ -21,6 +21,9 @@ incorporates equation building, constraints and Restraints.  equationFromString
 creates an Equation instance from a string.
 """
 
+from __future__ import print_function
+import six
+
 __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
@@ -42,6 +45,12 @@ from diffpy.srfit.interface import _recipeorganizer_interface
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 
+
+try:
+    from itertools import ifilter
+except ImportError:
+    # itertools.ifilter (python2) == filter (python3)
+    ifilter = filter
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -146,7 +155,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __getitem__(self, idx):
         """Get top-level parameters by index."""
-        return self._parameters.values()[idx]
+        # need to wrap this in a list for python 3 compatibility.
+        return list(self._parameters.values())[idx]
 
     def __getattr__(self, name):
         """Gives access to the contained objects as attributes."""
@@ -451,9 +461,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._addObject(f, self._calculators)
         # Register arguments of the calculator
         if argnames is None:
-            func_code = f.__call__.im_func.func_code
-            argnames = list(func_code.co_varnames)
-            argnames = argnames[1:func_code.co_argcount]
+            __code__ = f.__call__.__func__.__code__
+            argnames = list(__code__.co_varnames)
+            argnames = argnames[1:__code__.co_argcount]
 
         for pname in argnames:
             if pname not in self._eqfactory.builders:
@@ -510,21 +520,21 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
             import inspect
 
-            func_code = None
+            __code__ = None
 
             # This will let us offset the argument list to eliminate 'self'
             offset = 0
 
             # check regular functions
             if inspect.isfunction(f):
-                func_code = f.func_code
+                __code__ = f.__code__
             # check class method
             elif inspect.ismethod(f):
-                    func_code = f.im_func.func_code
+                    __code__ = f.__func__.__code__
                     offset = 1
             # check functor
-            elif hasattr(f, "__call__") and hasattr(f.__call__, 'im_func'):
-                    func_code = f.__call__.im_func.func_code
+            elif hasattr(f, "__call__") and hasattr(f.__call__, '__func__'):
+                    __code__ = f.__call__.__func__.__code__
                     offset = 1
             else:
                 m = "Cannot extract name or argnames"
@@ -532,15 +542,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
             # Extract the name
             if name is None:
-                name = func_code.co_name
+                name = __code__.co_name
                 if name == '<lambda>':
                     m = "You must supply a name name for a lambda function"
                     raise ValueError(m)
 
             # Extract the arguments
             if argnames is None:
-                argnames = list(func_code.co_varnames)
-                argnames = argnames[offset:func_code.co_argcount]
+                argnames = list(__code__.co_varnames)
+                argnames = argnames[offset:__code__.co_argcount]
 
         #### End introspection code
 
@@ -638,7 +648,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ns.
         Raises ValueError if par is marked as constant.
         """
-        if isinstance(par, basestring):
+        if isinstance(par, six.string_types):
             name = par
             par = self.get(name)
             if par is None:
@@ -650,7 +660,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if par.const:
             raise ValueError("The parameter '%s' is constant"%par)
 
-        if isinstance(con, basestring):
+        if isinstance(con, six.string_types):
             eqstr = con
             eq = equationFromString(con, self._eqfactory, ns)
         else:
@@ -676,7 +686,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         par     --  The name of a Parameter or a Parameter to check.
         """
-        if isinstance(par, basestring):
+        if isinstance(par, six.string_types):
             name = par
             par = self.get(name)
 
@@ -694,7 +704,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         update = False
         for par in pars:
-            if isinstance(par, basestring):
+            if isinstance(par, six.string_types):
                 name = par
                 par = self.get(name)
 
@@ -771,7 +781,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns the Restraint object for use with the 'unrestrain' method.
         """
 
-        if isinstance(res, basestring):
+        if isinstance(res, six.string_types):
             eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
         else:

@@ -20,6 +20,8 @@ Calculator. This is not wrapped as a ProfileGenerator because it will be used
 to share information between SAS I(Q) to PDF G(r), but it does not use the same
 profile as the PDF, which is where the calculator will be applied.
 """
+from __future__ import print_function
+import six
 
 __all__ = ["PrCalculator", "CFCalculator"]
 

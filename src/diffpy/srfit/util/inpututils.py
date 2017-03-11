@@ -14,6 +14,8 @@
 ##############################################################################
 
 """Input utilities."""
+from __future__ import print_function
+import six
 
 __all__ = ["inputToString"]
 
@@ -39,7 +41,7 @@ def inputToString(inpt):
         inptstr = inpt.read()
     # FIXME check for typos in the file name
     elif os.path.exists(inpt) or (len(inpt) < 80 and inpt.count("\n") == 0):
-        with file(inpt, 'r') as infile:
+        with open(inpt, 'r') as infile:
             inptstr = infile.read()
     else:
         inptstr = inpt

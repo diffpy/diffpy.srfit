@@ -36,6 +36,8 @@ ObjCrystBondLengthParameter
 ObjCrystBondAngleParameter
 ObjCrystDihedralAngleParameter
 """
+from __future__ import print_function
+import six
 
 __all__ = ["ObjCrystMoleculeParSet", "ObjCrystCrystalParSet"]
 

@@ -20,6 +20,13 @@ from diffpy.srfit.sas.sasimport import sasimport
 from diffpy.srfit.tests import logger
 from unittest import TestCase
 
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
+
 # Create a singleton and a test for optional test cases
 _TestCaseDisabled = object
 
@@ -37,7 +44,7 @@ try:
     sasimport('sas.pr.invertor')
     sasimport('sas.models')
     TestCaseSaS = TestCase
-except ImportError, e:
+except ImportError as ie:
     TestCaseSaS = _TestCaseDisabled
     logger.warning('%s, SaS tests skipped.', e)
 

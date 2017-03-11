@@ -54,12 +54,8 @@ def testsuite():
         diffpy.srfit.tests.testvisitors
         diffpy.srfit.tests.testweakrefcallable
     '''.split()
-    suite = unittest.TestSuite()
     loader = unittest.defaultTestLoader
-    mobj = None
-    for mname in modulenames:
-        exec ('import %s as mobj' % mname)
-        suite.addTests(loader.loadTestsFromModule(mobj))
+    suite = loader.loadTestsFromNames(modulenames)
     return suite
 
 

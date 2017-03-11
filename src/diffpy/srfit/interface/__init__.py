@@ -19,6 +19,8 @@ The classes and functions in this package are designed to unobtrusively mix
 with base SrFit objects and provide them with interface enhancements for
 scripting.
 """
+from __future__ import print_function
+import six
 
 
 from diffpy.srfit.interface.interface import ParameterInterface

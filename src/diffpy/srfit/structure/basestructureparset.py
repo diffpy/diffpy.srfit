@@ -18,6 +18,8 @@
 The BaseStructureParSet is a ParameterSet with functionality required by all
 structure adapters.
 """
+from __future__ import print_function
+import six
 
 __all__ = ["BaseStructureParSet"]
 

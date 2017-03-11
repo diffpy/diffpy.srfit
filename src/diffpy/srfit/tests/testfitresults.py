@@ -15,6 +15,8 @@
 
 """Tests for fitresults module."""
 
+from __future__ import print_function
+import six
 import unittest
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
@@ -52,7 +54,7 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertEquals(0, recipe.A.value)
         self.assertEquals(0, recipe.sig.value)
         self.assertEquals(0, recipe.x0.value)
-        infile = file(self.filename, 'r')
+        infile = open(self.filename, 'r')
         initializeRecipe(recipe, infile)
         self.assertFalse(infile.closed)
         infile.close()
@@ -67,7 +69,7 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertEquals(0, recipe.A.value)
         self.assertEquals(0, recipe.sig.value)
         self.assertEquals(0, recipe.x0.value)
-        infile = file(self.filename, 'r')
+        infile = open(self.filename, 'r')
         resstr = infile.read()
         infile.close()
         initializeRecipe(recipe, resstr)

@@ -334,7 +334,7 @@ class FitContribution(ParameterSet):
         from diffpy.srfit.equation.visitors import validate
         try:
             validate(self._eq)
-        except ValueError, e:
+        except ValueError as e:
             raise SrFitError(e)
         if self._eq is None:
             raise SrFitError("_eq is None")
@@ -342,7 +342,7 @@ class FitContribution(ParameterSet):
         val = None
         try:
             val = self._eq()
-        except TypeError, e:
+        except TypeError as e:
             raise SrFitError("_eq cannot be evaluated: %s"%e)
 
         if val is None:
@@ -351,11 +351,11 @@ class FitContribution(ParameterSet):
         # Try to get the value for residual
         try:
             validate(self._reseq)
-        except ValueError, e:
+        except ValueError as e:
             raise SrFitError(e)
         try:
             val = self.residual()
-        except TypeError, e:
+        except TypeError as e:
             raise SrFitError("residual cannot be evaluated")
         if val is None:
             raise SrFitError("residual evaluates to None")

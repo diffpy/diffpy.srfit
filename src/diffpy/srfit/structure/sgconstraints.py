@@ -15,6 +15,8 @@
 
 """Code to set space group constraints for a crystal structure."""
 
+from __future__ import print_function
+import six
 
 import re
 import numpy

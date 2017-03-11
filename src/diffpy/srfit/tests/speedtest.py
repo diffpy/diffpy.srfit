@@ -25,6 +25,13 @@ import diffpy.srfit.equation.literals as literals
 
 from diffpy.srfit.tests.utils import _makeArgs
 
+# python2/3 compatible xrange. xrange was renamed to range in python 3 and
+# range was removed
+try:
+    xrange
+except NameError:
+    xrange = range
+    
 x = numpy.arange(0, 20, 0.05)
 
 def makeLazyEquation():
@@ -343,7 +350,7 @@ def weightedTest(mutate = 2):
 
     #scale = visitors.NodeWeigher()
     #eq.root.identify(scale)
-    #print scale.output
+    #print(scale.output)
 
     from numpy import polyval
     def f(b1, b2, b3, b4, b5, b6, b7, b8):
@@ -370,7 +377,7 @@ def weightedTest(mutate = 2):
             c.remove(idx)
             args[idx] = random.random()
 
-        #print args
+        #print(args)
 
         # Time the different functions with these arguments
         teq += timeFunction(eq, *args)

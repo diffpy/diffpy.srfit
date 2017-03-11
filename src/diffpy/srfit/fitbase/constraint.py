@@ -102,14 +102,14 @@ class Constraint(Validatable):
         from diffpy.srfit.equation.visitors import validate
         try:
             validate(self.eq)
-        except ValueError, e:
+        except ValueError as e:
             raise SrFitError(e)
 
         # Try to get the value of eq.
         try:
             val = self.eq()
             self.par.setValue(val)
-        except TypeError, e:
+        except TypeError as e:
             raise SrFitError("eq cannot be evaluated")
         finally:
             if val is None:

@@ -27,7 +27,7 @@ __all__ = ["Parameter", "ParameterProxy", "ParameterAdapter"]
 
 from functools import wraps
 
-from numpy import inf
+import numpy as np
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.equation.literals import Argument
@@ -66,7 +66,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
         """
         self.constrained = False
-        self.bounds = [-inf, inf]
+        self.bounds = [-np.inf, np.inf]
         validateName(name)
         Argument.__init__(self, name, value, const)
         return

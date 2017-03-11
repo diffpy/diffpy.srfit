@@ -141,7 +141,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __iter__(self):
         """Iterate over top-level parameters."""
-        return self._parameters.itervalues()
+        return six.itervalues(self._parameters)
 
     def __len__(self):
         """Get number of top-level parameters."""
@@ -865,8 +865,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises AttributeError if validation fails.
         """
         RecipeContainer._validate(self)
-        iterable = chain(iter(self._restraints),
-                self._constraints.itervalues())
+        iterable = chain(self._restraints,
+                         six.itervalues(self._constraints))
         self._validateOthers(iterable)
         return
 

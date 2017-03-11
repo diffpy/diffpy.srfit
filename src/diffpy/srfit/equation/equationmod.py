@@ -37,6 +37,7 @@ Example
 
 See the class documentation for more information.
 """
+
 from __future__ import print_function
 import six
 
@@ -115,9 +116,7 @@ class Equation(Operator):
 
 
     def _getArgs(self):
-        # .values() returns a generator in python 3. Need to wrap this in a list
-        # wrap this in a six.itervalues call first to avoid double-listifying it
-        return list(self.argdict.values())
+        return list(six.itervalues(self.argdict))
 
     args = property(_getArgs)
 

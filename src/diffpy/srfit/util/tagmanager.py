@@ -24,12 +24,6 @@ import six
 __all__ = ["TagManager"]
 
 
-try:
-    reduce
-except NameError:
-    # reduce does not exist in python 3, it lives in functools
-    from functools import reduce
-
 class TagManager(object):
     """TagManager class.
 
@@ -112,7 +106,7 @@ class TagManager(object):
         """
         setgen = (self.__getObjectSet(t) for t in tags)
         resgen = ((obj in s) for s in setgen)
-        result = reduce(bool.__and__, resgen, True)
+        result = six.reduce(bool.__and__, resgen, True)
         return result
 
 
@@ -126,7 +120,7 @@ class TagManager(object):
             return set()
 
         setgen = (self.__getObjectSet(t) for t in tags)
-        objs = reduce(set.union, setgen)
+        objs = six.reduce(set.union, setgen)
 
         return objs
 
@@ -141,7 +135,7 @@ class TagManager(object):
             return set()
 
         setgen = (self.__getObjectSet(t) for t in tags)
-        objs = reduce(set.intersection, setgen)
+        objs = six.reduce(set.intersection, setgen)
 
         return objs
 

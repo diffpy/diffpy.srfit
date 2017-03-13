@@ -39,7 +39,7 @@ try:
     sasimport('sas.pr.invertor')
     sasimport('sas.models')
     TestCaseSaS = TestCase
-except ImportError as ie:
+except ImportError as e:
     TestCaseSaS = _TestCaseDisabled
     logger.warning('%s, SaS tests skipped.', e)
 

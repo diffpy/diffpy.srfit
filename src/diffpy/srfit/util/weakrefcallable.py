@@ -56,7 +56,7 @@ class WeakBoundMethod(object):
         """
         # This does not handle builtin methods, but that can be added
         # if necessary.
-        self.function = f.__func__.__get__(None, f.im_class)
+        self.function = f.__func__
         self.holder = holder
         cb = self.__make_callback(self.holder)
         self._wref = weakref.ref(f.__self__, cb)

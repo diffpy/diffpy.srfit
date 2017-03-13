@@ -22,8 +22,6 @@ displayed on screen or saved to file.
 
 from __future__ import print_function
 
-import six
-
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import re
@@ -451,8 +449,8 @@ class FitResults(object):
         tup = []
         cornames = []
         n = len(self.varnames)
-        for i in six.range(n):
-            for j in six.range(i+1, n):
+        for i in range(n):
+            for j in range(i + 1, n):
                 name = "corr(%s, %s)"%(varnames[i], varnames[j])
                 val = (self.cov[i,j]/(self.cov[i,i] * self.cov[j,j])**0.5)
                 if abs(val) > corrmin:

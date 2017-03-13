@@ -16,7 +16,6 @@
 """Tests for diffpy.srfit.structure package."""
 
 from __future__ import print_function
-import six
 
 import unittest
 
@@ -59,8 +58,8 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
             self.assertEquals(a2.Uisoequiv, s.Ag0.Uiso.getValue())
             self.assertEquals(a1.Bisoequiv, s.Cu0.Biso.getValue())
             self.assertEquals(a2.Bisoequiv, s.Ag0.Biso.getValue())
-            for i in six.range(1,4):
-                for j in six.range(i,4):
+            for i in range(1, 4):
+                for j in range(i, 4):
                     uijstru = getattr(a1, "U%i%i"%(i,j))
                     uij = getattr(s.Cu0, "U%i%i"%(i,j)).getValue()
                     uji = getattr(s.Cu0, "U%i%i"%(j,i)).getValue()

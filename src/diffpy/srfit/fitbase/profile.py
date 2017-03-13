@@ -21,6 +21,8 @@ to store a calculated signal, and by FitContributions to help calculate a
 residual equation.
 """
 
+import six
+
 __all__ = ["Parameter", "Profile"]
 
 import numpy
@@ -182,7 +184,7 @@ class Profile(Observable, Validatable):
             raise AttributeError("No observed profile")
         # local helper function
         def _isobs(a):
-            if not isinstance(a, basestring):
+            if not isinstance(a, six.string_types):
                 return False
             if a != 'obs':
                 raise ValueError('Must be either float or "obs".')

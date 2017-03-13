@@ -743,7 +743,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearConstraints")
-            for m in six.filter(f, self._iterManaged()):
+            for m in six.moves.filter(f, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
@@ -827,7 +827,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearRestraints")
-            for m in six.filter(f, self._iterManaged()):
+            for m in six.moves.filter(f, self._iterManaged()):
                 m.clearRestraints(recurse)
         return
 
@@ -836,7 +836,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         constraints = {}
         if recurse:
             f = lambda m : hasattr(m, "_getConstraints")
-            for m in six.filter(f, self._iterManaged()):
+            for m in six.moves.filter(f, self._iterManaged()):
                 constraints.update( m._getConstraints(recurse) )
 
         constraints.update( self._constraints)
@@ -851,7 +851,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         restraints = set(self._restraints)
         if recurse:
             f = lambda m : hasattr(m, "_getRestraints")
-            for m in six.filter(f, self._iterManaged()):
+            for m in six.moves.filter(f, self._iterManaged()):
                 restraints.update( m._getRestraints(recurse) )
 
         return restraints
@@ -974,7 +974,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         tlines = self._formatManaged()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
-            linesok = six.filter(pmatch, tlines)
+            linesok = six.moves.filter(pmatch, tlines)
             lastnotblank = False
             # squeeze repeated blank lines
             for lastnotblank, g in groupby(linesok, bool):
@@ -991,7 +991,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Constraints", _DASHEDLINE])
-            lines.extend(six.filter(cmatch, tlines))
+            lines.extend(six.moves.filter(cmatch, tlines))
 
         # FIXME - parameter names in equations not particularly informative
         # Show restraints
@@ -1000,7 +1000,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Restraints", _DASHEDLINE])
-            lines.extend(six.filter(pmatch, tlines))
+            lines.extend(six.moves.filter(pmatch, tlines))
 
         # Determine effective text width tw.
         tw = textwidth if (textwidth is not None and textwidth > 0) else None

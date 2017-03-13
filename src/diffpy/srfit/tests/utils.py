@@ -67,7 +67,7 @@ except ImportError:
 
 def _makeArgs(num):
     args = []
-    for i in six.range(num):
+    for i in six.moves.range(num):
         j=i+1
         args.append(literals.Argument(name="v%i"%j, value=j))
     return args

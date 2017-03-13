@@ -101,7 +101,7 @@ def speedTest1():
 
     total1 = 0
     total2 = 0
-    for i in six.range(len(args)):
+    for i in six.moves.range(len(args)):
         args[i] = 10*random.random()
         print("Changing argument %i" % (i + 1))
         t1 = timeFunction(f1, *args)
@@ -159,13 +159,13 @@ def speedTest2(mutate = 2):
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in six.range(numcalls):
+    for _i in six.moves.range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in six.range(n):
+        for _j in six.moves.range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()
@@ -233,13 +233,13 @@ def speedTest3(mutate = 2):
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in six.range(numcalls):
+    for _i in six.moves.range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in six.range(n):
+        for _j in six.moves.range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()
@@ -294,13 +294,13 @@ def speedTest4(mutate = 2):
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in six.range(numcalls):
+    for _i in six.moves.range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in six.range(n):
+        for _j in six.moves.range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()
@@ -360,13 +360,13 @@ def weightedTest(mutate = 2):
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in six.range(numcalls):
+    for _i in six.moves.range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in six.range(n):
+        for _j in six.moves.range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()
@@ -417,13 +417,13 @@ def profileTest():
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in six.range(numcalls):
+    for _i in six.moves.range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in six.range(n):
+        for _j in six.moves.range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()

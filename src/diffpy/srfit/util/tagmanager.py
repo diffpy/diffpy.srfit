@@ -106,7 +106,7 @@ class TagManager(object):
         """
         setgen = (self.__getObjectSet(t) for t in tags)
         resgen = ((obj in s) for s in setgen)
-        result = six.reduce(bool.__and__, resgen, True)
+        result = six.functools.reduce(bool.__and__, resgen, True)
         return result
 
 
@@ -120,7 +120,7 @@ class TagManager(object):
             return set()
 
         setgen = (self.__getObjectSet(t) for t in tags)
-        objs = six.reduce(set.union, setgen)
+        objs = six.functools.reduce(set.union, setgen)
 
         return objs
 
@@ -135,7 +135,7 @@ class TagManager(object):
             return set()
 
         setgen = (self.__getObjectSet(t) for t in tags)
-        objs = six.reduce(set.intersection, setgen)
+        objs = six.functools.reduce(set.intersection, setgen)
 
         return objs
 

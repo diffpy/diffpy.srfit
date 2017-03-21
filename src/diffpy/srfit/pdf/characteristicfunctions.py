@@ -24,8 +24,6 @@ Gcryst(f) is the crystal PDF.
 These functions are meant to be imported and added to a FitContribution using
 the 'registerFunction' method of that class.
 """
-from __future__ import print_function
-import six
 
 __all__ = ["sphericalCF", "spheroidalCF", "spheroidalCF2",
            "lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASCF"]
@@ -38,6 +36,7 @@ from numpy.fft import ifft, fftfreq
 from scipy.special import erf
 
 from diffpy.srfit.fitbase.calculator import Calculator
+
 
 def sphericalCF(r, psize):
     """Spherical nanoparticle characteristic function.

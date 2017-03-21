@@ -27,8 +27,6 @@ CCTBXCrystalParSet  --  Wrapper for cctbx.crystal
 CCTBXUnitCellParSet --  Wrapper for the unit cell of cctbx.crystal
 CCTBXScattererParSet --  Wrapper for cctbx.xray.scatterer
 """
-from __future__ import print_function
-import six
 
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
@@ -36,6 +34,7 @@ from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 
 __all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet",
            "CCTBXCrystalParSet"]
+
 
 class CCTBXScattererParSet(ParameterSet):
     """A wrapper for cctbx.xray.scatterer

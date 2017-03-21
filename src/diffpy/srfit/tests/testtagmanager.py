@@ -16,8 +16,6 @@
 """Unit tests for tagmanager.py
 """
 
-from __future__ import print_function
-import six
 import unittest
 
 from diffpy.srfit.util.tagmanager import TagManager

@@ -11,8 +11,6 @@
 # Derived from pyre-1.0/packages/pyre/patterns/Observable.py
 # See pyre-1.0 for full copyright and license information
 
-from __future__ import print_function
-import six
 __all__ = ["Observable"]
 
 

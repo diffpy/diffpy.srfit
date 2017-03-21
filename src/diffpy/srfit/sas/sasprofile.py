@@ -15,14 +15,13 @@
 
 """Class for adapting a sas DataInfo objects to the Profile interface.
 """
-from __future__ import print_function
-import six
 
 __all__ = ["SASProfile"]
 
 from numpy import ones_like
 
 from diffpy.srfit.fitbase.profile import Profile
+
 
 class SASProfile(Profile):
     """Observed and calculated profile container for SAS data.

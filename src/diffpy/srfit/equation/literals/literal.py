@@ -19,8 +19,6 @@ Literals are base pieces of the equation hierarchy. The 'identify' method
 identifies the Literal to a visitor by calling the identifying method of the
 vistior.
 """
-from __future__ import print_function
-import six
 
 __all__ = ["Literal"]
 

@@ -18,13 +18,12 @@
 The SASGenerator class wraps a sas.models.BaseModel object as a
 ProfileGenerator.
 """
-from __future__ import print_function
-import six
 
 __all__ = ["SASGenerator"]
 
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.sas.sasparameter import SASParameter
+
 
 class SASGenerator(ProfileGenerator):
     """A class for calculating I(Q) from a scattering type.

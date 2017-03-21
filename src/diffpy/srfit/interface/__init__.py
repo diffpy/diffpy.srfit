@@ -19,9 +19,6 @@ The classes and functions in this package are designed to unobtrusively mix
 with base SrFit objects and provide them with interface enhancements for
 scripting.
 """
-from __future__ import print_function
-import six
-
 
 from diffpy.srfit.interface.interface import ParameterInterface
 _parameter_interface = ParameterInterface
@@ -31,6 +28,5 @@ _recipeorganizer_interface = RecipeOrganizerInterface
 
 from diffpy.srfit.interface.interface import FitRecipeInterface
 _fitrecipe_interface = FitRecipeInterface
-
 
 # End of file

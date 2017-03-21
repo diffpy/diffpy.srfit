@@ -77,8 +77,6 @@ example.
 > eq = beq.makeEquation()
 """
 
-import six
-
 __all__ = ["EquationFactory", "BaseBuilder", "ArgumentBuilder",
            "OperatorBuilder", "wrapArgument", "wrapOperator", "wrapFunction",
            "getBuilder"]
@@ -222,7 +220,7 @@ class EquationFactory(object):
         Raises ValueError if the new builder's literal causes a self-reference
         in an existing equation.
         """
-        if not isinstance(name, six.string_types):
+        if not isinstance(name, str):
             raise TypeError("Name must be a string")
         if not isinstance(builder, BaseBuilder):
             raise TypeError("builder must be a BaseBuilder instance")
@@ -334,8 +332,9 @@ class EquationFactory(object):
         """
         import tokenize
         import token
+        import io
 
-        interface = six.StringIO(eqstr).readline
+        interface = io.StringIO(eqstr).readline
         # output is an iterator. Each entry (token) is a 5-tuple
         # token[0] = token type
         # token[1] = token string

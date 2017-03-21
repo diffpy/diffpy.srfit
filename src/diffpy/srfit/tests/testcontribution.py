@@ -15,8 +15,6 @@
 
 """Tests for refinableobj module."""
 
-from __future__ import print_function
-import six
 import unittest
 
 from numpy import arange, dot, array_equal, sin

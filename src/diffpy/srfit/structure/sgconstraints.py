@@ -15,8 +15,6 @@
 
 """Code to set space group constraints for a crystal structure."""
 
-from __future__ import print_function
-import six
 
 import re
 import numpy
@@ -25,6 +23,7 @@ from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 
 __all__ = ["constrainAsSpaceGroup"]
+
 
 def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
         sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,

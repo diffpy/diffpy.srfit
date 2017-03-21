@@ -38,9 +38,6 @@ Example
 See the class documentation for more information.
 """
 
-from __future__ import print_function
-import six
-
 __all__ = ["Equation"]
 
 from collections import OrderedDict
@@ -116,7 +113,7 @@ class Equation(Operator):
 
 
     def _getArgs(self):
-        return list(six.itervalues(self.argdict))
+        return list(self.argdict.values())
 
     args = property(_getArgs)
 

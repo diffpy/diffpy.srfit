@@ -14,12 +14,11 @@
 ##############################################################################
 
 """Input utilities."""
-from __future__ import print_function
-import six
 
 __all__ = ["inputToString"]
 
 import os.path
+
 
 def inputToString(inpt):
     """Convert input from various modes to a string.

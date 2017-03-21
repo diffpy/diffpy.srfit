@@ -15,8 +15,6 @@
 
 """Helper routines for testing."""
 
-import six
-
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
 from diffpy.srfit.tests import logger
@@ -67,7 +65,7 @@ except ImportError:
 
 def _makeArgs(num):
     args = []
-    for i in six.moves.range(num):
+    for i in range(num):
         j=i+1
         args.append(literals.Argument(name="v%i"%j, value=j))
     return args

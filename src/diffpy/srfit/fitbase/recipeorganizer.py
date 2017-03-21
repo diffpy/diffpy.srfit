@@ -21,9 +21,6 @@ incorporates equation building, constraints and Restraints.  equationFromString
 creates an Equation instance from a string.
 """
 
-from __future__ import print_function
-import six
-
 __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
@@ -141,7 +138,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __iter__(self):
         """Iterate over top-level parameters."""
-        return six.itervalues(self._parameters)
+        return self._parameters.values()
 
     def __len__(self):
         """Get number of top-level parameters."""
@@ -642,7 +639,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ns.
         Raises ValueError if par is marked as constant.
         """
-        if isinstance(par, six.string_types):
+        if isinstance(par, str):
             name = par
             par = self.get(name)
             if par is None:
@@ -654,7 +651,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if par.const:
             raise ValueError("The parameter '%s' is constant"%par)
 
-        if isinstance(con, six.string_types):
+        if isinstance(con, str):
             eqstr = con
             eq = equationFromString(con, self._eqfactory, ns)
         else:
@@ -680,7 +677,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         par     --  The name of a Parameter or a Parameter to check.
         """
-        if isinstance(par, six.string_types):
+        if isinstance(par, str):
             name = par
             par = self.get(name)
 
@@ -698,7 +695,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         update = False
         for par in pars:
-            if isinstance(par, six.string_types):
+            if isinstance(par, str):
                 name = par
                 par = self.get(name)
 
@@ -743,7 +740,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearConstraints")
-            for m in six.moves.filter(f, self._iterManaged()):
+            for m in filter(f, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
@@ -775,7 +772,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns the Restraint object for use with the 'unrestrain' method.
         """
 
-        if isinstance(res, six.string_types):
+        if isinstance(res, str):
             eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
         else:
@@ -827,7 +824,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearRestraints")
-            for m in six.moves.filter(f, self._iterManaged()):
+            for m in filter(f, self._iterManaged()):
                 m.clearRestraints(recurse)
         return
 
@@ -836,7 +833,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         constraints = {}
         if recurse:
             f = lambda m : hasattr(m, "_getConstraints")
-            for m in six.moves.filter(f, self._iterManaged()):
+            for m in filter(f, self._iterManaged()):
                 constraints.update( m._getConstraints(recurse) )
 
         constraints.update( self._constraints)
@@ -851,7 +848,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         restraints = set(self._restraints)
         if recurse:
             f = lambda m : hasattr(m, "_getRestraints")
-            for m in six.moves.filter(f, self._iterManaged()):
+            for m in filter(f, self._iterManaged()):
                 restraints.update( m._getRestraints(recurse) )
 
         return restraints
@@ -865,8 +862,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises AttributeError if validation fails.
         """
         RecipeContainer._validate(self)
-        iterable = chain(self._restraints,
-                         six.itervalues(self._constraints))
+        iterable = chain(self._restraints, self._constraints.values())
         self._validateOthers(iterable)
         return
 
@@ -974,7 +970,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         tlines = self._formatManaged()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
-            linesok = six.moves.filter(pmatch, tlines)
+            linesok = filter(pmatch, tlines)
             lastnotblank = False
             # squeeze repeated blank lines
             for lastnotblank, g in groupby(linesok, bool):
@@ -991,7 +987,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Constraints", _DASHEDLINE])
-            lines.extend(six.moves.filter(cmatch, tlines))
+            lines.extend(filter(cmatch, tlines))
 
         # FIXME - parameter names in equations not particularly informative
         # Show restraints
@@ -1000,7 +996,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Restraints", _DASHEDLINE])
-            lines.extend(six.moves.filter(pmatch, tlines))
+            lines.extend(filter(pmatch, tlines))
 
         # Determine effective text width tw.
         tw = textwidth if (textwidth is not None and textwidth > 0) else None

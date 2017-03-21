@@ -15,8 +15,6 @@
 
 """Tests for refinableobj module."""
 
-from __future__ import print_function
-import six
 import unittest
 
 from numpy import linspace, array_equal, pi, sin, dot
@@ -25,6 +23,7 @@ from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
+
 
 class TestFitRecipe(unittest.TestCase):
 

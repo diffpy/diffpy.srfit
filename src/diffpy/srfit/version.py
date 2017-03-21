@@ -16,8 +16,7 @@
 
 """Definition of __version__, __date__, __gitsha__.
 """
-from __future__ import print_function
-import six
+
 from pkg_resources import resource_filename
 try:
     # python 2 import path

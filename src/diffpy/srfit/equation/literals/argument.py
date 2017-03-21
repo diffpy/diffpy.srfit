@@ -18,8 +18,6 @@
 Arguments are the leaves of an equation tree, in essense a variable or a
 constant.
 """
-from __future__ import print_function
-import six
 
 __all__ = ["Argument"]
 

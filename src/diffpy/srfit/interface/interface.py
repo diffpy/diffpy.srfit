@@ -21,12 +21,11 @@ is the 'union' of these sets, and in general is used to combine different
 objects. See individual interface classes for specifics.
 """
 
-import six
-
 __all__ = ["ParameterInterface", "FitRecipeInterface",
            "RecipeOrganizerInterface"]
 
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
+
 
 class ParameterInterface(object):
     """Mix-in class for enhancing the Parameter interface."""
@@ -80,7 +79,7 @@ class RecipeOrganizerInterface(object):
         """
         # Want to detect _addParameter or _newParameter
         def f(*args):
-            if isinstance(args[0], six.string_types):
+            if isinstance(args[0], str):
                 self._newParameter(*args)
             else:
                 self._addParameter(*args)
@@ -116,7 +115,7 @@ class FitRecipeInterface(object):
         """
         # Want to detect addVar or newVar
         def f(*args):
-            if isinstance(args[0], six.string_types):
+            if isinstance(args[0], str):
                 self.newVar(*args)
             else:
                 self.addVar(*args)

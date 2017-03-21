@@ -27,8 +27,6 @@ DiffpyStructureParSet --  Adapter for diffpy.Structure.Structure
 DiffpyLatticeParSet   --  Adapter for diffpy.Structure.Lattice
 DiffpyAtomParSet      --  Adapter for diffpy.Structure.Atom
 """
-from __future__ import print_function
-import six
 
 __all__ = ["DiffpyStructureParSet"]
 
@@ -37,6 +35,7 @@ from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
 from diffpy.srfit.util.argbinders import bind2nd
+
 
 # Accessor for xyz of atoms
 class _xyzgetter(object):

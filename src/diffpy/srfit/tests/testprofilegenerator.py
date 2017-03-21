@@ -15,14 +15,13 @@
 
 """Tests for refinableobj module."""
 
-from __future__ import print_function
-import six
 import unittest
 
 from numpy import arange, array_equal
 
 from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 from diffpy.srfit.fitbase.profile import Profile
+
 
 class TestProfileGenerator(unittest.TestCase):
 

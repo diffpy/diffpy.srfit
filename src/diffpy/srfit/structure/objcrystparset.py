@@ -36,8 +36,6 @@ ObjCrystBondLengthParameter
 ObjCrystBondAngleParameter
 ObjCrystDihedralAngleParameter
 """
-from __future__ import print_function
-import six
 
 __all__ = ["ObjCrystMoleculeParSet", "ObjCrystCrystalParSet"]
 
@@ -51,6 +49,7 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
+
 
 class ObjCrystScattererParSet(ParameterSet):
     """A base adaptor for an Objcryst Scatterer.

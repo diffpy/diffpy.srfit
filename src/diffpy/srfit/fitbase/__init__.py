@@ -27,8 +27,6 @@ FitContribution, Profile and FitRecipe classes.
 Various code and design taken from Paul Kienzle's PARK package.
 http://www.reflectometry.org/danse/park.html
 """
-from __future__ import print_function
-import six
 
 __all__ = ['Calculator', 'FitContribution', 'FitHook', 'FitRecipe',
            'FitResults', 'initializeRecipe', 'PlotFitHook', 'Profile',

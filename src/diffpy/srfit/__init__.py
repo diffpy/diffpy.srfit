@@ -30,8 +30,7 @@ The subpackages herein define various pieces of the SrFit framework. Developers
 are encouraged to work through the examples described in the documentation to
 learn how to use and customize the various parts of SrFit.
 """
-from __future__ import print_function
-import six
+
 __all__ = ["__version__"]
 
 # package version

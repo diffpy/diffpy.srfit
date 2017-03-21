@@ -23,8 +23,6 @@ The Validator checks that the input count of each Operator is equal to the
 output count of its arguments. It also checks that each object has the proper
 interface.
 """
-from __future__ import print_function
-import six
 
 __all__ = ["Validator"]
 
@@ -32,6 +30,7 @@ from diffpy.srfit.equation.literals.abcs import ArgumentABC, OperatorABC
 from diffpy.srfit.equation.visitors.visitor import Visitor
 
 msg = "'%s' does not have the interface required by '%s'"
+
 
 class Validator(Visitor):
     """Validator error for checking validity of an equation tree.

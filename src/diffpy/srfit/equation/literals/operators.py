@@ -25,8 +25,6 @@ base class. Other Operators can be derived from Operator (see AdditionOperator),
 but they all identify themselves with the Visitor.onOperator method.
 """
 
-from __future__ import print_function
-import six
 __all__ = ["Operator", "AdditionOperator", "SubtractionOperator",
            "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
            "RemainderOperator", "NegationOperator", "ConvolutionOperator",

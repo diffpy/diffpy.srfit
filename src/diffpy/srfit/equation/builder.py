@@ -468,10 +468,10 @@ class BaseBuilder(object):
     def __rmul__(self, other):
         return self.__evalBinary(other, literals.MultiplicationOperator, False)
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         return self.__evalBinary(other, literals.DivisionOperator)
 
-    def __rdiv__(self, other):
+    def __rtruediv__(self, other):
         return self.__evalBinary(other, literals.DivisionOperator, False)
 
     def __pow__(self, other):

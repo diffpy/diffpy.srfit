@@ -13,17 +13,11 @@
 #
 ##############################################################################
 
-
 """Definition of __version__, __date__, __gitsha__.
 """
 
 from pkg_resources import resource_filename
-try:
-    # python 2 import path
-    from ConfigParser import RawConfigParser
-except ImportError:
-    # python 3 import path
-    from configparser import RawConfigParser
+from configparser import RawConfigParser
 
 # obtain version information from the version.cfg file
 cp = RawConfigParser(dict(version='', date='', commit='', timestamp=0))

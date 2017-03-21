@@ -65,11 +65,7 @@ def _unpickle_ufunc(name):
     return func
 
 import types
-try:
-    from copy_reg import pickle
-except ImportError:
-    # python 3 path
-    from copyreg import pickle
+from copyreg import pickle
 pickle(types.MethodType, _pickle_method, _unpickle_method)
 pickle(numpy.ufunc, _pickle_ufunc, _unpickle_ufunc)
 

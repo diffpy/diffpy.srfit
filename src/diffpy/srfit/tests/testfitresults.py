@@ -40,42 +40,42 @@ class TestInitializeRecipe(unittest.TestCase):
 
     def testInitializeFromFileName(self):
         recipe = self.recipe
-        self.assertEquals(0, recipe.A.value)
-        self.assertEquals(0, recipe.sig.value)
-        self.assertEquals(0, recipe.x0.value)
+        self.assertEqual(0, recipe.A.value)
+        self.assertEqual(0, recipe.sig.value)
+        self.assertEqual(0, recipe.x0.value)
         initializeRecipe(recipe, self.filename)
-        self.assertAlmostEquals(self.Aval, recipe.A.value)
-        self.assertAlmostEquals(self.sigval, recipe.sig.value)
-        self.assertAlmostEquals(self.x0val, recipe.x0.value)
+        self.assertAlmostEqual(self.Aval, recipe.A.value)
+        self.assertAlmostEqual(self.sigval, recipe.sig.value)
+        self.assertAlmostEqual(self.x0val, recipe.x0.value)
         return
 
     def testInitializeFromFileObj(self):
         recipe = self.recipe
-        self.assertEquals(0, recipe.A.value)
-        self.assertEquals(0, recipe.sig.value)
-        self.assertEquals(0, recipe.x0.value)
+        self.assertEqual(0, recipe.A.value)
+        self.assertEqual(0, recipe.sig.value)
+        self.assertEqual(0, recipe.x0.value)
         infile = open(self.filename, 'r')
         initializeRecipe(recipe, infile)
         self.assertFalse(infile.closed)
         infile.close()
-        self.assertAlmostEquals(self.Aval, recipe.A.value)
-        self.assertAlmostEquals(self.sigval, recipe.sig.value)
-        self.assertAlmostEquals(self.x0val, recipe.x0.value)
+        self.assertAlmostEqual(self.Aval, recipe.A.value)
+        self.assertAlmostEqual(self.sigval, recipe.sig.value)
+        self.assertAlmostEqual(self.x0val, recipe.x0.value)
         return
 
 
     def testInitializeFromString(self):
         recipe = self.recipe
-        self.assertEquals(0, recipe.A.value)
-        self.assertEquals(0, recipe.sig.value)
-        self.assertEquals(0, recipe.x0.value)
+        self.assertEqual(0, recipe.A.value)
+        self.assertEqual(0, recipe.sig.value)
+        self.assertEqual(0, recipe.x0.value)
         infile = open(self.filename, 'r')
         resstr = infile.read()
         infile.close()
         initializeRecipe(recipe, resstr)
-        self.assertAlmostEquals(self.Aval, recipe.A.value)
-        self.assertAlmostEquals(self.sigval, recipe.sig.value)
-        self.assertAlmostEquals(self.x0val, recipe.x0.value)
+        self.assertAlmostEqual(self.Aval, recipe.A.value)
+        self.assertAlmostEqual(self.sigval, recipe.sig.value)
+        self.assertAlmostEqual(self.x0val, recipe.x0.value)
         return
 
 if __name__ == "__main__":

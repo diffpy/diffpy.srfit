@@ -48,43 +48,43 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
 
         s = DiffpyStructureParSet("CuAg", dsstru)
 
-        self.assertEquals(s.name, "CuAg")
+        self.assertEqual(s.name, "CuAg")
 
         def _testAtoms():
             # Check the atoms thoroughly
-            self.assertEquals(a1.element, s.Cu0.element)
-            self.assertEquals(a2.element, s.Ag0.element)
-            self.assertEquals(a1.Uisoequiv, s.Cu0.Uiso.getValue())
-            self.assertEquals(a2.Uisoequiv, s.Ag0.Uiso.getValue())
-            self.assertEquals(a1.Bisoequiv, s.Cu0.Biso.getValue())
-            self.assertEquals(a2.Bisoequiv, s.Ag0.Biso.getValue())
+            self.assertEqual(a1.element, s.Cu0.element)
+            self.assertEqual(a2.element, s.Ag0.element)
+            self.assertEqual(a1.Uisoequiv, s.Cu0.Uiso.getValue())
+            self.assertEqual(a2.Uisoequiv, s.Ag0.Uiso.getValue())
+            self.assertEqual(a1.Bisoequiv, s.Cu0.Biso.getValue())
+            self.assertEqual(a2.Bisoequiv, s.Ag0.Biso.getValue())
             for i in range(1, 4):
                 for j in range(i, 4):
                     uijstru = getattr(a1, "U%i%i"%(i,j))
                     uij = getattr(s.Cu0, "U%i%i"%(i,j)).getValue()
                     uji = getattr(s.Cu0, "U%i%i"%(j,i)).getValue()
-                    self.assertEquals(uijstru, uij)
-                    self.assertEquals(uijstru, uji)
+                    self.assertEqual(uijstru, uij)
+                    self.assertEqual(uijstru, uji)
                     bijstru = getattr(a1, "B%i%i"%(i,j))
                     bij = getattr(s.Cu0, "B%i%i"%(i,j)).getValue()
                     bji = getattr(s.Cu0, "B%i%i"%(j,i)).getValue()
-                    self.assertEquals(bijstru, bij)
-                    self.assertEquals(bijstru, bji)
+                    self.assertEqual(bijstru, bij)
+                    self.assertEqual(bijstru, bji)
 
-            self.assertEquals(a1.xyz[0], s.Cu0.x.getValue())
-            self.assertEquals(a1.xyz[1], s.Cu0.y.getValue())
-            self.assertEquals(a1.xyz[2], s.Cu0.z.getValue())
+            self.assertEqual(a1.xyz[0], s.Cu0.x.getValue())
+            self.assertEqual(a1.xyz[1], s.Cu0.y.getValue())
+            self.assertEqual(a1.xyz[2], s.Cu0.z.getValue())
             return
 
         def _testLattice():
 
             # Test the lattice
-            self.assertEquals(dsstru.lattice.a, s.lattice.a.getValue())
-            self.assertEquals(dsstru.lattice.b, s.lattice.b.getValue())
-            self.assertEquals(dsstru.lattice.c, s.lattice.c.getValue())
-            self.assertEquals(dsstru.lattice.alpha, s.lattice.alpha.getValue())
-            self.assertEquals(dsstru.lattice.beta, s.lattice.beta.getValue())
-            self.assertEquals(dsstru.lattice.gamma, s.lattice.gamma.getValue())
+            self.assertEqual(dsstru.lattice.a, s.lattice.a.getValue())
+            self.assertEqual(dsstru.lattice.b, s.lattice.b.getValue())
+            self.assertEqual(dsstru.lattice.c, s.lattice.c.getValue())
+            self.assertEqual(dsstru.lattice.alpha, s.lattice.alpha.getValue())
+            self.assertEqual(dsstru.lattice.beta, s.lattice.beta.getValue())
+            self.assertEqual(dsstru.lattice.gamma, s.lattice.gamma.getValue())
 
         _testAtoms()
         _testLattice()

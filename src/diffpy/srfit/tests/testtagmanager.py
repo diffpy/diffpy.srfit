@@ -41,7 +41,7 @@ class TestTagManager(unittest.TestCase):
         m.tag(obj, "3", "three")
         m.tag(obj, "tri")
         tags = set(m.tags(obj))
-        self.assertEquals(set(["3", "three", "tri"]), tags)
+        self.assertEqual(set(["3", "three", "tri"]), tags)
 
         # Try an unhashable object
         obj = set()
@@ -56,19 +56,19 @@ class TestTagManager(unittest.TestCase):
         obj = 3
         m.tag(obj, "3", "three", "tri", "tres", "trois")
         tags = set(m.tags(obj))
-        self.assertEquals(set(["3", "three", "tri", "tres", "trois"]), tags)
+        self.assertEqual(set(["3", "three", "tri", "tres", "trois"]), tags)
         self.assertRaises(KeyError, m.untag, obj, "4")
         self.assertRaises(KeyError, m.untag, 4, "3")
         self.assertRaises(KeyError, m.untag, 4, "4")
         m.untag(obj, "3")
         tags = set(m.tags(obj))
-        self.assertEquals(set(["three", "tri", "tres", "trois"]), tags)
+        self.assertEqual(set(["three", "tri", "tres", "trois"]), tags)
         m.untag(obj, "three", "tri")
         tags = set(m.tags(obj))
-        self.assertEquals(set(["tres", "trois"]), tags)
+        self.assertEqual(set(["tres", "trois"]), tags)
         m.untag(obj)
         tags = set(m.tags(obj))
-        self.assertEquals(set(), tags)
+        self.assertEqual(set(), tags)
         return
 
     def test_union_and_intersection(self):
@@ -84,8 +84,8 @@ class TestTagManager(unittest.TestCase):
         self.assertEqual(m.union("3", "4"), objs)
         self.assertRaises(KeyError, m.union, "fail")
         m.silent = True
-        self.assertEquals(set(), m.union("fail"))
-        self.assertEquals(set([3]), m.union("fail", "3"))
+        self.assertEqual(set(), m.union("fail"))
+        self.assertEqual(set([3]), m.union("fail", "3"))
         m.silent = False
         self.assertEqual(m.intersection(), set())
         self.assertEqual(m.intersection("number"), objs)
@@ -93,7 +93,7 @@ class TestTagManager(unittest.TestCase):
         self.assertEqual(m.intersection("3", "4"), set())
         self.assertRaises(KeyError, m.intersection, "fail")
         m.silent = True
-        self.assertEquals(set(), m.intersection("fail"))
+        self.assertEqual(set(), m.intersection("fail"))
         return
 
     def test_hasTags(self):

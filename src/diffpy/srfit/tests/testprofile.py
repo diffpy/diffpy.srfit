@@ -40,7 +40,7 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(profile.y is None)
         self.assertTrue(profile.dy is None)
         self.assertTrue(profile.ycalc is None)
-        self.assertEquals(profile.meta, {})
+        self.assertEqual(profile.meta, {})
         return
 
     def testSetObservedProfile(self):
@@ -124,9 +124,9 @@ class TestProfile(unittest.TestCase):
         # This should be alright
         prof.setCalculationRange(3, 5)
         prof.setCalculationRange(xmin='obs', xmax=7, dx=0.001)
-        self.assertEquals(5001, len(prof.x))
-        self.assertEquals(len(prof.x), len(prof.y))
-        self.assertEquals(len(prof.x), len(prof.dy))
+        self.assertEqual(5001, len(prof.x))
+        self.assertEqual(len(prof.x), len(prof.y))
+        self.assertEqual(len(prof.x), len(prof.dy))
         # Test an internal bound
         prof.setCalculationRange(4, 7, dx='obs')
         self.assertTrue(array_equal(prof.x, arange(4, 7.1, 0.5)))

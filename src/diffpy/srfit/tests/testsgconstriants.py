@@ -101,14 +101,14 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
         self.assertTrue( l.alpha.const )
         self.assertTrue( l.beta.const )
         self.assertTrue( l.gamma.const )
-        self.assertEquals(pi/2, l.alpha.getValue())
-        self.assertEquals(pi/2, l.beta.getValue())
-        self.assertEquals(pi/2, l.gamma.getValue())
+        self.assertEqual(pi/2, l.alpha.getValue())
+        self.assertEqual(pi/2, l.beta.getValue())
+        self.assertEqual(pi/2, l.gamma.getValue())
 
         self.assertFalse( l.a.const )
         self.assertFalse( l.b.const )
         self.assertFalse( l.c.const )
-        self.assertEquals(0, len(l._constraints))
+        self.assertEqual(0, len(l._constraints))
 
         # Now make sure the scatterers are constrained properly
         scatterers = stru.getScatterers()
@@ -116,25 +116,25 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
         self.assertFalse(la.x.const)
         self.assertFalse(la.y.const)
         self.assertTrue(la.z.const)
-        self.assertEquals(0, len(la._constraints))
+        self.assertEqual(0, len(la._constraints))
 
         mn = scatterers[1]
         self.assertTrue(mn.x.const)
         self.assertTrue(mn.y.const)
         self.assertTrue(mn.z.const)
-        self.assertEquals(0, len(mn._constraints))
+        self.assertEqual(0, len(mn._constraints))
 
         o1 = scatterers[2]
         self.assertFalse(o1.x.const)
         self.assertFalse(o1.y.const)
         self.assertTrue(o1.z.const)
-        self.assertEquals(0, len(o1._constraints))
+        self.assertEqual(0, len(o1._constraints))
 
         o2 = scatterers[3]
         self.assertFalse(o2.x.const)
         self.assertFalse(o2.y.const)
         self.assertFalse(o2.z.const)
-        self.assertEquals(0, len(o2._constraints))
+        self.assertEqual(0, len(o2._constraints))
 
         # Make sure we can't constrain these
         self.assertRaises(ValueError, mn.constrain, mn.x, "y")
@@ -175,7 +175,7 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
             self.assertFalse(scatterer.U12.const)
             self.assertFalse(scatterer.U13.const)
             self.assertFalse(scatterer.U23.const)
-            self.assertEquals(0, len(scatterer._constraints))
+            self.assertEqual(0, len(scatterer._constraints))
 
         proxied = [p.par for p in sgpars]
 
@@ -218,7 +218,7 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
         sgpars2 = constrainAsSpaceGroup(parset2, sg)
         list(sgpars)
         list(sgpars2)
-        self.assertEquals(sgpars.names, sgpars2.names)
+        self.assertEqual(sgpars.names, sgpars2.names)
         return
 
 

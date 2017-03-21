@@ -45,29 +45,29 @@ class TestRestraint(unittest.TestCase):
         # This should have no penalty
         p1.setValue(1)
         p2.setValue(1)
-        self.assertEquals(0, r.penalty())
+        self.assertEqual(0, r.penalty())
 
         # Make p1 + p2 = 0
         # This should have a penalty of 1*(1 - 0)**2 = 1
         p1.setValue(-1)
         p2.setValue(1)
-        self.assertEquals(1, r.penalty())
+        self.assertEqual(1, r.penalty())
 
         # Make p1 + p2 = 8
         # This should have a penalty of 1*(8 - 5)**2 = 9
         p1.setValue(4)
         p2.setValue(4)
-        self.assertEquals(9, r.penalty())
+        self.assertEqual(9, r.penalty())
 
         # Set the chi^2 to get a dynamic penalty
         r.scaled = True
-        self.assertEquals(13.5, r.penalty(1.5))
+        self.assertEqual(13.5, r.penalty(1.5))
 
         # Make a really large number to check the upper bound
         import numpy
         r.ub = numpy.inf
         p1.setValue(1e100)
-        self.assertEquals(0, r.penalty())
+        self.assertEqual(0, r.penalty())
 
         return
 

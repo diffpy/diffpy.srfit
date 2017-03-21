@@ -138,45 +138,45 @@ class TestParameterAdapter(TestCaseObjCryst):
         cryst = ObjCrystCrystalParSet("bucky", occryst)
         m = cryst.c60
 
-        self.assertEquals(cryst.name, "bucky")
+        self.assertEqual(cryst.name, "bucky")
 
         def _testCrystal():
 
             # Test the lattice
-            self.assertAlmostEquals(occryst.a, cryst.a.value)
-            self.assertAlmostEquals(occryst.b, cryst.b.getValue())
-            self.assertAlmostEquals(occryst.c, cryst.c.getValue())
-            self.assertAlmostEquals(occryst.alpha, cryst.alpha.getValue())
-            self.assertAlmostEquals(occryst.beta, cryst.beta.getValue())
-            self.assertAlmostEquals(occryst.gamma, cryst.gamma.getValue())
+            self.assertAlmostEqual(occryst.a, cryst.a.value)
+            self.assertAlmostEqual(occryst.b, cryst.b.getValue())
+            self.assertAlmostEqual(occryst.c, cryst.c.getValue())
+            self.assertAlmostEqual(occryst.alpha, cryst.alpha.getValue())
+            self.assertAlmostEqual(occryst.beta, cryst.beta.getValue())
+            self.assertAlmostEqual(occryst.gamma, cryst.gamma.getValue())
 
             return
 
         def _testMolecule():
 
             # Test position / occupancy
-            self.assertAlmostEquals(ocmol.X, m.x.getValue())
-            self.assertAlmostEquals(ocmol.Y, m.y.getValue())
-            self.assertAlmostEquals(ocmol.Z, m.z.getValue())
-            self.assertAlmostEquals(ocmol.Occupancy, m.occ.getValue())
+            self.assertAlmostEqual(ocmol.X, m.x.getValue())
+            self.assertAlmostEqual(ocmol.Y, m.y.getValue())
+            self.assertAlmostEqual(ocmol.Z, m.z.getValue())
+            self.assertAlmostEqual(ocmol.Occupancy, m.occ.getValue())
 
             # Test orientation
-            self.assertAlmostEquals(ocmol.Q0, m.q0.getValue())
-            self.assertAlmostEquals(ocmol.Q1, m.q1.getValue())
-            self.assertAlmostEquals(ocmol.Q2, m.q2.getValue())
-            self.assertAlmostEquals(ocmol.Q3, m.q3.getValue())
+            self.assertAlmostEqual(ocmol.Q0, m.q0.getValue())
+            self.assertAlmostEqual(ocmol.Q1, m.q1.getValue())
+            self.assertAlmostEqual(ocmol.Q2, m.q2.getValue())
+            self.assertAlmostEqual(ocmol.Q3, m.q3.getValue())
 
             # Check the atoms thoroughly
             for i in range(len(ocmol)):
                 oca = ocmol[i]
                 ocsp = oca.GetScatteringPower()
                 a = m.atoms[i]
-                self.assertEquals(ocsp.GetSymbol(), a.element)
-                self.assertAlmostEquals(oca.X, a.x.getValue())
-                self.assertAlmostEquals(oca.Y, a.y.getValue())
-                self.assertAlmostEquals(oca.Z, a.z.getValue())
-                self.assertAlmostEquals(oca.Occupancy, a.occ.getValue())
-                self.assertAlmostEquals(ocsp.Biso, a.Biso.getValue())
+                self.assertEqual(ocsp.GetSymbol(), a.element)
+                self.assertAlmostEqual(oca.X, a.x.getValue())
+                self.assertAlmostEqual(oca.Y, a.y.getValue())
+                self.assertAlmostEqual(oca.Z, a.z.getValue())
+                self.assertAlmostEqual(oca.Occupancy, a.occ.getValue())
+                self.assertAlmostEqual(ocsp.Biso, a.Biso.getValue())
             return
 
 
@@ -396,7 +396,7 @@ class TestParameterAdapter(TestCaseObjCryst):
 
         dd = xyz0 - xyz7
         d0 = numpy.dot(dd, dd)**0.5
-        self.assertAlmostEquals(d0, p1.getValue(), 6)
+        self.assertAlmostEqual(d0, p1.getValue(), 6)
 
         # Record the unit direction of change for later
         u = dd/d0
@@ -406,7 +406,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         p1.setValue(scale*d0)
 
         # Verify that it has changed.
-        self.assertAlmostEquals(scale*d0, p1.getValue())
+        self.assertAlmostEqual(scale*d0, p1.getValue())
 
         xyz0a = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
         xyz7a = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
@@ -416,7 +416,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         dda = xyz0a - xyz7a
         d1 = numpy.dot(dda, dda)**0.5
 
-        self.assertAlmostEquals(scale*d0, d1)
+        self.assertAlmostEqual(scale*d0, d1)
 
         # Verify that only the second and third atoms have moved.
 
@@ -488,7 +488,7 @@ class TestParameterAdapter(TestCaseObjCryst):
 
         angle1 = numpy.arccos(numpy.dot(v1a, v2a)/(d1a*d2a))
 
-        self.assertAlmostEquals(scale*angle0, angle1)
+        self.assertAlmostEqual(scale*angle0, angle1)
 
         # Verify that only the last two atoms have moved.
 
@@ -566,7 +566,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         d234a = numpy.dot(v234a, v234a)**0.5
         angle1 = -numpy.arccos(numpy.dot(v123a, v234a)/(d123a*d234a))
 
-        self.assertAlmostEquals(scale*angle0, angle1)
+        self.assertAlmostEqual(scale*angle0, angle1)
 
         # Verify that only the last two atoms have moved.
 

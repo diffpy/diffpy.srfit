@@ -83,7 +83,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertFalse(recipe.isFree(recipe.k))
         self.assertFalse(recipe.isFree(recipe.c))
         self.assertTrue(recipe.isFree(recipe.B))
-        self.assertEquals(3, recipe.c.value)
+        self.assertEqual(3, recipe.c.value)
         recipe.fix("all")
         self.assertFalse(recipe.isFree(recipe.A))
         self.assertFalse(recipe.isFree(recipe.k))
@@ -106,7 +106,7 @@ class TestFitRecipe(unittest.TestCase):
         recipe.newVar("B", 0)
 
         names = recipe.getNames()
-        self.assertEquals(names, ["A", "k", "c", "B"])
+        self.assertEqual(names, ["A", "k", "c", "B"])
         values = recipe.getValues()
         self.assertTrue((values == [2, 1, 0, 0]).all())
 
@@ -120,24 +120,24 @@ class TestFitRecipe(unittest.TestCase):
         recipe.fix(recipe.k)
 
         names = recipe.getNames()
-        self.assertEquals(names, ["A", "c"])
+        self.assertEqual(names, ["A", "c"])
         values = recipe.getValues()
         self.assertTrue((values == [2, 0]).all())
 
         recipe.fix("all")
         names = recipe.getNames()
-        self.assertEquals(names, [])
+        self.assertEqual(names, [])
         values = recipe.getValues()
         self.assertTrue((values == []).all())
 
         recipe.free("all")
         names = recipe.getNames()
-        self.assertEquals(3, len(names))
+        self.assertEqual(3, len(names))
         self.assertTrue("A" in names)
         self.assertTrue("k" in names)
         self.assertTrue("c" in names)
         values = recipe.getValues()
-        self.assertEquals(3, len(values))
+        self.assertEqual(3, len(values))
         self.assertTrue(0 in values)
         self.assertTrue(1 in values)
         self.assertTrue(2 in values)
@@ -148,7 +148,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # With thing set up as they are, the residual should be 0
         res = self.recipe.residual()
-        self.assertAlmostEquals(0, dot(res, res))
+        self.assertAlmostEqual(0, dot(res, res))
 
         # Change the c value to 1 so that the equation evaluates as sin(x+1)
         x = self.profile.x
@@ -162,12 +162,12 @@ class TestFitRecipe(unittest.TestCase):
         var = self.recipe.newVar("Avar")
         self.recipe.constrain(self.fitcontribution.c, "2*A",
                 {"A" : self.fitcontribution.A})
-        self.assertEquals(2, self.fitcontribution.c.value)
+        self.assertEqual(2, self.fitcontribution.c.value)
         self.recipe.constrain(self.fitcontribution.A, var)
-        self.assertEquals(1, var.getValue())
-        self.assertEquals(self.recipe.cont.A.getValue(), var.getValue())
+        self.assertEqual(1, var.getValue())
+        self.assertEqual(self.recipe.cont.A.getValue(), var.getValue())
         # c is constrained to a constrained parameter.
-        self.assertEquals(2, self.fitcontribution.c.value)
+        self.assertEqual(2, self.fitcontribution.c.value)
         # The equation should evaluate to sin(x+2)
         x = self.profile.x
         y = sin(x+2)
@@ -229,12 +229,12 @@ class TestFitRecipe(unittest.TestCase):
         # Set the equation equal to the data
         self.fitcontribution.setEquation("y")
         res = self.recipe.residual()
-        self.assertAlmostEquals(0, dot(res, res))
+        self.assertAlmostEqual(0, dot(res, res))
 
         # Now add the uncertainty. This should give dy/dy = 1 for the residual
         self.fitcontribution.setEquation("y+dy")
         res = self.recipe.residual()
-        self.assertAlmostEquals(len(res), dot(res, res))
+        self.assertAlmostEqual(len(res), dot(res, res))
 
         return
 

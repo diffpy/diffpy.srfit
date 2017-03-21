@@ -133,27 +133,27 @@ class TestRecipeContainer(unittest.TestCase):
 
         # Locate m2 in m1 (m1.m2)
         loc = m1._locateManagedObject(m2)
-        self.assertEquals(loc, [m1, m2])
+        self.assertEqual(loc, [m1, m2])
 
         # Locate p1 (m1.p1)
         loc = m1._locateManagedObject(p1)
-        self.assertEquals(loc, [m1, p1])
+        self.assertEqual(loc, [m1, p1])
 
         # Locate p2 in m2 (m2.p2)
         loc = m2._locateManagedObject(p2)
-        self.assertEquals(loc, [m2, p2])
+        self.assertEqual(loc, [m2, p2])
 
         # Locate p2 in m1 (m1.m2.p2)
         loc = m1._locateManagedObject(p2)
-        self.assertEquals(loc, [m1, m2, p2])
+        self.assertEqual(loc, [m1, m2, p2])
 
         # Locate p3 in m1 (not there)
         loc = m1._locateManagedObject(p3)
-        self.assertEquals(loc, [])
+        self.assertEqual(loc, [])
 
         # Locate p3 in m2 (not there)
         loc = m2._locateManagedObject(p3)
-        self.assertEquals(loc, [])
+        self.assertEqual(loc, [])
 
         return
 
@@ -223,8 +223,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         m._addParameter(p4)
 
         # Check order
-        self.assertEquals(list(m._parameters.keys()), ["p1", "xyz"])
-        self.assertEquals(list(m._parameters.values()), [p2, p4])
+        self.assertEqual(list(m._parameters.keys()), ["p1", "xyz"])
+        self.assertEqual(list(m._parameters.values()), [p2, p4])
 
         return
 
@@ -261,18 +261,18 @@ class TestRecipeOrganizer(unittest.TestCase):
         p3 = Parameter("p3", 3)
 
         self.assertFalse(p1.constrained)
-        self.assertEquals(0, len(self.m._constraints))
+        self.assertEqual(0, len(self.m._constraints))
         self.m.constrain(p1, "2*p2")
 
 
         self.assertTrue(p1.constrained)
         self.assertTrue(p1 in self.m._constraints)
-        self.assertEquals(1, len(self.m._constraints))
+        self.assertEqual(1, len(self.m._constraints))
         self.assertTrue(self.m.isConstrained(p1))
 
         p2.setValue(10)
         self.m._constraints[p1].update()
-        self.assertEquals(20, p1.getValue())
+        self.assertEqual(20, p1.getValue())
 
         # Check errors on unregistered parameters
         self.assertRaises(ValueError, self.m.constrain, p1, "2*p3")
@@ -281,14 +281,14 @@ class TestRecipeOrganizer(unittest.TestCase):
         # Remove the constraint
         self.m.unconstrain(p1)
         self.assertFalse(p1.constrained)
-        self.assertEquals(0, len(self.m._constraints))
+        self.assertEqual(0, len(self.m._constraints))
         self.assertFalse(self.m.isConstrained(p1))
 
         # Try an straight constraint
         self.m.constrain(p1, p2)
         p2.setValue(7)
         self.m._constraints[p1].update()
-        self.assertEquals(7, p1.getValue())
+        self.assertEqual(7, p1.getValue())
         return
 
     def testRestrain(self):
@@ -300,18 +300,18 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m._eqfactory.registerArgument("p1", p1)
         self.m._eqfactory.registerArgument("p2", p2)
 
-        self.assertEquals(0, len(self.m._restraints))
+        self.assertEqual(0, len(self.m._restraints))
         r = self.m.restrain("p1+p2", ub = 10)
-        self.assertEquals(1, len(self.m._restraints))
+        self.assertEqual(1, len(self.m._restraints))
         p2.setValue(10)
-        self.assertEquals(1, r.penalty())
+        self.assertEqual(1, r.penalty())
         self.m.unrestrain(r)
-        self.assertEquals(0, len(self.m._restraints))
+        self.assertEqual(0, len(self.m._restraints))
 
         r = self.m.restrain(p1, ub = 10)
-        self.assertEquals(1, len(self.m._restraints))
+        self.assertEqual(1, len(self.m._restraints))
         p1.setValue(11)
-        self.assertEquals(1, r.penalty())
+        self.assertEqual(1, r.penalty())
 
         # Check errors on unregistered parameters
         self.assertRaises(ValueError, self.m.restrain, "2*p3")
@@ -342,7 +342,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         cons = self.m._getConstraints()
         self.assertTrue(p1 in cons)
         self.assertTrue(p3 in cons)
-        self.assertEquals(2, len(cons))
+        self.assertEqual(2, len(cons))
         return
 
     def testGetRestraints(self):
@@ -369,7 +369,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         res = self.m._getRestraints()
         self.assertTrue(r1 in res)
         self.assertTrue(r2 in res)
-        self.assertEquals(2, len(res))
+        self.assertEqual(2, len(res))
         return
 
     def testRegisterCalculator(self):
@@ -442,7 +442,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Make sure we can swap out "g".
         self.m.registerFunction(g2, "g")
-        self.assertAlmostEquals(2.0, eq())
+        self.assertAlmostEqual(2.0, eq())
 
         # Try a bound method
         class temp(object):
@@ -451,11 +451,11 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         t = temp()
         eq = self.m.registerFunction(t.eval, "eval")
-        self.assertAlmostEquals(1.23, eq())
+        self.assertAlmostEqual(1.23, eq())
 
         # Now the callable
         eq2 = self.m.registerFunction(t, "eval2")
-        self.assertAlmostEquals(4.56, eq2())
+        self.assertAlmostEqual(4.56, eq2())
 
         return
 
@@ -473,8 +473,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m._newParameter("y", 3.0)
 
         # Make sure that x and y are in the organizer
-        self.assertEquals(0, self.m.x.getValue())
-        self.assertEquals(3.0, self.m.y.getValue())
+        self.assertEqual(0, self.m.x.getValue())
+        self.assertEqual(3.0, self.m.y.getValue())
 
         # Use eq1 in some equations
 
@@ -484,16 +484,16 @@ class TestRecipeOrganizer(unittest.TestCase):
         eq3 = self.m.registerStringFunction("eq1(y) - 3", "eq3")
 
         # Test these equations.
-        self.assertEquals(0, eq2())
-        self.assertEquals(9.0, eq3())
+        self.assertEqual(0, eq2())
+        self.assertEqual(9.0, eq3())
         # Note that eq3 injects the value of y into the argument of eq1, which
         # is x. Thus, calling eq3 sets x to 3.
-        self.assertEquals(9.0, eq2())
+        self.assertEqual(9.0, eq2())
 
         # One more level of embedding
         # 2*y**2
         eq4 = self.m.registerStringFunction("2*eq3", "eq4")
-        self.assertEquals(18.0, eq4())
+        self.assertEqual(18.0, eq4())
 
         return
 

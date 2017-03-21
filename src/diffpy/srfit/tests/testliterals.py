@@ -47,7 +47,7 @@ class TestArgument(unittest.TestCase):
 
         a = literals.Argument()
 
-        self.assertEquals(None, a.getValue())
+        self.assertEqual(None, a.getValue())
 
         # Test setting value
         a.setValue(3.14)
@@ -89,7 +89,7 @@ class TestOperator(unittest.TestCase):
         op.addLiteral(a)
         op.addLiteral(b)
 
-        self.assertAlmostEquals(0, op.value)
+        self.assertAlmostEqual(0, op.value)
 
         # Test update from the nodes
         a.setValue(4)
@@ -173,8 +173,8 @@ class TestConvolutionOperator(unittest.TestCase):
         g3 = exp(-0.5*((x-mu3)/sig3)**2)
         g3 *= sum(g1)/sum(g3)
 
-        self.assertAlmostEquals(sum(g3c), sum(g3))
-        self.assertAlmostEquals(0, sum((g3-g3c)**2))
+        self.assertAlmostEqual(sum(g3c), sum(g3))
+        self.assertAlmostEqual(0, sum((g3-g3c)**2))
         return
 
 

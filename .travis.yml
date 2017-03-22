@@ -96,7 +96,7 @@ install:
     fi
 
 script:
-  - coverage run -m ${MYNAME}.tests.run
+  - coverage run --source ${MYNAME} -m ${MYNAME}.tests.run
 
 after_success:
   # do not post coverage reports when testing with system Python.

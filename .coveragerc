@@ -10,4 +10,4 @@ exclude_lines =
     # raise NotImplementedError
 
     ## Don't complain if non-runnable code isn't run:
-    ^[ ]{4}unittest.main()
+    # ^[ ]{4}unittest.main()

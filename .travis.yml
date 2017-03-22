@@ -63,10 +63,9 @@ before_install:
   - $NOMC || popd
   - $NOMC || export PATH="${HOME}/mc/bin:${PATH}"
 
-  # Avoid failure due to a bug in conda-build 2.1.6,
+  # Avoid failure due to a bug in conda-build 2.1.6, 2.1.7,
   # see https://github.com/conda/conda-build/issues/1825.
-  # Use tee to verify there is no expansion of "!".
-  - $NOMC || echo 'conda-build !=2.1.6' | tee ~/mc/conda-meta/pinned
+  - $NOMC || echo 'conda-build ==2.1.5' | tee ~/mc/conda-meta/pinned
 
   - $NOMC || conda update --yes conda
   - $NOMC || conda install --yes conda-build jinja2

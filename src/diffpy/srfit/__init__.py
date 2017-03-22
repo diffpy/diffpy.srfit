@@ -36,4 +36,25 @@ __all__ = ["__version__"]
 # package version
 from diffpy.srfit.version import __version__
 
+# Pickling support for numpy.ufunc -------------------------------------------
+
+import numpy
+import copy_reg
+from pkg_resources import parse_version
+
+# This requires the ufunc is defined in the numpy module. This is good for most
+# of what we're doing.
+def _pickle_ufunc(func):
+    name = func.__name__
+    return _unpickle_ufunc, (name,)
+
+def _unpickle_ufunc(name):
+    func = getattr(numpy, name)
+    return func
+
+# pickling support is built-in as of numpy 1.7.0
+if parse_version(numpy.__version__) < parse_version('1.7.0'):
+    copy_reg.pickle(numpy.ufunc, _pickle_ufunc, _unpickle_ufunc)
+
+
 # End of file

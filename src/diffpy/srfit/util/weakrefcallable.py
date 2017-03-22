@@ -39,9 +39,12 @@ class WeakBoundMethod(object):
         set that should drop this wrapper when it becomes inactive.
     _wref : weakref
         weak reference to the object the wrapped method is bound to.
+    _class : type
+        the type of the object to which the method is bound.
+        This is only used for pickling.
     """
 
-    __slots__ = ('function', 'holder', '_wref')
+    __slots__ = ('function', 'holder', '_wref', '_class')
 
     def __init__(self, f, holder=None):
         """Create a weak reference wrapper to bound method.
@@ -59,6 +62,7 @@ class WeakBoundMethod(object):
         self.function = f.__func__
         self.holder = holder
         cb = self.__make_callback(self.holder)
+        self._class = type(f.__self__)
         self._wref = weakref.ref(f.__self__, cb)
         return
 
@@ -104,14 +108,18 @@ class WeakBoundMethod(object):
         """Return state with a resolved weak reference.
         """
         mobj = self._wref()
-        state = (self.function, self.holder, mobj)
+        nm = self.function.__name__
+        assert self.function is getattr(self._class, nm), \
+            "Unable to pickle this unbound function by name."
+        state = (self._class, nm, self.holder, mobj)
         return state
 
 
     def __setstate__(self, state):
         """Restore the weak reference in this wrapper upon unpickling.
         """
-        (self.function, self.holder, mobj) = state
+        (self._class, nm, self.holder, mobj) = state
+        self.function = getattr(self._class, nm)
         if mobj is None:
             # use a fake weak reference that mimics deallocated object.
             self._wref = self.__mimic_empty_ref

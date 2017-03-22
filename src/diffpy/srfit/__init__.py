@@ -36,26 +36,4 @@ __all__ = ["__version__"]
 # package version
 from diffpy.srfit.version import __version__
 
-# Support for method and ufunc pickling.
-def _pickle_method(method):
-    name = method.__func__.__name__
-    obj = method.__self__
-    cls = method.__self__.__class__
-    return _unpickle_method, (name, obj, cls)
-
-def _unpickle_method(name, obj, cls):
-    for cls in cls.mro():
-        try:
-            func = cls.__dict__[name]
-        except KeyError:
-            pass
-        else:
-            break
-    return func.__get__(obj, cls)
-
-import types
-from copyreg import pickle
-pickle(types.MethodType, _pickle_method, _unpickle_method)
-
-
 # End of file

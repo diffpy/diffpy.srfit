@@ -23,8 +23,8 @@ scatterers, such as nanoparticles and molecules.
 
 __all__ = ["DebyePDFGenerator"]
 
-from diffpy.srreal.pdfcalculator import DebyePDFCalculator
 from diffpy.srfit.pdf.basepdfgenerator import BasePDFGenerator
+
 
 class DebyePDFGenerator(BasePDFGenerator):
     """A class for calculating the PDF from an isolated scatterer.
@@ -109,8 +109,8 @@ class DebyePDFGenerator(BasePDFGenerator):
 
     def __init__(self, name = "pdf"):
         """Initialize the generator.
-
         """
+        from diffpy.srreal.pdfcalculator import DebyePDFCalculator
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(DebyePDFCalculator())
         return

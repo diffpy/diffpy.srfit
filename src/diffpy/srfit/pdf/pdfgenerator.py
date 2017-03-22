@@ -24,7 +24,6 @@ examples for its use.
 
 __all__ = ["PDFGenerator"]
 
-from diffpy.srreal.pdfcalculator import PDFCalculator
 from diffpy.srfit.pdf.basepdfgenerator import BasePDFGenerator
 
 
@@ -69,8 +68,8 @@ class PDFGenerator(BasePDFGenerator):
 
     def __init__(self, name = "pdf"):
         """Initialize the generator.
-
         """
+        from diffpy.srreal.pdfcalculator import PDFCalculator
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(PDFCalculator())
         return

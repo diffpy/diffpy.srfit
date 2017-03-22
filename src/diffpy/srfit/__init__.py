@@ -53,21 +53,9 @@ def _unpickle_method(name, obj, cls):
             break
     return func.__get__(obj, cls)
 
-# This requires the ufunc is defined in the numpy module. This is good for most
-# of what we're doing.
-def _pickle_ufunc(func):
-    name = func.__name__
-    return _unpickle_ufunc, (name,)
-
-import numpy
-def _unpickle_ufunc(name):
-    func = getattr(numpy, name)
-    return func
-
 import types
 import copy_reg
 copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)
-copy_reg.pickle(numpy.ufunc, _pickle_ufunc, _unpickle_ufunc)
 
 
 # End of file

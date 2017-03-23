@@ -89,7 +89,7 @@ install:
 
   - $NOBREW || $MYPIP install $MYPIPFLAGS coverage
   # install diffpy.structure from the python3 development branch.
-  # replace with PyPI version later.
+  # TODO - replace with PyPI version later.
   - $NOBREW || $MYPIP install $MYPIPFLAGS https://github.com/diffpy/diffpy.structure/archive/python3.tar.gz
   - $NOBREW || $MYPIP install $MYPIPFLAGS "${MYTARBUNDLE}"
 

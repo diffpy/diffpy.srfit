@@ -57,7 +57,7 @@ class IntensityGenerator(ProfileGenerator):
     """A class for calculating intensity using the Debye equation.
 
     Calculating intensity from a structure is difficult in general. This class
-    takes a diffpy.Structure.Structure instance and from that generates a
+    takes a diffpy.structure.Structure instance and from that generates a
     theoretical intensity signal. Unlike the example in gaussianrecipe.py, the
     intensity generator is not simple. It must take a structure object and some
     Parameters, and from that generate a signal. At the same time, the
@@ -91,7 +91,7 @@ class IntensityGenerator(ProfileGenerator):
         """Set the structure used in the calculation.
 
         strufile    --  The name of a structure file. A
-                        diffpy.Structure.Structure object will be created from
+                        diffpy.structure.Structure object will be created from
                         the file, and that object will be passed to the 'iofq'
                         function whenever it is called.
 
@@ -100,7 +100,7 @@ class IntensityGenerator(ProfileGenerator):
         DiffpyStructureParSet is a ParameterSet object that organizes and gives
         attribute access to Parameters and ParameterSets adapted from a diffpy
         Structure object.  The Parameters embedded in the DiffpyStructureParSet
-        are proxies for attributes of the diffpy.Structure.Structure object
+        are proxies for attributes of the diffpy.structure.Structure object
         that is needed by the 'iofq' function. The Parameters will be
         accessible by name under the 'phase' attribute of this generator, and
         are organized hierarchically:
@@ -128,21 +128,21 @@ class IntensityGenerator(ProfileGenerator):
               - Uiso
             - etc.
 
-        The diffpy.Structure.Structure instance is held within the
+        The diffpy.structure.Structure instance is held within the
         DiffpyStructureParSet as the 'stru' attribute.
 
         """
         # Load the structure from file
-        from diffpy.Structure import Structure
+        from diffpy.structure import Structure
         stru = Structure()
         stru.read(strufile)
 
         # Create a ParameterSet designed to interface with
-        # diffpy.Structure.Structure objects that organizes the Parameter
+        # diffpy.structure.Structure objects that organizes the Parameter
         # hierarchy. Note that the DiffpyStructureParSet holds a handle to the
         # loaded structure that we use in the __call__ method below.
         #
-        # We pass the diffpy.Structure.Structure instance, and give the
+        # We pass the diffpy.structure.Structure instance, and give the
         # DiffpyStructureParSet the name "phase".
         parset = DiffpyStructureParSet("phase", stru)
 
@@ -156,7 +156,7 @@ class IntensityGenerator(ProfileGenerator):
 
         This ProfileGenerator will be used in a FitContribution that will be
         optimized to fit some data.  By the time this function is evaluated,
-        the diffpy.Structure.Structure instance has been updated by the
+        the diffpy.structure.Structure instance has been updated by the
         optimizer via the DiffpyStructureParSet defined in setStructure.  Thus,
         we need only call iofq with the internal structure object.
 
@@ -351,7 +351,7 @@ def iofq(S, q):
     I(Q) = 2 sum(i,j) f_i(Q) f_j(Q) sinc(rij Q) exp(-0.5 ssij Q**2)
     (The exponential term is the Debye-Waller factor.)
 
-    S   --  A diffpy.Structure.Structure instance. It is assumed that the
+    S   --  A diffpy.structure.Structure instance. It is assumed that the
             structure is that of an isolated scatterer. Periodic boundary
             conditions are not applied.
     q   --  The q-points to calculate over.
@@ -471,7 +471,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
 
     """
 
-    from diffpy.Structure import Structure
+    from diffpy.structure import Structure
     S = Structure()
     S.read(strufile)
 

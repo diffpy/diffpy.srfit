@@ -35,7 +35,7 @@ from diffpy.srfit.exceptions import SrFitError
 class BasePDFGenerator(ProfileGenerator):
     """Base class for calculating PDF profiles using SrReal.
 
-    This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
+    This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and
     pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
     are not created until the structure is added.
 
@@ -204,7 +204,7 @@ class BasePDFGenerator(ProfileGenerator):
         See those classes (located in diffpy.srfit.structure) for how they are
         used. The resulting ParameterSet will be managed by this generator.
 
-        stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
+        stru    --  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
                     pyobjcryst.molecule.Molecule instance.  Default None.
         name    --  A name to give to the managed ParameterSet that adapts stru
                     (default "phase").

@@ -15,7 +15,7 @@
 
 """PDF profile generator using the Debye equation.
 
-The DebyePDFGenerator class can take a diffpy.Structure,
+The DebyePDFGenerator class can take a diffpy.structure,
 pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and calculate
 the PDF from it. This generator is especially appropriate for isolated
 scatterers, such as nanoparticles and molecules.
@@ -29,7 +29,7 @@ from diffpy.srfit.pdf.basepdfgenerator import BasePDFGenerator
 class DebyePDFGenerator(BasePDFGenerator):
     """A class for calculating the PDF from an isolated scatterer.
 
-    This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
+    This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and
     pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
     are not created until the structure is added.
 
@@ -74,7 +74,7 @@ class DebyePDFGenerator(BasePDFGenerator):
         See those classes (located in diffpy.srfit.structure) for how they are
         used. The resulting ParameterSet will be managed by this generator.
 
-        stru    --  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or
+        stru    --  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
                     pyobjcryst.molecule.Molecule instance.  Default None.
         name    --  A name to give to the managed ParameterSet that adapts stru
                     (default "phase").

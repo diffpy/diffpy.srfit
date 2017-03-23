@@ -591,7 +591,7 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
     def setUp(self):
         global ObjCrystCrystalParSet, SpaceGroups
         from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
-        from diffpy.Structure import SpaceGroups
+        from diffpy.structure import SpaceGroups
 
     @staticmethod
     def getObjCrystParSetSpaceGroup(sg):

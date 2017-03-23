@@ -15,7 +15,7 @@
 
 """PDF profile generator.
 
-The PDFGenerator class can take a diffpy.Structure, pyobjcryst.crystal.Crystal
+The PDFGenerator class can take a diffpy.structure, pyobjcryst.crystal.Crystal
 or pyobjcryst.molecule.Molecule object and calculate the crystal PDF from it.
 The passed structure object is wrapped in a StructureParameter set, which makes
 its attributes refinable. See the class definition for more details and the
@@ -30,7 +30,7 @@ from diffpy.srfit.pdf.basepdfgenerator import BasePDFGenerator
 class PDFGenerator(BasePDFGenerator):
     """A class for calculating the PDF from a single crystal structure.
 
-    This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
+    This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and
     pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
     are not created until the structure is added.
 

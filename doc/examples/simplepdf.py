@@ -19,7 +19,7 @@ uses the PDFContribution class to simplify fit setup.
 
 """
 
-from diffpy.Structure import Structure
+from diffpy.structure import Structure
 from diffpy.srfit.pdf import PDFContribution
 from diffpy.srfit.fitbase import FitRecipe, FitResults
 

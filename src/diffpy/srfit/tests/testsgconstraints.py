@@ -27,7 +27,7 @@ ObjCrystCrystalParSet = DiffpyStructureParSet = None
 
 
 def makeLaMnO3_P1():
-    from diffpy.Structure import Structure
+    from diffpy.structure import Structure
     stru = Structure()
     stru.readStr(lamno3stru)
     return stru
@@ -207,7 +207,7 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
         """Test the arguments processing of constrainAsSpaceGroup function.
         """
         from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
-        from diffpy.Structure.SpaceGroups import GetSpaceGroup
+        from diffpy.structure.SpaceGroups import GetSpaceGroup
         stru = makeLaMnO3_P1()
         parset = DiffpyStructureParSet("LaMnO3", stru)
         sgpars = constrainAsSpaceGroup(parset, "P b n m")

@@ -13,19 +13,19 @@
 #
 ##############################################################################
 
-"""Adapters for interfacing a diffpy.Structure.Structure with SrFit.
+"""Adapters for interfacing a diffpy.structure.Structure with SrFit.
 
-A diffpy.Structure.Structure object is meant to be passed to a
+A diffpy.structure.Structure object is meant to be passed to a
 DiffpyStrucureParSet object from this module, which can then be used as a
 ParameterSet. (It has other methods for interfacing with SrReal calculator
 adapters.) Any change to the lattice or existing atoms will be registered with
 the Structure. Changes in the number of atoms will not be recognized.  Thus,
-the diffpy.Structure.Structure object should be fully configured before passing
+the diffpy.structure.Structure object should be fully configured before passing
 it to DiffpyStrucureParSet.
 
-DiffpyStructureParSet --  Adapter for diffpy.Structure.Structure
-DiffpyLatticeParSet   --  Adapter for diffpy.Structure.Lattice
-DiffpyAtomParSet      --  Adapter for diffpy.Structure.Atom
+DiffpyStructureParSet --  Adapter for diffpy.structure.Structure
+DiffpyLatticeParSet   --  Adapter for diffpy.structure.Lattice
+DiffpyAtomParSet      --  Adapter for diffpy.structure.Atom
 """
 
 __all__ = ["DiffpyStructureParSet"]
@@ -57,13 +57,13 @@ class _xyzsetter(object):
 
 
 class DiffpyAtomParSet(ParameterSet):
-    """A wrapper for diffpy.Structure.Atom.
+    """A wrapper for diffpy.structure.Atom.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
     this class for base attributes.
 
     Attributes:
-    atom        --  The diffpy.Structure.Atom this is adapting
+    atom        --  The diffpy.structure.Atom this is adapting
     element     --  The element name (property).
 
     Managed Parameters:
@@ -87,7 +87,7 @@ class DiffpyAtomParSet(ParameterSet):
     def __init__(self, name, atom):
         """Initialize
 
-        atom    --  A diffpy.Structure.Atom instance
+        atom    --  A diffpy.structure.Atom instance
 
         """
         ParameterSet.__init__(self, name)
@@ -161,13 +161,13 @@ def _latsetter(par):
 
 
 class DiffpyLatticeParSet(ParameterSet):
-    """A wrapper for diffpy.Structure.Lattice.
+    """A wrapper for diffpy.structure.Lattice.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
     this class for base attributes.
 
     Attributes
-    lattice     --  The diffpy.Structure.Lattice this is adapting
+    lattice     --  The diffpy.structure.Lattice this is adapting
     name        --  Always "lattice"
     angunits    --  "deg", the units of angle
 
@@ -179,7 +179,7 @@ class DiffpyLatticeParSet(ParameterSet):
     def __init__(self, lattice):
         """Initialize
 
-        lattice --  A diffpy.Structure.Lattice instance
+        lattice --  A diffpy.structure.Lattice instance
 
         """
         ParameterSet.__init__(self, "lattice")
@@ -206,14 +206,14 @@ class DiffpyLatticeParSet(ParameterSet):
 # End class DiffpyLatticeParSet
 
 class DiffpyStructureParSet(SrRealParSet):
-    """A wrapper for diffpy.Structure.Structure.
+    """A wrapper for diffpy.structure.Structure.
 
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
     this class for base attributes.
 
     Attributes:
     atoms   --  The list of DiffpyAtomParSets, provided for convenience.
-    stru    --  The diffpy.Structure.Structure this is adapting
+    stru    --  The diffpy.structure.Structure this is adapting
 
     Managed ParameterSets:
     lattice     --  The managed DiffpyLatticeParSet
@@ -229,7 +229,7 @@ class DiffpyStructureParSet(SrRealParSet):
         """Initialize
 
         name    --  A name for the structure
-        stru    --  A diffpy.Structure.Structure instance
+        stru    --  A diffpy.structure.Structure instance
 
         """
         SrRealParSet.__init__(self, name)
@@ -262,7 +262,7 @@ class DiffpyStructureParSet(SrRealParSet):
     @classmethod
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
-        from diffpy.Structure import Structure
+        from diffpy.structure import Structure
         return isinstance(stru, Structure)
 
     def getScatterers(self):

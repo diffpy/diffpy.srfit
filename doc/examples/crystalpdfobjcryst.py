@@ -79,7 +79,7 @@ def makeRecipe(ciffile, datname):
     # The difference in this example is that the ObjCrystCrystalParSet is aware
     # of space groups, and the DiffpyStructureParSet is not. Constraints are
     # created internally when "sgpars" attribute is called for. These
-    # constriants get enforced within the ObjCrystCrystalParSet. Free
+    # constraints get enforced within the ObjCrystCrystalParSet. Free
     # Parameters are stored within the 'sgpars' member of the
     # ObjCrystCrystalParSet, which is the same as the object returned from
     # 'constrainAsSpaceGroup'.

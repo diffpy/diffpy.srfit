@@ -49,7 +49,7 @@ def testsuite():
         diffpy.srfit.tests.testrecipeorganizer
         diffpy.srfit.tests.testrestraint
         diffpy.srfit.tests.testsas
-        diffpy.srfit.tests.testsgconstriants
+        diffpy.srfit.tests.testsgconstraints
         diffpy.srfit.tests.testtagmanager
         diffpy.srfit.tests.testvisitors
         diffpy.srfit.tests.testweakrefcallable

@@ -16,12 +16,12 @@
 """Adapters for interfacing a diffpy.structure.Structure with SrFit.
 
 A diffpy.structure.Structure object is meant to be passed to a
-DiffpyStrucureParSet object from this module, which can then be used as a
+DiffpyStructureParSet object from this module, which can then be used as a
 ParameterSet. (It has other methods for interfacing with SrReal calculator
 adapters.) Any change to the lattice or existing atoms will be registered with
 the Structure. Changes in the number of atoms will not be recognized.  Thus,
 the diffpy.structure.Structure object should be fully configured before passing
-it to DiffpyStrucureParSet.
+it to DiffpyStructureParSet.
 
 DiffpyStructureParSet --  Adapter for diffpy.structure.Structure
 DiffpyLatticeParSet   --  Adapter for diffpy.structure.Lattice

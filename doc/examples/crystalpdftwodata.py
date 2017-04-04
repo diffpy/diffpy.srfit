@@ -58,7 +58,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     ## The ProfileGenerators
     # We need one of these for the x-ray data.
     xgenerator = PDFGenerator("G")
-    stru = CreateCrystalFromCIF(file(ciffile))
+    stru = CreateCrystalFromCIF(open(ciffile))
     xgenerator.setStructure(stru)
 
     # And we need one for the neutron data. We want to refine the same

@@ -53,7 +53,7 @@ def makeRecipe(ciffile, datname):
     # create a Crystal object. That object is passed to the PDFGenerator as in
     # the previous example.
     generator = PDFGenerator("G")
-    stru = CreateCrystalFromCIF(file(ciffile))
+    stru = CreateCrystalFromCIF(open(ciffile))
     generator.setStructure(stru)
     generator.setQmax(40.0)
 

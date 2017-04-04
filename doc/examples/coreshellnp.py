@@ -163,8 +163,8 @@ def main():
     data = "data/CdS_ZnS_nano.gr"
 
     # Make the recipe
-    stru1 = CreateCrystalFromCIF(file(cdsciffile))
-    stru2 = CreateCrystalFromCIF(file(znsciffile))
+    stru1 = CreateCrystalFromCIF(open(cdsciffile))
+    stru2 = CreateCrystalFromCIF(open(znsciffile))
     recipe = makeRecipe(stru1, stru2, data)
     from diffpy.srfit.fitbase.fithook import PlotFitHook
     recipe.pushFitHook(PlotFitHook())

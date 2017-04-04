@@ -509,7 +509,7 @@ class FitResults(object):
         header = myheader + header
 
         res = self.formatResults(header, footer, update)
-        f = file(filename, 'w')
+        f = open(filename, 'w')
         f.write(res)
         f.close()
         return

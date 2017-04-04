@@ -322,7 +322,7 @@ class Profile(Observable, Validatable):
 
         # Add the header
         if not hasattr(fname, 'write'):
-            fname = file(fname, 'w')
+            fname = open(fname, 'w')
         if fname.closed:
             raise ValueError("I/O operation on closed file")
         header = "# x           ycalc           y           dy\n"

@@ -32,10 +32,10 @@ def makeRecipe(niciffile, siciffile, datname):
     contribution.loadData(datname)
     contribution.setCalculationRange(xmax = 20)
 
-    stru = CreateCrystalFromCIF(file(niciffile))
+    stru = CreateCrystalFromCIF(open(niciffile))
     contribution.addStructure("ni", stru)
 
-    stru = CreateCrystalFromCIF(file(siciffile))
+    stru = CreateCrystalFromCIF(open(siciffile))
     contribution.addStructure("si", stru)
 
     # Make the FitRecipe and add the FitContribution.

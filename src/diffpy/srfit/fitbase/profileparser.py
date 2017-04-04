@@ -105,7 +105,7 @@ class ProfileParser(object):
         Raises ParseError if the file cannot be parsed
 
         """
-        infile = file(filename, 'r')
+        infile = open(filename, 'r')
         self._banks = []
         self._meta = {}
         filestring = infile.read()

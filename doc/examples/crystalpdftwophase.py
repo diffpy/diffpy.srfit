@@ -59,11 +59,11 @@ def makeRecipe(niciffile, siciffile, datname):
     # The generator for the nickel phase. We call it "G_ni" and will use this
     # name later when we set the fitting equation in the FitContribution.
     generator_ni = PDFGenerator("G_ni")
-    stru = CreateCrystalFromCIF(file(niciffile))
+    stru = CreateCrystalFromCIF(open(niciffile))
     generator_ni.setStructure(stru)
     # The generator for the silicon phase. We call it "G_si".
     generator_si = PDFGenerator("G_si")
-    stru = CreateCrystalFromCIF(file(siciffile))
+    stru = CreateCrystalFromCIF(open(siciffile))
     generator_si.setStructure(stru)
 
     ## The FitContribution

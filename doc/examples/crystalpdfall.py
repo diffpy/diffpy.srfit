@@ -62,12 +62,12 @@ def makeRecipe(ciffile_ni, ciffile_si, xdata_ni, ndata_ni, xdata_si,
     ## The ProfileGenerators
     # We create one for each phase and share the phases.
     xgenerator_ni = PDFGenerator("xG_ni")
-    stru = CreateCrystalFromCIF(file(ciffile_ni))
+    stru = CreateCrystalFromCIF(open(ciffile_ni))
     xgenerator_ni.setStructure(stru)
     phase_ni = xgenerator_ni.phase
 
     xgenerator_si = PDFGenerator("xG_si")
-    stru = CreateCrystalFromCIF(file(ciffile_si))
+    stru = CreateCrystalFromCIF(open(ciffile_si))
     xgenerator_si.setStructure(stru)
     phase_si = xgenerator_si.phase
 

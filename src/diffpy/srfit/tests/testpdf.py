@@ -44,12 +44,12 @@ class TestPDFParset(testoptional(TestCasePDF)):
         self.assertEqual(1, meta['nbanks'])
         self.assertEqual('N', meta['stype'])
         self.assertEqual(27, meta['qmax'])
-        self.assertEquals(300, meta.get('temperature'))
-        self.assertEquals(None, meta.get('qdamp'))
-        self.assertEquals(None, meta.get('qbroad'))
-        self.assertEquals(None, meta.get('spdiameter'))
-        self.assertEquals(None, meta.get('scale'))
-        self.assertEquals(None, meta.get('doping'))
+        self.assertEqual(300, meta.get('temperature'))
+        self.assertEqual(None, meta.get('qdamp'))
+        self.assertEqual(None, meta.get('qbroad'))
+        self.assertEqual(None, meta.get('spdiameter'))
+        self.assertEqual(None, meta.get('scale'))
+        self.assertEqual(None, meta.get('doping'))
 
         x, y, dx, dy = parser.getData()
         self.assertTrue(dx is None)
@@ -79,12 +79,12 @@ class TestPDFParset(testoptional(TestCasePDF)):
         self.assertEqual(1, meta['nbanks'])
         self.assertEqual('X', meta['stype'])
         self.assertEqual(27, meta['qmax'])
-        self.assertEquals(300, meta.get('temperature'))
-        self.assertEquals(None, meta.get('qdamp'))
-        self.assertEquals(None, meta.get('qbroad'))
-        self.assertEquals(None, meta.get('spdiameter'))
-        self.assertEquals(None, meta.get('scale'))
-        self.assertEquals(None, meta.get('doping'))
+        self.assertEqual(300, meta.get('temperature'))
+        self.assertEqual(None, meta.get('qdamp'))
+        self.assertEqual(None, meta.get('qbroad'))
+        self.assertEqual(None, meta.get('spdiameter'))
+        self.assertEqual(None, meta.get('scale'))
+        self.assertEqual(None, meta.get('doping'))
 
         x, y, dx, dy = parser.getData()
         testx = numpy.linspace(0.01, 60, 5999, endpoint=False)
@@ -137,12 +137,12 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
         for par in gen.iterPars(recurse=False):
             pname = par.name
             defval = calc._getDoubleAttr(pname)
-            self.assertEquals(defval, par.getValue())
+            self.assertEqual(defval, par.getValue())
             # Test setting values
             par.setValue(1.0)
-            self.assertEquals(1.0, par.getValue())
+            self.assertEqual(1.0, par.getValue())
             par.setValue(defval)
-            self.assertEquals(defval, par.getValue())
+            self.assertEqual(defval, par.getValue())
 
         r = numpy.arange(0, 10, 0.1)
         y = gen(r)
@@ -162,7 +162,7 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
 
         diff = y - yref
         res = numpy.dot(diff, diff)
-        self.assertAlmostEquals(0, res)
+        self.assertAlmostEqual(0, res)
         return
 
 
@@ -170,11 +170,11 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
         """Verify qmin is propagated to the calculator object.
         """
         gen = self.gen
-        self.assertEquals(0, gen.getQmin())
-        self.assertEquals(0, gen._calc.qmin)
+        self.assertEqual(0, gen.getQmin())
+        self.assertEqual(0, gen._calc.qmin)
         gen.setQmin(0.93)
-        self.assertEquals(0.93, gen.getQmin())
-        self.assertEquals(0.93, gen._calc.qmin)
+        self.assertEqual(0.93, gen.getQmin())
+        self.assertEqual(0.93, gen._calc.qmin)
         return
 
 

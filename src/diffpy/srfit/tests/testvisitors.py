@@ -130,7 +130,7 @@ class TestArgFinder(unittest.TestCase):
 
         args = visitors.getArgs(v1)
 
-        self.assertEquals(1, len(args))
+        self.assertEqual(1, len(args))
         self.assertTrue(args[0] is v1)
         return
 
@@ -164,7 +164,7 @@ class TestSwapper(unittest.TestCase):
         v5.setValue(5)
 
         # Evaluate
-        self.assertEquals(8, mult.value)
+        self.assertEqual(8, mult.value)
 
         # Now swap an argument
         visitors.swap(mult, v2, v5)
@@ -184,7 +184,7 @@ class TestSwapper(unittest.TestCase):
         self.assertTrue(v5 in args)
 
         # Re-evaluate (1+3)*(4-5) = -4
-        self.assertEquals(-4, mult.value)
+        self.assertEqual(-4, mult.value)
 
         # Swap out the "-" operator
         plus2 = literals.AdditionOperator()
@@ -200,7 +200,7 @@ class TestSwapper(unittest.TestCase):
         plus2.addLiteral(v5)
 
         # Re-evaluate (1+3)*(4+5) = 36
-        self.assertEquals(36, mult.value)
+        self.assertEqual(36, mult.value)
 
         return
 

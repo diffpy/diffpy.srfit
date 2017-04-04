@@ -53,12 +53,12 @@ class TestConstraint(unittest.TestCase):
 
         p2.setValue(2.5)
         c.update()
-        self.assertEquals(5.0, p1.getValue())
+        self.assertEqual(5.0, p1.getValue())
 
         p2.setValue(8.1)
-        self.assertEquals(5.0, p1.getValue())
+        self.assertEqual(5.0, p1.getValue())
         c.update()
-        self.assertEquals(16.2, p1.getValue())
+        self.assertEqual(16.2, p1.getValue())
         return
 
 

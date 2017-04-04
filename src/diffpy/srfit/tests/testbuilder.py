@@ -40,7 +40,7 @@ class TestBuilder(unittest.TestCase):
         eq = factory.makeEquation("v1")
 
         self.assertTrue(v1 is eq.args[0])
-        self.assertEquals(1, len(eq.args))
+        self.assertEqual(1, len(eq.args))
 
         # Try to parse an equation with buildargs turned off
         self.assertRaises(ValueError, factory.makeEquation, "v1 + v2", False)
@@ -48,7 +48,7 @@ class TestBuilder(unittest.TestCase):
         # Make sure we can still use constants
         eq = factory.makeEquation("v1 + 2", False)
         self.assertTrue(v1 is eq.args[0])
-        self.assertEquals(1, len(eq.args))
+        self.assertEqual(1, len(eq.args))
         self.assertTrue(noObserversInGlobalBuilders())
         return
 
@@ -70,18 +70,18 @@ class TestBuilder(unittest.TestCase):
 
         # Build an equation where op is treated as a terminal node
         eq = factory.makeEquation("op")
-        self.assertAlmostEquals(3, eq())
+        self.assertAlmostEqual(3, eq())
 
         eq = factory.makeEquation("v3*op")
-        self.assertAlmostEquals(9, eq())
+        self.assertAlmostEqual(9, eq())
 
         # Now use the op like a function
         eq = factory.makeEquation("op(v3, v4)")
-        self.assertAlmostEquals(7, eq())
+        self.assertAlmostEqual(7, eq())
 
         # Make sure we can still access op as itself.
         eq = factory.makeEquation("op")
-        self.assertAlmostEquals(3, eq())
+        self.assertAlmostEqual(3, eq())
 
         self.assertTrue(noObserversInGlobalBuilders())
         return
@@ -110,11 +110,11 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue(v2 in op.args)
         self.assertTrue(v3 in op.args)
         self.assertTrue(v4 in op.args)
-        self.assertAlmostEquals(21, op.value)
+        self.assertAlmostEqual(21, op.value)
 
         eq1 = factory.makeEquation("g")
         self.assertTrue(eq1.root is op)
-        self.assertAlmostEquals(21, eq1())
+        self.assertAlmostEqual(21, eq1())
 
         # Swap out an argument by registering it under a taken name
         b = factory.registerArgument("v4", v5)
@@ -122,7 +122,7 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue(b.literal is v5)
         self.assertTrue(op._value is None)
         self.assertTrue(op.args == [v1, v2, v3, v5])
-        self.assertAlmostEquals(24, eq1())
+        self.assertAlmostEqual(24, eq1())
 
         # Now swap out the function
         b = factory.registerFunction("g", g2, ["v1"])
@@ -130,8 +130,8 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue(op.operation == g2)
         self.assertTrue(v1 in op.args)
         self.assertTrue(eq1.root is op)
-        self.assertAlmostEquals(0.5, op.value)
-        self.assertAlmostEquals(0.5, eq1())
+        self.assertAlmostEqual(0.5, op.value)
+        self.assertAlmostEqual(0.5, eq1())
 
         # Make an equation
         eqeq = factory.makeEquation("v1 + v2")
@@ -141,8 +141,8 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue(v1 in op.args)
         self.assertTrue(v2 in op.args)
         self.assertTrue(eq1.root is op)
-        self.assertAlmostEquals(3, op.value)
-        self.assertAlmostEquals(3, eq1())
+        self.assertAlmostEqual(3, op.value)
+        self.assertAlmostEqual(3, eq1())
 
         self.assertTrue(noObserversInGlobalBuilders())
         return
@@ -168,7 +168,7 @@ class TestBuilder(unittest.TestCase):
 
         # Make sure that the arguments of eq are listed in the order in which
         # they appear in the equations.
-        self.assertEquals(eq.args, [eq.A, eq.x, eq.B, eq.C])
+        self.assertEqual(eq.args, [eq.A, eq.x, eq.B, eq.C])
 
         # Vector equation
         eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
@@ -179,7 +179,7 @@ class TestBuilder(unittest.TestCase):
         f = lambda x, sigma : sqrt(e**(-0.5*(x/sigma)**2))
         self.assertTrue(numpy.allclose(eq(), f(x,sigma)))
 
-        self.assertEquals(eq.args, [eq.x, eq.sigma])
+        self.assertEqual(eq.args, [eq.x, eq.sigma])
 
         # Equation with constants
         factory.registerConstant("x", x)
@@ -188,7 +188,7 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue("x" not in eq.argdict)
         self.assertTrue(numpy.allclose(eq(sigma=sigma), f(x,sigma)))
 
-        self.assertEquals(eq.args, [eq.sigma])
+        self.assertEqual(eq.args, [eq.sigma])
 
         # Equation with user-defined functions
         factory.registerFunction("myfunc", eq, ["sigma"])
@@ -196,7 +196,7 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue(numpy.allclose(eq2(c=2, sigma=sigma), 2*f(x,sigma)))
         self.assertTrue("sigma" in eq2.argdict)
         self.assertTrue("c" in eq2.argdict)
-        self.assertEquals(eq2.args, [eq2.c, eq2.sigma])
+        self.assertEqual(eq2.args, [eq2.c, eq2.sigma])
 
         self.assertTrue(noObserversInGlobalBuilders())
         return
@@ -231,7 +231,7 @@ class TestBuilder(unittest.TestCase):
         self.assertTrue("A" in eq.argdict)
         self.assertTrue(array_equal(eq(), 2*numpy.sin(x)))
 
-        self.assertEquals(eq.args, [eq.A, eq.a])
+        self.assertEqual(eq.args, [eq.A, eq.a])
 
         # Check the number of arguments
         self.assertRaises(ValueError, sin)
@@ -267,18 +267,18 @@ class TestBuilder(unittest.TestCase):
         E = builder.wrapOperator("eq", eq)
         eq2 = (2*E).getEquation()
         # Make sure these evaulate to the same thing
-        self.assertEquals(eq.args, [A.literal, B.literal])
-        self.assertEquals(2*eq(), eq2())
+        self.assertEqual(eq.args, [A.literal, B.literal])
+        self.assertEqual(2*eq(), eq2())
         # Pass new arguments to the equation
         C = builder.ArgumentBuilder(name="C", value = 5)
         D = builder.ArgumentBuilder(name="D", value = 6)
         eq3 = (E(C, D)+1).getEquation()
-        self.assertEquals(12, eq3())
+        self.assertEqual(12, eq3())
         # Pass old and new arguments to the equation
         # If things work right, A has been given the value of C in the last
         # evaluation (5)
         eq4 = (3*E(A, D)-1).getEquation()
-        self.assertEquals(32, eq4())
+        self.assertEqual(32, eq4())
         # Try to pass the wrong number of arguments
         self.assertRaises(ValueError, E, A)
         self.assertRaises(ValueError, E, A, B, C)

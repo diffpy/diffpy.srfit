@@ -72,14 +72,14 @@ class TestSASGenerator(TestCaseSaS):
         for pname in model.params:
             defval = model.getParam(pname)
             par = gen.get(pname)
-            self.assertEquals(defval, par.getValue())
+            self.assertEqual(defval, par.getValue())
             # Test setting values
             par.setValue(1.0)
-            self.assertEquals(1.0, par.getValue())
-            self.assertEquals(1.0, model.getParam(pname))
+            self.assertEqual(1.0, par.getValue())
+            self.assertEqual(1.0, model.getParam(pname))
             par.setValue(defval)
-            self.assertEquals(defval, par.getValue())
-            self.assertEquals(defval, model.getParam(pname))
+            self.assertEqual(defval, par.getValue())
+            self.assertEqual(defval, model.getParam(pname))
 
 
         r = numpy.arange(1, 10, 0.1, dtype = float)

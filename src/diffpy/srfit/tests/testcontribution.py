@@ -103,7 +103,7 @@ class TestContribution(unittest.TestCase):
         # Now evaluate the profile equation
         self.assertTrue(array_equal(fc._eq(), yobs))
         # And the residual equation
-        self.assertAlmostEquals(0, sum(fc._reseq()))
+        self.assertAlmostEqual(0, sum(fc._reseq()))
 
         return
 
@@ -125,7 +125,7 @@ class TestContribution(unittest.TestCase):
         fc.addProfileGenerator(gen, "I")
         self.assertTrue(array_equal(gen.value, xobs))
         self.assertTrue(array_equal(fc._eq(), xobs))
-        self.assertAlmostEquals(0, sum(fc._reseq()))
+        self.assertAlmostEqual(0, sum(fc._reseq()))
         self.assertEqual(len(xobs), len(fc.residual()))
         eq = fc._eq
         reseq = fc._reseq
@@ -157,7 +157,7 @@ class TestContribution(unittest.TestCase):
         fc.addProfileGenerator(gen, "I")
         self.assertTrue(fc._eq._value is None)
         self.assertTrue(fc._reseq._value is None)
-        self.assertEquals(1, len(fc._generators))
+        self.assertEqual(1, len(fc._generators))
         self.assertTrue(gen.name in fc._generators)
 
         # Let's create some data

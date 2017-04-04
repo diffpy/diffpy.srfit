@@ -591,7 +591,7 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
     def setUp(self):
         global ObjCrystCrystalParSet, SpaceGroups
         from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
-        from diffpy.structure import SpaceGroups
+        from diffpy.structure import spacegroups
 
     @staticmethod
     def getObjCrystParSetSpaceGroup(sg):
@@ -626,8 +626,8 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
         for smbls in sgtbx.space_group_symbol_iterator():
             shn = smbls.hermann_mauguin()
             short_name = shn.replace(' ', '')
-            if SpaceGroups.IsSpaceGroupIdentifier(short_name):
-                sg = SpaceGroups.GetSpaceGroup(shn)
+            if spacegroups.IsSpaceGroupIdentifier(short_name):
+                sg = spacegroups.GetSpaceGroup(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
                 # print("dbsg: " + repr(self.sgsEquivalent(sg, sgnew)))
                 self.assertTrue(self.sgsEquivalent(sg, sgnew))

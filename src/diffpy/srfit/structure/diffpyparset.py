@@ -262,7 +262,7 @@ class DiffpyStructureParSet(SrRealParSet):
     @classmethod
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
-        from diffpy.structure import Structure
+        from diffpy.structure.structure import Structure
         return isinstance(stru, Structure)
 
     def getScatterers(self):

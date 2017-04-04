@@ -1445,7 +1445,8 @@ class ObjCrystCrystalParSet(SrRealParSet):
 
         """
         import copy
-        from diffpy.structure.SpaceGroups import GetSpaceGroup, SymOp
+        from diffpy.structure.spacegroups import GetSpaceGroup
+        from diffpy.structure.spacegroupmod import SymOp
         name = sgobjcryst.GetName()
         extnstr = ":%s" % sgobjcryst.GetExtension()
         if name.endswith(extnstr):

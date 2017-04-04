@@ -80,7 +80,8 @@ def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
 
     """
 
-    from diffpy.structure.SpaceGroups import GetSpaceGroup, SpaceGroup
+    from diffpy.structure.spacegroups import GetSpaceGroup
+    from diffpy.structure.spacegroupmod import SpaceGroup
 
     sg = spacegroup
     if not isinstance(spacegroup, SpaceGroup):
@@ -100,7 +101,7 @@ def _constrainAsSpaceGroup(phase, sg, scatterers = None,
 
     """
 
-    from diffpy.structure.SymmetryUtilities import stdUsymbols
+    from diffpy.structure.symmetryutilities import stdUsymbols
 
     if scatterers is None:
         scatterers = phase.getScatterers()
@@ -372,7 +373,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         """
 
-        from diffpy.structure.SymmetryUtilities import SymmetryConstraints
+        from diffpy.structure.symmetryutilities import SymmetryConstraints
 
         sg = self.sg
         sgoffset = self.sgoffset
@@ -412,8 +413,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         """
 
-        from diffpy.structure.SymmetryUtilities import stdUsymbols
-        from diffpy.structure.SymmetryUtilities import SymmetryConstraints
+        from diffpy.structure.symmetryutilities import stdUsymbols
+        from diffpy.structure.symmetryutilities import SymmetryConstraints
 
         if not self.constrainadps: return
 

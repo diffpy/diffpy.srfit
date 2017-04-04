@@ -124,7 +124,7 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
         self.assertEqual('N', gen.getScatteringType())
         gen.setQmax(qmax)
         self.assertAlmostEqual(qmax, gen.getQmax())
-        from diffpy.structure import PDFFitStructure
+        from diffpy.structure.pdffitstructure import PDFFitStructure
         stru = PDFFitStructure()
         ciffile = datafile("ni.cif")
         stru.read(ciffile)

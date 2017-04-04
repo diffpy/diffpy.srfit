@@ -16,6 +16,7 @@
 """Tests for diffpy.srfit.structure package."""
 
 import unittest
+import pickle
 
 import numpy
 
@@ -31,6 +32,7 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
         global Atom, Lattice, Structure, DiffpyStructureParSet
         from diffpy.Structure import Atom, Lattice, Structure
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+
 
     def testDiffpyStructureParSet(self):
         """Test the structure conversion."""
@@ -108,6 +110,33 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
         self.assertNotEquals(d, dsstru.lattice.dist(a1.xyz, a2.xyz))
         return
 
+
+    def test___repr__(self):
+        """Test representation of DiffpyStructureParSet objects.
+        """
+        lat = Lattice(3, 3, 2, 90, 90, 90)
+        atom = Atom("C", [0, 0.2, 0.5])
+        stru = Structure([atom], lattice=lat)
+        dsps = DiffpyStructureParSet("dsps", stru)
+        self.assertEqual(repr(stru), repr(dsps))
+        self.assertEqual(repr(lat), repr(dsps.lattice))
+        self.assertEqual(repr(atom), repr(dsps.atoms[0]))
+        return
+
+
+    @unittest.expectedFailure
+    def test_pickling(self):
+        """Test pickling of DiffpyStructureParSet.
+        """
+        stru = Structure([Atom("C", [0, 0.2, 0.5])])
+        dsps = DiffpyStructureParSet("dsps", stru)
+        data = pickle.dumps(dsps)
+        dsps2 = pickle.loads(data)
+        self.assertEqual(1, len(dsps2.atoms))
+        self.assertEqual(0.2, dsps2.atoms[0].y.value)
+        return
+
+# End of class TestParameterAdapter
 
 
 if __name__ == "__main__":

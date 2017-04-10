@@ -146,7 +146,6 @@ class TestContribution(unittest.TestCase):
         return
 
 
-    @unittest.expectedFailure
     def testResidual(self):
         """Test the residual, which requires all other methods."""
         fc = self.fitcontribution

@@ -124,7 +124,6 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
         return
 
 
-    @unittest.expectedFailure
     def test_pickling(self):
         """Test pickling of DiffpyStructureParSet.
         """

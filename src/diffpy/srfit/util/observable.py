@@ -57,7 +57,7 @@ class Observable(object):
         """
         Add callable to the set of observers
         """
-        f = weak_ref(callable, holder=self._observers)
+        f = weak_ref(callable)
         self._observers.add(f)
         return
 
@@ -85,10 +85,6 @@ class Observable(object):
         super(Observable, self).__init__(**kwds)
         self._observers = set()
         return
-
-
-    # private data
-    _observers = None
 
 
 # end of file

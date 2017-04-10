@@ -121,6 +121,31 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertTrue(feq2 is w2._wref())
         return
 
+
+    def test_observable_deregistration(self):
+        """check if Observable drops dead Observer.
+        """
+        f = self.f
+        x = f.newParameter('x', 5)
+        f.setEquation('3 * x')
+        self.assertEqual(15, f.evaluate())
+        self.assertEqual(15, f._eq._value)
+        # get one of the observer callables that are associated with f
+        xof = next(iter(x._observers))
+        self.assertTrue(isinstance(xof, WeakBoundMethod))
+        # changing value of x should reset f._eq
+        x.setValue(x.value + 1)
+        self.assertTrue(None is f._eq._value)
+        self.assertEqual(18, f.evaluate())
+        # deallocate f now
+        self.f = f = None
+        self.assertTrue(xof in x._observers)
+        # since f does not exist anymore, the next notification call
+        # should drop the associated observer.
+        x.setValue(x.value + 1)
+        self.assertEqual(0, len(x._observers))
+        return
+
 # End of class TestWeakBoundMethod
 
 # Local Routines -------------------------------------------------------------

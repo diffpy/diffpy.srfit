@@ -143,7 +143,6 @@ class TestFitRecipe(unittest.TestCase):
         return
 
 
-    @unittest.expectedFailure
     def testResidual(self):
         """Test the residual and everything that can change it."""
 

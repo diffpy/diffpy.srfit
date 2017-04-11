@@ -138,7 +138,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __iter__(self):
         """Iterate over top-level parameters."""
-        return self._parameters.values()
+        return iter(self._parameters.values())
 
     def __len__(self):
         """Get number of top-level parameters."""

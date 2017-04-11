@@ -110,6 +110,13 @@ class Operator(Literal, OperatorABC):
         return
 
 
+class UnaryOperator(Operator):
+
+    nin = 1
+    nout = 1
+    pass
+
+
 class BinaryOperator(Operator):
 
     nin = 2
@@ -191,13 +198,11 @@ class RemainderOperator(BinaryOperator):
     pass
 
 
-class NegationOperator(Operator):
+class NegationOperator(UnaryOperator):
     """Negation operator."""
 
     name = "negative"
     symbol = "-"
-    nin = 1
-    nout = 1
     operation = staticmethod(numpy.negative)
     pass
 
@@ -244,13 +249,11 @@ class ConvolutionOperator(BinaryOperator):
     pass
 
 
-class SumOperator(Operator):
+class SumOperator(UnaryOperator):
     """numpy.sum operator."""
 
     name = "sum"
     symbol = "sum"
-    nin = 1
-    nout = 1
     operation = staticmethod(numpy.sum)
 
 

@@ -77,6 +77,10 @@ class Equation(Operator):
     value   --  Property for 'getValue'.
     """
 
+    # define abstract attributes from the Operator base.
+    nin = None
+    nout = 1
+
     def __init__(self, name = None, root = None):
         """Initialize.
 
@@ -91,16 +95,16 @@ class Equation(Operator):
         if name is None and root is not None:
             name = "eq_%s"%root.name
         Literal.__init__(self, name)
-        self.symbol = name
-        self.nin = None
-        self.nout = 1
-
         self.root = None
         self.argdict = OrderedDict()
         if root is not None:
             self.setRoot(root)
-
         return
+
+
+    @property
+    def symbol(self):
+        return self.name
 
 
     @property

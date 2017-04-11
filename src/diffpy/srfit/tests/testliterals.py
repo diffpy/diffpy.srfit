@@ -56,12 +56,18 @@ class TestArgument(unittest.TestCase):
         self.assertAlmostEqual(3.14, a.getValue())
         return
 
-class TestOperator(unittest.TestCase):
+class TestCustomOperator(unittest.TestCase):
+
+
+    def setUp(self):
+        self.op = literals.makeOperator(
+            name="add", symbol="+", operation=numpy.add, nin=2, nout=1)
+        return
+
 
     def testInit(self):
         """Test that everthing initializes as expected."""
-        op = literals.Operator(symbol = "+", operation = numpy.add, nin = 2)
-
+        op = self.op
         self.assertEqual("+", op.symbol)
         self.assertEqual(numpy.add, op.operation)
         self.assertEqual(2, op.nin)
@@ -70,17 +76,19 @@ class TestOperator(unittest.TestCase):
         self.assertEqual([], op.args)
         return
 
+
     def testIdentity(self):
         """Make sure an Argument is an Argument."""
-        op = literals.Operator(symbol = "+", operation = numpy.add, nin = 2)
+        op = self.op
         self.assertTrue(issubclass(literals.Operator, abcs.OperatorABC))
         self.assertTrue(isinstance(op, abcs.OperatorABC))
         return
 
+
     def testValue(self):
         """Test value."""
         # Test addition and operations
-        op = literals.Operator(symbol = "+", operation = numpy.add, nin = 2)
+        op = self.op
         a = literals.Argument(value = 0)
         b = literals.Argument(value = 0)
 
@@ -101,10 +109,10 @@ class TestOperator(unittest.TestCase):
 
         return
 
+
     def testAddLiteral(self):
         """Test adding a literal to an operator node."""
-        op = literals.Operator(name = "add", symbol = "+", operation =
-                numpy.add, nin = 2, nout = 1)
+        op = self.op
 
         self.assertRaises(ValueError, op.getValue)
         op._value = 1
@@ -128,18 +136,19 @@ class TestOperator(unittest.TestCase):
         # Test for self-references
 
         # Try to add self
-        op = literals.Operator(name = "add", symbol = "+", operation =
-                numpy.add, nin = 2, nout = 1)
-        op.addLiteral(a)
-        self.assertRaises(ValueError, op.addLiteral, op)
+        op1 = literals.makeOperator(name="add", symbol="+",
+                                    operation=numpy.add, nin=2, nout=1)
+        op1.addLiteral(a)
+        self.assertRaises(ValueError, op1.addLiteral, op1)
 
         # Try to add argument that contains self
-        op2 = literals.Operator(name = "sub", symbol = "-", operation =
-                numpy.subtract, nin = 2, nout = 1)
-        op2.addLiteral(op)
-        self.assertRaises(ValueError, op.addLiteral, op2)
+        op2 = literals.makeOperator(
+            name="sub", symbol="-", operation=numpy.subtract, nin=2, nout=1)
+        op2.addLiteral(op1)
+        self.assertRaises(ValueError, op1.addLiteral, op2)
 
         return
+
 
 class TestConvolutionOperator(unittest.TestCase):
 

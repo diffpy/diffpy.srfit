@@ -89,6 +89,7 @@ __all__ = ["EquationFactory", "BaseBuilder", "ArgumentBuilder",
 _builders = {}
 
 
+import inspect
 import numbers
 import numpy
 
@@ -563,12 +564,11 @@ class OperatorBuilder(BaseBuilder):
             self.literal = literals.UFuncOperator(ufunc)
         # Here the Operator is already specified.  We can copy its attributes
         # to a new Operator inside of the new OperatorBuilder.
-        op = literals.Operator()
-        op.name = self.literal.name
-        op.symbol = self.literal.symbol
-        op.nin = self.literal.nin
-        op.nout = self.literal.nout
-        op.operation = self.literal.operation
+        op = literals.makeOperator(name=self.literal.name,
+                                   symbol=self.literal.symbol,
+                                   nin=self.literal.nin,
+                                   nout=self.literal.nout,
+                                   operation=self.literal.operation)
         newobj.literal = op
 
         # Now that we have a literal, let's check our inputs
@@ -601,7 +601,7 @@ def wrapOperator(name, op):
     opbuilder = OperatorBuilder(name, op)
     return opbuilder
 
-def wrapFunction(name, func, nin = 2, nout = 1):
+def wrapFunction(name, func, nin=2, nout=1):
     """Wrap a function in an OperatorBuilder instance.
 
     name    --  The name of the function
@@ -611,12 +611,9 @@ def wrapFunction(name, func, nin = 2, nout = 1):
 
     Returns the OperatorBuilder instance that wraps the function.
     """
-    op = literals.Operator()
-    op.name = name
-    op.symbol = name
-    op.nin = nin
-    op.nout = nout
-    op.operation = func
+    op = literals.makeOperator(name=name, symbol=name,
+                               nin=nin, nout=nout,
+                               operation=func)
 
     # Create the OperatorBuilder
     opbuilder = OperatorBuilder(name, op)
@@ -644,18 +641,19 @@ def __wrapSrFitOperators():
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
     instances in the module namespace.
     """
-    import inspect
     opmod = literals.operators
     for opname in dir(opmod):
         opclass = getattr(opmod, opname)
-        if inspect.isclass(opclass) \
-            and issubclass(opclass, opmod.Operator) \
-            and opclass is not opmod.Operator \
-            and opclass is not opmod.UFuncOperator:
-
-            op = opclass()
-            _builders[op.name] = OperatorBuilder(op.name, op)
-
+        skip = (not inspect.isclass(opclass) or
+                not issubclass(opclass, opmod.Operator) or
+                inspect.isabstract(opclass) or
+                opclass is opmod.CustomOperator or
+                opclass is opmod.UFuncOperator)
+        if skip:
+            continue
+        # here opclass is a desired Operator class
+        op = opclass()
+        _builders[op.name] = OperatorBuilder(op.name, op)
     return
 __wrapSrFitOperators()
 

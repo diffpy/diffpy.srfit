@@ -135,6 +135,13 @@ class Operator(Literal, OperatorABC):
 
 
 class UnaryOperator(Operator):
+    """
+    Abstract class for an unary operator with one input and one result.
+
+    This base class defines the `nin` and `nout` attributes.  The derived
+    concrete operator must provide the remaining abstract attributes
+    of the `Operator` class.
+    """
 
     nin = 1
     nout = 1
@@ -142,6 +149,13 @@ class UnaryOperator(Operator):
 
 
 class BinaryOperator(Operator):
+    """
+    Abstract class for a binary operator with two inputs and one result.
+
+    This base class defines the `nin` and `nout` attributes.  The derived
+    concrete operator must define the remaining abstract attributes
+    of the `Operator` class.
+    """
 
     nin = 2
     nout = 1
@@ -149,15 +163,43 @@ class BinaryOperator(Operator):
 
 
 class CustomOperator(Operator):
+    """
+    Concrete class for a user-defined Operator.
 
-    # non-abstract user-defined operator
+    Use the `makeOperator` factory function to create an instance.
+    """
+
+    # declare all abstract attributes from the Operator base.
     nin = None
     nout = None
     operation = None
     symbol = None
+    pass
 
 
 def makeOperator(name, symbol, operation, nin, nout):
+    """Return a new custom operator object.
+
+    Parameters
+    ----------
+    name : str
+        Name of the custom operator object.
+    symbol : str
+        The symbolic representation for the operator such as
+        "+" or "sin".
+    operation : callable
+        Function that performs the operation, e.g., `numpy.add`.
+    nin : int
+        Number of input arguments for the operator.  Any number of
+        arguments is allowed when -1.
+    nout : in
+        Number of outputs returned by the `operation`.
+
+    Returns
+    -------
+    CustomOperator
+        The new custom operator object.
+    """
     op = CustomOperator(name=name)
     op.symbol = symbol
     op.operation = operation

@@ -50,7 +50,7 @@ class Operator(Literal, OperatorABC):
 
     args    --  List of Literal arguments, set with 'addLiteral'
     name    --  A name for this operator. e.g. "add" or "sin"
-    nin     --  Number of inputs (<1 means this is variable)
+    nin     --  Number of inputs (-1 means this is variable)
     nout    --  Number of outputs
     operation   --  Function that performs the operation. e.g. numpy.add.
     symbol  --  The symbolic representation. e.g. "+" or "sin".

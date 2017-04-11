@@ -80,8 +80,7 @@ def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
 
     """
 
-    from diffpy.structure.spacegroups import GetSpaceGroup
-    from diffpy.structure.spacegroupmod import SpaceGroup
+    from diffpy.structure.spacegroups import GetSpaceGroup, SpaceGroup
 
     sg = spacegroup
     if not isinstance(spacegroup, SpaceGroup):

@@ -29,9 +29,7 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
 
     def setUp(self):
         global Atom, Lattice, Structure, DiffpyStructureParSet
-        from diffpy.structure.atom import Atom
-        from diffpy.structure.lattice import Lattice
-        from diffpy.structure.structure import Structure
+        from diffpy.structure import Atom, Lattice, Structure
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
     def testDiffpyStructureParSet(self):

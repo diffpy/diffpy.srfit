@@ -25,7 +25,7 @@ from diffpy.srfit.tests.utils import TestCaseStructure, TestCaseObjCryst
 
 
 def makeLaMnO3_P1():
-    from diffpy.structure.structure import Structure
+    from diffpy.structure import Structure
     stru = Structure()
     stru.readStr(lamno3stru)
     return stru

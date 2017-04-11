@@ -38,32 +38,56 @@ from diffpy.srfit.equation.literals.literal import Literal
 
 
 class Operator(Literal, OperatorABC):
-    """Class for holding a general operator.
+    """Abstract class for specifying a general operator.
 
-    This holds a general operator and records its function, arguments, name and
-    symbol.  The visitors should be able to process any Operator with this
-    information alone.
+    This class provides several methods that are common to a derived
+    classes for concrete concrete operations.
+
+    Class Attributes
+    ----------------
+    nin : int, abstract
+        Number of input arguments for the operator.  Any number of
+        arguments is allowed when -1.  This attribute must be defined
+        in a derived class.
+    nout : int, abstract
+        Number of outputs returned by the `operation`.  This attribute
+        must be defined in a derived class.
+    operation : callable, abstract
+        Function that performs the operation, e.g., `numpy.add`.
+        This must be defined in a derived class.
+    symbol : str, abstract
+        The symbolic representation for the operator such as
+        "+" or "sin".  This attribute must be defined in a derived
+        class.
 
     Attributes
-
-    FIXME
-
-    args    --  List of Literal arguments, set with 'addLiteral'
-    name    --  A name for this operator. e.g. "add" or "sin"
-    nin     --  Number of inputs (-1 means this is variable)
-    nout    --  Number of outputs
-    operation   --  Function that performs the operation. e.g. numpy.add.
-    symbol  --  The symbolic representation. e.g. "+" or "sin".
-    _value  --  The value of the Operator.
-    value   --  Property for 'getValue'.
+    ----------
+    args : list
+        The list of `Literal` arguments.  Read-only, use the
+        `addLiteral` method to change its content.
     """
 
+    # Private Attributes
+    # ------------------
+    # _value : float, numpy.ndarray or None
+    #     The last value of the operator or None.
+
+
+    # We must declare the abstract `args` here.
     args = None
+    # default for the value
     _value = None
 
 
     def __init__(self, name=None):
-        """Initialization."""
+        """Initialize the operator object with the specified name.
+
+        Parameters
+        ----------
+        name : str, optional
+            Name for the operator object.  When not specified,
+            use the class attribute `name`.
+        """
         Literal.__init__(self, name)
         self.args = []
         return

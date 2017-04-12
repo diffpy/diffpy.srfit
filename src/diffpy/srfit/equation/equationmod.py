@@ -107,13 +107,15 @@ class Equation(Operator):
         return self.name
 
 
-    @property
-    def operation(self):
-        """The bound __call__ method of this Equation object.
+    def operation(self, *args, **kw):
+        """Evaluate this Equation object.
 
-        This can be called as is to perform the operation.
+        Same as the __call__ method.  This method is used via
+        the Operator interface.
+
+        Return the result of __call__(*args, **kw).
         """
-        return self.__call__
+        return self.__call__(*args, **kw)
 
 
     def _getArgs(self):
@@ -172,6 +174,7 @@ class Equation(Operator):
 
         return
 
+
     def __call__(self, *args, **kw):
         """Call the equation.
 
@@ -181,7 +184,6 @@ class Equation(Operator):
 
         Raises
         ValueError when a passed argument cannot be found
-
         """
         # Process args
         for idx, val in enumerate(args):

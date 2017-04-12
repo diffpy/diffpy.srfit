@@ -13,7 +13,7 @@
 #
 ##############################################################################
 
-"""Tests for refinableobj module."""
+"""Tests for the diffpy.srfit.equation.literals module."""
 
 import unittest
 
@@ -187,6 +187,30 @@ class TestConvolutionOperator(unittest.TestCase):
 
         self.assertAlmostEqual(sum(g3c), sum(g3))
         self.assertAlmostEqual(0, sum((g3-g3c)**2))
+        return
+
+# ----------------------------------------------------------------------------
+
+class TestArrayOperator(unittest.TestCase):
+
+    def test_value(self):
+        """Check ArrayOperator.value.
+        """
+        x = literals.Argument('x', 1.0)
+        y = literals.Argument('y', 2.0)
+        z = literals.Argument('z', 3.0)
+        # check empty array
+        op = literals.ArrayOperator()
+        self.assertEqual(0, len(op.value))
+        self.assertTrue(isinstance(op.value, numpy.ndarray))
+        # check behavior with 2 arguments
+        op.addLiteral(x)
+        self.assertTrue(numpy.array_equal([1], op.value))
+        op.addLiteral(y)
+        op.addLiteral(z)
+        self.assertTrue(numpy.array_equal([1, 2, 3], op.value))
+        z.value = 7
+        self.assertTrue(numpy.array_equal([1, 2, 7], op.value))
         return
 
 # ----------------------------------------------------------------------------

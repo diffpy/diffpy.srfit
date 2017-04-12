@@ -28,15 +28,19 @@ class WeakBoundMethod(object):
     Callable wrapper to a bound method stored as a weak reference.
 
     Support storage of bound methods without keeping the associated objects
-    alive forever.  Remove this wrapper from an optional holder set when
-    the method object is to be finalized.
+    alive forever.  Provide facility for a fallback function to be used
+    when method-related object is deleted.
 
     Attributes
     ----------
     function : MethodType
         the unbound function extracted from the wrapped bound method.
-    holder : set, optional
-        set that should drop this wrapper when it becomes inactive.
+    fallback : FunctionType, optional
+        plain function to be called when object holding the bound method
+        gets deallocated.  The fallback function is called with this
+        object as the first argument followed by any positional and
+        keyword arguments passed for the bound method.  The fallback
+        function can be used to deregister this wrapper.
     _wref : weakref
         weak reference to the object the wrapped method is bound to.
     _class : type
@@ -44,46 +48,52 @@ class WeakBoundMethod(object):
         This is only used for pickling.
     """
 
-    __slots__ = ('function', 'holder', '_wref', '_class')
+    __slots__ = ('function', 'fallback', '_wref', '_class')
 
-    def __init__(self, f, holder=None):
+    def __init__(self, f, fallback=None):
         """Create a weak reference wrapper to bound method.
 
         Parameters
         ----------
         f : bound MethodType
             instance-bound method to be wrapped.
-        holder : set, optional
-            set which should discard this object when the method
-            associated object gets deallocated.
+        fallback : FunctionType, optional
+            plain function to be called instead of the bound method when
+            the method associated object gets deallocated.
         """
         # This does not handle builtin methods, but that can be added
         # if necessary.
         self.function = f.__func__.__get__(None, f.im_class)
-        self.holder = holder
-        cb = self.__make_callback(self.holder)
+        self.fallback = fallback
         self._class = type(f.__self__)
-        self._wref = weakref.ref(f.__self__, cb)
+        self._wref = weakref.ref(f.__self__)
         return
 
 
     def __call__(self, *args, **kwargs):
         """Call the wrapped method if the weak-referenced object is alive.
 
-        If that object does not exist, remove this wrapper from the holder
-        set and return None.
+        If that object does not exist and the fallback function is defined,
+        call the fallback function instead.
 
         Parameters
         ----------
         *args, **kwargs
             same arguments as for the wrapped bound method.
+
+        Raises
+        ------
+        ReferenceError
+            when the method-bound object does not exist and the fallback
+            function is not defined.
         """
         mobj = self._wref()
-        if mobj is None:
-            if self.holder is not None:
-                self.holder.discard(self)
-            return None
-        return self.function(mobj, *args, **kwargs)
+        if mobj is not None:
+            return self.function(mobj, *args, **kwargs)
+        if self.fallback is not None:
+            return self.fallback(self, *args, **kwargs)
+        emsg = "Object bound to {} does not exist.".format(self.function)
+        raise ReferenceError(emsg)
 
 
     # support use of this class in hashed collections
@@ -111,22 +121,21 @@ class WeakBoundMethod(object):
         nm = self.function.__name__
         assert self.function == getattr(self._class, nm), \
             "Unable to pickle this unbound function by name."
-        state = (self._class, nm, self.holder, mobj)
+        state = (self._class, nm, self.fallback, mobj)
         return state
 
 
     def __setstate__(self, state):
         """Restore the weak reference in this wrapper upon unpickling.
         """
-        (self._class, nm, self.holder, mobj) = state
+        (self._class, nm, self.fallback, mobj) = state
         self.function = getattr(self._class, nm)
         if mobj is None:
             # use a fake weak reference that mimics deallocated object.
             self._wref = self.__mimic_empty_ref
             return
         # Here the referred object exists.
-        cb = self.__make_callback(self.holder)
-        self._wref = weakref.ref(mobj, cb)
+        self._wref = weakref.ref(mobj)
         return
 
 
@@ -134,41 +143,34 @@ class WeakBoundMethod(object):
     def __mimic_empty_ref():
         return None
 
-
-    @staticmethod
-    def __make_callback(holder):
-        if holder is None:
-            return None
-        def cb(wref):
-            holder.difference_update([
-                m for m in holder
-                if isinstance(m, WeakBoundMethod) and m._wref == wref])
-        return cb
-
 # end of class WeakBoundMethod
 
 # ----------------------------------------------------------------------------
 
-def weak_ref(f, holder=None):
+def weak_ref(f, fallback=None):
     """Create weak-reference wrapper to a bound method.
 
     Parameters
     ----------
     f : callable
         object-bound method or a plain function.
-    holder : set, optional
-        set that should drop the returned wrapper when the `f`
-        gets deallocated.
+    fallback : FunctionType, optional
+        plain function to be called when object holding ``f`` gets
+        deallocated.  The fallback function is called with the
+        wrapper object as the first argument followed by positional
+        and keyword arguments passed for the bound method.  The
+        fallback function can be used to deregister the wrapper.
 
     Returns
     -------
     WeakBoundMethod
-        when `f` is a bound method.  If `f` is a plain function,
-        return `f` and ignore the `holder` argument.
+        when `f` is a bound method.  If `f` is a plain function or
+        already of WeakBoundMethod type, return `f` and ignore the
+        `fallback` argument.
     """
     # NOTE Weak referencing plain functions is probably not needed,
     # because they are already bound to the defining modules.
     rv = f
     if isinstance(f, (types.MethodType, types.BuiltinMethodType)):
-        rv = WeakBoundMethod(f, holder=holder)
+        rv = WeakBoundMethod(f, fallback=fallback)
     return rv

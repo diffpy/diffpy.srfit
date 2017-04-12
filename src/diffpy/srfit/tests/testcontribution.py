@@ -145,6 +145,7 @@ class TestContribution(unittest.TestCase):
         self.assertEqual(len(xobs2), len(fc.residual()))
         return
 
+
     def testResidual(self):
         """Test the residual, which requires all other methods."""
         fc = self.fitcontribution

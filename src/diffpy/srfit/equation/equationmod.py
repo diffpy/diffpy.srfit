@@ -77,6 +77,10 @@ class Equation(Operator):
     value   --  Property for 'getValue'.
     """
 
+    # define abstract attributes from the Operator base.
+    nin = None
+    nout = 1
+
     def __init__(self, name = None, root = None):
         """Initialize.
 
@@ -91,25 +95,27 @@ class Equation(Operator):
         if name is None and root is not None:
             name = "eq_%s"%root.name
         Literal.__init__(self, name)
-        self.symbol = name
-        self.nin = None
-        self.nout = 1
-
         self.root = None
         self.argdict = OrderedDict()
         if root is not None:
             self.setRoot(root)
-
         return
 
 
     @property
-    def operation(self):
-        """The bound __call__ method of this Equation object.
+    def symbol(self):
+        return self.name
 
-        This can be called as is to perform the operation.
+
+    def operation(self, *args, **kw):
+        """Evaluate this Equation object.
+
+        Same as the __call__ method.  This method is used via
+        the Operator interface.
+
+        Return the result of __call__(*args, **kw).
         """
-        return self.__call__
+        return self.__call__(*args, **kw)
 
 
     def _getArgs(self):
@@ -168,6 +174,7 @@ class Equation(Operator):
 
         return
 
+
     def __call__(self, *args, **kw):
         """Call the equation.
 
@@ -177,7 +184,6 @@ class Equation(Operator):
 
         Raises
         ValueError when a passed argument cannot be found
-
         """
         # Process args
         for idx, val in enumerate(args):

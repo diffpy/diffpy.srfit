@@ -89,20 +89,28 @@ class ProfileGenerator(Operator, ParameterSet):
     Properties
     names           --  Variable names (read only). See getNames.
     values          --  Variable values (read only). See getValues.
-
     """
+
+    # define abstract attributes from the Operator base.
+    nin = 0
+    nout = 1
+
 
     def __init__(self, name):
         """Initialize the attributes."""
+        Operator.__init__(self)
         ParameterSet.__init__(self, name)
         self.profile = None
         self.meta = {}
-
-        # Operator attributes
-        Operator.__init__(self, name, name, self.operation, 0, 1)
         return
 
+
+    @property
+    def symbol(self):
+        return self.name
+
     # Overload me!
+
     def __call__(self, x):
         """Evaluate the profile.
 
@@ -118,12 +126,11 @@ class ProfileGenerator(Operator, ParameterSet):
     def operation(self):
         """Evaluate the profile.
 
-        This calls __call__ and passes in profile.x. It also stores the output
-        in profile.ycalc. The calculated value is then returned.
-
+        Return the result of __call__(profile.x).
         """
         y = self.__call__(self.profile.x)
         return y
+
 
     def setProfile(self, profile):
         """Assign the profile.

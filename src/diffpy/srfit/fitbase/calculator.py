@@ -60,16 +60,26 @@ class Calculator(Operator, ParameterSet):
     Properties
     names           --  Variable names (read only). See getNames.
     values          --  Variable values (read only). See getValues.
-
     """
+
+    # define abstract attributes from the Operator base.
+
+    nin = -1
+    nout = 1
 
     def __init__(self, name):
         ParameterSet.__init__(self, name)
         self.meta = {}
 
         # Initialize Operator attributes
-        Operator.__init__(self, name, name, self.operation, -1, 1)
+        Operator.__init__(self, name)
         return
+
+
+    @property
+    def symbol(self):
+        return self.name
+
 
     # Overload me!
     def __call__(self, *args):
@@ -82,9 +92,11 @@ class Calculator(Operator, ParameterSet):
         """
         return 0
 
+
     def operation(self, *args):
         self._value = self.__call__(*args)
         return self._value
+
 
     def _validate(self):
         """Validate my state.

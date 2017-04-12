@@ -22,6 +22,7 @@ import numpy
 import diffpy.srfit.equation.literals as literals
 import diffpy.srfit.equation.literals.abcs as abcs
 
+# ----------------------------------------------------------------------------
 
 class TestArgument(unittest.TestCase):
 
@@ -33,12 +34,14 @@ class TestArgument(unittest.TestCase):
         self.assertTrue(None is a.name)
         return
 
+
     def testIdentity(self):
         """Make sure an Argument is an Argument."""
         a = literals.Argument()
         self.assertTrue(issubclass(literals.Argument, abcs.ArgumentABC))
         self.assertTrue(isinstance(a, abcs.ArgumentABC))
         return
+
 
     def testValue(self):
         """Test value setting."""
@@ -56,8 +59,9 @@ class TestArgument(unittest.TestCase):
         self.assertAlmostEqual(3.14, a.getValue())
         return
 
-class TestCustomOperator(unittest.TestCase):
+# ----------------------------------------------------------------------------
 
+class TestCustomOperator(unittest.TestCase):
 
     def setUp(self):
         self.op = literals.makeOperator(
@@ -149,6 +153,7 @@ class TestCustomOperator(unittest.TestCase):
 
         return
 
+# ----------------------------------------------------------------------------
 
 class TestConvolutionOperator(unittest.TestCase):
 
@@ -184,6 +189,7 @@ class TestConvolutionOperator(unittest.TestCase):
         self.assertAlmostEqual(0, sum((g3-g3c)**2))
         return
 
+# ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     unittest.main()

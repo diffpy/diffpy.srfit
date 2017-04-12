@@ -29,8 +29,8 @@ __all__ = ["Argument", "Operator", "BinaryOperator", "CustomOperator",
            "AdditionOperator", "SubtractionOperator",
            "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
            "RemainderOperator", "NegationOperator", "ConvolutionOperator",
-           "SumOperator", "UFuncOperator", "ListOperator", "SetOperator",
-           "ArrayOperator", "PolyvalOperator", "makeOperator"]
+           "SumOperator", "UFuncOperator", "ArrayOperator", "PolyvalOperator",
+           "makeOperator"]
 
 
 # Import the operators
@@ -49,8 +49,6 @@ from diffpy.srfit.equation.literals.operators import NegationOperator
 from diffpy.srfit.equation.literals.operators import ConvolutionOperator
 from diffpy.srfit.equation.literals.operators import UFuncOperator
 from diffpy.srfit.equation.literals.operators import SumOperator
-from diffpy.srfit.equation.literals.operators import ListOperator
-from diffpy.srfit.equation.literals.operators import SetOperator
 from diffpy.srfit.equation.literals.operators import ArrayOperator
 from diffpy.srfit.equation.literals.operators import PolyvalOperator
 from diffpy.srfit.equation.literals.operators import makeOperator

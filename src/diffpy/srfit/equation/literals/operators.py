@@ -28,8 +28,7 @@ but they all identify themselves with the Visitor.onOperator method.
 __all__ = ["Operator", "AdditionOperator", "SubtractionOperator",
            "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
            "RemainderOperator", "NegationOperator", "ConvolutionOperator",
-           "SumOperator", "UFuncOperator", "ListOperator", "SetOperator",
-           "ArrayOperator", "PolyvalOperator"]
+           "SumOperator", "UFuncOperator", "ArrayOperator", "PolyvalOperator"]
 
 import numpy
 
@@ -348,34 +347,6 @@ class UFuncOperator(Operator):
         self.nout = op.nout
         self.operation = op
         return
-
-
-class ListOperator(Operator):
-    """Operator that will take parameters and turn them into a list."""
-
-    name = "list"
-    symbol = "list"
-    nin = -1
-    nout = 1
-
-    @staticmethod
-    def operation(*args):
-        """Convert arguments into a list."""
-        return args
-
-
-class SetOperator(Operator):
-    """Operator that will take parameters and turn them into a set."""
-
-    name = "set"
-    symbol = "set"
-    nin = -1
-    nout = 1
-
-    @staticmethod
-    def operation(*args):
-        """Convert arguments into a set."""
-        return set(args)
 
 
 class ArrayOperator(Operator):

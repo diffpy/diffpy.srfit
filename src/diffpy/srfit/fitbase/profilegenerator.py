@@ -126,12 +126,11 @@ class ProfileGenerator(Operator, ParameterSet):
     def operation(self):
         """Evaluate the profile.
 
-        This calls __call__ and passes in profile.x. It also stores the output
-        in profile.ycalc. The calculated value is then returned.
-
+        Return the result of __call__(profile.x).
         """
         y = self.__call__(self.profile.x)
         return y
+
 
     def setProfile(self, profile):
         """Assign the profile.

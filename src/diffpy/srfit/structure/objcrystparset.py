@@ -1435,7 +1435,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
 
     @staticmethod
     def _createSpaceGroup(sgobjcryst):
-        """Create a diffpy.structure.SpaceGroup object from pyobjcryst.
+        """Create a diffpy.structure SpaceGroup object from pyobjcryst.
 
         sgobjcryst  --  A pyobjcryst.spacegroup.SpaceGroup instance.
 

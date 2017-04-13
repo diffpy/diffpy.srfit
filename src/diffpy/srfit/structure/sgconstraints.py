@@ -47,7 +47,7 @@ def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
     constrainadps   --  Flag indicating whether to constrain the ADPs
                     (default True).
     adpsymbols  --  A list of the ADP names. By default this is equal to
-                    diffpy.structure.SymmetryUtilities.stdUsymbols (U11,
+                    diffpy.structure.symmetryutilities.stdUsymbols (U11,
                     U22, etc.). The names must be given in the same order
                     as stdUsymbols.
     isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
@@ -96,7 +96,7 @@ def _constrainAsSpaceGroup(phase, sg, scatterers = None,
     """Restricted interface to constrainAsSpaceGroup.
 
     Arguments: As constrainAsSpaceGroup, except
-    sg          --  diffpy.structure.SpaceGroups.SpaceGroup instance
+    sg          --  diffpy.structure.spacegroups.SpaceGroup instance
 
     """
 
@@ -164,7 +164,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     Attributes
     name    --  "sgpars"
     phase   --  The constrained BaseStructure object.
-    sg      --  The diffpy.structure.SpaceGroups.SpaceGroup object
+    sg      --  The diffpy.structure.spacegroups.SpaceGroup object
                 corresponding to the space group.
     sgoffset    --  Optional offset for the space group origin.
     scatterers  --  The constrained scatterer ParameterSets.
@@ -190,7 +190,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         Arguments:
         phase   --  A BaseStructure object to be constrained.
         sg      --  The space group number or symbol (compatible with
-                    diffpy.structure.SpaceGroups.GetSpaceGroup.
+                    diffpy.structure.spacegroups.GetSpaceGroup.
         sgoffset    --  Optional offset for sg origin.
         scatterers  --  The scatterer ParameterSets to constrain. If scatterers
                     is None, then all scatterers accessible from
@@ -199,7 +199,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         constrainadps   --  Flag indicating whether to constrain the ADPs.
         adpsymbols  --  A list of the ADP names. The names must be given in the
                     same order as
-                    diffpy.structure.SymmetryUtilities.stdUsymbols.
+                    diffpy.structure.symmetryutilities.stdUsymbols.
         isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
                     isotropic ADPs will be constrainted via the anisotropic
                     ADPs.

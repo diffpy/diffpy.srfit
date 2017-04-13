@@ -19,9 +19,7 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import testoptional
 from diffpy.srfit.tests.utils import has_pyobjcryst, has_diffpy_structure
-from diffpy.srfit.tests.utils import TestCaseStructure, TestCaseObjCryst
 
 
 def makeLaMnO3_P1():

@@ -30,6 +30,7 @@ def makeLaMnO3_P1():
     stru.readStr(lamno3stru)
     return stru
 
+
 def makeLaMnO3():
     from pyobjcryst.crystal import Crystal
     from pyobjcryst.atom import Atom
@@ -66,10 +67,11 @@ def makeLaMnO3():
 
     return crystal
 
+
 class TestSGConstraints(unittest.TestCase):
 
     @unittest.skipIf(not has_pyobjcryst, "No module named 'pyobjcryst'")
-    def testConstrainSpaceGroup(self):
+    def test_ObjCryst_constrainSpaceGroup(self):
         """Make sure that all Parameters are constrained properly.
 
         This tests constrainSpaceGroup from
@@ -142,8 +144,9 @@ class TestSGConstraints(unittest.TestCase):
 
         return
 
-    @unittest.skipIf(not has_diffpy_structure, "No module named 'diffpy.structure'")
-    def testConstrainAsSpaceGroup(self):
+
+    @unittest.skipUnless(has_diffpy_structure, "No module named 'diffpy.structure'")
+    def test_DiffPy_constrainAsSpaceGroup(self):
         """Test the constrainAsSpaceGroup function."""
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
         from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
@@ -219,6 +222,9 @@ class TestSGConstraints(unittest.TestCase):
         self.assertEqual(sgpars.names, sgpars2.names)
         return
 
+# End of class TestSGConstraints
+
+# Local helper functions -----------------------------------------------------
 
 lamno3stru =\
 """\
@@ -353,6 +359,7 @@ O           0.22005206        0.21061274        0.53111255       1.0000
             0.00000000        0.00000000        0.00000000
 """
 
+# ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     unittest.main()

@@ -37,7 +37,7 @@ def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
     Arguments:
     phase       --  A BaseStructure object.
     spacegroup  --  The space group number, symbol or an instance of
-                    SpaceGroup class from diffpy.Structure package.
+                    SpaceGroup class from diffpy.structure package.
     sgoffset    --  Optional offset for sg origin (default [0, 0, 0]).
     scatterers  --  The scatterer ParameterSets to constrain. If scatterers
                     is None (default), then all scatterers accessible from
@@ -47,7 +47,7 @@ def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
     constrainadps   --  Flag indicating whether to constrain the ADPs
                     (default True).
     adpsymbols  --  A list of the ADP names. By default this is equal to
-                    diffpy.Structure.SymmetryUtilities.stdUsymbols (U11,
+                    diffpy.structure.symmetryutilities.stdUsymbols (U11,
                     U22, etc.). The names must be given in the same order
                     as stdUsymbols.
     isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
@@ -80,7 +80,7 @@ def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
 
     """
 
-    from diffpy.Structure.SpaceGroups import GetSpaceGroup, SpaceGroup
+    from diffpy.structure.spacegroups import GetSpaceGroup, SpaceGroup
 
     sg = spacegroup
     if not isinstance(spacegroup, SpaceGroup):
@@ -96,11 +96,11 @@ def _constrainAsSpaceGroup(phase, sg, scatterers = None,
     """Restricted interface to constrainAsSpaceGroup.
 
     Arguments: As constrainAsSpaceGroup, except
-    sg          --  diffpy.Structure.SpaceGroups.SpaceGroup instance
+    sg          --  diffpy.structure.spacegroups.SpaceGroup instance
 
     """
 
-    from diffpy.Structure.SymmetryUtilities import stdUsymbols
+    from diffpy.structure.symmetryutilities import stdUsymbols
 
     if scatterers is None:
         scatterers = phase.getScatterers()
@@ -164,7 +164,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     Attributes
     name    --  "sgpars"
     phase   --  The constrained BaseStructure object.
-    sg      --  The diffpy.Structure.SpaceGroups.SpaceGroup object
+    sg      --  The diffpy.structure.spacegroups.SpaceGroup object
                 corresponding to the space group.
     sgoffset    --  Optional offset for the space group origin.
     scatterers  --  The constrained scatterer ParameterSets.
@@ -190,7 +190,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         Arguments:
         phase   --  A BaseStructure object to be constrained.
         sg      --  The space group number or symbol (compatible with
-                    diffpy.Structure.SpaceGroups.GetSpaceGroup.
+                    diffpy.structure.spacegroups.GetSpaceGroup.
         sgoffset    --  Optional offset for sg origin.
         scatterers  --  The scatterer ParameterSets to constrain. If scatterers
                     is None, then all scatterers accessible from
@@ -199,7 +199,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         constrainadps   --  Flag indicating whether to constrain the ADPs.
         adpsymbols  --  A list of the ADP names. The names must be given in the
                     same order as
-                    diffpy.Structure.SymmetryUtilities.stdUsymbols.
+                    diffpy.structure.symmetryutilities.stdUsymbols.
         isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
                     isotropic ADPs will be constrainted via the anisotropic
                     ADPs.
@@ -372,7 +372,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         """
 
-        from diffpy.Structure.SymmetryUtilities import SymmetryConstraints
+        from diffpy.structure.symmetryutilities import SymmetryConstraints
 
         sg = self.sg
         sgoffset = self.sgoffset
@@ -412,8 +412,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         """
 
-        from diffpy.Structure.SymmetryUtilities import stdUsymbols
-        from diffpy.Structure.SymmetryUtilities import SymmetryConstraints
+        from diffpy.structure.symmetryutilities import stdUsymbols
+        from diffpy.structure.symmetryutilities import SymmetryConstraints
 
         if not self.constrainadps: return
 

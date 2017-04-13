@@ -42,17 +42,21 @@ except ImportError as e:
     logger.warning('%s, SaS tests skipped.', e)
 
 try:
-    import diffpy.Structure as m; del m
+    import diffpy.structure as m; del m
     TestCaseStructure = TestCase
+    has_diffpy_structure = True
 except ImportError:
     TestCaseStructure = _TestCaseDisabled
-    logger.warning('Cannot import diffpy.Structure, Structure tests skipped.')
+    has_diffpy_structure = False
+    logger.warning('Cannot import diffpy.structure, Structure tests skipped.')
 
 try:
     import pyobjcryst as m; del m
     TestCaseObjCryst = TestCase
+    has_pyobjcryst = True
 except ImportError:
     TestCaseObjCryst = _TestCaseDisabled
+    has_pyobjcryst = False
     logger.warning('Cannot import pyobjcryst, pyobjcryst tests skipped.')
 
 try:

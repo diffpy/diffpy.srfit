@@ -79,8 +79,8 @@ install:
   - $NOMC || source activate testenv
   - $NOMC || conda install --yes --use-local --file=/tmp/mypackage.txt
   # TODO - add pyobjcryst, diffpy.srreal, srfit-sasview when ready for Python 3.
-  # - $NOMC || conda install --yes
-  #             diffpy.structure
+  - $NOMC || conda install --yes
+                diffpy.structure
 
   - $NOBREW || $MYPIP install $MYPIPFLAGS coverage
   # install diffpy.structure from the python3 development branch.

@@ -49,8 +49,8 @@ Recommended software:
 
 Optimizations involving crystal structures or molecules require
 
-* ``diffpy.Structure`` - crystal structure container and parsers,
-  https://github.com/diffpy/diffpy.Structure
+* ``diffpy.structure`` - crystal structure container and parsers,
+  https://github.com/diffpy/diffpy.structure
 * ``pyobjcryst`` - Crystal and Molecule storage, rigid units, bond
   length and bond angle restraints, https://github.com/diffpy/pyobjcryst
 

@@ -19,18 +19,15 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import testoptional
-from diffpy.srfit.tests.utils import TestCaseStructure, TestCaseObjCryst
-
-# Global variables to be assigned in setUp
-ObjCrystCrystalParSet = DiffpyStructureParSet = None
+from diffpy.srfit.tests.utils import has_pyobjcryst, has_diffpy_structure
 
 
 def makeLaMnO3_P1():
-    from diffpy.Structure import Structure
+    from diffpy.structure import Structure
     stru = Structure()
     stru.readStr(lamno3stru)
     return stru
+
 
 def makeLaMnO3():
     from pyobjcryst.crystal import Crystal
@@ -68,14 +65,11 @@ def makeLaMnO3():
 
     return crystal
 
-class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
 
-    def setUp(self):
-        global ObjCrystCrystalParSet, DiffpyStructureParSet
-        from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
-        from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+class TestSGConstraints(unittest.TestCase):
 
-    def testConstrainSpaceGroup(self):
+    @unittest.skipIf(not has_pyobjcryst, "No module named 'pyobjcryst'")
+    def test_ObjCryst_constrainSpaceGroup(self):
         """Make sure that all Parameters are constrained properly.
 
         This tests constrainSpaceGroup from
@@ -83,6 +77,8 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
         when an ObjCrystCrystalParSet is created.
 
         """
+        from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
+
         pi = numpy.pi
 
         occryst = makeLaMnO3()
@@ -146,8 +142,11 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
 
         return
 
-    def testConstrainAsSpaceGroup(self):
+
+    @unittest.skipUnless(has_diffpy_structure, "No module named 'diffpy.structure'")
+    def test_DiffPy_constrainAsSpaceGroup(self):
         """Test the constrainAsSpaceGroup function."""
+        from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
         from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
 
         stru = makeLaMnO3_P1()
@@ -203,11 +202,13 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
         return
 
 
+    @unittest.skipIf(not has_diffpy_structure, "No module named 'diffpy.structure'")
     def test_ConstrainAsSpaceGroup_args(self):
         """Test the arguments processing of constrainAsSpaceGroup function.
         """
+        from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
         from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
-        from diffpy.Structure.SpaceGroups import GetSpaceGroup
+        from diffpy.structure.spacegroups import GetSpaceGroup
         stru = makeLaMnO3_P1()
         parset = DiffpyStructureParSet("LaMnO3", stru)
         sgpars = constrainAsSpaceGroup(parset, "P b n m")
@@ -219,6 +220,9 @@ class TestSGConstraints(testoptional(TestCaseStructure, TestCaseObjCryst)):
         self.assertEqual(sgpars.names, sgpars2.names)
         return
 
+# End of class TestSGConstraints
+
+# Local helper functions -----------------------------------------------------
 
 lamno3stru =\
 """\
@@ -353,6 +357,7 @@ O           0.22005206        0.21061274        0.53111255       1.0000
             0.00000000        0.00000000        0.00000000
 """
 
+# ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     unittest.main()

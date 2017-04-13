@@ -22,7 +22,7 @@ import numpy
 from diffpy.srfit.tests.utils import testoptional, TestCaseObjCryst
 
 # Global variables to be assigned in setUp
-ObjCrystCrystalParSet = SpaceGroups = None
+ObjCrystCrystalParSet = spacegroups = None
 Crystal = Atom = Molecule = ScatteringPowerAtom = None
 
 
@@ -589,9 +589,9 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
     """
 
     def setUp(self):
-        global ObjCrystCrystalParSet, SpaceGroups
+        global ObjCrystCrystalParSet, spacegroups
         from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
-        from diffpy.Structure import SpaceGroups
+        from diffpy.structure import spacegroups
 
     @staticmethod
     def getObjCrystParSetSpaceGroup(sg):
@@ -626,8 +626,8 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
         for smbls in sgtbx.space_group_symbol_iterator():
             shn = smbls.hermann_mauguin()
             short_name = shn.replace(' ', '')
-            if SpaceGroups.IsSpaceGroupIdentifier(short_name):
-                sg = SpaceGroups.GetSpaceGroup(shn)
+            if spacegroups.IsSpaceGroupIdentifier(short_name):
+                sg = spacegroups.GetSpaceGroup(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
                 # print("dbsg: " + repr(self.sgsEquivalent(sg, sgnew)))
                 self.assertTrue(self.sgsEquivalent(sg, sgnew))

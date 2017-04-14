@@ -651,6 +651,7 @@ def __wrapSrFitOperators():
     # create OperatorBuilder objects
     for nm, opclass in inspect.getmembers(opmod, is_exported_type):
         op = opclass()
+        assert op.name, "Unnamed Operator should never appear here."
         _builders[op.name] = OperatorBuilder(op.name, op)
     return
 __wrapSrFitOperators()

@@ -642,16 +642,14 @@ def __wrapSrFitOperators():
     instances in the module namespace.
     """
     opmod = literals.operators
-    for opname in dir(opmod):
-        opclass = getattr(opmod, opname)
-        skip = (not inspect.isclass(opclass) or
-                not issubclass(opclass, opmod.Operator) or
-                inspect.isabstract(opclass) or
-                opclass is opmod.CustomOperator or
-                opclass is opmod.UFuncOperator)
-        if skip:
-            continue
-        # here opclass is a desired Operator class
+    excluded_types = set((opmod.CustomOperator, opmod.UFuncOperator))
+    # check if opmod member should be wrapped as OperatorBuilder
+    is_exported_type = lambda cls : (
+        inspect.isclass(cls) and issubclass(cls, opmod.Operator) and
+        not inspect.isabstract(cls) and
+        not cls in excluded_types)
+    # create OperatorBuilder objects
+    for nm, opclass in inspect.getmembers(opmod, is_exported_type):
         op = opclass()
         _builders[op.name] = OperatorBuilder(op.name, op)
     return

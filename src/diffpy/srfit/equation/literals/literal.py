@@ -39,10 +39,11 @@ class Literal(Observable,LiteralABC):
     name = None
     _value = None
 
-    def __init__(self, name = None):
+    def __init__(self, name=None):
         """Initialization."""
         Observable.__init__(self)
-        self.name = name
+        if name is not None:
+            self.name = name
         return
 
     def getValue(self):

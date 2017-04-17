@@ -28,8 +28,7 @@ but they all identify themselves with the Visitor.onOperator method.
 __all__ = ["Operator", "AdditionOperator", "SubtractionOperator",
            "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
            "RemainderOperator", "NegationOperator", "ConvolutionOperator",
-           "SumOperator", "UFuncOperator", "ListOperator", "SetOperator",
-           "ArrayOperator", "PolyvalOperator"]
+           "SumOperator", "UFuncOperator", "ArrayOperator", "PolyvalOperator"]
 
 import numpy
 
@@ -38,41 +37,60 @@ from diffpy.srfit.equation.literals.literal import Literal
 
 
 class Operator(Literal, OperatorABC):
-    """Class for holding a general operator.
+    """Abstract class for specifying a general operator.
 
-    This holds a general operator and records its function, arguments, name and
-    symbol.  The visitors should be able to process any Operator with this
-    information alone.
+    This class provides several methods that are common to a derived
+    classes for concrete concrete operations.
+
+    Class Attributes
+    ----------------
+    nin : int, abstract
+        Number of input arguments for the operator.  Any number of
+        arguments is allowed when -1.  This attribute must be defined
+        in a derived class.
+    nout : int, abstract
+        Number of outputs returned by the `operation`.  This attribute
+        must be defined in a derived class.
+    operation : callable, abstract
+        Function that performs the operation, e.g., `numpy.add`.
+        This must be defined in a derived class.
+    symbol : str, abstract
+        The symbolic representation for the operator such as
+        "+" or "sin".  This attribute must be defined in a derived
+        class.
 
     Attributes
-    args    --  List of Literal arguments, set with 'addLiteral'
-    name    --  A name for this operator. e.g. "add" or "sin"
-    nin     --  Number of inputs (<1 means this is variable)
-    nout    --  Number of outputs
-    operation   --  Function that performs the operation. e.g. numpy.add.
-    symbol  --  The symbolic representation. e.g. "+" or "sin".
-    _value  --  The value of the Operator.
-    value   --  Property for 'getValue'.
-
+    ----------
+    args : list
+        The list of `Literal` arguments.  Read-only, use the
+        `addLiteral` method to change its content.
     """
 
+    # Private Attributes
+    # ------------------
+    # _value : float, numpy.ndarray or None
+    #     The last value of the operator or None.
+
+
+    # We must declare the abstract `args` here.
     args = None
-    nin = None
-    nout = None
-    operation = None
-    symbol = None
+    # default for the value
     _value = None
 
-    def __init__(self, name = None, symbol = None, operation = None, nin = 2,
-            nout = 1):
-        """Initialization."""
+
+    def __init__(self, name=None):
+        """Initialize the operator object with the specified name.
+
+        Parameters
+        ----------
+        name : str, optional
+            Name for the operator object.  When not specified,
+            use the class attribute `name`.
+        """
         Literal.__init__(self, name)
-        self.symbol = symbol
-        self.nin = nin
-        self.nout = nout
         self.args = []
-        self.operation = operation
         return
+
 
     def identify(self, visitor):
         """Identify self to a visitor."""
@@ -114,86 +132,144 @@ class Operator(Literal, OperatorABC):
                 self._loopCheck(l)
         return
 
+
+class UnaryOperator(Operator):
+    """
+    Abstract class for an unary operator with one input and one result.
+
+    This base class defines the `nin` and `nout` attributes.  The derived
+    concrete operator must provide the remaining abstract attributes
+    of the `Operator` class.
+    """
+
+    nin = 1
+    nout = 1
+    pass
+
+
+class BinaryOperator(Operator):
+    """
+    Abstract class for a binary operator with two inputs and one result.
+
+    This base class defines the `nin` and `nout` attributes.  The derived
+    concrete operator must define the remaining abstract attributes
+    of the `Operator` class.
+    """
+
+    nin = 2
+    nout = 1
+    pass
+
+
+class CustomOperator(Operator):
+    """
+    Concrete class for a user-defined Operator.
+
+    Use the `makeOperator` factory function to create an instance.
+    """
+
+    # declare all abstract attributes from the Operator base.
+    nin = None
+    nout = None
+    operation = None
+    symbol = None
+    pass
+
+
+def makeOperator(name, symbol, operation, nin, nout):
+    """Return a new custom operator object.
+
+    Parameters
+    ----------
+    name : str
+        Name of the custom operator object.
+    symbol : str
+        The symbolic representation for the operator such as
+        "+" or "sin".
+    operation : callable
+        Function that performs the operation, e.g., `numpy.add`.
+    nin : int
+        Number of input arguments for the operator.  Any number of
+        arguments is allowed when -1.
+    nout : in
+        Number of outputs returned by the `operation`.
+
+    Returns
+    -------
+    CustomOperator
+        The new custom operator object.
+    """
+    op = CustomOperator(name=name)
+    op.symbol = symbol
+    op.operation = operation
+    op.nin = nin
+    op.nout = nout
+    return op
+
 # Some specified operators
 
 
-class AdditionOperator(Operator):
+class AdditionOperator(BinaryOperator):
     """Addition operator."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "add"
-        self.symbol = "+"
-        self.operation = numpy.add
-        return
+    name = "add"
+    symbol = "+"
+    operation = staticmethod(numpy.add)
+    pass
 
-class SubtractionOperator(Operator):
+
+class SubtractionOperator(BinaryOperator):
     """Subtraction operator."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "subtract"
-        self.symbol = "-"
-        self.operation = numpy.subtract
-        return
+    name = "subtract"
+    symbol = "-"
+    operation = staticmethod(numpy.subtract)
+    pass
 
-class MultiplicationOperator(Operator):
+
+class MultiplicationOperator(BinaryOperator):
     """Multiplication operator."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "multiply"
-        self.symbol = "*"
-        self.operation = numpy.multiply
-        return
+    name = "multiply"
+    symbol = "*"
+    operation = staticmethod(numpy.multiply)
+    pass
 
-class DivisionOperator(Operator):
+
+class DivisionOperator(BinaryOperator):
     """Division operator."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "divide"
-        self.symbol = "/"
-        self.operation = numpy.divide
-        return
+    name = "divide"
+    symbol = "/"
+    operation = staticmethod(numpy.divide)
+    pass
 
-class ExponentiationOperator(Operator):
+
+class ExponentiationOperator(BinaryOperator):
     """Exponentiation operator."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "power"
-        self.symbol = "**"
-        self.operation = numpy.power
-        return
+    name = "power"
+    symbol = "**"
+    operation = staticmethod(numpy.power)
+    pass
 
-class RemainderOperator(Operator):
+
+class RemainderOperator(BinaryOperator):
     """Remainder operator."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "mod"
-        self.symbol = "%"
-        self.operation = numpy.mod
-        return
+    name = "mod"
+    symbol = "%"
+    operation = staticmethod(numpy.mod)
+    pass
 
-class NegationOperator(Operator):
+
+class NegationOperator(UnaryOperator):
     """Negation operator."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "negative"
-        self.symbol = "-"
-        self.nin = 1
-        self.operation = numpy.negative
-        return
+    name = "negative"
+    symbol = "-"
+    operation = staticmethod(numpy.negative)
+    pass
 
 
 def _conv(v1, v2):
@@ -219,7 +295,8 @@ def _conv(v1, v2):
 
     return c
 
-class ConvolutionOperator(Operator):
+
+class ConvolutionOperator(BinaryOperator):
     """Convolve two signals.
 
     This convolves two signals such that centroid of the first array is not
@@ -229,108 +306,68 @@ class ConvolutionOperator(Operator):
 
     Note that this is only possible when the signals are computed over the same
     range.
-
     """
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "convolve"
-        self.symbol = "convolve"
-        self.operation = _conv
-        return
+    name = "convolve"
+    symbol = "convolve"
+    operation = staticmethod(_conv)
+    pass
 
-class SumOperator(Operator):
+
+class SumOperator(UnaryOperator):
     """numpy.sum operator."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "sum"
-        self.symbol = "sum"
-        self.nin = 1
-        self.nout = 1
-        self.operation = numpy.sum
-        return
+    name = "sum"
+    symbol = "sum"
+    operation = staticmethod(numpy.sum)
+
 
 class UFuncOperator(Operator):
     """A operator wrapper around a numpy ufunc.
 
     The name and symbol attributes are set equal to the ufunc.__name__
     attribute. nin and nout are also taken from the ufunc.
-
     """
+
+    symbol = None
+    nin = None
+    nout = None
+    operation = None
 
     def __init__(self, op):
         """Initialization.
 
         Arguments
-        op  --  A numpy ufunc
 
+        op  --  A numpy ufunc
         """
-        Operator.__init__(self)
-        self.name = op.__name__
+        Operator.__init__(self, name=op.__name__)
         self.symbol = op.__name__
         self.nin = op.nin
         self.nout = op.nout
         self.operation = op
         return
 
-def _makeList(*args):
-    return args
-
-class ListOperator(Operator):
-    """Operator that will take parameters and turn them into a list."""
-
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "list"
-        self.symbol = "list"
-        self.nin = -1
-        self.operation = _makeList
-        return
-
-def _makeSet(*args):
-    return set(args)
-
-class SetOperator(Operator):
-    """Operator that will take parameters and turn them into a set."""
-
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "set"
-        self.symbol = "set"
-        self.nin = -1
-        self.operation = _makeSet
-        return
-
-def _makeArray(*args):
-    return numpy.array(args)
 
 class ArrayOperator(Operator):
     """Operator that will take parameters and turn them into an array."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "array"
-        self.symbol = "array"
-        self.nin = -1
-        self.operation = _makeArray
-        return
+    name = "array"
+    symbol = "array"
+    nin = -1
+    nout = 1
 
-class PolyvalOperator(Operator):
+    @staticmethod
+    def operation(*args):
+        return numpy.array(args)
+
+
+class PolyvalOperator(BinaryOperator):
     """Operator for numpy polyval."""
 
-    def __init__(self):
-        """Initialization."""
-        Operator.__init__(self)
-        self.name = "polyval"
-        self.symbol = "polyval"
-        self.nin = 2
-        self.operation = numpy.polyval
-        return
+    name = "polyval"
+    symbol = "polyval"
+    operation = staticmethod(numpy.polyval)
+    pass
 
 # End of file

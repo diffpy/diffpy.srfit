@@ -13,7 +13,7 @@
 #
 ##############################################################################
 
-"""Tests for refinableobj module."""
+"""Tests for the diffpy.srfit.equation.literals module."""
 
 import unittest
 
@@ -22,6 +22,7 @@ import numpy
 import diffpy.srfit.equation.literals as literals
 import diffpy.srfit.equation.literals.abcs as abcs
 
+# ----------------------------------------------------------------------------
 
 class TestArgument(unittest.TestCase):
 
@@ -33,12 +34,14 @@ class TestArgument(unittest.TestCase):
         self.assertTrue(None is a.name)
         return
 
+
     def testIdentity(self):
         """Make sure an Argument is an Argument."""
         a = literals.Argument()
         self.assertTrue(issubclass(literals.Argument, abcs.ArgumentABC))
         self.assertTrue(isinstance(a, abcs.ArgumentABC))
         return
+
 
     def testValue(self):
         """Test value setting."""
@@ -56,12 +59,19 @@ class TestArgument(unittest.TestCase):
         self.assertAlmostEqual(3.14, a.getValue())
         return
 
-class TestOperator(unittest.TestCase):
+# ----------------------------------------------------------------------------
+
+class TestCustomOperator(unittest.TestCase):
+
+    def setUp(self):
+        self.op = literals.makeOperator(
+            name="add", symbol="+", operation=numpy.add, nin=2, nout=1)
+        return
+
 
     def testInit(self):
         """Test that everthing initializes as expected."""
-        op = literals.Operator(symbol = "+", operation = numpy.add, nin = 2)
-
+        op = self.op
         self.assertEqual("+", op.symbol)
         self.assertEqual(numpy.add, op.operation)
         self.assertEqual(2, op.nin)
@@ -70,17 +80,19 @@ class TestOperator(unittest.TestCase):
         self.assertEqual([], op.args)
         return
 
+
     def testIdentity(self):
         """Make sure an Argument is an Argument."""
-        op = literals.Operator(symbol = "+", operation = numpy.add, nin = 2)
+        op = self.op
         self.assertTrue(issubclass(literals.Operator, abcs.OperatorABC))
         self.assertTrue(isinstance(op, abcs.OperatorABC))
         return
 
+
     def testValue(self):
         """Test value."""
         # Test addition and operations
-        op = literals.Operator(symbol = "+", operation = numpy.add, nin = 2)
+        op = self.op
         a = literals.Argument(value = 0)
         b = literals.Argument(value = 0)
 
@@ -101,10 +113,10 @@ class TestOperator(unittest.TestCase):
 
         return
 
+
     def testAddLiteral(self):
         """Test adding a literal to an operator node."""
-        op = literals.Operator(name = "add", symbol = "+", operation =
-                numpy.add, nin = 2, nout = 1)
+        op = self.op
 
         self.assertRaises(ValueError, op.getValue)
         op._value = 1
@@ -128,18 +140,20 @@ class TestOperator(unittest.TestCase):
         # Test for self-references
 
         # Try to add self
-        op = literals.Operator(name = "add", symbol = "+", operation =
-                numpy.add, nin = 2, nout = 1)
-        op.addLiteral(a)
-        self.assertRaises(ValueError, op.addLiteral, op)
+        op1 = literals.makeOperator(name="add", symbol="+",
+                                    operation=numpy.add, nin=2, nout=1)
+        op1.addLiteral(a)
+        self.assertRaises(ValueError, op1.addLiteral, op1)
 
         # Try to add argument that contains self
-        op2 = literals.Operator(name = "sub", symbol = "-", operation =
-                numpy.subtract, nin = 2, nout = 1)
-        op2.addLiteral(op)
-        self.assertRaises(ValueError, op.addLiteral, op2)
+        op2 = literals.makeOperator(
+            name="sub", symbol="-", operation=numpy.subtract, nin=2, nout=1)
+        op2.addLiteral(op1)
+        self.assertRaises(ValueError, op1.addLiteral, op2)
 
         return
+
+# ----------------------------------------------------------------------------
 
 class TestConvolutionOperator(unittest.TestCase):
 
@@ -175,6 +189,31 @@ class TestConvolutionOperator(unittest.TestCase):
         self.assertAlmostEqual(0, sum((g3-g3c)**2))
         return
 
+# ----------------------------------------------------------------------------
+
+class TestArrayOperator(unittest.TestCase):
+
+    def test_value(self):
+        """Check ArrayOperator.value.
+        """
+        x = literals.Argument('x', 1.0)
+        y = literals.Argument('y', 2.0)
+        z = literals.Argument('z', 3.0)
+        # check empty array
+        op = literals.ArrayOperator()
+        self.assertEqual(0, len(op.value))
+        self.assertTrue(isinstance(op.value, numpy.ndarray))
+        # check behavior with 2 arguments
+        op.addLiteral(x)
+        self.assertTrue(numpy.array_equal([1], op.value))
+        op.addLiteral(y)
+        op.addLiteral(z)
+        self.assertTrue(numpy.array_equal([1, 2, 3], op.value))
+        z.value = 7
+        self.assertTrue(numpy.array_equal([1, 2, 7], op.value))
+        return
+
+# ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     unittest.main()

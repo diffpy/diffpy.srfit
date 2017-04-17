@@ -142,6 +142,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertTrue(2 in values)
         return
 
+
     def testResidual(self):
         """Test the residual and everything that can change it."""
 

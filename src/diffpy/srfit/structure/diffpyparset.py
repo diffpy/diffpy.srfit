@@ -137,10 +137,10 @@ class DiffpyAtomParSet(ParameterSet):
         self.addParameter(B23)
         self.addParameter(B32)
         self.addParameter(ParameterAdapter("Biso", a, attr = "Bisoequiv"))
-
-        # Other setup
-        self.__repr__ = a.__repr__
         return
+
+    def __repr__(self):
+        return repr(self.atom)
 
     def _getElem(self):
         return self.atom.element
@@ -198,12 +198,13 @@ class DiffpyLatticeParSet(ParameterSet):
             _latsetter("beta")))
         self.addParameter(ParameterAdapter("gamma", l, _latgetter("gamma"),
             _latsetter("gamma")))
-
-        # Other setup
-        self.__repr__ = l.__repr__
         return
 
+    def __repr__(self):
+        return repr(self.lattice)
+
 # End class DiffpyLatticeParSet
+
 
 class DiffpyStructureParSet(SrRealParSet):
     """A wrapper for diffpy.structure.Structure.
@@ -287,6 +288,5 @@ class DiffpyStructureParSet(SrRealParSet):
         from diffpy.srreal.structureadapter import nometa
         stru = SrRealParSet._getSrRealStructure(self)
         return nometa(stru)
-
 
 # End class DiffpyStructureParSet

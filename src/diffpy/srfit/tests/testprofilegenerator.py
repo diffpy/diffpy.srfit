@@ -13,8 +13,9 @@
 #
 ##############################################################################
 
-"""Tests for refinableobj module."""
+"""Tests for profilegenerator module."""
 
+import pickle
 import unittest
 
 from numpy import arange, array_equal
@@ -33,6 +34,7 @@ class TestProfileGenerator(unittest.TestCase):
         self.gen.setProfile(self.profile)
         return
 
+
     def testOperation(self):
         """Test the operation method."""
         gen = self.gen
@@ -46,6 +48,7 @@ class TestProfileGenerator(unittest.TestCase):
         val = gen(2 * prof.x)
         self.assertTrue(array_equal(2 * prof.x, val))
         return
+
 
     def testUpdate(self):
         """Update and change the profile to make sure generator is flushed."""
@@ -74,6 +77,19 @@ class TestProfileGenerator(unittest.TestCase):
         self.assertTrue(array_equal(x, gen.value))
         return
 
+
+    def test_pickling(self):
+        """Test pickling of ProfileGenerator.
+        """
+        data = pickle.dumps(self.gen)
+        gen2 = pickle.loads(data)
+        self.assertEqual('test', gen2.name)
+        x = self.profile.x
+        self.assertTrue(array_equal(x, gen2.operation()))
+        self.assertTrue(array_equal(3 * x, gen2(3 * x)))
+        return
+
+# End of class TestProfileGenerator
 
 if __name__ == "__main__":
     unittest.main()

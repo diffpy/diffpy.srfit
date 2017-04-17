@@ -22,7 +22,8 @@ import unittest
 import pickle
 
 from diffpy.srfit.fitbase import FitContribution
-from diffpy.srfit.util.weakrefcallable import weak_ref
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.util.weakrefcallable import weak_ref, WeakBoundMethod
 
 # ----------------------------------------------------------------------------
 
@@ -30,26 +31,27 @@ class TestWeakBoundMethod(unittest.TestCase):
 
     def setUp(self):
         self.f = FitContribution('f')
-        self.holder = set()
-        self.w = weak_ref(self.f._flush, holder=self.holder)
-        self.holder.add(self.w)
+        self.f.setEquation('7')
+        self.w = weak_ref(self.f._eq._flush, fallback=_fallback_example)
         return
 
 
     def tearDown(self):
-        self.assertTrue(self.w in self.holder)
         self.f = None
-        self.assertTrue(None is self.w('any', 'argument'))
-        self.assertFalse(self.w in self.holder)
+        self.assertTrue(None is self.w._wref())
+        obj, args, kw = self.w('any', 'argument', foo=37)
+        self.assertTrue(obj is self.w)
+        self.assertEqual(('any', 'argument'), args)
+        self.assertEqual({'foo' : 37}, kw)
         return
 
 
     def test___init__(self):
         """check WeakBoundMethod.__init__()
         """
-        # make sure there is no 'weak object has gone away' warning.
-        wf = weak_ref(self.f._flush, holder=self.holder)
-        del wf
+        self.assertTrue(self.w.fallback is _fallback_example)
+        wf = weak_ref(self.f._flush)
+        self.assertTrue(None is wf.fallback)
         return
 
 
@@ -57,18 +59,17 @@ class TestWeakBoundMethod(unittest.TestCase):
         """check WeakBoundMethod.__call__()
         """
         f = self.f
-        f.newParameter('x', 5)
-        f.setEquation('3 * x')
-        wx = weak_ref(f._eq._flush, holder=self.holder)
-        self.holder.add(wx)
-        self.assertEqual(15, f.evaluate())
-        self.assertEqual(15, f._eq._value)
-        wx(())
+        self.assertEqual(7, f.evaluate())
+        self.assertEqual(7, f._eq._value)
+        # verify f has the same effect as f._eq._flush
+        self.w(())
         self.assertTrue(None is f._eq._value)
-        self.assertEqual(15, f.evaluate())
-        self.assertTrue(wx in self.holder)
-        f.setEquation('2 * t')
-        self.assertFalse(wx in self.holder)
+        # check WeakBoundMethod behavior with no fallback
+        x = Parameter('x', value=3)
+        wgetx = weak_ref(x.getValue)
+        self.assertEqual(3, wgetx())
+        del x
+        self.assertRaises(ReferenceError, wgetx)
         return
 
 
@@ -107,7 +108,51 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertEqual(w1, w1cc)
         return
 
+
+    def test_pickling(self):
+        """Verify unpickling works when it involves __hash__ call.
+        """
+        holder = set([self.w])
+        objs = [holder, self.f._eq, self.w]
+        data = pickle.dumps(objs)
+        objs2 = pickle.loads(data)
+        h2, feq2, w2 = objs2
+        self.assertTrue(w2 in h2)
+        self.assertTrue(feq2 is w2._wref())
+        return
+
+
+    def test_observable_deregistration(self):
+        """check if Observable drops dead Observer.
+        """
+        f = self.f
+        x = f.newParameter('x', 5)
+        f.setEquation('3 * x')
+        self.assertEqual(15, f.evaluate())
+        self.assertEqual(15, f._eq._value)
+        # get one of the observer callables that are associated with f
+        xof = next(iter(x._observers))
+        self.assertTrue(isinstance(xof, WeakBoundMethod))
+        # changing value of x should reset f._eq
+        x.setValue(x.value + 1)
+        self.assertTrue(None is f._eq._value)
+        self.assertEqual(18, f.evaluate())
+        # deallocate f now
+        self.f = f = None
+        self.assertTrue(xof in x._observers)
+        # since f does not exist anymore, the next notification call
+        # should drop the associated observer.
+        x.setValue(x.value + 1)
+        self.assertEqual(0, len(x._observers))
+        return
+
 # End of class TestWeakBoundMethod
+
+# Local Routines -------------------------------------------------------------
+
+def _fallback_example(wbm, *args, **kwargs):
+    return (wbm, args, kwargs)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -20,14 +20,14 @@ import unittest
 import numpy
 
 from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import has_pyobjcryst, has_diffpy_structure
-from diffpy.srfit.tests.utils import TestCaseStructure, TestCaseObjCryst
+from diffpy.srfit.tests.utils import has_pyobjcryst, _msg_nopyobjcryst
+from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
 
 # ----------------------------------------------------------------------------
 
 class TestSGConstraints(unittest.TestCase):
 
-    @unittest.skipIf(not has_pyobjcryst, "No module named 'pyobjcryst'")
+    @unittest.skipUnless(has_pyobjcryst, _msg_nopyobjcryst)
     def test_ObjCryst_constrainSpaceGroup(self):
         """Make sure that all Parameters are constrained properly.
 
@@ -102,7 +102,7 @@ class TestSGConstraints(unittest.TestCase):
         return
 
 
-    @unittest.skipUnless(has_diffpy_structure, "No module named 'diffpy.structure'")
+    @unittest.skipUnless(has_structure, _msg_nostructure)
     def test_DiffPy_constrainAsSpaceGroup(self):
         """Test the constrainAsSpaceGroup function."""
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
@@ -161,7 +161,7 @@ class TestSGConstraints(unittest.TestCase):
         return
 
 
-    @unittest.skipIf(not has_diffpy_structure, "No module named 'diffpy.structure'")
+    @unittest.skipUnless(has_structure, _msg_nostructure)
     def test_ConstrainAsSpaceGroup_args(self):
         """Test the arguments processing of constrainAsSpaceGroup function.
         """

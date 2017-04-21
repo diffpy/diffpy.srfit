@@ -20,18 +20,17 @@ import unittest
 import numpy
 
 from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import testoptional
-from diffpy.srfit.tests.utils import TestCasePDF, TestCaseStructure
+from diffpy.srfit.tests.utils import has_srreal, _msg_nosrreal
+from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from diffpy.srfit.pdf import PDFGenerator, PDFParser
 
-# Global variables to be assigned in setUp
-PDFGenerator = PDFParser = None
+# ----------------------------------------------------------------------------
 
-
-class TestPDFParset(testoptional(TestCasePDF)):
+class TestPDFParset(unittest.TestCase):
 
     def setUp(self):
-        global PDFParser
-        from diffpy.srfit.pdf import PDFParser
+        return
+
 
     def testParser1(self):
         data = datafile("ni-q27r100-neutron.gr")
@@ -67,6 +66,7 @@ class TestPDFParset(testoptional(TestCasePDF)):
         self.assertAlmostEqual(0, res)
 
         return
+
 
     def testParser2(self):
         data = datafile("si-q27r60-xray.gr")
@@ -108,11 +108,15 @@ class TestPDFParset(testoptional(TestCasePDF)):
         self.assertTrue(dx is None)
         return
 
-class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
+# End of class TestPDFParset
+
+# ----------------------------------------------------------------------------
+
+@unittest.skipUnless(has_srreal, _msg_nosrreal)
+@unittest.skipUnless(has_structure, _msg_nostructure)
+class TestPDFGenerator(unittest.TestCase):
 
     def setUp(self):
-        global PDFGenerator
-        from diffpy.srfit.pdf import PDFGenerator
         self.gen = PDFGenerator()
         return
 
@@ -177,6 +181,7 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
         self.assertEqual(0.93, gen._calc.qmin)
         return
 
+# End of class TestPDFGenerator
 
 if __name__ == "__main__":
     unittest.main()

@@ -20,18 +20,21 @@ import pickle
 
 import numpy
 
-from diffpy.srfit.tests.utils import testoptional, TestCaseStructure
+from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
 
 # Global variables to be assigned in setUp
 Atom = Lattice = Structure = DiffpyStructureParSet = None
 
+# ----------------------------------------------------------------------------
 
-class TestParameterAdapter(testoptional(TestCaseStructure)):
+@unittest.skipUnless(has_structure, _msg_nostructure)
+class TestParameterAdapter(unittest.TestCase):
 
     def setUp(self):
         global Atom, Lattice, Structure, DiffpyStructureParSet
         from diffpy.structure import Atom, Lattice, Structure
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+        return
 
 
     def testDiffpyStructureParSet(self):
@@ -75,6 +78,7 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
             self.assertEqual(a1.xyz[1], s.Cu0.y.getValue())
             self.assertEqual(a1.xyz[2], s.Cu0.z.getValue())
             return
+
 
         def _testLattice():
 
@@ -136,7 +140,6 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
         return
 
 # End of class TestParameterAdapter
-
 
 if __name__ == "__main__":
     unittest.main()

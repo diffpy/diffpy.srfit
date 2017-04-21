@@ -19,18 +19,22 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import testoptional, TestCaseSaS, TestCasePDF
+from diffpy.srfit.tests.utils import has_sas, _msg_nosas
 from diffpy.srfit.sas.sasimport import sasimport
 
 # Global variables to be assigned in setUp
 cf = None
 
+# ----------------------------------------------------------------------------
 
-class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
+@unittest.skipUnless(has_sas, _msg_nosas)
+class TestSASCF(unittest.TestCase):
 
     def setUp(self):
         global cf
         import diffpy.srfit.pdf.characteristicfunctions as cf
+        return
+
 
     def testSphere(self):
         radius = 25
@@ -49,6 +53,7 @@ class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
         res /= numpy.dot(fr2, fr2)
         self.assertAlmostEqual(0, res, 4)
         return
+
 
     def testSpheroid(self):
         prad = 20.9
@@ -70,6 +75,7 @@ class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
         self.assertAlmostEqual(0, res, 4)
         return
 
+
     def testShell(self):
         radius = 19.2
         thickness = 7.8
@@ -89,6 +95,7 @@ class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
         res /= numpy.dot(fr2, fr2)
         self.assertAlmostEqual(0, res, 4)
         return
+
 
     def testCylinder(self):
         """Make sure cylinder works over different r-ranges"""
@@ -143,7 +150,7 @@ class TestSASCF(testoptional(TestCaseSaS, TestCasePDF)):
         self.assertAlmostEqual(0, res34, 4)
         return
 
-
+# End of class TestSASCF
 
 if __name__ == "__main__":
     unittest.main()

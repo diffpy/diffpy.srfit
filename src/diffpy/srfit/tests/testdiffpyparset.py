@@ -111,7 +111,7 @@ class TestParameterAdapter(unittest.TestCase):
         _testAtoms()
         _testLattice()
         # Make sure the distance changed
-        self.assertNotEquals(d, dsstru.lattice.dist(a1.xyz, a2.xyz))
+        self.assertNotEqual(d, dsstru.lattice.dist(a1.xyz, a2.xyz))
         return
 
 

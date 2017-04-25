@@ -117,8 +117,8 @@ class TestSGConstraints(unittest.TestCase):
 
         # Make sure that the new parameters were created
         for par in sgpars:
-            self.assertNotEquals(None, par)
-            self.assertNotEquals(None, par.getValue() )
+            self.assertNotEqual(None, par)
+            self.assertNotEqual(None, par.getValue() )
 
         # Test the unconstrained atoms
         for scatterer in parset.getScatterers()[1::2]:

@@ -49,8 +49,8 @@ test:
   requires:
     # Put any additional test requirements here.  For example
     - diffpy.structure
+    - pyobjcryst
     # FIXME - uncomment as these packages become available for Python 3.
-    # - pyobjcryst
     # - diffpy.srreal
     # - srfit-sasview
 

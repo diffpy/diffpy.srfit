@@ -16,10 +16,12 @@
 
 """diffpy - tools for structure analysis by diffraction.
 
-This is the namespace package shared by all DiffPy software.
+Blank namespace package.
 """
 
-__import__('pkg_resources').declare_namespace(__name__)
+
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
 
 
 # End of file

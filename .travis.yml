@@ -60,7 +60,8 @@ before_install:
   - $NOMC || conda update --yes conda
   - $NOMC || conda install --yes conda-build jinja2
   - $NOMC || conda create --name=testenv --yes python=${MYPYTHON_VERSION} coverage
-  # FIXME - change to the "diffpy" channel for public release.
+  - $NOMC || conda config --add channels diffpy
+  # FIXME - keep just the "diffpy" channel for public release.
   - $NOMC || conda config --add channels diffpy/channel/dev
 
   - $NOBREW || test "${TRAVIS_OS_NAME}" = "osx" || exit $?

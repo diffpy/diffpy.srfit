@@ -106,12 +106,8 @@ def makeRecipe(molecule, datname):
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
-    r = recipe.bucky.profile.x
-
     # Plot this.
+    r = recipe.bucky.profile.x
     g = recipe.bucky.profile.y
     gcalc = recipe.bucky.profile.ycalc
     diffzero =  -0.8 * max(g) * numpy.ones_like(g)

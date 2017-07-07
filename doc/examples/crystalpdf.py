@@ -127,11 +127,7 @@ def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
     # All this should be pretty familiar by now.
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
     r = recipe.nickel.profile.x
-
     g = recipe.nickel.profile.y
     gcalc = recipe.nickel.profile.ycalc
     diffzero = -0.8 * max(g) * numpy.ones_like(g)

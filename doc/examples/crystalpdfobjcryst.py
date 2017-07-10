@@ -20,7 +20,7 @@ pyobjcryst crystal object. In this example we use internal constraints provided
 by the ObjCrystCrystalParSet structure adapter.
 """
 
-from pyobjcryst.crystal import CreateCrystalFromCIF
+from pyobjcryst import loadCrystal
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
@@ -53,7 +53,7 @@ def makeRecipe(ciffile, datname):
     # create a Crystal object. That object is passed to the PDFGenerator as in
     # the previous example.
     generator = PDFGenerator("G")
-    stru = CreateCrystalFromCIF(open(ciffile))
+    stru = loadCrystal(ciffile)
     generator.setStructure(stru)
     generator.setQmax(40.0)
 

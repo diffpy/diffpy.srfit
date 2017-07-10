@@ -23,7 +23,7 @@ find the structures and phase fractions.
 
 import numpy
 
-from pyobjcryst.crystal import CreateCrystalFromCIF
+from pyobjcryst import loadCrystal
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
@@ -59,11 +59,11 @@ def makeRecipe(niciffile, siciffile, datname):
     # The generator for the nickel phase. We call it "G_ni" and will use this
     # name later when we set the fitting equation in the FitContribution.
     generator_ni = PDFGenerator("G_ni")
-    stru = CreateCrystalFromCIF(open(niciffile))
+    stru = loadCrystal(niciffile)
     generator_ni.setStructure(stru)
     # The generator for the silicon phase. We call it "G_si".
     generator_si = PDFGenerator("G_si")
-    stru = CreateCrystalFromCIF(open(siciffile))
+    stru = loadCrystal(siciffile)
     generator_si.setStructure(stru)
 
     ## The FitContribution

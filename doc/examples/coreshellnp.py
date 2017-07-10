@@ -24,7 +24,7 @@ appropriate characteristic function.
 import numpy
 from scipy.optimize import leastsq
 
-from pyobjcryst.crystal import CreateCrystalFromCIF
+from pyobjcryst import loadCrystal
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
@@ -159,8 +159,8 @@ def main():
     data = "data/CdS_ZnS_nano.gr"
 
     # Make the recipe
-    stru1 = CreateCrystalFromCIF(open(cdsciffile))
-    stru2 = CreateCrystalFromCIF(open(znsciffile))
+    stru1 = loadCrystal(cdsciffile)
+    stru2 = loadCrystal(znsciffile)
     recipe = makeRecipe(stru1, stru2, data)
     from diffpy.srfit.fitbase.fithook import PlotFitHook
     recipe.pushFitHook(PlotFitHook())

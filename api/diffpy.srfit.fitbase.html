@@ -1,23 +1,21 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>diffpy.srfit.fitbase package &#8212; SrFit 1.2 documentation</title>
-    
+    <title>diffpy.srfit.fitbase package &#8212; SrFit 1.3 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2',
+        VERSION:     '1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,12 +24,10 @@
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="SrFit 1.2 documentation" href="../index.html" />
-    <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" />
     <link rel="prev" title="diffpy.srfit.equation.visitors package" href="diffpy.srfit.equation.visitors.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -47,7 +43,7 @@
         <li class="right" >
           <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>  
@@ -68,10 +64,10 @@
 <p>Calculator is a functor class for producing a signal from embedded Parameters.
 Calculators can store Parameters and ParameterSets, Constraints and Restraints.
 Also, the __call__ function can be overloaded to accept external arguments.
-Calculators are used to wrap registered functions so that the function&#8217;s
+Calculators are used to wrap registered functions so that the function’s
 Parameters are contained in an object specific to the function.  A custom
 Calculator can be added to another RecipeOrganizer with the
-&#8216;registerCalculator&#8217; method.</p>
+‘registerCalculator’ method.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.calculator.Calculator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.calculator.</code><code class="descname">Calculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator" title="Permalink to this definition">¶</a></dt>
@@ -80,35 +76,50 @@ Calculator can be added to another RecipeOrganizer with the
 <p>A Calculator organizes Parameters and has a __call__ method that can
 calculate a generic signal.</p>
 <p>Attributes
-name            &#8211;  A name for this organizer.
-meta            &#8211;  A dictionary of metadata needed by the calculator.
-_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+name            –  A name for this organizer.
+meta            –  A dictionary of metadata needed by the calculator.
+_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_parameters     &#8211;  A managed OrderedDict of contained Parameters.
-_parsets        &#8211;  A managed dictionary of ParameterSets.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_parameters     –  A managed OrderedDict of contained Parameters.
+_parsets        –  A managed dictionary of ParameterSets.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
 <dl class="docutils">
-<dt>_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</dt>
+<dt>_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</dt>
 <dd>instance that is used create Equations from string.</dd>
 </dl>
 <p>Operator Attributes
-args    &#8211;  List of Literal arguments
-nin     &#8211;  Number of inputs (&lt;1 means this is variable)
-nout    &#8211;  Number of outputs (1)
-operation   &#8211;  Function that performs the operation, self.__call__
-symbol  &#8211;  Same as name
-_value  &#8211;  The value of the Operator.
-value   &#8211;  Property for &#8216;getValue&#8217;.</p>
+args    –  List of Literal arguments
+nin     –  Number of inputs (&lt;1 means this is variable)
+nout    –  Number of outputs (1)
+operation   –  Function that performs the operation, self.__call__
+symbol  –  Same as name
+_value  –  The value of the Operator.
+value   –  Property for ‘getValue’.</p>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.calculator.Calculator.nin">
+<code class="descname">nin</code><em class="property"> = -1</em><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.nin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.calculator.Calculator.nout">
+<code class="descname">nout</code><em class="property"> = 1</em><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.nout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.calculator.Calculator.operation">
 <code class="descname">operation</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.operation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.calculator.Calculator.symbol">
+<code class="descname">symbol</code><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.symbol" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -125,7 +136,7 @@ values          &#8211;  Variable values (read only). See getValues.</p>
 <p>Configurable class.</p>
 <p>A Configurable has state of which a FitRecipe must be aware.</p>
 <p>Attributes
-_configobjs     &#8211;  Set of Configureables in a hierarcy or instances.</p>
+_configobjs     –  Set of Configureables in a hierarcy or instances.</p>
 <blockquote>
 <div>Messasges get passed up the hierarcy to a FitReciple
 via these objects.</div></blockquote>
@@ -147,8 +158,8 @@ this association.</p>
 <p>Constraints are designed to be stored in only one place. (The holder of the
 constraint owns it).</p>
 <p>Attributes
-par     &#8211;  A Parameter that is the subject of the constraint.
-eq      &#8211;  An equation whose evaluation is used to set the value of the</p>
+par     –  A Parameter that is the subject of the constraint.
+eq      –  An equation whose evaluation is used to set the value of the</p>
 <blockquote>
 <div>constraint.</div></blockquote>
 <dl class="method">
@@ -193,32 +204,32 @@ Profile that holds the signal. ProfileGenerators and Calculators can be
 used as well.  Contraints and Restraints can be created as part of a
 FitContribution.</p>
 <p>Attributes
-name            &#8211;  A name for this FitContribution.
-profile         &#8211;  A Profile that holds the measured (and calculated)</p>
+name            –  A name for this FitContribution.
+profile         –  A Profile that holds the measured (and calculated)</p>
 <blockquote>
 <div>signal.</div></blockquote>
-<p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+<p>_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_generators     &#8211;  A managed dictionary of ProfileGenerators.
-_parameters     &#8211;  A managed OrderedDict of parameters.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_generators     –  A managed dictionary of ProfileGenerators.
+_parameters     –  A managed OrderedDict of parameters.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; method.</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<div>‘restrain’ method.</div></blockquote>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string</div></blockquote>
-<p>_eq             &#8211;  The FitContribution equation that will be optimized.
-_reseq          &#8211;  The residual equation.
-_xname          &#8211;  Name of the x-variable
-_yname          &#8211;  Name of the y-variable
-_dyname         &#8211;  Name of the dy-variable</p>
+<p>_eq             –  The FitContribution equation that will be optimized.
+_reseq          –  The residual equation.
+_xname          –  Name of the x-variable
+_yname          –  Name of the y-variable
+_dyname         –  Name of the dy-variable</p>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution.addProfileGenerator">
 <code class="descname">addProfileGenerator</code><span class="sig-paren">(</span><em>gen</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.addProfileGenerator" title="Permalink to this definition">¶</a></dt>
@@ -230,10 +241,10 @@ FitContributions should not share ProfileGenerator instances. Different
 ProfileGenerators can share Parameters and ParameterSets, however.</p>
 <p>Calling addProfileGenerator sets the profile equation to call the
 calculator and if there is not a profile equation already.</p>
-<p>gen     &#8211;  A ProfileGenerator instance
-name    &#8211;  A name for the calculator. If name is None (default), then</p>
+<p>gen     –  A ProfileGenerator instance
+name    –  A name for the calculator. If name is None (default), then</p>
 <blockquote>
-<div>the ProfileGenerator&#8217;s name attribute will be used.</div></blockquote>
+<div>the ProfileGenerator’s name attribute will be used.</div></blockquote>
 <p>Raises ValueError if the ProfileGenerator has no name.
 Raises ValueError if the ProfileGenerator has the same name as some
 other managed object.</p>
@@ -281,15 +292,15 @@ method.</p>
 <dd><p>Set the profile equation for the FitContribution.</p>
 <p>This sets the equation that will be used when generating the residual
 for this FitContribution.  The equation will be usable within
-setResidualEquation as &#8220;eq&#8221;, and it takes no arguments.</p>
+setResidualEquation as “eq”, and it takes no arguments.</p>
 <dl class="docutils">
-<dt>eqstr   &#8211;  A string representation of the equation. Any Parameter</dt>
+<dt>eqstr   –  A string representation of the equation. Any Parameter</dt>
 <dd>registered by addParameter or setProfile, or function
 registered by setCalculator, registerFunction or
 registerStringFunction can be can be used in the equation
 by name. Other names will be turned into Parameters of this
 FitContribution.</dd>
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are used</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are used</dt>
 <dd>in the eqstr, but not registered (default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already used for a
@@ -301,17 +312,17 @@ variable.</p>
 <code class="descname">setProfile</code><span class="sig-paren">(</span><em>profile</em>, <em>xname=None</em>, <em>yname=None</em>, <em>dyname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign the Profile for this FitContribution.</p>
 <dl class="docutils">
-<dt>profile &#8211;  A Profile that specifies the calculation points and that</dt>
+<dt>profile –  A Profile that specifies the calculation points and that</dt>
 <dd>will store the calculated signal.</dd>
-<dt>xname   &#8211;  The name of the independent variable from the Profile. If</dt>
+<dt>xname   –  The name of the independent variable from the Profile. If</dt>
 <dd>this is None (default), then the name specified by the
 Profile for this parameter will be used.  This variable is
 usable within string equations with the specified name.</dd>
-<dt>yname   &#8211;  The name of the observed Profile.  If this is None</dt>
+<dt>yname   –  The name of the observed Profile.  If this is None</dt>
 <dd>(default), then the name specified by the Profile for this
 parameter will be used.  This variable is usable within
 string equations with the specified name.</dd>
-<dt>dyname  &#8211;  The name of the uncertainty in the observed Profile. If</dt>
+<dt>dyname  –  The name of the uncertainty in the observed Profile. If</dt>
 <dd>this is None (default), then the name specified by the
 Profile for this parameter will be used.  This variable is
 usable within string equations with the specified name.</dd>
@@ -323,12 +334,12 @@ usable within string equations with the specified name.</dd>
 <code class="descname">setResidualEquation</code><span class="sig-paren">(</span><em>eqstr</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the residual equation for the FitContribution.</p>
 <dl class="docutils">
-<dt>eqstr   &#8211;  A string representation of the residual. If eqstr is None</dt>
+<dt>eqstr   –  A string representation of the residual. If eqstr is None</dt>
 <dd>(default), then the previous residual equation will be
 used, or the chi2 residual will be used if that does not
 exist.</dd>
 </dl>
-<p>Two residuals are preset for convenience, &#8220;chiv&#8221; and &#8220;resv&#8221;.
+<p>Two residuals are preset for convenience, “chiv” and “resv”.
 chiv is defined such that dot(chiv, chiv) = chi^2.
 resv is defined such that dot(resv, resv) = Rw^2.
 You can call on these in your residual equation. Note that the quantity
@@ -366,15 +377,15 @@ methods for a description of their purpose.</p>
 <dt id="diffpy.srfit.fitbase.fithook.FitHook.postcall">
 <code class="descname">postcall</code><span class="sig-paren">(</span><em>recipe</em>, <em>chiv</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.postcall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, after the calculation.</p>
-<p>recipe  &#8211;  The FitRecipe instance
-chiv    &#8211;  The residual vector</p>
+<p>recipe  –  The FitRecipe instance
+chiv    –  The residual vector</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fithook.FitHook.precall">
 <code class="descname">precall</code><span class="sig-paren">(</span><em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.precall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, before the calculation.</p>
-<p>recipe  &#8211;  The FitRecipe instance</p>
+<p>recipe  –  The FitRecipe instance</p>
 </dd></dl>
 
 <dl class="method">
@@ -393,7 +404,7 @@ adding a new ParameterSet, constraint or restraint.</p>
 <span id="diffpy-srfit-fitbase-fitrecipe-module"></span><h2>diffpy.srfit.fitbase.fitrecipe module<a class="headerlink" href="#module-diffpy.srfit.fitbase.fitrecipe" title="Permalink to this headline">¶</a></h2>
 <p>FitRecipe class.</p>
 <p>FitRecipes organize FitContributions, variables, Restraints and Constraints to
-create a recipe of the system you wish to optimize. From the client&#8217;s
+create a recipe of the system you wish to optimize. From the client’s
 perspective, the FitRecipe is a residual calculator. The residual method does
 the work of updating variable values, which get propagated to the Parameters of
 the underlying FitContributions via the variables and Constraints.  This class
@@ -401,7 +412,7 @@ needs no special knowledge of the type of FitContribution or data being used.
 Thus, it is suitable for combining residual equations from various types of
 refinements into a single residual.</p>
 <p>Variables added to a FitRecipe can be tagged with string identifiers. Variables
-can be later retrieved or manipulated by tag. The tag name &#8220;__fixed&#8221; is
+can be later retrieved or manipulated by tag. The tag name “__fixed” is
 reserved.</p>
 <p>See the examples in the documentation for how to create an optimization problem
 using FitRecipe.</p>
@@ -411,57 +422,57 @@ using FitRecipe.</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
 <p>FitRecipe class.</p>
 <p>Attributes
-name            &#8211;  A name for this FitRecipe.
-fithooks        &#8211;  List of FitHook instances that can pass information out</p>
+name            –  A name for this FitRecipe.
+fithooks        –  List of FitHook instances that can pass information out</p>
 <blockquote>
 <div>of the system during a refinement. By default, the is
 populated by a PrintFitHook instance.</div></blockquote>
 <dl class="docutils">
-<dt>_constraints    &#8211;  A dictionary of Constraints, indexed by the constrained</dt>
+<dt>_constraints    –  A dictionary of Constraints, indexed by the constrained</dt>
 <dd>Parameter. Constraints can be added using the
-&#8216;constrain&#8217; method.</dd>
-<dt>_oconstraints   &#8211;  An ordered list of the constraints from this and all</dt>
+‘constrain’ method.</dd>
+<dt>_oconstraints   –  An ordered list of the constraints from this and all</dt>
 <dd>sub-components.</dd>
 </dl>
-<p>_calculators    &#8211;  A managed dictionary of Calculators.
-_contributions  &#8211;  A managed OrderedDict of FitContributions.
-_parameters     &#8211;  A managed OrderedDict of parameters (in this case the</p>
+<p>_calculators    –  A managed dictionary of Calculators.
+_contributions  –  A managed OrderedDict of FitContributions.
+_parameters     –  A managed OrderedDict of parameters (in this case the</p>
 <blockquote>
 <div>parameters are varied).</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string</div></blockquote>
-<p>_restraintlist  &#8211;  A list of restraints from this and all sub-components.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<p>_restraintlist  –  A list of restraints from this and all sub-components.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
 <dl class="docutils">
-<dt>_ready          &#8211;  A flag indicating if all attributes are ready for the</dt>
+<dt>_ready          –  A flag indicating if all attributes are ready for the</dt>
 <dd>calculation.</dd>
 </dl>
-<p>_tagmanager     &#8211;  A TagManager instance for managing tags on Parameters.
-_weights        &#8211;  List of weighing factors for each FitContribution. The</p>
+<p>_tagmanager     –  A TagManager instance for managing tags on Parameters.
+_weights        –  List of weighing factors for each FitContribution. The</p>
 <blockquote>
 <div>weights are multiplied by the residual of the
 FitContribution when determining the overall residual.</div></blockquote>
 <dl class="docutils">
-<dt>_fixedtag       &#8211;  &#8220;__fixed&#8221;, used for tagging variables as fixed. Don&#8217;t</dt>
+<dt>_fixedtag       –  “__fixed”, used for tagging variables as fixed. Don’t</dt>
 <dd>use this tag unless you want issues.</dd>
 </dl>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.
-fixednames      &#8211;  Names of the fixed refinable variables (read only).
-fixedvalues     &#8211;  Values of the fixed refinable variables (read only).
-bounds          &#8211;  Bounds on parameters (read only). See getBounds.
-bounds2         &#8211;  Bounds on parameters (read only). See getBounds2.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.
+fixednames      –  Names of the fixed refinable variables (read only).
+fixedvalues     –  Values of the fixed refinable variables (read only).
+bounds          –  Bounds on parameters (read only). See getBounds.
+bounds2         –  Bounds on parameters (read only). See getBounds2.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.addContribution">
 <code class="descname">addContribution</code><span class="sig-paren">(</span><em>con</em>, <em>weight=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addContribution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a FitContribution to the FitRecipe.</p>
-<p>con     &#8211;  The FitContribution to be stored.</p>
+<p>con     –  The FitContribution to be stored.</p>
 <p>Raises ValueError if the FitContribution has no name
 Raises ValueError if the FitContribution has the same name as some
 other managed object.</p>
@@ -471,7 +482,7 @@ other managed object.</p>
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.addParameterSet">
 <code class="descname">addParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ParameterSet to the hierarchy.</p>
-<p>parset  &#8211;  The ParameterSet to be stored.</p>
+<p>parset  –  The ParameterSet to be stored.</p>
 <p>Raises ValueError if the ParameterSet has no name.
 Raises ValueError if the ParameterSet has the same name as some other
 managed object.</p>
@@ -481,21 +492,21 @@ managed object.</p>
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.addVar">
 <code class="descname">addVar</code><span class="sig-paren">(</span><em>par</em>, <em>value=None</em>, <em>name=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.addVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a variable to be refined.</p>
-<p>par     &#8211;  A Parameter that will be varied during a fit.
-value   &#8211;  An initial value for the variable. If this is None</p>
+<p>par     –  A Parameter that will be varied during a fit.
+value   –  An initial value for the variable. If this is None</p>
 <blockquote>
 <div>(default), then the current value of par will be used.</div></blockquote>
 <dl class="docutils">
-<dt>name    &#8211;  A name for this variable. If name is None (default), then</dt>
+<dt>name    –  A name for this variable. If name is None (default), then</dt>
 <dd>the name of the parameter will be used.</dd>
 </dl>
-<p>fixed   &#8211;  Fix the variable so that it does not vary (default False).
-tag     &#8211;  A tag for the variable. This can be used to retrieve, fix</p>
+<p>fixed   –  Fix the variable so that it does not vary (default False).
+tag     –  A tag for the variable. This can be used to retrieve, fix</p>
 <blockquote>
 <div>or free variables by tag (default None). Note that a
-variable is automatically tagged with its name and &#8220;all&#8221;.</div></blockquote>
+variable is automatically tagged with its name and “all”.</div></blockquote>
 <dl class="docutils">
-<dt>tags    &#8211;  A list of tags (default []). Both tag and tags can be</dt>
+<dt>tags    –  A list of tags (default []). Both tag and tags can be</dt>
 <dd>applied.</dd>
 </dl>
 <p>Returns the ParameterProxy (variable) for the passed Parameter.</p>
@@ -521,10 +532,10 @@ Raises ValueError if par is constrained.</p>
 <dd><p>Turn all bounded parameters into restraints.</p>
 <p>The bounds become limits on the restraint.</p>
 <dl class="docutils">
-<dt>sig     &#8211;  The uncertainty on the bounds (scalar or iterable,</dt>
+<dt>sig     –  The uncertainty on the bounds (scalar or iterable,</dt>
 <dd>default 1).</dd>
 </dl>
-<p>scaled  &#8211;  Scale the restraints, see restrain.</p>
+<p>scaled  –  Scale the restraints, see restrain.</p>
 </dd></dl>
 
 <dl class="method">
@@ -541,15 +552,15 @@ Raises ValueError if par is constrained.</p>
 <p>This is overloaded to set the value of con if it represents a variable
 and its current value is None. A constrained variable will be set as
 fixed.</p>
-<p>par     &#8211;  The Parameter to constrain.
-con     &#8211;  A string representation of the constraint equation or a</p>
+<p>par     –  The Parameter to constrain.
+con     –  A string representation of the constraint equation or a</p>
 <blockquote>
 <div>Parameter to constrain to.  A constraint equation must
-consist of numpy operators and &#8220;known&#8221; Parameters.
+consist of numpy operators and “known” Parameters.
 Parameters are known if they are in the ns argument, or if
 they are managed by this object.</div></blockquote>
 <dl class="docutils">
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are used</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are used</dt>
 <dd>in the eqstr, but not part of this object (default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already used for a
@@ -565,7 +576,7 @@ Raises ValueError if par is marked as constant.</p>
 <dd><p>Remove a variable.</p>
 <p>Note that constraints and restraints involving the variable are not
 modified.</p>
-<p>var     &#8211;  A variable of the FitRecipe.</p>
+<p>var     –  A variable of the FitRecipe.</p>
 <p>Raises ValueError if var is not part of the FitRecipe.</p>
 </dd></dl>
 
@@ -574,7 +585,7 @@ modified.</p>
 <code class="descname">fix</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.fix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix a parameter by reference, name or tag.</p>
 <p>A fixed variable is not refined.  Variables are free by default.</p>
-<p>This method accepts string or variable arguments. An argument of &#8220;all&#8221;
+<p>This method accepts string or variable arguments. An argument of “all”
 selects all variables. Keyword arguments must be parameter names,
 followed by a value to assign to the fixed variable.</p>
 <p>Raises ValueError if an unknown Parameter, name or tag is passed, or if
@@ -599,7 +610,7 @@ a tag is passed in a keyword.</p>
 <dd><p>Free a parameter by reference, name or tag.</p>
 <p>A free variable is refined.  Variables are free by default. Constrained
 variables are not free.</p>
-<p>This method accepts string or variable arguments. An argument of &#8220;all&#8221;
+<p>This method accepts string or variable arguments. An argument of “all”
 selects all variables. Keyword arguments must be parameter names,
 followed by a value to assign to the fixed variable.</p>
 <p>Raises ValueError if an unknown Parameter, name or tag is passed, or if
@@ -654,18 +665,18 @@ Parameter.  Orphan variables may cause a fit to fail, depending on the
 optimization routine, and therefore should only be created to be used
 in contraint or restraint equations.</p>
 <dl class="docutils">
-<dt>name    &#8211;  The name of the variable. The variable will be able to be</dt>
+<dt>name    –  The name of the variable. The variable will be able to be</dt>
 <dd>used by this name in restraint and constraint equations.</dd>
-<dt>value   &#8211;  An initial value for the variable. If this is None</dt>
+<dt>value   –  An initial value for the variable. If this is None</dt>
 <dd>(default), then the variable will be given the value of the
 first non-None-valued Parameter constrained to it. If this
-fails, an error will be thrown when &#8216;residual&#8217; is called.</dd>
-<dt>fixed   &#8211;  Fix the variable so that it does not vary (default False).</dt>
+fails, an error will be thrown when ‘residual’ is called.</dd>
+<dt>fixed   –  Fix the variable so that it does not vary (default False).</dt>
 <dd>The variable will still be managed by the FitRecipe.</dd>
-<dt>tag     &#8211;  A tag for the variable. This can be used to fix and free</dt>
+<dt>tag     –  A tag for the variable. This can be used to fix and free</dt>
 <dd>variables by tag (default None). Note that a variable is
-automatically tagged with its name and &#8220;all&#8221;.</dd>
-<dt>tags    &#8211;  A list of tags (default []). Both tag and tags can be</dt>
+automatically tagged with its name and “all”.</dd>
+<dt>tags    –  A list of tags (default []). Both tag and tags can be</dt>
 <dd>applied.</dd>
 </dl>
 <p>Returns the new variable (Parameter instance).</p>
@@ -676,10 +687,10 @@ automatically tagged with its name and &#8220;all&#8221;.</dd>
 <code class="descname">popFitHook</code><span class="sig-paren">(</span><em>fithook=None</em>, <em>index=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.popFitHook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a FitHook by index or reference.</p>
 <dl class="docutils">
-<dt>fithook &#8211;  FitHook instance to remove from the sequence. If this is</dt>
+<dt>fithook –  FitHook instance to remove from the sequence. If this is</dt>
 <dd>None (default), default to index.</dd>
 </dl>
-<p>index   &#8211;  Index of FitHook instance to remove (default -1).</p>
+<p>index   –  Index of FitHook instance to remove (default -1).</p>
 <p>Raises ValueError if fithook is not None, but is not present in the
 sequence.
 Raises IndexError if the sequence is empty or index is out of range.</p>
@@ -693,8 +704,8 @@ Raises IndexError if the sequence is empty or index is out of range.</p>
 passing information out of the system during a refinement. See the
 diffpy.srfit.fitbase.fithook.FitHook class for the required interface.
 Added FitHooks will be called sequentially during refinement.</p>
-<p>fithook &#8211;  FitHook instance to add to the sequence
-index   &#8211;  Index for inserting fithook into the list of fit hooks.  If</p>
+<p>fithook –  FitHook instance to add to the sequence
+index   –  Index for inserting fithook into the list of fit hooks.  If</p>
 <blockquote>
 <div>this is None (default), the fithook is added to the end.</div></blockquote>
 </dd></dl>
@@ -711,14 +722,14 @@ index   &#8211;  Index for inserting fithook into the list of fit hooks.  If</p>
 <code class="descname">residual</code><span class="sig-paren">(</span><em>p=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.residual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the vector residual to be optimized.</p>
 <p>Arguments
-p   &#8211;  The list of current variable values, provided in the same order</p>
+p   –  The list of current variable values, provided in the same order</p>
 <blockquote>
-<div>as the &#8216;_parameters&#8217; list. If p is an empty iterable (default),
+<div>as the ‘_parameters’ list. If p is an empty iterable (default),
 then it is assumed that the parameters have already been
 updated in some other way, and the explicit update within this
 function is skipped.</div></blockquote>
 <p>The residual is by default the weighted concatenation of each
-FitContribution&#8217;s residual, plus the value of each restraint. The array
+FitContribution’s residual, plus the value of each restraint. The array
 returned, denoted chiv, is such that
 dot(chiv, chiv) = chi^2 + restraints.</p>
 </dd></dl>
@@ -728,14 +739,14 @@ dot(chiv, chiv) = chi^2 + restraints.</p>
 <code class="descname">scalarResidual</code><span class="sig-paren">(</span><em>p=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.scalarResidual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the scalar residual to be optimized.</p>
 <p>Arguments
-p   &#8211;  The list of current variable values, provided in the same order</p>
+p   –  The list of current variable values, provided in the same order</p>
 <blockquote>
-<div>as the &#8216;_parameters&#8217; list. If p is an empty iterable (default),
+<div>as the ‘_parameters’ list. If p is an empty iterable (default),
 then it is assumed that the parameters have already been
 updated in some other way, and the explicit update within this
 function is skipped.</div></blockquote>
 <p>The residual is by default the weighted concatenation of each
-FitContribution&#8217;s residual, plus the value of each restraint. The array
+FitContribution’s residual, plus the value of each restraint. The array
 returned, denoted chiv, is such that
 dot(chiv, chiv) = chi^2 + restraints.</p>
 </dd></dl>
@@ -752,7 +763,7 @@ dot(chiv, chiv) = chi^2 + restraints.</p>
 <dd><p>Unconstrain a Parameter.</p>
 <p>This removes any constraints on a Parameter. If the Parameter is also a
 variable of the recipe, it will be freed as well.</p>
-<p><a href="#id1"><span class="problematic" id="id2">*</span></a>pars   &#8211;  The names of Parameters or Parameters to unconstrain.</p>
+<p><a href="#id1"><span class="problematic" id="id2">*</span></a>pars   –  The names of Parameters or Parameters to unconstrain.</p>
 <p>Raises ValueError if the Parameter is not constrained.</p>
 </dd></dl>
 
@@ -771,35 +782,35 @@ displayed on screen or saved to file.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class for processing, presenting and storing results of a fit.</p>
 <p>Attributes
-recipe      &#8211;  The recipe containing the results.
-cov         &#8211;  The covariance matrix from the recipe.
-conresults  &#8211;  An ordered dictionary of ContributionResults for each</p>
+recipe      –  The recipe containing the results.
+cov         –  The covariance matrix from the recipe.
+conresults  –  An ordered dictionary of ContributionResults for each</p>
 <blockquote>
 <div>FitContribution, indexed by the FitContribution name.</div></blockquote>
 <dl class="docutils">
-<dt>derivstep   &#8211;  The fractional step size for calculating numeric</dt>
+<dt>derivstep   –  The fractional step size for calculating numeric</dt>
 <dd>derivatives. Default 1e-8.</dd>
 </dl>
-<p>varnames    &#8211;  Names of the variables in the recipe.
-varvals     &#8211;  Values of the variables in the recipe.
-varunc      &#8211;  Uncertainties in the variable values.
-showfixed   &#8211;  Show fixed variables (default True).
-fixednames  &#8211;  Names of the fixed variables of the recipe.
-fixedvals   &#8211;  Values of the fixed variables of the recipe.
-showcon     &#8211;  Show constraint values in the output (default False).
-connames    &#8211;  Names of the constrained parameters.
-convals     &#8211;  Values of the constrained parameters.
-conunc      &#8211;  Uncertainties in the constraint values.
-residual    &#8211;  The scalar residual of the recipe.
-penalty     &#8211;  The penalty to residual from the restraints.
-chi2        &#8211;  The chi2 of the recipe.
-cumchi2     &#8211;  The cumulative chi2 of the recipe.
-rchi2       &#8211;  The reduced chi2 of the recipe.
-rw          &#8211;  The Rw of the recipe.
-cumrw       &#8211;  The cumulative Rw of the recipe.
-messages    &#8211;  A list of messages about the results.
-precision   &#8211;  The precision of numeric output (default 8).
-_dcon       &#8211;  The derivatives of the constraint equations with respect to</p>
+<p>varnames    –  Names of the variables in the recipe.
+varvals     –  Values of the variables in the recipe.
+varunc      –  Uncertainties in the variable values.
+showfixed   –  Show fixed variables (default True).
+fixednames  –  Names of the fixed variables of the recipe.
+fixedvals   –  Values of the fixed variables of the recipe.
+showcon     –  Show constraint values in the output (default False).
+connames    –  Names of the constrained parameters.
+convals     –  Values of the constrained parameters.
+conunc      –  Uncertainties in the constraint values.
+residual    –  The scalar residual of the recipe.
+penalty     –  The penalty to residual from the restraints.
+chi2        –  The chi2 of the recipe.
+cumchi2     –  The cumulative chi2 of the recipe.
+rchi2       –  The reduced chi2 of the recipe.
+rw          –  The Rw of the recipe.
+cumrw       –  The cumulative Rw of the recipe.
+messages    –  A list of messages about the results.
+precision   –  The precision of numeric output (default 8).
+_dcon       –  The derivatives of the constraint equations with respect to</p>
 <blockquote>
 <div>the variables. This is used internally.</div></blockquote>
 <p>Each of these attributes, except the recipe, are created or updated when
@@ -810,9 +821,9 @@ the update method is called.</p>
 <dd><p>Format the results and return them in a string.</p>
 <p>This function is called by printResults and saveResults. Overloading
 the formatting here will change all three functions.</p>
-<p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)
-update  &#8211;  Flag indicating whether to call update() (default False).</p>
+<p>header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)
+update  –  Flag indicating whether to call update() (default False).</p>
 <p>Returns a string containing the formatted results.</p>
 </dd></dl>
 
@@ -820,9 +831,9 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 <dt id="diffpy.srfit.fitbase.fitresults.FitResults.printResults">
 <code class="descname">printResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.printResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and print the results.</p>
-<p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)
-update  &#8211;  Flag indicating whether to call update() (default False).</p>
+<p>header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)
+update  –  Flag indicating whether to call update() (default False).</p>
 </dd></dl>
 
 <dl class="method">
@@ -830,9 +841,9 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 <code class="descname">saveResults</code><span class="sig-paren">(</span><em>filename</em>, <em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.saveResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and save the results.</p>
 <p>filename -  Name of the save file.
-header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)
-update  &#8211;  Flag indicating whether to call update() (default False).</p>
+header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)
+update  –  Flag indicating whether to call update() (default False).</p>
 </dd></dl>
 
 <dl class="method">
@@ -850,29 +861,29 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 <p>Class for processing, storing FitContribution results.</p>
 <p>This does not store the FitContribution.</p>
 <p>Attributes
-y       &#8211;  The FitContribution&#8217;s profile over the calculation range</p>
+y       –  The FitContribution’s profile over the calculation range</p>
 <blockquote>
 <div>(default None).</div></blockquote>
 <dl class="docutils">
-<dt>dy      &#8211;  The uncertainty in the FitContribution&#8217;s profile over the</dt>
+<dt>dy      –  The uncertainty in the FitContribution’s profile over the</dt>
 <dd>calculation range (default None).</dd>
-<dt>x       &#8211;  A numpy array of the calculated independent variable for the</dt>
+<dt>x       –  A numpy array of the calculated independent variable for the</dt>
 <dd>FitContribution (default None).</dd>
-<dt>ycalc   &#8211;  A numpy array of the calculated signal for the FitContribution</dt>
+<dt>ycalc   –  A numpy array of the calculated signal for the FitContribution</dt>
 <dd>(default None).</dd>
 </dl>
-<p>residual    &#8211;  The scalar residual of the FitContribution.
-chi2        &#8211;  The chi2 of the FitContribution.
-cumchi2     &#8211;  The cumulative chi2 of the FitContribution.
-rw          &#8211;  The Rw of the FitContribution.
-cumrw       &#8211;  The cumulative Rw of the FitContribution.
-weight      &#8211;  The weight of the FitContribution in the recipe.
-conlocs     &#8211;  The location of the constrained parameters in the</p>
+<p>residual    –  The scalar residual of the FitContribution.
+chi2        –  The chi2 of the FitContribution.
+cumchi2     –  The cumulative chi2 of the FitContribution.
+rw          –  The Rw of the FitContribution.
+cumrw       –  The cumulative Rw of the FitContribution.
+weight      –  The weight of the FitContribution in the recipe.
+conlocs     –  The location of the constrained parameters in the</p>
 <blockquote>
 <div>FitContribution (see the
 RecipeContainer._locateManagedObject method).</div></blockquote>
-<p>convals     &#8211;  Values of the constrained parameters.
-conunc      &#8211;  Uncertainties in the constraint values.</p>
+<p>convals     –  Values of the constrained parameters.
+conunc      –  Uncertainties in the constraint values.</p>
 </dd></dl>
 
 <dl class="function">
@@ -882,8 +893,8 @@ conunc      &#8211;  Uncertainties in the constraint values.</p>
 <p>This reads the results from file and initializes any variables (fixed or
 free) in the recipe to the results values. Note that the recipe has to be
 configured, with variables. This does not reconstruct a FitRecipe.</p>
-<p>recipe  &#8211;  A configured recipe with variables
-results &#8211;  An open file-like object, name of a file that contains</p>
+<p>recipe  –  A configured recipe with variables
+results –  An open file-like object, name of a file that contains</p>
 <blockquote>
 <div>results from FitResults or a string containing fit results.</div></blockquote>
 </dd></dl>
@@ -899,15 +910,15 @@ results &#8211;  An open file-like object, name of a file that contains</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Parameter class.</p>
 <p>Attributes
-name    &#8211;  A name for this Parameter.
-const   &#8211;  A flag indicating whether this is considered a constant.
-_value  &#8211;  The value of the Parameter. Modified with &#8216;setValue&#8217;.
-value   &#8211;  Property for &#8216;getValue&#8217; and &#8216;setValue&#8217;.
-constrained &#8211;  A flag indicating if the Parameter is constrained</p>
+name    –  A name for this Parameter.
+const   –  A flag indicating whether this is considered a constant.
+_value  –  The value of the Parameter. Modified with ‘setValue’.
+value   –  Property for ‘getValue’ and ‘setValue’.
+constrained –  A flag indicating if the Parameter is constrained</p>
 <blockquote>
 <div>(default False).</div></blockquote>
 <dl class="docutils">
-<dt>bounds  &#8211;  A 2-list defining the bounds on the Parameter. This can be</dt>
+<dt>bounds  –  A 2-list defining the bounds on the Parameter. This can be</dt>
 <dd>used by some optimizers when the Parameter is varied. See
 FitRecipe.getBounds and FitRecipe.boundsToRestraints.</dd>
 </dl>
@@ -916,9 +927,9 @@ FitRecipe.getBounds and FitRecipe.boundsToRestraints.</dd>
 <code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.boundWindow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create bounds centered on the current value of the Parameter.</p>
 <dl class="docutils">
-<dt>lr  &#8211;  The radius of the lower bound (default 0). The lower bound is</dt>
+<dt>lr  –  The radius of the lower bound (default 0). The lower bound is</dt>
 <dd>computed as value - lr.</dd>
-<dt>ur  &#8211;  The radius of the upper bound. The upper bound is computed as</dt>
+<dt>ur  –  The radius of the upper bound. The upper bound is computed as</dt>
 <dd>value + ur. If this is None (default), then the value of the
 lower radius is used.</dd>
 </dl>
@@ -930,9 +941,9 @@ lower radius is used.</dd>
 <code class="descname">setConst</code><span class="sig-paren">(</span><em>const=True</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setConst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the Parameter as constant.</p>
 <dl class="docutils">
-<dt>const   &#8211;  Flag indicating if the parameter is constant (default</dt>
+<dt>const   –  Flag indicating if the parameter is constant (default</dt>
 <dd>True).</dd>
-<dt>value   &#8211;  An optional value for the parameter (default None). If this</dt>
+<dt>value   –  An optional value for the parameter (default None). If this</dt>
 <dd>is not None, then the parameter will get a new value,
 constant or otherwise.</dd>
 </dl>
@@ -943,12 +954,12 @@ constant or otherwise.</dd>
 <dt id="diffpy.srfit.fitbase.parameter.Parameter.setValue">
 <code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter and the bounds.</p>
-<p>val     &#8211;  The value to assign.
-lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
+<p>val     –  The value to assign.
+lb      –  The lower bounds for the bounds list. If this is None</p>
 <blockquote>
 <div>(default), then the lower bound will not be alterered.</div></blockquote>
 <dl class="docutils">
-<dt>ub      &#8211;  The upper bounds for the bounds list. If this is None</dt>
+<dt>ub      –  The upper bounds for the bounds list. If this is None</dt>
 <dd>(default), then the upper bound will not be alterered.</dd>
 </dl>
 <p>Returns self so that mutators can be chained.</p>
@@ -963,18 +974,18 @@ lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
 <p>A Parameter proxy for another parameter.</p>
 <p>This allows for the same parameter to have multiple names.</p>
 <p>Attributes
-name    &#8211;  A name for this ParameterProxy. Names should be unique within a</p>
+name    –  A name for this ParameterProxy. Names should be unique within a</p>
 <blockquote>
 <div>RecipeOrganizer and should be valid attribute names.</div></blockquote>
-<p>par     &#8211;  The Parameter this is a proxy for.</p>
+<p>par     –  The Parameter this is a proxy for.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.boundWindow">
 <code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.boundWindow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create bounds centered on the current value of the Parameter.</p>
 <dl class="docutils">
-<dt>lr  &#8211;  The radius of the lower bound (default 0). The lower bound is</dt>
+<dt>lr  –  The radius of the lower bound (default 0). The lower bound is</dt>
 <dd>computed as value - lr.</dd>
-<dt>ur  &#8211;  The radius of the upper bound. The upper bound is computed as</dt>
+<dt>ur  –  The radius of the upper bound. The upper bound is computed as</dt>
 <dd>value + ur. If this is None (default), then the value of the
 lower radius is used.</dd>
 </dl>
@@ -1006,9 +1017,9 @@ See FitRecipe.getBounds and FitRecipe.boundsToRestraints.</p>
 <code class="descname">setConst</code><span class="sig-paren">(</span><em>const=True</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.setConst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the Parameter as constant.</p>
 <dl class="docutils">
-<dt>const   &#8211;  Flag indicating if the parameter is constant (default</dt>
+<dt>const   –  Flag indicating if the parameter is constant (default</dt>
 <dd>True).</dd>
-<dt>value   &#8211;  An optional value for the parameter (default None). If this</dt>
+<dt>value   –  An optional value for the parameter (default None). If this</dt>
 <dd>is not None, then the parameter will get a new value,
 constant or otherwise.</dd>
 </dl>
@@ -1019,12 +1030,12 @@ constant or otherwise.</dd>
 <dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.setValue">
 <code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter and the bounds.</p>
-<p>val     &#8211;  The value to assign.
-lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
+<p>val     –  The value to assign.
+lb      –  The lower bounds for the bounds list. If this is None</p>
 <blockquote>
 <div>(default), then the lower bound will not be alterered.</div></blockquote>
 <dl class="docutils">
-<dt>ub      &#8211;  The upper bounds for the bounds list. If this is None</dt>
+<dt>ub      –  The upper bounds for the bounds list. If this is None</dt>
 <dd>(default), then the upper bound will not be alterered.</dd>
 </dl>
 <p>Returns self so that mutators can be chained.</p>
@@ -1073,30 +1084,30 @@ These constraints and restraints can be placed at any level and a flattened
 list of them can be retrieved with the getConstraints and getRestraints
 methods.</p>
 <p>Attributes
-name            &#8211;  A name for this organizer.
-_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+name            –  A name for this organizer.
+_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_parameters     &#8211;  A managed OrderedDict of parameters.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_parameters     –  A managed OrderedDict of parameters.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; methods.</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<div>‘restrain’ methods.</div></blockquote>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string equations.</div></blockquote>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet.addParameter">
 <code class="descname">addParameter</code><span class="sig-paren">(</span><em>par</em>, <em>check=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.addParameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store a Parameter.</p>
 <p>Parameters added in this way are registered with the _eqfactory.</p>
-<p>par     &#8211;  The Parameter to be stored.
-check   &#8211;  If True (default), a ValueError is raised a Parameter of</p>
+<p>par     –  The Parameter to be stored.
+check   –  If True (default), a ValueError is raised a Parameter of</p>
 <blockquote>
 <div>the specified name has already been inserted.</div></blockquote>
 <p>Raises ValueError if the Parameter has no name.
@@ -1108,7 +1119,7 @@ RecipeContainer.</p>
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet.addParameterSet">
 <code class="descname">addParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.addParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ParameterSet to the hierarchy.</p>
-<p>parset  &#8211;  The ParameterSet to be stored.</p>
+<p>parset  –  The ParameterSet to be stored.</p>
 <p>Raises ValueError if the ParameterSet has no name.
 Raises ValueError if the ParameterSet has the same name as some other
 managed object.</p>
@@ -1146,7 +1157,7 @@ modified.</p>
 <code class="descname">setConst</code><span class="sig-paren">(</span><em>const=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.setConst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set every parameter within the set to a constant.</p>
 <dl class="docutils">
-<dt>const   &#8211;  Flag indicating if the parameter is constant (default</dt>
+<dt>const   –  Flag indicating if the parameter is constant (default</dt>
 <dd>True).</dd>
 </dl>
 </dd></dl>
@@ -1167,15 +1178,15 @@ residual equation.</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Parameter class.</p>
 <p>Attributes
-name    &#8211;  A name for this Parameter.
-const   &#8211;  A flag indicating whether this is considered a constant.
-_value  &#8211;  The value of the Parameter. Modified with &#8216;setValue&#8217;.
-value   &#8211;  Property for &#8216;getValue&#8217; and &#8216;setValue&#8217;.
-constrained &#8211;  A flag indicating if the Parameter is constrained</p>
+name    –  A name for this Parameter.
+const   –  A flag indicating whether this is considered a constant.
+_value  –  The value of the Parameter. Modified with ‘setValue’.
+value   –  Property for ‘getValue’ and ‘setValue’.
+constrained –  A flag indicating if the Parameter is constrained</p>
 <blockquote>
 <div>(default False).</div></blockquote>
 <dl class="docutils">
-<dt>bounds  &#8211;  A 2-list defining the bounds on the Parameter. This can be</dt>
+<dt>bounds  –  A 2-list defining the bounds on the Parameter. This can be</dt>
 <dd>used by some optimizers when the Parameter is varied. See
 FitRecipe.getBounds and FitRecipe.boundsToRestraints.</dd>
 </dl>
@@ -1184,9 +1195,9 @@ FitRecipe.getBounds and FitRecipe.boundsToRestraints.</dd>
 <code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.boundWindow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create bounds centered on the current value of the Parameter.</p>
 <dl class="docutils">
-<dt>lr  &#8211;  The radius of the lower bound (default 0). The lower bound is</dt>
+<dt>lr  –  The radius of the lower bound (default 0). The lower bound is</dt>
 <dd>computed as value - lr.</dd>
-<dt>ur  &#8211;  The radius of the upper bound. The upper bound is computed as</dt>
+<dt>ur  –  The radius of the upper bound. The upper bound is computed as</dt>
 <dd>value + ur. If this is None (default), then the value of the
 lower radius is used.</dd>
 </dl>
@@ -1198,9 +1209,9 @@ lower radius is used.</dd>
 <code class="descname">setConst</code><span class="sig-paren">(</span><em>const=True</em>, <em>value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setConst" title="Permalink to this definition">¶</a></dt>
 <dd><p>Toggle the Parameter as constant.</p>
 <dl class="docutils">
-<dt>const   &#8211;  Flag indicating if the parameter is constant (default</dt>
+<dt>const   –  Flag indicating if the parameter is constant (default</dt>
 <dd>True).</dd>
-<dt>value   &#8211;  An optional value for the parameter (default None). If this</dt>
+<dt>value   –  An optional value for the parameter (default None). If this</dt>
 <dd>is not None, then the parameter will get a new value,
 constant or otherwise.</dd>
 </dl>
@@ -1211,12 +1222,12 @@ constant or otherwise.</dd>
 <dt id="diffpy.srfit.fitbase.profile.Parameter.setValue">
 <code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter and the bounds.</p>
-<p>val     &#8211;  The value to assign.
-lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
+<p>val     –  The value to assign.
+lb      –  The lower bounds for the bounds list. If this is None</p>
 <blockquote>
 <div>(default), then the lower bound will not be alterered.</div></blockquote>
 <dl class="docutils">
-<dt>ub      &#8211;  The upper bounds for the bounds list. If this is None</dt>
+<dt>ub      –  The upper bounds for the bounds list. If this is None</dt>
 <dd>(default), then the upper bound will not be alterered.</dd>
 </dl>
 <p>Returns self so that mutators can be chained.</p>
@@ -1233,35 +1244,35 @@ lb      &#8211;  The lower bounds for the bounds list. If this is None</p>
 by the Profile, which can in turn be observed by some other object.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_xobs   &#8211;  A numpy array of the observed independent variable (default</dt>
+<dt>_xobs   –  A numpy array of the observed independent variable (default</dt>
 <dd>None)</dd>
 </dl>
-<p>xobs    &#8211;  Read-only property of _xobs.
-_yobs   &#8211;  A numpy array of the observed signal (default None)
-yobs    &#8211;  Read-only property of _yobs.
-_dyobs  &#8211;  A numpy array of the uncertainty of the observed signal (default</p>
+<p>xobs    –  Read-only property of _xobs.
+_yobs   –  A numpy array of the observed signal (default None)
+yobs    –  Read-only property of _yobs.
+_dyobs  –  A numpy array of the uncertainty of the observed signal (default</p>
 <blockquote>
 <div>None, optional).</div></blockquote>
-<p>dyobs   &#8211;  Read-only property of _dyobs.
-x       &#8211;  A numpy array of the calculated independent variable (default</p>
+<p>dyobs   –  Read-only property of _dyobs.
+x       –  A numpy array of the calculated independent variable (default</p>
 <blockquote>
 <div>None, property for xpar accessors).</div></blockquote>
 <dl class="docutils">
-<dt>y       &#8211;  The profile over the calculation range (default None, property</dt>
+<dt>y       –  The profile over the calculation range (default None, property</dt>
 <dd>for ypar accessors).</dd>
-<dt>dy      &#8211;  The uncertainty in the profile over the calculation range</dt>
+<dt>dy      –  The uncertainty in the profile over the calculation range</dt>
 <dd>(default None, property for dypar accessors).</dd>
 </dl>
-<p>ycalc   &#8211;  A numpy array of the calculated signal (default None).
-xpar    &#8211;  A Parameter that stores x (named &#8220;x&#8221;).
-ypar    &#8211;  A Parameter that stores y (named &#8220;y&#8221;).
-dypar   &#8211;  A Parameter that stores dy (named &#8220;dy&#8221;).
-ycpar   &#8211;  A Parameter that stores ycalc (named &#8220;ycalc&#8221;). This is</p>
+<p>ycalc   –  A numpy array of the calculated signal (default None).
+xpar    –  A Parameter that stores x (named “x”).
+ypar    –  A Parameter that stores y (named “y”).
+dypar   –  A Parameter that stores dy (named “dy”).
+ycpar   –  A Parameter that stores ycalc (named “ycalc”). This is</p>
 <blockquote>
 <div>not observed by the profile, but it is present so it can be
 constrained to.</div></blockquote>
 <dl class="docutils">
-<dt>meta    &#8211;  A dictionary of metadata. This is only set if provided by a</dt>
+<dt>meta    –  A dictionary of metadata. This is only set if provided by a</dt>
 <dd>parser.</dd>
 </dl>
 <dl class="attribute">
@@ -1307,7 +1318,7 @@ arrays.</p>
 <code class="descname">setCalculationPoints</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation points.</p>
 <p>Arguments
-x   &#8211;  A non-empty numpy array containing the calculation points. If</p>
+x   –  A non-empty numpy array containing the calculation points. If</p>
 <blockquote>
 <div>xobs exists, the bounds of x will be limited to its bounds.</div></blockquote>
 <p>This will create y and dy on the specified grid if xobs, yobs and
@@ -1321,27 +1332,32 @@ dyobs exist.</p>
 <p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
 as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
-<dl class="docutils">
-<dt>xmin</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
-current minimum when not specified.  If specified as &#8220;obs&#8221;
-reset to the minimum observed value.</dd>
-<dt>xmax</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
-current maximum when not specified.  If specified as &#8220;obs&#8221;
-reset to the maximum observed value.</dd>
-<dt>dx</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
-</dl>
-<p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
-if it is within the bounds of the observed data.</p>
-<dl class="docutils">
-<dt>AttributeError</dt>
-<dd>If there is no observed data.</dd>
-<dt>ValueError</dt>
-<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as “obs”
+reset to the minimum observed value.</li>
+<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as “obs”
+reset to the maximum observed value.</li>
+<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
+<li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1349,9 +1365,9 @@ if it is within the bounds of the observed data.</p>
 <code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>Arguments
-xobs    &#8211;  Numpy array of the independent variable
-yobs    &#8211;  Numpy array of the observed signal.
-dyobs   &#8211;  Numpy array of the uncertainty in the observed signal. If</p>
+xobs    –  Numpy array of the independent variable
+yobs    –  Numpy array of the observed signal.
+dyobs   –  Numpy array of the uncertainty in the observed signal. If</p>
 <blockquote>
 <div>dyobs is None (default), it will be set to 1 at each
 observed xobs.</div></blockquote>
@@ -1400,11 +1416,11 @@ very simple example is
 &gt;
 &gt;    def __init__(self):
 &gt;        # Initialize and give this a name
-&gt;        ProfileGenerator.__init__(self, &#8220;g&#8221;)
+&gt;        ProfileGenerator.__init__(self, “g”)
 &gt;        # Add amplitude, center and width parameters
-&gt;        self.newParameter(&#8220;amp&#8221;, 0)
-&gt;        self.newParameter(&#8220;center&#8221;, 0)
-&gt;        self.newParameter(&#8220;width&#8221;, 0)
+&gt;        self.newParameter(“amp”, 0)
+&gt;        self.newParameter(“center”, 0)
+&gt;        self.newParameter(“width”, 0)
 &gt;
 &gt;    def __call__(self, x):
 &gt;        a = self.amp.getValue()
@@ -1422,48 +1438,57 @@ generate a profile. ProfileGenerator is also an Operator
 (diffpy.srfit.equation.literals.operators), so it can be used directly in
 an evaluation network.</p>
 <p>Attributes
-name            &#8211;  A name for this organizer.
-profile         &#8211;  A Profile instance that contains the calculation range</p>
+name            –  A name for this organizer.
+profile         –  A Profile instance that contains the calculation range</p>
 <blockquote>
 <div>and will contain the generated profile.</div></blockquote>
-<p>meta            &#8211;  A dictionary of metadata needed by the generator.
-eq              &#8211;  The Equation object used to wrap this ProfileGenerator.</p>
+<p>meta            –  A dictionary of metadata needed by the generator.
+eq              –  The Equation object used to wrap this ProfileGenerator.</p>
 <blockquote>
 <div>This is set when the ProfileGenerator is added to a
 FitContribution.</div></blockquote>
-<p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+<p>_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_parameters     &#8211;  A managed OrderedDict of contained Parameters.
-_parsets        &#8211;  A managed dictionary of ParameterSets.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_parameters     –  A managed OrderedDict of contained Parameters.
+_parsets        –  A managed dictionary of ParameterSets.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
 <dl class="docutils">
-<dt>_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</dt>
+<dt>_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</dt>
 <dd>instance that is used create Equations from string.</dd>
 </dl>
 <p>Operator Attributes
-args    &#8211;  List of Literal arguments, set with &#8216;addLiteral&#8217;
-name    &#8211;  A name for this operator. e.g. &#8220;add&#8221; or &#8220;sin&#8221;
-nin     &#8211;  Number of inputs (&lt;1 means this is variable)
-nout    &#8211;  Number of outputs
-operation   &#8211;  Function that performs the operation. e.g. numpy.add. In</p>
+args    –  List of Literal arguments, set with ‘addLiteral’
+name    –  A name for this operator. e.g. “add” or “sin”
+nin     –  Number of inputs (&lt;1 means this is variable)
+nout    –  Number of outputs
+operation   –  Function that performs the operation. e.g. numpy.add. In</p>
 <blockquote>
 <div>this case, operation is an instance method.</div></blockquote>
-<p>symbol  &#8211;  The symbolic representation. e.g. &#8220;+&#8221; or &#8220;sin&#8221;
-_value  &#8211;  The value of the Operator.
-value   &#8211;  Property for &#8216;getValue&#8217;.</p>
+<p>symbol  –  The symbolic representation. e.g. “+” or “sin”
+_value  –  The value of the Operator.
+value   –  Property for ‘getValue’.</p>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.nin">
+<code class="descname">nin</code><em class="property"> = 0</em><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.nin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.nout">
+<code class="descname">nout</code><em class="property"> = 1</em><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.nout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.operation">
 <code class="descname">operation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the profile.</p>
-<p>This calls __call__ and passes in profile.x. It also stores the output
-in profile.ycalc. The calculated value is then returned.</p>
+<p>Return the result of __call__(profile.x).</p>
 </dd></dl>
 
 <dl class="method">
@@ -1479,10 +1504,15 @@ metadata. This method gets called whenever the Profile is set.</p>
 <code class="descname">setProfile</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.setProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign the profile.</p>
 <dl class="docutils">
-<dt>profile &#8211;  A Profile that specifies the calculation points and which</dt>
+<dt>profile –  A Profile that specifies the calculation points and which</dt>
 <dd>will store the calculated signal.</dd>
 </dl>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.symbol">
+<code class="descname">symbol</code><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.symbol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -1491,7 +1521,7 @@ metadata. This method gets called whenever the Profile is set.</p>
 <span id="diffpy-srfit-fitbase-profileparser-module"></span><h2>diffpy.srfit.fitbase.profileparser module<a class="headerlink" href="#module-diffpy.srfit.fitbase.profileparser" title="Permalink to this headline">¶</a></h2>
 <p>This module contains classes for parsing profiles from files.</p>
 <p>ProfileParser is a base class for parsing data. It can interact with a Profile
-object to automatically set the Profile&#8217;s data and metadata. Each specific file
+object to automatically set the Profile’s data and metadata. Each specific file
 format must be encapsulated in a ProfileParser subclass.</p>
 <p>See the class documentation for more information.</p>
 <dl class="class">
@@ -1501,38 +1531,38 @@ format must be encapsulated in a ProfileParser subclass.</p>
 <p>Class for parsing data from a or string.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_format     &#8211;  Name of the data format that this parses (string, default</dt>
-<dd>&#8220;&#8221;). The format string is a unique identifier for the data
+<dt>_format     –  Name of the data format that this parses (string, default</dt>
+<dd>“”). The format string is a unique identifier for the data
 format handled by the parser.</dd>
-<dt>_banks      &#8211;  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
+<dt>_banks      –  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
 <dd><p class="first">tuple:
-x       &#8211;  A numpy array containing the independent</p>
+x       –  A numpy array containing the independent</p>
 <blockquote>
 <div>variable read from the file.</div></blockquote>
 <dl class="last docutils">
-<dt>y       &#8211;  A numpy array containing the profile</dt>
+<dt>y       –  A numpy array containing the profile</dt>
 <dd>from the file.</dd>
-<dt>dx      &#8211;  A numpy array containing the uncertainty in x</dt>
+<dt>dx      –  A numpy array containing the uncertainty in x</dt>
 <dd>read from the file. This is None if the
 uncertainty cannot be read.</dd>
-<dt>dy      &#8211;  A numpy array containing the uncertainty read</dt>
+<dt>dy      –  A numpy array containing the uncertainty read</dt>
 <dd>from the file. This is None if the uncertainty
 cannot be read.</dd>
 </dl>
 </dd>
 </dl>
-<p>_x          &#8211;  Indpendent variable from the chosen bank
-_y          &#8211;  Profile from the chosen bank
-_dx         &#8211;  Uncertainty in independent variable from the chosen bank
-_dy         &#8211;  Uncertainty in profile from the chosen bank
-_meta       &#8211;  A dictionary containing metadata read from the file.</p>
+<p>_x          –  Indpendent variable from the chosen bank
+_y          –  Profile from the chosen bank
+_dx         –  Uncertainty in independent variable from the chosen bank
+_dy         –  Uncertainty in profile from the chosen bank
+_meta       –  A dictionary containing metadata read from the file.</p>
 <p>General Metadata</p>
 <dl class="docutils">
-<dt>filename    &#8211;  The name of the file from which data was parsed. This key</dt>
+<dt>filename    –  The name of the file from which data was parsed. This key</dt>
 <dd>will not exist if data was not read from file.</dd>
 </dl>
-<p>nbanks      &#8211;  The number of banks parsed.
-bank        &#8211;  The chosen bank number.</p>
+<p>nbanks      –  The number of banks parsed.
+bank        –  The chosen bank number.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser.getData">
 <code class="descname">getData</code><span class="sig-paren">(</span><em>index=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser.getData" title="Permalink to this definition">¶</a></dt>
@@ -1542,7 +1572,7 @@ chosen bank number is not persistent, and so must be re-selected if the
 parser is used to parse more data. This uses python list notation, so
 index -n returns the nth bank from the end.</p>
 <p>Arguments:
-index  &#8211;   index of bank (integer, starting at 0, default None). If</p>
+index  –   index of bank (integer, starting at 0, default None). If</p>
 <blockquote>
 <div>index is None then the currently selected bank is used.</div></blockquote>
 <p>This returns (x, y, dx, dy) tuple for the bank. dx is 0 if it cannot
@@ -1573,7 +1603,7 @@ be determined from the data format.</p>
 <dd><p>Parse a file and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
-filename    &#8211;  The name of the file to parse</p>
+filename    –  The name of the file to parse</p>
 <p>Raises IOError if the file cannot be read
 Raises ParseError if the file cannot be parsed</p>
 </dd></dl>
@@ -1586,7 +1616,7 @@ Raises ParseError if the file cannot be parsed</p>
 None.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
-patstring   &#8211;  A string containing the pattern</p>
+patstring   –  A string containing the pattern</p>
 <p>Raises ParseError if the string cannot be parsed</p>
 </dd></dl>
 
@@ -1599,7 +1629,7 @@ chosen bank number is not persistent, and so must be re-selected if the
 parser is used to parse more data. This uses python list notation, so
 index -n returns the nth bank from the end.</p>
 <p>Arguments:
-index  &#8211;  index of bank (integer, starting at 0).</p>
+index  –  index of bank (integer, starting at 0).</p>
 <p>Raises IndexError if requesting a bank that does not exist</p>
 </dd></dl>
 
@@ -1634,21 +1664,21 @@ Parameters. This allows hierarchical calculation elements, such as
 ProfileGenerator, to detect changes in Parameters and Restraints on which
 it may depend.</p>
 <p>Attributes
-name            &#8211;  A name for this RecipeContainer. Names should be unique</p>
+name            –  A name for this RecipeContainer. Names should be unique</p>
 <blockquote>
 <div>within a RecipeContainer and should be valid attribute
 names.</div></blockquote>
-<p>_parameters     &#8211;  A managed OrderedDict of contained Parameters.
-__managed       &#8211;  A list of managed dictionaries. This is used for</p>
+<p>_parameters     –  A managed OrderedDict of contained Parameters.
+__managed       –  A list of managed dictionaries. This is used for</p>
 <blockquote>
 <div>attribute access, addition and removal.</div></blockquote>
 <dl class="docutils">
-<dt>_configobjs     &#8211;  A set of configurable objects that must know of</dt>
+<dt>_configobjs     –  A set of configurable objects that must know of</dt>
 <dd>configuration changes within this object.</dd>
 </dl>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>name</em>, <em>default=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get" title="Permalink to this definition">¶</a></dt>
@@ -1671,13 +1701,19 @@ values          &#8211;  Variable values (read only). See getValues.</p>
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterPars">
 <code class="descname">iterPars</code><span class="sig-paren">(</span><em>pattern=''</em>, <em>recurse=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterPars" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterate over the Parameters contained in this object.</p>
-<dl class="docutils">
-<dt>pattern</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>Iterate over parameters with names matching this regular
-expression (all parameters by default).</dd>
-<dt>recurse</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd>Recurse into managed objects when True (default).</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pattern</strong> (<em>str</em>) – Iterate over parameters with names matching this regular
+expression (all parameters by default).</li>
+<li><strong>recurse</strong> (<em>bool</em>) – Recurse into managed objects when True (default).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -1703,31 +1739,31 @@ Restraint equations.  These constraints and Restraints can be placed at any
 level and a flattened list of them can be retrieved with the
 _getConstraints and _getRestraints methods.</p>
 <p>Attributes
-name            &#8211;  A name for this organizer. Names should be unique</p>
+name            –  A name for this organizer. Names should be unique</p>
 <blockquote>
 <div>within a RecipeOrganizer and should be valid attribute
 names.</div></blockquote>
-<p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_parameters     &#8211;  A managed OrderedDict of contained Parameters.
-_constraints    &#8211;  A dictionary of Constraints, indexed by the constrained</p>
+<p>_calculators    –  A managed dictionary of Calculators, indexed by name.
+_parameters     –  A managed OrderedDict of contained Parameters.
+_constraints    –  A dictionary of Constraints, indexed by the constrained</p>
 <blockquote>
 <div>Parameter. Constraints can be added using the
-&#8216;constrain&#8217; method.</div></blockquote>
+‘constrain’ method.</div></blockquote>
 <dl class="docutils">
-<dt>_restraints     &#8211;  A set of Restraints. Restraints can be added using the</dt>
-<dd>&#8216;restrain&#8217; method.</dd>
-<dt>_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</dt>
+<dt>_restraints     –  A set of Restraints. Restraints can be added using the</dt>
+<dd>‘restrain’ method.</dd>
+<dt>_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</dt>
 <dd>instance that is used create Equations from string.</dd>
 </dl>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
 <p>Raises ValueError if the name is not a valid attribute identifier</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.addRestraint">
 <code class="descname">addRestraint</code><span class="sig-paren">(</span><em>res</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.addRestraint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a Restraint instance to the RecipeOrganizer.</p>
-<p>res     &#8211;  A Restraint instance.</p>
+<p>res     –  A Restraint instance.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1735,7 +1771,7 @@ values          &#8211;  Variable values (read only). See getValues.</p>
 <code class="descname">clearConstraints</code><span class="sig-paren">(</span><em>recurse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearConstraints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear all constraints managed by this organizer.</p>
 <dl class="docutils">
-<dt>recurse &#8211;  Recurse into managed objects and clear all constraints</dt>
+<dt>recurse –  Recurse into managed objects and clear all constraints</dt>
 <dd>found there as well.</dd>
 </dl>
 <p>This removes constraints that are held in this organizer, no matter
@@ -1747,7 +1783,7 @@ where the constrained parameters are from.</p>
 <code class="descname">clearRestraints</code><span class="sig-paren">(</span><em>recurse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearRestraints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clear all restraints.</p>
 <dl class="docutils">
-<dt>recurse &#8211;  Recurse into managed objects and clear all restraints</dt>
+<dt>recurse –  Recurse into managed objects and clear all restraints</dt>
 <dd>found there as well.</dd>
 </dl>
 </dd></dl>
@@ -1757,15 +1793,15 @@ where the constrained parameters are from.</p>
 <code class="descname">constrain</code><span class="sig-paren">(</span><em>par</em>, <em>con</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.constrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constrain a parameter to an equation.</p>
 <p>Note that only one constraint can exist on a Parameter at a time.</p>
-<p>par     &#8211;  The name of a Parameter or a Parameter to constrain.
-con     &#8211;  A string representation of the constraint equation or a</p>
+<p>par     –  The name of a Parameter or a Parameter to constrain.
+con     –  A string representation of the constraint equation or a</p>
 <blockquote>
 <div>Parameter to constrain to.  A constraint equation must
-consist of numpy operators and &#8220;known&#8221; Parameters.
+consist of numpy operators and “known” Parameters.
 Parameters are known if they are in the ns argument, or if
 they are managed by this object.</div></blockquote>
 <dl class="docutils">
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are used</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are used</dt>
 <dd>in the parameter, but not part of this object (default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already used for a
@@ -1780,9 +1816,9 @@ Raises ValueError if par is marked as constant.</p>
 <code class="descname">evaluateEquation</code><span class="sig-paren">(</span><em>eqstr</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.evaluateEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate a string equation.</p>
 <dl class="docutils">
-<dt>eqstr   &#8211;  A string equation to evaluate. The equation is evaluated at</dt>
+<dt>eqstr   –  A string equation to evaluate. The equation is evaluated at</dt>
 <dd>the current value of the registered Parameters.</dd>
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are</dt>
 <dd>used in fstr, but not part of the FitRecipe (default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already used for a
@@ -1794,7 +1830,7 @@ variable.</p>
 <code class="descname">getConstrainedPars</code><span class="sig-paren">(</span><em>recurse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.getConstrainedPars" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of constrained managed Parameters in this object.</p>
 <dl class="docutils">
-<dt>recurse &#8211;  Recurse into managed objects and retrive their constrained</dt>
+<dt>recurse –  Recurse into managed objects and retrive their constrained</dt>
 <dd>Parameters as well (default False).</dd>
 </dl>
 </dd></dl>
@@ -1803,7 +1839,7 @@ variable.</p>
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.isConstrained">
 <code class="descname">isConstrained</code><span class="sig-paren">(</span><em>par</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.isConstrained" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if a Parameter is constrained in this object.</p>
-<p>par     &#8211;  The name of a Parameter or a Parameter to check.</p>
+<p>par     –  The name of a Parameter or a Parameter to check.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1815,8 +1851,8 @@ This creates a function with this class that can be used within string
 equations. The resulting equation can be used in a string with
 arguments like a function or without, in which case the values of the
 Parameters created from argnames will be be used to compute the value.</p>
-<p>f           &#8211;  The Calculator to register.
-argnames    &#8211;  The names of the arguments to f (list or None).</p>
+<p>f           –  The Calculator to register.
+argnames    –  The names of the arguments to f (list or None).</p>
 <blockquote>
 <div>If this is None, then the argument names will be
 extracted from the function.</div></blockquote>
@@ -1830,21 +1866,21 @@ extracted from the function.</div></blockquote>
 equations.  The resulting equation does not require the arguments to be
 passed in the equation string, as this will be handled automatically.</p>
 <dl class="docutils">
-<dt>f           &#8211;  The callable to register. If this is an Equation</dt>
+<dt>f           –  The callable to register. If this is an Equation</dt>
 <dd>instance, then all that needs to be provied is a name.</dd>
-<dt>name        &#8211;  The name of the function to be used in equations. If</dt>
+<dt>name        –  The name of the function to be used in equations. If</dt>
 <dd>this is None (default), the method will try to
 determine the name of the function automatically.</dd>
-<dt>argnames    &#8211;  The names of the arguments to f (list or None).</dt>
+<dt>argnames    –  The names of the arguments to f (list or None).</dt>
 <dd>If this is None (default), then the argument names will
 be extracted from the function.</dd>
 </dl>
 <p>Note that name and argnames can be extracted from regular python
-functions (of type &#8216;function&#8217;), bound class methods and callable
+functions (of type ‘function’), bound class methods and callable
 classes.</p>
 <p>Raises TypeError if name or argnames cannot be automatically
 extracted.
-Raises TypeError if an automatically extracted name is &#8216;&lt;lambda&gt;&#8217;.
+Raises TypeError if an automatically extracted name is ‘&lt;lambda&gt;’.
 Raises ValueError if f is an Equation object and name is None.</p>
 <p>Returns the callable Equation object.</p>
 </dd></dl>
@@ -1856,9 +1892,9 @@ Raises ValueError if f is an Equation object and name is None.</p>
 <p>This creates a function with this class that can be used within string
 equations.  The resulting equation does not require the arguments to be
 passed in the function string, as this will be handled automatically.</p>
-<p>fstr        &#8211;  A string equation to register.
-name        &#8211;  The name of the function to be used in equations.
-ns          &#8211;  A dictionary of Parameters, indexed by name, that are</p>
+<p>fstr        –  A string equation to register.
+name        –  The name of the function to be used in equations.
+ns          –  A dictionary of Parameters, indexed by name, that are</p>
 <blockquote>
 <div>used in fstr, but not part of the FitRecipe (default
 {}).</div></blockquote>
@@ -1873,16 +1909,16 @@ object.</p>
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.restrain">
 <code class="descname">restrain</code><span class="sig-paren">(</span><em>res</em>, <em>lb=-inf</em>, <em>ub=inf</em>, <em>sig=1</em>, <em>scaled=False</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.restrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restrain an expression to specified bounds</p>
-<p>res     &#8211;  An equation string or Parameter to restrain.
-lb      &#8211;  The lower bound on the restraint evaluation (default -inf).
-ub      &#8211;  The lower bound on the restraint evaluation (default inf).
-sig     &#8211;  The uncertainty on the bounds (default 1).
-scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied)</p>
+<p>res     –  An equation string or Parameter to restrain.
+lb      –  The lower bound on the restraint evaluation (default -inf).
+ub      –  The lower bound on the restraint evaluation (default inf).
+sig     –  The uncertainty on the bounds (default 1).
+scaled  –  A flag indicating if the restraint is scaled (multiplied)</p>
 <blockquote>
 <div>by the unrestrained point-average chi^2 (chi^2/numpoints)
 (default False).</div></blockquote>
 <dl class="docutils">
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are used</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are used</dt>
 <dd>in the equation string, but not part of the RecipeOrganizer
 (default {}).</dd>
 </dl>
@@ -1894,7 +1930,7 @@ the average chi^2 if scaled is True.</p>
 Parameter.
 Raises ValueError if res depends on a Parameter that is not part of
 the RecipeOrganizer and that is not defined in ns.</p>
-<p>Returns the Restraint object for use with the &#8216;unrestrain&#8217; method.</p>
+<p>Returns the Restraint object for use with the ‘unrestrain’ method.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1902,14 +1938,20 @@ the RecipeOrganizer and that is not defined in ns.</p>
 <code class="descname">show</code><span class="sig-paren">(</span><em>pattern=''</em>, <em>textwidth=78</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Show the configuration hierarchy on the screen.</p>
 <p>This will print out a summary of all contained objects.</p>
-<dl class="docutils">
-<dt>pattern</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">str, optional</span><dd>Limit output to only those parameters that match this regular
-expression (match all by default).</dd>
-<dt>textwidth</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span><dd>Trim formatted lines at this text width to avoid folding at
-the screen width.  Do not trim when negative or 0.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pattern</strong> (<em>str</em><em>, </em><em>optional</em>) – Limit output to only those parameters that match this regular
+expression (match all by default).</li>
+<li><strong>textwidth</strong> (<em>int</em><em>, </em><em>optional</em>) – Trim formatted lines at this text width to avoid folding at
+the screen width.  Do not trim when negative or 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1917,7 +1959,7 @@ the screen width.  Do not trim when negative or 0.</dd>
 <code class="descname">unconstrain</code><span class="sig-paren">(</span><em>*pars</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unconstrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unconstrain a Parameter.</p>
 <p>This removes any constraints on a Parameter.</p>
-<p><a href="#id3"><span class="problematic" id="id4">*</span></a>pars   &#8211;  The names of Parameters or Parameters to unconstrain.</p>
+<p><a href="#id3"><span class="problematic" id="id4">*</span></a>pars   –  The names of Parameters or Parameters to unconstrain.</p>
 <p>Raises ValueError if the Parameter is not constrained.</p>
 </dd></dl>
 
@@ -1926,8 +1968,8 @@ the screen width.  Do not trim when negative or 0.</dd>
 <code class="descname">unrestrain</code><span class="sig-paren">(</span><em>*ress</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unrestrain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a Restraint from the RecipeOrganizer.</p>
 <dl class="docutils">
-<dt><a href="#id5"><span class="problematic" id="id6">*</span></a>ress   &#8211;  Restraints returned from the &#8216;restrain&#8217; method or added</dt>
-<dd>with the &#8216;addRestraint&#8217; method.</dd>
+<dt><a href="#id5"><span class="problematic" id="id6">*</span></a>ress   –  Restraints returned from the ‘restrain’ method or added</dt>
+<dd>with the ‘addRestraint’ method.</dd>
 </dl>
 </dd></dl>
 
@@ -1938,23 +1980,23 @@ the screen width.  Do not trim when negative or 0.</dd>
 <code class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</code><code class="descname">equationFromString</code><span class="sig-paren">(</span><em>eqstr</em>, <em>factory</em>, <em>ns={}</em>, <em>buildargs=False</em>, <em>argclass=&lt;class 'diffpy.srfit.fitbase.parameter.Parameter'&gt;</em>, <em>argkw={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.equationFromString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make an equation from a string.</p>
 <dl class="docutils">
-<dt>eqstr   &#8211;  A string representation of the equation. The equation must</dt>
-<dd>consist of numpy operators and &#8220;known&#8221; Parameters. Parameters
+<dt>eqstr   –  A string representation of the equation. The equation must</dt>
+<dd>consist of numpy operators and “known” Parameters. Parameters
 are known if they are in ns, or already defined in the factory.</dd>
 </dl>
-<p>factory &#8211;  An EquationFactory instance.
-ns      &#8211;  A dictionary of Parameters indexed by name that are used</p>
+<p>factory –  An EquationFactory instance.
+ns      –  A dictionary of Parameters indexed by name that are used</p>
 <blockquote>
 <div>in the eqstr but not already defined in the factory
 (default {}).</div></blockquote>
 <dl class="docutils">
-<dt>buildargs   &#8211;  A flag indicating whether missing Parameters can be created</dt>
+<dt>buildargs   –  A flag indicating whether missing Parameters can be created</dt>
 <dd>by the Factory (default False). If False, then the a ValueError
 will be raised if there are undefined arguments in the eqstr.</dd>
-<dt>argclass    &#8211;  Class to use when creating new Arguments (default</dt>
-<dd>Parameter). The class constructor must accept the &#8216;name&#8217; key
+<dt>argclass    –  Class to use when creating new Arguments (default</dt>
+<dd>Parameter). The class constructor must accept the ‘name’ key
 word.</dd>
-<dt>argkw   &#8211;  Key word dictionary to pass to the argclass constructor</dt>
+<dt>argkw   –  Key word dictionary to pass to the argclass constructor</dt>
 <dd>(default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already defined in the factory.
@@ -1975,13 +2017,13 @@ equation calculated by a FitRecipe.</p>
 <dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Restraint class.</p>
 <p>Attributes
-eq      &#8211;  An equation whose evaluation is compared against the restraint</p>
+eq      –  An equation whose evaluation is compared against the restraint</p>
 <blockquote>
 <div>bounds.</div></blockquote>
-<p>lb      &#8211;  The lower bound on the restraint evaluation (default -inf).
-ub      &#8211;  The lower bound on the restraint evaluation (default inf).
-sig     &#8211;  The uncertainty on the bounds (default 1).
-scaled  &#8211;  A flag indicating if the restraint is scaled (multiplied) by</p>
+<p>lb      –  The lower bound on the restraint evaluation (default -inf).
+ub      –  The lower bound on the restraint evaluation (default inf).
+sig     –  The uncertainty on the bounds (default 1).
+scaled  –  A flag indicating if the restraint is scaled (multiplied) by</p>
 <blockquote>
 <div>the unrestrained point-average chi^2 (chi^2/numpoints)
 (default False).</div></blockquote>
@@ -1994,7 +2036,7 @@ average chi^2 if scaled is True.</p>
 <code class="descname">penalty</code><span class="sig-paren">(</span><em>w=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.restraint.Restraint.penalty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the penalty of the restraint.</p>
 <dl class="docutils">
-<dt>w   &#8211;  The point-average chi^2 which is optionally used to scale the</dt>
+<dt>w   –  The point-average chi^2 which is optionally used to scale the</dt>
 <dd>penalty (default 1.0).</dd>
 </dl>
 <p>Returns the penalty as a float</p>
@@ -2011,53 +2053,53 @@ average chi^2 if scaled is True.</p>
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.simplerecipe.</code><code class="descname">SimpleRecipe</code><span class="sig-paren">(</span><em>name='fit'</em>, <em>conclass=&lt;class 'diffpy.srfit.fitbase.fitcontribution.FitContribution'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></code></a></p>
 <p>SimpleRecipe class.</p>
-<p>This is a FitRecipe with a built-in Profile (the &#8216;profile&#8217; attribute) and
-FitContribution (the &#8216;contribution&#8217; attribute). Unique methods from each of
+<p>This is a FitRecipe with a built-in Profile (the ‘profile’ attribute) and
+FitContribution (the ‘contribution’ attribute). Unique methods from each of
 these are exposed through this class to facilitate the creation of a simple
 fit recipe.</p>
 <p>Attributes
-profile         &#8211;  The built-in Profile object.
-contribution    &#8211;  The built-in FitContribution object.
-results         &#8211;  The built-in FitResults object.
-name            &#8211;  A name for this FitRecipe.
-fithook         &#8211;  An object to be called whenever within the residual</p>
+profile         –  The built-in Profile object.
+contribution    –  The built-in FitContribution object.
+results         –  The built-in FitResults object.
+name            –  A name for this FitRecipe.
+fithook         –  An object to be called whenever within the residual</p>
 <blockquote>
 <div>(default FitHook()) that can pass information out of
 the system during a refinement.</div></blockquote>
 <dl class="docutils">
-<dt>_constraints    &#8211;  A dictionary of Constraints, indexed by the constrained</dt>
+<dt>_constraints    –  A dictionary of Constraints, indexed by the constrained</dt>
 <dd>Parameter. Constraints can be added using the
-&#8216;constrain&#8217; method.</dd>
-<dt>_oconstraints   &#8211;  An ordered list of the constraints from this and all</dt>
+‘constrain’ method.</dd>
+<dt>_oconstraints   –  An ordered list of the constraints from this and all</dt>
 <dd>sub-components.</dd>
 </dl>
-<p>_calculators    &#8211;  A managed dictionary of Calculators.
-_contributions  &#8211;  A managed OrderedDict of FitContributions.
-_parameters     &#8211;  A managed OrderedDict of parameters (in this case the</p>
+<p>_calculators    –  A managed dictionary of Calculators.
+_contributions  –  A managed OrderedDict of FitContributions.
+_parameters     –  A managed OrderedDict of parameters (in this case the</p>
 <blockquote>
 <div>parameters are varied).</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string</div></blockquote>
-<p>_fixed          &#8211;  A set of parameters that are not actually varied.
-_restraintlist  &#8211;  A list of restraints from this and all sub-components.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<p>_fixed          –  A set of parameters that are not actually varied.
+_restraintlist  –  A list of restraints from this and all sub-components.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
 <dl class="docutils">
-<dt>_ready          &#8211;  A flag indicating if all attributes are ready for the</dt>
+<dt>_ready          –  A flag indicating if all attributes are ready for the</dt>
 <dd>calculation.</dd>
 </dl>
-<p>_tagdict        &#8211;  A dictionary of tags to variables.
-_weights        &#8211;  List of weighing factors for each FitContribution. The</p>
+<p>_tagdict        –  A dictionary of tags to variables.
+_weights        –  List of weighing factors for each FitContribution. The</p>
 <blockquote>
 <div>weights are multiplied by the residual of the
 FitContribution when determining the overall residual.</div></blockquote>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadParsedData">
 <code class="descname">loadParsedData</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadParsedData" title="Permalink to this definition">¶</a></dt>
@@ -2083,8 +2125,8 @@ arrays.</p>
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.printResults">
 <code class="descname">printResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.printResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and print the results.</p>
-<p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
+<p>header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)</p>
 </dd></dl>
 
 <dl class="method">
@@ -2092,8 +2134,8 @@ footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
 <code class="descname">saveResults</code><span class="sig-paren">(</span><em>filename</em>, <em>header=''</em>, <em>footer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.saveResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and save the results.</p>
 <p>filename -  Name of the save file.
-header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
+header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)</p>
 </dd></dl>
 
 <dl class="method">
@@ -2101,7 +2143,7 @@ footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
 <code class="descname">setCalculationPoints</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation points.</p>
 <p>Arguments
-x   &#8211;  A non-empty numpy array containing the calculation points. If</p>
+x   –  A non-empty numpy array containing the calculation points. If</p>
 <blockquote>
 <div>xobs exists, the bounds of x will be limited to its bounds.</div></blockquote>
 <p>This will create y and dy on the specified grid if xobs, yobs and
@@ -2115,27 +2157,32 @@ dyobs exist.</p>
 <p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
 as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
-<dl class="docutils">
-<dt>xmin</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
-current minimum when not specified.  If specified as &#8220;obs&#8221;
-reset to the minimum observed value.</dd>
-<dt>xmax</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
-current maximum when not specified.  If specified as &#8220;obs&#8221;
-reset to the maximum observed value.</dd>
-<dt>dx</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
-</dl>
-<p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
-if it is within the bounds of the observed data.</p>
-<dl class="docutils">
-<dt>AttributeError</dt>
-<dd>If there is no observed data.</dd>
-<dt>ValueError</dt>
-<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as “obs”
+reset to the minimum observed value.</li>
+<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as “obs”
+reset to the maximum observed value.</li>
+<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
+<li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -2143,13 +2190,13 @@ if it is within the bounds of the observed data.</p>
 <code class="descname">setEquation</code><span class="sig-paren">(</span><em>eqstr</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the profile equation for the FitContribution.</p>
 <p>This sets the equation that will be used when generating the residual.
-The equation will be usable within setResidualEquation as &#8220;eq&#8221;, and it
+The equation will be usable within setResidualEquation as “eq”, and it
 takes no arguments.</p>
 <dl class="docutils">
-<dt>eqstr   &#8211;  A string representation of the equation. Variables will be</dt>
+<dt>eqstr   –  A string representation of the equation. Variables will be</dt>
 <dd>extracted from this equation and be given an initial value
 of 0.</dd>
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are used</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are used</dt>
 <dd>in the eqstr, but not registered (default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already used for a
@@ -2161,9 +2208,9 @@ variable.</p>
 <code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>Arguments
-xobs    &#8211;  Numpy array of the independent variable
-yobs    &#8211;  Numpy array of the observed signal.
-dyobs   &#8211;  Numpy array of the uncertainty in the observed signal. If</p>
+xobs    –  Numpy array of the independent variable
+yobs    –  Numpy array of the observed signal.
+dyobs   –  Numpy array of the uncertainty in the observed signal. If</p>
 <blockquote>
 <div>dyobs is None (default), it will be set to 1 at each
 observed xobs.</div></blockquote>
@@ -2199,7 +2246,7 @@ that defining a fit problem with data, constraints and restraints. The classes
 involved in this collaboration can be tied to a fitting framework at various
 levels through inheritance. One can create a fitting problem using the
 FitContribution, Profile and FitRecipe classes.</p>
-<p>Various code and design taken from Paul Kienzle&#8217;s PARK package.
+<p>Various code and design taken from Paul Kienzle’s PARK package.
 <a class="reference external" href="http://www.reflectometry.org/danse/park.html">http://www.reflectometry.org/danse/park.html</a></p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.Calculator">
@@ -2209,35 +2256,50 @@ FitContribution, Profile and FitRecipe classes.</p>
 <p>A Calculator organizes Parameters and has a __call__ method that can
 calculate a generic signal.</p>
 <p>Attributes
-name            &#8211;  A name for this organizer.
-meta            &#8211;  A dictionary of metadata needed by the calculator.
-_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+name            –  A name for this organizer.
+meta            –  A dictionary of metadata needed by the calculator.
+_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_parameters     &#8211;  A managed OrderedDict of contained Parameters.
-_parsets        &#8211;  A managed dictionary of ParameterSets.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_parameters     –  A managed OrderedDict of contained Parameters.
+_parsets        –  A managed dictionary of ParameterSets.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
 <dl class="docutils">
-<dt>_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</dt>
+<dt>_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</dt>
 <dd>instance that is used create Equations from string.</dd>
 </dl>
 <p>Operator Attributes
-args    &#8211;  List of Literal arguments
-nin     &#8211;  Number of inputs (&lt;1 means this is variable)
-nout    &#8211;  Number of outputs (1)
-operation   &#8211;  Function that performs the operation, self.__call__
-symbol  &#8211;  Same as name
-_value  &#8211;  The value of the Operator.
-value   &#8211;  Property for &#8216;getValue&#8217;.</p>
+args    –  List of Literal arguments
+nin     –  Number of inputs (&lt;1 means this is variable)
+nout    –  Number of outputs (1)
+operation   –  Function that performs the operation, self.__call__
+symbol  –  Same as name
+_value  –  The value of the Operator.
+value   –  Property for ‘getValue’.</p>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.Calculator.nin">
+<code class="descname">nin</code><em class="property"> = -1</em><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.nin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.Calculator.nout">
+<code class="descname">nout</code><em class="property"> = 1</em><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.nout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Calculator.operation">
 <code class="descname">operation</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.operation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.Calculator.symbol">
+<code class="descname">symbol</code><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.symbol" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2252,32 +2314,32 @@ Profile that holds the signal. ProfileGenerators and Calculators can be
 used as well.  Contraints and Restraints can be created as part of a
 FitContribution.</p>
 <p>Attributes
-name            &#8211;  A name for this FitContribution.
-profile         &#8211;  A Profile that holds the measured (and calculated)</p>
+name            –  A name for this FitContribution.
+profile         –  A Profile that holds the measured (and calculated)</p>
 <blockquote>
 <div>signal.</div></blockquote>
-<p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+<p>_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_generators     &#8211;  A managed dictionary of ProfileGenerators.
-_parameters     &#8211;  A managed OrderedDict of parameters.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_generators     –  A managed dictionary of ProfileGenerators.
+_parameters     –  A managed OrderedDict of parameters.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; method.</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<div>‘restrain’ method.</div></blockquote>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string</div></blockquote>
-<p>_eq             &#8211;  The FitContribution equation that will be optimized.
-_reseq          &#8211;  The residual equation.
-_xname          &#8211;  Name of the x-variable
-_yname          &#8211;  Name of the y-variable
-_dyname         &#8211;  Name of the dy-variable</p>
+<p>_eq             –  The FitContribution equation that will be optimized.
+_reseq          –  The residual equation.
+_xname          –  Name of the x-variable
+_yname          –  Name of the y-variable
+_dyname         –  Name of the dy-variable</p>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitContribution.addProfileGenerator">
 <code class="descname">addProfileGenerator</code><span class="sig-paren">(</span><em>gen</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.addProfileGenerator" title="Permalink to this definition">¶</a></dt>
@@ -2289,10 +2351,10 @@ FitContributions should not share ProfileGenerator instances. Different
 ProfileGenerators can share Parameters and ParameterSets, however.</p>
 <p>Calling addProfileGenerator sets the profile equation to call the
 calculator and if there is not a profile equation already.</p>
-<p>gen     &#8211;  A ProfileGenerator instance
-name    &#8211;  A name for the calculator. If name is None (default), then</p>
+<p>gen     –  A ProfileGenerator instance
+name    –  A name for the calculator. If name is None (default), then</p>
 <blockquote>
-<div>the ProfileGenerator&#8217;s name attribute will be used.</div></blockquote>
+<div>the ProfileGenerator’s name attribute will be used.</div></blockquote>
 <p>Raises ValueError if the ProfileGenerator has no name.
 Raises ValueError if the ProfileGenerator has the same name as some
 other managed object.</p>
@@ -2340,15 +2402,15 @@ method.</p>
 <dd><p>Set the profile equation for the FitContribution.</p>
 <p>This sets the equation that will be used when generating the residual
 for this FitContribution.  The equation will be usable within
-setResidualEquation as &#8220;eq&#8221;, and it takes no arguments.</p>
+setResidualEquation as “eq”, and it takes no arguments.</p>
 <dl class="docutils">
-<dt>eqstr   &#8211;  A string representation of the equation. Any Parameter</dt>
+<dt>eqstr   –  A string representation of the equation. Any Parameter</dt>
 <dd>registered by addParameter or setProfile, or function
 registered by setCalculator, registerFunction or
 registerStringFunction can be can be used in the equation
 by name. Other names will be turned into Parameters of this
 FitContribution.</dd>
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are used</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are used</dt>
 <dd>in the eqstr, but not registered (default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already used for a
@@ -2360,17 +2422,17 @@ variable.</p>
 <code class="descname">setProfile</code><span class="sig-paren">(</span><em>profile</em>, <em>xname=None</em>, <em>yname=None</em>, <em>dyname=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign the Profile for this FitContribution.</p>
 <dl class="docutils">
-<dt>profile &#8211;  A Profile that specifies the calculation points and that</dt>
+<dt>profile –  A Profile that specifies the calculation points and that</dt>
 <dd>will store the calculated signal.</dd>
-<dt>xname   &#8211;  The name of the independent variable from the Profile. If</dt>
+<dt>xname   –  The name of the independent variable from the Profile. If</dt>
 <dd>this is None (default), then the name specified by the
 Profile for this parameter will be used.  This variable is
 usable within string equations with the specified name.</dd>
-<dt>yname   &#8211;  The name of the observed Profile.  If this is None</dt>
+<dt>yname   –  The name of the observed Profile.  If this is None</dt>
 <dd>(default), then the name specified by the Profile for this
 parameter will be used.  This variable is usable within
 string equations with the specified name.</dd>
-<dt>dyname  &#8211;  The name of the uncertainty in the observed Profile. If</dt>
+<dt>dyname  –  The name of the uncertainty in the observed Profile. If</dt>
 <dd>this is None (default), then the name specified by the
 Profile for this parameter will be used.  This variable is
 usable within string equations with the specified name.</dd>
@@ -2382,12 +2444,12 @@ usable within string equations with the specified name.</dd>
 <code class="descname">setResidualEquation</code><span class="sig-paren">(</span><em>eqstr</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setResidualEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the residual equation for the FitContribution.</p>
 <dl class="docutils">
-<dt>eqstr   &#8211;  A string representation of the residual. If eqstr is None</dt>
+<dt>eqstr   –  A string representation of the residual. If eqstr is None</dt>
 <dd>(default), then the previous residual equation will be
 used, or the chi2 residual will be used if that does not
 exist.</dd>
 </dl>
-<p>Two residuals are preset for convenience, &#8220;chiv&#8221; and &#8220;resv&#8221;.
+<p>Two residuals are preset for convenience, “chiv” and “resv”.
 chiv is defined such that dot(chiv, chiv) = chi^2.
 resv is defined such that dot(resv, resv) = Rw^2.
 You can call on these in your residual equation. Note that the quantity
@@ -2414,15 +2476,15 @@ methods for a description of their purpose.</p>
 <dt id="diffpy.srfit.fitbase.FitHook.postcall">
 <code class="descname">postcall</code><span class="sig-paren">(</span><em>recipe</em>, <em>chiv</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.postcall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, after the calculation.</p>
-<p>recipe  &#8211;  The FitRecipe instance
-chiv    &#8211;  The residual vector</p>
+<p>recipe  –  The FitRecipe instance
+chiv    –  The residual vector</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitHook.precall">
 <code class="descname">precall</code><span class="sig-paren">(</span><em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.precall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, before the calculation.</p>
-<p>recipe  &#8211;  The FitRecipe instance</p>
+<p>recipe  –  The FitRecipe instance</p>
 </dd></dl>
 
 <dl class="method">
@@ -2442,57 +2504,57 @@ adding a new ParameterSet, constraint or restraint.</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
 <p>FitRecipe class.</p>
 <p>Attributes
-name            &#8211;  A name for this FitRecipe.
-fithooks        &#8211;  List of FitHook instances that can pass information out</p>
+name            –  A name for this FitRecipe.
+fithooks        –  List of FitHook instances that can pass information out</p>
 <blockquote>
 <div>of the system during a refinement. By default, the is
 populated by a PrintFitHook instance.</div></blockquote>
 <dl class="docutils">
-<dt>_constraints    &#8211;  A dictionary of Constraints, indexed by the constrained</dt>
+<dt>_constraints    –  A dictionary of Constraints, indexed by the constrained</dt>
 <dd>Parameter. Constraints can be added using the
-&#8216;constrain&#8217; method.</dd>
-<dt>_oconstraints   &#8211;  An ordered list of the constraints from this and all</dt>
+‘constrain’ method.</dd>
+<dt>_oconstraints   –  An ordered list of the constraints from this and all</dt>
 <dd>sub-components.</dd>
 </dl>
-<p>_calculators    &#8211;  A managed dictionary of Calculators.
-_contributions  &#8211;  A managed OrderedDict of FitContributions.
-_parameters     &#8211;  A managed OrderedDict of parameters (in this case the</p>
+<p>_calculators    –  A managed dictionary of Calculators.
+_contributions  –  A managed OrderedDict of FitContributions.
+_parameters     –  A managed OrderedDict of parameters (in this case the</p>
 <blockquote>
 <div>parameters are varied).</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string</div></blockquote>
-<p>_restraintlist  &#8211;  A list of restraints from this and all sub-components.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<p>_restraintlist  –  A list of restraints from this and all sub-components.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
 <dl class="docutils">
-<dt>_ready          &#8211;  A flag indicating if all attributes are ready for the</dt>
+<dt>_ready          –  A flag indicating if all attributes are ready for the</dt>
 <dd>calculation.</dd>
 </dl>
-<p>_tagmanager     &#8211;  A TagManager instance for managing tags on Parameters.
-_weights        &#8211;  List of weighing factors for each FitContribution. The</p>
+<p>_tagmanager     –  A TagManager instance for managing tags on Parameters.
+_weights        –  List of weighing factors for each FitContribution. The</p>
 <blockquote>
 <div>weights are multiplied by the residual of the
 FitContribution when determining the overall residual.</div></blockquote>
 <dl class="docutils">
-<dt>_fixedtag       &#8211;  &#8220;__fixed&#8221;, used for tagging variables as fixed. Don&#8217;t</dt>
+<dt>_fixedtag       –  “__fixed”, used for tagging variables as fixed. Don’t</dt>
 <dd>use this tag unless you want issues.</dd>
 </dl>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.
-fixednames      &#8211;  Names of the fixed refinable variables (read only).
-fixedvalues     &#8211;  Values of the fixed refinable variables (read only).
-bounds          &#8211;  Bounds on parameters (read only). See getBounds.
-bounds2         &#8211;  Bounds on parameters (read only). See getBounds2.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.
+fixednames      –  Names of the fixed refinable variables (read only).
+fixedvalues     –  Values of the fixed refinable variables (read only).
+bounds          –  Bounds on parameters (read only). See getBounds.
+bounds2         –  Bounds on parameters (read only). See getBounds2.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.FitRecipe.addContribution">
 <code class="descname">addContribution</code><span class="sig-paren">(</span><em>con</em>, <em>weight=1.0</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addContribution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a FitContribution to the FitRecipe.</p>
-<p>con     &#8211;  The FitContribution to be stored.</p>
+<p>con     –  The FitContribution to be stored.</p>
 <p>Raises ValueError if the FitContribution has no name
 Raises ValueError if the FitContribution has the same name as some
 other managed object.</p>
@@ -2502,7 +2564,7 @@ other managed object.</p>
 <dt id="diffpy.srfit.fitbase.FitRecipe.addParameterSet">
 <code class="descname">addParameterSet</code><span class="sig-paren">(</span><em>parset</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addParameterSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a ParameterSet to the hierarchy.</p>
-<p>parset  &#8211;  The ParameterSet to be stored.</p>
+<p>parset  –  The ParameterSet to be stored.</p>
 <p>Raises ValueError if the ParameterSet has no name.
 Raises ValueError if the ParameterSet has the same name as some other
 managed object.</p>
@@ -2512,21 +2574,21 @@ managed object.</p>
 <dt id="diffpy.srfit.fitbase.FitRecipe.addVar">
 <code class="descname">addVar</code><span class="sig-paren">(</span><em>par</em>, <em>value=None</em>, <em>name=None</em>, <em>fixed=False</em>, <em>tag=None</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.addVar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a variable to be refined.</p>
-<p>par     &#8211;  A Parameter that will be varied during a fit.
-value   &#8211;  An initial value for the variable. If this is None</p>
+<p>par     –  A Parameter that will be varied during a fit.
+value   –  An initial value for the variable. If this is None</p>
 <blockquote>
 <div>(default), then the current value of par will be used.</div></blockquote>
 <dl class="docutils">
-<dt>name    &#8211;  A name for this variable. If name is None (default), then</dt>
+<dt>name    –  A name for this variable. If name is None (default), then</dt>
 <dd>the name of the parameter will be used.</dd>
 </dl>
-<p>fixed   &#8211;  Fix the variable so that it does not vary (default False).
-tag     &#8211;  A tag for the variable. This can be used to retrieve, fix</p>
+<p>fixed   –  Fix the variable so that it does not vary (default False).
+tag     –  A tag for the variable. This can be used to retrieve, fix</p>
 <blockquote>
 <div>or free variables by tag (default None). Note that a
-variable is automatically tagged with its name and &#8220;all&#8221;.</div></blockquote>
+variable is automatically tagged with its name and “all”.</div></blockquote>
 <dl class="docutils">
-<dt>tags    &#8211;  A list of tags (default []). Both tag and tags can be</dt>
+<dt>tags    –  A list of tags (default []). Both tag and tags can be</dt>
 <dd>applied.</dd>
 </dl>
 <p>Returns the ParameterProxy (variable) for the passed Parameter.</p>
@@ -2552,10 +2614,10 @@ Raises ValueError if par is constrained.</p>
 <dd><p>Turn all bounded parameters into restraints.</p>
 <p>The bounds become limits on the restraint.</p>
 <dl class="docutils">
-<dt>sig     &#8211;  The uncertainty on the bounds (scalar or iterable,</dt>
+<dt>sig     –  The uncertainty on the bounds (scalar or iterable,</dt>
 <dd>default 1).</dd>
 </dl>
-<p>scaled  &#8211;  Scale the restraints, see restrain.</p>
+<p>scaled  –  Scale the restraints, see restrain.</p>
 </dd></dl>
 
 <dl class="method">
@@ -2572,15 +2634,15 @@ Raises ValueError if par is constrained.</p>
 <p>This is overloaded to set the value of con if it represents a variable
 and its current value is None. A constrained variable will be set as
 fixed.</p>
-<p>par     &#8211;  The Parameter to constrain.
-con     &#8211;  A string representation of the constraint equation or a</p>
+<p>par     –  The Parameter to constrain.
+con     –  A string representation of the constraint equation or a</p>
 <blockquote>
 <div>Parameter to constrain to.  A constraint equation must
-consist of numpy operators and &#8220;known&#8221; Parameters.
+consist of numpy operators and “known” Parameters.
 Parameters are known if they are in the ns argument, or if
 they are managed by this object.</div></blockquote>
 <dl class="docutils">
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are used</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are used</dt>
 <dd>in the eqstr, but not part of this object (default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already used for a
@@ -2596,7 +2658,7 @@ Raises ValueError if par is marked as constant.</p>
 <dd><p>Remove a variable.</p>
 <p>Note that constraints and restraints involving the variable are not
 modified.</p>
-<p>var     &#8211;  A variable of the FitRecipe.</p>
+<p>var     –  A variable of the FitRecipe.</p>
 <p>Raises ValueError if var is not part of the FitRecipe.</p>
 </dd></dl>
 
@@ -2605,7 +2667,7 @@ modified.</p>
 <code class="descname">fix</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.fix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fix a parameter by reference, name or tag.</p>
 <p>A fixed variable is not refined.  Variables are free by default.</p>
-<p>This method accepts string or variable arguments. An argument of &#8220;all&#8221;
+<p>This method accepts string or variable arguments. An argument of “all”
 selects all variables. Keyword arguments must be parameter names,
 followed by a value to assign to the fixed variable.</p>
 <p>Raises ValueError if an unknown Parameter, name or tag is passed, or if
@@ -2630,7 +2692,7 @@ a tag is passed in a keyword.</p>
 <dd><p>Free a parameter by reference, name or tag.</p>
 <p>A free variable is refined.  Variables are free by default. Constrained
 variables are not free.</p>
-<p>This method accepts string or variable arguments. An argument of &#8220;all&#8221;
+<p>This method accepts string or variable arguments. An argument of “all”
 selects all variables. Keyword arguments must be parameter names,
 followed by a value to assign to the fixed variable.</p>
 <p>Raises ValueError if an unknown Parameter, name or tag is passed, or if
@@ -2685,18 +2747,18 @@ Parameter.  Orphan variables may cause a fit to fail, depending on the
 optimization routine, and therefore should only be created to be used
 in contraint or restraint equations.</p>
 <dl class="docutils">
-<dt>name    &#8211;  The name of the variable. The variable will be able to be</dt>
+<dt>name    –  The name of the variable. The variable will be able to be</dt>
 <dd>used by this name in restraint and constraint equations.</dd>
-<dt>value   &#8211;  An initial value for the variable. If this is None</dt>
+<dt>value   –  An initial value for the variable. If this is None</dt>
 <dd>(default), then the variable will be given the value of the
 first non-None-valued Parameter constrained to it. If this
-fails, an error will be thrown when &#8216;residual&#8217; is called.</dd>
-<dt>fixed   &#8211;  Fix the variable so that it does not vary (default False).</dt>
+fails, an error will be thrown when ‘residual’ is called.</dd>
+<dt>fixed   –  Fix the variable so that it does not vary (default False).</dt>
 <dd>The variable will still be managed by the FitRecipe.</dd>
-<dt>tag     &#8211;  A tag for the variable. This can be used to fix and free</dt>
+<dt>tag     –  A tag for the variable. This can be used to fix and free</dt>
 <dd>variables by tag (default None). Note that a variable is
-automatically tagged with its name and &#8220;all&#8221;.</dd>
-<dt>tags    &#8211;  A list of tags (default []). Both tag and tags can be</dt>
+automatically tagged with its name and “all”.</dd>
+<dt>tags    –  A list of tags (default []). Both tag and tags can be</dt>
 <dd>applied.</dd>
 </dl>
 <p>Returns the new variable (Parameter instance).</p>
@@ -2707,10 +2769,10 @@ automatically tagged with its name and &#8220;all&#8221;.</dd>
 <code class="descname">popFitHook</code><span class="sig-paren">(</span><em>fithook=None</em>, <em>index=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.popFitHook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a FitHook by index or reference.</p>
 <dl class="docutils">
-<dt>fithook &#8211;  FitHook instance to remove from the sequence. If this is</dt>
+<dt>fithook –  FitHook instance to remove from the sequence. If this is</dt>
 <dd>None (default), default to index.</dd>
 </dl>
-<p>index   &#8211;  Index of FitHook instance to remove (default -1).</p>
+<p>index   –  Index of FitHook instance to remove (default -1).</p>
 <p>Raises ValueError if fithook is not None, but is not present in the
 sequence.
 Raises IndexError if the sequence is empty or index is out of range.</p>
@@ -2724,8 +2786,8 @@ Raises IndexError if the sequence is empty or index is out of range.</p>
 passing information out of the system during a refinement. See the
 diffpy.srfit.fitbase.fithook.FitHook class for the required interface.
 Added FitHooks will be called sequentially during refinement.</p>
-<p>fithook &#8211;  FitHook instance to add to the sequence
-index   &#8211;  Index for inserting fithook into the list of fit hooks.  If</p>
+<p>fithook –  FitHook instance to add to the sequence
+index   –  Index for inserting fithook into the list of fit hooks.  If</p>
 <blockquote>
 <div>this is None (default), the fithook is added to the end.</div></blockquote>
 </dd></dl>
@@ -2742,14 +2804,14 @@ index   &#8211;  Index for inserting fithook into the list of fit hooks.  If</p>
 <code class="descname">residual</code><span class="sig-paren">(</span><em>p=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.residual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the vector residual to be optimized.</p>
 <p>Arguments
-p   &#8211;  The list of current variable values, provided in the same order</p>
+p   –  The list of current variable values, provided in the same order</p>
 <blockquote>
-<div>as the &#8216;_parameters&#8217; list. If p is an empty iterable (default),
+<div>as the ‘_parameters’ list. If p is an empty iterable (default),
 then it is assumed that the parameters have already been
 updated in some other way, and the explicit update within this
 function is skipped.</div></blockquote>
 <p>The residual is by default the weighted concatenation of each
-FitContribution&#8217;s residual, plus the value of each restraint. The array
+FitContribution’s residual, plus the value of each restraint. The array
 returned, denoted chiv, is such that
 dot(chiv, chiv) = chi^2 + restraints.</p>
 </dd></dl>
@@ -2759,14 +2821,14 @@ dot(chiv, chiv) = chi^2 + restraints.</p>
 <code class="descname">scalarResidual</code><span class="sig-paren">(</span><em>p=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.scalarResidual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the scalar residual to be optimized.</p>
 <p>Arguments
-p   &#8211;  The list of current variable values, provided in the same order</p>
+p   –  The list of current variable values, provided in the same order</p>
 <blockquote>
-<div>as the &#8216;_parameters&#8217; list. If p is an empty iterable (default),
+<div>as the ‘_parameters’ list. If p is an empty iterable (default),
 then it is assumed that the parameters have already been
 updated in some other way, and the explicit update within this
 function is skipped.</div></blockquote>
 <p>The residual is by default the weighted concatenation of each
-FitContribution&#8217;s residual, plus the value of each restraint. The array
+FitContribution’s residual, plus the value of each restraint. The array
 returned, denoted chiv, is such that
 dot(chiv, chiv) = chi^2 + restraints.</p>
 </dd></dl>
@@ -2783,7 +2845,7 @@ dot(chiv, chiv) = chi^2 + restraints.</p>
 <dd><p>Unconstrain a Parameter.</p>
 <p>This removes any constraints on a Parameter. If the Parameter is also a
 variable of the recipe, it will be freed as well.</p>
-<p><a href="#id7"><span class="problematic" id="id8">*</span></a>pars   &#8211;  The names of Parameters or Parameters to unconstrain.</p>
+<p><a href="#id7"><span class="problematic" id="id8">*</span></a>pars   –  The names of Parameters or Parameters to unconstrain.</p>
 <p>Raises ValueError if the Parameter is not constrained.</p>
 </dd></dl>
 
@@ -2795,35 +2857,35 @@ variable of the recipe, it will be freed as well.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Class for processing, presenting and storing results of a fit.</p>
 <p>Attributes
-recipe      &#8211;  The recipe containing the results.
-cov         &#8211;  The covariance matrix from the recipe.
-conresults  &#8211;  An ordered dictionary of ContributionResults for each</p>
+recipe      –  The recipe containing the results.
+cov         –  The covariance matrix from the recipe.
+conresults  –  An ordered dictionary of ContributionResults for each</p>
 <blockquote>
 <div>FitContribution, indexed by the FitContribution name.</div></blockquote>
 <dl class="docutils">
-<dt>derivstep   &#8211;  The fractional step size for calculating numeric</dt>
+<dt>derivstep   –  The fractional step size for calculating numeric</dt>
 <dd>derivatives. Default 1e-8.</dd>
 </dl>
-<p>varnames    &#8211;  Names of the variables in the recipe.
-varvals     &#8211;  Values of the variables in the recipe.
-varunc      &#8211;  Uncertainties in the variable values.
-showfixed   &#8211;  Show fixed variables (default True).
-fixednames  &#8211;  Names of the fixed variables of the recipe.
-fixedvals   &#8211;  Values of the fixed variables of the recipe.
-showcon     &#8211;  Show constraint values in the output (default False).
-connames    &#8211;  Names of the constrained parameters.
-convals     &#8211;  Values of the constrained parameters.
-conunc      &#8211;  Uncertainties in the constraint values.
-residual    &#8211;  The scalar residual of the recipe.
-penalty     &#8211;  The penalty to residual from the restraints.
-chi2        &#8211;  The chi2 of the recipe.
-cumchi2     &#8211;  The cumulative chi2 of the recipe.
-rchi2       &#8211;  The reduced chi2 of the recipe.
-rw          &#8211;  The Rw of the recipe.
-cumrw       &#8211;  The cumulative Rw of the recipe.
-messages    &#8211;  A list of messages about the results.
-precision   &#8211;  The precision of numeric output (default 8).
-_dcon       &#8211;  The derivatives of the constraint equations with respect to</p>
+<p>varnames    –  Names of the variables in the recipe.
+varvals     –  Values of the variables in the recipe.
+varunc      –  Uncertainties in the variable values.
+showfixed   –  Show fixed variables (default True).
+fixednames  –  Names of the fixed variables of the recipe.
+fixedvals   –  Values of the fixed variables of the recipe.
+showcon     –  Show constraint values in the output (default False).
+connames    –  Names of the constrained parameters.
+convals     –  Values of the constrained parameters.
+conunc      –  Uncertainties in the constraint values.
+residual    –  The scalar residual of the recipe.
+penalty     –  The penalty to residual from the restraints.
+chi2        –  The chi2 of the recipe.
+cumchi2     –  The cumulative chi2 of the recipe.
+rchi2       –  The reduced chi2 of the recipe.
+rw          –  The Rw of the recipe.
+cumrw       –  The cumulative Rw of the recipe.
+messages    –  A list of messages about the results.
+precision   –  The precision of numeric output (default 8).
+_dcon       –  The derivatives of the constraint equations with respect to</p>
 <blockquote>
 <div>the variables. This is used internally.</div></blockquote>
 <p>Each of these attributes, except the recipe, are created or updated when
@@ -2834,9 +2896,9 @@ the update method is called.</p>
 <dd><p>Format the results and return them in a string.</p>
 <p>This function is called by printResults and saveResults. Overloading
 the formatting here will change all three functions.</p>
-<p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)
-update  &#8211;  Flag indicating whether to call update() (default False).</p>
+<p>header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)
+update  –  Flag indicating whether to call update() (default False).</p>
 <p>Returns a string containing the formatted results.</p>
 </dd></dl>
 
@@ -2844,9 +2906,9 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 <dt id="diffpy.srfit.fitbase.FitResults.printResults">
 <code class="descname">printResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.printResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and print the results.</p>
-<p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)
-update  &#8211;  Flag indicating whether to call update() (default False).</p>
+<p>header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)
+update  –  Flag indicating whether to call update() (default False).</p>
 </dd></dl>
 
 <dl class="method">
@@ -2854,9 +2916,9 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 <code class="descname">saveResults</code><span class="sig-paren">(</span><em>filename</em>, <em>header=''</em>, <em>footer=''</em>, <em>update=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.saveResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and save the results.</p>
 <p>filename -  Name of the save file.
-header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)
-update  &#8211;  Flag indicating whether to call update() (default False).</p>
+header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)
+update  –  Flag indicating whether to call update() (default False).</p>
 </dd></dl>
 
 <dl class="method">
@@ -2874,8 +2936,8 @@ update  &#8211;  Flag indicating whether to call update() (default False).</p>
 <p>This reads the results from file and initializes any variables (fixed or
 free) in the recipe to the results values. Note that the recipe has to be
 configured, with variables. This does not reconstruct a FitRecipe.</p>
-<p>recipe  &#8211;  A configured recipe with variables
-results &#8211;  An open file-like object, name of a file that contains</p>
+<p>recipe  –  A configured recipe with variables
+results –  An open file-like object, name of a file that contains</p>
 <blockquote>
 <div>results from FitResults or a string containing fit results.</div></blockquote>
 </dd></dl>
@@ -2890,8 +2952,8 @@ results &#8211;  An open file-like object, name of a file that contains</p>
 <code class="descname">postcall</code><span class="sig-paren">(</span><em>recipe</em>, <em>chiv</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.PlotFitHook.postcall" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is called within FitRecipe.residual, after the calculation.</p>
 <p>Find data and plot it.</p>
-<p>recipe  &#8211;  The FitRecipe instance
-chiv    &#8211;  The residual vector</p>
+<p>recipe  –  The FitRecipe instance
+chiv    –  The residual vector</p>
 </dd></dl>
 
 <dl class="method">
@@ -2911,35 +2973,35 @@ chiv    &#8211;  The residual vector</p>
 by the Profile, which can in turn be observed by some other object.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_xobs   &#8211;  A numpy array of the observed independent variable (default</dt>
+<dt>_xobs   –  A numpy array of the observed independent variable (default</dt>
 <dd>None)</dd>
 </dl>
-<p>xobs    &#8211;  Read-only property of _xobs.
-_yobs   &#8211;  A numpy array of the observed signal (default None)
-yobs    &#8211;  Read-only property of _yobs.
-_dyobs  &#8211;  A numpy array of the uncertainty of the observed signal (default</p>
+<p>xobs    –  Read-only property of _xobs.
+_yobs   –  A numpy array of the observed signal (default None)
+yobs    –  Read-only property of _yobs.
+_dyobs  –  A numpy array of the uncertainty of the observed signal (default</p>
 <blockquote>
 <div>None, optional).</div></blockquote>
-<p>dyobs   &#8211;  Read-only property of _dyobs.
-x       &#8211;  A numpy array of the calculated independent variable (default</p>
+<p>dyobs   –  Read-only property of _dyobs.
+x       –  A numpy array of the calculated independent variable (default</p>
 <blockquote>
 <div>None, property for xpar accessors).</div></blockquote>
 <dl class="docutils">
-<dt>y       &#8211;  The profile over the calculation range (default None, property</dt>
+<dt>y       –  The profile over the calculation range (default None, property</dt>
 <dd>for ypar accessors).</dd>
-<dt>dy      &#8211;  The uncertainty in the profile over the calculation range</dt>
+<dt>dy      –  The uncertainty in the profile over the calculation range</dt>
 <dd>(default None, property for dypar accessors).</dd>
 </dl>
-<p>ycalc   &#8211;  A numpy array of the calculated signal (default None).
-xpar    &#8211;  A Parameter that stores x (named &#8220;x&#8221;).
-ypar    &#8211;  A Parameter that stores y (named &#8220;y&#8221;).
-dypar   &#8211;  A Parameter that stores dy (named &#8220;dy&#8221;).
-ycpar   &#8211;  A Parameter that stores ycalc (named &#8220;ycalc&#8221;). This is</p>
+<p>ycalc   –  A numpy array of the calculated signal (default None).
+xpar    –  A Parameter that stores x (named “x”).
+ypar    –  A Parameter that stores y (named “y”).
+dypar   –  A Parameter that stores dy (named “dy”).
+ycpar   –  A Parameter that stores ycalc (named “ycalc”). This is</p>
 <blockquote>
 <div>not observed by the profile, but it is present so it can be
 constrained to.</div></blockquote>
 <dl class="docutils">
-<dt>meta    &#8211;  A dictionary of metadata. This is only set if provided by a</dt>
+<dt>meta    –  A dictionary of metadata. This is only set if provided by a</dt>
 <dd>parser.</dd>
 </dl>
 <dl class="attribute">
@@ -2985,7 +3047,7 @@ arrays.</p>
 <code class="descname">setCalculationPoints</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation points.</p>
 <p>Arguments
-x   &#8211;  A non-empty numpy array containing the calculation points. If</p>
+x   –  A non-empty numpy array containing the calculation points. If</p>
 <blockquote>
 <div>xobs exists, the bounds of x will be limited to its bounds.</div></blockquote>
 <p>This will create y and dy on the specified grid if xobs, yobs and
@@ -2999,27 +3061,32 @@ dyobs exist.</p>
 <p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
 as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
-<dl class="docutils">
-<dt>xmin</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
-current minimum when not specified.  If specified as &#8220;obs&#8221;
-reset to the minimum observed value.</dd>
-<dt>xmax</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
-current maximum when not specified.  If specified as &#8220;obs&#8221;
-reset to the maximum observed value.</dd>
-<dt>dx</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
-</dl>
-<p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
-if it is within the bounds of the observed data.</p>
-<dl class="docutils">
-<dt>AttributeError</dt>
-<dd>If there is no observed data.</dd>
-<dt>ValueError</dt>
-<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as “obs”
+reset to the minimum observed value.</li>
+<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as “obs”
+reset to the maximum observed value.</li>
+<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
+<li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -3027,9 +3094,9 @@ if it is within the bounds of the observed data.</p>
 <code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>Arguments
-xobs    &#8211;  Numpy array of the independent variable
-yobs    &#8211;  Numpy array of the observed signal.
-dyobs   &#8211;  Numpy array of the uncertainty in the observed signal. If</p>
+xobs    –  Numpy array of the independent variable
+yobs    –  Numpy array of the observed signal.
+dyobs   –  Numpy array of the uncertainty in the observed signal. If</p>
 <blockquote>
 <div>dyobs is None (default), it will be set to 1 at each
 observed xobs.</div></blockquote>
@@ -3074,48 +3141,57 @@ generate a profile. ProfileGenerator is also an Operator
 (diffpy.srfit.equation.literals.operators), so it can be used directly in
 an evaluation network.</p>
 <p>Attributes
-name            &#8211;  A name for this organizer.
-profile         &#8211;  A Profile instance that contains the calculation range</p>
+name            –  A name for this organizer.
+profile         –  A Profile instance that contains the calculation range</p>
 <blockquote>
 <div>and will contain the generated profile.</div></blockquote>
-<p>meta            &#8211;  A dictionary of metadata needed by the generator.
-eq              &#8211;  The Equation object used to wrap this ProfileGenerator.</p>
+<p>meta            –  A dictionary of metadata needed by the generator.
+eq              –  The Equation object used to wrap this ProfileGenerator.</p>
 <blockquote>
 <div>This is set when the ProfileGenerator is added to a
 FitContribution.</div></blockquote>
-<p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+<p>_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_parameters     &#8211;  A managed OrderedDict of contained Parameters.
-_parsets        &#8211;  A managed dictionary of ParameterSets.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_parameters     –  A managed OrderedDict of contained Parameters.
+_parsets        –  A managed dictionary of ParameterSets.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
 <dl class="docutils">
-<dt>_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</dt>
+<dt>_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</dt>
 <dd>instance that is used create Equations from string.</dd>
 </dl>
 <p>Operator Attributes
-args    &#8211;  List of Literal arguments, set with &#8216;addLiteral&#8217;
-name    &#8211;  A name for this operator. e.g. &#8220;add&#8221; or &#8220;sin&#8221;
-nin     &#8211;  Number of inputs (&lt;1 means this is variable)
-nout    &#8211;  Number of outputs
-operation   &#8211;  Function that performs the operation. e.g. numpy.add. In</p>
+args    –  List of Literal arguments, set with ‘addLiteral’
+name    –  A name for this operator. e.g. “add” or “sin”
+nin     –  Number of inputs (&lt;1 means this is variable)
+nout    –  Number of outputs
+operation   –  Function that performs the operation. e.g. numpy.add. In</p>
 <blockquote>
 <div>this case, operation is an instance method.</div></blockquote>
-<p>symbol  &#8211;  The symbolic representation. e.g. &#8220;+&#8221; or &#8220;sin&#8221;
-_value  &#8211;  The value of the Operator.
-value   &#8211;  Property for &#8216;getValue&#8217;.</p>
+<p>symbol  –  The symbolic representation. e.g. “+” or “sin”
+_value  –  The value of the Operator.
+value   –  Property for ‘getValue’.</p>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.ProfileGenerator.nin">
+<code class="descname">nin</code><em class="property"> = 0</em><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.nin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.ProfileGenerator.nout">
+<code class="descname">nout</code><em class="property"> = 1</em><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.nout" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.ProfileGenerator.operation">
 <code class="descname">operation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.operation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the profile.</p>
-<p>This calls __call__ and passes in profile.x. It also stores the output
-in profile.ycalc. The calculated value is then returned.</p>
+<p>Return the result of __call__(profile.x).</p>
 </dd></dl>
 
 <dl class="method">
@@ -3131,10 +3207,15 @@ metadata. This method gets called whenever the Profile is set.</p>
 <code class="descname">setProfile</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.setProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assign the profile.</p>
 <dl class="docutils">
-<dt>profile &#8211;  A Profile that specifies the calculation points and which</dt>
+<dt>profile –  A Profile that specifies the calculation points and which</dt>
 <dd>will store the calculated signal.</dd>
 </dl>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="diffpy.srfit.fitbase.ProfileGenerator.symbol">
+<code class="descname">symbol</code><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.symbol" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -3143,53 +3224,53 @@ metadata. This method gets called whenever the Profile is set.</p>
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">SimpleRecipe</code><span class="sig-paren">(</span><em>name='fit'</em>, <em>conclass=&lt;class 'diffpy.srfit.fitbase.fitcontribution.FitContribution'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></code></a></p>
 <p>SimpleRecipe class.</p>
-<p>This is a FitRecipe with a built-in Profile (the &#8216;profile&#8217; attribute) and
-FitContribution (the &#8216;contribution&#8217; attribute). Unique methods from each of
+<p>This is a FitRecipe with a built-in Profile (the ‘profile’ attribute) and
+FitContribution (the ‘contribution’ attribute). Unique methods from each of
 these are exposed through this class to facilitate the creation of a simple
 fit recipe.</p>
 <p>Attributes
-profile         &#8211;  The built-in Profile object.
-contribution    &#8211;  The built-in FitContribution object.
-results         &#8211;  The built-in FitResults object.
-name            &#8211;  A name for this FitRecipe.
-fithook         &#8211;  An object to be called whenever within the residual</p>
+profile         –  The built-in Profile object.
+contribution    –  The built-in FitContribution object.
+results         –  The built-in FitResults object.
+name            –  A name for this FitRecipe.
+fithook         –  An object to be called whenever within the residual</p>
 <blockquote>
 <div>(default FitHook()) that can pass information out of
 the system during a refinement.</div></blockquote>
 <dl class="docutils">
-<dt>_constraints    &#8211;  A dictionary of Constraints, indexed by the constrained</dt>
+<dt>_constraints    –  A dictionary of Constraints, indexed by the constrained</dt>
 <dd>Parameter. Constraints can be added using the
-&#8216;constrain&#8217; method.</dd>
-<dt>_oconstraints   &#8211;  An ordered list of the constraints from this and all</dt>
+‘constrain’ method.</dd>
+<dt>_oconstraints   –  An ordered list of the constraints from this and all</dt>
 <dd>sub-components.</dd>
 </dl>
-<p>_calculators    &#8211;  A managed dictionary of Calculators.
-_contributions  &#8211;  A managed OrderedDict of FitContributions.
-_parameters     &#8211;  A managed OrderedDict of parameters (in this case the</p>
+<p>_calculators    –  A managed dictionary of Calculators.
+_contributions  –  A managed OrderedDict of FitContributions.
+_parameters     –  A managed OrderedDict of parameters (in this case the</p>
 <blockquote>
 <div>parameters are varied).</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string</div></blockquote>
-<p>_fixed          &#8211;  A set of parameters that are not actually varied.
-_restraintlist  &#8211;  A list of restraints from this and all sub-components.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<p>_fixed          –  A set of parameters that are not actually varied.
+_restraintlist  –  A list of restraints from this and all sub-components.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
 <dl class="docutils">
-<dt>_ready          &#8211;  A flag indicating if all attributes are ready for the</dt>
+<dt>_ready          –  A flag indicating if all attributes are ready for the</dt>
 <dd>calculation.</dd>
 </dl>
-<p>_tagdict        &#8211;  A dictionary of tags to variables.
-_weights        &#8211;  List of weighing factors for each FitContribution. The</p>
+<p>_tagdict        –  A dictionary of tags to variables.
+_weights        –  List of weighing factors for each FitContribution. The</p>
 <blockquote>
 <div>weights are multiplied by the residual of the
 FitContribution when determining the overall residual.</div></blockquote>
 <p>Properties
-names           &#8211;  Variable names (read only). See getNames.
-values          &#8211;  Variable values (read only). See getValues.</p>
+names           –  Variable names (read only). See getNames.
+values          –  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.loadParsedData">
 <code class="descname">loadParsedData</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.loadParsedData" title="Permalink to this definition">¶</a></dt>
@@ -3215,8 +3296,8 @@ arrays.</p>
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.printResults">
 <code class="descname">printResults</code><span class="sig-paren">(</span><em>header=''</em>, <em>footer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.printResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and print the results.</p>
-<p>header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
+<p>header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)</p>
 </dd></dl>
 
 <dl class="method">
@@ -3224,8 +3305,8 @@ footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
 <code class="descname">saveResults</code><span class="sig-paren">(</span><em>filename</em>, <em>header=''</em>, <em>footer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.saveResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format and save the results.</p>
 <p>filename -  Name of the save file.
-header  &#8211;  A header to add to the output (default &#8220;&#8221;)
-footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
+header  –  A header to add to the output (default “”)
+footer  –  A footer to add to the output (default “”)</p>
 </dd></dl>
 
 <dl class="method">
@@ -3233,7 +3314,7 @@ footer  &#8211;  A footer to add to the output (default &#8220;&#8221;)</p>
 <code class="descname">setCalculationPoints</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setCalculationPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the calculation points.</p>
 <p>Arguments
-x   &#8211;  A non-empty numpy array containing the calculation points. If</p>
+x   –  A non-empty numpy array containing the calculation points. If</p>
 <blockquote>
 <div>xobs exists, the bounds of x will be limited to its bounds.</div></blockquote>
 <p>This will create y and dy on the specified grid if xobs, yobs and
@@ -3247,27 +3328,32 @@ dyobs exist.</p>
 <p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
 as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
-<dl class="docutils">
-<dt>xmin</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
-current minimum when not specified.  If specified as &#8220;obs&#8221;
-reset to the minimum observed value.</dd>
-<dt>xmax</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
-current maximum when not specified.  If specified as &#8220;obs&#8221;
-reset to the maximum observed value.</dd>
-<dt>dx</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
-</dl>
-<p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
-if it is within the bounds of the observed data.</p>
-<dl class="docutils">
-<dt>AttributeError</dt>
-<dd>If there is no observed data.</dd>
-<dt>ValueError</dt>
-<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as “obs”
+reset to the minimum observed value.</li>
+<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as “obs”
+reset to the maximum observed value.</li>
+<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
+<li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -3275,13 +3361,13 @@ if it is within the bounds of the observed data.</p>
 <code class="descname">setEquation</code><span class="sig-paren">(</span><em>eqstr</em>, <em>ns={}</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setEquation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the profile equation for the FitContribution.</p>
 <p>This sets the equation that will be used when generating the residual.
-The equation will be usable within setResidualEquation as &#8220;eq&#8221;, and it
+The equation will be usable within setResidualEquation as “eq”, and it
 takes no arguments.</p>
 <dl class="docutils">
-<dt>eqstr   &#8211;  A string representation of the equation. Variables will be</dt>
+<dt>eqstr   –  A string representation of the equation. Variables will be</dt>
 <dd>extracted from this equation and be given an initial value
 of 0.</dd>
-<dt>ns      &#8211;  A dictionary of Parameters, indexed by name, that are used</dt>
+<dt>ns      –  A dictionary of Parameters, indexed by name, that are used</dt>
 <dd>in the eqstr, but not registered (default {}).</dd>
 </dl>
 <p>Raises ValueError if ns uses a name that is already used for a
@@ -3293,9 +3379,9 @@ variable.</p>
 <code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>Arguments
-xobs    &#8211;  Numpy array of the independent variable
-yobs    &#8211;  Numpy array of the observed signal.
-dyobs   &#8211;  Numpy array of the uncertainty in the observed signal. If</p>
+xobs    –  Numpy array of the independent variable
+yobs    –  Numpy array of the observed signal.
+dyobs   –  Numpy array of the uncertainty in the observed signal. If</p>
 <blockquote>
 <div>dyobs is None (default), it will be set to 1 at each
 observed xobs.</div></blockquote>
@@ -3348,7 +3434,7 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/diffpy.srfit.fitbase.txt"
+      <li><a href="../_sources/api/diffpy.srfit.fitbase.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -3381,13 +3467,13 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
         <li class="right" >
           <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+        &#169; Copyright 2017, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

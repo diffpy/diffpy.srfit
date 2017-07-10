@@ -1,23 +1,21 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>diffpy.srfit.sas package &#8212; SrFit 1.2 documentation</title>
-    
+    <title>diffpy.srfit.sas package &#8212; SrFit 1.3 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2',
+        VERSION:     '1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,12 +24,10 @@
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="SrFit 1.2 documentation" href="../index.html" />
-    <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.structure package" href="diffpy.srfit.structure.html" />
     <link rel="prev" title="diffpy.srfit.pdf package" href="diffpy.srfit.pdf.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -47,7 +43,7 @@
         <li class="right" >
           <a href="diffpy.srfit.pdf.html" title="diffpy.srfit.pdf package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>  
@@ -82,16 +78,16 @@ where f(r) is the nanoparticle form factor.
 This is obtained from P(r) as
 P(r) = 4 pi r**2 f(r).</p>
 <p>Attributes:
-_invertor   &#8211;  sas.pr.invertor.Invertor object. This object is internal,</p>
+_invertor   –  sas.pr.invertor.Invertor object. This object is internal,</p>
 <blockquote>
 <div>but can be configured by the user after initialization.
-Note that the &#8216;x&#8217;, &#8216;y&#8217; and &#8216;err&#8217; attributes get overwritten
+Note that the ‘x’, ‘y’ and ‘err’ attributes get overwritten
 every time the invertor is used.</div></blockquote>
 <p>Managed Parameters:
-scale       &#8211;  The scale factor (default 1).
-q           &#8211;  The q-values of the I(q) signal
-iq          &#8211;  The I(q) signal
-diq         &#8211;  The uncertainty in I(q)</p>
+scale       –  The scale factor (default 1).
+q           –  The q-values of the I(q) signal
+iq          –  The I(q) signal
+diq         –  The uncertainty in I(q)</p>
 </dd></dl>
 
 <dl class="class">
@@ -103,16 +99,16 @@ diq         &#8211;  The uncertainty in I(q)</p>
 f(r) = P(r) / 4 pi r**2
 which is the nanoparticle form factor scaled by density.</p>
 <p>Attributes:
-_invertor   &#8211;  sas.pr.invertor.Invertor object. This object is internal,</p>
+_invertor   –  sas.pr.invertor.Invertor object. This object is internal,</p>
 <blockquote>
 <div>but can be configured by the user after initialization.
-Note that the &#8216;x&#8217;, &#8216;y&#8217; and &#8216;err&#8217; attributes get overwritten
+Note that the ‘x’, ‘y’ and ‘err’ attributes get overwritten
 every time the invertor is used.</div></blockquote>
 <p>Managed Parameters:
-scale       &#8211;  The scale factor (default 1).
-q           &#8211;  The q-values of the I(q) signal
-iq          &#8211;  The I(q) signal
-diq         &#8211;  The uncertainty in I(q)</p>
+scale       –  The scale factor (default 1).
+q           –  The q-values of the I(q) signal
+iq          –  The I(q) signal
+diq         –  The uncertainty in I(q)</p>
 </dd></dl>
 
 </div>
@@ -127,12 +123,12 @@ ProfileGenerator.</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></code></a></p>
 <p>A class for calculating I(Q) from a scattering type.</p>
 <p>Attributes:
-_model      &#8211;  BaseModel object this adapts.</p>
+_model      –  BaseModel object this adapts.</p>
 <p>Managed Parameters:
 These depend on the parameters of the BaseModel object held by _model. They
-are created from the &#8216;params&#8217; attribute of the BaseModel. If a dispersion
-is set for the BaseModel, the dispersion &#8220;width&#8221; will be accessible under
-&#8220;&lt;parname&gt;_width&#8221;, where &lt;parname&gt; is the name a parameter adjusted by
+are created from the ‘params’ attribute of the BaseModel. If a dispersion
+is set for the BaseModel, the dispersion “width” will be accessible under
+“&lt;parname&gt;_width”, where &lt;parname&gt; is the name a parameter adjusted by
 dispersion.</p>
 </dd></dl>
 
@@ -148,20 +144,20 @@ ProfileGenerator.</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></code></a></p>
 <p>Class adapting a sasmodel parameter to srfit Parameter.</p>
 <p>Attributes
-name    &#8211;  A name for this Parameter.
-const   &#8211;  A flag indicating whether this is considered a constant.
-_value  &#8211;  The value of the Parameter. Modified with &#8216;setValue&#8217;.
-value   &#8211;  Property for &#8216;getValue&#8217; and &#8216;setValue&#8217;.
-constrained &#8211;  A flag indicating if the Parameter is constrained</p>
+name    –  A name for this Parameter.
+const   –  A flag indicating whether this is considered a constant.
+_value  –  The value of the Parameter. Modified with ‘setValue’.
+value   –  Property for ‘getValue’ and ‘setValue’.
+constrained –  A flag indicating if the Parameter is constrained</p>
 <blockquote>
 <div>(default False).</div></blockquote>
 <dl class="docutils">
-<dt>bounds  &#8211;  A 2-list defining the bounds on the Parameter. This can be</dt>
+<dt>bounds  –  A 2-list defining the bounds on the Parameter. This can be</dt>
 <dd>used by some optimizers when the Parameter is varied. These
 bounds are unrelated to restraints on a Parameter.</dd>
 </dl>
-<p>_model  &#8211;  The BaseModel to which the underlying parameter belongs.
-_parname    &#8211;  The name of the underlying BaseModel parameter.</p>
+<p>_model  –  The BaseModel to which the underlying parameter belongs.
+_parname    –  The name of the underlying BaseModel parameter.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.sasparameter.SASParameter.getValue">
 <code class="descname">getValue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter.getValue" title="Permalink to this definition">¶</a></dt>
@@ -187,50 +183,50 @@ _parname    &#8211;  The name of the underlying BaseModel parameter.</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
 <p>Class for parsing a sas profile.</p>
 <p>This uses a sas DataLoader to load the data. The DataInfo object it returns
-is held in the metadata under the name &#8220;datainfo&#8221;.</p>
+is held in the metadata under the name “datainfo”.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_format     &#8211;  Name of the data format that this parses (string, default</dt>
-<dd>&#8220;&#8221;). The format string is a unique identifier for the data
+<dt>_format     –  Name of the data format that this parses (string, default</dt>
+<dd>“”). The format string is a unique identifier for the data
 format handled by the parser.</dd>
-<dt>_banks      &#8211;  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
+<dt>_banks      –  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
 <dd><p class="first">tuple:
-x       &#8211;  A numpy array containing the independent</p>
+x       –  A numpy array containing the independent</p>
 <blockquote>
 <div>variable read from the file.</div></blockquote>
 <dl class="last docutils">
-<dt>y       &#8211;  A numpy array containing the profile</dt>
+<dt>y       –  A numpy array containing the profile</dt>
 <dd>from the file.</dd>
-<dt>dx      &#8211;  A numpy array containing the uncertainty in x</dt>
+<dt>dx      –  A numpy array containing the uncertainty in x</dt>
 <dd>read from the file. This is 0 if the uncertainty
 cannot be read.</dd>
-<dt>dy      &#8211;  A numpy array containing the uncertainty read</dt>
+<dt>dy      –  A numpy array containing the uncertainty read</dt>
 <dd>from the file. This is 0 if the uncertainty
 cannot be read.</dd>
 </dl>
 </dd>
 </dl>
-<p>_x          &#8211;  Indpendent variable from the chosen bank
-_y          &#8211;  Profile from the chosen bank
-_dx         &#8211;  Uncertainty in independent variable from the chosen bank
-_dy         &#8211;  Uncertainty in profile from the chosen bank
-_meta       &#8211;  A dictionary containing metadata read from the file.</p>
+<p>_x          –  Indpendent variable from the chosen bank
+_y          –  Profile from the chosen bank
+_dx         –  Uncertainty in independent variable from the chosen bank
+_dy         –  Uncertainty in profile from the chosen bank
+_meta       –  A dictionary containing metadata read from the file.</p>
 <p>General Metadata</p>
 <dl class="docutils">
-<dt>filename    &#8211;  The name of the file from which data was parsed. This key</dt>
+<dt>filename    –  The name of the file from which data was parsed. This key</dt>
 <dd>will not exist if data was not read from file.</dd>
 </dl>
-<p>nbanks      &#8211;  The number of banks parsed.
-bank        &#8211;  The chosen bank number.</p>
+<p>nbanks      –  The number of banks parsed.
+bank        –  The chosen bank number.</p>
 <p>Metadata - These may appear in the metadata dictionary</p>
-<p>datainfo    &#8211;  The DataInfo object used to do the data parsing.</p>
+<p>datainfo    –  The DataInfo object used to do the data parsing.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.sasparser.SASParser.parseFile">
 <code class="descname">parseFile</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser.parseFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a file and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
-filename    &#8211;  The name of the file to parse</p>
+filename    –  The name of the file to parse</p>
 <p>Raises IOError if the file cannot be read
 Raises ParseError if the file cannot be parsed</p>
 </dd></dl>
@@ -242,7 +238,7 @@ Raises ParseError if the file cannot be parsed</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to 0.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
-patstring   &#8211;  A string containing the pattern</p>
+patstring   –  A string containing the pattern</p>
 <p>Raises ParseError if the string cannot be parsed</p>
 </dd></dl>
 
@@ -263,42 +259,42 @@ Otherwise, use the SASParser class and load the data into a base Profile
 object.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_xobs   &#8211;  A numpy array of the observed independent variable (default</dt>
+<dt>_xobs   –  A numpy array of the observed independent variable (default</dt>
 <dd>None)</dd>
 </dl>
-<p>xobs    &#8211;  Read-only property of _xobs.
-_yobs   &#8211;  A numpy array of the observed signal (default None)
-yobs    &#8211;  Read-only property of _yobs.
-_dyobs  &#8211;  A numpy array of the uncertainty of the observed signal (default</p>
+<p>xobs    –  Read-only property of _xobs.
+_yobs   –  A numpy array of the observed signal (default None)
+yobs    –  Read-only property of _yobs.
+_dyobs  –  A numpy array of the uncertainty of the observed signal (default</p>
 <blockquote>
 <div>None, optional).</div></blockquote>
-<p>dyobs   &#8211;  Read-only property of _dyobs.
-x       &#8211;  A numpy array of the calculated independent variable (default</p>
+<p>dyobs   –  Read-only property of _dyobs.
+x       –  A numpy array of the calculated independent variable (default</p>
 <blockquote>
 <div>None, property for xpar accessors).</div></blockquote>
 <dl class="docutils">
-<dt>y       &#8211;  The profile over the calculation range (default None, property</dt>
+<dt>y       –  The profile over the calculation range (default None, property</dt>
 <dd>for ypar accessors).</dd>
-<dt>dy      &#8211;  The uncertainty in the profile over the calculation range</dt>
+<dt>dy      –  The uncertainty in the profile over the calculation range</dt>
 <dd>(default None, property for dypar accessors).</dd>
 </dl>
-<p>ycalc   &#8211;  A numpy array of the calculated signal (default None).
-xpar    &#8211;  A ProfileParameter that stores x (named &#8220;x&#8221;).
-ypar    &#8211;  A ProfileParameter that stores y (named &#8220;y&#8221;).
-dypar   &#8211;  A ProfileParameter that stores dy (named &#8220;dy&#8221;).
-meta    &#8211;  A dictionary of metadata. This is only set if provided by a</p>
+<p>ycalc   –  A numpy array of the calculated signal (default None).
+xpar    –  A ProfileParameter that stores x (named “x”).
+ypar    –  A ProfileParameter that stores y (named “y”).
+dypar   –  A ProfileParameter that stores dy (named “dy”).
+meta    –  A dictionary of metadata. This is only set if provided by a</p>
 <blockquote>
 <div>parser.</div></blockquote>
-<p>_datainfo   &#8211;  The DataInfo object this wraps.</p>
+<p>_datainfo   –  The DataInfo object this wraps.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.sasprofile.SASProfile.setObservedProfile">
 <code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.sasprofile.SASProfile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>This is overloaded to change the value within the datainfo object.</p>
 <p>Arguments
-xobs    &#8211;  Numpy array of the independent variable
-yobs    &#8211;  Numpy array of the observed signal.
-dyobs   &#8211;  Numpy array of the uncertainty in the observed signal. If</p>
+xobs    –  Numpy array of the independent variable
+yobs    –  Numpy array of the observed signal.
+dyobs   –  Numpy array of the uncertainty in the observed signal. If</p>
 <blockquote>
 <div>dyobs is None (default), it will be set to 1 at each
 observed xobs.</div></blockquote>
@@ -318,12 +314,12 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></code></a></p>
 <p>A class for calculating I(Q) from a scattering type.</p>
 <p>Attributes:
-_model      &#8211;  BaseModel object this adapts.</p>
+_model      –  BaseModel object this adapts.</p>
 <p>Managed Parameters:
 These depend on the parameters of the BaseModel object held by _model. They
-are created from the &#8216;params&#8217; attribute of the BaseModel. If a dispersion
-is set for the BaseModel, the dispersion &#8220;width&#8221; will be accessible under
-&#8220;&lt;parname&gt;_width&#8221;, where &lt;parname&gt; is the name a parameter adjusted by
+are created from the ‘params’ attribute of the BaseModel. If a dispersion
+is set for the BaseModel, the dispersion “width” will be accessible under
+“&lt;parname&gt;_width”, where &lt;parname&gt; is the name a parameter adjusted by
 dispersion.</p>
 </dd></dl>
 
@@ -333,50 +329,50 @@ dispersion.</p>
 <dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
 <p>Class for parsing a sas profile.</p>
 <p>This uses a sas DataLoader to load the data. The DataInfo object it returns
-is held in the metadata under the name &#8220;datainfo&#8221;.</p>
+is held in the metadata under the name “datainfo”.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_format     &#8211;  Name of the data format that this parses (string, default</dt>
-<dd>&#8220;&#8221;). The format string is a unique identifier for the data
+<dt>_format     –  Name of the data format that this parses (string, default</dt>
+<dd>“”). The format string is a unique identifier for the data
 format handled by the parser.</dd>
-<dt>_banks      &#8211;  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
+<dt>_banks      –  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
 <dd><p class="first">tuple:
-x       &#8211;  A numpy array containing the independent</p>
+x       –  A numpy array containing the independent</p>
 <blockquote>
 <div>variable read from the file.</div></blockquote>
 <dl class="last docutils">
-<dt>y       &#8211;  A numpy array containing the profile</dt>
+<dt>y       –  A numpy array containing the profile</dt>
 <dd>from the file.</dd>
-<dt>dx      &#8211;  A numpy array containing the uncertainty in x</dt>
+<dt>dx      –  A numpy array containing the uncertainty in x</dt>
 <dd>read from the file. This is 0 if the uncertainty
 cannot be read.</dd>
-<dt>dy      &#8211;  A numpy array containing the uncertainty read</dt>
+<dt>dy      –  A numpy array containing the uncertainty read</dt>
 <dd>from the file. This is 0 if the uncertainty
 cannot be read.</dd>
 </dl>
 </dd>
 </dl>
-<p>_x          &#8211;  Indpendent variable from the chosen bank
-_y          &#8211;  Profile from the chosen bank
-_dx         &#8211;  Uncertainty in independent variable from the chosen bank
-_dy         &#8211;  Uncertainty in profile from the chosen bank
-_meta       &#8211;  A dictionary containing metadata read from the file.</p>
+<p>_x          –  Indpendent variable from the chosen bank
+_y          –  Profile from the chosen bank
+_dx         –  Uncertainty in independent variable from the chosen bank
+_dy         –  Uncertainty in profile from the chosen bank
+_meta       –  A dictionary containing metadata read from the file.</p>
 <p>General Metadata</p>
 <dl class="docutils">
-<dt>filename    &#8211;  The name of the file from which data was parsed. This key</dt>
+<dt>filename    –  The name of the file from which data was parsed. This key</dt>
 <dd>will not exist if data was not read from file.</dd>
 </dl>
-<p>nbanks      &#8211;  The number of banks parsed.
-bank        &#8211;  The chosen bank number.</p>
+<p>nbanks      –  The number of banks parsed.
+bank        –  The chosen bank number.</p>
 <p>Metadata - These may appear in the metadata dictionary</p>
-<p>datainfo    &#8211;  The DataInfo object used to do the data parsing.</p>
+<p>datainfo    –  The DataInfo object used to do the data parsing.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.SASParser.parseFile">
 <code class="descname">parseFile</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.SASParser.parseFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a file and set the _x, _y, _dx, _dy and _meta variables.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
-filename    &#8211;  The name of the file to parse</p>
+filename    –  The name of the file to parse</p>
 <p>Raises IOError if the file cannot be read
 Raises ParseError if the file cannot be parsed</p>
 </dd></dl>
@@ -388,7 +384,7 @@ Raises ParseError if the file cannot be parsed</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to 0.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
-patstring   &#8211;  A string containing the pattern</p>
+patstring   –  A string containing the pattern</p>
 <p>Raises ParseError if the string cannot be parsed</p>
 </dd></dl>
 
@@ -405,42 +401,42 @@ Otherwise, use the SASParser class and load the data into a base Profile
 object.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_xobs   &#8211;  A numpy array of the observed independent variable (default</dt>
+<dt>_xobs   –  A numpy array of the observed independent variable (default</dt>
 <dd>None)</dd>
 </dl>
-<p>xobs    &#8211;  Read-only property of _xobs.
-_yobs   &#8211;  A numpy array of the observed signal (default None)
-yobs    &#8211;  Read-only property of _yobs.
-_dyobs  &#8211;  A numpy array of the uncertainty of the observed signal (default</p>
+<p>xobs    –  Read-only property of _xobs.
+_yobs   –  A numpy array of the observed signal (default None)
+yobs    –  Read-only property of _yobs.
+_dyobs  –  A numpy array of the uncertainty of the observed signal (default</p>
 <blockquote>
 <div>None, optional).</div></blockquote>
-<p>dyobs   &#8211;  Read-only property of _dyobs.
-x       &#8211;  A numpy array of the calculated independent variable (default</p>
+<p>dyobs   –  Read-only property of _dyobs.
+x       –  A numpy array of the calculated independent variable (default</p>
 <blockquote>
 <div>None, property for xpar accessors).</div></blockquote>
 <dl class="docutils">
-<dt>y       &#8211;  The profile over the calculation range (default None, property</dt>
+<dt>y       –  The profile over the calculation range (default None, property</dt>
 <dd>for ypar accessors).</dd>
-<dt>dy      &#8211;  The uncertainty in the profile over the calculation range</dt>
+<dt>dy      –  The uncertainty in the profile over the calculation range</dt>
 <dd>(default None, property for dypar accessors).</dd>
 </dl>
-<p>ycalc   &#8211;  A numpy array of the calculated signal (default None).
-xpar    &#8211;  A ProfileParameter that stores x (named &#8220;x&#8221;).
-ypar    &#8211;  A ProfileParameter that stores y (named &#8220;y&#8221;).
-dypar   &#8211;  A ProfileParameter that stores dy (named &#8220;dy&#8221;).
-meta    &#8211;  A dictionary of metadata. This is only set if provided by a</p>
+<p>ycalc   –  A numpy array of the calculated signal (default None).
+xpar    –  A ProfileParameter that stores x (named “x”).
+ypar    –  A ProfileParameter that stores y (named “y”).
+dypar   –  A ProfileParameter that stores dy (named “dy”).
+meta    –  A dictionary of metadata. This is only set if provided by a</p>
 <blockquote>
 <div>parser.</div></blockquote>
-<p>_datainfo   &#8211;  The DataInfo object this wraps.</p>
+<p>_datainfo   –  The DataInfo object this wraps.</p>
 <dl class="method">
 <dt id="diffpy.srfit.sas.SASProfile.setObservedProfile">
 <code class="descname">setObservedProfile</code><span class="sig-paren">(</span><em>xobs</em>, <em>yobs</em>, <em>dyobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.sas.SASProfile.setObservedProfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the observed profile.</p>
 <p>This is overloaded to change the value within the datainfo object.</p>
 <p>Arguments
-xobs    &#8211;  Numpy array of the independent variable
-yobs    &#8211;  Numpy array of the observed signal.
-dyobs   &#8211;  Numpy array of the uncertainty in the observed signal. If</p>
+xobs    –  Numpy array of the independent variable
+yobs    –  Numpy array of the observed signal.
+dyobs   –  Numpy array of the uncertainty in the observed signal. If</p>
 <blockquote>
 <div>dyobs is None (default), it will be set to 1 at each
 observed xobs.</div></blockquote>
@@ -463,16 +459,16 @@ where f(r) is the nanoparticle form factor.
 This is obtained from P(r) as
 P(r) = 4 pi r**2 f(r).</p>
 <p>Attributes:
-_invertor   &#8211;  sas.pr.invertor.Invertor object. This object is internal,</p>
+_invertor   –  sas.pr.invertor.Invertor object. This object is internal,</p>
 <blockquote>
 <div>but can be configured by the user after initialization.
-Note that the &#8216;x&#8217;, &#8216;y&#8217; and &#8216;err&#8217; attributes get overwritten
+Note that the ‘x’, ‘y’ and ‘err’ attributes get overwritten
 every time the invertor is used.</div></blockquote>
 <p>Managed Parameters:
-scale       &#8211;  The scale factor (default 1).
-q           &#8211;  The q-values of the I(q) signal
-iq          &#8211;  The I(q) signal
-diq         &#8211;  The uncertainty in I(q)</p>
+scale       –  The scale factor (default 1).
+q           –  The q-values of the I(q) signal
+iq          –  The I(q) signal
+diq         –  The uncertainty in I(q)</p>
 </dd></dl>
 
 <dl class="class">
@@ -484,16 +480,16 @@ diq         &#8211;  The uncertainty in I(q)</p>
 f(r) = P(r) / 4 pi r**2
 which is the nanoparticle form factor scaled by density.</p>
 <p>Attributes:
-_invertor   &#8211;  sas.pr.invertor.Invertor object. This object is internal,</p>
+_invertor   –  sas.pr.invertor.Invertor object. This object is internal,</p>
 <blockquote>
 <div>but can be configured by the user after initialization.
-Note that the &#8216;x&#8217;, &#8216;y&#8217; and &#8216;err&#8217; attributes get overwritten
+Note that the ‘x’, ‘y’ and ‘err’ attributes get overwritten
 every time the invertor is used.</div></blockquote>
 <p>Managed Parameters:
-scale       &#8211;  The scale factor (default 1).
-q           &#8211;  The q-values of the I(q) signal
-iq          &#8211;  The I(q) signal
-diq         &#8211;  The uncertainty in I(q)</p>
+scale       –  The scale factor (default 1).
+q           –  The q-values of the I(q) signal
+iq          –  The I(q) signal
+diq         –  The uncertainty in I(q)</p>
 </dd></dl>
 
 </div>
@@ -528,7 +524,7 @@ diq         &#8211;  The uncertainty in I(q)</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/diffpy.srfit.sas.txt"
+      <li><a href="../_sources/api/diffpy.srfit.sas.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -561,13 +557,13 @@ diq         &#8211;  The uncertainty in I(q)</p>
         <li class="right" >
           <a href="diffpy.srfit.pdf.html" title="diffpy.srfit.pdf package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+        &#169; Copyright 2017, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

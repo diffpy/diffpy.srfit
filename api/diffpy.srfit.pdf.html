@@ -1,23 +1,21 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>diffpy.srfit.pdf package &#8212; SrFit 1.2 documentation</title>
-    
+    <title>diffpy.srfit.pdf package &#8212; SrFit 1.3 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2',
+        VERSION:     '1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,12 +24,10 @@
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="SrFit 1.2 documentation" href="../index.html" />
-    <link rel="up" title="diffpy.srfit package" href="diffpy.srfit.html" />
     <link rel="next" title="diffpy.srfit.sas package" href="diffpy.srfit.sas.html" />
     <link rel="prev" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -47,7 +43,7 @@
         <li class="right" >
           <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>  
@@ -76,39 +72,39 @@ as a base for the PDFGenerator and DebyePDFGenerator classes.</p>
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
-_calc   &#8211;  PDFCalculator or DebyePDFCalculator instance for calculating</p>
+_calc   –  PDFCalculator or DebyePDFCalculator instance for calculating</p>
 <blockquote>
 <div>the PDF.</div></blockquote>
-<p>_phase  &#8211;  The structure ParameterSet used to calculate the profile.
-stru    &#8211;  The structure objected adapted by _phase.
-_lastr  &#8211;  The last value of r over which the PDF was calculated. This is</p>
+<p>_phase  –  The structure ParameterSet used to calculate the profile.
+stru    –  The structure objected adapted by _phase.
+_lastr  –  The last value of r over which the PDF was calculated. This is</p>
 <blockquote>
 <div>used to configure the calculator when r changes.</div></blockquote>
-<p>_pool   &#8211;  A multiprocessing.Pool for managing parallel computation.</p>
+<p>_pool   –  A multiprocessing.Pool for managing parallel computation.</p>
 <p>Managed Parameters:
-scale   &#8211;  Scale factor
-delta1  &#8211;  Linear peak broadening term
-delta2  &#8211;  Quadratic peak broadening term
-qbroad  &#8211;  Resolution peak broadening term
-qdamp   &#8211;  Resolution peak dampening term</p>
+scale   –  Scale factor
+delta1  –  Linear peak broadening term
+delta2  –  Quadratic peak broadening term
+qbroad  –  Resolution peak broadening term
+qdamp   –  Resolution peak dampening term</p>
 <p>Managed ParameterSets:
 The structure ParameterSet (SrRealParSet instance) used to calculate the
 profile is named by the user.</p>
 <p>Usable Metadata:
-stype   &#8211;  The scattering type &#8220;X&#8221; for x-ray, &#8220;N&#8221; for neutron (see</p>
+stype   –  The scattering type “X” for x-ray, “N” for neutron (see</p>
 <blockquote>
-<div>&#8216;setScatteringType&#8217;).</div></blockquote>
+<div>‘setScatteringType’).</div></blockquote>
 <dl class="docutils">
-<dt>qmax    &#8211;  The maximum scattering vector used to generate the PDF (see</dt>
+<dt>qmax    –  The maximum scattering vector used to generate the PDF (see</dt>
 <dd>setQmax).</dd>
-<dt>qmin    &#8211;  The minimum scattering vector used to generate the PDF (see</dt>
+<dt>qmin    –  The minimum scattering vector used to generate the PDF (see</dt>
 <dd>setQmin).</dd>
 </dl>
-<p>scale   &#8211;  See Managed Parameters.
-delta1  &#8211;  See Managed Parameters.
-delta2  &#8211;  See Managed Parameters.
-qbroad  &#8211;  See Managed Parameters.
-qdamp   &#8211;  See Managed Parameters.</p>
+<p>scale   –  See Managed Parameters.
+delta1  –  See Managed Parameters.
+delta2  –  See Managed Parameters.
+qbroad  –  See Managed Parameters.
+qdamp   –  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getQmax">
 <code class="descname">getQmax</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getQmax" title="Permalink to this definition">¶</a></dt>
@@ -124,15 +120,15 @@ qdamp   &#8211;  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getScatteringType">
 <code class="descname">getScatteringType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.getScatteringType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the scattering type. See &#8216;setScatteringType&#8217;.</p>
+<dd><p>Get the scattering type. See ‘setScatteringType’.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.parallel">
 <code class="descname">parallel</code><span class="sig-paren">(</span><em>ncpu</em>, <em>mapfunc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.parallel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run calculation in parallel.</p>
-<p>ncpu    &#8211; Number of parallel processes.  Revert to serial mode when 1.
-mapfunc &#8211; A mapping function to use. If this is None (default),</p>
+<p>ncpu    – Number of parallel processes.  Revert to serial mode when 1.
+mapfunc – A mapping function to use. If this is None (default),</p>
 <blockquote>
 <div>multiprocessing.Pool.imap_unordered will be used.</div></blockquote>
 <p>No return value.</p>
@@ -153,11 +149,11 @@ ObjCrystCrystalParSet or ObjCrystMoleculeParSet that adapts a structure
 object (from diffpy or pyobjcryst).  The passed ParameterSet will be
 managed by this generator.</p>
 <dl class="docutils">
-<dt>parset  &#8211;  A SrRealParSet that holds the structural information.</dt>
+<dt>parset  –  A SrRealParSet that holds the structural information.</dt>
 <dd>This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</dd>
-<dt>periodic &#8211; The structure should be treated as periodic (default True).</dt>
+<dt>periodic – The structure should be treated as periodic (default True).</dt>
 <dd>Note that some structures do not support periodicity, in
 which case this will be ignored.</dd>
 </dl>
@@ -180,7 +176,7 @@ which case this will be ignored.</dd>
 <code class="descname">setScatteringType</code><span class="sig-paren">(</span><em>stype='X'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator.setScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the scattering type.</p>
 <dl class="docutils">
-<dt>stype   &#8211;   &#8220;X&#8221; for x-ray, &#8220;N&#8221; for neutron, &#8220;E&#8221; for electrons,</dt>
+<dt>stype   –   “X” for x-ray, “N” for neutron, “E” for electrons,</dt>
 <dd>or any registered type from diffpy.srreal from
 ScatteringFactorTable.getRegisteredTypes().</dd>
 </dl>
@@ -196,11 +192,11 @@ ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
 See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
-<dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
-<dt>name    &#8211;  A name to give to the managed ParameterSet that adapts stru</dt>
-<dd>(default &#8220;phase&#8221;).</dd>
-<dt>periodic &#8211; The structure should be treated as periodic (default</dt>
+<dt>name    –  A name to give to the managed ParameterSet that adapts stru</dt>
+<dd>(default “phase”).</dd>
+<dt>periodic – The structure should be treated as periodic (default</dt>
 <dd>True). Note that some structures do not support
 periodicity, in which case this will have no effect on the
 PDF calculation.</dd>
@@ -219,13 +215,13 @@ Gnano(r) = f(r) Gcryst(r),
 where f(r) is the nanoparticle characteristic function and
 Gcryst(f) is the crystal PDF.</p>
 <p>These functions are meant to be imported and added to a FitContribution using
-the &#8216;registerFunction&#8217; method of that class.</p>
+the ‘registerFunction’ method of that class.</p>
 <dl class="function">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.sphericalCF">
 <code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">sphericalCF</code><span class="sig-paren">(</span><em>r</em>, <em>psize</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.sphericalCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical nanoparticle characteristic function.</p>
-<p>r       &#8211;  distance of interaction
-psize   &#8211;  The particle diameter</p>
+<p>r       –  distance of interaction
+psize   –  The particle diameter</p>
 <p>From Kodama et al., Acta Cryst. A, 62, 444-453
 (converted from radius to diameter)</p>
 </dd></dl>
@@ -235,8 +231,8 @@ psize   &#8211;  The particle diameter</p>
 <code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">spheroidalCF</code><span class="sig-paren">(</span><em>r</em>, <em>erad</em>, <em>prad</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spheroidal characteristic function specified using radii.</p>
 <p>Spheroid with radii (erad, erad, prad)</p>
-<p>prad    &#8211;  polar radius
-erad    &#8211;  equatorial radius</p>
+<p>prad    –  polar radius
+erad    –  equatorial radius</p>
 <p>erad &lt; prad equates to a prolate spheroid
 erad &gt; prad equates to a oblate spheroid
 erad == prad is a sphere</p>
@@ -247,9 +243,9 @@ erad == prad is a sphere</p>
 <code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">spheroidalCF2</code><span class="sig-paren">(</span><em>r</em>, <em>psize</em>, <em>axrat</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spheroidal nanoparticle characteristic function.</p>
 <p>Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)</p>
-<p>r      &#8211;  distance of interaction
-psize  &#8211;  The equatorial diameter
-axrat  &#8211;  The ratio of axis lengths</p>
+<p>r      –  distance of interaction
+psize  –  The equatorial diameter
+axrat  –  The ratio of axis lengths</p>
 <p>From Lei et al., Phys. Rev. B, 80, 024118 (2009)</p>
 </dd></dl>
 
@@ -258,9 +254,9 @@ axrat  &#8211;  The ratio of axis lengths</p>
 <code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">lognormalSphericalCF</code><span class="sig-paren">(</span><em>r</em>, <em>psize</em>, <em>psig</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.lognormalSphericalCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical nanoparticle characteristic function with lognormal size
 distribution.</p>
-<p>r      &#8211;  distance of interaction
-psize  &#8211;  The mean particle diameter
-psig   &#8211;  The log-normal width of the particle diameter</p>
+<p>r      –  distance of interaction
+psize  –  The mean particle diameter
+psig   –  The log-normal width of the particle diameter</p>
 <p>Here, r is the independent variable, mu is the mean of the distrubution
 (not of the particle size), and s is the width of the distribution. This is
 the characteristic function for the lognormal distribution of particle
@@ -287,8 +283,8 @@ mu = log(psize) - s^2/2</p>
 <dt id="diffpy.srfit.pdf.characteristicfunctions.sheetCF">
 <code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">sheetCF</code><span class="sig-paren">(</span><em>r</em>, <em>sthick</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.sheetCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Nanosheet characteristic function.</p>
-<p>r       &#8211;  distance of interaction
-sthick  &#8211;  Thickness of nanosheet</p>
+<p>r       –  distance of interaction
+sthick  –  Thickness of nanosheet</p>
 <p>From Kodama et al., Acta Cryst. A, 62, 444-453</p>
 </dd></dl>
 
@@ -296,8 +292,8 @@ sthick  &#8211;  Thickness of nanosheet</p>
 <dt id="diffpy.srfit.pdf.characteristicfunctions.shellCF">
 <code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">shellCF</code><span class="sig-paren">(</span><em>r</em>, <em>radius</em>, <em>thickness</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.shellCF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical shell characteristic function.</p>
-<p>radius      &#8211;  Inner radius
-thickness   &#8211;  Thickness of shell</p>
+<p>radius      –  Inner radius
+thickness   –  Thickness of shell</p>
 <p>outer radius = radius + thickness</p>
 <p>From Lei et al., Phys. Rev. B, 80, 024118 (2009)</p>
 </dd></dl>
@@ -306,8 +302,8 @@ thickness   &#8211;  Thickness of shell</p>
 <dt id="diffpy.srfit.pdf.characteristicfunctions.shellCF2">
 <code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">shellCF2</code><span class="sig-paren">(</span><em>r</em>, <em>a</em>, <em>delta</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.shellCF2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical shell characteristic function.</p>
-<p>a       &#8211;  Central radius
-delta   &#8211;  Thickness of shell</p>
+<p>a       –  Central radius
+delta   –  Thickness of shell</p>
 <p>outer radius = a + thickness/2</p>
 <p>From Lei et al., Phys. Rev. B, 80, 024118 (2009)</p>
 </dd></dl>
@@ -320,14 +316,14 @@ delta   &#8211;  Thickness of shell</p>
 <p>This class wraps a sas.models.BaseModel to calculate I(Q) related to
 nanoparticle shape. This I(Q) is inverted to f(r) according to:
 f(r) = 1 / (4 pi r) * SINFT(I(Q)),
-where &#8220;SINFT&#8221; represents the sine Fourier transform.</p>
+where “SINFT” represents the sine Fourier transform.</p>
 <p>Attributes:
-_model      &#8211;  BaseModel object this adapts.</p>
+_model      –  BaseModel object this adapts.</p>
 <p>Managed Parameters:
 These depend on the parameters of the BaseModel object held by _model. They
-are created from the &#8216;params&#8217; attribute of the BaseModel. If a dispersion
-is set for the BaseModel, the dispersion &#8220;width&#8221; will be accessible under
-&#8220;&lt;parname&gt;_width&#8221;, where &lt;parname&gt; is the name a parameter adjusted by
+are created from the ‘params’ attribute of the BaseModel. If a dispersion
+is set for the BaseModel, the dispersion “width” will be accessible under
+“&lt;parname&gt;_width”, where &lt;parname&gt; is the name a parameter adjusted by
 dispersion.</p>
 </dd></dl>
 
@@ -348,36 +344,36 @@ scatterers, such as nanoparticles and molecules.</p>
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
-_calc   &#8211;  DebyePDFCalculator instance for calculating the PDF
-_phase  &#8211;  The structure ParameterSets used to calculate the profile.
-stru    &#8211;  The structure objected adapted by _phase.
-_lastr  &#8211;  The last value of r over which the PDF was calculated. This is</p>
+_calc   –  DebyePDFCalculator instance for calculating the PDF
+_phase  –  The structure ParameterSets used to calculate the profile.
+stru    –  The structure objected adapted by _phase.
+_lastr  –  The last value of r over which the PDF was calculated. This is</p>
 <blockquote>
 <div>used to configure the calculator when r changes.</div></blockquote>
 <p>Managed Parameters:
-scale   &#8211;  Scale factor
-delta1  &#8211;  Linear peak broadening term
-delta2  &#8211;  Quadratic peak broadening term
-qbroad  &#8211;  Resolution peak broadening term
-qdamp   &#8211;  Resolution peak dampening term</p>
+scale   –  Scale factor
+delta1  –  Linear peak broadening term
+delta2  –  Quadratic peak broadening term
+qbroad  –  Resolution peak broadening term
+qdamp   –  Resolution peak dampening term</p>
 <p>Managed ParameterSets:
 The structure ParameterSet (SrRealStructure instance) used to calculate the
 profile is named by the user.</p>
 <p>Usable Metadata:
-stype   &#8211;  The scattering type &#8220;X&#8221; for x-ray, &#8220;N&#8221; for neutron (see</p>
+stype   –  The scattering type “X” for x-ray, “N” for neutron (see</p>
 <blockquote>
-<div>&#8216;setScatteringType&#8217;).</div></blockquote>
+<div>‘setScatteringType’).</div></blockquote>
 <dl class="docutils">
-<dt>qmax    &#8211;  The maximum scattering vector used to generate the PDF (see</dt>
+<dt>qmax    –  The maximum scattering vector used to generate the PDF (see</dt>
 <dd>setQmax).</dd>
-<dt>qmin    &#8211;  The minimum scattering vector used to generate the PDF (see</dt>
+<dt>qmin    –  The minimum scattering vector used to generate the PDF (see</dt>
 <dd>setQmin).</dd>
 </dl>
-<p>scale   &#8211;  See Managed Parameters.
-delta1  &#8211;  See Managed Parameters.
-delta2  &#8211;  See Managed Parameters.
-qbroad  &#8211;  See Managed Parameters.
-qdamp   &#8211;  See Managed Parameters.</p>
+<p>scale   –  See Managed Parameters.
+delta1  –  See Managed Parameters.
+delta2  –  See Managed Parameters.
+qbroad  –  See Managed Parameters.
+qdamp   –  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator.setPhase">
 <code class="descname">setPhase</code><span class="sig-paren">(</span><em>parset</em>, <em>periodic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator.setPhase" title="Permalink to this definition">¶</a></dt>
@@ -387,11 +383,11 @@ ObjCrystCrystalParSet or ObjCrystMoleculeParSet that adapts a structure
 object (from diffpy or pyobjcryst).  The passed ParameterSet will be
 managed by this generator.</p>
 <dl class="docutils">
-<dt>parset  &#8211;  A SrRealParSet that holds the structural information.</dt>
+<dt>parset  –  A SrRealParSet that holds the structural information.</dt>
 <dd>This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</dd>
-<dt>periodic &#8211; The structure should be treated as periodic (default True).</dt>
+<dt>periodic – The structure should be treated as periodic (default True).</dt>
 <dd>Note that some structures do not support periodicity, in
 which case this will be ignored.</dd>
 </dl>
@@ -406,11 +402,11 @@ ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
 See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
-<dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
-<dt>name    &#8211;  A name to give to the managed ParameterSet that adapts stru</dt>
-<dd>(default &#8220;phase&#8221;).</dd>
-<dt>periodic &#8211; The structure should be treated as periodic (default</dt>
+<dt>name    –  A name to give to the managed ParameterSet that adapts stru</dt>
+<dd>(default “phase”).</dd>
+<dt>periodic – The structure should be treated as periodic (default</dt>
 <dd>False). Note that some structures do not support
 periodicity, in which case this will have no effect on the
 PDF calculation.</dd>
@@ -434,54 +430,54 @@ and phases can be added directly to the PDFContribution. Setup of
 constraints and restraints requires direct interaction with the generator
 attributes (see setPhase).</p>
 <p>Attributes
-name            &#8211;  A name for this FitContribution.
-profile         &#8211;  A Profile that holds the measured (and calculated)</p>
+name            –  A name for this FitContribution.
+profile         –  A Profile that holds the measured (and calculated)</p>
 <blockquote>
 <div>signal.</div></blockquote>
 <dl class="docutils">
-<dt>_meta           &#8211;  Metadata dictionary. This is specific to this object,</dt>
+<dt>_meta           –  Metadata dictionary. This is specific to this object,</dt>
 <dd>and not shared with the profile. This is used to record
 configuration options, like qmax.</dd>
 </dl>
-<p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+<p>_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_generators     &#8211;  A managed dictionary of ProfileGenerators.
-_parameters     &#8211;  A managed OrderedDict of parameters.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_generators     –  A managed dictionary of ProfileGenerators.
+_parameters     –  A managed OrderedDict of parameters.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string</div></blockquote>
-<p>_eq             &#8211;  The FitContribution equation that will be optimized.
-_reseq          &#8211;  The residual equation.
-_xname          &#8211;  Name of the x-variable
-_yname          &#8211;  Name of the y-variable
-_dyname         &#8211;  Name of the dy-variable</p>
+<p>_eq             –  The FitContribution equation that will be optimized.
+_reseq          –  The residual equation.
+_xname          –  Name of the x-variable
+_yname          –  Name of the y-variable
+_dyname         –  Name of the dy-variable</p>
 <p>Managed Parameters:
-scale   &#8211;  Scale factor
-qbroad  &#8211;  Resolution peak broadening term
-qdamp   &#8211;  Resolution peak dampening term</p>
+scale   –  Scale factor
+qbroad  –  Resolution peak broadening term
+qdamp   –  Resolution peak dampening term</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.addPhase">
 <code class="descname">addPhase</code><span class="sig-paren">(</span><em>name</em>, <em>parset</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.addPhase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a phase that goes into the PDF calculation.</p>
 <dl class="docutils">
-<dt>name    &#8211;  A name to give the generator that will manage the PDF</dt>
+<dt>name    –  A name to give the generator that will manage the PDF</dt>
 <dd>calculation from the passed parameter phase. The parset
-will be accessible via the name &#8220;phase&#8221; as an attribute
+will be accessible via the name “phase” as an attribute
 of the generator, e.g., contribution.name.phase, where
-&#8216;contribution&#8217; is this contribution and &#8216;name&#8217; is passed
+‘contribution’ is this contribution and ‘name’ is passed
 name.</dd>
-<dt>parset  &#8211;  A SrRealParSet that holds the structural information.</dt>
+<dt>parset  –  A SrRealParSet that holds the structural information.</dt>
 <dd>This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</dd>
-<dt>periodic &#8211; The structure should be treated as periodic.  If this is</dt>
+<dt>periodic – The structure should be treated as periodic.  If this is</dt>
 <dd>True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
 DebyePDFGenerator will be used. Note that some structures
@@ -497,16 +493,16 @@ stru.)</p>
 <code class="descname">addStructure</code><span class="sig-paren">(</span><em>name</em>, <em>stru</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.addStructure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a phase that goes into the PDF calculation.</p>
 <dl class="docutils">
-<dt>name    &#8211;  A name to give the generator that will manage the PDF</dt>
+<dt>name    –  A name to give the generator that will manage the PDF</dt>
 <dd>calculation from the passed structure. The adapted
-structure will be accessible via the name &#8220;phase&#8221; as an
+structure will be accessible via the name “phase” as an
 attribute of the generator, e.g.
-contribution.name.phase, where &#8216;contribution&#8217; is this
-contribution and &#8216;name&#8217; is passed name.
-(default), then the name will be set as &#8220;phase&#8221;.</dd>
-<dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+contribution.name.phase, where ‘contribution’ is this
+contribution and ‘name’ is passed name.
+(default), then the name will be set as “phase”.</dd>
+<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
-<dt>periodic &#8211; The structure should be treated as periodic.  If this is</dt>
+<dt>periodic – The structure should be treated as periodic.  If this is</dt>
 <dd>True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
 DebyePDFGenerator will be used. Note that some structures
@@ -532,7 +528,7 @@ stru.)</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.getScatteringType">
 <code class="descname">getScatteringType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.getScatteringType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the scattering type. See &#8216;setScatteringType&#8217;.</p>
+<dd><p>Get the scattering type. See ‘setScatteringType’.</p>
 </dd></dl>
 
 <dl class="method">
@@ -542,7 +538,7 @@ stru.)</p>
 <p>This uses the PDFParser to load the data and then passes it to the
 build-in profile with loadParsedData.</p>
 <dl class="docutils">
-<dt>data    &#8211;  An open file-like object, name of a file that contains data</dt>
+<dt>data    –  An open file-like object, name of a file that contains data</dt>
 <dd>or a string containing the data.</dd>
 </dl>
 </dd></dl>
@@ -562,27 +558,32 @@ build-in profile with loadParsedData.</p>
 <p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
 as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
-<dl class="docutils">
-<dt>xmin</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
-current minimum when not specified.  If specified as &#8220;obs&#8221;
-reset to the minimum observed value.</dd>
-<dt>xmax</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
-current maximum when not specified.  If specified as &#8220;obs&#8221;
-reset to the maximum observed value.</dd>
-<dt>dx</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
-</dl>
-<p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
-if it is within the bounds of the observed data.</p>
-<dl class="docutils">
-<dt>AttributeError</dt>
-<dd>If there is no observed data.</dd>
-<dt>ValueError</dt>
-<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as “obs”
+reset to the minimum observed value.</li>
+<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as “obs”
+reset to the maximum observed value.</li>
+<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
+<li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -601,8 +602,8 @@ if it is within the bounds of the observed data.</p>
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.setScatteringType">
 <code class="descname">setScatteringType</code><span class="sig-paren">(</span><em>type='X'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the scattering type.</p>
-<p>type    &#8211;   &#8220;X&#8221; for x-ray or &#8220;N&#8221; for neutron</p>
-<p>Raises ValueError if type is not &#8220;X&#8221; or &#8220;N&#8221;</p>
+<p>type    –   “X” for x-ray or “N” for neutron</p>
+<p>Raises ValueError if type is not “X” or “N”</p>
 </dd></dl>
 
 </dd></dl>
@@ -625,35 +626,35 @@ examples for its use.</p>
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
-_calc   &#8211;  PDFCalculator instance for calculating the PDF
-_phase  &#8211;  The structure ParameterSet used to calculate the profile.
-_lastr  &#8211;  The last value of r over which the PDF was calculated. This is</p>
+_calc   –  PDFCalculator instance for calculating the PDF
+_phase  –  The structure ParameterSet used to calculate the profile.
+_lastr  –  The last value of r over which the PDF was calculated. This is</p>
 <blockquote>
 <div>used to configure the calculator when r changes.</div></blockquote>
 <p>Managed Parameters:
-scale   &#8211;  Scale factor
-delta1  &#8211;  Linear peak broadening term
-delta2  &#8211;  Quadratic peak broadening term
-qbroad  &#8211;  Resolution peak broadening term
-qdamp   &#8211;  Resolution peak dampening term</p>
+scale   –  Scale factor
+delta1  –  Linear peak broadening term
+delta2  –  Quadratic peak broadening term
+qbroad  –  Resolution peak broadening term
+qdamp   –  Resolution peak dampening term</p>
 <p>Managed ParameterSets:
 The structure ParameterSet (SrRealStructure instance) used to calculate the
 profile is named by the user.</p>
 <p>Usable Metadata:
-stype   &#8211;  The scattering type &#8220;X&#8221; for x-ray, &#8220;N&#8221; for neutron (see</p>
+stype   –  The scattering type “X” for x-ray, “N” for neutron (see</p>
 <blockquote>
-<div>&#8216;setScatteringType&#8217;).</div></blockquote>
+<div>‘setScatteringType’).</div></blockquote>
 <dl class="docutils">
-<dt>qmax    &#8211;  The maximum scattering vector used to generate the PDF (see</dt>
+<dt>qmax    –  The maximum scattering vector used to generate the PDF (see</dt>
 <dd>setQmax).</dd>
-<dt>qmin    &#8211;  The minimum scattering vector used to generate the PDF (see</dt>
+<dt>qmin    –  The minimum scattering vector used to generate the PDF (see</dt>
 <dd>setQmin).</dd>
 </dl>
-<p>scale   &#8211;  See Managed Parameters.
-delta1  &#8211;  See Managed Parameters.
-delta2  &#8211;  See Managed Parameters.
-qbroad  &#8211;  See Managed Parameters.
-qdamp   &#8211;  See Managed Parameters.</p>
+<p>scale   –  See Managed Parameters.
+delta1  –  See Managed Parameters.
+delta2  –  See Managed Parameters.
+qbroad  –  See Managed Parameters.
+qdamp   –  See Managed Parameters.</p>
 </dd></dl>
 
 </div>
@@ -669,48 +670,48 @@ qdamp   &#8211;  See Managed Parameters.</p>
 <p>Class for holding a diffraction pattern.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_format     &#8211;  Name of the data format that this parses (string, default</dt>
-<dd>&#8220;&#8221;). The format string is a unique identifier for the data
+<dt>_format     –  Name of the data format that this parses (string, default</dt>
+<dd>“”). The format string is a unique identifier for the data
 format handled by the parser.</dd>
-<dt>_banks      &#8211;  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
+<dt>_banks      –  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
 <dd><p class="first">tuple:
-x       &#8211;  A numpy array containing the independent</p>
+x       –  A numpy array containing the independent</p>
 <blockquote>
 <div>variable read from the file.</div></blockquote>
 <dl class="last docutils">
-<dt>y       &#8211;  A numpy array containing the profile</dt>
+<dt>y       –  A numpy array containing the profile</dt>
 <dd>from the file.</dd>
-<dt>dx      &#8211;  A numpy array containing the uncertainty in x</dt>
+<dt>dx      –  A numpy array containing the uncertainty in x</dt>
 <dd>read from the file. This is 0 if the uncertainty
 cannot be read.</dd>
-<dt>dy      &#8211;  A numpy array containing the uncertainty read</dt>
+<dt>dy      –  A numpy array containing the uncertainty read</dt>
 <dd>from the file. This is 0 if the uncertainty
 cannot be read.</dd>
 </dl>
 </dd>
 </dl>
-<p>_x          &#8211;  Indpendent variable from the chosen bank
-_y          &#8211;  Profile from the chosen bank
-_dx         &#8211;  Uncertainty in independent variable from the chosen bank
-_dy         &#8211;  Uncertainty in profile from the chosen bank
-_meta       &#8211;  A dictionary containing metadata read from the file.</p>
+<p>_x          –  Indpendent variable from the chosen bank
+_y          –  Profile from the chosen bank
+_dx         –  Uncertainty in independent variable from the chosen bank
+_dy         –  Uncertainty in profile from the chosen bank
+_meta       –  A dictionary containing metadata read from the file.</p>
 <p>General Metadata</p>
 <dl class="docutils">
-<dt>filename    &#8211;  The name of the file from which data was parsed. This key</dt>
+<dt>filename    –  The name of the file from which data was parsed. This key</dt>
 <dd>will not exist if data was not read from file.</dd>
 </dl>
-<p>nbanks      &#8211;  The number of banks parsed.
-bank        &#8211;  The chosen bank number.</p>
+<p>nbanks      –  The number of banks parsed.
+bank        –  The chosen bank number.</p>
 <p>Metadata - These may appear in the metadata dictionary</p>
-<p>stype       &#8211;  The scattering type (&#8220;X&#8221;, &#8220;N&#8221;)
-qmin        &#8211;  Minimum scattering vector (float)
-qmax        &#8211;  Maximum scattering vector (float)
-qdamp       &#8211;  Resolution damping factor (float)
-qbroad      &#8211;  Resolution broadening factor (float)
-spdiameter  &#8211;  Nanoparticle diameter (float)
-scale       &#8211;  Data scale (float)
-temperature &#8211;  Temperature (float)
-doping      &#8211;  Doping (float)</p>
+<p>stype       –  The scattering type (“X”, “N”)
+qmin        –  Minimum scattering vector (float)
+qmax        –  Maximum scattering vector (float)
+qdamp       –  Resolution damping factor (float)
+qbroad      –  Resolution broadening factor (float)
+spdiameter  –  Nanoparticle diameter (float)
+scale       –  Data scale (float)
+temperature –  Temperature (float)
+doping      –  Doping (float)</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfparser.PDFParser.parseString">
 <code class="descname">parseString</code><span class="sig-paren">(</span><em>patstring</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfparser.PDFParser.parseString" title="Permalink to this definition">¶</a></dt>
@@ -718,7 +719,7 @@ doping      &#8211;  Doping (float)</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to 0.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
-patstring   &#8211;  A string containing the pattern</p>
+patstring   –  A string containing the pattern</p>
 <p>Raises ParseError if the string cannot be parsed</p>
 </dd></dl>
 
@@ -737,35 +738,35 @@ patstring   &#8211;  A string containing the pattern</p>
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
-_calc   &#8211;  PDFCalculator instance for calculating the PDF
-_phase  &#8211;  The structure ParameterSet used to calculate the profile.
-_lastr  &#8211;  The last value of r over which the PDF was calculated. This is</p>
+_calc   –  PDFCalculator instance for calculating the PDF
+_phase  –  The structure ParameterSet used to calculate the profile.
+_lastr  –  The last value of r over which the PDF was calculated. This is</p>
 <blockquote>
 <div>used to configure the calculator when r changes.</div></blockquote>
 <p>Managed Parameters:
-scale   &#8211;  Scale factor
-delta1  &#8211;  Linear peak broadening term
-delta2  &#8211;  Quadratic peak broadening term
-qbroad  &#8211;  Resolution peak broadening term
-qdamp   &#8211;  Resolution peak dampening term</p>
+scale   –  Scale factor
+delta1  –  Linear peak broadening term
+delta2  –  Quadratic peak broadening term
+qbroad  –  Resolution peak broadening term
+qdamp   –  Resolution peak dampening term</p>
 <p>Managed ParameterSets:
 The structure ParameterSet (SrRealStructure instance) used to calculate the
 profile is named by the user.</p>
 <p>Usable Metadata:
-stype   &#8211;  The scattering type &#8220;X&#8221; for x-ray, &#8220;N&#8221; for neutron (see</p>
+stype   –  The scattering type “X” for x-ray, “N” for neutron (see</p>
 <blockquote>
-<div>&#8216;setScatteringType&#8217;).</div></blockquote>
+<div>‘setScatteringType’).</div></blockquote>
 <dl class="docutils">
-<dt>qmax    &#8211;  The maximum scattering vector used to generate the PDF (see</dt>
+<dt>qmax    –  The maximum scattering vector used to generate the PDF (see</dt>
 <dd>setQmax).</dd>
-<dt>qmin    &#8211;  The minimum scattering vector used to generate the PDF (see</dt>
+<dt>qmin    –  The minimum scattering vector used to generate the PDF (see</dt>
 <dd>setQmin).</dd>
 </dl>
-<p>scale   &#8211;  See Managed Parameters.
-delta1  &#8211;  See Managed Parameters.
-delta2  &#8211;  See Managed Parameters.
-qbroad  &#8211;  See Managed Parameters.
-qdamp   &#8211;  See Managed Parameters.</p>
+<p>scale   –  See Managed Parameters.
+delta1  –  See Managed Parameters.
+delta2  –  See Managed Parameters.
+qbroad  –  See Managed Parameters.
+qdamp   –  See Managed Parameters.</p>
 </dd></dl>
 
 <dl class="class">
@@ -777,36 +778,36 @@ qdamp   &#8211;  See Managed Parameters.</p>
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
-_calc   &#8211;  DebyePDFCalculator instance for calculating the PDF
-_phase  &#8211;  The structure ParameterSets used to calculate the profile.
-stru    &#8211;  The structure objected adapted by _phase.
-_lastr  &#8211;  The last value of r over which the PDF was calculated. This is</p>
+_calc   –  DebyePDFCalculator instance for calculating the PDF
+_phase  –  The structure ParameterSets used to calculate the profile.
+stru    –  The structure objected adapted by _phase.
+_lastr  –  The last value of r over which the PDF was calculated. This is</p>
 <blockquote>
 <div>used to configure the calculator when r changes.</div></blockquote>
 <p>Managed Parameters:
-scale   &#8211;  Scale factor
-delta1  &#8211;  Linear peak broadening term
-delta2  &#8211;  Quadratic peak broadening term
-qbroad  &#8211;  Resolution peak broadening term
-qdamp   &#8211;  Resolution peak dampening term</p>
+scale   –  Scale factor
+delta1  –  Linear peak broadening term
+delta2  –  Quadratic peak broadening term
+qbroad  –  Resolution peak broadening term
+qdamp   –  Resolution peak dampening term</p>
 <p>Managed ParameterSets:
 The structure ParameterSet (SrRealStructure instance) used to calculate the
 profile is named by the user.</p>
 <p>Usable Metadata:
-stype   &#8211;  The scattering type &#8220;X&#8221; for x-ray, &#8220;N&#8221; for neutron (see</p>
+stype   –  The scattering type “X” for x-ray, “N” for neutron (see</p>
 <blockquote>
-<div>&#8216;setScatteringType&#8217;).</div></blockquote>
+<div>‘setScatteringType’).</div></blockquote>
 <dl class="docutils">
-<dt>qmax    &#8211;  The maximum scattering vector used to generate the PDF (see</dt>
+<dt>qmax    –  The maximum scattering vector used to generate the PDF (see</dt>
 <dd>setQmax).</dd>
-<dt>qmin    &#8211;  The minimum scattering vector used to generate the PDF (see</dt>
+<dt>qmin    –  The minimum scattering vector used to generate the PDF (see</dt>
 <dd>setQmin).</dd>
 </dl>
-<p>scale   &#8211;  See Managed Parameters.
-delta1  &#8211;  See Managed Parameters.
-delta2  &#8211;  See Managed Parameters.
-qbroad  &#8211;  See Managed Parameters.
-qdamp   &#8211;  See Managed Parameters.</p>
+<p>scale   –  See Managed Parameters.
+delta1  –  See Managed Parameters.
+delta2  –  See Managed Parameters.
+qbroad  –  See Managed Parameters.
+qdamp   –  See Managed Parameters.</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.DebyePDFGenerator.setPhase">
 <code class="descname">setPhase</code><span class="sig-paren">(</span><em>parset</em>, <em>periodic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.DebyePDFGenerator.setPhase" title="Permalink to this definition">¶</a></dt>
@@ -816,11 +817,11 @@ ObjCrystCrystalParSet or ObjCrystMoleculeParSet that adapts a structure
 object (from diffpy or pyobjcryst).  The passed ParameterSet will be
 managed by this generator.</p>
 <dl class="docutils">
-<dt>parset  &#8211;  A SrRealParSet that holds the structural information.</dt>
+<dt>parset  –  A SrRealParSet that holds the structural information.</dt>
 <dd>This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</dd>
-<dt>periodic &#8211; The structure should be treated as periodic (default True).</dt>
+<dt>periodic – The structure should be treated as periodic (default True).</dt>
 <dd>Note that some structures do not support periodicity, in
 which case this will be ignored.</dd>
 </dl>
@@ -835,11 +836,11 @@ ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
 See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
-<dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
-<dt>name    &#8211;  A name to give to the managed ParameterSet that adapts stru</dt>
-<dd>(default &#8220;phase&#8221;).</dd>
-<dt>periodic &#8211; The structure should be treated as periodic (default</dt>
+<dt>name    –  A name to give to the managed ParameterSet that adapts stru</dt>
+<dd>(default “phase”).</dd>
+<dt>periodic – The structure should be treated as periodic (default</dt>
 <dd>False). Note that some structures do not support
 periodicity, in which case this will have no effect on the
 PDF calculation.</dd>
@@ -858,54 +859,54 @@ and phases can be added directly to the PDFContribution. Setup of
 constraints and restraints requires direct interaction with the generator
 attributes (see setPhase).</p>
 <p>Attributes
-name            &#8211;  A name for this FitContribution.
-profile         &#8211;  A Profile that holds the measured (and calculated)</p>
+name            –  A name for this FitContribution.
+profile         –  A Profile that holds the measured (and calculated)</p>
 <blockquote>
 <div>signal.</div></blockquote>
 <dl class="docutils">
-<dt>_meta           &#8211;  Metadata dictionary. This is specific to this object,</dt>
+<dt>_meta           –  Metadata dictionary. This is specific to this object,</dt>
 <dd>and not shared with the profile. This is used to record
 configuration options, like qmax.</dd>
 </dl>
-<p>_calculators    &#8211;  A managed dictionary of Calculators, indexed by name.
-_constraints    &#8211;  A set of constrained Parameters. Constraints can be</p>
+<p>_calculators    –  A managed dictionary of Calculators, indexed by name.
+_constraints    –  A set of constrained Parameters. Constraints can be</p>
 <blockquote>
-<div>added using the &#8216;constrain&#8217; methods.</div></blockquote>
-<p>_generators     &#8211;  A managed dictionary of ProfileGenerators.
-_parameters     &#8211;  A managed OrderedDict of parameters.
-_restraints     &#8211;  A set of Restraints. Restraints can be added using the</p>
+<div>added using the ‘constrain’ methods.</div></blockquote>
+<p>_generators     –  A managed dictionary of ProfileGenerators.
+_parameters     –  A managed OrderedDict of parameters.
+_restraints     –  A set of Restraints. Restraints can be added using the</p>
 <blockquote>
-<div>&#8216;restrain&#8217; or &#8216;confine&#8217; methods.</div></blockquote>
-<p>_parsets        &#8211;  A managed dictionary of ParameterSets.
-_eqfactory      &#8211;  A diffpy.srfit.equation.builder.EquationFactory</p>
+<div>‘restrain’ or ‘confine’ methods.</div></blockquote>
+<p>_parsets        –  A managed dictionary of ParameterSets.
+_eqfactory      –  A diffpy.srfit.equation.builder.EquationFactory</p>
 <blockquote>
 <div>instance that is used to create constraints and
 restraints from string</div></blockquote>
-<p>_eq             &#8211;  The FitContribution equation that will be optimized.
-_reseq          &#8211;  The residual equation.
-_xname          &#8211;  Name of the x-variable
-_yname          &#8211;  Name of the y-variable
-_dyname         &#8211;  Name of the dy-variable</p>
+<p>_eq             –  The FitContribution equation that will be optimized.
+_reseq          –  The residual equation.
+_xname          –  Name of the x-variable
+_yname          –  Name of the y-variable
+_dyname         –  Name of the dy-variable</p>
 <p>Managed Parameters:
-scale   &#8211;  Scale factor
-qbroad  &#8211;  Resolution peak broadening term
-qdamp   &#8211;  Resolution peak dampening term</p>
+scale   –  Scale factor
+qbroad  –  Resolution peak broadening term
+qdamp   –  Resolution peak dampening term</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.addPhase">
 <code class="descname">addPhase</code><span class="sig-paren">(</span><em>name</em>, <em>parset</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.addPhase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a phase that goes into the PDF calculation.</p>
 <dl class="docutils">
-<dt>name    &#8211;  A name to give the generator that will manage the PDF</dt>
+<dt>name    –  A name to give the generator that will manage the PDF</dt>
 <dd>calculation from the passed parameter phase. The parset
-will be accessible via the name &#8220;phase&#8221; as an attribute
+will be accessible via the name “phase” as an attribute
 of the generator, e.g., contribution.name.phase, where
-&#8216;contribution&#8217; is this contribution and &#8216;name&#8217; is passed
+‘contribution’ is this contribution and ‘name’ is passed
 name.</dd>
-<dt>parset  &#8211;  A SrRealParSet that holds the structural information.</dt>
+<dt>parset  –  A SrRealParSet that holds the structural information.</dt>
 <dd>This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</dd>
-<dt>periodic &#8211; The structure should be treated as periodic.  If this is</dt>
+<dt>periodic – The structure should be treated as periodic.  If this is</dt>
 <dd>True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
 DebyePDFGenerator will be used. Note that some structures
@@ -921,16 +922,16 @@ stru.)</p>
 <code class="descname">addStructure</code><span class="sig-paren">(</span><em>name</em>, <em>stru</em>, <em>periodic=True</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.addStructure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a phase that goes into the PDF calculation.</p>
 <dl class="docutils">
-<dt>name    &#8211;  A name to give the generator that will manage the PDF</dt>
+<dt>name    –  A name to give the generator that will manage the PDF</dt>
 <dd>calculation from the passed structure. The adapted
-structure will be accessible via the name &#8220;phase&#8221; as an
+structure will be accessible via the name “phase” as an
 attribute of the generator, e.g.
-contribution.name.phase, where &#8216;contribution&#8217; is this
-contribution and &#8216;name&#8217; is passed name.
-(default), then the name will be set as &#8220;phase&#8221;.</dd>
-<dt>stru    &#8211;  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+contribution.name.phase, where ‘contribution’ is this
+contribution and ‘name’ is passed name.
+(default), then the name will be set as “phase”.</dd>
+<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
-<dt>periodic &#8211; The structure should be treated as periodic.  If this is</dt>
+<dt>periodic – The structure should be treated as periodic.  If this is</dt>
 <dd>True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
 DebyePDFGenerator will be used. Note that some structures
@@ -956,7 +957,7 @@ stru.)</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.getScatteringType">
 <code class="descname">getScatteringType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.getScatteringType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the scattering type. See &#8216;setScatteringType&#8217;.</p>
+<dd><p>Get the scattering type. See ‘setScatteringType’.</p>
 </dd></dl>
 
 <dl class="method">
@@ -966,7 +967,7 @@ stru.)</p>
 <p>This uses the PDFParser to load the data and then passes it to the
 build-in profile with loadParsedData.</p>
 <dl class="docutils">
-<dt>data    &#8211;  An open file-like object, name of a file that contains data</dt>
+<dt>data    –  An open file-like object, name of a file that contains data</dt>
 <dd>or a string containing the data.</dd>
 </dl>
 </dd></dl>
@@ -986,27 +987,32 @@ build-in profile with loadParsedData.</p>
 <p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
 as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
-<dl class="docutils">
-<dt>xmin</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The minimum value of the independent variable.  Keep the
-current minimum when not specified.  If specified as &#8220;obs&#8221;
-reset to the minimum observed value.</dd>
-<dt>xmax</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The maximum value of the independent variable.  Keep the
-current maximum when not specified.  If specified as &#8220;obs&#8221;
-reset to the maximum observed value.</dd>
-<dt>dx</dt>
- <span class="classifier-delimiter">:</span> <span class="classifier">float or &#8220;obs&#8221;, optional</span><dd>The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</dd>
-</dl>
-<p>Note that xmin is always inclusive (unless clipped). xmax is inclusive
-if it is within the bounds of the observed data.</p>
-<dl class="docutils">
-<dt>AttributeError</dt>
-<dd>If there is no observed data.</dd>
-<dt>ValueError</dt>
-<dd>When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+current minimum when not specified.  If specified as “obs”
+reset to the minimum observed value.</li>
+<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+current maximum when not specified.  If specified as “obs”
+reset to the maximum observed value.</li>
+<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
+<li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -1025,8 +1031,8 @@ if it is within the bounds of the observed data.</p>
 <dt id="diffpy.srfit.pdf.PDFContribution.setScatteringType">
 <code class="descname">setScatteringType</code><span class="sig-paren">(</span><em>type='X'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setScatteringType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the scattering type.</p>
-<p>type    &#8211;   &#8220;X&#8221; for x-ray or &#8220;N&#8221; for neutron</p>
-<p>Raises ValueError if type is not &#8220;X&#8221; or &#8220;N&#8221;</p>
+<p>type    –   “X” for x-ray or “N” for neutron</p>
+<p>Raises ValueError if type is not “X” or “N”</p>
 </dd></dl>
 
 </dd></dl>
@@ -1038,48 +1044,48 @@ if it is within the bounds of the observed data.</p>
 <p>Class for holding a diffraction pattern.</p>
 <p>Attributes</p>
 <dl class="docutils">
-<dt>_format     &#8211;  Name of the data format that this parses (string, default</dt>
-<dd>&#8220;&#8221;). The format string is a unique identifier for the data
+<dt>_format     –  Name of the data format that this parses (string, default</dt>
+<dd>“”). The format string is a unique identifier for the data
 format handled by the parser.</dd>
-<dt>_banks      &#8211;  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
+<dt>_banks      –  The data from each bank. Each bank contains a (x, y, dx, dy)</dt>
 <dd><p class="first">tuple:
-x       &#8211;  A numpy array containing the independent</p>
+x       –  A numpy array containing the independent</p>
 <blockquote>
 <div>variable read from the file.</div></blockquote>
 <dl class="last docutils">
-<dt>y       &#8211;  A numpy array containing the profile</dt>
+<dt>y       –  A numpy array containing the profile</dt>
 <dd>from the file.</dd>
-<dt>dx      &#8211;  A numpy array containing the uncertainty in x</dt>
+<dt>dx      –  A numpy array containing the uncertainty in x</dt>
 <dd>read from the file. This is 0 if the uncertainty
 cannot be read.</dd>
-<dt>dy      &#8211;  A numpy array containing the uncertainty read</dt>
+<dt>dy      –  A numpy array containing the uncertainty read</dt>
 <dd>from the file. This is 0 if the uncertainty
 cannot be read.</dd>
 </dl>
 </dd>
 </dl>
-<p>_x          &#8211;  Indpendent variable from the chosen bank
-_y          &#8211;  Profile from the chosen bank
-_dx         &#8211;  Uncertainty in independent variable from the chosen bank
-_dy         &#8211;  Uncertainty in profile from the chosen bank
-_meta       &#8211;  A dictionary containing metadata read from the file.</p>
+<p>_x          –  Indpendent variable from the chosen bank
+_y          –  Profile from the chosen bank
+_dx         –  Uncertainty in independent variable from the chosen bank
+_dy         –  Uncertainty in profile from the chosen bank
+_meta       –  A dictionary containing metadata read from the file.</p>
 <p>General Metadata</p>
 <dl class="docutils">
-<dt>filename    &#8211;  The name of the file from which data was parsed. This key</dt>
+<dt>filename    –  The name of the file from which data was parsed. This key</dt>
 <dd>will not exist if data was not read from file.</dd>
 </dl>
-<p>nbanks      &#8211;  The number of banks parsed.
-bank        &#8211;  The chosen bank number.</p>
+<p>nbanks      –  The number of banks parsed.
+bank        –  The chosen bank number.</p>
 <p>Metadata - These may appear in the metadata dictionary</p>
-<p>stype       &#8211;  The scattering type (&#8220;X&#8221;, &#8220;N&#8221;)
-qmin        &#8211;  Minimum scattering vector (float)
-qmax        &#8211;  Maximum scattering vector (float)
-qdamp       &#8211;  Resolution damping factor (float)
-qbroad      &#8211;  Resolution broadening factor (float)
-spdiameter  &#8211;  Nanoparticle diameter (float)
-scale       &#8211;  Data scale (float)
-temperature &#8211;  Temperature (float)
-doping      &#8211;  Doping (float)</p>
+<p>stype       –  The scattering type (“X”, “N”)
+qmin        –  Minimum scattering vector (float)
+qmax        –  Maximum scattering vector (float)
+qdamp       –  Resolution damping factor (float)
+qbroad      –  Resolution broadening factor (float)
+spdiameter  –  Nanoparticle diameter (float)
+scale       –  Data scale (float)
+temperature –  Temperature (float)
+doping      –  Doping (float)</p>
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFParser.parseString">
 <code class="descname">parseString</code><span class="sig-paren">(</span><em>patstring</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFParser.parseString" title="Permalink to this definition">¶</a></dt>
@@ -1087,7 +1093,7 @@ doping      &#8211;  Doping (float)</p>
 <p>When _dx or _dy cannot be obtained in the data format it is set to 0.</p>
 <p>This wipes out the currently loaded data and selected bank number.</p>
 <p>Arguments
-patstring   &#8211;  A string containing the pattern</p>
+patstring   –  A string containing the pattern</p>
 <p>Raises ParseError if the string cannot be parsed</p>
 </dd></dl>
 
@@ -1126,7 +1132,7 @@ patstring   &#8211;  A string containing the pattern</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/api/diffpy.srfit.pdf.txt"
+      <li><a href="../_sources/api/diffpy.srfit.pdf.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -1159,13 +1165,13 @@ patstring   &#8211;  A string containing the pattern</p>
         <li class="right" >
           <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+        &#169; Copyright 2017, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

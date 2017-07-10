@@ -1,23 +1,21 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Examples &#8212; SrFit 1.2 documentation</title>
-    
+    <title>Examples &#8212; SrFit 1.3 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.2',
+        VERSION:     '1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
@@ -26,11 +24,10 @@
     <script type="text/javascript" src="_static/sidebar.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="SrFit 1.2 documentation" href="index.html" />
     <link rel="next" title="gaussianrecipe.py" href="examples/gaussianrecipe.html" />
     <link rel="prev" title="SrFit developer’s documentation" href="index.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -46,7 +43,7 @@
         <li class="right" >
           <a href="index.html" title="SrFit developer’s documentation"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SrFit 1.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">SrFit 1.3 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -111,7 +108,7 @@ SrFit source distribution.  They can be downloaded from
 </pre></div>
 </div>
 <p>where <em>example.py</em> represents the example file. The output will show on screen
-and a plot window will display. Once you&#8217;ve studied the output and plot, close
+and a plot window will display. Once you’ve studied the output and plot, close
 the plot window and open the example file. In the file there will be a
 description of what the script is doing and the purpose of the example. By
 reading through the example, you will be introduced to the SrFit programming
@@ -119,52 +116,46 @@ interface.</p>
 <p>Here is an overview of the examples. It is recommended that you work through
 them in the order listed below.</p>
 <p>Basic:</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/gaussianrecipe.html">gaussianrecipe.py</a></dt>
-<dd><p class="first last">Introductory recipe building and configuration. This introduces the
-fundamental classes in SrFit.</p>
-</dd>
+<dd>Introductory recipe building and configuration. This introduces the
+fundamental classes in SrFit.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/debyemodel.html">debyemodel.py</a></dt>
-<dd><p class="first last">Introductory recipe building and configuration. This shows how to use a
+<dd>Introductory recipe building and configuration. This shows how to use a
 function created by someone else in a refinement. This example also
-introduces restraints.</p>
-</dd>
+introduces restraints.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/debyemodelII.html">debyemodelII.py</a></dt>
-<dd><p class="first last">Refine two different values of a variable from two different regions of a
+<dd>Refine two different values of a variable from two different regions of a
 profile. This example introduces constraints and working with multiple
-contributions to a fit.</p>
-</dd>
+contributions to a fit.</dd>
 </dl>
 </li>
 </ul>
 <p>Advanced:</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/gaussiangenerator.html">gaussiangenerator.py</a></dt>
-<dd><p class="first last">Create a custom ProfileGenerator and use it in a refinement. This is an
-instructive extension to <a class="reference external" href="examples/gaussianrecipe.html">gaussianrecipe.py</a>.</p>
-</dd>
+<dd>Create a custom ProfileGenerator and use it in a refinement. This is an
+instructive extension to <a class="reference external" href="examples/gaussianrecipe.html">gaussianrecipe.py</a>.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/npintensity.html">npintensity.py</a></dt>
-<dd><p class="first last">Use diffpy.Structure to build a nanoparticle intensity generator, and use
-it to refine a structure to simulated data.</p>
-</dd>
+<dd>Use diffpy.Structure to build a nanoparticle intensity generator, and use
+it to refine a structure to simulated data.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/npintensityII.html">npintensityII.py</a></dt>
-<dd><p class="first last">Use the calculator built in npintensity.py to simultaneously refine a
-structure to two data sets.</p>
-</dd>
+<dd>Use the calculator built in npintensity.py to simultaneously refine a
+structure to two data sets.</dd>
 </dl>
 </li>
 </ul>
@@ -175,81 +166,69 @@ structure to two data sets.</p>
 not adopt the tutorial format of the previous examples. Regardless, developers
 should read through these use cases to gain an understanding of PDF and SAS
 refinement with SrFit.</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/crystalpdf.html">crystalpdf.py</a></dt>
-<dd><p class="first last">Refine a diffpy.Structure crystal to PDF data using automatic explicit
-space group constraints.</p>
-</dd>
+<dd>Refine a diffpy.Structure crystal to PDF data using automatic explicit
+space group constraints.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/simplepdf.html">simplepdf.py</a></dt>
-<dd><p class="first last">As <a class="reference external" href="examples/crystalpdf.html">crystalpdf.py</a>, but with a simplified interface.</p>
-</dd>
+<dd>As <a class="reference external" href="examples/crystalpdf.html">crystalpdf.py</a>, but with a simplified interface.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></dt>
-<dd><p class="first last">Refine a pyobjcryst crystal to PDF data using automatic implicit space
-group constraints.</p>
-</dd>
+<dd>Refine a pyobjcryst crystal to PDF data using automatic implicit space
+group constraints.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a></dt>
-<dd><p class="first last">Refine a two-phase structure to PDF data using two profile generators.</p>
-</dd>
+<dd>Refine a two-phase structure to PDF data using two profile generators.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/simplepdftwophase.html">simplepdftwophase.py</a></dt>
-<dd><p class="first last"><a class="reference external" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a> using the simplified PDFContribution interface.</p>
-</dd>
+<dd><a class="reference external" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a> using the simplified PDFContribution interface.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/crystalpdftwodata.html">crystalpdftwodata.py</a></dt>
-<dd><p class="first last">Refine a single structure to x-ray and neutron data simultaneously.</p>
-</dd>
+<dd>Refine a single structure to x-ray and neutron data simultaneously.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/crystalpdfall.html">crystalpdfall.py</a></dt>
-<dd><p class="first last">Refine a two-phase structure using four data sets.</p>
-</dd>
+<dd>Refine a two-phase structure using four data sets.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/nppdfobjcryst.html">nppdfobjcryst.py</a></dt>
-<dd><p class="first last">Refine the C60 structure to real data.</p>
-</dd>
+<dd>Refine the C60 structure to real data.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/nppdfcrystal.html">nppdfcrystal.py</a></dt>
-<dd><p class="first last">Fit a nanoparticle PDF as a crystal PDF attenuated by a nanoparticle form
-factor.</p>
-</dd>
+<dd>Fit a nanoparticle PDF as a crystal PDF attenuated by a nanoparticle form
+factor.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/coreshellnp.html">coreshellnp.py</a></dt>
-<dd><p class="first last">As above, but fit the PDF from core-shell nanoparticles.</p>
-</dd>
+<dd>As above, but fit the PDF from core-shell nanoparticles.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/ellipsoidsas.html">ellipsoidsas.py</a></dt>
-<dd><p class="first last">Refine an ellipsoid SAS model to ideal data.</p>
-</dd>
+<dd>Refine an ellipsoid SAS model to ideal data.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/nppdfsas.html">nppdfsas.py</a></dt>
-<dd><p class="first last">Refine PDF from nanoparticle of assumed shape using a crystal model and SAS
-data from the same system.</p>
-</dd>
+<dd>Refine PDF from nanoparticle of assumed shape using a crystal model and SAS
+data from the same system.</dd>
 </dl>
 </li>
 </ul>
@@ -258,23 +237,21 @@ data from the same system.</p>
 <h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
 <p>These demonstrate other SrFit features. These are in flux and may not be in
 future versions.</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/simplerecipe.html">simplerecipe.py</a></dt>
-<dd><p class="first last">This introduces the SimpleRecipe class that is a FitRecipe with an embedded
+<dd>This introduces the SimpleRecipe class that is a FitRecipe with an embedded
 Profile and FitContribution. SimpleRecipe exposes methods from the Profile
 and FitContribution, and adds other methods so it is easy to set up a
-simple fit.</p>
-</dd>
+simple fit.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><a class="reference external" href="examples/interface.html">interface.py</a></dt>
-<dd><p class="first last">This example introduces some interface enhancements that allow the SrFit
+<dd>This example introduces some interface enhancements that allow the SrFit
 recipes to be written with less code. This is not the same as a
 full-featured scripting interface, but rather somewhere in between a
-scripting interface and the API.</p>
-</dd>
+scripting interface and the API.</dd>
 </dl>
 </li>
 </ul>
@@ -329,14 +306,14 @@ scripting interface and the API.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">SrFit developer&#8217;s documentation</a></p>
+                        title="previous chapter">SrFit developer’s documentation</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="examples/gaussianrecipe.html"
                         title="next chapter">gaussianrecipe.py</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/examples.txt"
+      <li><a href="_sources/examples.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -369,12 +346,12 @@ scripting interface and the API.</p>
         <li class="right" >
           <a href="index.html" title="SrFit developer’s documentation"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">SrFit 1.2 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">SrFit 1.3 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+        &#169; Copyright 2017, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

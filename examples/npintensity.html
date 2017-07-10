@@ -1,23 +1,21 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>npintensity.py &#8212; SrFit 1.2 documentation</title>
-    
+    <title>npintensity.py &#8212; SrFit 1.3 documentation</title>
     <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '1.2',
+        VERSION:     '1.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
@@ -26,12 +24,10 @@
     <script type="text/javascript" src="../_static/sidebar.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="top" title="SrFit 1.2 documentation" href="../index.html" />
-    <link rel="up" title="Examples" href="../examples.html" />
     <link rel="next" title="npintensityII.py" href="npintensityII.html" />
     <link rel="prev" title="gaussiangenerator.py" href="gaussiangenerator.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -47,7 +43,7 @@
         <li class="right" >
           <a href="gaussiangenerator.html" title="gaussiangenerator.py"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" accesskey="U">Examples</a> &#187;</li> 
       </ul>
     </div>  
@@ -73,6 +69,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
+
 <span class="sd">&quot;&quot;&quot;Example of using ProfileGenerators in FitContributions.</span>
 
 <span class="sd">This is an example of building a ProfileGenerator and using it in a</span>
@@ -100,8 +97,9 @@
 <span class="sd">  objects used in the fit recipe. Create variables from the moved Parameters</span>
 <span class="sd">  rather than from the &#39;phase&#39; that lives in the IntensityGenerator and see if</span>
 <span class="sd">  everything still refines.</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 
@@ -143,7 +141,7 @@
 <span class="sd">        gets performed. The &#39;count&#39; attribute will be used to store the count.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ProfileGenerator</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">ProfileGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="c1"># Count the calls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span>
@@ -223,7 +221,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="nb">print</span> <span class="s2">&quot;iofq called&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;iofq called&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">iofq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phase</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
 
 <span class="c1"># End class IntensityGenerator</span>
@@ -286,7 +284,7 @@
 
     <span class="c1"># This creates a callable equation named &quot;bkgd&quot; within the FitContribution,</span>
     <span class="c1"># and turns the polynomial coefficients into Parameters.</span>
-    <span class="n">eq</span> <span class="o">=</span> <span class="n">contribution</span><span class="o">.</span><span class="n">registerStringFunction</span><span class="p">(</span><span class="n">bkgdstr</span><span class="p">,</span> <span class="s2">&quot;bkgd&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">registerStringFunction</span><span class="p">(</span><span class="n">bkgdstr</span><span class="p">,</span> <span class="s2">&quot;bkgd&quot;</span><span class="p">)</span>
 
     <span class="c1"># We will create the broadening function that we need by creating a python</span>
     <span class="c1"># function and registering it with the FitContribution.</span>
@@ -429,7 +427,7 @@
     <span class="c1"># The brute-force calculation is very slow. Thus we optimize a little bit.</span>
 
     <span class="c1"># The precision of distance measurements</span>
-    <span class="n">deltad</span> <span class="o">=</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span>
+    <span class="n">deltad</span> <span class="o">=</span> <span class="mf">1e-6</span>
     <span class="n">dmult</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">deltad</span><span class="p">)</span>
     <span class="n">deltau</span> <span class="o">=</span> <span class="n">deltad</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">umult</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">deltau</span><span class="p">)</span>
@@ -570,7 +568,7 @@
     <span class="k">return</span>
 
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 
@@ -594,7 +592,7 @@
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/examples/npintensity.txt"
+      <li><a href="../_sources/examples/npintensity.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -627,13 +625,13 @@
         <li class="right" >
           <a href="gaussiangenerator.html" title="gaussiangenerator.py"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.2 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../examples.html" >Examples</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2016, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.9.
+        &#169; Copyright 2017, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

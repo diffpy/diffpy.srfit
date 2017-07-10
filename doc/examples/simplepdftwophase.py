@@ -15,7 +15,7 @@
 
 """Example of a simplified PDF refinement of two-phase structure."""
 
-from pyobjcryst.crystal import CreateCrystalFromCIF
+from pyobjcryst import loadCrystal
 
 from diffpy.srfit.pdf import PDFContribution
 from diffpy.srfit.fitbase import FitRecipe, FitResults
@@ -33,10 +33,10 @@ def makeRecipe(niciffile, siciffile, datname):
     contribution.loadData(datname)
     contribution.setCalculationRange(xmax = 20)
 
-    stru = CreateCrystalFromCIF(file(niciffile))
+    stru = loadCrystal(niciffile)
     contribution.addStructure("ni", stru)
 
-    stru = CreateCrystalFromCIF(file(siciffile))
+    stru = loadCrystal(siciffile)
     contribution.addStructure("si", stru)
 
     # Make the FitRecipe and add the FitContribution.

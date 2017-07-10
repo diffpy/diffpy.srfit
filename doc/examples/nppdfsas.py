@@ -25,7 +25,7 @@ best with both the PDF and SAS data.
 
 import numpy
 
-from pyobjcryst.crystal import CreateCrystalFromCIF
+from pyobjcryst import loadCrystal
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.pdf.characteristicfunctions import SASCF
@@ -57,7 +57,7 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)
-    stru = CreateCrystalFromCIF(file(ciffile))
+    stru = loadCrystal(ciffile)
     pdfgenerator.setStructure(stru)
     pdfcontribution.addProfileGenerator(pdfgenerator)
     pdfcontribution.setResidualEquation("resv")

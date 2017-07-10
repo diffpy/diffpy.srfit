@@ -27,7 +27,7 @@ diffpy.srfit.pdf.characteristicfunctions module.
 
 import numpy
 
-from pyobjcryst.crystal import CreateCrystalFromCIF
+from pyobjcryst import loadCrystal
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
@@ -52,7 +52,7 @@ def makeRecipe(ciffile, grdata):
 
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)
-    stru = CreateCrystalFromCIF(file(ciffile))
+    stru = loadCrystal(ciffile)
     pdfgenerator.setStructure(stru)
     pdfcontribution.addProfileGenerator(pdfgenerator)
 

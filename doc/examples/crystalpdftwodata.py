@@ -23,7 +23,7 @@ ObjCrystCrystalParSet.
 
 import numpy
 
-from pyobjcryst.crystal import CreateCrystalFromCIF
+from pyobjcryst import loadCrystal
 
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
@@ -58,7 +58,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     ## The ProfileGenerators
     # We need one of these for the x-ray data.
     xgenerator = PDFGenerator("G")
-    stru = CreateCrystalFromCIF(file(ciffile))
+    stru = loadCrystal(ciffile)
     xgenerator.setStructure(stru)
 
     # And we need one for the neutron data. We want to refine the same

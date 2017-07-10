@@ -31,7 +31,6 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 
 from gaussianrecipe import scipyOptimize
-from crystalpdf import plotResults
 
 ####### Example Code
 
@@ -137,9 +136,6 @@ def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
     # All this should be pretty familiar by now.
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
     xr = recipe.xnickel.profile.x
     xg = recipe.xnickel.profile.y
     xgcalc = recipe.xnickel.profile.ycalc

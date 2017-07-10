@@ -85,7 +85,7 @@ def makeRecipeII():
     recipe.addVar(recipe.highT.offset, name = "highToffset")
     # We create a new Variable and use the recipe's "constrain" method to
     # associate the Debye temperature parameters with that variable.
-    par = recipe.newVar("thetaD", 100)
+    recipe.newVar("thetaD", 100)
     recipe.constrain(recipe.lowT.thetaD, "thetaD")
     recipe.constrain(recipe.highT.thetaD, "thetaD")
     return recipe

@@ -267,8 +267,6 @@ def speedTest4(mutate = 2):
     factory = EquationFactory()
 
     x = numpy.arange(0, 20, 0.05)
-    qsig = 0.01
-    sigma = 0.003
 
     eqstr = """\
     b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
@@ -276,7 +274,7 @@ def speedTest4(mutate = 2):
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
 
-    from sympy import var, exp, lambdify
+    from sympy import var, lambdify
     from numpy import polyval
     b1, b2, b3, b4, b5, b6, b7, b8, xx = vars = var("b1 b2 b3 b4 b5 b6 b7 b8 xx")
     f = lambdify(vars, polyval([b1, b2, b3, b4, b5, b6, b7, b8], xx), "numpy")
@@ -322,8 +320,6 @@ def weightedTest(mutate = 2):
     factory = EquationFactory()
 
     x = numpy.arange(0, 10, 0.01)
-    qsig = 0.01
-    sigma = 0.003
 
     eqstr = """\
     b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
@@ -389,8 +385,6 @@ def profileTest():
     factory = EquationFactory()
 
     x = numpy.arange(0, 10, 0.001)
-    qsig = 0.01
-    sigma = 0.003
 
     eqstr = """\
     b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\

@@ -143,11 +143,7 @@ def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
     # All this should be pretty familiar by now.
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
     r = recipe.pdf.profile.x
-
     g = recipe.pdf.profile.y
     gcalc = recipe.pdf.profile.ycalc
     diffzero = -0.8 * max(g) * numpy.ones_like(g)

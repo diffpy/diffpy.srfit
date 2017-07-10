@@ -37,8 +37,8 @@ Extensions
 import numpy
 
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
-from npintensity import IntensityGenerator, scipyOptimize
-from npintensity import iofq, makeData
+from npintensity import IntensityGenerator
+from npintensity import makeData
 
 from gaussianrecipe import scipyOptimize
 

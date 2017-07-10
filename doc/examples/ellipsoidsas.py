@@ -85,11 +85,7 @@ def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
     # All this should be pretty familiar by now.
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
     r = recipe.ellipsoid.profile.x
-
     y = recipe.ellipsoid.profile.y
     ycalc = recipe.ellipsoid.profile.ycalc
     diff = y - ycalc + min(y)

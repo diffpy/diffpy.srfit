@@ -141,9 +141,6 @@ def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
     # All this should be pretty familiar by now.
-    names = recipe.getNames()
-    vals = recipe.getValues()
-
     xnickel = recipe.xnickel
     xr_ni = xnickel.profile.x
     xg_ni = xnickel.profile.y

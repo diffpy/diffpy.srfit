@@ -12,11 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of fitting the Debye recipe to experimental Debye-Waller factors.
 
 This is an extension of example in debyemodel.py. The recipe we create will
 simultaneously fit the low and high temperature parts of the experimental data
-with the same debye temperature, but different offsets. This example also
+with the same Debye temperature, but different offsets. This example also
 introduces constraints.
 
 Instructions
@@ -31,7 +32,6 @@ Extensions
 - The Debye temperature parameters from the two contributions can be
   constrained without creating a new variable. Try to figure out how that is
   done.
-
 """
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults

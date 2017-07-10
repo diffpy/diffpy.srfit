@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of fitting the Debye model to experimental Debye-Waller factors.
 
 In this example, we build a fit recipe that uses an external function that can
@@ -30,7 +31,6 @@ Extensions
 - Don't hardcode the mass of lead in the fitting equation. Turn it into a
   Parameter and refine it. There are two ways to do this. Try to figure out
   both.
-
 """
 
 import numpy

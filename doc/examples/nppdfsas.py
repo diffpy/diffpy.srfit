@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of combining PDF and SAS nanoparticles data.
 
 This is an example of using both PDF and SAS data in the same fit. This fits a
@@ -20,7 +21,6 @@ and the PDF data. Using the same shape for the PDF and SAS provides a feedback
 mechanism into the fit that allows the PDF and SAS portions of the fit to guide
 one another, and in the end gives the shape of the nanoparticle that agrees
 best with both the PDF and SAS data.
-
 """
 
 import numpy

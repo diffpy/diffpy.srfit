@@ -12,8 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of a refinement of SAS I(Q) data to an ellipsoidal model.
 
+"""Example of a refinement of SAS I(Q) data to an ellipsoidal model.
 """
 
 from diffpy.srfit.sas import SASGenerator, SASParser

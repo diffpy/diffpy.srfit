@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of extracting information from multiple data sets simultaneously.
 
 This example builds on npintensitygenerator.py, and uses IntensityGenerator
@@ -31,7 +32,6 @@ Extensions
   job done, make it clearer what is being done and therefore reduce potential
   mistakes in the code. This encapsulation of configuration workflow is the
   first step towards writing a user interface.
-
 """
 
 import numpy

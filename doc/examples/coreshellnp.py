@@ -12,13 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Refine the structure of a core-shell nanoparticle.
 
 This applies the characteristic function formalism described in nppdfcrystal.py
 to the case of a spherical core-shell nanoparticle. The modeling approach we
 use is to refine the core and shell as two different phases, each with an
 appropriate characteristic function.
-
 """
 
 import numpy

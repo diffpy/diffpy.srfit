@@ -12,11 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of a PDF refinement of two-phase structure.
 
 This example uses PDFGenerator to refine a the two phase nickel-silicon
 structure to all the available data.
-
 """
 
 import numpy

@@ -12,11 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of a nanoparticle PDF refinement using DebyePDFGenerator.
 
-This example is similar to crystalpdfobjcryst.py, except that it uses the
-DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.
-
+This example is similar to crystalpdfobjcryst.py, except that it uses
+the DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.
 """
 
 import numpy

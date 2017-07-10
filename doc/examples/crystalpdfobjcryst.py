@@ -12,12 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of a PDF refinement using pyobjcryst and PDFGenerator.
 
 This example is similar to crystalpdf.py, except that here we refine a
 pyobjcryst crystal object. In this example we use internal constraints provided
 by the ObjCrystCrystalParSet structure adapter.
-
 """
 
 from pyobjcryst.crystal import CreateCrystalFromCIF

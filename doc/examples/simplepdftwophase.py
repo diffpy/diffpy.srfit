@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of a simplified PDF refinement of two-phase structure."""
 
 from pyobjcryst.crystal import CreateCrystalFromCIF

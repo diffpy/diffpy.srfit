@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of using ProfileGenerators in FitContributions.
 
 This is an example of building a ProfileGenerator and using it in a
@@ -36,7 +37,6 @@ Extensions
 - Remove the amplitude from GaussianGenerator and instead use the 'setEquation'
   method of the FitContribution to account for it. Note that the
   GaussianGenerator will be accessible by its name, "g".
-
 """
 
 from numpy import exp

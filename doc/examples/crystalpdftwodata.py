@@ -12,13 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of a PDF refinement of two-phase structure.
 
 This example uses PDFGenerator to refine a single structure two profiles.
 This will require setting up two FitContribution, each with its own
 PDFGenerator. However, the PDFGenerators will refer to the same underlying
 ObjCrystCrystalParSet.
-
 """
 
 import numpy

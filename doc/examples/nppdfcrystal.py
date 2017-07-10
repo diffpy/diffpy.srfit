@@ -12,6 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
+
 """Example of fitting a crystal-like nanoparticle (nanocrystal) PDF.
 
 This is an example of modeling the PDF from a nanocrystal as an attenuated bulk
@@ -22,7 +23,6 @@ Gnano(r) = f(r) * Gbulk(r),
 where f(r) is the nanoparticle characteristic function for the nanoparticle
 shape. Functions for calculating the characteristic function in the
 diffpy.srfit.pdf.characteristicfunctions module.
-
 """
 
 import numpy

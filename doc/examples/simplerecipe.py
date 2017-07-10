@@ -12,11 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of simplified fitting .
 
-This is like gaussianrecipe.py, but it uses the SimpleRecipe, which integrates
-the FitContribution and Profile objects for simple recipe creation.
+"""Example of simplified fitting.
 
+This is like gaussianrecipe.py, but it uses the SimpleRecipe, which
+integrates the FitContribution and Profile objects for simple recipe
+creation.
 """
 
 from diffpy.srfit.fitbase import SimpleRecipe

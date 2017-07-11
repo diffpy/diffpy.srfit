@@ -38,7 +38,8 @@ http://diffpy.github.io/diffpy.srfit.
 REQUIREMENTS
 ------------------------------------------------------------------------
 
-The diffpy.srfit package requires Python 2.7 and the following software:
+The diffpy.srfit package requires Python 3.4 or later and
+the following software:
 
 * ``setuptools`` - software distribution tools for Python
 * ``NumPy`` - numerical mathematics and fast array operations for Python
@@ -73,7 +74,7 @@ install the required software separately.  As an example, on Ubuntu
 Linux some of the required software can be installed using ::
 
    sudo apt-get install \
-      python-setuptools python-numpy python-scipy python-matplotlib
+      python3-setuptools python3-numpy python3-scipy python3-matplotlib
 
 For other required packages see their respective web pages for installation
 instructions.

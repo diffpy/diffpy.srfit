@@ -303,7 +303,6 @@ class TestParameterAdapter(unittest.TestCase):
 
         # make our crystal
         cryst = ObjCrystCrystalParSet("bucky", occryst)
-        return
         m = cryst.c60
 
         # make some bond angle restraints
@@ -314,9 +313,10 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertTrue(2, len(m._restraints))
 
         # make sure these evaluate to whatver we get from objcryst
-        p0 = set([res0.penalty(), res1.penalty()])
+        p0 = [res0.penalty(), res1.penalty()]
         bonds = ocmol.GetBondList()
-        p1 = set([bonds[0].GetLogLikelihood(), bonds[1].GetLogLikelihood()])
+        self.assertEqual(2, len(bonds))
+        p1 = [b.GetLogLikelihood() for b in bonds]
         self.assertEqual(p0, p1)
 
         return

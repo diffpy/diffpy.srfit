@@ -22,7 +22,7 @@ import numpy
 from diffpy.srfit.tests.utils import datafile
 from diffpy.srfit.tests.utils import has_srreal, _msg_nosrreal
 from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.pdf import PDFGenerator, PDFParser, PDFContribution
 
 # ----------------------------------------------------------------------------
 
@@ -182,6 +182,56 @@ class TestPDFGenerator(unittest.TestCase):
         return
 
 # End of class TestPDFGenerator
+
+# ----------------------------------------------------------------------------
+
+@unittest.skipUnless(has_srreal, _msg_nosrreal)
+@unittest.skipUnless(has_structure, _msg_nostructure)
+class TestPDFContribution(unittest.TestCase):
+
+    def setUp(self):
+        self.pc = PDFContribution('pdf')
+        return
+
+
+    def test_setQmax(self):
+        """check PDFContribution.setQmax()
+        """
+        from diffpy.structure import Structure
+        pc = self.pc
+        pc.setQmax(21)
+        pc.addStructure('empty', Structure())
+        self.assertEqual(21, pc.empty.getQmax())
+        pc.setQmax(22)
+        self.assertEqual(22, pc.getQmax())
+        self.assertEqual(22, pc.empty.getQmax())
+        return
+
+
+    def test_getQmax(self):
+        """check PDFContribution.getQmax()
+        """
+        from diffpy.structure import Structure
+        # cover all code branches in PDFContribution._getMetaValue
+        # (1) contribution metadata
+        pc1 = self.pc
+        self.assertIsNone(pc1.getQmax())
+        pc1.setQmax(17)
+        self.assertEqual(17, pc1.getQmax())
+        # (2) contribution metadata
+        pc2 = PDFContribution('pdf')
+        pc2.addStructure('empty', Structure())
+        pc2.empty.setQmax(18)
+        self.assertEqual(18, pc2.getQmax())
+        # (3) profile metadata
+        pc3 = PDFContribution('pdf')
+        pc3.profile.meta['qmax'] = 19
+        self.assertEqual(19, pc3.getQmax())
+        return
+
+# End of class TestPDFContribution
+
+# ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     unittest.main()

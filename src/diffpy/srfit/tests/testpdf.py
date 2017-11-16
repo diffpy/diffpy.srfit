@@ -24,14 +24,17 @@ from diffpy.srfit.tests.utils import testoptional
 from diffpy.srfit.tests.utils import TestCasePDF, TestCaseStructure
 
 # Global variables to be assigned in setUp
-PDFGenerator = PDFParser = None
+PDFGenerator = PDFParser = PDFContribution = None
 
+# ----------------------------------------------------------------------------
 
 class TestPDFParset(testoptional(TestCasePDF)):
 
     def setUp(self):
         global PDFParser
         from diffpy.srfit.pdf import PDFParser
+        return
+
 
     def testParser1(self):
         data = datafile("ni-q27r100-neutron.gr")
@@ -67,6 +70,7 @@ class TestPDFParset(testoptional(TestCasePDF)):
         self.assertAlmostEqual(0, res)
 
         return
+
 
     def testParser2(self):
         data = datafile("si-q27r60-xray.gr")
@@ -107,6 +111,10 @@ class TestPDFParset(testoptional(TestCasePDF)):
 
         self.assertTrue(dx is None)
         return
+
+# End of class TestPDFParset
+
+# ----------------------------------------------------------------------------
 
 class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
 
@@ -177,6 +185,57 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
         self.assertEqual(0.93, gen._calc.qmin)
         return
 
+# End of class TestPDFGenerator
+
+# ----------------------------------------------------------------------------
+
+class TestPDFContribution(testoptional(TestCaseStructure, TestCasePDF)):
+
+    def setUp(self):
+        global PDFContribution
+        from diffpy.srfit.pdf import PDFContribution
+        self.pc = PDFContribution('pdf')
+        return
+
+
+    def test_setQmax(self):
+        """check PDFContribution.setQmax()
+        """
+        from diffpy.Structure import Structure
+        pc = self.pc
+        pc.setQmax(21)
+        pc.addStructure('empty', Structure())
+        self.assertEqual(21, pc.empty.getQmax())
+        pc.setQmax(22)
+        self.assertEqual(22, pc.getQmax())
+        self.assertEqual(22, pc.empty.getQmax())
+        return
+
+
+    def test_getQmax(self):
+        """check PDFContribution.getQmax()
+        """
+        from diffpy.Structure import Structure
+        # cover all code branches in PDFContribution._getMetaValue
+        # (1) contribution metadata
+        pc1 = self.pc
+        self.assertIsNone(pc1.getQmax())
+        pc1.setQmax(17)
+        self.assertEqual(17, pc1.getQmax())
+        # (2) contribution metadata
+        pc2 = PDFContribution('pdf')
+        pc2.addStructure('empty', Structure())
+        pc2.empty.setQmax(18)
+        self.assertEqual(18, pc2.getQmax())
+        # (3) profile metadata
+        pc3 = PDFContribution('pdf')
+        pc3.profile.meta['qmax'] = 19
+        self.assertEqual(19, pc3.getQmax())
+        return
+
+# End of class TestPDFContribution
+
+# ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     unittest.main()

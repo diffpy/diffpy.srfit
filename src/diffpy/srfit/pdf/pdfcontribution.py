@@ -261,13 +261,14 @@ class PDFContribution(FitContribution):
     def _getMetaValue(self, kwd):
         """Get metadata according to object hierarchy."""
         # Check self, then generators then profile
-        val = self._meta.get("kwd")
-        if val is None and len(self._generators) > 0:
-            gen = self._generators.values()[0]
-            val = gen.meta.get(kwd)
-        else:
-            val = self.profile.meta.get(kwd)
+        if kwd in self._meta:
+            return self._meta[kwd]
+        for gen in self._generators.values():
+            if kwd in gen.meta:
+                return gen.meta[kwd]
+        val = self.profile.meta.get(kwd)
         return val
+
 
     def setScatteringType(self, type = "X"):
         """Set the scattering type.

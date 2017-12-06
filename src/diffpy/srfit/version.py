@@ -25,6 +25,7 @@ Use `__git_commit__` instead.
 __all__ = ['__date__', '__git_commit__', '__timestamp__', '__version__']
 
 import os.path
+
 from pkg_resources import resource_filename
 
 

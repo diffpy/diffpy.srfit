@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-
-"""\
+"""
 Universal import functions for volatile SasView/SansViews API-s.
 """
 

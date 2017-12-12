@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-
-"""\
+"""
 Picklable storage of callable objects using weak references.
 """
 

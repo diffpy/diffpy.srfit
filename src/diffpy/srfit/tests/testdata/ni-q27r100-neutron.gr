@@ -5,31 +5,31 @@
 # run=npdf_03315     background=npdf_03001
 # smooth=2    smoothParam=32 32 0    backKillThresh=-1.0
 # in beam: radius=0.45325     height=4.5
-# temp=300     runTitle=Run 3315: Ni commercial, RT_stick                                               
-# 
+# temp=300     runTitle=Run 3315: Ni commercial, RT_stick
+#
 # ##### Vanadium     runCorrection=T
 # run=npdf_03000     background=npdf_03001
 # smooth=2    smoothParam=32 32 0    vanKillThresh=-1.0    vBackKillThresh=-1.0
 # in beam: radius=0.47625     height=4.5
-# 
+#
 # ##### Container     runCorrection=T
 # run=npdf_03002     background=npdf_03001
 # smooth=2    smoothParam=32 32 0    cBackKillThresh=-1.0
 # wallThick=0.023     atomDensity=0.072110
 # atomic information: scattCS=5.100     absorpCS=5.080
-# 
+#
 # ##### Sample Material     numElements=1     NormLaue=0.00000
 # Element relAtomNum atomMass atomCoherCS atomIncoherCS atomAbsorpCS
 #   Ni        1.0000   58.693     13.3000        5.2000      4.49000
 # density=7.0     effDensity=2.8777
-# 
+#
 # ##### Banks=4  deltaQ=0.01  matchRef=0  matchScal=T  matchOffset=T
 # bank   angle   blendQmin   blendQmax       (0.0 means no info)
-#   1     46.6        0.87    21.63   
-#   2     90.0        1.51    37.66   
-#   3    119.0        1.84    45.96   
-#   4    148.0        2.05    51.25   
-# 
+#   1     46.6        0.87    21.63
+#   2     90.0        1.51    37.66
+#   3    119.0        1.84    45.96
+#   4    148.0        2.05    51.25
+#
 # ##### Program Specific Information
 # ## Ft     calcError=1     (1 for true, 0 for false)
 # numRpoints=10000     maxR=100.0     numDensity=0.0   intMaxR=1.5
@@ -40,7 +40,7 @@
 # ## Soqd     minProcOut=0
 # samPlazcek=1     vanPlazcek=1     smoothData=0     modifyData=1
 # ## Corps     minProcOut=0     numBanksMiss=0
-# 
+#
 # ##### prepgsas     prepOutput=1     numBanksMiss=0       fileExt=gsa
 # instParamFile=npdf_TL-displex_2018.iparm
 # numBanksAdd=0

@@ -68,14 +68,14 @@ Where next?
 
    examples.rst
    extending.rst
-   
+
 ======================================
 API
 ======================================
 
 .. toctree::
    :maxdepth: 3
-   
+
    api/diffpy.srfit.rst
 
 .. faq.rst

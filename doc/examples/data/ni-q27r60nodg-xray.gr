@@ -1,5 +1,5 @@
 History written: Mon Apr 21 20:48:28 2008
-Produced by 
+Produced by
 ####### Get_XPDF #######
 
 ##### General_Setting
@@ -26,7 +26,7 @@ sambkgfile=kapton_bgrd_300k_nor_2-3.chi    num_sambkgs=1
 confile=    num_cons=1
 conbkgfile=    num_conbkgs=1
 det#  used  xcol detcol deterrcol xmin  xmax  add_det  mul_det   add_bkg  mul_bkg  add_con  mul_con  add_conbkg   mul_conbkg
-  0    1    0    1    3    0.600000    35.0000    0.000000    1.00000    0.000000    1.00000    0.000000    1.00000    0.000000    1.00000    
+  0    1    0    1    3    0.600000    35.0000    0.000000    1.00000    0.000000    1.00000    0.000000    1.00000    0.000000    1.00000
 
 ##### Experiment_Setup
 title=PDF analysis
@@ -128,9 +128,9 @@ gropttype=OptFq    miscdatatype=AtomASF
 ##### start data
 #F ni300mesh_300k_nor_1-5.gr
 #D Mon Apr 21 21:05:49 2008
-#C 
+#C
 #S 1    G(r)
-#D 
+#D
 #L r(A)    G(r)
   1.000000e-002    6.873431e-002
   2.000000e-002    1.419026e-001

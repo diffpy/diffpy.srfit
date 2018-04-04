@@ -81,7 +81,7 @@ class BasePDFGenerator(ProfileGenerator):
         self._phase = None
         self.stru = None
         self.meta = {}
-        self._lastr = None
+        self._lastr = numpy.empty(0)
         self._calc = None
 
         self._pool = None
@@ -253,10 +253,12 @@ class BasePDFGenerator(ProfileGenerator):
 
     def _prepare(self, r):
         """Prepare the calculator when a new r-value is passed."""
-        self._lastr = r
-        self._calc.rstep = r[1] - r[0]
-        self._calc.rmin = r[0]
-        self._calc.rmax = r[-1] + 0.5*self._calc.rstep
+        self._lastr = r.copy()
+        lo, hi = r.min(), r.max()
+        ndiv = max(len(r) - 1, 1)
+        self._calc.rstep = (hi - lo) / ndiv
+        self._calc.rmin = lo
+        self._calc.rmax = hi + 0.5*self._calc.rstep
         return
 
     def _validate(self):
@@ -285,7 +287,7 @@ class BasePDFGenerator(ProfileGenerator):
         structure object.
 
         """
-        if r is not self._lastr:
+        if not numpy.array_equal(r, self._lastr):
             self._prepare(r)
 
         rcalc, y = self._calc(self._phase._getSrRealStructure())

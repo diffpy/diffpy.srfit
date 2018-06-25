@@ -29,6 +29,8 @@ __all__ = ["FitHook"]
 
 import numpy
 
+from diffpy.srfit.util import sortKeyForNumericString
+
 
 class FitHook(object):
     """Base class for inspecting the progress of a FitRecipe refinement.
@@ -144,10 +146,11 @@ class PrintFitHook(FitHook):
             print("Variables")
             vnames = recipe.getNames()
             vals = recipe.getValues()
-            items = zip(vnames, vals)
-            items.sort()
+            byname = lambda nv : sortKeyForNumericString(nv[0])
+            items = sorted(zip(vnames, vals), key=byname)
             for name, val in items:
                 print("  %s = %f" % (name, val))
+        return
 
 # End class PrintFitHook
 

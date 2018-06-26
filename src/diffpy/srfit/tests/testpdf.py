@@ -232,7 +232,6 @@ class TestPDFContribution(unittest.TestCase):
         return
 
 
-    @unittest.expectedFailure
     def test_savetxt(self):
         "check PDFContribution.savetxt()"
         from diffpy.structure import Structure

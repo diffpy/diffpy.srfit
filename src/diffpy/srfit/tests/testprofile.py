@@ -210,7 +210,6 @@ class TestProfile(unittest.TestCase):
         return
 
 
-    @unittest.expectedFailure
     def test_savetxt(self):
         "Check the savetxt method."
         prof = self.profile

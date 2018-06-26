@@ -239,5 +239,43 @@ class TestFitRecipe(unittest.TestCase):
         return
 
 
+    def testPrintFitHook(self):
+        "check output from default PrintFitHook."
+        from io import StringIO
+        from contextlib import redirect_stdout
+        self.recipe.addVar(self.fitcontribution.c)
+        self.recipe.restrain('c', lb=5)
+        pfh, = self.recipe.getFitHooks()
+        with redirect_stdout(StringIO()) as fp:
+            self.recipe.scalarResidual()
+        self.assertEqual('', fp.getvalue())
+        pfh.verbose = 1
+        with redirect_stdout(StringIO()) as fp:
+            self.recipe.scalarResidual()
+        out = fp.getvalue()
+        self.assertTrue(out.strip().isdigit())
+        self.assertFalse('\nRestraints:' in out)
+        pfh.verbose = 2
+        with redirect_stdout(StringIO()) as fp:
+            self.recipe.scalarResidual()
+        out = fp.getvalue()
+        self.assertTrue('\nResidual:' in out)
+        self.assertTrue('\nRestraints:' in out)
+        self.assertFalse('\nVariables' in out)
+        pfh.verbose = 3
+        with redirect_stdout(StringIO()) as fp:
+            self.recipe.scalarResidual()
+        out = fp.getvalue()
+        self.assertTrue('\nVariables' in out)
+        self.assertTrue('c = ' in out)
+        with redirect_stdout(StringIO()) as fp:
+            self.recipe.scalarResidual()
+        out = fp.getvalue()
+        return
+
+# End of class TestFitRecipe
+
+# ----------------------------------------------------------------------------
+
 if __name__ == "__main__":
     unittest.main()

@@ -505,7 +505,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
         y = numpy.random.poisson(y*nl) / nl
 
     # Now save it
-    numpy.savetxt(datname, zip(q, y, u))
+    numpy.savetxt(datname, numpy.transpose([q, y, u]))
     return
 
 

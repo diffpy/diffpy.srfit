@@ -143,15 +143,14 @@ class PDFContribution(FitContribution):
         return self.profile.setCalculationRange(xmin, xmax, dx)
 
 
-    def savetxt(self, fname, fmt='%.18e', delimiter=' '):
+    def savetxt(self, fname, **kwargs):
         """Call numpy.savetxt with x, ycalc, y, dy
 
         This calls on the built-in Profile.
 
         Arguments are passed to numpy.savetxt.
-
         """
-        return self.profile.savetxt(fname, fmt, delimiter)
+        return self.profile.savetxt(fname, **kwargs)
 
     # Phase methods
 

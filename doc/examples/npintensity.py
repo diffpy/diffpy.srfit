@@ -241,7 +241,7 @@ def makeRecipe(strufile, datname):
     contribution.registerFunction(gaussian)
 
     # Center the Gaussian so it is not truncated.
-    contribution.q0.value = x[len(x)/2]
+    contribution.q0.value = x[len(x) // 2]
 
     # Now we can incorporate the scale and bkgd into our calculation. We also
     # convolve the signal with the Gaussian to broaden it. Recall that we don't
@@ -486,7 +486,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
     y = iofq(S, q)
 
     # We want to broaden the peaks as well. This simulates instrument effects.
-    q0 = q[len(q)/2]
+    q0 = q[len(q) // 2]
     g = numpy.exp(-0.5*((q-q0)/sig)**2)
     y = numpy.convolve(y, g, mode='same')/sum(g)
 

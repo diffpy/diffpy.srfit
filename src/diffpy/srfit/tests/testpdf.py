@@ -16,6 +16,7 @@
 """Tests for pdf package."""
 
 import unittest
+import io
 
 import numpy
 
@@ -23,6 +24,7 @@ from diffpy.srfit.tests.utils import datafile
 from diffpy.srfit.tests.utils import has_srreal, _msg_nosrreal
 from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
 from diffpy.srfit.pdf import PDFGenerator, PDFParser, PDFContribution
+from diffpy.srfit.exceptions import SrFitError
 
 # ----------------------------------------------------------------------------
 
@@ -227,6 +229,24 @@ class TestPDFContribution(unittest.TestCase):
         pc3 = PDFContribution('pdf')
         pc3.profile.meta['qmax'] = 19
         self.assertEqual(19, pc3.getQmax())
+        return
+
+
+    @unittest.expectedFailure
+    def test_savetxt(self):
+        "check PDFContribution.savetxt()"
+        from diffpy.structure import Structure
+        pc = self.pc
+        pc.loadData(datafile("si-q27r60-xray.gr"))
+        pc.setCalculationRange(0, 10)
+        pc.addStructure('empty', Structure())
+        fp = io.BytesIO()
+        self.assertRaises(SrFitError, pc.savetxt, fp)
+        pc.evaluate()
+        pc.savetxt(fp)
+        txt = fp.getvalue().decode()
+        nlines = len(txt.strip().split('\n'))
+        self.assertEqual(1001, nlines)
         return
 
 # End of class TestPDFContribution

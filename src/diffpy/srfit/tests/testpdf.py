@@ -16,10 +16,12 @@
 """Tests for pdf package."""
 
 import unittest
+import io
 
 import numpy
 
 from diffpy.srfit.tests.utils import datafile
+from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.tests.utils import testoptional
 from diffpy.srfit.tests.utils import TestCasePDF, TestCaseStructure
 
@@ -231,6 +233,23 @@ class TestPDFContribution(testoptional(TestCaseStructure, TestCasePDF)):
         pc3 = PDFContribution('pdf')
         pc3.profile.meta['qmax'] = 19
         self.assertEqual(19, pc3.getQmax())
+        return
+
+
+    def test_savetxt(self):
+        "check PDFContribution.savetxt()"
+        from diffpy.Structure import Structure
+        pc = self.pc
+        pc.loadData(datafile("si-q27r60-xray.gr"))
+        pc.setCalculationRange(0, 10)
+        pc.addStructure('empty', Structure())
+        fp = io.BytesIO()
+        self.assertRaises(SrFitError, pc.savetxt, fp)
+        pc.evaluate()
+        pc.savetxt(fp)
+        txt = fp.getvalue().decode()
+        nlines = len(txt.strip().split('\n'))
+        self.assertEqual(1001, nlines)
         return
 
 # End of class TestPDFContribution

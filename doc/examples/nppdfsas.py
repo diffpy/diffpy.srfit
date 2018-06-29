@@ -68,6 +68,8 @@ def makeRecipe(ciffile, grdata, iqdata):
     sasparser = SASParser()
     sasparser.parseFile(iqdata)
     sasprofile.loadParsedData(sasparser)
+    if all(sasprofile.dy == 0):
+        sasprofile.dy[:] = 1
 
     sascontribution = FitContribution("sas")
     sascontribution.setProfile(sasprofile)
@@ -122,7 +124,9 @@ def fitRecipe(recipe):
     recipe.setWeight(recipe.pdf, 0)
     recipe.fix("all")
     recipe.free("radius_a", "radius_b", iqscale = 1e8)
+    recipe.constrain('radius_b', 'radius_a')
     scipyOptimize(recipe)
+    recipe.unconstrain('radius_b')
 
     # Tune PDF
     recipe.setWeight(recipe.pdf, 1)

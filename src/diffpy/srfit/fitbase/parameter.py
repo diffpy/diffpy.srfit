@@ -71,7 +71,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         Argument.__init__(self, name, value, const)
         return
 
-    def setValue(self, val, lb = None, ub = None):
+    def setValue(self, val):
         """Set the value of the Parameter and the bounds.
 
         val     --  The value to assign.
@@ -84,8 +84,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
         """
         Argument.setValue(self, val)
-        if lb is not None: self.bounds[0] = lb
-        if ub is not None: self.bounds[1] = ub
         return self
 
     def setConst(self, const = True, value = None):
@@ -104,6 +102,22 @@ class Parameter(_parameter_interface, Argument, Validatable):
         if value is not None:
             self.setValue(value)
         return self
+
+
+    def boundRange(self, lb=None, ub=None):
+        """Set lower and upper bound of the Parameter.
+
+        lb  -- The lower bound for the bounds list.
+        ub  -- The upper bound for the bounds list.
+
+        Returns self so that mutators can be chained.
+        """
+        if lb is not None:
+            self.bounds[0] = lb
+        if ub is not None:
+            self.bounds[1] = ub
+        return self
+
 
     def boundWindow(self, lr = 0, ur = None):
         """Create bounds centered on the current value of the Parameter.
@@ -203,8 +217,8 @@ class ParameterProxy(Parameter):
     # wrap Parameter methods to use the target object ------------------------
 
     @wraps(Parameter.setValue)
-    def setValue(self, val, lb=None, ub=None):
-        return self.par.setValue(val, lb, ub)
+    def setValue(self, val):
+        return self.par.setValue(val)
 
 
     @wraps(Parameter.getValue)
@@ -215,6 +229,11 @@ class ParameterProxy(Parameter):
     @wraps(Parameter.setConst)
     def setConst(self, const=True, value=None):
         return self.par.setConst(const, value)
+
+
+    @wraps(Parameter.boundRange)
+    def boundRange(self, lb=None, ub=None):
+        return self.par.boundRange(lb, ub)
 
 
     @wraps(Parameter.boundWindow)
@@ -300,15 +319,11 @@ class ParameterAdapter(Parameter):
         """Get the value of the Parameter."""
         return self.getter(self.obj)
 
-    def setValue(self, value, lb = None, ub = None):
+    def setValue(self, value):
         """Set the value of the Parameter."""
         if value != self.getValue():
             self.setter(self.obj, value)
             self.notify()
-
-        if lb is not None: self.bounds[0] = lb
-        if ub is not None: self.bounds[1] = ub
-
         return self
 
 # End class ParameterAdapter

@@ -16,10 +16,13 @@
 """Tests for refinableobj module."""
 
 import unittest
+import re
+import io
 
 from numpy import array, arange, array_equal, ones_like, allclose
 
 from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.tests.utils import datafile
 
 
@@ -206,6 +209,26 @@ class TestProfile(unittest.TestCase):
         self.assertRaises(ValueError, prof.loadtxt, data, usecols=(0,))
         return
 
+
+    def test_savetxt(self):
+        "Check the savetxt method."
+        prof = self.profile
+        self.assertRaises(SrFitError, prof.savetxt, 'foo')
+        xobs = arange(-2, 3.01, 0.25)
+        yobs = xobs ** 2
+        prof.setObservedProfile(xobs, yobs)
+        prof.ycalc = yobs.copy()
+        fp = io.BytesIO()
+        prof.savetxt(fp)
+        txt = fp.getvalue().decode()
+        self.assertTrue(re.match(r'^# x +ycalc +y +dy\b', txt))
+        nlines = len(txt.strip().split('\n'))
+        self.assertEqual(22, nlines)
+        return
+
+# End of class TestProfile
+
+# ----------------------------------------------------------------------------
 
 if __name__ == "__main__":
     unittest.main()

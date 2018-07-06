@@ -213,7 +213,7 @@ class TestContribution(unittest.TestCase):
         # Make a custom residual.
         fc.setResidualEquation("abs(eq-y)**0.5")
         chiv = fc.residual()
-        self.assertEqual(sum(abs(2*xobs-yobs)), dot(chiv, chiv))
+        self.assertAlmostEqual(sum(abs(2*xobs-yobs)), dot(chiv, chiv))
 
         # Test configuration checks
         fc1 = FitContribution('test1')

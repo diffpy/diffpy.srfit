@@ -307,28 +307,39 @@ class Profile(Observable, Validatable):
         self.setObservedProfile(x, y, dy)
         return x, y, dy
 
-    def savetxt(self, fname, fmt='%.18e', delimiter=' '):
-        """Call numpy.savetxt with x, ycalc, y, dy
 
-        Arguments are passed to numpy.savetxt.
+    def savetxt(self, fname, **kwargs):
+        """Call `numpy.savetxt` with x, ycalc, y, dy.
 
+        Parameters
+        ----------
+        fname : filename or file handle
+            This is passed to `numpy.savetxt`.
+        **kwargs
+            The keyword arguments that are passed to `numpy.savetxt`.
+            We preset file header "x  ycalc  y  dy".  Use ``header=''``
+            to save data without any header.
+
+        Raises
+        ------
+        SrFitError
+            When `self.ycalc` has not been set.
+
+        See also
+        --------
+        numpy.savetxt
         """
         x = self.x
         ycalc = self.ycalc
         if ycalc is None:
-            raise AttributeError("ycalc is None")
+            raise SrFitError("ycalc is None")
         y = self.y
         dy = self.dy
-
-        # Add the header
-        if not hasattr(fname, 'write'):
-            fname = open(fname, 'w')
-        if fname.closed:
-            raise ValueError("I/O operation on closed file")
-        header = "# x           ycalc           y           dy\n"
-        fname.write(header)
-        numpy.savetxt(fname, zip(x, ycalc, y, dy), fmt, delimiter)
+        kwargs.setdefault('header', 'x  ycalc  y  dy')
+        data = numpy.transpose([x, ycalc, y, dy])
+        numpy.savetxt(fname, data, **kwargs)
         return
+
 
     def _flush(self, other):
         """Invalidate cached state.

@@ -86,7 +86,7 @@ def makeRecipe():
          bkgd")
 
     # c is the center of the gaussian.
-    contribution.c.value =  x[len(x)/2]
+    contribution.c.value =  x[len(x) // 2]
 
     ## The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can

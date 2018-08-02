@@ -662,7 +662,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
     compname = "%s_%i"%(parname, idx)
 
     # Check to see if this parameter is free
-    pat = '%s *((\+|-) *\d+)?$'%compname
+    pat = r'%s *([+-] *\d+)?$' % compname
     if re.match(pat, formula):
         return par
 

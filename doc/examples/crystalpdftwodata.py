@@ -161,8 +161,8 @@ def plotResults(recipe):
     pylab.plot(nr,ngcalc,'r-',label="G(r) neutron Fit")
     pylab.plot(nr,ndiff,'g-',label="G(r) neutron diff")
     pylab.plot(nr,ndiffzero,'k-')
-    pylab.xlabel("$r (\AA)$")
-    pylab.ylabel("$G (\AA^{-2})$")
+    pylab.xlabel(r"$r (\AA)$")
+    pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
 
     pylab.show()

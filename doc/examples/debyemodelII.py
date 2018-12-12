@@ -115,12 +115,12 @@ def plotResults(recipe):
     # Now we can plot this.
     import pylab
     pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")
-    lbl1 = "$T_d$=%3.1f K, lowToff=%1.5f $\AA^2$"% (abs(thetaD),lowToffset)
-    lbl2 = "$T_d$=%3.1f K, highToff=%1.5f $\AA^2$"% (abs(thetaD),highToffset)
+    lbl1 = r"$T_d$=%3.1f K, lowToff=%1.5f $\AA^2$"% (abs(thetaD),lowToffset)
+    lbl2 = r"$T_d$=%3.1f K, highToff=%1.5f $\AA^2$"% (abs(thetaD),highToffset)
     pylab.plot(T,lowU,label=lbl1)
     pylab.plot(T,highU,label=lbl2)
     pylab.xlabel("T (K)")
-    pylab.ylabel("$U_{iso} (\AA^2)$")
+    pylab.ylabel(r"$U_{iso} (\AA^2)$")
     pylab.legend(loc = (0.0,0.8))
 
     pylab.show()

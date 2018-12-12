@@ -176,8 +176,8 @@ def plotResults(recipe):
     pylab.plot(xr_ni,xgcalc_ni,'r-',label="G(r) x-ray nickel Fit")
     pylab.plot(xr_ni,xdiff_ni,'g-',label="G(r) x-ray nickel diff")
     pylab.plot(xr_ni,xdiffzero_ni,'k-')
-    pylab.xlabel("$r (\AA)$")
-    pylab.ylabel("$G (\AA^{-2})$")
+    pylab.xlabel(r"$r (\AA)$")
+    pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
 
     pylab.subplot(2, 2, 2)

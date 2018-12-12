@@ -94,7 +94,7 @@ def plotResults(recipe):
     pylab.loglog(r,y,'bo',label="I(Q) Data")
     pylab.loglog(r, ycalc,'r-',label="I(Q) Fit")
     pylab.loglog(r,diff,'g-',label="I(Q) diff")
-    pylab.xlabel("$Q (\AA^{-1})$")
+    pylab.xlabel(r"$Q (\AA^{-1})$")
     pylab.ylabel("$I (arb. units)$")
     pylab.legend(loc=1)
 

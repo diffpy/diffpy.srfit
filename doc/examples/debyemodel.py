@@ -166,7 +166,7 @@ def plotResults(recipe):
     pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")
     pylab.plot(T,Ucalc)
     pylab.xlabel("T (K)")
-    pylab.ylabel("$U_{iso} (\AA^2)$")
+    pylab.ylabel(r"$U_{iso} (\AA^2)$")
     pylab.legend(loc = (0.0,0.8))
 
     pylab.show()

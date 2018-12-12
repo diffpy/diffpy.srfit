@@ -209,7 +209,7 @@ def plotResults(recipe):
     pylab.plot(q,Icalc2,'r-',label="I2(Q) Fit")
     pylab.plot(q,diff2,'g-',label="I2(Q) diff")
     pylab.plot(q,bkgd2,'c-',label="Bkgd2 Fit")
-    pylab.xlabel("$Q (\AA^{-1})$")
+    pylab.xlabel(r"$Q (\AA^{-1})$")
     pylab.ylabel("Intensity (arb. units)")
     pylab.legend(loc=1)
 

@@ -107,7 +107,7 @@ class Restraint(Validatable):
         # Try to get the value of eq.
         try:
             val = self.eq()
-        except TypeError as e:
+        except TypeError:
             raise SrFitError("eq cannot be evaluated")
         finally:
             if val is None:

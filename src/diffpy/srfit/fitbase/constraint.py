@@ -109,7 +109,7 @@ class Constraint(Validatable):
         try:
             val = self.eq()
             self.par.setValue(val)
-        except TypeError as e:
+        except TypeError:
             raise SrFitError("eq cannot be evaluated")
         finally:
             if val is None:

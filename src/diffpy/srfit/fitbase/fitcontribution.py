@@ -355,7 +355,7 @@ class FitContribution(ParameterSet):
             raise SrFitError(e)
         try:
             val = self.residual()
-        except TypeError as e:
+        except TypeError:
             raise SrFitError("residual cannot be evaluated")
         if val is None:
             raise SrFitError("residual evaluates to None")

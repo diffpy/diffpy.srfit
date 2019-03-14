@@ -38,7 +38,7 @@ http://diffpy.github.io/diffpy.srfit.
 REQUIREMENTS
 ------------------------------------------------------------------------
 
-The diffpy.srfit package requires Python 3.4 or later and
+The diffpy.srfit package requires Python 3.5 or later and
 the following software:
 
 * ``setuptools`` - software distribution tools for Python

@@ -1,3 +1,5 @@
+:tocdepth: 2
+
 diffpy.srfit package
 ====================
 
@@ -5,6 +7,7 @@ Subpackages
 -----------
 
 .. toctree::
+    :maxdepth: 2
 
     diffpy.srfit.equation
     diffpy.srfit.fitbase

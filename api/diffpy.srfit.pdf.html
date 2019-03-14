@@ -1,52 +1,42 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>diffpy.srfit.pdf package &#8212; SrFit 1.3 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <title>diffpy.srfit.pdf package &#8212; diffpy.srfit 3.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.3',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <script type="text/javascript" src="../_static/sidebar.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="diffpy.srfit.sas package" href="diffpy.srfit.sas.html" />
-    <link rel="prev" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" /> 
-  </head>
-  <body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <link rel="prev" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
+    <meta name="viewport" content="width=device-width,initial-scale=0.8">
+    
+    
+
+  </head><body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="diffpy.srfit.sas.html" title="diffpy.srfit.sas package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
+        <li class="responsive-menu"><a href="#sidebar-anchor" title="Navigation">&#9776;</a></li>
+        <li><a href="../index.html">diffpy.srfit 3.0.0 documentation</a> &#187;</li>
+          <li><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
       </ul>
-    </div>  
+    </div>
+    
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -66,9 +56,9 @@ as a base for the PDFGenerator and DebyePDFGenerator classes.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.basepdfgenerator.</code><code class="descname">BasePDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.profilegenerator.ProfileGenerator</span></code></a></p>
 <p>Base class for calculating PDF profiles using SrReal.</p>
-<p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
+<p>This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
@@ -192,7 +182,7 @@ ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
 See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
-<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+<dt>stru    –  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>name    –  A name to give to the managed ParameterSet that adapts stru</dt>
 <dd>(default “phase”).</dd>
@@ -311,7 +301,7 @@ delta   –  Thickness of shell</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.characteristicfunctions.SASCF">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.characteristicfunctions.</code><code class="descname">SASCF</code><span class="sig-paren">(</span><em>name</em>, <em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.characteristicfunctions.SASCF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.calculator.Calculator" title="diffpy.srfit.fitbase.calculator.Calculator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.calculator.Calculator</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.calculator.Calculator" title="diffpy.srfit.fitbase.calculator.Calculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.calculator.Calculator</span></code></a></p>
 <p>Calculator class for characteristic functions from sas-models.</p>
 <p>This class wraps a sas.models.BaseModel to calculate I(Q) related to
 nanoparticle shape. This I(Q) is inverted to f(r) according to:
@@ -331,16 +321,16 @@ dispersion.</p>
 <div class="section" id="module-diffpy.srfit.pdf.debyepdfgenerator">
 <span id="diffpy-srfit-pdf-debyepdfgenerator-module"></span><h2>diffpy.srfit.pdf.debyepdfgenerator module<a class="headerlink" href="#module-diffpy.srfit.pdf.debyepdfgenerator" title="Permalink to this headline">¶</a></h2>
 <p>PDF profile generator using the Debye equation.</p>
-<p>The DebyePDFGenerator class can take a diffpy.Structure,
+<p>The DebyePDFGenerator class can take a diffpy.structure,
 pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and calculate
 the PDF from it. This generator is especially appropriate for isolated
 scatterers, such as nanoparticles and molecules.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.debyepdfgenerator.</code><code class="descname">DebyePDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
 <p>A class for calculating the PDF from an isolated scatterer.</p>
-<p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
+<p>This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
@@ -402,7 +392,7 @@ ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
 See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
-<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+<dt>stru    –  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>name    –  A name to give to the managed ParameterSet that adapts stru</dt>
 <dd>(default “phase”).</dd>
@@ -423,7 +413,7 @@ PDF calculation.</dd>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.pdfcontribution.</code><code class="descname">PDFContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="diffpy.srfit.fitbase.fitcontribution.FitContribution"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitcontribution.FitContribution</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="diffpy.srfit.fitbase.fitcontribution.FitContribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.fitcontribution.FitContribution</span></code></a></p>
 <p>PDFContribution class.</p>
 <p>PDFContribution is a FitContribution that is customized for PDF fits. Data
 and phases can be added directly to the PDFContribution. Setup of
@@ -500,7 +490,7 @@ attribute of the generator, e.g.
 contribution.name.phase, where ‘contribution’ is this
 contribution and ‘name’ is passed name.
 (default), then the name will be set as “phase”.</dd>
-<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+<dt>stru    –  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>periodic – The structure should be treated as periodic.  If this is</dt>
 <dd>True (default), then a PDFGenerator will be used to
@@ -545,7 +535,7 @@ build-in profile with loadParsedData.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.savetxt">
-<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.savetxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.savetxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call numpy.savetxt with x, ycalc, y, dy</p>
 <p>This calls on the built-in Profile.</p>
 <p>Arguments are passed to numpy.savetxt.</p>
@@ -555,30 +545,30 @@ build-in profile with loadParsedData.</p>
 <dt id="diffpy.srfit.pdf.pdfcontribution.PDFContribution.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfcontribution.PDFContribution.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set epsilon-inclusive calculation range.</p>
-<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
-as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+<p>Adhere to the observed <code class="docutils literal notranslate"><span class="pre">xobs</span></code> points when <code class="docutils literal notranslate"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal notranslate"><span class="pre">xmin</span></code> and <code class="docutils literal notranslate"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+<li><strong>xmin</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
 current minimum when not specified.  If specified as “obs”
 reset to the minimum observed value.</li>
-<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+<li><strong>xmax</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
 current maximum when not specified.  If specified as “obs”
 reset to the maximum observed value.</li>
-<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal notranslate"><span class="pre">x</span></code> as anchored at <code class="docutils literal notranslate"><span class="pre">xmin</span></code>.</li>
 <li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
 <li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a> – If there is no observed data.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#ValueError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
 </ul>
 </td>
 </tr>
@@ -612,7 +602,7 @@ from the data, resample the <code class="docutils literal"><span class="pre">x</
 <div class="section" id="module-diffpy.srfit.pdf.pdfgenerator">
 <span id="diffpy-srfit-pdf-pdfgenerator-module"></span><h2>diffpy.srfit.pdf.pdfgenerator module<a class="headerlink" href="#module-diffpy.srfit.pdf.pdfgenerator" title="Permalink to this headline">¶</a></h2>
 <p>PDF profile generator.</p>
-<p>The PDFGenerator class can take a diffpy.Structure, pyobjcryst.crystal.Crystal
+<p>The PDFGenerator class can take a diffpy.structure, pyobjcryst.crystal.Crystal
 or pyobjcryst.molecule.Molecule object and calculate the crystal PDF from it.
 The passed structure object is wrapped in a StructureParameter set, which makes
 its attributes refinable. See the class definition for more details and the
@@ -620,9 +610,9 @@ examples for its use.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.pdfgenerator.PDFGenerator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.pdfgenerator.</code><code class="descname">PDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.pdfgenerator.PDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
 <p>A class for calculating the PDF from a single crystal structure.</p>
-<p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
+<p>This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
@@ -666,7 +656,7 @@ qdamp   –  See Managed Parameters.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.pdfparser.PDFParser">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.pdfparser.</code><code class="descname">PDFParser</code><a class="headerlink" href="#diffpy.srfit.pdf.pdfparser.PDFParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
 <p>Class for holding a diffraction pattern.</p>
 <p>Attributes</p>
 <dl class="docutils">
@@ -732,9 +722,9 @@ patstring   –  A string containing the pattern</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.PDFGenerator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.</code><code class="descname">PDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
 <p>A class for calculating the PDF from a single crystal structure.</p>
-<p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
+<p>This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
@@ -772,9 +762,9 @@ qdamp   –  See Managed Parameters.</p>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.DebyePDFGenerator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.</code><code class="descname">DebyePDFGenerator</code><span class="sig-paren">(</span><em>name='pdf'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.DebyePDFGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator" title="diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator</span></code></a></p>
 <p>A class for calculating the PDF from an isolated scatterer.</p>
-<p>This works with diffpy.Structure.Structure, pyobjcryst.crystal.Crystal and
+<p>This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and
 pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
 are not created until the structure is added.</p>
 <p>Attributes:
@@ -836,7 +826,7 @@ ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
 See those classes (located in diffpy.srfit.structure) for how they are
 used. The resulting ParameterSet will be managed by this generator.</p>
 <dl class="docutils">
-<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+<dt>stru    –  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>name    –  A name to give to the managed ParameterSet that adapts stru</dt>
 <dd>(default “phase”).</dd>
@@ -852,7 +842,7 @@ PDF calculation.</dd>
 <dl class="class">
 <dt id="diffpy.srfit.pdf.PDFContribution">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.</code><code class="descname">PDFContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="diffpy.srfit.fitbase.fitcontribution.FitContribution"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitcontribution.FitContribution</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="diffpy.srfit.fitbase.fitcontribution.FitContribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.fitcontribution.FitContribution</span></code></a></p>
 <p>PDFContribution class.</p>
 <p>PDFContribution is a FitContribution that is customized for PDF fits. Data
 and phases can be added directly to the PDFContribution. Setup of
@@ -929,7 +919,7 @@ attribute of the generator, e.g.
 contribution.name.phase, where ‘contribution’ is this
 contribution and ‘name’ is passed name.
 (default), then the name will be set as “phase”.</dd>
-<dt>stru    –  diffpy.Structure.Structure, pyobjcryst.crystal.Crystal or</dt>
+<dt>stru    –  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or</dt>
 <dd>pyobjcryst.molecule.Molecule instance.  Default None.</dd>
 <dt>periodic – The structure should be treated as periodic.  If this is</dt>
 <dd>True (default), then a PDFGenerator will be used to
@@ -974,7 +964,7 @@ build-in profile with loadParsedData.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.pdf.PDFContribution.savetxt">
-<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.savetxt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.savetxt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call numpy.savetxt with x, ycalc, y, dy</p>
 <p>This calls on the built-in Profile.</p>
 <p>Arguments are passed to numpy.savetxt.</p>
@@ -984,30 +974,30 @@ build-in profile with loadParsedData.</p>
 <dt id="diffpy.srfit.pdf.PDFContribution.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.pdf.PDFContribution.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set epsilon-inclusive calculation range.</p>
-<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
-as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+<p>Adhere to the observed <code class="docutils literal notranslate"><span class="pre">xobs</span></code> points when <code class="docutils literal notranslate"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal notranslate"><span class="pre">xmin</span></code> and <code class="docutils literal notranslate"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+<li><strong>xmin</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
 current minimum when not specified.  If specified as “obs”
 reset to the minimum observed value.</li>
-<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+<li><strong>xmax</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
 current maximum when not specified.  If specified as “obs”
 reset to the maximum observed value.</li>
-<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal notranslate"><span class="pre">x</span></code> as anchored at <code class="docutils literal notranslate"><span class="pre">xmin</span></code>.</li>
 <li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
 <li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a> – If there is no observed data.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#ValueError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
 </ul>
 </td>
 </tr>
@@ -1040,7 +1030,7 @@ from the data, resample the <code class="docutils literal"><span class="pre">x</
 <dl class="class">
 <dt id="diffpy.srfit.pdf.PDFParser">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.pdf.</code><code class="descname">PDFParser</code><a class="headerlink" href="#diffpy.srfit.pdf.PDFParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profileparser.ProfileParser" title="diffpy.srfit.fitbase.profileparser.ProfileParser"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.profileparser.ProfileParser</span></code></a></p>
 <p>Class for holding a diffraction pattern.</p>
 <p>Attributes</p>
 <dl class="docutils">
@@ -1108,7 +1098,10 @@ patstring   –  A string containing the pattern</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+    <a id="sidebar-anchor"></a>
+    
+
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">diffpy.srfit.pdf package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
@@ -1138,40 +1131,41 @@ patstring   –  A string containing the pattern</p>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
-             >index</a></li>
+             accesskey="I">index</a></li>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="diffpy.srfit.sas.html" title="diffpy.srfit.sas package"
-             >next</a> |</li>
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &#187;</li> 
+             accesskey="P">previous</a> |</li>
       </ul>
     </div>
+
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+        &#169; Copyright 2019, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

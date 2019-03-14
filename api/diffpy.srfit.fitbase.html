@@ -1,52 +1,42 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>diffpy.srfit.fitbase package &#8212; SrFit 1.3 documentation</title>
-    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <title>diffpy.srfit.fitbase package &#8212; diffpy.srfit 3.0.0 documentation</title>
+    <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../',
-        VERSION:     '1.3',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    
     <script type="text/javascript" src="../_static/sidebar.js"></script>
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="diffpy.srfit.interface package" href="diffpy.srfit.interface.html" />
-    <link rel="prev" title="diffpy.srfit.equation.visitors package" href="diffpy.srfit.equation.visitors.html" /> 
-  </head>
-  <body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <link rel="prev" title="diffpy.srfit.equation.visitors package" href="diffpy.srfit.equation.visitors.html" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
+    <meta name="viewport" content="width=device-width,initial-scale=0.8">
+    
+    
+
+  </head><body>
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
+        <li class="responsive-menu"><a href="#sidebar-anchor" title="Navigation">&#9776;</a></li>
+        <li><a href="../index.html">diffpy.srfit 3.0.0 documentation</a> &#187;</li>
+          <li><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
       </ul>
-    </div>  
+    </div>
+    
+  
 
     <div class="document">
       <div class="documentwrapper">
@@ -71,7 +61,7 @@ Calculator can be added to another RecipeOrganizer with the
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.calculator.Calculator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.calculator.</code><code class="descname">Calculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>Base class for calculators.</p>
 <p>A Calculator organizes Parameters and has a __call__ method that can
 calculate a generic signal.</p>
@@ -115,7 +105,36 @@ values          –  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.calculator.Calculator.operation">
 <code class="descname">operation</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.operation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>A decorator indicating abstract properties.</p>
+<p>Requires that the metaclass is ABCMeta or derived from it.  A
+class that has a metaclass derived from ABCMeta cannot be
+instantiated unless all of its abstract properties are overridden.
+The abstract properties can be called using any of the normal
+‘super’ call mechanisms.</p>
+<p>Usage:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd><p class="first">__metaclass__ = ABCMeta
+&#64;abstractproperty
+def my_abstract_property(self):</p>
+<blockquote class="last">
+<div>…</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p>This defines a read-only property; you can also define a read-write
+abstract property using the ‘long’ form of property declaration:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd>__metaclass__ = ABCMeta
+def getx(self): …
+def setx(self, value): …
+x = abstractproperty(getx, setx)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.calculator.Calculator.symbol">
@@ -132,7 +151,7 @@ values          –  Variable values (read only). See getValues.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.configurable.Configurable">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.configurable.</code><code class="descname">Configurable</code><a class="headerlink" href="#diffpy.srfit.fitbase.configurable.Configurable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Configurable class.</p>
 <p>A Configurable has state of which a FitRecipe must be aware.</p>
 <p>Attributes
@@ -153,7 +172,7 @@ this association.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.constraint.Constraint">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.constraint.</code><code class="descname">Constraint</code><a class="headerlink" href="#diffpy.srfit.fitbase.constraint.Constraint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Constraint class.</p>
 <p>Constraints are designed to be stored in only one place. (The holder of the
 constraint owns it).</p>
@@ -197,7 +216,7 @@ holds the observed and calculated signals.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitcontribution.FitContribution">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitcontribution.</code><code class="descname">FitContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>FitContribution class.</p>
 <p>FitContributions organize an Equation that calculates the signal, and a
 Profile that holds the signal. ProfileGenerators and Calculators can be
@@ -367,7 +386,7 @@ method.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fithook.FitHook">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fithook.</code><code class="descname">FitHook</code><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for inspecting the progress of a FitRecipe refinement.</p>
 <p>Can serve as a fithook for the FitRecipe class (see FitRecipe.pushFitHook
 method.) The methods in this class are called during the preparation of the
@@ -419,7 +438,7 @@ using FitRecipe.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitrecipe.FitRecipe">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitrecipe.</code><code class="descname">FitRecipe</code><span class="sig-paren">(</span><em>name='fit'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
 <p>FitRecipe class.</p>
 <p>Attributes
 name            –  A name for this FitRecipe.
@@ -779,7 +798,7 @@ displayed on screen or saved to file.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitresults.FitResults">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitresults.</code><code class="descname">FitResults</code><span class="sig-paren">(</span><em>recipe</em>, <em>update=True</em>, <em>showfixed=True</em>, <em>showcon=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class for processing, presenting and storing results of a fit.</p>
 <p>Attributes
 recipe      –  The recipe containing the results.
@@ -857,7 +876,7 @@ update  –  Flag indicating whether to call update() (default False).</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.fitresults.ContributionResults">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.fitresults.</code><code class="descname">ContributionResults</code><span class="sig-paren">(</span><em>con</em>, <em>weight</em>, <em>fitres</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.ContributionResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class for processing, storing FitContribution results.</p>
 <p>This does not store the FitContribution.</p>
 <p>Attributes
@@ -907,7 +926,7 @@ results –  An open file-like object, name of a file that contains</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameter.Parameter">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameter.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>value=None</em>, <em>const=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Parameter class.</p>
 <p>Attributes
 name    –  A name for this Parameter.
@@ -922,6 +941,15 @@ constrained –  A flag indicating if the Parameter is constrained</p>
 <dd>used by some optimizers when the Parameter is varied. See
 FitRecipe.getBounds and FitRecipe.boundsToRestraints.</dd>
 </dl>
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.parameter.Parameter.boundRange">
+<code class="descname">boundRange</code><span class="sig-paren">(</span><em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.boundRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set lower and upper bound of the Parameter.</p>
+<p>lb  – The lower bound for the bounds list.
+ub  – The upper bound for the bounds list.</p>
+<p>Returns self so that mutators can be chained.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.Parameter.boundWindow">
 <code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.boundWindow" title="Permalink to this definition">¶</a></dt>
@@ -952,7 +980,7 @@ constant or otherwise.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.Parameter.setValue">
-<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter and the bounds.</p>
 <p>val     –  The value to assign.
 lb      –  The lower bounds for the bounds list. If this is None</p>
@@ -970,7 +998,7 @@ lb      –  The lower bounds for the bounds list. If this is None</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterProxy">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameter.</code><code class="descname">ParameterProxy</code><span class="sig-paren">(</span><em>name</em>, <em>par</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></code></a></p>
 <p>A Parameter proxy for another parameter.</p>
 <p>This allows for the same parameter to have multiple names.</p>
 <p>Attributes
@@ -978,6 +1006,15 @@ name    –  A name for this ParameterProxy. Names should be unique within a</p>
 <blockquote>
 <div>RecipeOrganizer and should be valid attribute names.</div></blockquote>
 <p>par     –  The Parameter this is a proxy for.</p>
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.boundRange">
+<code class="descname">boundRange</code><span class="sig-paren">(</span><em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.boundRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set lower and upper bound of the Parameter.</p>
+<p>lb  – The lower bound for the bounds list.
+ub  – The upper bound for the bounds list.</p>
+<p>Returns self so that mutators can be chained.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.boundWindow">
 <code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.boundWindow" title="Permalink to this definition">¶</a></dt>
@@ -1028,7 +1065,7 @@ constant or otherwise.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterProxy.setValue">
-<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.setValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterProxy.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter and the bounds.</p>
 <p>val     –  The value to assign.
 lb      –  The lower bounds for the bounds list. If this is None</p>
@@ -1046,7 +1083,7 @@ lb      –  The lower bounds for the bounds list. If this is None</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterAdapter">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameter.</code><code class="descname">ParameterAdapter</code><span class="sig-paren">(</span><em>name</em>, <em>obj</em>, <em>getter=None</em>, <em>setter=None</em>, <em>attr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameter.Parameter" title="diffpy.srfit.fitbase.parameter.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.parameter.Parameter</span></code></a></p>
 <p>An adapter for parameter-like objects.</p>
 <p>This class wraps an object as a Parameter. The getValue and setValue
 methods defer to the data of the wrapped object.</p>
@@ -1058,7 +1095,7 @@ methods defer to the data of the wrapped object.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.parameter.ParameterAdapter.setValue">
-<code class="descname">setValue</code><span class="sig-paren">(</span><em>value</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.setValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter.</p>
 </dd></dl>
 
@@ -1074,7 +1111,7 @@ embedded Parameters.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.parameterset.ParameterSet">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.parameterset.</code><code class="descname">ParameterSet</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
 <p>Class for organizing Parameters and other ParameterSets.</p>
 <p>ParameterSets are hierarchical organizations of Parameters, Constraints,
 Restraints and other ParameterSets.</p>
@@ -1175,7 +1212,7 @@ residual equation.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.profile.Parameter">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.profile.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>value=None</em>, <em>const=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.interface.interface.ParameterInterface</span></code></a>, <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.argument.Argument" title="diffpy.srfit.equation.literals.argument.Argument"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.equation.literals.argument.Argument</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Parameter class.</p>
 <p>Attributes
 name    –  A name for this Parameter.
@@ -1190,6 +1227,15 @@ constrained –  A flag indicating if the Parameter is constrained</p>
 <dd>used by some optimizers when the Parameter is varied. See
 FitRecipe.getBounds and FitRecipe.boundsToRestraints.</dd>
 </dl>
+<dl class="method">
+<dt id="diffpy.srfit.fitbase.profile.Parameter.boundRange">
+<code class="descname">boundRange</code><span class="sig-paren">(</span><em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.boundRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set lower and upper bound of the Parameter.</p>
+<p>lb  – The lower bound for the bounds list.
+ub  – The upper bound for the bounds list.</p>
+<p>Returns self so that mutators can be chained.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Parameter.boundWindow">
 <code class="descname">boundWindow</code><span class="sig-paren">(</span><em>lr=0</em>, <em>ur=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.boundWindow" title="Permalink to this definition">¶</a></dt>
@@ -1220,7 +1266,7 @@ constant or otherwise.</dd>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Parameter.setValue">
-<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em>, <em>lb=None</em>, <em>ub=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">setValue</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the Parameter and the bounds.</p>
 <p>val     –  The value to assign.
 lb      –  The lower bounds for the bounds list. If this is None</p>
@@ -1238,7 +1284,7 @@ lb      –  The lower bounds for the bounds list. If this is None</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.profile.Profile">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.profile.</code><code class="descname">Profile</code><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Observed and calculated profile container.</p>
 <p>Profile is an Observable. The xpar, ypar and dypar attributes are observed
 by the Profile, which can in turn be observed by some other object.</p>
@@ -1308,9 +1354,29 @@ arrays.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.profile.Profile.savetxt">
-<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.savetxt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call numpy.savetxt with x, ycalc, y, dy</p>
-<p>Arguments are passed to numpy.savetxt.</p>
+<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.savetxt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call <cite>numpy.savetxt</cite> with x, ycalc, y, dy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> (<em>filename</em><em> or </em><em>file handle</em>) – This is passed to <cite>numpy.savetxt</cite>.</li>
+<li><strong>**kwargs</strong> – The keyword arguments that are passed to <cite>numpy.savetxt</cite>.
+We preset file header “x  ycalc  y  dy”.  Use <code class="docutils literal notranslate"><span class="pre">header=''</span></code>
+to save data without any header.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">SrFitError</span></code> – When <cite>self.ycalc</cite> has not been set.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.savetxt()</span></code></p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -1329,30 +1395,30 @@ dyobs exist.</p>
 <dt id="diffpy.srfit.fitbase.profile.Profile.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Profile.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set epsilon-inclusive calculation range.</p>
-<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
-as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+<p>Adhere to the observed <code class="docutils literal notranslate"><span class="pre">xobs</span></code> points when <code class="docutils literal notranslate"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal notranslate"><span class="pre">xmin</span></code> and <code class="docutils literal notranslate"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+<li><strong>xmin</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
 current minimum when not specified.  If specified as “obs”
 reset to the minimum observed value.</li>
-<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+<li><strong>xmax</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
 current maximum when not specified.  If specified as “obs”
 reset to the maximum observed value.</li>
-<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal notranslate"><span class="pre">x</span></code> as anchored at <code class="docutils literal notranslate"><span class="pre">xmin</span></code>.</li>
 <li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
 <li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a> – If there is no observed data.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#ValueError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
 </ul>
 </td>
 </tr>
@@ -1431,7 +1497,7 @@ very simple example is
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.profilegenerator.</code><code class="descname">ProfileGenerator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>Base class for profile generators.</p>
 <p>A ProfileGenerator organizes Parameters and has a __call__ method that can
 generate a profile. ProfileGenerator is also an Operator
@@ -1527,7 +1593,7 @@ format must be encapsulated in a ProfileParser subclass.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.profileparser.ProfileParser">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.profileparser.</code><code class="descname">ProfileParser</code><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class for parsing data from a or string.</p>
 <p>Attributes</p>
 <dl class="docutils">
@@ -1646,7 +1712,7 @@ creates an Equation instance from a string.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</code><code class="descname">RecipeContainer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.configurable.Configurable" title="diffpy.srfit.fitbase.configurable.Configurable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.configurable.Configurable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.configurable.Configurable" title="diffpy.srfit.fitbase.configurable.Configurable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.configurable.Configurable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Base class for organizing pieces of a FitRecipe.</p>
 <p>RecipeContainers are hierarchical organizations of Parameters and other
 RecipeContainers. This class provides attribute-access to these contained
@@ -1706,9 +1772,9 @@ values          –  Variable values (read only). See getValues.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pattern</strong> (<em>str</em>) – Iterate over parameters with names matching this regular
+<li><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Iterate over parameters with names matching this regular
 expression (all parameters by default).</li>
-<li><strong>recurse</strong> (<em>bool</em>) – Recurse into managed objects when True (default).</li>
+<li><strong>recurse</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#bool" title="(in Python v3.7)"><em>bool</em></a>) – Recurse into managed objects when True (default).</li>
 </ul>
 </td>
 </tr>
@@ -1731,7 +1797,7 @@ expression (all parameters by default).</li>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.recipeorganizer.</code><code class="descname">RecipeOrganizer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="diffpy.srfit.interface.interface.RecipeOrganizerInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.RecipeOrganizerInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeContainer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="diffpy.srfit.interface.interface.RecipeOrganizerInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.interface.interface.RecipeOrganizerInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeContainer</span></code></a></p>
 <p>Extended base class for organizing pieces of a FitRecipe.</p>
 <p>This class extends RecipeContainer by organizing constraints and
 Restraints, as well as Equations that can be used in Constraint and
@@ -1943,9 +2009,9 @@ the RecipeOrganizer and that is not defined in ns.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>pattern</strong> (<em>str</em><em>, </em><em>optional</em>) – Limit output to only those parameters that match this regular
+<li><strong>pattern</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>optional</em>) – Limit output to only those parameters that match this regular
 expression (match all by default).</li>
-<li><strong>textwidth</strong> (<em>int</em><em>, </em><em>optional</em>) – Trim formatted lines at this text width to avoid folding at
+<li><strong>textwidth</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a><em>, </em><em>optional</em>) – Trim formatted lines at this text width to avoid folding at
 the screen width.  Do not trim when negative or 0.</li>
 </ul>
 </td>
@@ -2014,7 +2080,7 @@ equation calculated by a FitRecipe.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.restraint.Restraint">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.restraint.</code><code class="descname">Restraint</code><span class="sig-paren">(</span><em>eq</em>, <em>lb=-inf</em>, <em>ub=inf</em>, <em>sig=1</em>, <em>scaled=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.restraint.Restraint" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Restraint class.</p>
 <p>Attributes
 eq      –  An equation whose evaluation is compared against the restraint</p>
@@ -2051,7 +2117,7 @@ average chi^2 if scaled is True.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.simplerecipe.</code><code class="descname">SimpleRecipe</code><span class="sig-paren">(</span><em>name='fit'</em>, <em>conclass=&lt;class 'diffpy.srfit.fitbase.fitcontribution.FitContribution'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></code></a></p>
 <p>SimpleRecipe class.</p>
 <p>This is a FitRecipe with a built-in Profile (the ‘profile’ attribute) and
 FitContribution (the ‘contribution’ attribute). Unique methods from each of
@@ -2154,30 +2220,30 @@ dyobs exist.</p>
 <dt id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set epsilon-inclusive calculation range.</p>
-<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
-as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+<p>Adhere to the observed <code class="docutils literal notranslate"><span class="pre">xobs</span></code> points when <code class="docutils literal notranslate"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal notranslate"><span class="pre">xmin</span></code> and <code class="docutils literal notranslate"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+<li><strong>xmin</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
 current minimum when not specified.  If specified as “obs”
 reset to the minimum observed value.</li>
-<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+<li><strong>xmax</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
 current maximum when not specified.  If specified as “obs”
 reset to the maximum observed value.</li>
-<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal notranslate"><span class="pre">x</span></code> as anchored at <code class="docutils literal notranslate"><span class="pre">xmin</span></code>.</li>
 <li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
 <li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a> – If there is no observed data.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#ValueError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
 </ul>
 </td>
 </tr>
@@ -2229,7 +2295,7 @@ calculate the residual.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.validatable.Validatable">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.validatable.</code><code class="descname">Validatable</code><a class="headerlink" href="#diffpy.srfit.fitbase.validatable.Validatable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Validatable class.</p>
 <p>A Validatable has state that must be validated by a FitRecipe.</p>
 </dd></dl>
@@ -2251,7 +2317,7 @@ FitContribution, Profile and FitRecipe classes.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.Calculator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">Calculator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>Base class for calculators.</p>
 <p>A Calculator organizes Parameters and has a __call__ method that can
 calculate a generic signal.</p>
@@ -2295,7 +2361,36 @@ values          –  Variable values (read only). See getValues.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Calculator.operation">
 <code class="descname">operation</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.operation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>A decorator indicating abstract properties.</p>
+<p>Requires that the metaclass is ABCMeta or derived from it.  A
+class that has a metaclass derived from ABCMeta cannot be
+instantiated unless all of its abstract properties are overridden.
+The abstract properties can be called using any of the normal
+‘super’ call mechanisms.</p>
+<p>Usage:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd><p class="first">__metaclass__ = ABCMeta
+&#64;abstractproperty
+def my_abstract_property(self):</p>
+<blockquote class="last">
+<div>…</div></blockquote>
+</dd>
+</dl>
+</div></blockquote>
+<p>This defines a read-only property; you can also define a read-write
+abstract property using the ‘long’ form of property declaration:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>class C:</dt>
+<dd>__metaclass__ = ABCMeta
+def getx(self): …
+def setx(self, value): …
+x = abstractproperty(getx, setx)</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="diffpy.srfit.fitbase.Calculator.symbol">
@@ -2307,7 +2402,7 @@ values          –  Variable values (read only). See getValues.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitContribution">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitContribution</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>FitContribution class.</p>
 <p>FitContributions organize an Equation that calculates the signal, and a
 Profile that holds the signal. ProfileGenerators and Calculators can be
@@ -2466,7 +2561,7 @@ the FitContribution.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitHook">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitHook</code><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Base class for inspecting the progress of a FitRecipe refinement.</p>
 <p>Can serve as a fithook for the FitRecipe class (see FitRecipe.pushFitHook
 method.) The methods in this class are called during the preparation of the
@@ -2501,7 +2596,7 @@ adding a new ParameterSet, constraint or restraint.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitRecipe">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitRecipe</code><span class="sig-paren">(</span><em>name='fit'</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.interface.interface.FitRecipeInterface</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer" title="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer</span></code></a></p>
 <p>FitRecipe class.</p>
 <p>Attributes
 name            –  A name for this FitRecipe.
@@ -2854,7 +2949,7 @@ variable of the recipe, it will be freed as well.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.FitResults">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">FitResults</code><span class="sig-paren">(</span><em>recipe</em>, <em>update=True</em>, <em>showfixed=True</em>, <em>showcon=False</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class for processing, presenting and storing results of a fit.</p>
 <p>Attributes
 recipe      –  The recipe containing the results.
@@ -2945,7 +3040,7 @@ results –  An open file-like object, name of a file that contains</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.PlotFitHook">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">PlotFitHook</code><a class="headerlink" href="#diffpy.srfit.fitbase.PlotFitHook" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fithook.FitHook" title="diffpy.srfit.fitbase.fithook.FitHook"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fithook.FitHook</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fithook.FitHook" title="diffpy.srfit.fitbase.fithook.FitHook"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.fithook.FitHook</span></code></a></p>
 <p>This FitHook has live plotting of whatever is being refined.</p>
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.PlotFitHook.postcall">
@@ -2967,7 +3062,7 @@ chiv    –  The residual vector</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.Profile">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">Profile</code><a class="headerlink" href="#diffpy.srfit.fitbase.Profile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable" title="diffpy.srfit.util.observable.Observable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.util.observable.Observable</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.validatable.Validatable" title="diffpy.srfit.fitbase.validatable.Validatable"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.validatable.Validatable</span></code></a></p>
 <p>Observed and calculated profile container.</p>
 <p>Profile is an Observable. The xpar, ypar and dypar attributes are observed
 by the Profile, which can in turn be observed by some other object.</p>
@@ -3037,9 +3132,29 @@ arrays.</p>
 
 <dl class="method">
 <dt id="diffpy.srfit.fitbase.Profile.savetxt">
-<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>fmt='%.18e'</em>, <em>delimiter=' '</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.savetxt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Call numpy.savetxt with x, ycalc, y, dy</p>
-<p>Arguments are passed to numpy.savetxt.</p>
+<code class="descname">savetxt</code><span class="sig-paren">(</span><em>fname</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.savetxt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call <cite>numpy.savetxt</cite> with x, ycalc, y, dy.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fname</strong> (<em>filename</em><em> or </em><em>file handle</em>) – This is passed to <cite>numpy.savetxt</cite>.</li>
+<li><strong>**kwargs</strong> – The keyword arguments that are passed to <cite>numpy.savetxt</cite>.
+We preset file header “x  ycalc  y  dy”.  Use <code class="docutils literal notranslate"><span class="pre">header=''</span></code>
+to save data without any header.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal notranslate"><span class="pre">SrFitError</span></code> – When <cite>self.ycalc</cite> has not been set.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><code class="xref py py-meth docutils literal notranslate"><span class="pre">numpy.savetxt()</span></code></p>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -3058,30 +3173,30 @@ dyobs exist.</p>
 <dt id="diffpy.srfit.fitbase.Profile.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.Profile.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set epsilon-inclusive calculation range.</p>
-<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
-as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+<p>Adhere to the observed <code class="docutils literal notranslate"><span class="pre">xobs</span></code> points when <code class="docutils literal notranslate"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal notranslate"><span class="pre">xmin</span></code> and <code class="docutils literal notranslate"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+<li><strong>xmin</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
 current minimum when not specified.  If specified as “obs”
 reset to the minimum observed value.</li>
-<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+<li><strong>xmax</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
 current maximum when not specified.  If specified as “obs”
 reset to the maximum observed value.</li>
-<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal notranslate"><span class="pre">x</span></code> as anchored at <code class="docutils literal notranslate"><span class="pre">xmin</span></code>.</li>
 <li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
 <li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a> – If there is no observed data.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#ValueError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
 </ul>
 </td>
 </tr>
@@ -3134,7 +3249,7 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.ProfileGenerator">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">ProfileGenerator</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.operators.Operator" title="diffpy.srfit.equation.literals.operators.Operator"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.equation.literals.operators.Operator</span></code></a>, <a class="reference internal" href="#diffpy.srfit.fitbase.parameterset.ParameterSet" title="diffpy.srfit.fitbase.parameterset.ParameterSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.parameterset.ParameterSet</span></code></a></p>
 <p>Base class for profile generators.</p>
 <p>A ProfileGenerator organizes Parameters and has a __call__ method that can
 generate a profile. ProfileGenerator is also an Operator
@@ -3222,7 +3337,7 @@ metadata. This method gets called whenever the Profile is set.</p>
 <dl class="class">
 <dt id="diffpy.srfit.fitbase.SimpleRecipe">
 <em class="property">class </em><code class="descclassname">diffpy.srfit.fitbase.</code><code class="descname">SimpleRecipe</code><span class="sig-paren">(</span><em>name='fit'</em>, <em>conclass=&lt;class 'diffpy.srfit.fitbase.fitcontribution.FitContribution'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><code class="xref py py-class docutils literal"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe" title="diffpy.srfit.fitbase.fitrecipe.FitRecipe"><code class="xref py py-class docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.fitrecipe.FitRecipe</span></code></a></p>
 <p>SimpleRecipe class.</p>
 <p>This is a FitRecipe with a built-in Profile (the ‘profile’ attribute) and
 FitContribution (the ‘contribution’ attribute). Unique methods from each of
@@ -3325,30 +3440,30 @@ dyobs exist.</p>
 <dt id="diffpy.srfit.fitbase.SimpleRecipe.setCalculationRange">
 <code class="descname">setCalculationRange</code><span class="sig-paren">(</span><em>xmin=None</em>, <em>xmax=None</em>, <em>dx=None</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.setCalculationRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set epsilon-inclusive calculation range.</p>
-<p>Adhere to the observed <code class="docutils literal"><span class="pre">xobs</span></code> points when <code class="docutils literal"><span class="pre">dx</span></code> is the same
-as in the data.  <code class="docutils literal"><span class="pre">xmin</span></code> and <code class="docutils literal"><span class="pre">xmax</span></code> are clipped at the bounds
+<p>Adhere to the observed <code class="docutils literal notranslate"><span class="pre">xobs</span></code> points when <code class="docutils literal notranslate"><span class="pre">dx</span></code> is the same
+as in the data.  <code class="docutils literal notranslate"><span class="pre">xmin</span></code> and <code class="docutils literal notranslate"><span class="pre">xmax</span></code> are clipped at the bounds
 of the observed data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>xmin</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
+<li><strong>xmin</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The minimum value of the independent variable.  Keep the
 current minimum when not specified.  If specified as “obs”
 reset to the minimum observed value.</li>
-<li><strong>xmax</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
+<li><strong>xmax</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The maximum value of the independent variable.  Keep the
 current maximum when not specified.  If specified as “obs”
 reset to the maximum observed value.</li>
-<li><strong>dx</strong> (<em>float</em><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
-from the data, resample the <code class="docutils literal"><span class="pre">x</span></code> as anchored at <code class="docutils literal"><span class="pre">xmin</span></code>.</li>
+<li><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em> or </em><em>&quot;obs&quot;</em><em>, </em><em>optional</em>) – The sample spacing in the independent variable.  When different
+from the data, resample the <code class="docutils literal notranslate"><span class="pre">x</span></code> as anchored at <code class="docutils literal notranslate"><span class="pre">xmin</span></code>.</li>
 <li><strong>that xmin is always inclusive</strong><strong> (</strong><strong>unless clipped</strong><strong>)</strong><strong> xmax is inclusive</strong> (<em>Note</em>) – </li>
 <li><strong>it is within the bounds of the observed data.</strong> (<em>if</em>) – </li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> – If there is no observed data.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#AttributeError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">AttributeError</span></code></a> – If there is no observed data.</li>
+<li><a class="reference external" href="https://docs.python.org/3.7/library/exceptions.html#ValueError" title="(in Python v3.7)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ValueError</span></code></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</li>
 </ul>
 </td>
 </tr>
@@ -3400,7 +3515,10 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+    <a id="sidebar-anchor"></a>
+    
+
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">diffpy.srfit.fitbase package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
@@ -3440,40 +3558,41 @@ Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
-             >index</a></li>
+             accesskey="I">index</a></li>
         <li class="right" >
           <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="diffpy.srfit.interface.html" title="diffpy.srfit.interface package"
-             >next</a> |</li>
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="diffpy.srfit.equation.visitors.html" title="diffpy.srfit.equation.visitors package"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">SrFit 1.3 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="diffpy.srfit.html" >diffpy.srfit package</a> &#187;</li> 
+             accesskey="P">previous</a> |</li>
       </ul>
     </div>
+
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+        &#169; Copyright 2019, Brookhaven National Laboratory.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
     </div>
   </body>
 </html>

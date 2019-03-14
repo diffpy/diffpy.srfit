@@ -31,8 +31,11 @@ ab_authors = u'Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge group'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx',
-              'sphinx.ext.napoleon']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.intersphinx',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -262,4 +265,7 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-# intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'numpy': ('https://docs.scipy.org/doc/numpy', None),
+    'python' : ('https://docs.python.org/3.7', None),
+}

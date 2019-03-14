@@ -268,9 +268,6 @@ class TestFitRecipe(unittest.TestCase):
         out = fp.getvalue()
         self.assertTrue('\nVariables' in out)
         self.assertTrue('c = ' in out)
-        with redirect_stdout(StringIO()) as fp:
-            self.recipe.scalarResidual()
-        out = fp.getvalue()
         return
 
 # End of class TestFitRecipe

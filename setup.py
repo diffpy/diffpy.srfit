@@ -77,6 +77,9 @@ def getversioncfg():
 
 versiondata = getversioncfg()
 
+with open(os.path.join(MYDIR, 'README.rst')) as fp:
+    long_description = fp.read()
+
 # define distribution
 setup_args = dict(
     name = "diffpy.srfit",
@@ -92,6 +95,8 @@ setup_args = dict(
     maintainer = "Pavol Juhas",
     maintainer_email = "pavol.juhas@gmail.com",
     description = "SrFit - Structure refinement from diffraction data",
+    long_description = long_description,
+    long_description_content_type = 'text/x-rst',
     license = 'BSD-style license',
     url = "https://github.com/diffpy/diffpy.srfit",
     keywords = "optimization constraints restraints structure refinement complex modeling",

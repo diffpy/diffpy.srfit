@@ -42,6 +42,8 @@ Extensions
   everything still refines.
 """
 
+from __future__ import print_function
+
 import numpy
 
 from diffpy.srfit.fitbase import ProfileGenerator, Profile

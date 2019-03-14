@@ -25,6 +25,8 @@ Custom FitHooks can be added to a FitRecipe with the FitRecipe.setFitHook
 method.
 """
 
+from __future__ import print_function
+
 __all__ = ["FitHook"]
 
 import numpy

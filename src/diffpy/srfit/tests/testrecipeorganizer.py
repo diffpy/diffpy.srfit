@@ -16,8 +16,9 @@
 """Tests for refinableobj module."""
 
 import sys
-import io
 import unittest
+
+import six
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.calculator import Calculator
@@ -510,7 +511,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         """Verify output from the show function.
         """
         def capture_show(*args, **kwargs):
-            sys.stdout = io.StringIO()
+            sys.stdout = six.StringIO()
             self.m.show(*args, **kwargs)
             rv = sys.stdout.getvalue()
             sys.stdout = sys.__stdout__

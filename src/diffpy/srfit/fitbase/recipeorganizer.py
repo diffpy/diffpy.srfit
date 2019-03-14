@@ -28,6 +28,8 @@ from collections import OrderedDict
 from itertools import chain, groupby
 import re
 
+import six
+
 from diffpy.srfit.fitbase.constraint import Constraint
 from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.fitbase.parameter import Parameter
@@ -639,7 +641,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ns.
         Raises ValueError if par is marked as constant.
         """
-        if isinstance(par, str):
+        if isinstance(par, six.string_types):
             name = par
             par = self.get(name)
             if par is None:
@@ -651,7 +653,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if par.const:
             raise ValueError("The parameter '%s' is constant"%par)
 
-        if isinstance(con, str):
+        if isinstance(con, six.string_types):
             eqstr = con
             eq = equationFromString(con, self._eqfactory, ns)
         else:
@@ -677,7 +679,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         par     --  The name of a Parameter or a Parameter to check.
         """
-        if isinstance(par, str):
+        if isinstance(par, six.string_types):
             name = par
             par = self.get(name)
 
@@ -695,7 +697,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         update = False
         for par in pars:
-            if isinstance(par, str):
+            if isinstance(par, six.string_types):
                 name = par
                 par = self.get(name)
 
@@ -772,7 +774,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns the Restraint object for use with the 'unrestrain' method.
         """
 
-        if isinstance(res, str):
+        if isinstance(res, six.string_types):
             eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
         else:

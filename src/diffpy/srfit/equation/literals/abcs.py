@@ -20,8 +20,11 @@ __all__ = ["LiteralABC", "ArgumentABC", "OperatorABC"]
 
 from abc import ABCMeta, abstractmethod, abstractproperty
 
+import six
 
-class LiteralABC(metaclass=ABCMeta):
+
+@six.add_metaclass(ABCMeta)
+class LiteralABC(object):
     """Abstract Base Class for Literal. See Literal for usage."""
 
     @abstractmethod

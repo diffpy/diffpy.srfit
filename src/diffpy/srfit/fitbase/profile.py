@@ -23,6 +23,7 @@ residual equation.
 
 __all__ = ["Parameter", "Profile"]
 
+import six
 import numpy
 
 from diffpy.srfit.util.observable import Observable
@@ -183,7 +184,7 @@ class Profile(Observable, Validatable):
             raise AttributeError("No observed profile")
         # local helper function
         def _isobs(a):
-            if not isinstance(a, str):
+            if not isinstance(a, six.string_types):
                 return False
             if a != 'obs':
                 raise ValueError('Must be either float or "obs".')

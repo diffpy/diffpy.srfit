@@ -93,6 +93,8 @@ import inspect
 import numbers
 import numpy
 
+import six
+
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation.literals.literal import Literal
 from diffpy.srfit.equation.equationmod import Equation
@@ -221,7 +223,7 @@ class EquationFactory(object):
         Raises ValueError if the new builder's literal causes a self-reference
         in an existing equation.
         """
-        if not isinstance(name, str):
+        if not isinstance(name, six.string_types):
             raise TypeError("Name must be a string")
         if not isinstance(builder, BaseBuilder):
             raise TypeError("builder must be a BaseBuilder instance")
@@ -333,9 +335,8 @@ class EquationFactory(object):
         """
         import tokenize
         import token
-        import io
 
-        interface = io.StringIO(eqstr).readline
+        interface = six.StringIO(eqstr).readline
         # output is an iterator. Each entry (token) is a 5-tuple
         # token[0] = token type
         # token[1] = token string

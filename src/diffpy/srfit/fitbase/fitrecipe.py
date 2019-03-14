@@ -36,6 +36,7 @@ __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
 from numpy import array, concatenate, sqrt, dot
+import six
 
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.tagmanager import TagManager
@@ -551,7 +552,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns the variable or None if the variable cannot be found in the
         _parameters list.
         """
-        if isinstance(var, str):
+        if isinstance(var, six.string_types):
             var = self._parameters.get(var)
 
         if var not in self._parameters.values():
@@ -571,7 +572,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         a tag is passed in a keyword.
         """
         # Process args. Each variable is tagged with its name, so this is easy.
-        strargs = set([arg for arg in args if isinstance(arg, str)])
+        strargs = set([arg for arg in args if isinstance(arg, six.string_types)])
         varargs = set(args) - strargs
         # Check that the tags are valid
         alltags = set(self._tagmanager.alltags())
@@ -670,7 +671,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         update = False
         for par in pars:
-            if isinstance(par, str):
+            if isinstance(par, six.string_types):
                 name = par
                 par = self.get(name)
 
@@ -715,7 +716,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         the FitRecipe and that is not defined in ns.
         Raises ValueError if par is marked as constant.
         """
-        if isinstance(par, str):
+        if isinstance(par, six.string_types):
             name = par
             par = self.get(name)
             if par is None:

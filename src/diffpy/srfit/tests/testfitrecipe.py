@@ -241,7 +241,7 @@ class TestFitRecipe(unittest.TestCase):
 
     def testPrintFitHook(self):
         "check output from default PrintFitHook."
-        from io import StringIO
+        from six import StringIO
         from contextlib import redirect_stdout
         self.recipe.addVar(self.fitcontribution.c)
         self.recipe.restrain('c', lb=5)

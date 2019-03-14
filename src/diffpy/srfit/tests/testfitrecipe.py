@@ -23,6 +23,7 @@ from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.tests.utils import capturestdout
 
 
 class TestFitRecipe(unittest.TestCase):
@@ -241,31 +242,22 @@ class TestFitRecipe(unittest.TestCase):
 
     def testPrintFitHook(self):
         "check output from default PrintFitHook."
-        from six import StringIO
-        from contextlib import redirect_stdout
         self.recipe.addVar(self.fitcontribution.c)
         self.recipe.restrain('c', lb=5)
         pfh, = self.recipe.getFitHooks()
-        with redirect_stdout(StringIO()) as fp:
-            self.recipe.scalarResidual()
-        self.assertEqual('', fp.getvalue())
+        out = capturestdout(self.recipe.scalarResidual)
+        self.assertEqual('', out)
         pfh.verbose = 1
-        with redirect_stdout(StringIO()) as fp:
-            self.recipe.scalarResidual()
-        out = fp.getvalue()
+        out = capturestdout(self.recipe.scalarResidual)
         self.assertTrue(out.strip().isdigit())
         self.assertFalse('\nRestraints:' in out)
         pfh.verbose = 2
-        with redirect_stdout(StringIO()) as fp:
-            self.recipe.scalarResidual()
-        out = fp.getvalue()
+        out = capturestdout(self.recipe.scalarResidual)
         self.assertTrue('\nResidual:' in out)
         self.assertTrue('\nRestraints:' in out)
         self.assertFalse('\nVariables' in out)
         pfh.verbose = 3
-        with redirect_stdout(StringIO()) as fp:
-            self.recipe.scalarResidual()
-        out = fp.getvalue()
+        out = capturestdout(self.recipe.scalarResidual)
         self.assertTrue('\nVariables' in out)
         self.assertTrue('c = ' in out)
         return

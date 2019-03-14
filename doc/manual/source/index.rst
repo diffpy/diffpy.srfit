@@ -70,6 +70,7 @@ Table of contents
    :titlesonly:
 
    license
+   release
    api/diffpy.srfit.rst
 
 .. faq.rst

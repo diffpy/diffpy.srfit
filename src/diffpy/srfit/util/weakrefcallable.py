@@ -21,6 +21,8 @@ Picklable storage of callable objects using weak references.
 import weakref
 import types
 
+import six
+
 
 class WeakBoundMethod(object):
     """\
@@ -63,6 +65,8 @@ class WeakBoundMethod(object):
         # This does not handle builtin methods, but that can be added
         # if necessary.
         self.function = f.__func__
+        if six.PY2:
+            self.function = f.__func__.__get__(None, f.im_class)
         self.fallback = fallback
         self._class = type(f.__self__)
         self._wref = weakref.ref(f.__self__)
@@ -118,8 +122,11 @@ class WeakBoundMethod(object):
         """
         mobj = self._wref()
         nm = self.function.__name__
-        assert self.function is getattr(self._class, nm), \
-            "Unable to pickle this unbound function by name."
+        amsg = "Unable to pickle this unbound function by name."
+        if six.PY2:
+            assert self.function == getattr(self._class, nm), amsg
+        if six.PY3:
+            assert self.function is getattr(self._class, nm), amsg
         state = (self._class, nm, self.fallback, mobj)
         return state
 

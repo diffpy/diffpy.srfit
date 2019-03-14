@@ -22,6 +22,7 @@ from numpy import ones_like
 
 from diffpy.srfit.fitbase.profile import Profile
 
+
 class SASProfile(Profile):
     """Observed and calculated profile container for SAS data.
 

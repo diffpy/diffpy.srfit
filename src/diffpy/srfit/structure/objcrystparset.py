@@ -50,6 +50,7 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
 
+
 class ObjCrystScattererParSet(ParameterSet):
     """A base adaptor for an Objcryst Scatterer.
 
@@ -1434,7 +1435,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
 
     @staticmethod
     def _createSpaceGroup(sgobjcryst):
-        """Create a diffpy.Structure.SpaceGroup object from pyobjcryst.
+        """Create a diffpy.structure SpaceGroup object from pyobjcryst.
 
         sgobjcryst  --  A pyobjcryst.spacegroup.SpaceGroup instance.
 
@@ -1444,7 +1445,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
 
         """
         import copy
-        from diffpy.Structure.SpaceGroups import GetSpaceGroup, SymOp
+        from diffpy.structure.spacegroups import GetSpaceGroup, SymOp
         name = sgobjcryst.GetName()
         extnstr = ":%s" % sgobjcryst.GetExtension()
         if name.endswith(extnstr):

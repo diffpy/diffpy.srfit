@@ -119,7 +119,7 @@ class Equation(Operator):
 
 
     def _getArgs(self):
-        return self.argdict.values()
+        return list(self.argdict.values())
 
     args = property(_getArgs)
 

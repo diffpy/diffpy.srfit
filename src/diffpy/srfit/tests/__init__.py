@@ -17,10 +17,9 @@
 """
 
 import unittest
-
-# create logger instance for the tests subpackage
 import logging
 
+# create logger instance for the tests subpackage
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 del logging

@@ -30,5 +30,4 @@ _recipeorganizer_interface = RecipeOrganizerInterface
 from diffpy.srfit.interface.interface import FitRecipeInterface
 _fitrecipe_interface = FitRecipeInterface
 
-
 # End of file

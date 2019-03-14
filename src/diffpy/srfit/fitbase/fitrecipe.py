@@ -36,12 +36,14 @@ __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
 from numpy import array, concatenate, sqrt, dot
+import six
 
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.tagmanager import TagManager
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.srfit.fitbase.fithook import PrintFitHook
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -233,9 +235,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         # Calculate the bare chiv
         chiv = concatenate([
-            sqrt(self._weights[i])*\
-                    self._contributions.values()[i].residual().flatten() \
-                    for i in range(len(self._contributions))])
+            wi * ci.residual().flatten()
+            for wi, ci in zip(self._weights, self._contributions.values())])
 
         # Calculate the point-average chi^2
         w = dot(chiv, chiv)/len(chiv)
@@ -361,10 +362,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def __collectConstraintsAndRestraints(self):
         """Collect the Constraints and Restraints from subobjects."""
+        from itertools import chain
+        from functools import cmp_to_key
         rset = set(self._restraints)
         cdict = {}
 
-        for org in self._contributions.values() + self._parsets.values():
+        for org in chain(self._contributions.values(), self._parsets.values()):
             rset.update( org._getRestraints() )
             cdict.update( org._getConstraints() )
         cdict.update(self._constraints)
@@ -374,7 +377,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         # Reorder the constraints. Constraints are ordered such that a given
         # constraint is placed before its dependencies.
-        self._oconstraints = cdict.values()
+        self._oconstraints = list(cdict.values())
 
         # Create a depth-1 map of the constraint dependencies
         depmap = {}
@@ -413,7 +416,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             # constraints are equivalent
             return 0
 
-        self._oconstraints.sort(cmp)
+        self._oconstraints.sort(key=cmp_to_key(cmp))
 
         return
 
@@ -549,7 +552,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns the variable or None if the variable cannot be found in the
         _parameters list.
         """
-        if isinstance(var, basestring):
+        if isinstance(var, six.string_types):
             var = self._parameters.get(var)
 
         if var not in self._parameters.values():
@@ -569,7 +572,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         a tag is passed in a keyword.
         """
         # Process args. Each variable is tagged with its name, so this is easy.
-        strargs = set([arg for arg in args if isinstance(arg, basestring)])
+        strargs = set([arg for arg in args if isinstance(arg, six.string_types)])
         varargs = set(args) - strargs
         # Check that the tags are valid
         alltags = set(self._tagmanager.alltags())
@@ -668,7 +671,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         update = False
         for par in pars:
-            if isinstance(par, basestring):
+            if isinstance(par, six.string_types):
                 name = par
                 par = self.get(name)
 
@@ -713,7 +716,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         the FitRecipe and that is not defined in ns.
         Raises ValueError if par is marked as constant.
         """
-        if isinstance(par, basestring):
+        if isinstance(par, six.string_types):
             name = par
             par = self.get(name)
             if par is None:

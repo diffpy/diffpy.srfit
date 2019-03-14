@@ -20,18 +20,21 @@ import pickle
 
 import numpy
 
-from diffpy.srfit.tests.utils import testoptional, TestCaseStructure
+from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
 
 # Global variables to be assigned in setUp
 Atom = Lattice = Structure = DiffpyStructureParSet = None
 
+# ----------------------------------------------------------------------------
 
-class TestParameterAdapter(testoptional(TestCaseStructure)):
+@unittest.skipUnless(has_structure, _msg_nostructure)
+class TestParameterAdapter(unittest.TestCase):
 
     def setUp(self):
         global Atom, Lattice, Structure, DiffpyStructureParSet
-        from diffpy.Structure import Atom, Lattice, Structure
+        from diffpy.structure import Atom, Lattice, Structure
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+        return
 
 
     def testDiffpyStructureParSet(self):
@@ -58,8 +61,8 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
             self.assertEqual(a2.Uisoequiv, s.Ag0.Uiso.getValue())
             self.assertEqual(a1.Bisoequiv, s.Cu0.Biso.getValue())
             self.assertEqual(a2.Bisoequiv, s.Ag0.Biso.getValue())
-            for i in xrange(1,4):
-                for j in xrange(i,4):
+            for i in range(1, 4):
+                for j in range(i, 4):
                     uijstru = getattr(a1, "U%i%i"%(i,j))
                     uij = getattr(s.Cu0, "U%i%i"%(i,j)).getValue()
                     uji = getattr(s.Cu0, "U%i%i"%(j,i)).getValue()
@@ -75,6 +78,7 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
             self.assertEqual(a1.xyz[1], s.Cu0.y.getValue())
             self.assertEqual(a1.xyz[2], s.Cu0.z.getValue())
             return
+
 
         def _testLattice():
 
@@ -136,7 +140,6 @@ class TestParameterAdapter(testoptional(TestCaseStructure)):
         return
 
 # End of class TestParameterAdapter
-
 
 if __name__ == "__main__":
     unittest.main()

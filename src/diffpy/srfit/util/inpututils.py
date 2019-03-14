@@ -19,6 +19,7 @@ __all__ = ["inputToString"]
 
 import os.path
 
+
 def inputToString(inpt):
     """Convert input from various modes to a string.
 

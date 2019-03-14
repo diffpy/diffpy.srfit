@@ -37,6 +37,7 @@ from scipy.special import erf
 
 from diffpy.srfit.fitbase.calculator import Calculator
 
+
 def sphericalCF(r, psize):
     """Spherical nanoparticle characteristic function.
 

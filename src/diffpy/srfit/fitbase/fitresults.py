@@ -449,8 +449,8 @@ class FitResults(object):
         tup = []
         cornames = []
         n = len(self.varnames)
-        for i in xrange(n):
-            for j in xrange(i+1, n):
+        for i in range(n):
+            for j in range(i + 1, n):
                 name = "corr(%s, %s)"%(varnames[i], varnames[j])
                 val = (self.cov[i,j]/(self.cov[i,i] * self.cov[j,j])**0.5)
                 if abs(val) > corrmin:

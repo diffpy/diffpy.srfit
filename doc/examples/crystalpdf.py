@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of a PDF refinement using diffpy.Structure and PDFGenerator.
+
+"""Example of a PDF refinement using diffpy.structure and PDFGenerator.
 
 This is example of fitting the fcc nickel structure to measured PDF data. The
 purpose of this example is to demonstrate and describe the classes in
@@ -26,7 +27,7 @@ sources. This example demonstrates only the basic configuration.
 
 import numpy
 
-from diffpy.Structure import Structure
+from diffpy.structure import Structure
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
@@ -56,7 +57,7 @@ def makeRecipe(ciffile, datname):
 
     ## The ProfileGenerator
     # The PDFGenerator is for configuring and calculating a PDF profile. Here,
-    # we want to refine a Structure object from diffpy.Structure. We tell the
+    # we want to refine a Structure object from diffpy.structure. We tell the
     # PDFGenerator that with the 'setStructure' method. All other configuration
     # options will be inferred from the metadata that is read by the PDFParser.
     # In particular, this will set the scattering type (x-ray or neutron), the

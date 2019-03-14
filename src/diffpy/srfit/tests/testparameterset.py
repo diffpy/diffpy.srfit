@@ -20,6 +20,7 @@ import unittest
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 
+
 class TestParameterSet(unittest.TestCase):
 
     def setUp(self):

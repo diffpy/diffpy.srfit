@@ -35,6 +35,7 @@ from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 __all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet",
            "CCTBXCrystalParSet"]
 
+
 class CCTBXScattererParSet(ParameterSet):
     """A wrapper for cctbx.xray.scatterer
 

@@ -23,6 +23,7 @@ __all__ = ["BaseStructureParSet"]
 
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 
+
 class BaseStructureParSet(ParameterSet):
     """Base class for structure adapters.
 

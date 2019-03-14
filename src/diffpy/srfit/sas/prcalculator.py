@@ -29,6 +29,7 @@ from diffpy.srfit.fitbase import Calculator
 
 Invertor = None
 
+
 class PrCalculator(Calculator):
     """A class for calculating P(r) from data.
 

@@ -20,11 +20,12 @@ __all__ = ["LiteralABC", "ArgumentABC", "OperatorABC"]
 
 from abc import ABCMeta, abstractmethod, abstractproperty
 
+import six
 
+
+@six.add_metaclass(ABCMeta)
 class LiteralABC(object):
     """Abstract Base Class for Literal. See Literal for usage."""
-
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def identify(self, visitor): pass
@@ -36,6 +37,7 @@ class LiteralABC(object):
 
 # End class LiteralABC
 
+
 class ArgumentABC(LiteralABC):
     """Abstract Base Class for Argument. See Argument for usage."""
 
@@ -46,6 +48,7 @@ class ArgumentABC(LiteralABC):
     value = abstractproperty(None, None)
 
 # End class ArgumentABC
+
 
 class OperatorABC(LiteralABC):
     """Abstract Base Class for Operator. See Operator for usage."""

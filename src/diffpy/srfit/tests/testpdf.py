@@ -21,20 +21,16 @@ import io
 import numpy
 
 from diffpy.srfit.tests.utils import datafile
+from diffpy.srfit.tests.utils import has_srreal, _msg_nosrreal
+from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from diffpy.srfit.pdf import PDFGenerator, PDFParser, PDFContribution
 from diffpy.srfit.exceptions import SrFitError
-from diffpy.srfit.tests.utils import testoptional
-from diffpy.srfit.tests.utils import TestCasePDF, TestCaseStructure
-
-# Global variables to be assigned in setUp
-PDFGenerator = PDFParser = PDFContribution = None
 
 # ----------------------------------------------------------------------------
 
-class TestPDFParset(testoptional(TestCasePDF)):
+class TestPDFParset(unittest.TestCase):
 
     def setUp(self):
-        global PDFParser
-        from diffpy.srfit.pdf import PDFParser
         return
 
 
@@ -118,11 +114,11 @@ class TestPDFParset(testoptional(TestCasePDF)):
 
 # ----------------------------------------------------------------------------
 
-class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
+@unittest.skipUnless(has_srreal, _msg_nosrreal)
+@unittest.skipUnless(has_structure, _msg_nostructure)
+class TestPDFGenerator(unittest.TestCase):
 
     def setUp(self):
-        global PDFGenerator
-        from diffpy.srfit.pdf import PDFGenerator
         self.gen = PDFGenerator()
         return
 
@@ -134,7 +130,7 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
         self.assertEqual('N', gen.getScatteringType())
         gen.setQmax(qmax)
         self.assertAlmostEqual(qmax, gen.getQmax())
-        from diffpy.Structure import PDFFitStructure
+        from diffpy.structure import PDFFitStructure
         stru = PDFFitStructure()
         ciffile = datafile("ni.cif")
         stru.read(ciffile)
@@ -191,11 +187,11 @@ class TestPDFGenerator(testoptional(TestCaseStructure, TestCasePDF)):
 
 # ----------------------------------------------------------------------------
 
-class TestPDFContribution(testoptional(TestCaseStructure, TestCasePDF)):
+@unittest.skipUnless(has_srreal, _msg_nosrreal)
+@unittest.skipUnless(has_structure, _msg_nostructure)
+class TestPDFContribution(unittest.TestCase):
 
     def setUp(self):
-        global PDFContribution
-        from diffpy.srfit.pdf import PDFContribution
         self.pc = PDFContribution('pdf')
         return
 
@@ -203,7 +199,7 @@ class TestPDFContribution(testoptional(TestCaseStructure, TestCasePDF)):
     def test_setQmax(self):
         """check PDFContribution.setQmax()
         """
-        from diffpy.Structure import Structure
+        from diffpy.structure import Structure
         pc = self.pc
         pc.setQmax(21)
         pc.addStructure('empty', Structure())
@@ -217,7 +213,7 @@ class TestPDFContribution(testoptional(TestCaseStructure, TestCasePDF)):
     def test_getQmax(self):
         """check PDFContribution.getQmax()
         """
-        from diffpy.Structure import Structure
+        from diffpy.structure import Structure
         # cover all code branches in PDFContribution._getMetaValue
         # (1) contribution metadata
         pc1 = self.pc
@@ -238,7 +234,7 @@ class TestPDFContribution(testoptional(TestCaseStructure, TestCasePDF)):
 
     def test_savetxt(self):
         "check PDFContribution.savetxt()"
-        from diffpy.Structure import Structure
+        from diffpy.structure import Structure
         pc = self.pc
         pc.loadData(datafile("si-q27r60-xray.gr"))
         pc.setCalculationRange(0, 10)

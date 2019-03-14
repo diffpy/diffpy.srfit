@@ -24,6 +24,7 @@ __all__ = ["SASGenerator"]
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.sas.sasparameter import SASParameter
 
+
 class SASGenerator(ProfileGenerator):
     """A class for calculating I(Q) from a scattering type.
 

@@ -23,6 +23,7 @@ __all__ = ["SASParameter"]
 
 from diffpy.srfit.fitbase.parameter import Parameter
 
+
 class SASParameter(Parameter):
     """Class adapting a sasmodel parameter to srfit Parameter.
 

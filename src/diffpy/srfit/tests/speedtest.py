@@ -27,6 +27,7 @@ from diffpy.srfit.tests.utils import _makeArgs
 
 x = numpy.arange(0, 20, 0.05)
 
+
 def makeLazyEquation():
     """Make a lazy equation and see how fast it is."""
 
@@ -100,7 +101,7 @@ def speedTest1():
 
     total1 = 0
     total2 = 0
-    for i in xrange(len(args)):
+    for i in range(len(args)):
         args[i] = 10*random.random()
         print("Changing argument %i" % (i + 1))
         t1 = timeFunction(f1, *args)
@@ -158,13 +159,13 @@ def speedTest2(mutate = 2):
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in xrange(numcalls):
+    for _i in range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in xrange(n):
+        for _j in range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()
@@ -232,13 +233,13 @@ def speedTest3(mutate = 2):
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in xrange(numcalls):
+    for _i in range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in xrange(n):
+        for _j in range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()
@@ -291,13 +292,13 @@ def speedTest4(mutate = 2):
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in xrange(numcalls):
+    for _i in range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in xrange(n):
+        for _j in range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()
@@ -339,7 +340,7 @@ def weightedTest(mutate = 2):
 
     #scale = visitors.NodeWeigher()
     #eq.root.identify(scale)
-    #print scale.output
+    #print(scale.output)
 
     from numpy import polyval
     def f(b1, b2, b3, b4, b5, b6, b7, b8):
@@ -355,18 +356,18 @@ def weightedTest(mutate = 2):
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in xrange(numcalls):
+    for _i in range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in xrange(n):
+        for _j in range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()
 
-        #print args
+        #print(args)
 
         # Time the different functions with these arguments
         teq += timeFunction(eq, *args)
@@ -410,13 +411,13 @@ def profileTest():
     # The call-loop
     random.seed()
     numcalls = 1000
-    for _i in xrange(numcalls):
+    for _i in range(numcalls):
         # Mutate values
         n = mutate
         if n == 0:
             n = random.choice(choices)
         c = choices[:]
-        for _j in xrange(n):
+        for _j in range(n):
             idx = random.choice(c)
             c.remove(idx)
             args[idx] = random.random()

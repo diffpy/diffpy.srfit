@@ -20,11 +20,14 @@ import unittest
 import numpy
 
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
-from diffpy.srfit.tests.utils import TestCaseSaS, datafile
+from diffpy.srfit.tests.utils import datafile
+from diffpy.srfit.tests.utils import has_sas, _msg_nosas
 from diffpy.srfit.sas.sasimport import sasimport
 
+# ----------------------------------------------------------------------------
 
-class TestSASParser(TestCaseSaS):
+@unittest.skipUnless(has_sas, _msg_nosas)
+class TestSASParser(unittest.TestCase):
 
     def testParser(self):
         data = datafile("sas_ascii_test_1.txt")
@@ -59,8 +62,12 @@ class TestSASParser(TestCaseSaS):
 
         return
 
+# End of class TestSASParser
 
-class TestSASGenerator(TestCaseSaS):
+# ----------------------------------------------------------------------------
+
+@unittest.skipUnless(has_sas, _msg_nosas)
+class TestSASGenerator(unittest.TestCase):
 
     def testGenerator(self):
 
@@ -91,6 +98,7 @@ class TestSASGenerator(TestCaseSaS):
 
         return
 
+
     def testGenerator2(self):
 
         # Test generator with a profile
@@ -117,6 +125,7 @@ class TestSASGenerator(TestCaseSaS):
         self.assertAlmostEqual(0, res)
         return
 
+# End of class TestSASGenerator
 
 if __name__ == "__main__":
     unittest.main()

@@ -31,14 +31,20 @@ ab_authors = u'Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge group'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.intersphinx',
-              'sphinx.ext.napoleon']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.intersphinx',
+    'm2r',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-# The suffix of source filenames.
-source_suffix = '.rst'
+# The suffix(es) of source filenames.
+# You can specify multiple suffix as a list of string:
+#
+source_suffix = ['.rst', '.md']
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
@@ -47,7 +53,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'SrFit'
+project = u'diffpy.srfit'
 copyright = u'%Y, Brookhaven National Laboratory'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -107,13 +113,15 @@ nitpicky = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'sphinx_py3doc_enhanced_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-# html_theme_options = {}
-html_theme_options = {'collapsiblesidebar' : 'true'}
+html_theme_options = {
+    'collapsiblesidebar' : 'true',
+    'navigation_with_keys' : 'true',
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
@@ -181,7 +189,7 @@ html_split_index = True
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'SrFitdoc'
+htmlhelp_basename = 'srfitdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -200,7 +208,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'SrFit_manual.tex', u'SrFit Documentation',
+  ('index', 'srfit_manual.tex', u'diffpy.srfit documentation',
    ab_authors, 'manual'),
 ]
 
@@ -230,7 +238,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'srfit', u'SrFit Documentation',
+    ('index', 'diffpy.srfit', u'diffpy.srfit documentation',
      ab_authors, 1)
 ]
 
@@ -244,8 +252,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'SrFit', u'SrFit Documentation',
-   ab_authors, 'SrFit', 'One line description of project.',
+  ('index', 'diffpy.srfit', u'diffpy.srfit documentation',
+   ab_authors, 'diffpy.srfit', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -260,4 +268,7 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-# intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'numpy': ('https://docs.scipy.org/doc/numpy', None),
+    'python' : ('https://docs.python.org/3.7', None),
+}

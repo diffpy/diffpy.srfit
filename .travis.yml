@@ -70,24 +70,16 @@ before_install:
                   which python; exit 1)
   - $NOAPT || sudo apt-get update -qq
   - $NOAPT || sudo apt-get install -y
-                  libgsl0-dev libboost-all-dev python-dev
-                  python-setuptools python-numpy python-pyparsing
-                  python-lxml python-pip build-essential scons
+                  python-dev python-setuptools python-numpy
+                  build-essential
 
   - $NOBREW || test "${TRAVIS_OS_NAME}" = "osx" || exit $?
   - $NOBREW || brew update
   - $NOBREW || brew upgrade python
   - $NOBREW || brew install gcc || brew link --overwrite gcc
-  - $NOBREW || brew install boost-python3
-  - $NOBREW || brew install gsl
-  - $NOBREW || brew install scons
 
   - $NOSYS || devutils/makesdist
   - $NOSYS || MYTARBUNDLE="$(ls -t "${PWD}"/dist/*.tar.gz | head -1)"
-  - $NOSYS || pushd ~/pkgs
-  - $NOSYS || git clone https://github.com/diffpy/libobjcryst.git
-  - $NOSYS || git clone https://github.com/diffpy/libdiffpy.git
-  - $NOSYS || popd
 
 
 install:
@@ -100,17 +92,9 @@ install:
   - $NOMC || conda install --yes
                 diffpy.structure pyobjcryst diffpy.srreal
 
-  - MYSUDO=
-  - $NOAPT || MYSUDO=sudo
   - $NOSYS || $MYPIP install $MYPIPFLAGS coverage
-  - $NOSYS || $MYPIP install $MYPIPFLAGS periodictable
   - $NOSYS || $MYPIP install $MYPIPFLAGS pycifrw
   - $NOSYS || $MYPIP install $MYPIPFLAGS diffpy.structure
-  - $NOSYS || $MYSUDO scons -C ~/pkgs/libobjcryst install
-  - $NOSYS || $MYPIP install $MYPIPFLAGS pyobjcryst
-  - $NOSYS || $MYSUDO scons -C ~/pkgs/libdiffpy install
-  - $NOSYS || $MYPIP install $MYPIPFLAGS diffpy.srreal
-
   - $NOSYS || $MYPIP install $MYPIPFLAGS "${MYTARBUNDLE}"
 
   - cd ${MYRUNDIR}

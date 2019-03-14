@@ -475,6 +475,14 @@ class BaseBuilder(object):
     def __rtruediv__(self, other):
         return self.__evalBinary(other, literals.DivisionOperator, False)
 
+    # Python 2 Compatibility -------------------------------------------------
+
+    if six.PY2:
+        __div__ = __truediv__
+        __rdiv__ = __rtruediv__
+
+    # ------------------------------------------------------------------------
+
     def __pow__(self, other):
         return self.__evalBinary(other, literals.ExponentiationOperator)
 

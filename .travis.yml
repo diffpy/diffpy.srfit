@@ -62,8 +62,6 @@ before_install:
   - $NOMC || conda install --yes conda-build jinja2
   - $NOMC || conda create --name=testenv --yes python=${MYPYTHON_VERSION} coverage
   - $NOMC || conda config --add channels diffpy
-  # FIXME - keep just the "diffpy" channel for public release.
-  - $NOMC || conda config --add channels diffpy/channel/dev
 
   - $NOBREW || test "${TRAVIS_OS_NAME}" = "osx" || exit $?
   - $NOBREW || brew update
@@ -83,9 +81,7 @@ install:
                 diffpy.structure pyobjcryst diffpy.srreal
 
   - $NOBREW || $MYPIP install $MYPIPFLAGS coverage
-  # install diffpy.structure from the python3 development branch.
-  # TODO - replace with PyPI version later.
-  - $NOBREW || $MYPIP install $MYPIPFLAGS https://github.com/diffpy/diffpy.structure/archive/python3.tar.gz
+  - $NOBREW || $MYPIP install $MYPIPFLAGS diffpy.structure
   - $NOBREW || $MYPIP install $MYPIPFLAGS "${MYTARBUNDLE}"
 
   - cd ${MYRUNDIR}

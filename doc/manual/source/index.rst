@@ -1,14 +1,13 @@
 .. _developers-guide-index:
 
 ####################################################
-SrFit developer's documentation
+diffpy.srfit documentation
 ####################################################
 
-Software version |release|.
+diffpy.srfit - configurable code for solving atomic structures.
 
-Last updated |today|.
-
-Configurable code for solving atomic structures.
+| Software version |release|.
+| Last updated |today|.
 
 The diffpy.srfit package provides the framework for building a global optimizer
 on the fly from components such as function calculators (that calculate
@@ -32,31 +31,32 @@ obtain the total cost function. Additionally, diffpy.srfit is designed to be
 extensible, allowing the user to integrate external calculators to perform
 co-refinements with other techniques.
 
+========================================
+Authors
+========================================
+
+diffpy.srfit is developed by members of the Billinge Group at
+Columbia University and at Brookhaven National Laboratory including
+Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge.
+
+The source code in *observable.py* was derived from the 1.0 version
+of the Caltech "Pyre" project.
+
+For a detailed list of contributors see
+https://github.com/diffpy/diffpy.srfit/graphs/contributors.
+
 ===================
 Disclaimer
 ===================
 
 .. literalinclude:: ../../../LICENSE.txt
 
-================
-Acknowledgments
-================
-
-Developers
------------
-
-diffpy.sifit is developed and maintained by
-
-.. literalinclude:: ../../../AUTHORS.txt
-
-The source code in *observable.py* was derived from the 1.0 version
-of the Caltech "Pyre" project.
 
 ======================================
 Installation
 ======================================
 
-See the `README.rst <https://github.com/diffpy/diffpy.srfit#requirements>`_
+See the `README <https://github.com/diffpy/diffpy.srfit#requirements>`_
 file included with the distribution.
 
 ======================================

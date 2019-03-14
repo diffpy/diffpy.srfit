@@ -45,13 +45,6 @@ of the Caltech "Pyre" project.
 For a detailed list of contributors see
 https://github.com/diffpy/diffpy.srfit/graphs/contributors.
 
-===================
-Disclaimer
-===================
-
-.. literalinclude:: ../../../LICENSE.txt
-
-
 ======================================
 Installation
 ======================================
@@ -70,12 +63,13 @@ Where next?
    extending.rst
 
 ======================================
-API
+Table of contents
 ======================================
 
 .. toctree::
-   :maxdepth: 3
+   :titlesonly:
 
+   license
    api/diffpy.srfit.rst
 
 .. faq.rst

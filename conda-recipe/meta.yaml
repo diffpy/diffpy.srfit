@@ -18,6 +18,7 @@ requirements:
   build:
     - python
     - setuptools
+    - six
 
   run:
     - python

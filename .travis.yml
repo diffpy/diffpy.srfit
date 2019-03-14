@@ -82,9 +82,16 @@ before_install:
   - $NOBREW || brew update
   - $NOBREW || brew upgrade python
   - $NOBREW || brew install gcc || brew link --overwrite gcc
+  - $NOBREW || brew install boost-python3
+  - $NOBREW || brew install gsl
+  - $NOBREW || brew install scons
 
   - $NOSYS || devutils/makesdist
   - $NOSYS || MYTARBUNDLE="$(ls -t "${PWD}"/dist/*.tar.gz | head -1)"
+  - $NOSYS || pushd ~/pkgs
+  - $NOSYS || git clone https://github.com/diffpy/libobjcryst.git
+  - $NOSYS || git clone https://github.com/diffpy/libdiffpy.git
+  - $NOSYS || popd
 
 
 install:
@@ -97,8 +104,17 @@ install:
   - $NOMC || conda install --yes
                 diffpy.structure pyobjcryst diffpy.srreal
 
+  - MYSUDO=
+  - $NOAPT || MYSUDO=sudo
   - $NOSYS || $MYPIP install $MYPIPFLAGS coverage
+  - $NOSYS || $MYPIP install $MYPIPFLAGS periodictable
+  - $NOSYS || $MYPIP install $MYPIPFLAGS pycifrw
   - $NOSYS || $MYPIP install $MYPIPFLAGS diffpy.structure
+  - $NOSYS || $MYSUDO scons -C ~/pkgs/libobjcryst install
+  - $NOSYS || $MYPIP install $MYPIPFLAGS pyobjcryst
+  - $NOSYS || $MYSUDO scons -C ~/pkgs/libdiffpy install
+  - $NOSYS || $MYPIP install $MYPIPFLAGS diffpy.srreal
+
   - $NOSYS || $MYPIP install $MYPIPFLAGS "${MYTARBUNDLE}"
 
   - cd ${MYRUNDIR}

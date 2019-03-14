@@ -15,6 +15,9 @@
 
 """Helper routines for testing."""
 
+import sys
+import six
+
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
 from diffpy.srfit.tests import logger
@@ -92,5 +95,18 @@ def datafile(filename):
     from pkg_resources import resource_filename
     rv = resource_filename(__name__, "testdata/" + filename)
     return rv
+
+
+def capturestdout(f, *args, **kwargs):
+    """Capture the standard output from a call of function f.
+    """
+    savestdout = sys.stdout
+    fp = six.StringIO()
+    try:
+        sys.stdout = fp
+        f(*args, **kwargs)
+    finally:
+        sys.stdout = savestdout
+    return fp.getvalue()
 
 # End of file

@@ -50,7 +50,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'SrFit'
+project = u'diffpy.srfit'
 copyright = u'%Y, Brookhaven National Laboratory'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -186,7 +186,7 @@ html_split_index = True
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'SrFitdoc'
+htmlhelp_basename = 'srfitdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -205,7 +205,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'SrFit_manual.tex', u'SrFit Documentation',
+  ('index', 'srfit_manual.tex', u'diffpy.srfit documentation',
    ab_authors, 'manual'),
 ]
 
@@ -235,7 +235,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'srfit', u'SrFit Documentation',
+    ('index', 'diffpy.srfit', u'diffpy.srfit documentation',
      ab_authors, 1)
 ]
 
@@ -249,8 +249,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'SrFit', u'SrFit Documentation',
-   ab_authors, 'SrFit', 'One line description of project.',
+  ('index', 'diffpy.srfit', u'diffpy.srfit documentation',
+   ab_authors, 'diffpy.srfit', 'One line description of project.',
    'Miscellaneous'),
 ]
 

@@ -88,9 +88,12 @@ install:
                 sed 's,.*/,,; s/[.]tar[.]bz2$//; s/-/=/g' > /tmp/mypackage.txt
   - $NOMC || source activate testenv
   - $NOMC || conda install --yes --use-local --file=/tmp/mypackage.txt
-  # TODO - add srfit-sasview when ready for Python 3.
   - $NOMC || conda install --yes
                 diffpy.structure pyobjcryst diffpy.srreal
+  # TODO - always install srfit-sasview when ready for Python 3.
+  - if $MYUSEMC && [[ "$MYPYTHON_VERSION" == 2.7 ]]; then
+        conda install --yes srfit-sasview;
+    fi
 
   - $NOSYS || $MYPIP install $MYPIPFLAGS coverage
   - $NOSYS || $MYPIP install $MYPIPFLAGS pycifrw

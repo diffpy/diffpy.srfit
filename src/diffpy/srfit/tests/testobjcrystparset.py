@@ -19,15 +19,14 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import testoptional, TestCaseObjCryst
+from diffpy.srfit.tests.utils import has_pyobjcryst, _msg_nopyobjcryst
 
 # Global variables to be assigned in setUp
-ObjCrystCrystalParSet = SpaceGroups = None
+ObjCrystCrystalParSet = spacegroups = None
 Crystal = Atom = Molecule = ScatteringPowerAtom = None
 
 
-c60xyz = \
-"""
+c60xyz = """\
 3.451266498   0.685000000   0.000000000
 3.451266498  -0.685000000   0.000000000
 -3.451266498   0.685000000   0.000000000
@@ -109,8 +108,10 @@ def makeC60():
 
     return c
 
+# ----------------------------------------------------------------------------
 
-class TestParameterAdapter(TestCaseObjCryst):
+@unittest.skipUnless(has_pyobjcryst, _msg_nopyobjcryst)
+class TestParameterAdapter(unittest.TestCase):
 
     def setUp(self):
         global ObjCrystCrystalParSet, Crystal, Atom, Molecule
@@ -128,6 +129,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         del self.occryst
         del self.ocmol
         return
+
 
     def testObjCrystParSet(self):
         """Test the structure conversion."""
@@ -204,6 +206,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         _testMolecule()
         return
 
+
     def testImplicitBondLengthRestraints(self):
         """Test the structure with implicit bond lengths."""
         occryst = self.occryst
@@ -230,6 +233,7 @@ class TestParameterAdapter(TestCaseObjCryst):
 
         return
 
+
     def testImplicitBondAngleRestraints(self):
         """Test the structure with implicit bond angles."""
         occryst = self.occryst
@@ -255,6 +259,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         self.assertEqual(p0, p1)
 
         return
+
 
     def testImplicitDihedralAngleRestraints(self):
         """Test the structure with implicit dihedral angles."""
@@ -284,10 +289,12 @@ class TestParameterAdapter(TestCaseObjCryst):
 
         return
 
+
     def testImplicitStretchModes(self):
         """Test the molecule with implicit stretch modes."""
         # Not sure how to make this happen.
         pass
+
 
     def testExplicitBondLengthRestraints(self):
         """Test the structure with explicit bond lengths."""
@@ -313,6 +320,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         self.assertEqual(p0, p1)
 
         return
+
 
     def testExplicitBondAngleRestraints(self):
         """Test the structure with explicit bond angles.
@@ -345,6 +353,7 @@ class TestParameterAdapter(TestCaseObjCryst):
 
         return
 
+
     def testExplicitDihedralAngleRestraints(self):
         """Test the structure with explicit dihedral angles."""
         occryst = self.occryst
@@ -371,6 +380,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         self.assertEqual(p0, p1)
 
         return
+
 
     def testExplicitBondLengthParameter(self):
         """Test adding bond length parameters to the molecule."""
@@ -431,6 +441,7 @@ class TestParameterAdapter(TestCaseObjCryst):
             self.assertAlmostEqual(xyz20a[i], xyz20calc[i], 6)
 
         return
+
 
     def testExplicitBondAngleParameter(self):
         """Test adding bond angle parameters to the molecule."""
@@ -498,6 +509,7 @@ class TestParameterAdapter(TestCaseObjCryst):
         self.assertFalse(numpy.array_equal(xyz25, xyz25a))
 
         return
+
 
     def testExplicitDihedralAngleParameter(self):
         """Test adding dihedral angle parameters to the molecule."""
@@ -578,9 +590,12 @@ class TestParameterAdapter(TestCaseObjCryst):
 
         return
 
+# End of class TestParameterAdapter
 
+# ----------------------------------------------------------------------------
 
-class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
+@unittest.skipUnless(has_pyobjcryst, _msg_nopyobjcryst)
+class TestCreateSpaceGroup(unittest.TestCase):
     """Test space group creation from pyobjcryst structures.
 
     This makes sure that the space groups created by the structure parameter
@@ -589,9 +604,9 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
     """
 
     def setUp(self):
-        global ObjCrystCrystalParSet, SpaceGroups
+        global ObjCrystCrystalParSet, spacegroups
         from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
-        from diffpy.Structure import SpaceGroups
+        from diffpy.structure import spacegroups
 
     @staticmethod
     def getObjCrystParSetSpaceGroup(sg):
@@ -626,13 +641,14 @@ class TestCreateSpaceGroup(testoptional(TestCaseObjCryst)):
         for smbls in sgtbx.space_group_symbol_iterator():
             shn = smbls.hermann_mauguin()
             short_name = shn.replace(' ', '')
-            if SpaceGroups.IsSpaceGroupIdentifier(short_name):
-                sg = SpaceGroups.GetSpaceGroup(shn)
+            if spacegroups.IsSpaceGroupIdentifier(short_name):
+                sg = spacegroups.GetSpaceGroup(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
-                # print "dbsg: " + repr(self.sgsEquivalent(sg, sgnew))
+                # print("dbsg: " + repr(self.sgsEquivalent(sg, sgnew)))
                 self.assertTrue(self.sgsEquivalent(sg, sgnew))
         return
 
+# End of class TestCreateSpaceGroup
 
 if __name__ == "__main__":
     unittest.main()

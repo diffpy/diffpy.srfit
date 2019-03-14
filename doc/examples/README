@@ -94,7 +94,7 @@ Advanced:
     instructive extension to gaussianrecipe.py_.
 
 * npintensity.py_
-    Use diffpy.Structure to build a nanoparticle intensity generator, and use
+    Use diffpy.structure to build a nanoparticle intensity generator, and use
     it to refine a structure to simulated data.
 
 * npintensityII.py_
@@ -111,7 +111,7 @@ should read through these use cases to gain an understanding of PDF and SAS
 refinement with SrFit.
 
 * crystalpdf.py_
-    Refine a diffpy.Structure crystal to PDF data using automatic explicit
+    Refine a diffpy.structure crystal to PDF data using automatic explicit
     space group constraints.
 
 * simplepdf.py_

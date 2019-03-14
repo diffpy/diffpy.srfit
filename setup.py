@@ -14,7 +14,7 @@ from setuptools import setup, find_packages
 
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.
-FALLBACK_VERSION = '1.3.post0'
+FALLBACK_VERSION = '3.0a0.post0'
 
 # determine if we run with Python 3.
 PY3 = (sys.version_info[0] == 3)
@@ -85,7 +85,7 @@ setup_args = dict(
     package_dir = {'' : 'src'},
     test_suite = 'diffpy.srfit.tests',
     include_package_data = True,
-    install_requires = [],
+    install_requires = ['six'],
     zip_safe = False,
     author = "Simon J.L. Billinge",
     author_email = "sb2896@columbia.edu",
@@ -107,6 +107,9 @@ setup_args = dict(
         'Operating System :: MacOS',
         'Operating System :: POSIX',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Topic :: Scientific/Engineering :: Chemistry',
         'Topic :: Scientific/Engineering :: Physics',
         'Topic :: Software Development :: Libraries',

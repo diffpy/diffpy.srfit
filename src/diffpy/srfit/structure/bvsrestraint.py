@@ -21,7 +21,6 @@ refinement to keep the bond-valence sum within tolerable limits.
 
 __all__ = ["BVSRestraint"]
 
-
 from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.exceptions import SrFitError
 

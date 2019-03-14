@@ -18,54 +18,57 @@
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
 from diffpy.srfit.tests import logger
-from unittest import TestCase
 
-# Create a singleton and a test for optional test cases
-_TestCaseDisabled = object
 
-def _allactive(*testcaseclasses):
-    'True if none of the testcaseclasses has been disabled.'
-    return not _TestCaseDisabled in testcaseclasses
+# Resolve availability of optional third-party packages.
 
-def testoptional(*testcaseclasses):
-    'Return unittest.TestCase only if all testcaseclasses are active.'
-    if _allactive(*testcaseclasses):  return TestCase
-    return _TestCaseDisabled
+# srfit-sasview or sasview
 
-# Resolve the TestCase*Optional classes
 try:
+    _msg_nosas = "No module named 'sas.pr.invertor'"
     sasimport('sas.pr.invertor')
+    _msg_nosas = "No module named 'sas.models'"
     sasimport('sas.models')
-    TestCaseSaS = TestCase
-except ImportError, e:
-    TestCaseSaS = _TestCaseDisabled
+    has_sas = True
+except ImportError as e:
+    has_sas = False
     logger.warning('%s, SaS tests skipped.', e)
 
-try:
-    import diffpy.Structure as m; del m
-    TestCaseStructure = TestCase
-except ImportError:
-    TestCaseStructure = _TestCaseDisabled
-    logger.warning('Cannot import diffpy.Structure, Structure tests skipped.')
+# diffpy.structure
 
+_msg_nostructure = "No module named 'diffpy.structure'"
+try:
+    import diffpy.structure as m; del m
+    has_structure = True
+except ImportError:
+    has_structure = False
+    logger.warning('Cannot import diffpy.structure, Structure tests skipped.')
+
+# pyobjcryst
+
+_msg_nopyobjcryst = "No module named 'pyobjcryst'"
 try:
     import pyobjcryst as m; del m
-    TestCaseObjCryst = TestCase
+    has_pyobjcryst = True
 except ImportError:
-    TestCaseObjCryst = _TestCaseDisabled
+    has_pyobjcryst = False
     logger.warning('Cannot import pyobjcryst, pyobjcryst tests skipped.')
 
+# diffpy.srreal
+
+_msg_nosrreal = "No module named 'diffpy.srreal'"
 try:
     import diffpy.srreal.pdfcalculator as m; del m
-    TestCasePDF = TestCase
+    has_srreal = True
 except ImportError:
-    TestCasePDF = _TestCaseDisabled
+    has_srreal = False
     logger.warning('Cannot import diffpy.srreal, PDF tests skipped.')
 
+# Helper functions for testing -----------------------------------------------
 
 def _makeArgs(num):
     args = []
-    for i in xrange(num):
+    for i in range(num):
         j=i+1
         args.append(literals.Argument(name="v%i"%j, value=j))
     return args

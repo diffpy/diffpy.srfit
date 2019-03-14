@@ -20,8 +20,8 @@ ArgFinder extracts all Arguments from a literal true.
 
 __all__ = ["ArgFinder"]
 
-
 from diffpy.srfit.equation.visitors.visitor import Visitor
+
 
 class ArgFinder(Visitor):
     """ArgFinder extracts Arguments from a Literal tree.

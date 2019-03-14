@@ -21,20 +21,20 @@ import re
 
 reident = re.compile(r'^[a-zA-Z_]\w*$')
 
+
 def isIdentifier(s):
     """Check to see if a python string is a valid identifier.
 
     From http://code.activestate.com/recipes/413487/
-
     """
     if reident.match(s) is None: return False
     return True
+
 
 def validateName(name):
     """Validate that a name is a valid identifier.
 
     Raises ValueError if the name is invalid.
-
     """
     # Check that the name is valid
     if not isIdentifier(name):

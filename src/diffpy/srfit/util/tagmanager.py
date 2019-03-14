@@ -21,6 +21,8 @@ can then be easily referenced via their assigned tags.
 
 __all__ = ["TagManager"]
 
+import functools
+
 
 class TagManager(object):
     """TagManager class.
@@ -90,9 +92,8 @@ class TagManager(object):
         """Get all tags on an object.
 
         Returns list
-
         """
-        tags = [k for (k, v) in self._tagdict.iteritems() if obj in v]
+        tags = [k for (k, v) in self._tagdict.items() if obj in v]
         return tags
 
 
@@ -100,11 +101,9 @@ class TagManager(object):
         """Determine if an object has all passed tags.
 
         Returns bool
-
         """
         setgen = (self.__getObjectSet(t) for t in tags)
-        resgen = ((obj in s) for s in setgen)
-        result = reduce(bool.__and__, resgen, True)
+        result = all(obj in s for s in setgen)
         return result
 
 
@@ -116,10 +115,8 @@ class TagManager(object):
         """
         if not tags:
             return set()
-
         setgen = (self.__getObjectSet(t) for t in tags)
-        objs = reduce(set.union, setgen)
-
+        objs = functools.reduce(set.union, setgen)
         return objs
 
 
@@ -127,14 +124,11 @@ class TagManager(object):
         """Get all objects that have all of the passed tags.
 
         Returns set
-
         """
         if not tags:
             return set()
-
         setgen = (self.__getObjectSet(t) for t in tags)
-        objs = reduce(set.intersection, setgen)
-
+        objs = functools.reduce(set.intersection, setgen)
         return objs
 
 

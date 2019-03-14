@@ -17,7 +17,8 @@
 
 import sys
 import unittest
-import cStringIO
+
+import six
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.calculator import Calculator
@@ -222,8 +223,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         m._addParameter(p4)
 
         # Check order
-        self.assertEqual(m._parameters.keys(), ["p1", "xyz"])
-        self.assertEqual(m._parameters.values(), [p2, p4])
+        self.assertEqual(list(m._parameters.keys()), ["p1", "xyz"])
+        self.assertEqual(list(m._parameters.values()), [p2, p4])
 
         return
 
@@ -510,7 +511,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         """Verify output from the show function.
         """
         def capture_show(*args, **kwargs):
-            sys.stdout = cStringIO.StringIO()
+            sys.stdout = six.StringIO()
             self.m.show(*args, **kwargs)
             rv = sys.stdout.getvalue()
             sys.stdout = sys.__stdout__

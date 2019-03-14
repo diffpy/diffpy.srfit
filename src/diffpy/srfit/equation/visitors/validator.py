@@ -31,6 +31,7 @@ from diffpy.srfit.equation.visitors.visitor import Visitor
 
 msg = "'%s' does not have the interface required by '%s'"
 
+
 class Validator(Visitor):
     """Validator error for checking validity of an equation tree.
 

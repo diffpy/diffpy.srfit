@@ -18,6 +18,7 @@ interface and automatic structure constraint generation from space group
 information.
 """
 
+
 def struToParameterSet(name, stru):
     """Creates a ParameterSet from an structure.
 

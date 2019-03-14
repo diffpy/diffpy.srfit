@@ -18,9 +18,9 @@
 
 __all__ = ["SrRealParSet"]
 
-
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 from diffpy.srfit.structure.bvsrestraint import BVSRestraint
+
 
 class SrRealParSet(BaseStructureParSet):
     """Base class for SrReal-compatible structure adapters.

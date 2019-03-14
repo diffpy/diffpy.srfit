@@ -15,12 +15,13 @@
 
 """Tests for refinableobj module."""
 
-import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.equation import Equation
 import unittest
 
+import diffpy.srfit.equation.literals as literals
+from diffpy.srfit.equation import Equation
 from diffpy.srfit.tests.utils import _makeArgs
 from diffpy.srfit.tests.utils import noObserversInGlobalBuilders
+
 
 class TestEquation(unittest.TestCase):
 

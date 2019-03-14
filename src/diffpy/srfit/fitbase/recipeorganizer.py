@@ -25,8 +25,10 @@ __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 from numpy import inf
 from collections import OrderedDict
-from itertools import chain, ifilter, groupby
+from itertools import chain, groupby
 import re
+
+import six
 
 from diffpy.srfit.fitbase.constraint import Constraint
 from diffpy.srfit.fitbase.restraint import Restraint
@@ -138,7 +140,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __iter__(self):
         """Iterate over top-level parameters."""
-        return self._parameters.itervalues()
+        return iter(self._parameters.values())
 
     def __len__(self):
         """Get number of top-level parameters."""
@@ -146,7 +148,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def __getitem__(self, idx):
         """Get top-level parameters by index."""
-        return self._parameters.values()[idx]
+        # need to wrap this in a list for python 3 compatibility.
+        return list(self._parameters.values())[idx]
 
     def __getattr__(self, name):
         """Gives access to the contained objects as attributes."""
@@ -451,7 +454,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._addObject(f, self._calculators)
         # Register arguments of the calculator
         if argnames is None:
-            func_code = f.__call__.im_func.func_code
+            func_code = f.__call__.__func__.__code__
             argnames = list(func_code.co_varnames)
             argnames = argnames[1:func_code.co_argcount]
 
@@ -517,14 +520,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
             # check regular functions
             if inspect.isfunction(f):
-                func_code = f.func_code
+                func_code = f.__code__
             # check class method
             elif inspect.ismethod(f):
-                    func_code = f.im_func.func_code
+                    func_code = f.__func__.__code__
                     offset = 1
             # check functor
-            elif hasattr(f, "__call__") and hasattr(f.__call__, 'im_func'):
-                    func_code = f.__call__.im_func.func_code
+            elif hasattr(f, "__call__") and hasattr(f.__call__, '__func__'):
+                    func_code = f.__call__.__func__.__code__
                     offset = 1
             else:
                 m = "Cannot extract name or argnames"
@@ -638,7 +641,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ns.
         Raises ValueError if par is marked as constant.
         """
-        if isinstance(par, basestring):
+        if isinstance(par, six.string_types):
             name = par
             par = self.get(name)
             if par is None:
@@ -650,7 +653,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if par.const:
             raise ValueError("The parameter '%s' is constant"%par)
 
-        if isinstance(con, basestring):
+        if isinstance(con, six.string_types):
             eqstr = con
             eq = equationFromString(con, self._eqfactory, ns)
         else:
@@ -676,7 +679,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         par     --  The name of a Parameter or a Parameter to check.
         """
-        if isinstance(par, basestring):
+        if isinstance(par, six.string_types):
             name = par
             par = self.get(name)
 
@@ -694,7 +697,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         update = False
         for par in pars:
-            if isinstance(par, basestring):
+            if isinstance(par, six.string_types):
                 name = par
                 par = self.get(name)
 
@@ -739,7 +742,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearConstraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in filter(f, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
@@ -771,7 +774,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns the Restraint object for use with the 'unrestrain' method.
         """
 
-        if isinstance(res, basestring):
+        if isinstance(res, six.string_types):
             eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
         else:
@@ -823,7 +826,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if recurse:
             f = lambda m : hasattr(m, "clearRestraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in filter(f, self._iterManaged()):
                 m.clearRestraints(recurse)
         return
 
@@ -832,7 +835,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         constraints = {}
         if recurse:
             f = lambda m : hasattr(m, "_getConstraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in filter(f, self._iterManaged()):
                 constraints.update( m._getConstraints(recurse) )
 
         constraints.update( self._constraints)
@@ -847,7 +850,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         restraints = set(self._restraints)
         if recurse:
             f = lambda m : hasattr(m, "_getRestraints")
-            for m in ifilter(f, self._iterManaged()):
+            for m in filter(f, self._iterManaged()):
                 restraints.update( m._getRestraints(recurse) )
 
         return restraints
@@ -861,8 +864,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises AttributeError if validation fails.
         """
         RecipeContainer._validate(self)
-        iterable = chain(iter(self._restraints),
-                self._constraints.itervalues())
+        iterable = chain(self._restraints, self._constraints.values())
         self._validateOthers(iterable)
         return
 

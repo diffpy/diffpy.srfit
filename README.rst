@@ -2,7 +2,7 @@
    :target: https://travis-ci.org/diffpy/diffpy.srfit
 
 .. image:: https://codecov.io/gh/diffpy/diffpy.srfit/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/diffpy/diffpy.srfit/branch/master
+   :target: https://codecov.io/gh/diffpy/diffpy.srfit
 
 
 diffpy.srfit

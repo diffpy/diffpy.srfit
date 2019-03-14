@@ -71,9 +71,14 @@ Table of contents
 
    license
    release
-   api/diffpy.srfit.rst
+   Package API <api/diffpy.srfit>
 
 .. faq.rst
 
+======================================
+Indices
+======================================
+
 * :ref:`genindex`
+* :ref:`modindex`
 * :ref:`search`

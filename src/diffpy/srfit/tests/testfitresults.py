@@ -42,7 +42,6 @@ class TestFitResults(unittest.TestCase):
         return
 
 
-    @unittest.expectedFailure
     def test_saveResults(self):
         "check FitResults.saveResults()"
         txt = capturefilewrite(self.blank.saveResults)

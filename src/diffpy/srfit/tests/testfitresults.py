@@ -18,9 +18,42 @@
 import unittest
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
+from diffpy.srfit.fitbase.fitresults import FitResults
 from diffpy.srfit.fitbase.fitresults import initializeRecipe
 from diffpy.srfit.tests.utils import datafile
+from diffpy.srfit.tests.utils import capturefilewrite
 
+# ----------------------------------------------------------------------------
+
+class TestFitResults(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        blankfit = FitRecipe()
+        cls.blank = FitResults(blankfit)
+        return
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.blank = None
+        return
+
+    def setUp(self):
+        return
+
+
+    @unittest.expectedFailure
+    def test_saveResults(self):
+        "check FitResults.saveResults()"
+        txt = capturefilewrite(self.blank.saveResults)
+        lines = txt.split('\n')
+        self.assertFalse(lines[0].startswith('Results written'))
+        self.assertFalse(lines[0].startswith('produced by'))
+        return
+
+# end of class TestFitResults
+
+# ----------------------------------------------------------------------------
 
 class TestInitializeRecipe(unittest.TestCase):
 
@@ -76,6 +109,9 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertAlmostEqual(self.x0val, recipe.x0.value)
         return
 
-if __name__ == "__main__":
+# end of class TestInitializeRecipe
 
+# ----------------------------------------------------------------------------
+
+if __name__ == "__main__":
     unittest.main()

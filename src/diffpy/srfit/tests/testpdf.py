@@ -16,6 +16,7 @@
 """Tests for pdf package."""
 
 import unittest
+import pickle
 import io
 
 import numpy
@@ -247,6 +248,32 @@ class TestPDFContribution(unittest.TestCase):
         nlines = len(txt.strip().split('\n'))
         self.assertEqual(1001, nlines)
         return
+
+
+    def test_pickling(self):
+        "validate PDFContribution.residual() after pickling."
+        from itertools import chain
+        from diffpy.structure import loadStructure
+        pc = self.pc
+        pc.loadData(datafile("ni-q27r100-neutron.gr"))
+        ni = loadStructure(datafile("ni.cif"))
+        ni.Uisoequiv = 0.003
+        pc.addStructure('ni', ni)
+        pc.setCalculationRange(0, 10)
+        pc2 = pickle.loads(pickle.dumps(pc))
+        res0 = pc.residual()
+        self.assertTrue(numpy.array_equal(res0, pc2.residual()))
+        for p in chain(pc.iterPars('Uiso'), pc2.iterPars('Uiso')):
+            p.value = 0.004
+        res1 = pc.residual()
+        self.assertFalse(numpy.allclose(res0, res1))
+        self.assertTrue(numpy.array_equal(res1, pc2.residual()))
+        return
+
+    # TODO: remove after fixup release of diffpy.structure
+    import sys
+    if sys.version_info >= (3, 7):
+        test_pickling = unittest.expectedFailure(test_pickling)
 
 # End of class TestPDFContribution
 

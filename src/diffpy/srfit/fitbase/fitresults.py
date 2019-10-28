@@ -349,7 +349,7 @@ class FitResults(object):
 
         ## Per-FitContribution results
         if len(self.conresults) > 1:
-            keys = self.conresults.keys()
+            keys = list(self.conresults.keys())
             keys.sort(key=numstr)
 
             lines.append("")

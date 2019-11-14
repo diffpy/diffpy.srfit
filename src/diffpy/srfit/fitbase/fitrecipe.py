@@ -179,7 +179,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def setWeight(self, con, weight):
         """Set the weight of a FitContribution."""
-        idx = self._contributions.values().index(con)
+        idx = list(self._contributions.values()).index(con)
         self._weights[idx] = weight
         return
 

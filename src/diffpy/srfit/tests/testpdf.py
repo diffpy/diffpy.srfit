@@ -270,11 +270,6 @@ class TestPDFContribution(unittest.TestCase):
         self.assertTrue(numpy.array_equal(res1, pc2.residual()))
         return
 
-    # TODO: remove after fixup release of diffpy.structure
-    import sys
-    if sys.version_info >= (3, 7):
-        test_pickling = unittest.expectedFailure(test_pickling)
-
 # End of class TestPDFContribution
 
 # ----------------------------------------------------------------------------

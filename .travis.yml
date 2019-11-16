@@ -89,7 +89,7 @@ install:
   - $NOMC || source activate testenv
   - $NOMC || conda install --yes --use-local --file=/tmp/mypackage.txt
   - $NOMC || conda install --yes
-                diffpy.structure pyobjcryst diffpy.srreal
+                diffpy.structure pyobjcryst "diffpy.srreal>=1.3.0"
   # TODO - always install srfit-sasview when ready for Python 3.
   - if $MYUSEMC && [[ "$MYPYTHON_VERSION" == 2.7 ]]; then
         conda install --yes srfit-sasview;

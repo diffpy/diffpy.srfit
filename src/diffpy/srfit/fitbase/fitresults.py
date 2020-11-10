@@ -499,15 +499,7 @@ class FitResults(object):
         header  --  A header to add to the output (default "")
         footer  --  A footer to add to the output (default "")
         update  --  Flag indicating whether to call update() (default False).
-
         """
-        # Save the time and user
-        from time import ctime
-        from getpass import getuser
-        myheader = "Results written: " + ctime() + "\n"
-        myheader += "produced by " + getuser() + "\n"
-        header = myheader + header
-
         res = self.formatResults(header, footer, update)
         f = open(filename, 'w')
         f.write(res)

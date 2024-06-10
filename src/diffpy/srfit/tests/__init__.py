@@ -16,8 +16,8 @@
 """Unit tests for diffpy.srfit.
 """
 
-import unittest
 import logging
+import unittest
 
 # create logger instance for the tests subpackage
 logging.basicConfig()
@@ -43,9 +43,9 @@ def testsuite(pattern=''):
     import re
     from os.path import dirname
     from itertools import chain
-    from pkg_resources import resource_filename
+    from importlib.resources import files
     loader = unittest.defaultTestLoader
-    thisdir = resource_filename(__name__, '')
+    thisdir = files(__name__) / ""
     depth = __name__.count('.') + 1
     topdir = thisdir
     for i in range(depth):
@@ -80,6 +80,7 @@ def test():
     runner = unittest.TextTestRunner()
     result = runner.run(suite)
     return result
+
 
 
 # End of file

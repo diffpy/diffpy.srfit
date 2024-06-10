@@ -26,12 +26,12 @@ __all__ = ['__date__', '__git_commit__', '__timestamp__', '__version__']
 
 import os.path
 
-from pkg_resources import resource_filename
+from importlib.resources import files
 
 
 # obtain version information from the version.cfg file
 cp = dict(version='', date='', commit='', timestamp='0')
-fcfg = resource_filename(__name__, 'version.cfg')
+fcfg = files(__name__) / "version.cfg"
 if not os.path.isfile(fcfg):    # pragma: no cover
     from warnings import warn
     warn('Package metadata not found, execute "./setup.py egg_info".')

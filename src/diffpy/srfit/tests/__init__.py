@@ -16,8 +16,8 @@
 """Unit tests for diffpy.srfit.
 """
 
-import unittest
 import logging
+import unittest
 
 # create logger instance for the tests subpackage
 logging.basicConfig()
@@ -80,6 +80,7 @@ def test():
     runner = unittest.TextTestRunner()
     result = runner.run(suite)
     return result
+
 
 
 # End of file

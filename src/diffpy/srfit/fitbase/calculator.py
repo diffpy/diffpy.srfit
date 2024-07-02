@@ -26,8 +26,9 @@ Calculator can be added to another RecipeOrganizer with the
 
 __all__ = ["Calculator"]
 
-from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.equation.literals.operators import Operator
+from diffpy.srfit.fitbase.parameterset import ParameterSet
+
 
 class Calculator(Operator, ParameterSet):
     """Base class for calculators.
@@ -75,11 +76,9 @@ class Calculator(Operator, ParameterSet):
         Operator.__init__(self, name)
         return
 
-
     @property
     def symbol(self):
         return self.name
-
 
     # Overload me!
     def __call__(self, *args):
@@ -92,11 +91,9 @@ class Calculator(Operator, ParameterSet):
         """
         return 0
 
-
     def operation(self, *args):
         self._value = self.__call__(*args)
         return self._value
-
 
     def _validate(self):
         """Validate my state.
@@ -111,5 +108,6 @@ class Calculator(Operator, ParameterSet):
         ParameterSet._validate(self)
 
         return
+
 
 # End class Calculator

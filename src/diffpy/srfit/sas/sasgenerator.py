@@ -69,4 +69,5 @@ class SASGenerator(ProfileGenerator):
         """Calculate I(Q) for the BaseModel."""
         return self._model.evalDistribution(q)
 
+
 # End class SASGenerator

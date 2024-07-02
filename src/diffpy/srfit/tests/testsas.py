@@ -20,11 +20,11 @@ import unittest
 import numpy
 
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
-from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import has_sas, _msg_nosas
 from diffpy.srfit.sas.sasimport import sasimport
+from diffpy.srfit.tests.utils import _msg_nosas, datafile, has_sas
 
 # ----------------------------------------------------------------------------
+
 
 @unittest.skipUnless(has_sas, _msg_nosas)
 class TestSASParser(unittest.TestCase):
@@ -36,35 +36,39 @@ class TestSASParser(unittest.TestCase):
 
         x, y, dx, dy = parser.getData()
 
-        testx = numpy.array([0.002618, 0.007854, 0.01309, 0.01832, 0.02356,
-            0.02879, 0.03402, 0.03925, 0.04448, 0.0497])
+        testx = numpy.array(
+            [0.002618, 0.007854, 0.01309, 0.01832, 0.02356, 0.02879, 0.03402, 0.03925, 0.04448, 0.0497]
+        )
         diff = testx - x
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
-        testy = numpy.array([ 0.02198, 0.02201, 0.02695, 0.02645, 0.03024,
-            0.3927, 7.305, 17.43, 13.43, 8.346])
+        testy = numpy.array([0.02198, 0.02201, 0.02695, 0.02645, 0.03024, 0.3927, 7.305, 17.43, 13.43, 8.346])
         diff = testy - y
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
-        testdy = numpy.array([ 0.002704, 0.001643, 0.002452, 0.001769,
-            0.001531, 0.1697, 1.006, 0.5351, 0.3677, 0.191])
+        testdy = numpy.array(
+            [0.002704, 0.001643, 0.002452, 0.001769, 0.001531, 0.1697, 1.006, 0.5351, 0.3677, 0.191]
+        )
         diff = testdy - dy
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
-        testdx = numpy.array([0.0004091, 0.005587, 0.005598, 0.005624,
-            0.005707, 0.005975, 0.006264, 0.006344, 0.006424, 0.006516])
+        testdx = numpy.array(
+            [0.0004091, 0.005587, 0.005598, 0.005624, 0.005707, 0.005975, 0.006264, 0.006344, 0.006424, 0.006516]
+        )
         diff = testdx - dx
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
         return
 
+
 # End of class TestSASParser
 
 # ----------------------------------------------------------------------------
+
 
 @unittest.skipUnless(has_sas, _msg_nosas)
 class TestSASGenerator(unittest.TestCase):
@@ -72,7 +76,7 @@ class TestSASGenerator(unittest.TestCase):
     def testGenerator(self):
 
         # Test generator output
-        SphereModel = sasimport('sas.models.SphereModel').SphereModel
+        SphereModel = sasimport("sas.models.SphereModel").SphereModel
         model = SphereModel()
         gen = SASGenerator("sphere", model)
 
@@ -88,8 +92,7 @@ class TestSASGenerator(unittest.TestCase):
             self.assertEqual(defval, par.getValue())
             self.assertEqual(defval, model.getParam(pname))
 
-
-        r = numpy.arange(1, 10, 0.1, dtype = float)
+        r = numpy.arange(1, 10, 0.1, dtype=float)
         y = gen(r)
         refy = model.evalDistribution(r)
         diff = y - refy
@@ -98,16 +101,15 @@ class TestSASGenerator(unittest.TestCase):
 
         return
 
-
     def testGenerator2(self):
 
         # Test generator with a profile
-        EllipsoidModel = sasimport('sas.models.EllipsoidModel').EllipsoidModel
+        EllipsoidModel = sasimport("sas.models.EllipsoidModel").EllipsoidModel
         model = EllipsoidModel()
         gen = SASGenerator("ellipsoid", model)
 
         # Load the data using SAS tools
-        Loader = sasimport('sas.dataloader.loader').Loader
+        Loader = sasimport("sas.dataloader.loader").Loader
         loader = Loader()
         data = datafile("sas_ellipsoid_testdata.txt")
         datainfo = loader.load(data)
@@ -124,6 +126,7 @@ class TestSASGenerator(unittest.TestCase):
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
         return
+
 
 # End of class TestSASGenerator
 

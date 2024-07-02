@@ -58,4 +58,3 @@ diffpy.srfit.util.weakrefcallable module
     :members:
     :undoc-members:
     :show-inheritance:
-

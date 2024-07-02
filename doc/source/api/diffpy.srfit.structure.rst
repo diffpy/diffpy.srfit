@@ -66,4 +66,3 @@ diffpy.srfit.structure.sgconstraints module
     :members:
     :undoc-members:
     :show-inheritance:
-

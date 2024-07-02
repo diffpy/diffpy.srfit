@@ -35,4 +35,3 @@ diffpy.srfit.equation.equationmod module
     :members:
     :undoc-members:
     :show-inheritance:
-

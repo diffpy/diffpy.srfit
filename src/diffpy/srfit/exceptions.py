@@ -20,9 +20,11 @@ Exceptions used for SrFit - specific errors.
 
 class SrFitError(Exception):
     """Generic error in SrFit expressions or recipe."""
+
     pass
 
 
 class ParseError(Exception):
     """Exception used by ProfileParsers."""
+
     pass

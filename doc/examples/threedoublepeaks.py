@@ -20,9 +20,10 @@ from __future__ import print_function
 
 import numpy
 
-from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 
 ####### Example Code
+
 
 def makeRecipe():
     """Make a FitRecipe for fitting three double-gaussian curves to data.
@@ -48,15 +49,15 @@ def makeRecipe():
 
     # Create the contribution
     contribution = FitContribution("peaks")
-    contribution.setProfile(profile, xname = "t")
+    contribution.setProfile(profile, xname="t")
     pi = numpy.pi
     exp = numpy.exp
 
     # This is a building-block of our profile function
     def gaussian(t, mu, sig):
-        return 1/(2*pi*sig**2)**0.5 * exp(-0.5 * ((t-mu)/sig)**2)
+        return 1 / (2 * pi * sig**2) ** 0.5 * exp(-0.5 * ((t - mu) / sig) ** 2)
 
-    contribution.registerFunction(gaussian, name = "peakshape")
+    contribution.registerFunction(gaussian, name="peakshape")
 
     def delta(t, mu):
         """Calculate a delta-function.
@@ -83,10 +84,11 @@ def makeRecipe():
          + 0.23*convolve( delta(t, mu22), peakshape(t, c, sig22) ) ) + \
          A3 * ( convolve( delta(t, mu31), peakshape(t, c, sig31) ) \
          + 0.23*convolve( delta(t, mu32), peakshape(t, c, sig32) ) ) + \
-         bkgd")
+         bkgd"
+    )
 
     # c is the center of the gaussian.
-    contribution.c.value =  x[len(x) // 2]
+    contribution.c.value = x[len(x) // 2]
 
     ## The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
@@ -109,12 +111,13 @@ def makeRecipe():
     recipe.addVar(contribution.mu31, 33.0)
 
     # Constrain the position of the second double peak
-    from numpy import sin, arcsin
+    from numpy import arcsin, sin
+
     def peakloc(mu):
         """Calculate the location of the second peak given the first."""
         l1 = 1.012
         l2 = 1.0
-        return 180 / pi * arcsin( pi / 180 * l2 * sin(mu) / l1 )
+        return 180 / pi * arcsin(pi / 180 * l2 * sin(mu) / l1)
 
     recipe.registerFunction(peakloc)
     recipe.constrain(contribution.mu12, "peakloc(mu11)")
@@ -128,7 +131,7 @@ def makeRecipe():
 
     def sig(sig0, dsig, mu):
         """Calculate the peak broadening with respect to position."""
-        return sig0 * (1 - dsig * mu**2);
+        return sig0 * (1 - dsig * mu**2)
 
     recipe.registerFunction(sig)
     recipe.fix("mu")
@@ -136,24 +139,22 @@ def makeRecipe():
     recipe.sig0.value = 0.001
     recipe.dsig.value = 4.0
     recipe.constrain(contribution.sig11, "sig(sig0, dsig, mu11)")
-    recipe.constrain(contribution.sig12, "sig(sig0, dsig, mu12)",
-            ns = {"mu12" : contribution.mu12} )
+    recipe.constrain(contribution.sig12, "sig(sig0, dsig, mu12)", ns={"mu12": contribution.mu12})
     recipe.constrain(contribution.sig21, "sig(sig0, dsig, mu21)")
-    recipe.constrain(contribution.sig22, "sig(sig0, dsig, mu22)",
-            ns = {"mu22" : contribution.mu22} )
+    recipe.constrain(contribution.sig22, "sig(sig0, dsig, mu22)", ns={"mu22": contribution.mu22})
     recipe.constrain(contribution.sig31, "sig(sig0, dsig, mu31)")
-    recipe.constrain(contribution.sig32, "sig(sig0, dsig, mu32)",
-            ns = {"mu32" : contribution.mu32} )
+    recipe.constrain(contribution.sig32, "sig(sig0, dsig, mu32)", ns={"mu32": contribution.mu32})
 
     # Also the background
-    recipe.addVar(contribution.b0, 0, tag = "bkgd")
-    recipe.addVar(contribution.b1, 0, tag = "bkgd")
-    recipe.addVar(contribution.b2, 0, tag = "bkgd")
-    recipe.addVar(contribution.b3, 0, tag = "bkgd")
-    recipe.addVar(contribution.b4, 0, tag = "bkgd")
-    recipe.addVar(contribution.b5, 0, tag = "bkgd")
-    recipe.addVar(contribution.b6, 0, tag = "bkgd")
+    recipe.addVar(contribution.b0, 0, tag="bkgd")
+    recipe.addVar(contribution.b1, 0, tag="bkgd")
+    recipe.addVar(contribution.b2, 0, tag="bkgd")
+    recipe.addVar(contribution.b3, 0, tag="bkgd")
+    recipe.addVar(contribution.b4, 0, tag="bkgd")
+    recipe.addVar(contribution.b5, 0, tag="bkgd")
+    recipe.addVar(contribution.b6, 0, tag="bkgd")
     return recipe
+
 
 def scipyOptimize(recipe):
     """Optimize the recipe created above using scipy.
@@ -169,6 +170,7 @@ def scipyOptimize(recipe):
     # (recipe.residual) and the starting values of the Variables
     # (recipe.getValues()).
     from scipy.optimize.minpack import leastsq
+
     print("Fit using scipy's LM optimizer")
     leastsq(recipe.residual, recipe.getValues())
 
@@ -190,15 +192,17 @@ def plotResults(recipe):
 
     # This stuff is specific to pylab from the matplotlib distribution.
     import pylab
-    pylab.plot(x, y, 'b.', label = "observed profile")
-    pylab.plot(x, ycalc, 'r-', label = "calculated profile")
-    pylab.plot(x, y - ycalc - 0.1 * max(y), 'g-', label = "difference")
-    pylab.legend(loc = (0.0,0.8))
+
+    pylab.plot(x, y, "b.", label="observed profile")
+    pylab.plot(x, ycalc, "r-", label="calculated profile")
+    pylab.plot(x, y - ycalc - 0.1 * max(y), "g-", label="difference")
+    pylab.legend(loc=(0.0, 0.8))
     pylab.xlabel("x")
     pylab.ylabel("y")
 
     pylab.show()
     return
+
 
 def steerFit(recipe):
     """Steer the fit for this problem.
@@ -218,6 +222,7 @@ def steerFit(recipe):
     scipyOptimize(recipe)
 
     return
+
 
 if __name__ == "__main__":
 

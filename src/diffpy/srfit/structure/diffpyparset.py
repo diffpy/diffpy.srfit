@@ -30,8 +30,7 @@ DiffpyAtomParSet      --  Adapter for diffpy.structure.Atom
 
 __all__ = ["DiffpyStructureParSet"]
 
-from diffpy.srfit.fitbase.parameter import ParameterProxy
-from diffpy.srfit.fitbase.parameter import ParameterAdapter
+from diffpy.srfit.fitbase.parameter import ParameterAdapter, ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
 from diffpy.srfit.util.argbinders import bind2nd
@@ -94,24 +93,21 @@ class DiffpyAtomParSet(ParameterSet):
         self.atom = atom
         a = atom
         # x, y, z, occupancy
-        self.addParameter(ParameterAdapter("x", a, _xyzgetter(0),
-            _xyzsetter(0)))
-        self.addParameter(ParameterAdapter("y", a, _xyzgetter(1),
-            _xyzsetter(1)))
-        self.addParameter(ParameterAdapter("z", a, _xyzgetter(2),
-            _xyzsetter(2)))
-        occupancy = ParameterAdapter("occupancy", a, attr = "occupancy")
+        self.addParameter(ParameterAdapter("x", a, _xyzgetter(0), _xyzsetter(0)))
+        self.addParameter(ParameterAdapter("y", a, _xyzgetter(1), _xyzsetter(1)))
+        self.addParameter(ParameterAdapter("z", a, _xyzgetter(2), _xyzsetter(2)))
+        occupancy = ParameterAdapter("occupancy", a, attr="occupancy")
         self.addParameter(occupancy)
         self.addParameter(ParameterProxy("occ", occupancy))
         # U
-        self.addParameter(ParameterAdapter("U11", a, attr = "U11"))
-        self.addParameter(ParameterAdapter("U22", a, attr = "U22"))
-        self.addParameter(ParameterAdapter("U33", a, attr = "U33"))
-        U12 = ParameterAdapter("U12", a, attr = "U12")
+        self.addParameter(ParameterAdapter("U11", a, attr="U11"))
+        self.addParameter(ParameterAdapter("U22", a, attr="U22"))
+        self.addParameter(ParameterAdapter("U33", a, attr="U33"))
+        U12 = ParameterAdapter("U12", a, attr="U12")
         U21 = ParameterProxy("U21", U12)
-        U13 = ParameterAdapter("U13", a, attr = "U13")
+        U13 = ParameterAdapter("U13", a, attr="U13")
         U31 = ParameterProxy("U31", U13)
-        U23 = ParameterAdapter("U23", a, attr = "U23")
+        U23 = ParameterAdapter("U23", a, attr="U23")
         U32 = ParameterProxy("U32", U23)
         self.addParameter(U12)
         self.addParameter(U21)
@@ -119,16 +115,16 @@ class DiffpyAtomParSet(ParameterSet):
         self.addParameter(U31)
         self.addParameter(U23)
         self.addParameter(U32)
-        self.addParameter(ParameterAdapter("Uiso", a, attr = "Uisoequiv"))
+        self.addParameter(ParameterAdapter("Uiso", a, attr="Uisoequiv"))
         # B
-        self.addParameter(ParameterAdapter("B11", a, attr = "B11"))
-        self.addParameter(ParameterAdapter("B22", a, attr = "B22"))
-        self.addParameter(ParameterAdapter("B33", a, attr = "B33"))
-        B12 = ParameterAdapter("B12", a, attr = "B12")
+        self.addParameter(ParameterAdapter("B11", a, attr="B11"))
+        self.addParameter(ParameterAdapter("B22", a, attr="B22"))
+        self.addParameter(ParameterAdapter("B33", a, attr="B33"))
+        B12 = ParameterAdapter("B12", a, attr="B12")
         B21 = ParameterProxy("B21", B12)
-        B13 = ParameterAdapter("B13", a, attr = "B13")
+        B13 = ParameterAdapter("B13", a, attr="B13")
         B31 = ParameterProxy("B31", B13)
-        B23 = ParameterAdapter("B23", a, attr = "B23")
+        B23 = ParameterAdapter("B23", a, attr="B23")
         B32 = ParameterProxy("B32", B23)
         self.addParameter(B12)
         self.addParameter(B21)
@@ -136,7 +132,7 @@ class DiffpyAtomParSet(ParameterSet):
         self.addParameter(B31)
         self.addParameter(B23)
         self.addParameter(B32)
-        self.addParameter(ParameterAdapter("Biso", a, attr = "Bisoequiv"))
+        self.addParameter(ParameterAdapter("Biso", a, attr="Bisoequiv"))
         return
 
     def __repr__(self):
@@ -150,11 +146,13 @@ class DiffpyAtomParSet(ParameterSet):
 
     element = property(_getElem, _setElem, "type of atom")
 
+
 # End class DiffpyAtomParSet
 
 
 def _latgetter(par):
     return bind2nd(getattr, par)
+
 
 def _latsetter(par):
     return bind2nd(setattr, par)
@@ -186,22 +184,17 @@ class DiffpyLatticeParSet(ParameterSet):
         self.angunits = "deg"
         self.lattice = lattice
         l = lattice
-        self.addParameter(ParameterAdapter("a", l, _latgetter("a"),
-            _latsetter("a")))
-        self.addParameter(ParameterAdapter("b", l, _latgetter("b"),
-            _latsetter("b")))
-        self.addParameter(ParameterAdapter("c", l, _latgetter("c"),
-            _latsetter("c")))
-        self.addParameter(ParameterAdapter("alpha", l, _latgetter("alpha"),
-            _latsetter("alpha")))
-        self.addParameter(ParameterAdapter("beta", l, _latgetter("beta"),
-            _latsetter("beta")))
-        self.addParameter(ParameterAdapter("gamma", l, _latgetter("gamma"),
-            _latsetter("gamma")))
+        self.addParameter(ParameterAdapter("a", l, _latgetter("a"), _latsetter("a")))
+        self.addParameter(ParameterAdapter("b", l, _latgetter("b"), _latsetter("b")))
+        self.addParameter(ParameterAdapter("c", l, _latgetter("c"), _latsetter("c")))
+        self.addParameter(ParameterAdapter("alpha", l, _latgetter("alpha"), _latsetter("alpha")))
+        self.addParameter(ParameterAdapter("beta", l, _latgetter("beta"), _latsetter("beta")))
+        self.addParameter(ParameterAdapter("gamma", l, _latgetter("gamma"), _latsetter("gamma")))
         return
 
     def __repr__(self):
         return repr(self.lattice)
+
 
 # End class DiffpyLatticeParSet
 
@@ -242,11 +235,11 @@ class DiffpyStructureParSet(SrRealParSet):
         for a in stru:
             el = a.element.title()
             # Try to sanitize the name.
-            el = el.replace("+","p")
-            el = el.replace("-","m")
+            el = el.replace("+", "p")
+            el = el.replace("-", "m")
             i = cdict.get(el, 0)
-            aname = "%s%i"%(el,i)
-            cdict[el] = i+1
+            aname = "%s%i" % (el, i)
+            cdict[el] = i + 1
             atom = DiffpyAtomParSet(aname, a)
             self.addParameterSet(atom)
             self.atoms.append(atom)
@@ -264,6 +257,7 @@ class DiffpyStructureParSet(SrRealParSet):
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         from diffpy.structure import Structure
+
         return isinstance(stru, Structure)
 
     def getScatterers(self):
@@ -286,7 +280,9 @@ class DiffpyStructureParSet(SrRealParSet):
 
         """
         from diffpy.srreal.structureadapter import nometa
+
         stru = SrRealParSet._getSrRealStructure(self)
         return nometa(stru)
+
 
 # End class DiffpyStructureParSet

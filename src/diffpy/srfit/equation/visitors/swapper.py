@@ -20,6 +20,7 @@ __all__ = ["Swapper"]
 
 from diffpy.srfit.equation.visitors.visitor import Visitor
 
+
 class Swapper(Visitor):
     """Swapper for swapping out one literal for another in a literal tree.
 
@@ -113,7 +114,6 @@ class Swapper(Visitor):
                 newlit.addObserver(op._flush)
                 op._flush(other=())
 
-
             self._swap = False
 
         return
@@ -142,5 +142,6 @@ class Swapper(Visitor):
         eq.setRoot(eq.root)
 
         return
+
 
 # End of file

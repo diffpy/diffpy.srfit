@@ -25,6 +25,7 @@ import re
 
 from diffpy.srfit.equation.visitors.visitor import Visitor
 
+
 class Printer(Visitor):
     """Printer for printing a Literal tree.
 
@@ -44,12 +45,10 @@ class Printer(Visitor):
         self.reset()
         return
 
-
     def reset(self):
         """Reset the out put string."""
         self.output = ""
         return
-
 
     @property
     def eqskip(self):
@@ -70,7 +69,6 @@ class Printer(Visitor):
             self._eqpat = re.compile(value)
         return
 
-
     def onArgument(self, arg):
         """Process an Argument node.
 
@@ -82,7 +80,6 @@ class Printer(Visitor):
             self.output += str(arg.name)
         return self.output
 
-
     def onOperator(self, op):
         """Process an Operator node."""
         # We have to deal with infix operators
@@ -93,31 +90,30 @@ class Printer(Visitor):
         self.output += str(op.name) + "("
 
         for idx, literal in enumerate(op.args):
-            if idx != 0: self.output += ", "
+            if idx != 0:
+                self.output += ", "
             literal.identify(self)
 
         self.output += ")"
         return self.output
 
-
     def onEquation(self, eq):
         """Process an Equation node."""
-        skipthis = (self._eqpat is not None and eq.name and
-                    self._eqpat.match(eq.name))
+        skipthis = self._eqpat is not None and eq.name and self._eqpat.match(eq.name)
         if skipthis:
             self.onArgument(eq)
         else:
             eq.root.identify(self)
         return self.output
 
-
     def _onInfix(self, op):
         """Process infix operators."""
         self.output += "("
         op.args[0].identify(self)
-        self.output += " %s "%op.symbol
+        self.output += " %s " % op.symbol
         op.args[1].identify(self)
         self.output += ")"
         return
+
 
 # End of file

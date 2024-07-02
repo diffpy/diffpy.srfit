@@ -58,4 +58,3 @@ diffpy.srfit.sas.sasgenerator module
     :members:
     :undoc-members:
     :show-inheritance:
-

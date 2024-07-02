@@ -4,6 +4,21 @@ Release Notes
 
 .. current developments
 
+Version 3.1.0 - 2024-7-2
+
+**Added:**
+
+**Changed:**
+
+**Deprecated:**
+
+**Removed:**
+
+**Fixed:**
+
+- Repo structure modified to the new diffpy standard
+
+**Security:**
 
 Version 3.0.0 - 2019-03-14
 --------------------------

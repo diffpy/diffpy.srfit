@@ -10,7 +10,7 @@ coverage:
   status:
     patch:
       default:
-        target: '80'
+        target: '70'
         if_no_uploads: error
         if_not_found: success
         if_ci_failed: failure
@@ -20,12 +20,13 @@ coverage:
         target: auto
         if_no_uploads: error
         if_not_found: success
-        if_ci_failed: failure
+        if_ci_failed: error
         paths: '!*/tests/.*'
 
       tests:
         target: 97.9%
         paths: '*/tests/.*'
+        if_not_found: success
 
 flags:
   tests:

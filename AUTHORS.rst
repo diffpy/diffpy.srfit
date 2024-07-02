@@ -1,7 +1,9 @@
 Authors
 =======
 
-Billinge Group and community contibutors.
+Chris Farrow
+Pavol Juhas
+Simon J.L. Billinge
 
 Contributors
 ------------

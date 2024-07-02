@@ -4,4 +4,4 @@
 debyemodel.py
 ========================
 
-.. literalinclude:: ../../../examples/debyemodel.py
+.. literalinclude:: ../../examples/debyemodel.py

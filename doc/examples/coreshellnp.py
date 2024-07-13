@@ -31,21 +31,22 @@ from diffpy.srfit.fitbase import Profile
 from diffpy.srfit.fitbase import FitContribution, FitRecipe
 from diffpy.srfit.fitbase import FitResults
 
-####### Example Code
+# Example Code
+
 
 def makeRecipe(stru1, stru2, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profile
+    # The Profile
     profile = Profile()
 
     # Load data and add it to the profile
     parser = PDFParser()
     parser.parseFile(datname)
     profile.loadParsedData(parser)
-    profile.setCalculationRange(xmin=1.5, xmax = 45, dx = 0.1)
+    profile.setCalculationRange(xmin=1.5, xmax=45, dx=0.1)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # In order to fit the core and shell phases simultaneously, we must use two
     # PDFGenerators.
     #
@@ -61,20 +62,20 @@ def makeRecipe(stru1, stru2, datname):
     generator_zns.setQmax(26)
     generator_zns.qdamp.value = 0.0396
 
-    ## The FitContribution
+    # The FitContribution
     # Add both generators and the profile to the FitContribution.
     contribution = FitContribution("cdszns")
     contribution.addProfileGenerator(generator_cds)
     contribution.addProfileGenerator(generator_zns)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname="r")
 
     # Set up the characteristic functions. We use a spherical CF for the core
     # and a spherical shell CF for the shell. Since this is set up as two
     # phases, we implicitly assume that the core-shell correlations contribute
     # very little to the PDF.
     from diffpy.srfit.pdf.characteristicfunctions import sphericalCF, shellCF
-    contribution.registerFunction(sphericalCF, name = "f_CdS")
-    contribution.registerFunction(shellCF, name = "f_ZnS")
+    contribution.registerFunction(sphericalCF, name="f_CdS")
+    contribution.registerFunction(shellCF, name="f_ZnS")
 
     # Write the fitting equation. We want to sum the PDFs from each phase and
     # multiply it by a scaling factor.
@@ -90,7 +91,7 @@ def makeRecipe(stru1, stru2, datname):
     recipe.addVar(contribution.thickness, 11)
     recipe.constrain(contribution.psize, "2 * radius")
 
-    ## Configure the fit variables
+    # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
     recipe.newVar("scale_CdS", 0.7)
@@ -106,26 +107,27 @@ def makeRecipe(stru1, stru2, datname):
     # subsequent refinement.
     phase_cds = generator_cds.phase
     for par in phase_cds.sgpars.latpars:
-        recipe.addVar(par, name = par.name + "_cds", tag = "lat")
+        recipe.addVar(par, name=par.name + "_cds", tag="lat")
     for par in phase_cds.sgpars.adppars:
-        recipe.addVar(par, 1, name = par.name + "_cds", tag = "adp")
-    recipe.addVar(phase_cds.sgpars.xyzpars.z_1, name = "z_1_cds", tag = "xyz")
+        recipe.addVar(par, 1, name=par.name + "_cds", tag="adp")
+    recipe.addVar(phase_cds.sgpars.xyzpars.z_1, name="z_1_cds", tag="xyz")
     # Since we know these have stacking disorder, constrain the B33 adps for
     # each atom type.
     recipe.constrain("B33_1_cds", "B33_0_cds")
-    recipe.addVar(generator_cds.delta2, name = "delta2_cds", value = 5)
+    recipe.addVar(generator_cds.delta2, name="delta2_cds", value=5)
 
     phase_zns = generator_zns.phase
     for par in phase_zns.sgpars.latpars:
-        recipe.addVar(par, name = par.name + "_zns", tag = "lat")
+        recipe.addVar(par, name=par.name + "_zns", tag="lat")
     for par in phase_zns.sgpars.adppars:
-        recipe.addVar(par, 1, name = par.name + "_zns", tag = "adp")
-    recipe.addVar(phase_zns.sgpars.xyzpars.z_1, name = "z_1_zns", tag = "xyz")
+        recipe.addVar(par, 1, name=par.name + "_zns", tag="adp")
+    recipe.addVar(phase_zns.sgpars.xyzpars.z_1, name="z_1_zns", tag="xyz")
     recipe.constrain("B33_1_zns", "B33_0_zns")
-    recipe.addVar(generator_zns.delta2, name = "delta2_zns", value = 2.5)
+    recipe.addVar(generator_zns.delta2, name="delta2_zns", value=2.5)
 
     # Give the recipe away so it can be used!
     return recipe
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -138,10 +140,10 @@ def plotResults(recipe):
     diff = g - gcalc + diffzero
 
     import pylab
-    pylab.plot(r,g,'bo',label="G(r) Data")
-    pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,diff,'g-',label="G(r) diff")
-    pylab.plot(r,diffzero,'k-')
+    pylab.plot(r, g, 'bo', label="G(r) Data")
+    pylab.plot(r, gcalc, 'r-', label="G(r) Fit")
+    pylab.plot(r, diff, 'g-', label="G(r) diff")
+    pylab.plot(r, diffzero, 'k-')
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
@@ -172,23 +174,23 @@ def main():
     # Start with the lattice parameters. In makeRecipe, these were tagged with
     # "lat". Here is how we use that.
     recipe.free("lat")
-    leastsq(recipe.residual, recipe.values, maxfev = 50)
+    leastsq(recipe.residual, recipe.values, maxfev=50)
 
     # Now the scale and phase fraction.
     recipe.free("scale", "scale_CdS")
-    leastsq(recipe.residual, recipe.values, maxfev = 50)
+    leastsq(recipe.residual, recipe.values, maxfev=50)
 
     # The ADPs.
     recipe.free("adp")
-    leastsq(recipe.residual, recipe.values, maxfev = 100)
+    leastsq(recipe.residual, recipe.values, maxfev=100)
 
     # The delta2 parameters.
     recipe.free("delta2_cds", "delta2_zns")
-    leastsq(recipe.residual, recipe.values, maxfev = 50)
+    leastsq(recipe.residual, recipe.values, maxfev=50)
 
     # The shape parameters.
     recipe.free("radius", "thickness")
-    leastsq(recipe.residual, recipe.values, maxfev = 50)
+    leastsq(recipe.residual, recipe.values, maxfev=50)
 
     # The positional parameters.
     recipe.free("xyz")
@@ -201,6 +203,7 @@ def main():
     # Plot!
     plotResults(recipe)
     return
+
 
 if __name__ == "__main__":
     main()

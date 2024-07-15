@@ -39,7 +39,6 @@ class Observable(object):
 
     """
 
-
     def notify(self, other=()):
         """
         Notify all observers
@@ -51,7 +50,6 @@ class Observable(object):
             callable(semaphors)
         return
 
-
     # callback management
     def addObserver(self, callable):
         """
@@ -61,7 +59,6 @@ class Observable(object):
         self._observers.add(f)
         return
 
-
     def removeObserver(self, callable):
         """
         Remove callable from the set of observers
@@ -69,7 +66,6 @@ class Observable(object):
         f = weak_ref(callable)
         self._observers.remove(f)
         return
-
 
     def hasObserver(self, callable):
         """
@@ -79,16 +75,17 @@ class Observable(object):
         rv = f in self._observers
         return rv
 
-
     # meta methods
     def __init__(self, **kwds):
         super(Observable, self).__init__(**kwds)
         self._observers = set()
         return
 
+
 # end of class Observable
 
 # Local helpers --------------------------------------------------------------
+
 
 def _fbRemoveObserver(fobs, semaphors):
     # Remove WeakBoundMethod `fobs` from the observers of notifying object.
@@ -97,5 +94,6 @@ def _fbRemoveObserver(fobs, semaphors):
     observable = semaphors[0]
     observable.removeObserver(fobs)
     return
+
 
 # end of file

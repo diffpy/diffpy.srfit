@@ -67,7 +67,8 @@ class PrCalculator(Calculator):
         global Invertor
         if Invertor is None:
             from diffpy.srfit.sas.sasimport import sasimport
-            Invertor = sasimport('sas.pr.invertor').Invertor
+
+            Invertor = sasimport("sas.pr.invertor").Invertor
 
         self._invertor = Invertor()
 
@@ -97,7 +98,9 @@ class PrCalculator(Calculator):
         pr = numpy.array(pr)
         return self.scale.value * pr
 
+
 # End class PrCalculator
+
 
 class CFCalculator(PrCalculator):
     """A class for calculating the characteristic function (CF) from data.
@@ -129,5 +132,6 @@ class CFCalculator(PrCalculator):
             # other choice.
             fr[0] = 1
         return fr
+
 
 # End class CFCalculator

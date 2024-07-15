@@ -24,17 +24,14 @@ best with both the PDF and SAS data.
 """
 
 import numpy
-
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.pdf.characteristicfunctions import SASCF
-from diffpy.srfit.sas import SASParser, SASGenerator
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
+from diffpy.srfit.sas import SASGenerator, SASParser
 
-from gaussianrecipe import scipyOptimize
 
 def makeRecipe(ciffile, grdata, iqdata):
     """Make complex-modeling recipe where I(q) and G(r) are fit
@@ -50,10 +47,10 @@ def makeRecipe(ciffile, grdata, iqdata):
     pdfparser = PDFParser()
     pdfparser.parseFile(grdata)
     pdfprofile.loadParsedData(pdfparser)
-    pdfprofile.setCalculationRange(xmin = 0.1, xmax = 20)
+    pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
-    pdfcontribution.setProfile(pdfprofile, xname = "r")
+    pdfcontribution.setProfile(pdfprofile, xname="r")
 
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)
@@ -75,6 +72,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     sascontribution.setProfile(sasprofile)
 
     from sas.models.EllipsoidModel import EllipsoidModel
+
     model = EllipsoidModel()
     sasgenerator = SASGenerator("generator", model)
     sascontribution.addProfileGenerator(sasgenerator)
@@ -105,7 +103,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     recipe.addVar(pdfgenerator.delta2, 0)
 
     # SAS
-    recipe.addVar(sasgenerator.scale, 1, name = "iqscale")
+    recipe.addVar(sasgenerator.scale, 1, name="iqscale")
     recipe.addVar(sasgenerator.radius_a, 10)
     recipe.addVar(sasgenerator.radius_b, 10)
 
@@ -117,16 +115,17 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     return recipe
 
+
 def fitRecipe(recipe):
     """We refine in stages to help the refinement converge."""
 
     # Tune SAS.
     recipe.setWeight(recipe.pdf, 0)
     recipe.fix("all")
-    recipe.free("radius_a", "radius_b", iqscale = 1e8)
-    recipe.constrain('radius_b', 'radius_a')
+    recipe.free("radius_a", "radius_b", iqscale=1e8)
+    recipe.constrain("radius_b", "radius_a")
     scipyOptimize(recipe)
-    recipe.unconstrain('radius_b')
+    recipe.unconstrain("radius_b")
 
     # Tune PDF
     recipe.setWeight(recipe.pdf, 1)
@@ -142,6 +141,7 @@ def fitRecipe(recipe):
     scipyOptimize(recipe)
 
     return
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -160,12 +160,13 @@ def plotResults(recipe):
     fr *= max(g) / fr[0]
 
     import pylab
-    pylab.plot(r,g,'bo',label="G(r) Data")
-    pylab.plot(r, gcryst,'y--',label="G(r) Crystal")
-    pylab.plot(r, fr,'k--',label="f(r) calculated (scaled)")
-    pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r, diff,'g-',label="G(r) diff")
-    pylab.plot(r, diffzero,'k-')
+
+    pylab.plot(r, g, "bo", label="G(r) Data")
+    pylab.plot(r, gcryst, "y--", label="G(r) Crystal")
+    pylab.plot(r, fr, "k--", label="f(r) calculated (scaled)")
+    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
+    pylab.plot(r, diff, "g-", label="G(r) diff")
+    pylab.plot(r, diffzero, "k-")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
@@ -175,7 +176,6 @@ def plotResults(recipe):
 
 
 if __name__ == "__main__":
-
     ciffile = "data/pb.cif"
     grdata = "data/pb_100_qmin1.gr"
     iqdata = "data/pb_100_qmax1.iq"

@@ -45,8 +45,8 @@ __all__ = ["ProfileGenerator"]
 
 
 from diffpy.srfit.equation.literals.operators import Operator
-from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.parameterset import ParameterSet
 
 
 class ProfileGenerator(Operator, ParameterSet):
@@ -95,7 +95,6 @@ class ProfileGenerator(Operator, ParameterSet):
     nin = 0
     nout = 1
 
-
     def __init__(self, name):
         """Initialize the attributes."""
         Operator.__init__(self)
@@ -103,7 +102,6 @@ class ProfileGenerator(Operator, ParameterSet):
         self.profile = None
         self.meta = {}
         return
-
 
     @property
     def symbol(self):
@@ -131,7 +129,6 @@ class ProfileGenerator(Operator, ParameterSet):
         y = self.__call__(self.profile.x)
         return y
 
-
     def setProfile(self, profile):
         """Assign the profile.
 
@@ -147,7 +144,7 @@ class ProfileGenerator(Operator, ParameterSet):
         self._flush(other=(self,))
 
         # Merge the profiles metadata with our own
-        self.meta.update( self.profile.meta )
+        self.meta.update(self.profile.meta)
         self.processMetaData()
         return
 

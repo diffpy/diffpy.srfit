@@ -25,8 +25,8 @@ __all__ = ["Restraint"]
 
 from numpy import inf
 
-from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.validatable import Validatable
 
 
 class Restraint(Validatable):
@@ -49,7 +49,7 @@ class Restraint(Validatable):
 
     """
 
-    def __init__(self, eq, lb = -inf, ub = inf, sig = 1, scaled = False):
+    def __init__(self, eq, lb=-inf, ub=inf, sig=1, scaled=False):
         """Restrain an equation to specified bounds.
 
         eq      --  An equation whose evaluation is compared against the
@@ -71,7 +71,7 @@ class Restraint(Validatable):
         self.scaled = bool(scaled)
         return
 
-    def penalty(self, w = 1.0):
+    def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
         w   --  The point-average chi^2 which is optionally used to scale the
@@ -81,7 +81,7 @@ class Restraint(Validatable):
 
         """
         val = self.eq()
-        penalty = (max(0, self.lb - val, val - self.ub) / self.sig)**2
+        penalty = (max(0, self.lb - val, val - self.ub) / self.sig) ** 2
 
         if self.scaled:
             penalty *= w
@@ -99,6 +99,7 @@ class Restraint(Validatable):
         if self.eq is None:
             raise SrFitError("eq is None")
         from diffpy.srfit.equation.visitors import validate
+
         try:
             validate(self.eq)
         except ValueError as e:
@@ -114,6 +115,7 @@ class Restraint(Validatable):
                 raise SrFitError("eq evaluates to None")
 
         return
+
 
 # End class Restraint
 

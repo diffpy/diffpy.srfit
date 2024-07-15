@@ -72,7 +72,6 @@ class WeakBoundMethod(object):
         self._wref = weakref.ref(f.__self__)
         return
 
-
     def __call__(self, *args, **kwargs):
         """Call the wrapped method if the weak-referenced object is alive.
 
@@ -98,19 +97,16 @@ class WeakBoundMethod(object):
         emsg = "Object bound to {} does not exist.".format(self.function)
         raise ReferenceError(emsg)
 
-
     # support use of this class in hashed collections
 
     def __hash__(self):
         return hash((self.function, self._wref))
-
 
     def __eq__(self, other):
         rv = (self.function == other.function and
               (self._wref == other._wref or
                None is self._wref() is other._wref()))
         return rv
-
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -130,7 +126,6 @@ class WeakBoundMethod(object):
         state = (self._class, nm, self.fallback, mobj)
         return state
 
-
     def __setstate__(self, state):
         """Restore the weak reference in this wrapper upon unpickling.
         """
@@ -144,7 +139,6 @@ class WeakBoundMethod(object):
         self._wref = weakref.ref(mobj)
         return
 
-
     @staticmethod
     def __mimic_empty_ref():
         return None
@@ -152,6 +146,7 @@ class WeakBoundMethod(object):
 # end of class WeakBoundMethod
 
 # ----------------------------------------------------------------------------
+
 
 def weak_ref(f, fallback=None):
     """Create weak-reference wrapper to a bound method.

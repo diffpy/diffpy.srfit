@@ -29,5 +29,4 @@ __all__ = ["Equation"]
 
 from diffpy.srfit.equation.equationmod import Equation
 
-
 # End of file

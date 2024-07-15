@@ -16,13 +16,13 @@
 """Example of a refinement of SAS I(Q) data to an ellipsoidal model.
 """
 
-from diffpy.srfit.sas import SASGenerator, SASParser
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults, Profile
-
 from gaussianrecipe import scipyOptimize
 
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
+from diffpy.srfit.sas import SASGenerator, SASParser
+
 ####### Example Code
+
 
 def makeRecipe(datname):
     """Create a fitting recipe for ellipsoidal SAS data."""
@@ -45,6 +45,7 @@ def makeRecipe(datname):
     # data. The documentation for the various sas models can be found at
     # http://www.sasview.org.
     from sas.models.EllipsoidModel import EllipsoidModel
+
     model = EllipsoidModel()
     generator = SASGenerator("generator", model)
 
@@ -53,7 +54,7 @@ def makeRecipe(datname):
     # before.
     contribution = FitContribution("ellipsoid")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "q")
+    contribution.setProfile(profile, xname="q")
 
     # We want to fit the log of the signal to the log of the data so that the
     # higher-Q information remains significant. There are no I(Q) uncertainty
@@ -81,6 +82,7 @@ def makeRecipe(datname):
     # Give the recipe away so it can be used!
     return recipe
 
+
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
@@ -91,9 +93,10 @@ def plotResults(recipe):
     diff = y - ycalc + min(y)
 
     import pylab
-    pylab.loglog(r,y,'bo',label="I(Q) Data")
-    pylab.loglog(r, ycalc,'r-',label="I(Q) Fit")
-    pylab.loglog(r,diff,'g-',label="I(Q) diff")
+
+    pylab.loglog(r, y, "bo", label="I(Q) Data")
+    pylab.loglog(r, ycalc, "r-", label="I(Q) Fit")
+    pylab.loglog(r, diff, "g-", label="I(Q) diff")
     pylab.xlabel(r"$Q (\AA^{-1})$")
     pylab.ylabel("$I (arb. units)$")
     pylab.legend(loc=1)
@@ -101,8 +104,8 @@ def plotResults(recipe):
     pylab.show()
     return
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     # Make the data and the recipe
     data = "data/sas_ellipsoid_testdata.txt"
 

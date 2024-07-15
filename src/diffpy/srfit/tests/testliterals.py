@@ -24,8 +24,8 @@ import diffpy.srfit.equation.literals.abcs as abcs
 
 # ----------------------------------------------------------------------------
 
-class TestArgument(unittest.TestCase):
 
+class TestArgument(unittest.TestCase):
     def testInit(self):
         """Test that everthing initializes as expected."""
         a = literals.Argument()
@@ -34,14 +34,12 @@ class TestArgument(unittest.TestCase):
         self.assertTrue(None is a.name)
         return
 
-
     def testIdentity(self):
         """Make sure an Argument is an Argument."""
         a = literals.Argument()
         self.assertTrue(issubclass(literals.Argument, abcs.ArgumentABC))
         self.assertTrue(isinstance(a, abcs.ArgumentABC))
         return
-
 
     def testValue(self):
         """Test value setting."""
@@ -59,15 +57,16 @@ class TestArgument(unittest.TestCase):
         self.assertAlmostEqual(3.14, a.getValue())
         return
 
+
 # ----------------------------------------------------------------------------
 
-class TestCustomOperator(unittest.TestCase):
 
+class TestCustomOperator(unittest.TestCase):
     def setUp(self):
         self.op = literals.makeOperator(
-            name="add", symbol="+", operation=numpy.add, nin=2, nout=1)
+            name="add", symbol="+", operation=numpy.add, nin=2, nout=1
+        )
         return
-
 
     def testInit(self):
         """Test that everthing initializes as expected."""
@@ -80,7 +79,6 @@ class TestCustomOperator(unittest.TestCase):
         self.assertEqual([], op.args)
         return
 
-
     def testIdentity(self):
         """Make sure an Argument is an Argument."""
         op = self.op
@@ -88,13 +86,12 @@ class TestCustomOperator(unittest.TestCase):
         self.assertTrue(isinstance(op, abcs.OperatorABC))
         return
 
-
     def testValue(self):
         """Test value."""
         # Test addition and operations
         op = self.op
-        a = literals.Argument(value = 0)
-        b = literals.Argument(value = 0)
+        a = literals.Argument(value=0)
+        b = literals.Argument(value=0)
 
         op.addLiteral(a)
         op.addLiteral(b)
@@ -113,7 +110,6 @@ class TestCustomOperator(unittest.TestCase):
 
         return
 
-
     def testAddLiteral(self):
         """Test adding a literal to an operator node."""
         op = self.op
@@ -123,8 +119,8 @@ class TestCustomOperator(unittest.TestCase):
         self.assertEqual(op.getValue(), 1)
 
         # Test addition and operations
-        a = literals.Argument(name = "a", value = 0)
-        b = literals.Argument(name = "b", value = 0)
+        a = literals.Argument(name="a", value=0)
+        b = literals.Argument(name="b", value=0)
 
         op.addLiteral(a)
         self.assertRaises(ValueError, op.getValue)
@@ -140,23 +136,26 @@ class TestCustomOperator(unittest.TestCase):
         # Test for self-references
 
         # Try to add self
-        op1 = literals.makeOperator(name="add", symbol="+",
-                                    operation=numpy.add, nin=2, nout=1)
+        op1 = literals.makeOperator(
+            name="add", symbol="+", operation=numpy.add, nin=2, nout=1
+        )
         op1.addLiteral(a)
         self.assertRaises(ValueError, op1.addLiteral, op1)
 
         # Try to add argument that contains self
         op2 = literals.makeOperator(
-            name="sub", symbol="-", operation=numpy.subtract, nin=2, nout=1)
+            name="sub", symbol="-", operation=numpy.subtract, nin=2, nout=1
+        )
         op2.addLiteral(op1)
         self.assertRaises(ValueError, op1.addLiteral, op2)
 
         return
 
+
 # ----------------------------------------------------------------------------
 
-class TestConvolutionOperator(unittest.TestCase):
 
+class TestConvolutionOperator(unittest.TestCase):
     def testValue(self):
         """Make sure the convolution operator is working properly."""
 
@@ -169,10 +168,10 @@ class TestConvolutionOperator(unittest.TestCase):
         mu2 = 2.5
         sig2 = 0.4
 
-        g1 = exp(-0.5*((x-mu1)/sig1)**2)
-        a1 = literals.Argument(name = "g1", value = g1)
-        g2 = exp(-0.5*((x-mu2)/sig2)**2)
-        a2 = literals.Argument(name = "g2", value = g2)
+        g1 = exp(-0.5 * ((x - mu1) / sig1) ** 2)
+        a1 = literals.Argument(name="g1", value=g1)
+        g2 = exp(-0.5 * ((x - mu2) / sig2) ** 2)
+        a2 = literals.Argument(name="g2", value=g2)
 
         op = literals.ConvolutionOperator()
         op.addLiteral(a1)
@@ -181,24 +180,24 @@ class TestConvolutionOperator(unittest.TestCase):
         g3c = op.value
 
         mu3 = mu1
-        sig3 = (sig1**2 + sig2**2)**0.5
-        g3 = exp(-0.5*((x-mu3)/sig3)**2)
-        g3 *= sum(g1)/sum(g3)
+        sig3 = (sig1**2 + sig2**2) ** 0.5
+        g3 = exp(-0.5 * ((x - mu3) / sig3) ** 2)
+        g3 *= sum(g1) / sum(g3)
 
         self.assertAlmostEqual(sum(g3c), sum(g3))
-        self.assertAlmostEqual(0, sum((g3-g3c)**2))
+        self.assertAlmostEqual(0, sum((g3 - g3c) ** 2))
         return
+
 
 # ----------------------------------------------------------------------------
 
-class TestArrayOperator(unittest.TestCase):
 
+class TestArrayOperator(unittest.TestCase):
     def test_value(self):
-        """Check ArrayOperator.value.
-        """
-        x = literals.Argument('x', 1.0)
-        y = literals.Argument('y', 2.0)
-        z = literals.Argument('z', 3.0)
+        """Check ArrayOperator.value."""
+        x = literals.Argument("x", 1.0)
+        y = literals.Argument("y", 2.0)
+        z = literals.Argument("z", 3.0)
         # check empty array
         op = literals.ArrayOperator()
         self.assertEqual(0, len(op.value))
@@ -212,6 +211,7 @@ class TestArrayOperator(unittest.TestCase):
         z.value = 7
         self.assertTrue(numpy.array_equal([1, 2, 7], op.value))
         return
+
 
 # ----------------------------------------------------------------------------
 

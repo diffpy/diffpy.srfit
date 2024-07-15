@@ -25,32 +25,47 @@ is that described by the Visitor pattern
 (http://en.wikipedia.org/wiki/Visitor_pattern).
 """
 
-__all__ = ["Argument", "Operator", "BinaryOperator", "CustomOperator",
-           "AdditionOperator", "SubtractionOperator",
-           "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
-           "RemainderOperator", "NegationOperator", "ConvolutionOperator",
-           "SumOperator", "UFuncOperator", "ArrayOperator", "PolyvalOperator",
-           "makeOperator"]
+__all__ = [
+    "Argument",
+    "Operator",
+    "BinaryOperator",
+    "CustomOperator",
+    "AdditionOperator",
+    "SubtractionOperator",
+    "MultiplicationOperator",
+    "DivisionOperator",
+    "ExponentiationOperator",
+    "RemainderOperator",
+    "NegationOperator",
+    "ConvolutionOperator",
+    "SumOperator",
+    "UFuncOperator",
+    "ArrayOperator",
+    "PolyvalOperator",
+    "makeOperator",
+]
 
 
 # Import the operators
 
 from diffpy.srfit.equation.literals.argument import Argument
-from diffpy.srfit.equation.literals.operators import Operator
-from diffpy.srfit.equation.literals.operators import BinaryOperator
-from diffpy.srfit.equation.literals.operators import CustomOperator
-from diffpy.srfit.equation.literals.operators import AdditionOperator
-from diffpy.srfit.equation.literals.operators import SubtractionOperator
-from diffpy.srfit.equation.literals.operators import MultiplicationOperator
-from diffpy.srfit.equation.literals.operators import DivisionOperator
-from diffpy.srfit.equation.literals.operators import ExponentiationOperator
-from diffpy.srfit.equation.literals.operators import RemainderOperator
-from diffpy.srfit.equation.literals.operators import NegationOperator
-from diffpy.srfit.equation.literals.operators import ConvolutionOperator
-from diffpy.srfit.equation.literals.operators import UFuncOperator
-from diffpy.srfit.equation.literals.operators import SumOperator
-from diffpy.srfit.equation.literals.operators import ArrayOperator
-from diffpy.srfit.equation.literals.operators import PolyvalOperator
-from diffpy.srfit.equation.literals.operators import makeOperator
+from diffpy.srfit.equation.literals.operators import (
+    AdditionOperator,
+    ArrayOperator,
+    BinaryOperator,
+    ConvolutionOperator,
+    CustomOperator,
+    DivisionOperator,
+    ExponentiationOperator,
+    MultiplicationOperator,
+    NegationOperator,
+    Operator,
+    PolyvalOperator,
+    RemainderOperator,
+    SubtractionOperator,
+    SumOperator,
+    UFuncOperator,
+    makeOperator,
+)
 
 # End of file

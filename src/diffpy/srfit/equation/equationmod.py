@@ -42,9 +42,10 @@ __all__ = ["Equation"]
 
 from collections import OrderedDict
 
-from diffpy.srfit.equation.visitors import validate, getArgs, swap
-from diffpy.srfit.equation.literals.operators import Operator
 from diffpy.srfit.equation.literals.literal import Literal
+from diffpy.srfit.equation.literals.operators import Operator
+from diffpy.srfit.equation.visitors import getArgs, swap, validate
+
 
 class Equation(Operator):
     """Class for holding and evaluating a Literal tree.
@@ -81,7 +82,7 @@ class Equation(Operator):
     nin = None
     nout = 1
 
-    def __init__(self, name = None, root = None):
+    def __init__(self, name=None, root=None):
         """Initialize.
 
         name    --  A name for this Equation.
@@ -93,7 +94,7 @@ class Equation(Operator):
         # Operator stuff. We circumvent Operator.__init__ since we're using
         # args as a property. We cannot set it, as the Operator tries to do.
         if name is None and root is not None:
-            name = "eq_%s"%root.name
+            name = "eq_%s" % root.name
         Literal.__init__(self, name)
         self.root = None
         self.argdict = OrderedDict()
@@ -101,11 +102,9 @@ class Equation(Operator):
             self.setRoot(root)
         return
 
-
     @property
     def symbol(self):
         return self.name
-
 
     def operation(self, *args, **kw):
         """Evaluate this Equation object.
@@ -117,7 +116,6 @@ class Equation(Operator):
         """
         return self.__call__(*args, **kw)
 
-
     def _getArgs(self):
         return list(self.argdict.values())
 
@@ -126,16 +124,13 @@ class Equation(Operator):
     def __getattr__(self, name):
         """Gives access to the Arguments as attributes."""
         # Avoid infinite loop on argdict lookup.
-        argdict = object.__getattribute__(self, 'argdict')
+        argdict = object.__getattribute__(self, "argdict")
         if not name in argdict:
             raise AttributeError("No argument named '%s' here" % name)
         return argdict[name]
 
-
     # Ensure there is no __dir__ override in the base class.
-    assert (getattr(Operator, '__dir__', None) is
-            getattr(object, '__dir__', None))
-
+    assert getattr(Operator, "__dir__", None) is getattr(object, "__dir__", None)
 
     def __dir__(self):
         "Return sorted list of attributes for this object."
@@ -143,7 +138,6 @@ class Equation(Operator):
         rv.update(self.__dict__, self.argdict)
         rv = sorted(rv)
         return rv
-
 
     def setRoot(self, root):
         """Set the root of the Literal tree.
@@ -167,13 +161,12 @@ class Equation(Operator):
 
         # Get the args
         args = getArgs(root, getconsts=False)
-        self.argdict = OrderedDict( [(arg.name, arg) for arg in args] )
+        self.argdict = OrderedDict([(arg.name, arg) for arg in args])
 
         # Set Operator attributes
         self.nin = len(self.args)
 
         return
-
 
     def __call__(self, *args, **kw):
         """Call the equation.
@@ -196,7 +189,7 @@ class Equation(Operator):
         for name, val in kw.items():
             arg = self.argdict.get(name)
             if arg is None:
-                raise ValueError("No argument named '%s' here"%name)
+                raise ValueError("No argument named '%s' here" % name)
             arg.setValue(val)
 
         self._value = self.root.getValue()
@@ -223,5 +216,6 @@ class Equation(Operator):
     def identify(self, visitor):
         """Identify self to a visitor."""
         return visitor.onEquation(self)
+
 
 # End of file

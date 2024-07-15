@@ -61,7 +61,7 @@ class Validator(Visitor):
 
         """
         if not isinstance(arg, ArgumentABC):
-            m = msg%(arg, ArgumentABC.__name__)
+            m = msg % (arg, ArgumentABC.__name__)
             self.errors.append(m)
         self._nin = 1
         return self.errors
@@ -75,24 +75,24 @@ class Validator(Visitor):
         """
 
         if not isinstance(op, OperatorABC):
-            m = msg%(op, OperatorABC.__name__)
+            m = msg % (op, OperatorABC.__name__)
             self.errors.append(m)
 
         # Can only process single-valued functions
         if op.nout != 1:
-            m = "'%s' is not single-valued (nout != 1)"%op
+            m = "'%s' is not single-valued (nout != 1)" % op
             self.errors.append(m)
         # Check name
         if op.name is None:
-            m = "'%s' does not have a name"%op
+            m = "'%s' does not have a name" % op
             self.errors.append(m)
         # Check symbol
         if op.symbol is None:
-            m = "'%s' does not have a symbol"%op
+            m = "'%s' does not have a symbol" % op
             self.errors.append(m)
         # Check operation without evaluating it
         if op.operation is None:
-            m = "'%s' does not define and operation"%op
+            m = "'%s' does not define and operation" % op
             self.errors.append(m)
 
         localnin = 0
@@ -103,10 +103,11 @@ class Validator(Visitor):
 
         # Check the input/output balance
         if op.nin >= 0 and localnin != op.nin:
-            m = "'%s' requires %i inputs but receives %i"%(op, op.nin, localnin)
+            m = "'%s' requires %i inputs but receives %i" % (op, op.nin, localnin)
             self.errors.append(m)
 
         self._nin = op.nout
         return self.errors
+
 
 # End of file

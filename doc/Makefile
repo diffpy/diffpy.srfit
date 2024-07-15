@@ -31,4 +31,3 @@ clean:
 	rm -rf diffpy.srfitapi
 	rm -f srfit_examples.zip
 	$(MAKE) -C devmanual $@
-

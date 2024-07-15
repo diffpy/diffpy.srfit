@@ -54,6 +54,7 @@ class Configurable(object):
             self._configobjs.add(obj)
         return
 
+
 # End class Configurable
 
 # End of file

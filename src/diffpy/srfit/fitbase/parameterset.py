@@ -98,7 +98,7 @@ class ParameterSet(RecipeOrganizer):
         self._removeObject(parset, self._parsets)
         return
 
-    def setConst(self, const = True):
+    def setConst(self, const=True):
         """Set every parameter within the set to a constant.
 
         const   --  Flag indicating if the parameter is constant (default
@@ -109,6 +109,7 @@ class ParameterSet(RecipeOrganizer):
             par.setConst(const)
 
         return
+
 
 # End class ParameterSet
 

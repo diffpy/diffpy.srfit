@@ -23,7 +23,6 @@ from diffpy.srfit.tests.utils import datafile
 
 
 class TestInitializeRecipe(unittest.TestCase):
-
     def setUp(self):
         self.recipe = recipe = FitRecipe("recipe")
         recipe.newVar("A", 0)
@@ -33,7 +32,7 @@ class TestInitializeRecipe(unittest.TestCase):
 
         self.Aval = 5.77619823e-01
         self.sigval = -9.22758690e-01
-        self.x0val = 6.12422115e+00
+        self.x0val = 6.12422115e00
         return
 
     def testInitializeFromFileName(self):
@@ -52,7 +51,7 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertEqual(0, recipe.A.value)
         self.assertEqual(0, recipe.sig.value)
         self.assertEqual(0, recipe.x0.value)
-        infile = open(self.filename, 'r')
+        infile = open(self.filename, "r")
         initializeRecipe(recipe, infile)
         self.assertFalse(infile.closed)
         infile.close()
@@ -61,13 +60,12 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertAlmostEqual(self.x0val, recipe.x0.value)
         return
 
-
     def testInitializeFromString(self):
         recipe = self.recipe
         self.assertEqual(0, recipe.A.value)
         self.assertEqual(0, recipe.sig.value)
         self.assertEqual(0, recipe.x0.value)
-        infile = open(self.filename, 'r')
+        infile = open(self.filename, "r")
         resstr = infile.read()
         infile.close()
         initializeRecipe(recipe, resstr)
@@ -76,6 +74,6 @@ class TestInitializeRecipe(unittest.TestCase):
         self.assertAlmostEqual(self.x0val, recipe.x0.value)
         return
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     unittest.main()

@@ -23,14 +23,14 @@ __all__ = ["BasePDFGenerator"]
 
 import numpy
 
+from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import struToParameterSet
-from diffpy.srfit.exceptions import SrFitError
-
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
+
 
 class BasePDFGenerator(ProfileGenerator):
     """Base class for calculating PDF profiles using SrReal.
@@ -74,7 +74,7 @@ class BasePDFGenerator(ProfileGenerator):
 
     """
 
-    def __init__(self, name = "pdf"):
+    def __init__(self, name="pdf"):
         """Initialize the generator."""
         ProfileGenerator.__init__(self, name)
 
@@ -88,7 +88,7 @@ class BasePDFGenerator(ProfileGenerator):
 
         return
 
-    _parnames = ['delta1', 'delta2', 'qbroad', 'scale', 'qdamp']
+    _parnames = ["delta1", "delta2", "qbroad", "scale", "qdamp"]
 
     def _setCalculator(self, calc):
         """Set the SrReal calulator instance.
@@ -99,13 +99,11 @@ class BasePDFGenerator(ProfileGenerator):
         """
         self._calc = calc
         for pname in self.__class__._parnames:
-            self.addParameter(
-                ParameterAdapter(pname, self._calc, attr = pname)
-                )
+            self.addParameter(ParameterAdapter(pname, self._calc, attr=pname))
         self.processMetaData()
         return
 
-    def parallel(self, ncpu, mapfunc = None):
+    def parallel(self, ncpu, mapfunc=None):
         """Run calculation in parallel.
 
         ncpu    -- Number of parallel processes.  Revert to serial mode when 1.
@@ -115,8 +113,9 @@ class BasePDFGenerator(ProfileGenerator):
         No return value.
         """
         from diffpy.srreal.parallel import createParallelCalculator
+
         calc_serial = self._calc
-        if hasattr(calc_serial, 'pqobj'):
+        if hasattr(calc_serial, "pqobj"):
             calc_serial = calc_serial.pqobj
         # revert to serial calculator for ncpu <= 1
         if ncpu <= 1:
@@ -127,6 +126,7 @@ class BasePDFGenerator(ProfileGenerator):
         # ncpu = min(ncpu, multiprocessing.cpu_count())
         if mapfunc is None:
             import multiprocessing
+
             self._pool = multiprocessing.Pool(ncpu)
             mapfunc = self._pool.imap_unordered
 
@@ -157,7 +157,7 @@ class BasePDFGenerator(ProfileGenerator):
 
         return
 
-    def setScatteringType(self, stype = "X"):
+    def setScatteringType(self, stype="X"):
         """Set the scattering type.
 
         stype   --   "X" for x-ray, "N" for neutron, "E" for electrons,
@@ -186,8 +186,7 @@ class BasePDFGenerator(ProfileGenerator):
         return self._calc.qmax
 
     def setQmin(self, qmin):
-        """Set the qmin value.
-        """
+        """Set the qmin value."""
         self._calc.qmin = qmin
         self.meta["qmin"] = self.getQmin()
         return
@@ -196,7 +195,7 @@ class BasePDFGenerator(ProfileGenerator):
         """Get the qmin value."""
         return self._calc.qmin
 
-    def setStructure(self, stru, name = "phase", periodic = True):
+    def setStructure(self, stru, name="phase", periodic=True):
         """Set the structure that will be used to calculate the PDF.
 
         This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
@@ -222,8 +221,7 @@ class BasePDFGenerator(ProfileGenerator):
         self.setPhase(parset, periodic)
         return
 
-
-    def setPhase(self, parset, periodic = True):
+    def setPhase(self, parset, periodic=True):
         """Set the phase that will be used to calculate the PDF.
 
         Set the phase directly with a DiffpyStructureParSet,
@@ -258,7 +256,7 @@ class BasePDFGenerator(ProfileGenerator):
         ndiv = max(len(r) - 1, 1)
         self._calc.rstep = (hi - lo) / ndiv
         self._calc.rmin = lo
-        self._calc.rmax = hi + 0.5*self._calc.rstep
+        self._calc.rmax = hi + 0.5 * self._calc.rstep
         return
 
     def _validate(self):
@@ -297,5 +295,6 @@ class BasePDFGenerator(ProfileGenerator):
         else:
             y = numpy.interp(r, rcalc, y)
         return y
+
 
 # End class BasePDFGenerator

@@ -22,7 +22,6 @@ from diffpy.srfit.fitbase.parameterset import ParameterSet
 
 
 class TestParameterSet(unittest.TestCase):
-
     def setUp(self):
         self.parset = ParameterSet("test")
         return

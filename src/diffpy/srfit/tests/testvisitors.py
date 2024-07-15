@@ -17,13 +17,12 @@
 
 import unittest
 
-import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
+import diffpy.srfit.equation.visitors as visitors
 from diffpy.srfit.tests.utils import _makeArgs
 
 
 class TestValidator(unittest.TestCase):
-
     def testSimpleFunction(self):
         """Test a simple function."""
 
@@ -73,6 +72,7 @@ class TestValidator(unittest.TestCase):
 
         # Fix the operation of plus
         import numpy
+
         plus.operation = numpy.add
         validator.reset()
         mult.identify(validator)
@@ -88,7 +88,6 @@ class TestValidator(unittest.TestCase):
 
 
 class TestArgFinder(unittest.TestCase):
-
     def testSimpleFunction(self):
         """Test a simple function."""
 
@@ -138,7 +137,6 @@ class TestArgFinder(unittest.TestCase):
 
 
 class TestSwapper(unittest.TestCase):
-
     def testSimpleFunction(self):
         """Test a simple function."""
 

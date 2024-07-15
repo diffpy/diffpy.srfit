@@ -17,20 +17,22 @@
 
 import unittest
 
+import numpy
+
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
-from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
+from diffpy.srfit.fitbase.recipeorganizer import (
+    RecipeContainer,
+    RecipeOrganizer,
+    equationFromString,
+)
 from diffpy.srfit.tests.utils import capturestdout
-
-import numpy
 
 # ----------------------------------------------------------------------------
 
-class TestEquationFromString(unittest.TestCase):
 
+class TestEquationFromString(unittest.TestCase):
     def testEquationFromString(self):
         """Test the equationFromString method."""
 
@@ -56,7 +58,7 @@ class TestEquationFromString(unittest.TestCase):
         self.assertRaises(ValueError, equationFromString, "p1+p2+p3", factory)
 
         # Pass that argument in the ns dictionary
-        eq = equationFromString("p1+p2+p3", factory, {"p3":p3})
+        eq = equationFromString("p1+p2+p3", factory, {"p3": p3})
         self.assertEqual(3, len(eq.args))
         self.assertTrue(p1 in eq.args)
         self.assertTrue(p2 in eq.args)
@@ -67,19 +69,20 @@ class TestEquationFromString(unittest.TestCase):
         self.assertTrue("p3" not in factory.builders)
 
         # Pass and use an unregistered parameter
-        self.assertRaises(ValueError, equationFromString, "p1+p2+p3+p4",
-                factory, {"p3":p3})
+        self.assertRaises(
+            ValueError, equationFromString, "p1+p2+p3+p4", factory, {"p3": p3}
+        )
 
         # Try to overload a registered parameter
-        self.assertRaises(ValueError, equationFromString, "p1+p2",
-                factory, {"p2":p4})
+        self.assertRaises(ValueError, equationFromString, "p1+p2", factory, {"p2": p4})
 
         return
 
+
 # ----------------------------------------------------------------------------
 
-class TestRecipeContainer(unittest.TestCase):
 
+class TestRecipeContainer(unittest.TestCase):
     def setUp(self):
         self.m = RecipeContainer("test")
 
@@ -107,13 +110,17 @@ class TestRecipeContainer(unittest.TestCase):
         self.assertTrue(m1.m2.p2 is p2)
 
         self.assertTrue(m1[0] is p1)
-        self.assertTrue(m1[0:] == [p1,])
+        self.assertTrue(
+            m1[0:]
+            == [
+                p1,
+            ]
+        )
         self.assertTrue(m2[0] is p2)
 
         self.assertEqual(1, len(m1))
         self.assertEqual(1, len(m2))
         return
-
 
     def testLocateManagedObject(self):
         """Test the locateManagedObject method."""
@@ -155,10 +162,11 @@ class TestRecipeContainer(unittest.TestCase):
 
         return
 
+
 # ----------------------------------------------------------------------------
 
-class TestRecipeOrganizer(unittest.TestCase):
 
+class TestRecipeOrganizer(unittest.TestCase):
     def setUp(self):
         self.m = RecipeOrganizer("test")
         # Add a managed container so we can do more in-depth tests.
@@ -168,7 +176,6 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def tearDown(self):
         return
-
 
     def testNewParameter(self):
         """Test the addParameter method."""
@@ -185,7 +192,6 @@ class TestRecipeOrganizer(unittest.TestCase):
         p2 = m._newParameter("p2", 0)
         self.assertTrue(p2 is m.p2)
         return
-
 
     def testAddParameter(self):
         """Test the addParameter method."""
@@ -261,7 +267,6 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEqual(0, len(self.m._constraints))
         self.m.constrain(p1, "2*p2")
 
-
         self.assertTrue(p1.constrained)
         self.assertTrue(p1 in self.m._constraints)
         self.assertEqual(1, len(self.m._constraints))
@@ -273,7 +278,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Check errors on unregistered parameters
         self.assertRaises(ValueError, self.m.constrain, p1, "2*p3")
-        self.assertRaises(ValueError, self.m.constrain, p1, "2*p2", {"p2":p3})
+        self.assertRaises(ValueError, self.m.constrain, p1, "2*p2", {"p2": p3})
 
         # Remove the constraint
         self.m.unconstrain(p1)
@@ -298,21 +303,21 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m._eqfactory.registerArgument("p2", p2)
 
         self.assertEqual(0, len(self.m._restraints))
-        r = self.m.restrain("p1+p2", ub = 10)
+        r = self.m.restrain("p1+p2", ub=10)
         self.assertEqual(1, len(self.m._restraints))
         p2.setValue(10)
         self.assertEqual(1, r.penalty())
         self.m.unrestrain(r)
         self.assertEqual(0, len(self.m._restraints))
 
-        r = self.m.restrain(p1, ub = 10)
+        r = self.m.restrain(p1, ub=10)
         self.assertEqual(1, len(self.m._restraints))
         p1.setValue(11)
         self.assertEqual(1, r.penalty())
 
         # Check errors on unregistered parameters
         self.assertRaises(ValueError, self.m.restrain, "2*p3")
-        self.assertRaises(ValueError, self.m.restrain, "2*p2", ns = {"p2":p3})
+        self.assertRaises(ValueError, self.m.restrain, "2*p2", ns={"p2": p3})
         return
 
     def testGetConstraints(self):
@@ -370,9 +375,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         return
 
     def testRegisterCalculator(self):
-
         class GCalc(Calculator):
-
             def __init__(self, name):
                 Calculator.__init__(self, name)
                 self.newParameter("A", 1.0)
@@ -384,7 +387,7 @@ class TestRecipeOrganizer(unittest.TestCase):
                 A = self.A.getValue()
                 c = self.center.getValue()
                 w = self.width.getValue()
-                return A * numpy.exp(-0.5*((x-c)/w)**2)
+                return A * numpy.exp(-0.5 * ((x - c) / w) ** 2)
 
         # End class GCalc
 
@@ -397,27 +400,31 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         self.m.g.center.setValue(3.0)
 
-        self.assertTrue(numpy.array_equal(numpy.exp(-0.5*((x-3.0)/0.1)**2),
-            g(x)))
+        self.assertTrue(
+            numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), g(x))
+        )
 
         self.m.g.center.setValue(5.0)
 
-        self.assertTrue(numpy.array_equal(numpy.exp(-0.5*((x-5.0)/0.1)**2),
-            g(x)))
+        self.assertTrue(
+            numpy.array_equal(numpy.exp(-0.5 * ((x - 5.0) / 0.1) ** 2), g(x))
+        )
 
         # Use this in another equation
 
         eq = self.m.registerStringFunction("g/x - 1", "pdf")
-        self.assertTrue(numpy.array_equal(g(x)/x - 1, eq()))
+        self.assertTrue(numpy.array_equal(g(x) / x - 1, eq()))
 
         return
 
     def testRegisterFunction(self):
         """Test registering various functions."""
+
         def g1(A, c, w, x):
-            return A * numpy.exp(-0.5*((x-c)/w)**2)
+            return A * numpy.exp(-0.5 * ((x - c) / w) ** 2)
+
         def g2(A):
-            return A+1
+            return A + 1
 
         eq = self.m.registerFunction(g1, "g")
 
@@ -430,12 +437,13 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m.c.setValue(3.0)
         self.m.w.setValue(0.1)
 
-        self.assertTrue(numpy.array_equal(numpy.exp(-0.5*((x-3.0)/0.1)**2),
-            eq()))
+        self.assertTrue(
+            numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), eq())
+        )
 
         # Use this in another equation
         eq2 = self.m.registerStringFunction("g/x - 1", "pdf")
-        self.assertTrue(numpy.array_equal(eq()/x - 1, eq2()))
+        self.assertTrue(numpy.array_equal(eq() / x - 1, eq2()))
 
         # Make sure we can swap out "g".
         self.m.registerFunction(g2, "g")
@@ -443,8 +451,11 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Try a bound method
         class temp(object):
-            def eval(self): return 1.23
-            def __call__(self): return 4.56
+            def eval(self):
+                return 1.23
+
+            def __call__(self):
+                return 4.56
 
         t = temp()
         eq = self.m.registerFunction(t.eval, "eval")
@@ -494,50 +505,48 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         return
 
-
     def test_releaseOldEquations(self):
-        """Verify EquationFactory does not hold temporary equations.
-        """
-        self.m._newParameter('x', 12)
-        self.assertEqual(36, self.m.evaluateEquation('3 * x'))
+        """Verify EquationFactory does not hold temporary equations."""
+        self.m._newParameter("x", 12)
+        self.assertEqual(36, self.m.evaluateEquation("3 * x"))
         self.assertEqual(0, len(self.m._eqfactory.equations))
         return
 
-
     def test_show(self):
-        """Verify output from the show function.
-        """
+        """Verify output from the show function."""
+
         def capture_show(*args, **kwargs):
             rv = capturestdout(self.m.show, *args, **kwargs)
             return rv
-        self.assertEqual('', capture_show())
-        self.m._newParameter('x', 1)
-        self.m._newParameter('y', 2)
+
+        self.assertEqual("", capture_show())
+        self.m._newParameter("x", 1)
+        self.m._newParameter("y", 2)
         out1 = capture_show()
-        lines1 = out1.strip().split('\n')
+        lines1 = out1.strip().split("\n")
         self.assertEqual(4, len(lines1))
-        self.assertTrue('Parameters' in lines1)
-        self.assertFalse('Constraints' in lines1)
-        self.assertFalse('Restraints' in lines1)
-        self.m._newParameter('z', 7)
-        self.m.constrain('y', '3 * z')
+        self.assertTrue("Parameters" in lines1)
+        self.assertFalse("Constraints" in lines1)
+        self.assertFalse("Restraints" in lines1)
+        self.m._newParameter("z", 7)
+        self.m.constrain("y", "3 * z")
         out2 = capture_show()
-        lines2 = out2.strip().split('\n')
+        lines2 = out2.strip().split("\n")
         self.assertEqual(9, len(lines2))
-        self.assertTrue('Parameters' in lines2)
-        self.assertTrue('Constraints' in lines2)
-        self.assertFalse('Restraints' in lines2)
-        self.m.restrain('z', lb=2, ub=3, sig=0.001)
+        self.assertTrue("Parameters" in lines2)
+        self.assertTrue("Constraints" in lines2)
+        self.assertFalse("Restraints" in lines2)
+        self.m.restrain("z", lb=2, ub=3, sig=0.001)
         out3 = capture_show()
-        lines3 = out3.strip().split('\n')
+        lines3 = out3.strip().split("\n")
         self.assertEqual(13, len(lines3))
-        self.assertTrue('Parameters' in lines3)
-        self.assertTrue('Constraints' in lines3)
-        self.assertTrue('Restraints' in lines3)
-        out4 = capture_show(pattern='x')
-        lines4 = out4.strip().split('\n')
+        self.assertTrue("Parameters" in lines3)
+        self.assertTrue("Constraints" in lines3)
+        self.assertTrue("Restraints" in lines3)
+        out4 = capture_show(pattern="x")
+        lines4 = out4.strip().split("\n")
         self.assertEqual(9, len(lines4))
-        out5 = capture_show(pattern='^')
+        out5 = capture_show(pattern="^")
         self.assertEqual(out3, out5)
         # check output with another level of hierarchy
         self.m._addObject(RecipeOrganizer("foo"), self.m._containers)
@@ -545,10 +554,11 @@ class TestRecipeOrganizer(unittest.TestCase):
         out6 = capture_show()
         self.assertTrue("foo.bar" in out6)
         # filter out foo.bar
-        out7 = capture_show('^(?!foo).')
+        out7 = capture_show("^(?!foo).")
         self.assertFalse("foo.bar" in out7)
         self.assertEqual(out3, out7)
         return
+
 
 # ----------------------------------------------------------------------------
 

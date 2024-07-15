@@ -18,8 +18,8 @@ Picklable storage of callable objects using weak references.
 """
 
 
-import weakref
 import types
+import weakref
 
 import six
 
@@ -49,7 +49,7 @@ class WeakBoundMethod(object):
         This is only used for pickling.
     """
 
-    __slots__ = ('function', 'fallback', '_wref', '_class')
+    __slots__ = ("function", "fallback", "_wref", "_class")
 
     def __init__(self, f, fallback=None):
         """Create a weak reference wrapper to bound method.
@@ -103,9 +103,9 @@ class WeakBoundMethod(object):
         return hash((self.function, self._wref))
 
     def __eq__(self, other):
-        rv = (self.function == other.function and
-              (self._wref == other._wref or
-               None is self._wref() is other._wref()))
+        rv = self.function == other.function and (
+            self._wref == other._wref or None is self._wref() is other._wref()
+        )
         return rv
 
     def __ne__(self, other):
@@ -114,8 +114,7 @@ class WeakBoundMethod(object):
     # support pickling of this type
 
     def __getstate__(self):
-        """Return state with a resolved weak reference.
-        """
+        """Return state with a resolved weak reference."""
         mobj = self._wref()
         nm = self.function.__name__
         amsg = "Unable to pickle this unbound function by name."
@@ -127,8 +126,7 @@ class WeakBoundMethod(object):
         return state
 
     def __setstate__(self, state):
-        """Restore the weak reference in this wrapper upon unpickling.
-        """
+        """Restore the weak reference in this wrapper upon unpickling."""
         (self._class, nm, self.fallback, mobj) = state
         self.function = getattr(self._class, nm)
         if mobj is None:
@@ -142,6 +140,7 @@ class WeakBoundMethod(object):
     @staticmethod
     def __mimic_empty_ref():
         return None
+
 
 # end of class WeakBoundMethod
 

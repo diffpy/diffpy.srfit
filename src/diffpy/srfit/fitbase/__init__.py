@@ -28,17 +28,26 @@ Various code and design taken from Paul Kienzle's PARK package.
 http://www.reflectometry.org/danse/park.html
 """
 
-__all__ = ['Calculator', 'FitContribution', 'FitHook', 'FitRecipe',
-           'FitResults', 'initializeRecipe', 'PlotFitHook', 'Profile',
-           'ProfileGenerator', 'SimpleRecipe']
+__all__ = [
+    "Calculator",
+    "FitContribution",
+    "FitHook",
+    "FitRecipe",
+    "FitResults",
+    "initializeRecipe",
+    "PlotFitHook",
+    "Profile",
+    "ProfileGenerator",
+    "SimpleRecipe",
+]
 
 from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fithook import FitHook, PlotFitHook
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
-from diffpy.srfit.fitbase.simplerecipe import SimpleRecipe
 from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
+from diffpy.srfit.fitbase.simplerecipe import SimpleRecipe
 
 # End of file

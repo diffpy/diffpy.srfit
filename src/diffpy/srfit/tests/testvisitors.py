@@ -21,6 +21,7 @@ import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.tests.utils import _makeArgs
 
+
 class TestValidator(unittest.TestCase):
 
     def testSimpleFunction(self):
@@ -85,6 +86,7 @@ class TestValidator(unittest.TestCase):
 
         return
 
+
 class TestArgFinder(unittest.TestCase):
 
     def testSimpleFunction(self):
@@ -133,6 +135,7 @@ class TestArgFinder(unittest.TestCase):
         self.assertEqual(1, len(args))
         self.assertTrue(args[0] is v1)
         return
+
 
 class TestSwapper(unittest.TestCase):
 

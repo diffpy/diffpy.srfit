@@ -25,6 +25,7 @@ from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
 
 # ----------------------------------------------------------------------------
 
+
 class TestSGConstraints(unittest.TestCase):
 
     @unittest.skipUnless(has_pyobjcryst, _msg_nopyobjcryst)
@@ -50,18 +51,18 @@ class TestSGConstraints(unittest.TestCase):
         stru.sgpars.adppars
 
         # Check the orthorhombic lattice
-        l = stru.getLattice()
-        self.assertTrue( l.alpha.const )
-        self.assertTrue( l.beta.const )
-        self.assertTrue( l.gamma.const )
-        self.assertEqual(pi/2, l.alpha.getValue())
-        self.assertEqual(pi/2, l.beta.getValue())
-        self.assertEqual(pi/2, l.gamma.getValue())
+        lattice = stru.getLattice()
+        self.assertTrue(lattice.alpha.const)
+        self.assertTrue(lattice.beta.const)
+        self.assertTrue(lattice.gamma.const)
+        self.assertEqual(pi/2, lattice.alpha.getValue())
+        self.assertEqual(pi/2, lattice.beta.getValue())
+        self.assertEqual(pi/2, lattice.gamma.getValue())
 
-        self.assertFalse( l.a.const )
-        self.assertFalse( l.b.const )
-        self.assertFalse( l.c.const )
-        self.assertEqual(0, len(l._constraints))
+        self.assertFalse(lattice.a.const)
+        self.assertFalse(lattice.b.const)
+        self.assertFalse(lattice.c.const)
+        self.assertEqual(0, len(lattice._constraints))
 
         # Now make sure the scatterers are constrained properly
         scatterers = stru.getScatterers()
@@ -101,7 +102,6 @@ class TestSGConstraints(unittest.TestCase):
 
         return
 
-
     @unittest.skipUnless(has_structure, _msg_nostructure)
     def test_DiffPy_constrainAsSpaceGroup(self):
         """Test the constrainAsSpaceGroup function."""
@@ -112,13 +112,13 @@ class TestSGConstraints(unittest.TestCase):
         parset = DiffpyStructureParSet("LaMnO3", stru)
 
         sgpars = constrainAsSpaceGroup(parset, "P b n m",
-                scatterers = parset.getScatterers()[::2],
-                constrainadps = True)
+                                       scatterers=parset.getScatterers()[::2],
+                                       constrainadps=True)
 
         # Make sure that the new parameters were created
         for par in sgpars:
             self.assertNotEqual(None, par)
-            self.assertNotEqual(None, par.getValue() )
+            self.assertNotEqual(None, par.getValue())
 
         # Test the unconstrained atoms
         for scatterer in parset.getScatterers()[1::2]:
@@ -137,10 +137,13 @@ class TestSGConstraints(unittest.TestCase):
 
         def _consttest(par):
             return par.const
+
         def _constrainedtest(par):
             return par.constrained
+
         def _proxytest(par):
             return par in proxied
+
         def _alltests(par):
             return _consttest(par) or _constrainedtest(par) or _proxytest(par)
 
@@ -153,13 +156,12 @@ class TestSGConstraints(unittest.TestCase):
 
             test = False
             for par in [scatterer.U11, scatterer.U22, scatterer.U33,
-                    scatterer.U12, scatterer.U13, scatterer.U23]:
+                        scatterer.U12, scatterer.U13, scatterer.U23]:
                 test |= _alltests(par)
 
             self.assertTrue(test)
 
         return
-
 
     @unittest.skipUnless(has_structure, _msg_nostructure)
     def test_ConstrainAsSpaceGroup_args(self):
@@ -182,6 +184,7 @@ class TestSGConstraints(unittest.TestCase):
 # End of class TestSGConstraints
 
 # Local helper functions -----------------------------------------------------
+
 
 def makeLaMnO3_P1():
     from diffpy.structure import Structure
@@ -227,6 +230,7 @@ def makeLaMnO3():
     return crystal
 
 # ----------------------------------------------------------------------------
+
 
 if __name__ == "__main__":
     unittest.main()

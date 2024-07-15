@@ -35,16 +35,14 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.w = weak_ref(self.f._eq._flush, fallback=_fallback_example)
         return
 
-
     def tearDown(self):
         self.f = None
         self.assertTrue(None is self.w._wref())
         obj, args, kw = self.w('any', 'argument', foo=37)
         self.assertTrue(obj is self.w)
         self.assertEqual(('any', 'argument'), args)
-        self.assertEqual({'foo' : 37}, kw)
+        self.assertEqual({'foo': 37}, kw)
         return
-
 
     def test___init__(self):
         """check WeakBoundMethod.__init__()
@@ -53,7 +51,6 @@ class TestWeakBoundMethod(unittest.TestCase):
         wf = weak_ref(self.f._flush)
         self.assertTrue(None is wf.fallback)
         return
-
 
     def test___call__(self):
         """check WeakBoundMethod.__call__()
@@ -72,7 +69,6 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertRaises(ReferenceError, wgetx)
         return
 
-
     def test___hash__(self):
         """check WeakBoundMethod.__hash__()
         """
@@ -86,7 +82,6 @@ class TestWeakBoundMethod(unittest.TestCase):
         w1c2 = pickle.loads(pickle.dumps(w1))
         self.assertEqual(hash(w1c1), hash(w1c2))
         return
-
 
     def test___eq__(self):
         """check WeakBoundMethod.__eq__()
@@ -108,7 +103,6 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertEqual(w1, w1cc)
         return
 
-
     def test_pickling(self):
         """Verify unpickling works when it involves __hash__ call.
         """
@@ -120,7 +114,6 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertTrue(w2 in h2)
         self.assertTrue(feq2 is w2._wref())
         return
-
 
     def test_observable_deregistration(self):
         """check if Observable drops dead Observer.
@@ -149,6 +142,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 # End of class TestWeakBoundMethod
 
 # Local Routines -------------------------------------------------------------
+
 
 def _fallback_example(wbm, *args, **kwargs):
     return (wbm, args, kwargs)

@@ -16,8 +16,8 @@
 """Simple FitRecipe class that includes a FitContribution and Profile.
 """
 
-from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
+from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import FitResults
 from diffpy.srfit.fitbase.profile import Profile
 

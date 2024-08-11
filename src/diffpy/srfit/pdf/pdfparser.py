@@ -23,10 +23,12 @@ See the class documentation for more information.
 __all__ = ["PDFParser"]
 
 import re
+
 import numpy
 
 from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
+
 
 class PDFParser(ProfileParser):
     """Class for holding a diffraction pattern.

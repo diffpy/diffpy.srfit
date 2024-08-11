@@ -19,9 +19,13 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import has_pyobjcryst, _msg_nopyobjcryst
-from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from diffpy.srfit.tests.utils import (
+    _msg_nopyobjcryst,
+    _msg_nostructure,
+    datafile,
+    has_pyobjcryst,
+    has_structure,
+)
 
 # ----------------------------------------------------------------------------
 
@@ -191,8 +195,8 @@ def makeLaMnO3_P1():
 
 
 def makeLaMnO3():
-    from pyobjcryst.crystal import Crystal
     from pyobjcryst.atom import Atom
+    from pyobjcryst.crystal import Crystal
     from pyobjcryst.scatteringpower import ScatteringPowerAtom
 
     pi = numpy.pi

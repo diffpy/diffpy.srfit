@@ -21,9 +21,7 @@ the DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.
 
 import numpy
 
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import DebyePDFGenerator
 
 ####### Example Code

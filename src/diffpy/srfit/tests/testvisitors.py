@@ -17,9 +17,10 @@
 
 import unittest
 
-import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
+import diffpy.srfit.equation.visitors as visitors
 from diffpy.srfit.tests.utils import _makeArgs
+
 
 class TestValidator(unittest.TestCase):
 

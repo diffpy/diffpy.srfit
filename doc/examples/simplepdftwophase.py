@@ -15,13 +15,12 @@
 
 """Example of a simplified PDF refinement of two-phase structure."""
 
+from crystalpdftwophase import plotResults
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
-from diffpy.srfit.pdf import PDFContribution
 from diffpy.srfit.fitbase import FitRecipe, FitResults
-
-from gaussianrecipe import scipyOptimize
-from crystalpdftwophase import plotResults
+from diffpy.srfit.pdf import PDFContribution
 
 ####### Example Code
 

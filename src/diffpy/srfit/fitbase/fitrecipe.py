@@ -35,14 +35,15 @@ using FitRecipe.
 __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
-from numpy import array, concatenate, sqrt, dot
-import six
 
-from diffpy.srfit.interface import _fitrecipe_interface
-from diffpy.srfit.util.tagmanager import TagManager
+import six
+from numpy import array, concatenate, dot, sqrt
+
+from diffpy.srfit.fitbase.fithook import PrintFitHook
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
-from diffpy.srfit.fitbase.fithook import PrintFitHook
+from diffpy.srfit.interface import _fitrecipe_interface
+from diffpy.srfit.util.tagmanager import TagManager
 
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
@@ -362,8 +363,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def __collectConstraintsAndRestraints(self):
         """Collect the Constraints and Restraints from subobjects."""
-        from itertools import chain
         from functools import cmp_to_key
+        from itertools import chain
         rset = set(self._restraints)
         cdict = {}
 

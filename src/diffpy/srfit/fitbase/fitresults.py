@@ -25,12 +25,13 @@ from __future__ import print_function
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import re
-import numpy
 from collections import OrderedDict
 
-from diffpy.srfit.util.inpututils import inputToString
+import numpy
+
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
+from diffpy.srfit.util.inpututils import inputToString
 
 
 class FitResults(object):
@@ -502,8 +503,8 @@ class FitResults(object):
 
         """
         # Save the time and user
-        from time import ctime
         from getpass import getuser
+        from time import ctime
         myheader = "Results written: " + ctime() + "\n"
         myheader += "produced by " + getuser() + "\n"
         header = myheader + header

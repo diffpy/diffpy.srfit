@@ -25,8 +25,8 @@ __all__ = ["Restraint"]
 
 from numpy import inf
 
-from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.validatable import Validatable
 
 
 class Restraint(Validatable):

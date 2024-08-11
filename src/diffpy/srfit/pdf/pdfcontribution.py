@@ -20,8 +20,8 @@ This is a custom FitContribution that simplifies the creation of PDF fits.
 
 __all__ = ["PDFContribution"]
 
-from diffpy.srfit.fitbase import FitContribution
-from diffpy.srfit.fitbase import Profile
+from diffpy.srfit.fitbase import FitContribution, Profile
+
 
 class PDFContribution(FitContribution):
     """PDFContribution class.

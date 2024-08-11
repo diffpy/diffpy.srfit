@@ -23,11 +23,10 @@ __all__ = ["BasePDFGenerator"]
 
 import numpy
 
+from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import struToParameterSet
-from diffpy.srfit.exceptions import SrFitError
-
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.

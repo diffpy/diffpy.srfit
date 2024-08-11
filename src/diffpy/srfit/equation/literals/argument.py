@@ -21,9 +21,11 @@ constant.
 
 __all__ = ["Argument"]
 
-from numpy import ndarray, array_equal
+from numpy import array_equal, ndarray
+
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.equation.literals.literal import Literal
+
 
 class Argument(Literal, ArgumentABC):
     """Argument class.

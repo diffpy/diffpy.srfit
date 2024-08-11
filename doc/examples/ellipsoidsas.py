@@ -16,11 +16,10 @@
 """Example of a refinement of SAS I(Q) data to an ellipsoidal model.
 """
 
-from diffpy.srfit.sas import SASGenerator, SASParser
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults, Profile
-
 from gaussianrecipe import scipyOptimize
+
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
+from diffpy.srfit.sas import SASGenerator, SASParser
 
 ####### Example Code
 

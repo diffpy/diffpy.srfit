@@ -18,11 +18,11 @@
 from __future__ import print_function
 
 import random
+
 import numpy
 
-import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
-
+import diffpy.srfit.equation.visitors as visitors
 from diffpy.srfit.tests.utils import _makeArgs
 
 x = numpy.arange(0, 20, 0.05)
@@ -144,8 +144,7 @@ def speedTest2(mutate = 2):
     eq.b7.setValue(2.0)
     eq.b8.setValue(2.0)
 
-    from numpy import exp
-    from numpy import polyval
+    from numpy import exp, polyval
     def f(A0, qsig, sigma1, sigma2, b1, b2, b3, b4, b5, b6, b7, b8):
         return A0*exp(-(x*qsig)**2)*(exp(-((x-1.0)/sigma1)**2)+exp(-((x-2.0)/sigma2)**2)) + polyval([b8, b7, b6, b5,b4,b3,b2,b1],x)
 
@@ -217,8 +216,8 @@ def speedTest3(mutate = 2):
     eq.b7.setValue(2.0)
     eq.b8.setValue(2.0)
 
-    from sympy import var, exp, lambdify
     from numpy import polyval
+    from sympy import exp, lambdify, var
     A0, qsig, sigma1, sigma2, b1, b2, b3, b4, b5, b6, b7, b8, xx = vars = var("A0 qsig sigma1 sigma2 b1 b2 b3 b4 b5 b6 b7 b8 xx")
     f = lambdify(vars, A0*exp(-(xx*qsig)**2)*(exp(-((xx-1.0)/sigma1)**2)+exp(-((xx-2.0)/sigma2)**2)) + polyval([b1, b2, b3, b4, b5, b6, b7, b8], xx), "numpy")
 
@@ -276,8 +275,8 @@ def speedTest4(mutate = 2):
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
 
-    from sympy import var, lambdify
     from numpy import polyval
+    from sympy import lambdify, var
     b1, b2, b3, b4, b5, b6, b7, b8, xx = vars = var("b1 b2 b3 b4 b5 b6 b7 b8 xx")
     f = lambdify(vars, polyval([b1, b2, b3, b4, b5, b6, b7, b8], xx), "numpy")
 

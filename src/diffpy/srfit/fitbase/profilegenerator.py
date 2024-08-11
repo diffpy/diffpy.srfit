@@ -45,8 +45,8 @@ __all__ = ["ProfileGenerator"]
 
 
 from diffpy.srfit.equation.literals.operators import Operator
-from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.parameterset import ParameterSet
 
 
 class ProfileGenerator(Operator, ParameterSet):

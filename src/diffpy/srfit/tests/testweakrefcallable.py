@@ -18,12 +18,12 @@ Unit tests for the weakrefcallable module.
 """
 
 
-import unittest
 import pickle
+import unittest
 
 from diffpy.srfit.fitbase import FitContribution
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.util.weakrefcallable import weak_ref, WeakBoundMethod
+from diffpy.srfit.util.weakrefcallable import WeakBoundMethod, weak_ref
 
 # ----------------------------------------------------------------------------
 

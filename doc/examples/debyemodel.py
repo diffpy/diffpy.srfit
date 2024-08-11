@@ -34,10 +34,9 @@ Extensions
 """
 
 import numpy
-
-from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
-
 from gaussianrecipe import scipyOptimize
+
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 
 # The data
 data = """\

@@ -91,13 +91,13 @@ _builders = {}
 
 import inspect
 import numbers
-import numpy
 
+import numpy
 import six
 
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.equation.literals.literal import Literal
 from diffpy.srfit.equation.equationmod import Equation
+from diffpy.srfit.equation.literals.literal import Literal
 
 
 class EquationFactory(object):
@@ -333,8 +333,8 @@ class EquationFactory(object):
 
         Raises SyntaxError if the equation string uses invalid syntax.
         """
-        import tokenize
         import token
+        import tokenize
 
         interface = six.StringIO(eqstr).readline
         # output is an iterator. Each entry (token) is a 5-tuple

@@ -23,26 +23,25 @@ creates an Equation instance from a string.
 
 __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
-from numpy import inf
+import re
 from collections import OrderedDict
 from itertools import chain, groupby
-import re
 
 import six
+from numpy import inf
 
-from diffpy.srfit.fitbase.constraint import Constraint
-from diffpy.srfit.fitbase.restraint import Restraint
-from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.configurable import Configurable
-from diffpy.srfit.fitbase.validatable import Validatable
-
-from diffpy.srfit.util.observable import Observable
 from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
-from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.fitbase.configurable import Configurable
+from diffpy.srfit.fitbase.constraint import Constraint
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.restraint import Restraint
+from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _recipeorganizer_interface
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
+from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.util.observable import Observable
 
 
 class RecipeContainer(Observable, Configurable, Validatable):

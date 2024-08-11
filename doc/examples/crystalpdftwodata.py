@@ -22,15 +22,11 @@ ObjCrystCrystalParSet.
 """
 
 import numpy
-
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
-
-from gaussianrecipe import scipyOptimize
 
 ####### Example Code
 

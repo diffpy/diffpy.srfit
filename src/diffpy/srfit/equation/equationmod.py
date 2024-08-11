@@ -42,9 +42,10 @@ __all__ = ["Equation"]
 
 from collections import OrderedDict
 
-from diffpy.srfit.equation.visitors import validate, getArgs, swap
-from diffpy.srfit.equation.literals.operators import Operator
 from diffpy.srfit.equation.literals.literal import Literal
+from diffpy.srfit.equation.literals.operators import Operator
+from diffpy.srfit.equation.visitors import getArgs, swap, validate
+
 
 class Equation(Operator):
     """Class for holding and evaluating a Literal tree.

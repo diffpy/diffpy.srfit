@@ -24,17 +24,14 @@ best with both the PDF and SAS data.
 """
 
 import numpy
-
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.pdf.characteristicfunctions import SASCF
-from diffpy.srfit.sas import SASParser, SASGenerator
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
+from diffpy.srfit.sas import SASGenerator, SASParser
 
-from gaussianrecipe import scipyOptimize
 
 def makeRecipe(ciffile, grdata, iqdata):
     """Make complex-modeling recipe where I(q) and G(r) are fit

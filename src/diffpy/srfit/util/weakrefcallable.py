@@ -18,8 +18,8 @@ Picklable storage of callable objects using weak references.
 """
 
 
-import weakref
 import types
+import weakref
 
 import six
 

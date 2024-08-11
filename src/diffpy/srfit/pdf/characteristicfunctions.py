@@ -29,10 +29,10 @@ __all__ = ["sphericalCF", "spheroidalCF", "spheroidalCF2",
            "lognormalSphericalCF", "sheetCF", "shellCF", "shellCF2", "SASCF"]
 
 import numpy
-from numpy import pi, sqrt, log, exp, log2, ceil, sign
 from numpy import arctan as atan
 from numpy import arctanh as atanh
-from numpy.fft import ifft, fftfreq
+from numpy import ceil, exp, log, log2, pi, sign, sqrt
+from numpy.fft import fftfreq, ifft
 from scipy.special import erf
 
 from diffpy.srfit.fitbase.calculator import Calculator
@@ -286,6 +286,7 @@ class SASCF(Calculator):
         self._model = model
 
         from diffpy.srfit.sas.sasparameter import SASParameter
+
         # Wrap normal parameters
         for parname in model.params:
             par = SASParameter(parname, model)

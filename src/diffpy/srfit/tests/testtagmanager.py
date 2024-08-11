@@ -20,6 +20,7 @@ import unittest
 
 from diffpy.srfit.util.tagmanager import TagManager
 
+
 ##############################################################################
 class TestTagManager(unittest.TestCase):
 

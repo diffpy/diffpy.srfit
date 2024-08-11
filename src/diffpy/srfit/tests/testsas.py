@@ -20,9 +20,8 @@ import unittest
 import numpy
 
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
-from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import has_sas, _msg_nosas
 from diffpy.srfit.sas.sasimport import sasimport
+from diffpy.srfit.tests.utils import _msg_nosas, datafile, has_sas
 
 # ----------------------------------------------------------------------------
 

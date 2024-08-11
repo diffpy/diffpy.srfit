@@ -19,7 +19,7 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import has_pyobjcryst, _msg_nopyobjcryst
+from diffpy.srfit.tests.utils import _msg_nopyobjcryst, has_pyobjcryst
 
 # Global variables to be assigned in setUp
 ObjCrystCrystalParSet = spacegroups = None
@@ -116,11 +116,12 @@ class TestParameterAdapter(unittest.TestCase):
     def setUp(self):
         global ObjCrystCrystalParSet, Crystal, Atom, Molecule
         global ScatteringPowerAtom
-        from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
-        from pyobjcryst.crystal import Crystal
         from pyobjcryst.atom import Atom
+        from pyobjcryst.crystal import Crystal
         from pyobjcryst.molecule import Molecule
         from pyobjcryst.scatteringpower import ScatteringPowerAtom
+
+        from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
         self.occryst = makeC60()
         self.ocmol = self.occryst.GetScatterer("c60")
         return

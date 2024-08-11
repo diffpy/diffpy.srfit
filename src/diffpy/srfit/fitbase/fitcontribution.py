@@ -25,11 +25,12 @@ See the examples in the documention for how to use a FitContribution.
 
 __all__ = ["FitContribution"]
 
-from diffpy.srfit.fitbase.parameterset import ParameterSet
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.srfit.fitbase.parameter import ParameterProxy
-from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.fitbase.parameterset import ParameterSet
+from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+
 
 class FitContribution(ParameterSet):
     """FitContribution class.

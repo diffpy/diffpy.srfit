@@ -20,6 +20,7 @@ __all__ = ["Swapper"]
 
 from diffpy.srfit.equation.visitors.visitor import Visitor
 
+
 class Swapper(Visitor):
     """Swapper for swapping out one literal for another in a literal tree.
 

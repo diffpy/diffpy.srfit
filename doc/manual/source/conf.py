@@ -12,7 +12,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import os
+import sys
 import time
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -61,6 +62,7 @@ copyright = u'%Y, Brookhaven National Laboratory'
 # built documents.
 sys.path.insert(0, os.path.abspath('../../..'))
 from setup import versiondata
+
 fullversion = versiondata.get('DEFAULT', 'version')
 # The short X.Y version.
 version = ''.join(fullversion.split('.post')[:1])

@@ -22,14 +22,11 @@ appropriate characteristic function.
 """
 
 import numpy
+from pyobjcryst import loadCrystal
 from scipy.optimize import leastsq
 
-from pyobjcryst import loadCrystal
-
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
 
 # Example Code
 
@@ -73,7 +70,7 @@ def makeRecipe(stru1, stru2, datname):
     # and a spherical shell CF for the shell. Since this is set up as two
     # phases, we implicitly assume that the core-shell correlations contribute
     # very little to the PDF.
-    from diffpy.srfit.pdf.characteristicfunctions import sphericalCF, shellCF
+    from diffpy.srfit.pdf.characteristicfunctions import shellCF, sphericalCF
     contribution.registerFunction(sphericalCF, name="f_CdS")
     contribution.registerFunction(shellCF, name="f_ZnS")
 

@@ -17,10 +17,11 @@
 
 
 import re
+
 import numpy
 
-from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 
 __all__ = ["constrainAsSpaceGroup"]
 
@@ -412,8 +413,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         """
 
-        from diffpy.structure.symmetryutilities import stdUsymbols
-        from diffpy.structure.symmetryutilities import SymmetryConstraints
+        from diffpy.structure.symmetryutilities import SymmetryConstraints, stdUsymbols
 
         if not self.constrainadps: return
 

@@ -25,6 +25,7 @@ __all__ = ["Literal"]
 from diffpy.srfit.equation.literals.abcs import LiteralABC
 from diffpy.srfit.util.observable import Observable
 
+
 class Literal(Observable,LiteralABC):
     """Abstract class for equation pieces, such as operators and arguments.
 

@@ -40,13 +40,16 @@ ObjCrystDihedralAngleParameter
 __all__ = ["ObjCrystMoleculeParSet", "ObjCrystCrystalParSet"]
 
 import numpy
+from pyobjcryst.molecule import (
+    GetBondAngle,
+    GetBondLength,
+    GetDihedralAngle,
+    StretchModeBondAngle,
+    StretchModeBondLength,
+    StretchModeTorsion,
+)
 
-from pyobjcryst.molecule import GetBondLength, GetBondAngle, GetDihedralAngle
-from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
-from pyobjcryst.molecule import StretchModeTorsion
-
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
-from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter, ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
 
@@ -1445,6 +1448,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
 
         """
         import copy
+
         from diffpy.structure.spacegroups import GetSpaceGroup, SymOp
         name = sgobjcryst.GetName()
         extnstr = ":%s" % sgobjcryst.GetExtension()

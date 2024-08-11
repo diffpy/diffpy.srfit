@@ -45,13 +45,16 @@ Extensions
 from __future__ import print_function
 
 import numpy
-
-from diffpy.srfit.fitbase import ProfileGenerator, Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
-
 from gaussianrecipe import scipyOptimize
+
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+    ProfileGenerator,
+)
+from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
 ####### Example Code
 

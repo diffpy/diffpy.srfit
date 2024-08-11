@@ -20,15 +20,12 @@ pyobjcryst crystal object. In this example we use internal constraints provided
 by the ObjCrystCrystalParSet structure adapter.
 """
 
+from crystalpdf import plotResults
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
-
-from gaussianrecipe import scipyOptimize
-from crystalpdf import plotResults
 
 ####### Example Code
 

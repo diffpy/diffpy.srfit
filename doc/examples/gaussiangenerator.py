@@ -41,8 +41,7 @@ Extensions
 
 from numpy import exp
 
-from diffpy.srfit.fitbase import ProfileGenerator, Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, ProfileGenerator
 
 ####### Example Code
 

@@ -20,7 +20,7 @@ from __future__ import print_function
 
 import numpy
 
-from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 
 ####### Example Code
 
@@ -109,7 +109,7 @@ def makeRecipe():
     recipe.addVar(contribution.mu31, 33.0)
 
     # Constrain the position of the second double peak
-    from numpy import sin, arcsin
+    from numpy import arcsin, sin
     def peakloc(mu):
         """Calculate the location of the second peak given the first."""
         l1 = 1.012

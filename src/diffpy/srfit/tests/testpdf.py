@@ -15,17 +15,21 @@
 
 """Tests for pdf package."""
 
-import unittest
-import pickle
 import io
+import pickle
+import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import has_srreal, _msg_nosrreal
-from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
-from diffpy.srfit.pdf import PDFGenerator, PDFParser, PDFContribution
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.pdf import PDFContribution, PDFGenerator, PDFParser
+from diffpy.srfit.tests.utils import (
+    _msg_nosrreal,
+    _msg_nostructure,
+    datafile,
+    has_srreal,
+    has_structure,
+)
 
 # ----------------------------------------------------------------------------
 
@@ -215,6 +219,7 @@ class TestPDFContribution(unittest.TestCase):
         """check PDFContribution.getQmax()
         """
         from diffpy.structure import Structure
+
         # cover all code branches in PDFContribution._getMetaValue
         # (1) contribution metadata
         pc1 = self.pc
@@ -253,6 +258,7 @@ class TestPDFContribution(unittest.TestCase):
     def test_pickling(self):
         "validate PDFContribution.residual() after pickling."
         from itertools import chain
+
         from diffpy.structure import loadStructure
         pc = self.pc
         pc.loadData(datafile("ni-q27r100-neutron.gr"))

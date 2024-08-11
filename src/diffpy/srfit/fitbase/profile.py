@@ -23,13 +23,13 @@ residual equation.
 
 __all__ = ["Parameter", "Profile"]
 
-import six
 import numpy
+import six
 
-from diffpy.srfit.util.observable import Observable
+from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.validatable import Validatable
-from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.util.observable import Observable
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8

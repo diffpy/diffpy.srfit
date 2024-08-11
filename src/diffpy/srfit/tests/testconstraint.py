@@ -17,10 +17,10 @@
 
 import unittest
 
-from diffpy.srfit.fitbase.constraint import Constraint
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.equation.builder import EquationFactory
+from diffpy.srfit.fitbase.constraint import Constraint
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 
 
 class TestConstraint(unittest.TestCase):

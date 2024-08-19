@@ -41,7 +41,7 @@ class BVSRestraint(Restraint):
 
     """
 
-    def __init__(self, parset, sig = 1, scaled = False):
+    def __init__(self, parset, sig=1, scaled=False):
         """Initialize the Restraint.
 
         parset  --  SrRealParSet that creates this BVSRestraint.
@@ -52,13 +52,14 @@ class BVSRestraint(Restraint):
 
         """
         from diffpy.srreal.bvscalculator import BVSCalculator
+
         self._calc = BVSCalculator()
         self._parset = parset
         self.sig = float(sig)
         self.scaled = bool(scaled)
         return
 
-    def penalty(self, w = 1.0):
+    def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
         w   --  The point-average chi^2 which is optionally used to scale the
@@ -74,7 +75,8 @@ class BVSRestraint(Restraint):
         penalty /= self.sig**2
 
         # Optionally scale by w
-        if self.scaled: penalty *= w
+        if self.scaled:
+            penalty *= w
 
         return penalty
 
@@ -85,16 +87,20 @@ class BVSRestraint(Restraint):
 
         """
         from numpy import nan
+
         p = self.penalty()
         if p is None or p is nan:
             raise SrFitError("Cannot evaluate penalty")
         v = self._calc.value
         if len(v) > 1 and not v.any():
-            emsg = ("Bond valence sums are all zero.  Check atom symbols in "
-                    "the structure or define custom bond-valence parameters.")
+            emsg = (
+                "Bond valence sums are all zero.  Check atom symbols in "
+                "the structure or define custom bond-valence parameters."
+            )
             raise SrFitError(emsg)
         return
 
     # End of class BVSRestraint
+
 
 # End of file

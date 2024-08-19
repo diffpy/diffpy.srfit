@@ -38,7 +38,8 @@ class Validatable(object):
 
         """
         for obj in iterable:
-            if obj is self: continue
+            if obj is self:
+                continue
             if isinstance(obj, Validatable):
                 obj._validate()
 
@@ -55,6 +56,7 @@ class Validatable(object):
         # Validate self here.
         # Then validate others.
         return
+
 
 # End class Validatable
 

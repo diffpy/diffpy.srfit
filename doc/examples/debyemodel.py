@@ -55,6 +55,7 @@ data = """\
 
 ####### Example Code
 
+
 def makeRecipe():
     """Make the recipe for the fit.
 
@@ -85,7 +86,7 @@ def makeRecipe():
 
     # Load data and add it to the profile. It is our responsibility to get our
     # data into the profile.
-    xydy = numpy.array(map(float, data.split()), dtype=float).reshape(-1,3)
+    xydy = numpy.array(map(float, data.split()), dtype=float).reshape(-1, 3)
     x, y, dy = numpy.hsplit(xydy, 3)
     profile.setObservedProfile(x, y, dy)
 
@@ -145,10 +146,11 @@ def makeRecipe():
     # breaking the restraint by the point-average chi^2 value so that the
     # restraint is roughly as significant as any other data point throughout
     # the fit.
-    recipe.restrain(recipe.offset, lb = 0, scaled = True)
+    recipe.restrain(recipe.offset, lb=0, scaled=True)
 
     # We're done setting up the recipe. We can now do other things with it.
     return recipe
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -162,14 +164,16 @@ def plotResults(recipe):
     Ucalc = recipe.pb.profile.ycalc
 
     import pylab
-    pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")
-    pylab.plot(T,Ucalc)
+
+    pylab.plot(T, U, "o", label="Pb $U_{iso}$ Data")
+    pylab.plot(T, Ucalc)
     pylab.xlabel("T (K)")
     pylab.ylabel(r"$U_{iso} (\AA^2)$")
-    pylab.legend(loc = (0.0,0.8))
+    pylab.legend(loc=(0.0, 0.8))
 
     pylab.show()
     return
+
 
 def main():
     """The workflow of creating, running and inspecting a fit."""
@@ -196,12 +200,14 @@ def main():
 # as we treat them as if existing in some external library that we cannot
 # modify.
 
+
 def debye(T, m, thetaD):
     """A wrapped version of 'adps' that can handle an array of T-values."""
     y = numpy.array([adps(m, thetaD, x) for x in T])
     return y
 
-def adps(m,thetaD,T):
+
+def adps(m, thetaD, T):
     """Calculates atomic displacement factors within the Debye model
 
     <u^2> = (3h^2/4 pi^2 m kB thetaD)(phi(thetaD/T)/(ThetaD/T) + 1/4)
@@ -215,9 +221,9 @@ def adps(m,thetaD,T):
     Uiso -- float -- the thermal factor from the Debye recipe at temp T
 
     """
-    h = 6.6260755e-34   # Planck's constant. J.s of m^2.kg/s
+    h = 6.6260755e-34  # Planck's constant. J.s of m^2.kg/s
     kB = 1.3806503e-23  # Boltzmann's constant. J/K
-    amu = 1.66053886e-27 # Atomic mass unit. kg
+    amu = 1.66053886e-27  # Atomic mass unit. kg
 
     def __phi(x):
         """evaluates the phi integral needed in Debye calculation
@@ -231,29 +237,26 @@ def adps(m,thetaD,T):
         phi -- float -- value of the phi function
 
         """
-        def __debyeKernel(xi):
-            """function needed by debye calculators
 
-            """
-            y = xi/(numpy.exp(xi)-1)
+        def __debyeKernel(xi):
+            """function needed by debye calculators"""
+            y = xi / (numpy.exp(xi) - 1)
             return y
 
         import scipy.integrate
 
         int = scipy.integrate.quad(__debyeKernel, 0, x)
-        phi = (1/x) * int[0]
+        phi = (1 / x) * int[0]
 
         return phi
 
-
     m = m * amu
-    u2 = (3*h**2 / (4 * numpy.pi**2 *m *kB *thetaD))*\
-            (__phi(thetaD/T)/(thetaD/T) + 1./4.)
+    u2 = (3 * h**2 / (4 * numpy.pi**2 * m * kB * thetaD)) * (__phi(thetaD / T) / (thetaD / T) + 1.0 / 4.0)
 
-    return u2*1e20
+    return u2 * 1e20
+
 
 if __name__ == "__main__":
-
     main()
 
 # End of file

@@ -23,8 +23,8 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 
 ####### Example Code
 
-def main():
 
+def main():
     p = Profile()
     p.loadtxt("data/gaussian.dat")
 
@@ -47,11 +47,12 @@ def main():
     #           loosely tying parameters to a value.
     r = FitRecipe()
     r |= c
-    r += (c.A, 0.5), (c.x0, 5), 'sig'
-    r *= c.sigma, 'sig'
+    r += (c.A, 0.5), (c.x0, 5), "sig"
+    r *= c.sigma, "sig"
     r %= c.A, 0.5, 0.5
 
     from gaussianrecipe import scipyOptimize
+
     scipyOptimize(r)
 
     res = FitResults(r)
@@ -59,6 +60,7 @@ def main():
     res.printResults()
     # Plot the results.
     from gaussianrecipe import plotResults
+
     plotResults(r)
 
     return

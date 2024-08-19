@@ -26,6 +26,7 @@ from diffpy.srfit.pdf import DebyePDFGenerator
 
 ####### Example Code
 
+
 def makeRecipe(molecule, datname):
     """Create a recipe that uses the DebyePDFGenerator."""
 
@@ -47,7 +48,7 @@ def makeRecipe(molecule, datname):
     ## The FitContribution
     contribution = FitContribution("bucky")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname="r")
 
     # Make a FitRecipe.
     recipe = FitRecipe()
@@ -62,7 +63,6 @@ def makeRecipe(molecule, datname):
     # First, the isotropic thermal displacement factor.
     Biso = recipe.newVar("Biso")
     for atom in c60.getScatterers():
-
         # We have defined a 'center' atom that is a dummy, which means that it
         # has no scattering power. It is only used as a reference point for
         # our bond length. We don't want to constrain it.
@@ -84,13 +84,12 @@ def makeRecipe(molecule, datname):
     # from the constraint.
     radius = recipe.newVar("radius")
     for i, atom in enumerate(c60.getScatterers()):
-
         if atom.isDummy():
             continue
 
         # This creates a Parameter that moves the second atom according to the
         # bond length. Note that each Parameter needs a unique name.
-        par = c60.addBondLengthParameter("rad%i"%i, center, atom)
+        par = c60.addBondLengthParameter("rad%i" % i, center, atom)
         recipe.constrain(par, radius)
 
     # Add the correlation term, scale. The scale is too short to effectively
@@ -101,6 +100,7 @@ def makeRecipe(molecule, datname):
     # Give the recipe away so it can be used!
     return recipe
 
+
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
@@ -108,14 +108,15 @@ def plotResults(recipe):
     r = recipe.bucky.profile.x
     g = recipe.bucky.profile.y
     gcalc = recipe.bucky.profile.ycalc
-    diffzero =  -0.8 * max(g) * numpy.ones_like(g)
+    diffzero = -0.8 * max(g) * numpy.ones_like(g)
     diff = g - gcalc + diffzero
 
     import pylab
-    pylab.plot(r,g,'ob',label="G(r) Data")
-    pylab.plot(r,gcalc,'-r',label="G(r) Fit")
-    pylab.plot(r,diff,'-g',label="G(r) diff")
-    pylab.plot(r,diffzero,'-k')
+
+    pylab.plot(r, g, "ob", label="G(r) Data")
+    pylab.plot(r, gcalc, "-r", label="G(r) Fit")
+    pylab.plot(r, diff, "-g", label="G(r) diff")
+    pylab.plot(r, diffzero, "-k")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
@@ -123,8 +124,8 @@ def plotResults(recipe):
     pylab.show()
     return
 
-def main():
 
+def main():
     molecule = makeC60()
     # Make the data and the recipe
     recipe = makeRecipe(molecule, "data/C60.gr")
@@ -133,6 +134,7 @@ def main():
 
     # Optimize
     from scipy.optimize import leastsq
+
     leastsq(recipe.residual, recipe.getValues())
 
     # Print results
@@ -144,8 +146,8 @@ def main():
 
     return
 
-c60xyz = \
-"""
+
+c60xyz = """
 3.451266498   0.685000000   0.000000000
 3.451266498  -0.685000000   0.000000000
 -3.451266498   0.685000000   0.000000000
@@ -208,6 +210,7 @@ c60xyz = \
 -2.279809890  -2.580456608  -0.724000000
 """
 
+
 def makeC60():
     """Make the C60 molecule using pyobjcryst."""
 
@@ -234,13 +237,12 @@ def makeC60():
     # Add the other atoms. They will be named C1, C2, ..., C60.
     for i, l in enumerate(c60xyz.strip().splitlines()):
         x, y, z = map(float, l.split())
-        m.AddAtom(x, y, z, sp, "C%i"%(i+1))
+        m.AddAtom(x, y, z, sp, "C%i" % (i + 1))
 
     return m
 
 
 if __name__ == "__main__":
-
     main()
 
 # End of file

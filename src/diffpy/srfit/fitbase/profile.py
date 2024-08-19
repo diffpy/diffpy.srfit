@@ -88,19 +88,15 @@ class Profile(Observable, Validatable):
         return
 
     # We want x, y, ycalc and dy to stay in-sync with xpar, ypar and dypar
-    x = property( lambda self : self.xpar.getValue(),
-                  lambda self, val : self.xpar.setValue(val) )
-    y = property( lambda self : self.ypar.getValue(),
-                  lambda self, val : self.ypar.setValue(val) )
-    dy = property( lambda self : self.dypar.getValue(),
-                   lambda self, val : self.dypar.setValue(val) )
-    ycalc = property( lambda self : self.ycpar.getValue(),
-                  lambda self, val : self.ycpar.setValue(val) )
+    x = property(lambda self: self.xpar.getValue(), lambda self, val: self.xpar.setValue(val))
+    y = property(lambda self: self.ypar.getValue(), lambda self, val: self.ypar.setValue(val))
+    dy = property(lambda self: self.dypar.getValue(), lambda self, val: self.dypar.setValue(val))
+    ycalc = property(lambda self: self.ycpar.getValue(), lambda self, val: self.ycpar.setValue(val))
 
     # We want xobs, yobs and dyobs to be read-only
-    xobs = property( lambda self: self._xobs )
-    yobs = property( lambda self: self._yobs )
-    dyobs = property( lambda self: self._dyobs )
+    xobs = property(lambda self: self._xobs)
+    yobs = property(lambda self: self._yobs)
+    dyobs = property(lambda self: self._dyobs)
 
     def loadParsedData(self, parser):
         """Load parsed data from a ProfileParser.
@@ -113,7 +109,7 @@ class Profile(Observable, Validatable):
         self.setObservedProfile(x, y, dy)
         return
 
-    def setObservedProfile(self, xobs, yobs, dyobs = None):
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         Arguments
@@ -182,29 +178,27 @@ class Profile(Observable, Validatable):
         """
         if self.xobs is None:
             raise AttributeError("No observed profile")
+
         # local helper function
         def _isobs(a):
             if not isinstance(a, six.string_types):
                 return False
-            if a != 'obs':
+            if a != "obs":
                 raise ValueError('Must be either float or "obs".')
             return True
+
         # resolve new low and high bounds for x
-        lo = (self.x[0] if xmin is None else
-              self.xobs[0] if _isobs(xmin) else float(xmin))
+        lo = self.x[0] if xmin is None else self.xobs[0] if _isobs(xmin) else float(xmin)
         lo = max(lo, self.xobs[0])
-        hi = (self.x[-1] if xmax is None else
-              self.xobs[-1] if _isobs(xmax) else float(xmax))
+        hi = self.x[-1] if xmax is None else self.xobs[-1] if _isobs(xmax) else float(xmax)
         hi = min(hi, self.xobs[-1])
         # determine if we need to clip the original grid
         clip = True
         step = None
         ncur = len(self.x)
-        stepcur = (1 if ncur < 2
-                   else (self.x[-1] - self.x[0]) / (ncur - 1.0))
+        stepcur = 1 if ncur < 2 else (self.x[-1] - self.x[0]) / (ncur - 1.0)
         nobs = len(self.xobs)
-        stepobs = (1 if nobs < 2
-                   else (self.xobs[-1] - self.xobs[0]) / (nobs - 1.0))
+        stepobs = 1 if nobs < 2 else (self.xobs[-1] - self.xobs[0]) / (nobs - 1.0)
         if dx is None:
             # check if xobs overlaps with x
             i0 = numpy.fabs(self.xobs - self.x[0]).argmin()
@@ -244,7 +238,6 @@ class Profile(Observable, Validatable):
             self.setCalculationPoints(x1)
         return
 
-
     def setCalculationPoints(self, x):
         """Set the calculation points.
 
@@ -258,8 +251,8 @@ class Profile(Observable, Validatable):
         """
         x = numpy.asarray(x)
         if self.xobs is not None:
-            x = x[ x >= self.xobs[0] - epsilon ]
-            x = x[ x <= self.xobs[-1] + epsilon ]
+            x = x[x >= self.xobs[0] - epsilon]
+            x = x[x <= self.xobs[-1] + epsilon]
         self.x = x
         if self.yobs is not None:
             self.y = rebinArray(self.yobs, self.xobs, self.x)
@@ -268,8 +261,8 @@ class Profile(Observable, Validatable):
             if (self.dyobs == 1).all():
                 self.dy = numpy.ones_like(self.x)
             else:
-            # FIXME - This does not follow error propogation rules and it
-            # introduces (more) correlation between the data points.
+                # FIXME - This does not follow error propogation rules and it
+                # introduces (more) correlation between the data points.
                 self.dy = rebinArray(self.dyobs, self.xobs, self.x)
 
         return
@@ -309,7 +302,6 @@ class Profile(Observable, Validatable):
         self.setObservedProfile(x, y, dy)
         return x, y, dy
 
-
     def savetxt(self, fname, **kwargs):
         """Call `numpy.savetxt` with x, ycalc, y, dy.
 
@@ -337,11 +329,10 @@ class Profile(Observable, Validatable):
             raise SrFitError("ycalc is None")
         y = self.y
         dy = self.dy
-        kwargs.setdefault('header', 'x  ycalc  y  dy')
+        kwargs.setdefault("header", "x  ycalc  y  dy")
         data = numpy.transpose([x, ycalc, y, dy])
         numpy.savetxt(fname, data, **kwargs)
         return
-
 
     def _flush(self, other):
         """Invalidate cached state.
@@ -362,8 +353,7 @@ class Profile(Observable, Validatable):
         Raises SrFitError if validation fails.
 
         """
-        datanotset = any(v is None for v in
-                [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs])
+        datanotset = any(v is None for v in [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs])
         if datanotset:
             raise SrFitError("Missing data")
         if len(self.x) != len(self.y) or len(self.x) != len(self.dy):
@@ -372,6 +362,7 @@ class Profile(Observable, Validatable):
 
 
 # End class Profile
+
 
 def rebinArray(A, xold, xnew):
     """Rebin the an array by interpolating over the new x range.

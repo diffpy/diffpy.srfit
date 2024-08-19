@@ -41,7 +41,7 @@ class Argument(Literal, ArgumentABC):
 
     const = None
 
-    def __init__(self, name = None, value = None, const = False):
+    def __init__(self, name=None, value=None, const=False):
         """Initialization."""
         Literal.__init__(self, name)
         self.const = const
@@ -71,7 +71,7 @@ class Argument(Literal, ArgumentABC):
             self.notify()
         return
 
-    value = property( lambda self: self.getValue(),
-            lambda self, val: self.setValue(val))
+    value = property(lambda self: self.getValue(), lambda self, val: self.setValue(val))
+
 
 # End of file

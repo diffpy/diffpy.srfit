@@ -32,7 +32,7 @@ class ArgFinder(Visitor):
 
     """
 
-    def __init__(self, getconsts = True):
+    def __init__(self, getconsts=True):
         """Initialize.
 
         Arguments
@@ -60,5 +60,6 @@ class ArgFinder(Visitor):
         for arg in op.args:
             arg.identify(self)
         return self.args
+
 
 # End of file

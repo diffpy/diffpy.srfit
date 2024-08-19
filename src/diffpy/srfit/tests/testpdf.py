@@ -33,11 +33,10 @@ from diffpy.srfit.tests.utils import (
 
 # ----------------------------------------------------------------------------
 
-class TestPDFParset(unittest.TestCase):
 
+class TestPDFParset(unittest.TestCase):
     def setUp(self):
         return
-
 
     def testParser1(self):
         data = datafile("ni-q27r100-neutron.gr")
@@ -46,16 +45,16 @@ class TestPDFParset(unittest.TestCase):
 
         meta = parser._meta
 
-        self.assertEqual(data, meta['filename'])
-        self.assertEqual(1, meta['nbanks'])
-        self.assertEqual('N', meta['stype'])
-        self.assertEqual(27, meta['qmax'])
-        self.assertEqual(300, meta.get('temperature'))
-        self.assertEqual(None, meta.get('qdamp'))
-        self.assertEqual(None, meta.get('qbroad'))
-        self.assertEqual(None, meta.get('spdiameter'))
-        self.assertEqual(None, meta.get('scale'))
-        self.assertEqual(None, meta.get('doping'))
+        self.assertEqual(data, meta["filename"])
+        self.assertEqual(1, meta["nbanks"])
+        self.assertEqual("N", meta["stype"])
+        self.assertEqual(27, meta["qmax"])
+        self.assertEqual(300, meta.get("temperature"))
+        self.assertEqual(None, meta.get("qdamp"))
+        self.assertEqual(None, meta.get("qbroad"))
+        self.assertEqual(None, meta.get("spdiameter"))
+        self.assertEqual(None, meta.get("scale"))
+        self.assertEqual(None, meta.get("doping"))
 
         x, y, dx, dy = parser.getData()
         self.assertTrue(dx is None)
@@ -66,14 +65,12 @@ class TestPDFParset(unittest.TestCase):
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
-        testy = numpy.array([1.144, 2.258, 3.312, 4.279, 5.135, 5.862, 6.445,
-            6.875, 7.150, 7.272])
+        testy = numpy.array([1.144, 2.258, 3.312, 4.279, 5.135, 5.862, 6.445, 6.875, 7.150, 7.272])
         diff = testy - y[:10]
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
         return
-
 
     def testParser2(self):
         data = datafile("si-q27r60-xray.gr")
@@ -82,16 +79,16 @@ class TestPDFParset(unittest.TestCase):
 
         meta = parser._meta
 
-        self.assertEqual(data, meta['filename'])
-        self.assertEqual(1, meta['nbanks'])
-        self.assertEqual('X', meta['stype'])
-        self.assertEqual(27, meta['qmax'])
-        self.assertEqual(300, meta.get('temperature'))
-        self.assertEqual(None, meta.get('qdamp'))
-        self.assertEqual(None, meta.get('qbroad'))
-        self.assertEqual(None, meta.get('spdiameter'))
-        self.assertEqual(None, meta.get('scale'))
-        self.assertEqual(None, meta.get('doping'))
+        self.assertEqual(data, meta["filename"])
+        self.assertEqual(1, meta["nbanks"])
+        self.assertEqual("X", meta["stype"])
+        self.assertEqual(27, meta["qmax"])
+        self.assertEqual(300, meta.get("temperature"))
+        self.assertEqual(None, meta.get("qdamp"))
+        self.assertEqual(None, meta.get("qbroad"))
+        self.assertEqual(None, meta.get("spdiameter"))
+        self.assertEqual(None, meta.get("scale"))
+        self.assertEqual(None, meta.get("doping"))
 
         x, y, dx, dy = parser.getData()
         testx = numpy.linspace(0.01, 60, 5999, endpoint=False)
@@ -99,15 +96,38 @@ class TestPDFParset(unittest.TestCase):
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
-        testy = numpy.array([0.1105784, 0.2199684, 0.3270088, 0.4305913,
-            0.5296853, 0.6233606, 0.7108060, 0.7913456, 0.8644501, 0.9297440])
+        testy = numpy.array(
+            [
+                0.1105784,
+                0.2199684,
+                0.3270088,
+                0.4305913,
+                0.5296853,
+                0.6233606,
+                0.7108060,
+                0.7913456,
+                0.8644501,
+                0.9297440,
+            ]
+        )
         diff = testy - y[:10]
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
-        testdy = numpy.array([0.001802192, 0.003521449, 0.005079115,
-            0.006404892, 0.007440527, 0.008142955, 0.008486813, 0.008466340,
-            0.008096858, 0.007416456])
+        testdy = numpy.array(
+            [
+                0.001802192,
+                0.003521449,
+                0.005079115,
+                0.006404892,
+                0.007440527,
+                0.008142955,
+                0.008486813,
+                0.008466340,
+                0.008096858,
+                0.007416456,
+            ]
+        )
         diff = testdy - dy[:10]
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
@@ -115,27 +135,28 @@ class TestPDFParset(unittest.TestCase):
         self.assertTrue(dx is None)
         return
 
+
 # End of class TestPDFParset
 
 # ----------------------------------------------------------------------------
 
+
 @unittest.skipUnless(has_srreal, _msg_nosrreal)
 @unittest.skipUnless(has_structure, _msg_nostructure)
 class TestPDFGenerator(unittest.TestCase):
-
     def setUp(self):
         self.gen = PDFGenerator()
         return
 
-
     def testGenerator(self):
         qmax = 27.0
         gen = self.gen
-        gen.setScatteringType('N')
-        self.assertEqual('N', gen.getScatteringType())
+        gen.setScatteringType("N")
+        self.assertEqual("N", gen.getScatteringType())
         gen.setQmax(qmax)
         self.assertAlmostEqual(qmax, gen.getQmax())
         from diffpy.structure import PDFFitStructure
+
         stru = PDFFitStructure()
         ciffile = datafile("ni.cif")
         stru.read(ciffile)
@@ -162,12 +183,13 @@ class TestPDFGenerator(unittest.TestCase):
         # output, we just have to make sure we can calculate from the
         # PDFGenerator interface.
         from diffpy.srreal.pdfcalculator import PDFCalculator
+
         calc = PDFCalculator()
         calc.rstep = r[1] - r[0]
         calc.rmin = r[0]
         calc.rmax = r[-1] + 0.5 * calc.rstep
         calc.qmax = qmax
-        calc.setScatteringFactorTableByType('N')
+        calc.setScatteringFactorTableByType("N")
         calc.eval(stru)
         yref = calc.pdf
 
@@ -176,10 +198,8 @@ class TestPDFGenerator(unittest.TestCase):
         self.assertAlmostEqual(0, res)
         return
 
-
     def test_setQmin(self):
-        """Verify qmin is propagated to the calculator object.
-        """
+        """Verify qmin is propagated to the calculator object."""
         gen = self.gen
         self.assertEqual(0, gen.getQmin())
         self.assertEqual(0, gen._calc.qmin)
@@ -188,36 +208,34 @@ class TestPDFGenerator(unittest.TestCase):
         self.assertEqual(0.93, gen._calc.qmin)
         return
 
+
 # End of class TestPDFGenerator
 
 # ----------------------------------------------------------------------------
 
+
 @unittest.skipUnless(has_srreal, _msg_nosrreal)
 @unittest.skipUnless(has_structure, _msg_nostructure)
 class TestPDFContribution(unittest.TestCase):
-
     def setUp(self):
-        self.pc = PDFContribution('pdf')
+        self.pc = PDFContribution("pdf")
         return
 
-
     def test_setQmax(self):
-        """check PDFContribution.setQmax()
-        """
+        """check PDFContribution.setQmax()"""
         from diffpy.structure import Structure
+
         pc = self.pc
         pc.setQmax(21)
-        pc.addStructure('empty', Structure())
+        pc.addStructure("empty", Structure())
         self.assertEqual(21, pc.empty.getQmax())
         pc.setQmax(22)
         self.assertEqual(22, pc.getQmax())
         self.assertEqual(22, pc.empty.getQmax())
         return
 
-
     def test_getQmax(self):
-        """check PDFContribution.getQmax()
-        """
+        """check PDFContribution.getQmax()"""
         from diffpy.structure import Structure
 
         # cover all code branches in PDFContribution._getMetaValue
@@ -227,54 +245,55 @@ class TestPDFContribution(unittest.TestCase):
         pc1.setQmax(17)
         self.assertEqual(17, pc1.getQmax())
         # (2) contribution metadata
-        pc2 = PDFContribution('pdf')
-        pc2.addStructure('empty', Structure())
+        pc2 = PDFContribution("pdf")
+        pc2.addStructure("empty", Structure())
         pc2.empty.setQmax(18)
         self.assertEqual(18, pc2.getQmax())
         # (3) profile metadata
-        pc3 = PDFContribution('pdf')
-        pc3.profile.meta['qmax'] = 19
+        pc3 = PDFContribution("pdf")
+        pc3.profile.meta["qmax"] = 19
         self.assertEqual(19, pc3.getQmax())
         return
-
 
     def test_savetxt(self):
         "check PDFContribution.savetxt()"
         from diffpy.structure import Structure
+
         pc = self.pc
         pc.loadData(datafile("si-q27r60-xray.gr"))
         pc.setCalculationRange(0, 10)
-        pc.addStructure('empty', Structure())
+        pc.addStructure("empty", Structure())
         fp = io.BytesIO()
         self.assertRaises(SrFitError, pc.savetxt, fp)
         pc.evaluate()
         pc.savetxt(fp)
         txt = fp.getvalue().decode()
-        nlines = len(txt.strip().split('\n'))
+        nlines = len(txt.strip().split("\n"))
         self.assertEqual(1001, nlines)
         return
-
 
     def test_pickling(self):
         "validate PDFContribution.residual() after pickling."
         from itertools import chain
 
         from diffpy.structure import loadStructure
+
         pc = self.pc
         pc.loadData(datafile("ni-q27r100-neutron.gr"))
         ni = loadStructure(datafile("ni.cif"))
         ni.Uisoequiv = 0.003
-        pc.addStructure('ni', ni)
+        pc.addStructure("ni", ni)
         pc.setCalculationRange(0, 10)
         pc2 = pickle.loads(pickle.dumps(pc))
         res0 = pc.residual()
         self.assertTrue(numpy.array_equal(res0, pc2.residual()))
-        for p in chain(pc.iterPars('Uiso'), pc2.iterPars('Uiso')):
+        for p in chain(pc.iterPars("Uiso"), pc2.iterPars("Uiso")):
             p.value = 0.004
         res1 = pc.residual()
         self.assertFalse(numpy.allclose(res0, res1))
         self.assertTrue(numpy.array_equal(res1, pc2.residual()))
         return
+
 
 # End of class TestPDFContribution
 

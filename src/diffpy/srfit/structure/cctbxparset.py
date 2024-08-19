@@ -32,8 +32,7 @@ from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 
-__all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet",
-           "CCTBXCrystalParSet"]
+__all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet", "CCTBXCrystalParSet"]
 
 
 class CCTBXScattererParSet(ParameterSet):
@@ -65,29 +64,22 @@ class CCTBXScattererParSet(ParameterSet):
         self.idx = idx
 
         # x, y, z, occupancy
-        self.addParameter(ParameterAdapter("x", None, self._xyzgetter(0),
-            self._xyzsetter(0)))
-        self.addParameter(ParameterAdapter("y", None, self._xyzgetter(1),
-            self._xyzsetter(1)))
-        self.addParameter(ParameterAdapter("z", None, self._xyzgetter(2),
-            self._xyzsetter(2)))
-        self.addParameter(ParameterAdapter("occupancy", None, self._getocc,
-            self._setocc))
-        self.addParameter(ParameterAdapter("Uiso", None, self._getuiso,
-            self._setuiso))
+        self.addParameter(ParameterAdapter("x", None, self._xyzgetter(0), self._xyzsetter(0)))
+        self.addParameter(ParameterAdapter("y", None, self._xyzgetter(1), self._xyzsetter(1)))
+        self.addParameter(ParameterAdapter("z", None, self._xyzgetter(2), self._xyzsetter(2)))
+        self.addParameter(ParameterAdapter("occupancy", None, self._getocc, self._setocc))
+        self.addParameter(ParameterAdapter("Uiso", None, self._getuiso, self._setuiso))
         return
 
     # Getters and setters
 
     def _xyzgetter(self, i):
-
         def f(dummy):
             return self.strups.stru.scatterers()[self.idx].site[i]
 
         return f
 
     def _xyzsetter(self, i):
-
         def f(dummy, value):
             xyz = list(self.strups.stru.scatterers()[self.idx].site)
             xyz[i] = value
@@ -115,7 +107,9 @@ class CCTBXScattererParSet(ParameterSet):
 
     element = property(_getElem)
 
+
 # End class CCTBXScattererParSet
+
 
 class CCTBXUnitCellParSet(ParameterSet):
     """A wrapper for cctbx unit_cell object.
@@ -137,30 +131,22 @@ class CCTBXUnitCellParSet(ParameterSet):
         self.strups = strups
         self._latpars = list(self.strups.stru.unit_cell().parameters())
 
-        self.addParameter(ParameterAdapter("a", None, self._latgetter(0),
-            self._latsetter(0)))
-        self.addParameter(ParameterAdapter("b", None, self._latgetter(1),
-            self._latsetter(1)))
-        self.addParameter(ParameterAdapter("c", None, self._latgetter(2),
-            self._latsetter(2)))
-        self.addParameter(ParameterAdapter("alpha", None, self._latgetter(3),
-            self._latsetter(3)))
-        self.addParameter(ParameterAdapter("beta", None, self._latgetter(4),
-            self._latsetter(4)))
-        self.addParameter(ParameterAdapter("gamma", None, self._latgetter(5),
-            self._latsetter(5)))
+        self.addParameter(ParameterAdapter("a", None, self._latgetter(0), self._latsetter(0)))
+        self.addParameter(ParameterAdapter("b", None, self._latgetter(1), self._latsetter(1)))
+        self.addParameter(ParameterAdapter("c", None, self._latgetter(2), self._latsetter(2)))
+        self.addParameter(ParameterAdapter("alpha", None, self._latgetter(3), self._latsetter(3)))
+        self.addParameter(ParameterAdapter("beta", None, self._latgetter(4), self._latsetter(4)))
+        self.addParameter(ParameterAdapter("gamma", None, self._latgetter(5), self._latsetter(5)))
 
         return
 
     def _latgetter(self, i):
-
         def f(dummy):
             return self._latpars[i]
 
         return f
 
     def _latsetter(self, i):
-
         def f(dummy, value):
             self._latpars[i] = value
             self.strups._update = True
@@ -172,6 +158,7 @@ class CCTBXUnitCellParSet(ParameterSet):
 # End class CCTBXUnitCellParSet
 
 # FIXME - Special positions should be constant.
+
 
 class CCTBXCrystalParSet(BaseStructureParSet):
     """A wrapper for CCTBX structure.
@@ -201,14 +188,15 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         for s in stru.scatterers():
             el = s.element_symbol()
             i = cdict.get(el, 0)
-            sname = "%s%i"%(el,i)
-            cdict[el] = i+1
+            sname = "%s%i" % (el, i)
+            cdict[el] = i + 1
             scatterer = CCTBXScattererParSet(sname, self, i)
             self.addParameterSet(scatterer)
             self.scatterers.append(scatterer)
 
         # Constrain the lattice
         from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
+
         symbol = self.getSpaceGroup()
         _constrainSpaceGroup(self, symbol)
 
@@ -231,16 +219,11 @@ class CCTBXCrystalParSet(BaseStructureParSet):
 
         # Create the symmetry object
         from cctbx.crystal import symmetry
-        symm = symmetry(
-                unit_cell = self.unitcell._latpars,
-                space_group_symbol = sgn
-                )
+
+        symm = symmetry(unit_cell=self.unitcell._latpars, space_group_symbol=sgn)
 
         # Now the new structure
-        newstru = stru.__class__(
-                crystal_symmetry = symm,
-                scatterers = stru.scatterers()
-                )
+        newstru = stru.__class__(crystal_symmetry=symm, scatterers=stru.scatterers())
 
         self.unitcell._latpars = list(newstru.unit_cell().parameters())
 
@@ -276,7 +259,6 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         sg = self.stru.space_group()
         t = sg.type()
         return t.lookup_symbol()
-
 
 
 # End class CCTBXCrystalParSet

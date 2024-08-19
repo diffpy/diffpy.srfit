@@ -81,12 +81,10 @@ class Swapper(Visitor):
         # If we've been told to swap out a literal, then we must do it in-place
         # because the order of op.args matters.
         if self._swap:
-
             oldlit = self.oldlit
             newlit = self.newlit
 
             while oldlit in op.args:
-
                 # Record the index
                 idx = op.args.index(oldlit)
                 # Remove the literal
@@ -113,7 +111,6 @@ class Swapper(Visitor):
                 op.args.insert(idx, newlit)
                 newlit.addObserver(op._flush)
                 op._flush(other=())
-
 
             self._swap = False
 
@@ -143,5 +140,6 @@ class Swapper(Visitor):
         eq.setRoot(eq.root)
 
         return
+
 
 # End of file

@@ -42,6 +42,7 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 
 ####### Example Code
 
+
 def makeRecipe(strufile, datname1, datname2):
     """Create a recipe that uses the IntensityGenerator.
 
@@ -83,10 +84,10 @@ def makeRecipe(strufile, datname1, datname2):
     # Create the FitContributions.
     contribution1 = FitContribution("bucky1")
     contribution1.addProfileGenerator(generator1)
-    contribution1.setProfile(profile1, xname = "q")
+    contribution1.setProfile(profile1, xname="q")
     contribution2 = FitContribution("bucky2")
     contribution2.addProfileGenerator(generator2)
-    contribution2.setProfile(profile2, xname = "q")
+    contribution2.setProfile(profile2, xname="q")
 
     # Now we're ready to define the fitting equation for each FitContribution.
     # The functions registered below will be independent, even though they take
@@ -103,8 +104,9 @@ def makeRecipe(strufile, datname1, datname2):
     # We will create the broadening function by registering a python function.
     pi = numpy.pi
     exp = numpy.exp
+
     def gaussian(q, q0, width):
-        return 1/(2*pi*width**2)**0.5 * exp(-0.5 * ((q-q0)/width)**2)
+        return 1 / (2 * pi * width**2) ** 0.5 * exp(-0.5 * ((q - q0) / width) ** 2)
 
     contribution1.registerFunction(gaussian)
     contribution2.registerFunction(gaussian)
@@ -126,32 +128,32 @@ def makeRecipe(strufile, datname1, datname2):
     # background that we just defined in the FitContributions. We have to do
     # this separately for each FitContribution. We tag the variables so it is
     # easy to retrieve the background variables.
-    recipe.addVar(contribution1.b0, 0, name = "b1_0", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b1, 0, name = "b1_1", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b2, 0, name = "b1_2", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b3, 0, name = "b1_3", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b4, 0, name = "b1_4", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b5, 0, name = "b1_5", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b6, 0, name = "b1_6", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b7, 0, name = "b1_7", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b8, 0, name = "b1_8", tag = "bcoeffs1")
-    recipe.addVar(contribution1.b9, 0, name = "b1_9", tag = "bcoeffs1")
-    recipe.addVar(contribution2.b0, 0, name = "b2_0", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b1, 0, name = "b2_1", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b2, 0, name = "b2_2", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b3, 0, name = "b2_3", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b4, 0, name = "b2_4", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b5, 0, name = "b2_5", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b6, 0, name = "b2_6", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b7, 0, name = "b2_7", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b8, 0, name = "b2_8", tag = "bcoeffs2")
-    recipe.addVar(contribution2.b9, 0, name = "b2_9", tag = "bcoeffs2")
+    recipe.addVar(contribution1.b0, 0, name="b1_0", tag="bcoeffs1")
+    recipe.addVar(contribution1.b1, 0, name="b1_1", tag="bcoeffs1")
+    recipe.addVar(contribution1.b2, 0, name="b1_2", tag="bcoeffs1")
+    recipe.addVar(contribution1.b3, 0, name="b1_3", tag="bcoeffs1")
+    recipe.addVar(contribution1.b4, 0, name="b1_4", tag="bcoeffs1")
+    recipe.addVar(contribution1.b5, 0, name="b1_5", tag="bcoeffs1")
+    recipe.addVar(contribution1.b6, 0, name="b1_6", tag="bcoeffs1")
+    recipe.addVar(contribution1.b7, 0, name="b1_7", tag="bcoeffs1")
+    recipe.addVar(contribution1.b8, 0, name="b1_8", tag="bcoeffs1")
+    recipe.addVar(contribution1.b9, 0, name="b1_9", tag="bcoeffs1")
+    recipe.addVar(contribution2.b0, 0, name="b2_0", tag="bcoeffs2")
+    recipe.addVar(contribution2.b1, 0, name="b2_1", tag="bcoeffs2")
+    recipe.addVar(contribution2.b2, 0, name="b2_2", tag="bcoeffs2")
+    recipe.addVar(contribution2.b3, 0, name="b2_3", tag="bcoeffs2")
+    recipe.addVar(contribution2.b4, 0, name="b2_4", tag="bcoeffs2")
+    recipe.addVar(contribution2.b5, 0, name="b2_5", tag="bcoeffs2")
+    recipe.addVar(contribution2.b6, 0, name="b2_6", tag="bcoeffs2")
+    recipe.addVar(contribution2.b7, 0, name="b2_7", tag="bcoeffs2")
+    recipe.addVar(contribution2.b8, 0, name="b2_8", tag="bcoeffs2")
+    recipe.addVar(contribution2.b9, 0, name="b2_9", tag="bcoeffs2")
 
     # We also want to adjust the scale and the convolution width
-    recipe.addVar(contribution1.scale, 1, name = "scale1")
-    recipe.addVar(contribution1.width, 0.1, name = "width1")
-    recipe.addVar(contribution2.scale, 1, name = "scale2")
-    recipe.addVar(contribution2.width, 0.1, name = "width2")
+    recipe.addVar(contribution1.scale, 1, name="scale1")
+    recipe.addVar(contribution1.width, 0.1, name="width1")
+    recipe.addVar(contribution2.scale, 1, name="scale2")
+    recipe.addVar(contribution2.width, 0.1, name="width2")
 
     # We can also refine structural parameters. We only have to do this once,
     # since each generator holds the same DiffpyStructureParSet.
@@ -172,6 +174,7 @@ def makeRecipe(strufile, datname1, datname2):
 
     # Give the recipe away so it can be used!
     return recipe
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -195,18 +198,19 @@ def plotResults(recipe):
     diff1 += offset
 
     import pylab
+
     pylab.subplot(2, 1, 1)
-    pylab.plot(q,I1,'bo',label="I1(Q) Data")
-    pylab.plot(q,Icalc1,'r-',label="I1(Q) Fit")
-    pylab.plot(q,diff1,'g-',label="I1(Q) diff")
-    pylab.plot(q,bkgd1,'c-',label="Bkgd1 Fit")
+    pylab.plot(q, I1, "bo", label="I1(Q) Data")
+    pylab.plot(q, Icalc1, "r-", label="I1(Q) Fit")
+    pylab.plot(q, diff1, "g-", label="I1(Q) diff")
+    pylab.plot(q, bkgd1, "c-", label="Bkgd1 Fit")
     pylab.legend(loc=1)
 
     pylab.subplot(2, 1, 2)
-    pylab.plot(q,I2,'bo',label="I2(Q) Data")
-    pylab.plot(q,Icalc2,'r-',label="I2(Q) Fit")
-    pylab.plot(q,diff2,'g-',label="I2(Q) diff")
-    pylab.plot(q,bkgd2,'c-',label="Bkgd2 Fit")
+    pylab.plot(q, I2, "bo", label="I2(Q) Data")
+    pylab.plot(q, Icalc2, "r-", label="I2(Q) Fit")
+    pylab.plot(q, diff2, "g-", label="I2(Q) diff")
+    pylab.plot(q, bkgd2, "c-", label="Bkgd2 Fit")
     pylab.xlabel(r"$Q (\AA^{-1})$")
     pylab.ylabel("Intensity (arb. units)")
     pylab.legend(loc=1)
@@ -214,8 +218,8 @@ def plotResults(recipe):
     pylab.show()
     return
 
-def main():
 
+def main():
     # Make two different data sets, each from the same structure, but with
     # different scale, noise, broadening and background.
     strufile = "data/C60.stru"
@@ -256,8 +260,8 @@ def main():
 
     return
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     main()
 
 # End of file

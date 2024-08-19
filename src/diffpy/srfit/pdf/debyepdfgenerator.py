@@ -66,7 +66,7 @@ class DebyePDFGenerator(BasePDFGenerator):
 
     """
 
-    def setStructure(self, stru, name = "phase", periodic = False):
+    def setStructure(self, stru, name="phase", periodic=False):
         """Set the structure that will be used to calculate the PDF.
 
         This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
@@ -86,8 +86,7 @@ class DebyePDFGenerator(BasePDFGenerator):
         """
         return BasePDFGenerator.setStructure(self, stru, name, periodic)
 
-
-    def setPhase(self, parset, periodic = False):
+    def setPhase(self, parset, periodic=False):
         """Set the phase that will be used to calculate the PDF.
 
         Set the phase directly with a DiffpyStructureParSet,
@@ -106,14 +105,14 @@ class DebyePDFGenerator(BasePDFGenerator):
         """
         return BasePDFGenerator.setPhase(self, parset, periodic)
 
-
-    def __init__(self, name = "pdf"):
-        """Initialize the generator.
-        """
+    def __init__(self, name="pdf"):
+        """Initialize the generator."""
         from diffpy.srreal.pdfcalculator import DebyePDFCalculator
+
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(DebyePDFCalculator())
         return
+
 
 # End class DebyePDFGenerator
 

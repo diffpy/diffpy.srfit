@@ -38,7 +38,6 @@ from diffpy.srfit.util.argbinders import bind2nd
 
 # Accessor for xyz of atoms
 class _xyzgetter(object):
-
     def __init__(self, i):
         self.i = i
 
@@ -47,7 +46,6 @@ class _xyzgetter(object):
 
 
 class _xyzsetter(object):
-
     def __init__(self, i):
         self.i = i
 
@@ -93,12 +91,9 @@ class DiffpyAtomParSet(ParameterSet):
         self.atom = atom
         a = atom
         # x, y, z, occupancy
-        self.addParameter(ParameterAdapter("x", a,
-                                           _xyzgetter(0), _xyzsetter(0)))
-        self.addParameter(ParameterAdapter("y", a,
-                                           _xyzgetter(1), _xyzsetter(1)))
-        self.addParameter(ParameterAdapter("z", a,
-                                           _xyzgetter(2), _xyzsetter(2)))
+        self.addParameter(ParameterAdapter("x", a, _xyzgetter(0), _xyzsetter(0)))
+        self.addParameter(ParameterAdapter("y", a, _xyzgetter(1), _xyzsetter(1)))
+        self.addParameter(ParameterAdapter("z", a, _xyzgetter(2), _xyzsetter(2)))
         occupancy = ParameterAdapter("occupancy", a, attr="occupancy")
         self.addParameter(occupancy)
         self.addParameter(ParameterProxy("occ", occupancy))
@@ -149,6 +144,7 @@ class DiffpyAtomParSet(ParameterSet):
 
     element = property(_getElem, _setElem, "type of atom")
 
+
 # End class DiffpyAtomParSet
 
 
@@ -186,22 +182,17 @@ class DiffpyLatticeParSet(ParameterSet):
         self.angunits = "deg"
         self.lattice = lattice
         lat = lattice
-        self.addParameter(ParameterAdapter("a", lat,
-                                           _latgetter("a"), _latsetter("a")))
-        self.addParameter(ParameterAdapter("b", lat,
-                                           _latgetter("b"), _latsetter("b")))
-        self.addParameter(ParameterAdapter("c", lat,
-                                           _latgetter("c"), _latsetter("c")))
-        self.addParameter(ParameterAdapter("alpha", lat, _latgetter("alpha"),
-                                           _latsetter("alpha")))
-        self.addParameter(ParameterAdapter("beta", lat, _latgetter("beta"),
-                                           _latsetter("beta")))
-        self.addParameter(ParameterAdapter("gamma", lat, _latgetter("gamma"),
-                                           _latsetter("gamma")))
+        self.addParameter(ParameterAdapter("a", lat, _latgetter("a"), _latsetter("a")))
+        self.addParameter(ParameterAdapter("b", lat, _latgetter("b"), _latsetter("b")))
+        self.addParameter(ParameterAdapter("c", lat, _latgetter("c"), _latsetter("c")))
+        self.addParameter(ParameterAdapter("alpha", lat, _latgetter("alpha"), _latsetter("alpha")))
+        self.addParameter(ParameterAdapter("beta", lat, _latgetter("beta"), _latsetter("beta")))
+        self.addParameter(ParameterAdapter("gamma", lat, _latgetter("gamma"), _latsetter("gamma")))
         return
 
     def __repr__(self):
         return repr(self.lattice)
+
 
 # End class DiffpyLatticeParSet
 
@@ -246,7 +237,7 @@ class DiffpyStructureParSet(SrRealParSet):
             el = el.replace("-", "m")
             i = cdict.get(el, 0)
             aname = "%s%i" % (el, i)
-            cdict[el] = i+1
+            cdict[el] = i + 1
             atom = DiffpyAtomParSet(aname, a)
             self.addParameterSet(atom)
             self.atoms.append(atom)
@@ -264,6 +255,7 @@ class DiffpyStructureParSet(SrRealParSet):
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         from diffpy.structure import Structure
+
         return isinstance(stru, Structure)
 
     def getScatterers(self):
@@ -286,7 +278,9 @@ class DiffpyStructureParSet(SrRealParSet):
 
         """
         from diffpy.srreal.structureadapter import nometa
+
         stru = SrRealParSet._getSrRealStructure(self)
         return nometa(stru)
+
 
 # End class DiffpyStructureParSet

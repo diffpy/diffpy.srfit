@@ -86,11 +86,10 @@ class ObjCrystScattererParSet(ParameterSet):
         self.parent = parent
 
         # x, y, z, occ
-        self.addParameter(ParameterAdapter("x", self.scat, attr = "X"))
-        self.addParameter(ParameterAdapter("y", self.scat, attr = "Y"))
-        self.addParameter(ParameterAdapter("z", self.scat, attr = "Z"))
-        self.addParameter(ParameterAdapter("occ", self.scat, attr =
-            "Occupancy"))
+        self.addParameter(ParameterAdapter("x", self.scat, attr="X"))
+        self.addParameter(ParameterAdapter("y", self.scat, attr="Y"))
+        self.addParameter(ParameterAdapter("z", self.scat, attr="Z"))
+        self.addParameter(ParameterAdapter("occ", self.scat, attr="Occupancy"))
         return
 
     def isDummy(self):
@@ -103,6 +102,7 @@ class ObjCrystScattererParSet(ParameterSet):
 
 
 # End class ObjCrystScattererParSet
+
 
 class ObjCrystAtomParSet(ObjCrystScattererParSet):
     """A adaptor for a pyobjcryst.Atom.
@@ -138,15 +138,15 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
         sp = atom.GetScatteringPower()
 
         # The B-parameters
-        self.addParameter(ParameterAdapter("Biso", sp, attr = "Biso"))
-        self.addParameter(ParameterAdapter("B11", sp, attr = "B11"))
-        self.addParameter(ParameterAdapter("B22", sp, attr = "B22"))
-        self.addParameter(ParameterAdapter("B33", sp, attr = "B33"))
-        B12 = ParameterAdapter("B12", sp, attr = "B12")
+        self.addParameter(ParameterAdapter("Biso", sp, attr="Biso"))
+        self.addParameter(ParameterAdapter("B11", sp, attr="B11"))
+        self.addParameter(ParameterAdapter("B22", sp, attr="B22"))
+        self.addParameter(ParameterAdapter("B33", sp, attr="B33"))
+        B12 = ParameterAdapter("B12", sp, attr="B12")
         B21 = ParameterProxy("B21", B12)
-        B13 = ParameterAdapter("B13", sp, attr = "B13")
+        B13 = ParameterAdapter("B13", sp, attr="B13")
         B31 = ParameterProxy("B31", B13)
-        B23 = ParameterAdapter("B23", sp, attr = "B23")
+        B23 = ParameterAdapter("B23", sp, attr="B23")
         B32 = ParameterProxy("B32", B23)
         self.addParameter(B12)
         self.addParameter(B21)
@@ -166,7 +166,9 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
 
     element = property(_getElem)
 
+
 # End class ObjCrystAtomParSet
+
 
 class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
     """A adaptor for a pyobjcryst.Molecule.
@@ -191,7 +193,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
     """
 
-    def __init__(self, name, molecule, parent = None):
+    def __init__(self, name, molecule, parent=None):
         """Initialize
 
         name    --  The name of the scatterer
@@ -203,22 +205,21 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         self.stru = molecule
 
         # Add orientiation quaternion
-        self.addParameter(ParameterAdapter("q0", self.scat, attr = "Q0"))
-        self.addParameter(ParameterAdapter("q1", self.scat, attr = "Q1"))
-        self.addParameter(ParameterAdapter("q2", self.scat, attr = "Q2"))
-        self.addParameter(ParameterAdapter("q3", self.scat, attr = "Q3"))
+        self.addParameter(ParameterAdapter("q0", self.scat, attr="Q0"))
+        self.addParameter(ParameterAdapter("q1", self.scat, attr="Q1"))
+        self.addParameter(ParameterAdapter("q2", self.scat, attr="Q2"))
+        self.addParameter(ParameterAdapter("q3", self.scat, attr="Q3"))
 
         # Wrap the MolAtoms within the molecule
         self.atoms = []
         anames = []
 
         for a in molecule:
-
             name = a.GetName()
             if not name:
                 raise AttributeError("Each MolAtom must have a name")
             if name in anames:
-                raise AttributeError("MolAtom name '%s' is duplicated"%name)
+                raise AttributeError("MolAtom name '%s' is duplicated" % name)
 
             atom = ObjCrystMolAtomParSet(name, a, self)
             atom.molecule = self
@@ -232,10 +233,11 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         from pyobjcryst.molecule import Molecule
+
         return isinstance(stru, Molecule)
 
     # Part of SrRealParSet interface
-    def useSymmetry(self, use = True):
+    def useSymmetry(self, use=True):
         """Set this structure to use symmetry.
 
         This structure object does not support symmetry.
@@ -330,17 +332,16 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             atom1 = getattr(self, name1)
             atom2 = getattr(self, name2)
 
-            par = ObjCrystBondLengthParameter(name, atom1, atom2, mode = mode)
+            par = ObjCrystBondLengthParameter(name, atom1, atom2, mode=mode)
 
             atoms = []
             for a in mode.GetAtoms():
                 name = a.GetName()
-                atoms.append( getattr(self, name) )
+                atoms.append(getattr(self, name))
 
             par.AddAtoms(atoms)
 
             self.addParameter(par)
-
 
         for mode in self.scat.GetStretchModeBondAngleList():
             name1 = mode.mpAtom0.GetName()
@@ -353,21 +354,19 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             atom2 = getattr(self, name2)
             atom3 = getattr(self, name3)
 
-            par = ObjCrystBondAngleParameter(name, atom1, atom2, atom3, mode =
-                    mode)
+            par = ObjCrystBondAngleParameter(name, atom1, atom2, atom3, mode=mode)
 
             atoms = []
             for a in mode.GetAtoms():
                 name = a.GetName()
-                atoms.append( getattr(self, name) )
+                atoms.append(getattr(self, name))
             par.AddAtoms(atoms)
 
             self.addParameter(par)
 
         return
 
-    def restrainBondLength(self, atom1, atom2, length, sigma, delta, scaled =
-            False):
+    def restrainBondLength(self, atom1, atom2, length, sigma, delta, scaled=False):
         """Add a bond length restraint.
 
         This creates an instance of ObjCrystBondLengthRestraint and adds it to
@@ -391,8 +390,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return res
 
-    def restrainBondLengthParameter(self, par, length, sigma, delta, scaled =
-            False):
+    def restrainBondLengthParameter(self, par, length, sigma, delta, scaled=False):
         """Add a bond length restraint.
 
         This creates an instance of ObjCrystBondLengthRestraint and adds it to
@@ -410,11 +408,9 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         'unrestrain' method.
 
         """
-        return self.restrainBondLength(par.atom1, par.atom2, length, sigma,
-                delta, scaled)
+        return self.restrainBondLength(par.atom1, par.atom2, length, sigma, delta, scaled)
 
-    def restrainBondAngle(self, atom1, atom2, atom3, angle, sigma, delta,
-            scaled = False):
+    def restrainBondAngle(self, atom1, atom2, atom3, angle, sigma, delta, scaled=False):
         """Add a bond angle restraint.
 
         This creates an instance of ObjCrystBondAngleRestraint and adds it to
@@ -435,14 +431,12 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         'unrestrain' method.
 
         """
-        res = ObjCrystBondAngleRestraint(atom1, atom2, atom3, angle, sigma,
-                delta, scaled)
+        res = ObjCrystBondAngleRestraint(atom1, atom2, atom3, angle, sigma, delta, scaled)
         self._restraints.add(res)
 
         return res
 
-    def restrainBondAngleParameter(self, par, angle, sigma, delta,
-            scaled = False):
+    def restrainBondAngleParameter(self, par, angle, sigma, delta, scaled=False):
         """Add a bond angle restraint.
 
         This creates an instance of ObjCrystBondAngleRestraint and adds it to
@@ -460,11 +454,9 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         'unrestrain' method.
 
         """
-        return self.restrainBondAngle(par.atom1, par.atom2, par.atom3, angle,
-                sigma, delta, scaled)
+        return self.restrainBondAngle(par.atom1, par.atom2, par.atom3, angle, sigma, delta, scaled)
 
-    def restrainDihedralAngle(self, atom1, atom2, atom3, atom4, angle, sigma,
-            delta, scaled = False):
+    def restrainDihedralAngle(self, atom1, atom2, atom3, atom4, angle, sigma, delta, scaled=False):
         """Add a dihedral angle restraint.
 
         This creates an instance of ObjCrystDihedralAngleRestraint and adds it
@@ -485,14 +477,12 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         'unrestrain' method.
 
         """
-        res = ObjCrystDihedralAngleRestraint(atom1, atom2, atom3, atom4, angle,
-                sigma, delta, scaled)
+        res = ObjCrystDihedralAngleRestraint(atom1, atom2, atom3, atom4, angle, sigma, delta, scaled)
         self._restraints.add(res)
 
         return res
 
-    def restrainDihedralAngleParameter(self, par, angle, sigma, delta,
-            scaled = False):
+    def restrainDihedralAngleParameter(self, par, angle, sigma, delta, scaled=False):
         """Add a dihedral angle restraint.
 
         This creates an instance of ObjCrystDihedralAngleRestraint and adds it
@@ -511,11 +501,9 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         'unrestrain' method.
 
         """
-        return self.restrainDihedralAngle(par.atom1, par.atom2, par.atom3,
-                par.atom4, angle, sigma, delta, scaled)
+        return self.restrainDihedralAngle(par.atom1, par.atom2, par.atom3, par.atom4, angle, sigma, delta, scaled)
 
-    def addBondLengthParameter(self, name, atom1, atom2, value = None, const =
-            False):
+    def addBondLengthParameter(self, name, atom1, atom2, value=None, const=False):
         """Add a bond length to the Molecule.
 
         This creates a ObjCrystBondLengthParameter to the
@@ -539,8 +527,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return par
 
-    def addBondAngleParameter(self, name, atom1, atom2, atom3, value = None,
-            const = False):
+    def addBondAngleParameter(self, name, atom1, atom2, atom3, value=None, const=False):
         """Add a bond angle to the Molecule.
 
         This creates a ObjCrystBondAngleParameter to the ObjCrystMoleculeParSet
@@ -561,14 +548,12 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Returns the new ObjCrystBondAngleParameter.
 
         """
-        par = ObjCrystBondAngleParameter(name, atom1, atom2, atom3, value,
-                const)
+        par = ObjCrystBondAngleParameter(name, atom1, atom2, atom3, value, const)
         self.addParameter(par)
 
         return par
 
-    def addDihedralAngleParameter(self, name, atom1, atom2, atom3, atom4, value
-            = None, const = False):
+    def addDihedralAngleParameter(self, name, atom1, atom2, atom3, atom4, value=None, const=False):
         """Add a dihedral angle to the Molecule.
 
         This creates a ObjCrystDihedralAngleParameter to the
@@ -591,13 +576,14 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Returns the new ObjCrystDihedralAngleParameter.
 
         """
-        par = ObjCrystDihedralAngleParameter(name, atom1, atom2, atom3, atom4,
-                value, const)
+        par = ObjCrystDihedralAngleParameter(name, atom1, atom2, atom3, atom4, value, const)
         self.addParameter(par)
 
         return par
 
+
 # End class ObjCrystMoleculeParSet
+
 
 class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
     """A adaptor for an pyobjcryst.molecule.MolAtom.
@@ -637,15 +623,15 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
 
         # Only wrap this if there is a scattering power
         if sp is not None:
-            self.addParameter(ParameterAdapter("Biso", sp, attr = "Biso"))
-            self.addParameter(ParameterAdapter("B11", sp, attr = "B11"))
-            self.addParameter(ParameterAdapter("B22", sp, attr = "B22"))
-            self.addParameter(ParameterAdapter("B33", sp, attr = "B33"))
-            B12 = ParameterAdapter("B12", sp, attr = "B12")
+            self.addParameter(ParameterAdapter("Biso", sp, attr="Biso"))
+            self.addParameter(ParameterAdapter("B11", sp, attr="B11"))
+            self.addParameter(ParameterAdapter("B22", sp, attr="B22"))
+            self.addParameter(ParameterAdapter("B33", sp, attr="B33"))
+            B12 = ParameterAdapter("B12", sp, attr="B12")
             B21 = ParameterProxy("B21", B12)
-            B13 = ParameterAdapter("B13", sp, attr = "B13")
+            B13 = ParameterAdapter("B13", sp, attr="B13")
             B31 = ParameterProxy("B31", B13)
-            B23 = ParameterAdapter("B23", sp, attr = "B23")
+            B23 = ParameterAdapter("B23", sp, attr="B23")
             B32 = ParameterProxy("B32", B23)
             self.addParameter(B12)
             self.addParameter(B21)
@@ -670,7 +656,9 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
         """Indicate whether this atom is a dummy atom."""
         return self.scat.IsDummy()
 
+
 # End class ObjCrystMolAtomParSet
+
 
 class ObjCrystMoleculeRestraint(object):
     """Base class for adapting pyobjcryst Molecule restraints to srfit.
@@ -688,7 +676,7 @@ class ObjCrystMoleculeRestraint(object):
 
     """
 
-    def __init__(self, res, scaled = False):
+    def __init__(self, res, scaled=False):
         """Create a Restraint-like from a pyobjcryst Molecule restraint.
 
         res     --  The pyobjcryst Molecule restraint.
@@ -701,7 +689,7 @@ class ObjCrystMoleculeRestraint(object):
         self.scaled = scaled
         return
 
-    def penalty(self, w = 1.0):
+    def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
         w   --  The point-average chi^2 which is optionally used to scale the
@@ -713,7 +701,9 @@ class ObjCrystMoleculeRestraint(object):
             penalty *= w
         return penalty
 
+
 # End class ObjCrystMoleculeRestraint
+
 
 class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
     """Restrain the distance between two atoms.
@@ -731,7 +721,7 @@ class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
 
     """
 
-    def __init__(self, atom1, atom2, length, sigma, delta, scaled = False):
+    def __init__(self, atom1, atom2, length, sigma, delta, scaled=False):
         """Create a bond length restraint.
 
         atom1   --  First atom (ObjCrystMolAtomParSet) in the bond
@@ -754,14 +744,13 @@ class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
         return
 
     # Give access to the parameters of the restraint
-    length = property( lambda self: self.res.GetLength0(),
-                       lambda self, val: self.res.SetLength0(val))
-    sigma = property( lambda self: self.res.GetLengthSigma(),
-                       lambda self, val: self.res.SetLengthSigma(val))
-    delta = property( lambda self: self.res.GetLengthDelta(),
-                       lambda self, val: self.res.SetLengthDelta(val))
+    length = property(lambda self: self.res.GetLength0(), lambda self, val: self.res.SetLength0(val))
+    sigma = property(lambda self: self.res.GetLengthSigma(), lambda self, val: self.res.SetLengthSigma(val))
+    delta = property(lambda self: self.res.GetLengthDelta(), lambda self, val: self.res.SetLengthDelta(val))
+
 
 # End class ObjCrystBondLengthRestraint
+
 
 class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
     """Restrain the angle defined by three atoms.
@@ -780,8 +769,7 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
 
     """
 
-    def __init__(self, atom1, atom2, atom3, angle, sigma, delta, scaled =
-            False):
+    def __init__(self, atom1, atom2, atom3, angle, sigma, delta, scaled=False):
         """Create a bond angle restraint.
 
         atom1   --  First atom (ObjCrystMolAtomParSet) in the bond angle
@@ -801,21 +789,19 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
         self.atom3 = atom3
 
         m = self.atom1.scat.GetMolecule()
-        res = m.AddBondAngle(atom1.scat, atom2.scat, atom3.scat, angle,
-                sigma, delta)
+        res = m.AddBondAngle(atom1.scat, atom2.scat, atom3.scat, angle, sigma, delta)
 
         ObjCrystMoleculeRestraint.__init__(self, res, scaled)
         return
 
     # Give access to the parameters of the restraint
-    angle = property( lambda self: self.res.GetAngle0(),
-                       lambda self, val: self.res.SetAngle0(val))
-    sigma = property( lambda self: self.res.GetAngleSigma(),
-                       lambda self, val: self.res.SetAngleSigma(val))
-    delta = property( lambda self: self.res.GetAngleDelta(),
-                       lambda self, val: self.res.SetAngleDelta(val))
+    angle = property(lambda self: self.res.GetAngle0(), lambda self, val: self.res.SetAngle0(val))
+    sigma = property(lambda self: self.res.GetAngleSigma(), lambda self, val: self.res.SetAngleSigma(val))
+    delta = property(lambda self: self.res.GetAngleDelta(), lambda self, val: self.res.SetAngleDelta(val))
+
 
 # End class ObjCrystBondAngleRestraint
+
 
 class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
     """Restrain the dihedral (torsion) angle defined by four atoms.
@@ -835,8 +821,7 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
 
     """
 
-    def __init__(self, atom1, atom2, atom3, atom4, angle, sigma, delta, scaled
-            = False):
+    def __init__(self, atom1, atom2, atom3, atom4, angle, sigma, delta, scaled=False):
         """Create a dihedral angle restraint.
 
         atom1   --  First atom (ObjCrystMolAtomParSet) in the angle
@@ -857,21 +842,19 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
         self.atom4 = atom4
 
         m = self.atom1.scat.GetMolecule()
-        res = m.AddDihedralAngle(atom1.scat, atom2.scat, atom3.scat,
-                atom4.scat, angle, sigma, delta)
+        res = m.AddDihedralAngle(atom1.scat, atom2.scat, atom3.scat, atom4.scat, angle, sigma, delta)
 
         ObjCrystMoleculeRestraint.__init__(self, res, scaled)
         return
 
     # Give access to the parameters of the restraint
-    angle = property( lambda self: self.res.GetAngle0(),
-                       lambda self, val: self.res.SetAngle0(val))
-    sigma = property( lambda self: self.res.GetAngleSigma(),
-                       lambda self, val: self.res.SetAngleSigma(val))
-    delta = property( lambda self: self.res.GetAngleDelta(),
-                       lambda self, val: self.res.SetAngleDelta(val))
+    angle = property(lambda self: self.res.GetAngle0(), lambda self, val: self.res.SetAngle0(val))
+    sigma = property(lambda self: self.res.GetAngleSigma(), lambda self, val: self.res.SetAngleSigma(val))
+    delta = property(lambda self: self.res.GetAngleDelta(), lambda self, val: self.res.SetAngleDelta(val))
+
 
 # End class ObjCrystDihedralAngleRestraint
+
 
 class StretchModeParameter(Parameter):
     """Partial Parameter class encapsulating pyobjcryst stretch modes.
@@ -890,7 +873,7 @@ class StretchModeParameter(Parameter):
 
     """
 
-    def __init__(self, name, value = None, const = False):
+    def __init__(self, name, value=None, const=False):
         """Initialization.
 
         name    --  The name of this Parameter (must be a valid attribute
@@ -969,7 +952,9 @@ class StretchModeParameter(Parameter):
         Parameter.notify(self, other)
         return
 
+
 # End class StretchModeParameter
+
 
 class ObjCrystBondLengthParameter(StretchModeParameter):
     """Class for abstracting a bond length in a Molecule to a Parameter.
@@ -1019,8 +1004,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
 
     """
 
-    def __init__(self, name, atom1, atom2, value = None, const = False, mode =
-            None):
+    def __init__(self, name, atom1, atom2, value=None, const=False, mode=None):
         """Create a ObjCrystBondLengthParameter.
 
         name    --  The name of the ObjCrystBondLengthParameter
@@ -1064,7 +1048,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
 
         return
 
-    def setConst(self, const = True, value = None):
+    def setConst(self, const=True, value=None):
         """Toggle the Parameter as constant.
 
         This sets the underlying ObjCrystMolAtomParSet positions const as well.
@@ -1101,6 +1085,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
 
 # End class ObjCrystBondLengthParameter
 
+
 class ObjCrystBondAngleParameter(StretchModeParameter):
     """Class for abstracting a bond angle in a Molecule to a Parameter.
 
@@ -1135,8 +1120,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
 
     """
 
-    def __init__(self, name, atom1, atom2, atom3, value = None, const = False,
-            mode = None):
+    def __init__(self, name, atom1, atom2, atom3, value=None, const=False, mode=None):
         """Create a ObjCrystBondAngleParameter.
 
         name    --  The name of the ObjCrystBondAngleParameter.
@@ -1158,8 +1142,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         # Create the stretch mode
         self.mode = mode
         if mode is None:
-            self.mode = StretchModeBondAngle(atom1.scat, atom2.scat,
-                    atom3.scat, None)
+            self.mode = StretchModeBondAngle(atom1.scat, atom2.scat, atom3.scat, None)
         # We only add the last atom. This is the one that will move
         self.mode.AddAtom(atom3.scat)
         self.matoms = set([atom3])
@@ -1183,7 +1166,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
 
         return
 
-    def setConst(self, const = True, value = None):
+    def setConst(self, const=True, value=None):
         """Toggle the Parameter as constant.
 
         This sets the underlying ObjCrystMolAtomParSet positions const as well.
@@ -1211,13 +1194,14 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
 
         """
         if self._value is None:
-            val = GetBondAngle(self.atom1.scat, self.atom2.scat,
-                    self.atom3.scat)
+            val = GetBondAngle(self.atom1.scat, self.atom2.scat, self.atom3.scat)
             Parameter.setValue(self, val)
 
         return self._value
 
+
 # End class ObjCrystBondAngleParameter
+
 
 class ObjCrystDihedralAngleParameter(StretchModeParameter):
     """Class for abstracting a dihedral angle in a Molecule to a Parameter.
@@ -1256,8 +1240,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
 
     """
 
-    def __init__(self, name, atom1, atom2, atom3, atom4, value = None, const =
-            False, mode = None):
+    def __init__(self, name, atom1, atom2, atom3, atom4, value=None, const=False, mode=None):
         """Create a ObjCrystDihedralAngleParameter.
 
         name    --  The name of the ObjCrystDihedralAngleParameter
@@ -1301,14 +1284,13 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
 
         # We do this last so the atoms are defined before we set any values.
         if value is None:
-            value = GetDihedralAngle(atom1.scat, atom2.scat, atom3.scat,
-                    atom4.scat)
+            value = GetDihedralAngle(atom1.scat, atom2.scat, atom3.scat, atom4.scat)
         StretchModeParameter.__init__(self, name, value, const)
         self.setConst(const)
 
         return
 
-    def setConst(self, const = True, value = None):
+    def setConst(self, const=True, value=None):
         """Toggle the Parameter as constant.
 
         This sets the underlying ObjCrystMolAtomParSet positions const as well.
@@ -1336,13 +1318,14 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
 
         """
         if self._value is None:
-            val = GetDihedralAngle(self.atom1.scat, self.atom2.scat,
-                    self.atom3.scat, self.atom4.scat)
+            val = GetDihedralAngle(self.atom1.scat, self.atom2.scat, self.atom3.scat, self.atom4.scat)
             Parameter.setValue(self, val)
 
         return self._value
 
+
 # End class ObjCrystDihedralAngleParameter
+
 
 class ObjCrystCrystalParSet(SrRealParSet):
     """A adaptor for pyobjcryst.crystal.Crystal instance.
@@ -1384,14 +1367,12 @@ class ObjCrystCrystalParSet(SrRealParSet):
         self.stru = cryst
         self._sgpars = None
 
-        self.addParameter(ParameterAdapter("a", self.stru, attr = "a"))
-        self.addParameter(ParameterAdapter("b", self.stru, attr = "b"))
-        self.addParameter(ParameterAdapter("c", self.stru, attr = "c"))
-        self.addParameter(ParameterAdapter("alpha", self.stru, attr =
-            "alpha"))
-        self.addParameter(ParameterAdapter("beta", self.stru, attr = "beta"))
-        self.addParameter(ParameterAdapter("gamma", self.stru, attr =
-            "gamma"))
+        self.addParameter(ParameterAdapter("a", self.stru, attr="a"))
+        self.addParameter(ParameterAdapter("b", self.stru, attr="b"))
+        self.addParameter(ParameterAdapter("c", self.stru, attr="c"))
+        self.addParameter(ParameterAdapter("alpha", self.stru, attr="alpha"))
+        self.addParameter(ParameterAdapter("beta", self.stru, attr="beta"))
+        self.addParameter(ParameterAdapter("gamma", self.stru, attr="gamma"))
 
         # Now we must loop over the scatterers and create parameter sets from
         # them.
@@ -1404,7 +1385,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
             if not name:
                 raise ValueError("Each Scatterer must have a name")
             if name in snames:
-                raise ValueError("Scatterer name '%s' is duplicated"%name)
+                raise ValueError("Scatterer name '%s' is duplicated" % name)
 
             # Now create the proper object
             cname = s.GetClassName()
@@ -1413,7 +1394,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
             elif cname == "Molecule":
                 parset = ObjCrystMoleculeParSet(name, s, self)
             else:
-                raise TypeError("Unrecognized scatterer '%s'"%cname)
+                raise TypeError("Unrecognized scatterer '%s'" % cname)
 
             self.addParameterSet(parset)
             self.scatterers.append(parset)
@@ -1427,11 +1408,13 @@ class ObjCrystCrystalParSet(SrRealParSet):
             return self._sgpars
         sg = self._createSpaceGroup(self.stru.GetSpaceGroup())
         from diffpy.srfit.structure.sgconstraints import _constrainAsSpaceGroup
+
         adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
         isosymbol = "Biso"
         sgoffset = [0, 0, 0]
-        self._sgpars = _constrainAsSpaceGroup(self, sg, self.scatterers,
-                sgoffset, adpsymbols = adpsymbols, isosymbol = isosymbol)
+        self._sgpars = _constrainAsSpaceGroup(
+            self, sg, self.scatterers, sgoffset, adpsymbols=adpsymbols, isosymbol=isosymbol
+        )
         return self._sgpars
 
     sgpars = property(_constrainSpaceGroup)
@@ -1450,10 +1433,11 @@ class ObjCrystCrystalParSet(SrRealParSet):
         import copy
 
         from diffpy.structure.spacegroups import GetSpaceGroup, SymOp
+
         name = sgobjcryst.GetName()
         extnstr = ":%s" % sgobjcryst.GetExtension()
         if name.endswith(extnstr):
-            name = name[:-len(extnstr)]
+            name = name[: -len(extnstr)]
 
         # Get whatever spacegroup we can get by name. This will set the proper
         # crystal system.  Creating a copy of the singleton from GetSpaceGroup,
@@ -1469,7 +1453,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
             for shift, rot in symops:
                 tv = trans + shift
                 tv -= numpy.floor(tv)
-                sg.symop_list.append( SymOp(rot, tv) )
+                sg.symop_list.append(SymOp(rot, tv))
 
         if sgobjcryst.IsCentrosymmetric():
             center = sgobjcryst.GetInversionCenter()
@@ -1477,7 +1461,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
                 for shift, rot in symops:
                     tv = center - trans - shift
                     tv -= numpy.floor(tv)
-                    sg.symop_list.append( SymOp(-rot , tv) )
+                    sg.symop_list.append(SymOp(-rot, tv))
 
         return sg
 
@@ -1485,6 +1469,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
     def canAdapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         from pyobjcryst.crystal import Crystal
+
         return isinstance(stru, Crystal)
 
     def getLattice(self):
@@ -1501,5 +1486,6 @@ class ObjCrystCrystalParSet(SrRealParSet):
 
         """
         return self.scatterers
+
 
 # End class ObjCrystCrystalParSet

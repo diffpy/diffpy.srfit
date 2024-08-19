@@ -24,13 +24,14 @@ from diffpy.srfit.pdf import PDFContribution
 
 ####### Example Code
 
+
 def makeRecipe(niciffile, siciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
     # Load data and add it to the profile
     contribution = PDFContribution("nisi")
     contribution.loadData(datname)
-    contribution.setCalculationRange(xmax = 20)
+    contribution.setCalculationRange(xmax=20)
 
     stru = loadCrystal(niciffile)
     contribution.addStructure("ni", stru)
@@ -65,13 +66,13 @@ def makeRecipe(niciffile, siciffile, datname):
     # above.
     phase_ni = contribution.ni.phase
     for par in phase_ni.sgpars:
-        recipe.addVar(par, name = par.name + "_ni")
-    recipe.addVar(contribution.ni.delta2, name = "delta2_ni")
+        recipe.addVar(par, name=par.name + "_ni")
+    recipe.addVar(contribution.ni.delta2, name="delta2_ni")
     # Next the silicon parameters
     phase_si = contribution.si.phase
     for par in phase_si.sgpars:
-        recipe.addVar(par, name = par.name + "_si")
-    recipe.addVar(contribution.si.delta2, name = "delta2_si")
+        recipe.addVar(par, name=par.name + "_si")
+    recipe.addVar(contribution.si.delta2, name="delta2_si")
 
     # We have prior information from the earlier examples so we'll use it here
     # in the form of restraints.
@@ -81,25 +82,24 @@ def makeRecipe(niciffile, siciffile, datname):
     # derived has no uncertainty. Thus, we will tell the recipe to scale the
     # residual, which means that it will be weighted as much as the average
     # data point during the fit.
-    recipe.restrain("a_ni", lb = 3.527, ub = 3.527, scaled = True)
+    recipe.restrain("a_ni", lb=3.527, ub=3.527, scaled=True)
     # Now we do the same with the delta2 and Biso parameters (remember that
     # Biso = 8*pi**2*Uiso)
-    recipe.restrain("delta2_ni", lb = 2.22, ub = 2.22, scaled = True)
-    recipe.restrain("Biso_0_ni", lb = 0.454, ub = 0.454, scaled = True)
+    recipe.restrain("delta2_ni", lb=2.22, ub=2.22, scaled=True)
+    recipe.restrain("Biso_0_ni", lb=0.454, ub=0.454, scaled=True)
     #
     # We can do the same with the silicon values. We haven't done a thorough
     # job of measuring the uncertainties in the results, so we'll scale these
     # as well.
-    recipe.restrain("a_si", lb = 5.430, ub = 5.430, scaled = True)
-    recipe.restrain("delta2_si", lb = 3.54, ub = 3.54, scaled = True)
-    recipe.restrain("Biso_0_si", lb = 0.645, ub = 0.645, scaled = True)
+    recipe.restrain("a_si", lb=5.430, ub=5.430, scaled=True)
+    recipe.restrain("delta2_si", lb=3.54, ub=3.54, scaled=True)
+    recipe.restrain("Biso_0_si", lb=0.645, ub=0.645, scaled=True)
 
     # Give the recipe away so it can be used!
     return recipe
 
 
 if __name__ == "__main__":
-
     # Make the data and the recipe
     niciffile = "data/ni.cif"
     siciffile = "data/si.cif"

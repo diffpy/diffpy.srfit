@@ -19,13 +19,14 @@ python -m diffpy.srfit.tests.run
 """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     # show warnings by default
     if not sys.warnoptions:
         import os
         import warnings
+
         warnings.simplefilter("default")
         # also affect subprocesses
         os.environ["PYTHONWARNINGS"] = "default"

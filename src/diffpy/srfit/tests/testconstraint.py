@@ -24,7 +24,6 @@ from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 
 
 class TestConstraint(unittest.TestCase):
-
     def testConstraint(self):
         """Test the Constraint class."""
 

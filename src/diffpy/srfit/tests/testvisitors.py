@@ -23,7 +23,6 @@ from diffpy.srfit.tests.utils import _makeArgs
 
 
 class TestValidator(unittest.TestCase):
-
     def testSimpleFunction(self):
         """Test a simple function."""
 
@@ -73,6 +72,7 @@ class TestValidator(unittest.TestCase):
 
         # Fix the operation of plus
         import numpy
+
         plus.operation = numpy.add
         validator.reset()
         mult.identify(validator)
@@ -86,8 +86,8 @@ class TestValidator(unittest.TestCase):
 
         return
 
-class TestArgFinder(unittest.TestCase):
 
+class TestArgFinder(unittest.TestCase):
     def testSimpleFunction(self):
         """Test a simple function."""
 
@@ -135,8 +135,8 @@ class TestArgFinder(unittest.TestCase):
         self.assertTrue(args[0] is v1)
         return
 
-class TestSwapper(unittest.TestCase):
 
+class TestSwapper(unittest.TestCase):
     def testSimpleFunction(self):
         """Test a simple function."""
 

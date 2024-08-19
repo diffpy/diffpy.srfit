@@ -21,7 +21,6 @@ from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter, Paramete
 
 
 class TestParameter(unittest.TestCase):
-
     def testSetValue(self):
         """Test initialization."""
         l = Parameter("l")
@@ -31,16 +30,17 @@ class TestParameter(unittest.TestCase):
 
         # Try array
         import numpy
+
         x = numpy.arange(0, 10, 0.1)
         l.setValue(x)
-        self.assertTrue( l.getValue() is x )
-        self.assertTrue( l.value is x )
+        self.assertTrue(l.getValue() is x)
+        self.assertTrue(l.value is x)
 
         # Change the array
         y = numpy.arange(0, 10, 0.5)
         l.value = y
-        self.assertTrue( l.getValue() is y )
-        self.assertTrue( l.value is y )
+        self.assertTrue(l.getValue() is y)
+        self.assertTrue(l.value is y)
 
         # Back to scalar
         l.setValue(1.01)
@@ -48,8 +48,8 @@ class TestParameter(unittest.TestCase):
         self.assertAlmostEqual(1.01, l.value)
         return
 
-class TestParameterProxy(unittest.TestCase):
 
+class TestParameterProxy(unittest.TestCase):
     def testProxy(self):
         """Test the ParameterProxy class."""
         l = Parameter("l", 3.14)
@@ -72,8 +72,8 @@ class TestParameterProxy(unittest.TestCase):
 
         return
 
-class TestParameterAdapter(unittest.TestCase):
 
+class TestParameterAdapter(unittest.TestCase):
     def testWrapper(self):
         """Test the adapter.
 
@@ -82,8 +82,7 @@ class TestParameterAdapter(unittest.TestCase):
         l = Parameter("l", 3.14)
 
         # Try Accessor adaptation
-        la = ParameterAdapter("l", l, getter = Parameter.getValue, setter =
-                Parameter.setValue)
+        la = ParameterAdapter("l", l, getter=Parameter.getValue, setter=Parameter.setValue)
 
         self.assertEqual(l.name, la.name)
         self.assertEqual(l.getValue(), la.getValue())
@@ -97,7 +96,7 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertEqual(l.getValue(), la.getValue())
 
         # Try Attribute adaptation
-        la = ParameterAdapter("l", l, attr = "value")
+        la = ParameterAdapter("l", l, attr="value")
 
         self.assertEqual(l.name, la.name)
         self.assertEqual("value", la.attr)

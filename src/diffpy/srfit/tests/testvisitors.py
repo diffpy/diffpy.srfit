@@ -195,7 +195,7 @@ class TestSwapper(unittest.TestCase):
         self.assertTrue(plus2.hasObserver(mult._flush))
 
         # plus2 has no arguments yet. Verify this.
-        self.assertRaises(ValueError, mult.getValue)
+        self.assertRaises(TypeError, mult.getValue)
         # Add the arguments to plus2.
         plus2.addLiteral(v4)
         plus2.addLiteral(v5)

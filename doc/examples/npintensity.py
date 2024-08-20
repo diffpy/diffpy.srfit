@@ -56,7 +56,7 @@ from diffpy.srfit.fitbase import (
 )
 from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
-####### Example Code
+# Example Code
 
 
 class IntensityGenerator(ProfileGenerator):
@@ -184,21 +184,21 @@ def makeRecipe(strufile, datname):
 
     """
 
-    ## The Profile
+    # The Profile
     # Create a Profile. This will hold the experimental and calculated signal.
     profile = Profile()
 
     # Load data and add it to the profile
     x, y, u = profile.loadtxt(datname)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # Create an IntensityGenerator named "I". This will be the name we use to
     # refer to the generator from within the FitContribution equation.  We also
     # need to load the model structure we're using.
     generator = IntensityGenerator("I")
     generator.setStructure(strufile)
 
-    ## The FitContribution
+    # The FitContribution
     # Create a FitContribution, that will associate the Profile with the
     # ProfileGenerator.  The ProfileGenerator will be accessible as an
     # attribute of the FitContribution by its name ("I").  We also want to tell

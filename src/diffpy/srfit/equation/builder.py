@@ -504,7 +504,7 @@ class BaseBuilder(object):
         return self.__evalUnary(literals.NegationOperator)
 
 
-## These are used by the class.
+# These are used by the class.
 
 
 class ArgumentBuilder(BaseBuilder):

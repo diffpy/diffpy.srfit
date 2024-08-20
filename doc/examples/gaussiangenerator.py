@@ -43,7 +43,7 @@ from numpy import exp
 
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, ProfileGenerator
 
-####### Example Code
+# Example Code
 
 
 class GaussianGenerator(ProfileGenerator):
@@ -124,7 +124,7 @@ def makeRecipe():
 
     """
 
-    ## The Profile
+    # The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
 
@@ -132,12 +132,12 @@ def makeRecipe():
     # numpy.
     profile.loadtxt("data/gaussian.dat")
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # Create a GaussianGenerator named "g". This will be the name we use to
     # refer to the generator from within the FitContribution equation.
     generator = GaussianGenerator("g")
 
-    ## The FitContribution
+    # The FitContribution
     # Create a FitContribution that will associate the Profile with the
     # GaussianGenerator.  The GaussianGenerator will be accessible as an
     # attribute of the FitContribution by its name ("g"). Note that this will
@@ -146,7 +146,7 @@ def makeRecipe():
     contribution.addProfileGenerator(generator)
     contribution.setProfile(profile)
 
-    ## The FitRecipe
+    # The FitRecipe
     # Now we create the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
     recipe.addContribution(contribution)

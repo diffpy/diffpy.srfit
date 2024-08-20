@@ -21,7 +21,7 @@ the diffpy.srfit.interface.interface.py module.
 
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 
-####### Example Code
+# Example Code
 
 
 def main():

@@ -22,7 +22,7 @@ from pyobjcryst import loadCrystal
 from diffpy.srfit.fitbase import FitRecipe, FitResults
 from diffpy.srfit.pdf import PDFContribution
 
-####### Example Code
+# Example Code
 
 
 def makeRecipe(niciffile, siciffile, datname):
@@ -43,7 +43,7 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
     recipe.newVar("scale_ni", 0.1)

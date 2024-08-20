@@ -27,13 +27,13 @@ from pyobjcryst import loadCrystal
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 
-####### Example Code
+# Example Code
 
 
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profile
+    # The Profile
     # This will be used to store the observed and calculated PDF profile.
     profile = Profile()
 
@@ -46,7 +46,7 @@ def makeRecipe(ciffile, datname):
     profile.loadParsedData(parser)
     profile.setCalculationRange(xmax=20)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # This time we use the CreateCrystalFromCIF method of pyobjcryst.crystal to
     # create a Crystal object. That object is passed to the PDFGenerator as in
     # the previous example.
@@ -55,7 +55,7 @@ def makeRecipe(ciffile, datname):
     generator.setStructure(stru)
     generator.setQmax(40.0)
 
-    ## The FitContribution
+    # The FitContribution
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname="r")
@@ -64,7 +64,7 @@ def makeRecipe(ciffile, datname):
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
 
     # As before, we get a handle to the structure parameter set. In this case,
     # it is a ObjCrystCrystalParSet instance that was created when we called

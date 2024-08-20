@@ -24,20 +24,20 @@ import numpy
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import DebyePDFGenerator
 
-####### Example Code
+# Example Code
 
 
 def makeRecipe(molecule, datname):
     """Create a recipe that uses the DebyePDFGenerator."""
 
-    ## The Profile
+    # The Profile
     profile = Profile()
 
     # Load data and add it to the profile
     profile.loadtxt(datname)
     profile.setCalculationRange(xmin=1.2, xmax=8)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # Create a DebyePDFGenerator named "G".
     generator = DebyePDFGenerator("G")
     generator.setStructure(molecule)
@@ -45,7 +45,7 @@ def makeRecipe(molecule, datname):
     generator.setQmin(0.68)
     generator.setQmax(22)
 
-    ## The FitContribution
+    # The FitContribution
     contribution = FitContribution("bucky")
     contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname="r")

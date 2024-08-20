@@ -22,7 +22,7 @@ creation.
 
 from diffpy.srfit.fitbase import SimpleRecipe
 
-####### Example Code
+# Example Code
 
 
 def main():

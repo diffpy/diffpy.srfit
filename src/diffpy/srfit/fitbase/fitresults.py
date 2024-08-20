@@ -111,8 +111,8 @@ class FitResults(object):
 
     def update(self):
         """Update the results according to the current state of the recipe."""
-        ## Note that the order of these operations are chosen to reduce
-        ## computation time.
+        # Note that the order of these operations are chosen to reduce
+        # computation time.
 
         recipe = self.recipe
 
@@ -331,7 +331,7 @@ class FitResults(object):
 
         lines.extend(self.messages)
 
-        ## Overall results
+        # Overall results
         l = "Overall"
         if not certain:
             l += " (Chi2 and Reduced Chi2 invalid)"
@@ -345,7 +345,7 @@ class FitResults(object):
         lines.append(formatstr % ("Reduced Chi2", self.rchi2))
         lines.append(formatstr % ("Rw", self.rw))
 
-        ## Per-FitContribution results
+        # Per-FitContribution results
         if len(self.conresults) > 1:
             keys = list(self.conresults.keys())
             keys.sort(key=numstr)
@@ -367,7 +367,7 @@ class FitResults(object):
                 lines.append(formatstr % ("Chi2", res.chi2))
                 lines.append(formatstr % ("Rw", res.rw))
 
-        ## The variables
+        # The variables
         if self.varnames:
             lines.append("")
             l = "Variables"
@@ -406,7 +406,7 @@ class FitResults(object):
             varlines.sort()
             lines.extend(varlines)
 
-        ## The constraints
+        # The constraints
         if self.connames and self.showcon:
             lines.append("")
             l = "Constrained Parameters"
@@ -435,7 +435,7 @@ class FitResults(object):
                 val, unc = vals[name]
                 lines.append(formatstr % (name, val, unc))
 
-        ## Variable correlations
+        # Variable correlations
         lines.append("")
         corint = int(corrmin * 100)
         l = "Variable Correlations greater than %i%%" % corint
@@ -566,8 +566,8 @@ class ContributionResults(object):
 
     def _init(self, con, weight, fitres):
         """Initialize the attributes, for real."""
-        ## Note that the order of these operations is chosen to reduce
-        ## computation time.
+        # Note that the order of these operations is chosen to reduce
+        # computation time.
 
         if con.profile is None:
             return

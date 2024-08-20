@@ -53,7 +53,7 @@ data = """\
 500.0 0.03946 0.00250
 """
 
-####### Example Code
+# Example Code
 
 
 def makeRecipe():
@@ -80,7 +80,7 @@ def makeRecipe():
 
     """
 
-    ## The Profile
+    # The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
 
@@ -90,7 +90,7 @@ def makeRecipe():
     x, y, dy = numpy.hsplit(xydy, 3)
     profile.setObservedProfile(x, y, dy)
 
-    ## The FitContribution
+    # The FitContribution
     # The FitContribution associates the profile with the Debye function.
     contribution = FitContribution("pb")
     # Tell the contribution about the Profile. We will need to use the
@@ -123,7 +123,7 @@ def makeRecipe():
     # can specify that as well.
     contribution.setEquation("debye(T, 207.2, abs(thetaD)) + offset")
 
-    ## The FitRecipe
+    # The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
     # create variables, constraints and restraints. If we had multiple profiles
     # to fit simultaneously, the contribution from each could be added to the

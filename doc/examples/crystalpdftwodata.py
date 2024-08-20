@@ -28,13 +28,13 @@ from pyobjcryst import loadCrystal
 from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 
-####### Example Code
+# Example Code
 
 
 def makeRecipe(ciffile, xdatname, ndatname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profiles
+    # The Profiles
     # We need a profile for each data set. This means that we will need two
     # FitContributions as well.
     xprofile = Profile()
@@ -51,7 +51,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     nprofile.loadParsedData(parser)
     nprofile.setCalculationRange(xmax=20)
 
-    ## The ProfileGenerators
+    # The ProfileGenerators
     # We need one of these for the x-ray data.
     xgenerator = PDFGenerator("G")
     stru = loadCrystal(ciffile)
@@ -76,7 +76,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     ngenerator = PDFGenerator("G")
     ngenerator.setPhase(xgenerator.phase)
 
-    ## The FitContributions
+    # The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
     xcontribution = FitContribution("xnickel")
     xcontribution.addProfileGenerator(xgenerator)

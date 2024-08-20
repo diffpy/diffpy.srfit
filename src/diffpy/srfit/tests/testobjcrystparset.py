@@ -185,7 +185,7 @@ class TestParameterAdapter(unittest.TestCase):
         _testCrystal()
         _testMolecule()
 
-        ## Now change some values from ObjCryst
+        # Now change some values from ObjCryst
         ocmol[0].X *= 1.1
         ocmol[0].Occupancy *= 1.1
         ocmol[0].GetScatteringPower().Biso *= 1.1
@@ -195,7 +195,7 @@ class TestParameterAdapter(unittest.TestCase):
         _testCrystal()
         _testMolecule()
 
-        ## Now change values from the srfit StructureParSet
+        # Now change values from the srfit StructureParSet
         cryst.c60.C44.x.setValue(1.1)
         cryst.c60.C44.occ.setValue(1.1)
         cryst.c60.C44.Biso.setValue(1.1)

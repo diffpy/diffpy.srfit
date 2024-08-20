@@ -32,13 +32,13 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.structure import Structure
 
-####### Example Code
+# Example Code
 
 
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profile
+    # The Profile
     # This will be used to store the observed and calculated PDF profile.
     profile = Profile()
 
@@ -53,7 +53,7 @@ def makeRecipe(ciffile, datname):
     profile.loadParsedData(parser)
     profile.setCalculationRange(xmax=20)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # The PDFGenerator is for configuring and calculating a PDF profile. Here,
     # we want to refine a Structure object from diffpy.structure. We tell the
     # PDFGenerator that with the 'setStructure' method. All other configuration
@@ -65,18 +65,18 @@ def makeRecipe(ciffile, datname):
     stru.read(ciffile)
     generator.setStructure(stru)
 
-    ## The FitContribution
+    # The FitContribution
     # Here we associate the Profile and ProfileGenerator, as has been done
     # before.
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
     contribution.setProfile(profile, xname="r")
 
-    ## Make the FitRecipe and add the FitContribution.
+    # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
 
     # The PDFGenerator class holds the ParameterSet associated with the
     # Structure passed above in a data member named "phase". (We could have

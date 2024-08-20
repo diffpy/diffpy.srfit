@@ -501,7 +501,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self._eqfactory.registerOperator(name, f)
             return f
 
-        #### Introspection code
+        # Introspection code
         if name is None or argnames is None:
             import inspect
 
@@ -537,7 +537,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 argnames = list(fncode.co_varnames)
                 argnames = argnames[offset : fncode.co_argcount]
 
-        #### End introspection code
+        # End introspection code
 
         # Make missing Parameters
         for pname in argnames:

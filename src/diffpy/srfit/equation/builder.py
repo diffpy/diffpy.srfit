@@ -93,9 +93,6 @@ __all__ = [
 # right-side over its arguments. This results in an array of BaseBuilder
 # instances, not an BaseBuilder that contains an array.
 
-_builders = {}
-
-
 import inspect
 import numbers
 
@@ -105,6 +102,8 @@ import six
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation.equationmod import Equation
 from diffpy.srfit.equation.literals.literal import Literal
+
+_builders = {}
 
 
 class EquationFactory(object):
@@ -364,16 +363,9 @@ class EquationFactory(object):
         # generated.
         for tok in set(args):
             # Move genuine varibles to the eqargs dictionary
-            if (
-                # Check registered builders
-                tok in self.builders
-                or
-                # Check symbols
-                tok in EquationFactory.symbols
-                or
-                # Check ignored characters
-                tok in EquationFactory.ignore
-            ):
+            if (tok in self.builders or  # Check registered builders
+                tok in EquationFactory.symbols or  # Check symbols
+                tok in EquationFactory.ignore):  # Check ignored characters
                 args.remove(tok)
 
         return args

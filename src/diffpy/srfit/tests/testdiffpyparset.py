@@ -42,9 +42,9 @@ class TestParameterAdapter(unittest.TestCase):
 
         a1 = Atom("Cu", xyz=numpy.array([0.0, 0.1, 0.2]), Uisoequiv=0.003)
         a2 = Atom("Ag", xyz=numpy.array([0.3, 0.4, 0.5]), Uisoequiv=0.002)
-        l = Lattice(2.5, 2.5, 2.5, 90, 90, 90)
+        lattice = Lattice(2.5, 2.5, 2.5, 90, 90, 90)
 
-        dsstru = Structure([a1, a2], l)
+        dsstru = Structure([a1, a2], lattice)
         # Structure makes copies
         a1 = dsstru[0]
         a2 = dsstru[1]

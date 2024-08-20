@@ -213,8 +213,7 @@ class EquationFactory(object):
         opbuilder = wrapFunction(name, func, len(argnames))
         for n in argnames:
             b = self.builders[n]
-            l = b.literal
-            opbuilder.literal.addLiteral(l)
+            opbuilder.literal.addLiteral(b.literal)
 
         return self.registerBuilder(name, opbuilder)
 

@@ -173,8 +173,8 @@ class FitResults(object):
             self.cov = numpy.dot(vh.T.conj() / s**2, vh)
         except numpy.linalg.LinAlgError:
             self.messages.append("Cannot compute covariance matrix.")
-            l = len(self.varvals)
-            self.cov = numpy.zeros((l, l), dtype=float)
+            matrix_size = len(self.varvals)
+            self.cov = numpy.zeros((matrix_size, matrix_size), dtype=float)
         return
 
     def _calculateJacobian(self):
@@ -325,17 +325,17 @@ class FitResults(object):
             lines.append(header)
 
         if not certain:
-            l = "Some quantities invalid due to missing profile uncertainty"
-            if not l in self.messages:
-                self.messages.append(l)
+            error_message = "Some quantities invalid due to missing profile uncertainty"
+            if not error_message in self.messages:
+                self.messages.append(error_message)
 
         lines.extend(self.messages)
 
         # Overall results
-        l = "Overall"
+        error_message = "Overall"
         if not certain:
-            l += " (Chi2 and Reduced Chi2 invalid)"
-        lines.append(l)
+            error_message += " (Chi2 and Reduced Chi2 invalid)"
+        lines.append(error_message)
         lines.append(_DASHEDLINE)
         formatstr = "%-14s %.8f"
         lines.append(formatstr % ("Residual", self.residual))
@@ -351,10 +351,10 @@ class FitResults(object):
             keys.sort(key=numstr)
 
             lines.append("")
-            l = "Contributions"
+            error_message = "Contributions"
             if not certain:
-                l += " (Chi2 and Reduced Chi2 invalid)"
-            lines.append(l)
+                error_message += " (Chi2 and Reduced Chi2 invalid)"
+            lines.append(error_message)
             lines.append(_DASHEDLINE)
             formatstr = "%-10s %-42.8f"
             for name in keys:
@@ -370,11 +370,11 @@ class FitResults(object):
         # The variables
         if self.varnames:
             lines.append("")
-            l = "Variables"
+            error_message = "Variables"
             if not certain:
                 m = "Uncertainties invalid"
-                l += " (%s)" % m
-            lines.append(l)
+                error_message += " (%s)" % m
+            lines.append(error_message)
             lines.append(_DASHEDLINE)
 
             varnames = self.varnames
@@ -409,10 +409,10 @@ class FitResults(object):
         # The constraints
         if self.connames and self.showcon:
             lines.append("")
-            l = "Constrained Parameters"
+            error_message = "Constrained Parameters"
             if not certain:
-                l += " (Uncertainties invalid)"
-            lines.append(l)
+                error_message += " (Uncertainties invalid)"
+            lines.append(error_message)
             lines.append(_DASHEDLINE)
 
             w = 0
@@ -438,10 +438,10 @@ class FitResults(object):
         # Variable correlations
         lines.append("")
         corint = int(corrmin * 100)
-        l = "Variable Correlations greater than %i%%" % corint
+        error_message = "Variable Correlations greater than %i%%" % corint
         if not certain:
-            l += " (Correlations invalid)"
-        lines.append(l)
+            error_message += " (Correlations invalid)"
+        lines.append(error_message)
         lines.append(_DASHEDLINE)
         tup = []
         cornames = []

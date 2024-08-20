@@ -92,8 +92,8 @@ class PrCalculator(Calculator):
         self._invertor.y = iq
         self._invertor.err = diq
         c, c_cov = self._invertor.invert_optimize()
-        l = lambda x: self._invertor.pr(c, x)
-        pr = map(l, r)
+        calculate_pr = lambda x: self._invertor.pr(c, x)
+        pr = map(calculate_pr, r)
 
         pr = numpy.array(pr)
         return self.scale.value * pr

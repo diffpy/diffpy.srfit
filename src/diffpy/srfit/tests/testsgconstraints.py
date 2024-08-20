@@ -54,18 +54,18 @@ class TestSGConstraints(unittest.TestCase):
         stru.sgpars.adppars
 
         # Check the orthorhombic lattice
-        l = stru.getLattice()
-        self.assertTrue(l.alpha.const)
-        self.assertTrue(l.beta.const)
-        self.assertTrue(l.gamma.const)
-        self.assertEqual(pi / 2, l.alpha.getValue())
-        self.assertEqual(pi / 2, l.beta.getValue())
-        self.assertEqual(pi / 2, l.gamma.getValue())
+        lattice = stru.getLattice()
+        self.assertTrue(lattice.alpha.const)
+        self.assertTrue(lattice.beta.const)
+        self.assertTrue(lattice.gamma.const)
+        self.assertEqual(pi / 2, lattice.alpha.getValue())
+        self.assertEqual(pi / 2, lattice.beta.getValue())
+        self.assertEqual(pi / 2, lattice.gamma.getValue())
 
-        self.assertFalse(l.a.const)
-        self.assertFalse(l.b.const)
-        self.assertFalse(l.c.const)
-        self.assertEqual(0, len(l._constraints))
+        self.assertFalse(lattice.a.const)
+        self.assertFalse(lattice.b.const)
+        self.assertFalse(lattice.c.const)
+        self.assertEqual(0, len(lattice._constraints))
 
         # Now make sure the scatterers are constrained properly
         scatterers = stru.getScatterers()

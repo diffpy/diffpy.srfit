@@ -933,6 +933,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         rlines.sort(key=numstr)
         return rlines
 
+    def _get_pmatch(self, s):
+        return len(s.split(None, 1)) < 2 or self._regexp.search(s.split(None, 1)[0])
+    
     def show(self, pattern="", textwidth=78):
         """Show the configuration hierarchy on the screen.
 
@@ -947,14 +950,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             Trim formatted lines at this text width to avoid folding at
             the screen width.  Do not trim when negative or 0.
         """
-        regexp = re.compile(pattern)
-        pmatch = lambda s: (len(s.split(None, 1)) < 2 or regexp.search(s.split(None, 1)[0]))
+        self._regexp = re.compile(pattern)
+
         # Show sub objects and their parameters
         lines = []
         tlines = self._formatManaged()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
-            linesok = filter(pmatch, tlines)
+            linesok = filter(self._get_pmatch, tlines)
             lastnotblank = False
             # squeeze repeated blank lines
             for lastnotblank, g in groupby(linesok, bool):
@@ -965,7 +968,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # FIXME - parameter names in equations not particularly informative
         # Show constraints
-        cmatch = regexp.search
+        cmatch = self._regexp.search
         tlines = self._formatConstraints()
         if tlines:
             if lines:
@@ -980,7 +983,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Restraints", _DASHEDLINE])
-            lines.extend(filter(pmatch, tlines))
+            lines.extend(filter(self._get_pmatch, tlines))
 
         # Determine effective text width tw.
         tw = textwidth if (textwidth is not None and textwidth > 0) else None

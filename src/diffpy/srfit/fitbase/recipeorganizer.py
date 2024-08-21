@@ -935,7 +935,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     def _matchPattern(self, s):
         return len(s.split(None, 1)) < 2 or self._regexp.search(s.split(None, 1)[0])
-    
+
     def show(self, pattern="", textwidth=78):
         """Show the configuration hierarchy on the screen.
 

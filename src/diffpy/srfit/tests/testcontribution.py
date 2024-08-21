@@ -270,7 +270,7 @@ class TestContribution(unittest.TestCase):
     def test_registerFunction(self):
         """Ensure registered function works after second setEquation call."""
         fc = self.fitcontribution
-        fsquare = lambda x: x**2
+        fsquare = lambda x: x**2  # noqa: E731
         fc.registerFunction(fsquare, name="fsquare")
         fc.setEquation("fsquare")
         fc.x.setValue(5)

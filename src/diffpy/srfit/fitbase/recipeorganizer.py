@@ -730,7 +730,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self.unconstrain(*self._constraints)
 
         if recurse:
-            f = lambda m: hasattr(m, "clearConstraints")
+            f = lambda m: hasattr(m, "clearConstraints")  # noqa: E731
             for m in filter(f, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
@@ -813,7 +813,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self.unrestrain(*self._restraints)
 
         if recurse:
-            f = lambda m: hasattr(m, "clearRestraints")
+            f = lambda m: hasattr(m, "clearRestraints")  # noqa: E731
             for m in filter(f, self._iterManaged()):
                 m.clearRestraints(recurse)
         return
@@ -822,7 +822,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Get the constrained Parameters for this and managed sub-objects."""
         constraints = {}
         if recurse:
-            f = lambda m: hasattr(m, "_getConstraints")
+            f = lambda m: hasattr(m, "_getConstraints")  # noqa: E731
             for m in filter(f, self._iterManaged()):
                 constraints.update(m._getConstraints(recurse))
 
@@ -837,7 +837,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         restraints = set(self._restraints)
         if recurse:
-            f = lambda m: hasattr(m, "_getRestraints")
+            f = lambda m: hasattr(m, "_getRestraints")  # noqa: E731
             for m in filter(f, self._iterManaged()):
                 restraints.update(m._getRestraints(recurse))
 
@@ -948,7 +948,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             the screen width.  Do not trim when negative or 0.
         """
         regexp = re.compile(pattern)
-        pmatch = lambda s: (len(s.split(None, 1)) < 2 or regexp.search(s.split(None, 1)[0]))
+        pmatch = lambda s: (len(s.split(None, 1)) < 2 or regexp.search(s.split(None, 1)[0]))  # noqa: E731
         # Show sub objects and their parameters
         lines = []
         tlines = self._formatManaged()

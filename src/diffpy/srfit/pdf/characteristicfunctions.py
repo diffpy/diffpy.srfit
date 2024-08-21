@@ -198,7 +198,7 @@ def lognormalSphericalCF(r, psize, psig):
     if psig <= 0:
         return sphericalCF(r, psize)
 
-    erfc = lambda x: 1.0 - erf(x)
+    erfc = lambda x: 1.0 - erf(x)  # noqa: E731
 
     sqrt2 = sqrt(2.0)
     s = sqrt(log(psig * psig / (1.0 * psize * psize) + 1))

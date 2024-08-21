@@ -661,7 +661,7 @@ def __wrapSrFitOperators():
     opmod = literals.operators
     excluded_types = set((opmod.CustomOperator, opmod.UFuncOperator))
     # check if opmod member should be wrapped as OperatorBuilder
-    is_exported_type = lambda cls: (
+    is_exported_type = lambda cls: (  # noqa: E731
         inspect.isclass(cls)
         and issubclass(cls, opmod.Operator)
         and not inspect.isabstract(cls)

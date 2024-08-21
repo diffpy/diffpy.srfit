@@ -933,7 +933,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         rlines.sort(key=numstr)
         return rlines
 
-    def _get_pmatch(self, s):
+    def _matchPattern(self, s):
         return len(s.split(None, 1)) < 2 or self._regexp.search(s.split(None, 1)[0])
     
     def show(self, pattern="", textwidth=78):
@@ -957,7 +957,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         tlines = self._formatManaged()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
-            linesok = filter(self._get_pmatch, tlines)
+            linesok = filter(self._matchPattern, tlines)
             lastnotblank = False
             # squeeze repeated blank lines
             for lastnotblank, g in groupby(linesok, bool):
@@ -983,7 +983,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Restraints", _DASHEDLINE])
-            lines.extend(filter(self._get_pmatch, tlines))
+            lines.extend(filter(self._matchPattern, tlines))
 
         # Determine effective text width tw.
         tw = textwidth if (textwidth is not None and textwidth > 0) else None

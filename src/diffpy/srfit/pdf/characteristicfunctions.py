@@ -41,7 +41,7 @@ from numpy import arctan as atan
 from numpy import arctanh as atanh
 from numpy import ceil, exp, log, log2, pi, sign, sqrt
 from numpy.fft import fftfreq, ifft
-from scipy.special import erf
+from scipy.special import erfc
 
 from diffpy.srfit.fitbase.calculator import Calculator
 
@@ -197,8 +197,6 @@ def lognormalSphericalCF(r, psize, psig):
         return numpy.zeros_like(r)
     if psig <= 0:
         return sphericalCF(r, psize)
-
-    erfc = lambda x: 1.0 - erf(x)
 
     sqrt2 = sqrt(2.0)
     s = sqrt(log(psig * psig / (1.0 * psize * psize) + 1))

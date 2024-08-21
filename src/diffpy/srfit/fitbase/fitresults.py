@@ -326,7 +326,7 @@ class FitResults(object):
 
         if not certain:
             error_message = "Some quantities invalid due to missing profile uncertainty"
-            if not error_message in self.messages:
+            if error_message not in self.messages:
                 self.messages.append(error_message)
 
         lines.extend(self.messages)

@@ -125,7 +125,7 @@ class Equation(Operator):
         """Gives access to the Arguments as attributes."""
         # Avoid infinite loop on argdict lookup.
         argdict = object.__getattribute__(self, "argdict")
-        if not name in argdict:
+        if name not in argdict:
             raise AttributeError("No argument named '%s' here" % name)
         return argdict[name]
 

@@ -337,15 +337,15 @@ def plotResults(recipe):
     # All this should be pretty familiar by now.
     q = recipe.bucky.profile.x
 
-    I = recipe.bucky.profile.y
-    Icalc = recipe.bucky.profile.ycalc
+    intensity = recipe.bucky.profile.y
+    intensity_calc = recipe.bucky.profile.ycalc
     bkgd = recipe.bucky.evaluateEquation("bkgd")
-    diff = I - Icalc
+    diff = intensity - intensity_calc
 
     import pylab
 
-    pylab.plot(q, I, "ob", label="I(Q) Data")
-    pylab.plot(q, Icalc, "r-", label="I(Q) Fit")
+    pylab.plot(q, intensity, "ob", label="I(Q) Data")
+    pylab.plot(q, intensity_calc, "r-", label="I(Q) Fit")
     pylab.plot(q, diff, "g-", label="I(Q) diff")
     pylab.plot(q, bkgd, "c-", label="Bkgd. Fit")
     pylab.xlabel(r"$Q (\AA^{-1})$")

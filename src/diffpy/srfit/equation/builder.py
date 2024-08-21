@@ -363,9 +363,11 @@ class EquationFactory(object):
         # generated.
         for tok in set(args):
             # Move genuine varibles to the eqargs dictionary
-            if (tok in self.builders or  # Check registered builders
-                tok in EquationFactory.symbols or  # Check symbols
-                tok in EquationFactory.ignore):  # Check ignored characters
+            if (
+                tok in self.builders  # Check registered builders
+                or tok in EquationFactory.symbols  # Check symbols
+                or tok in EquationFactory.ignore  # Check ignored characters
+            ):
                 args.remove(tok)
 
         return args
@@ -665,7 +667,7 @@ def __wrapSrFitOperators():
         inspect.isclass(cls)
         and issubclass(cls, opmod.Operator)
         and not inspect.isabstract(cls)
-        and not cls in excluded_types
+        and cls not in excluded_types
     )
     # create OperatorBuilder objects
     for nm, opclass in inspect.getmembers(opmod, is_exported_type):

@@ -730,8 +730,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self.unconstrain(*self._constraints)
 
         if recurse:
-            f = lambda m: hasattr(m, "clearConstraints")
-            for m in filter(f, self._iterManaged()):
+            for m in filter(lambda m: hasattr(m, "clearConstraints"), self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
@@ -813,8 +812,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self.unrestrain(*self._restraints)
 
         if recurse:
-            f = lambda m: hasattr(m, "clearRestraints")
-            for m in filter(f, self._iterManaged()):
+            for m in filter(lambda m: hasattr(m, "clearRestraints"), self._iterManaged()):
                 m.clearRestraints(recurse)
         return
 
@@ -822,8 +820,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Get the constrained Parameters for this and managed sub-objects."""
         constraints = {}
         if recurse:
-            f = lambda m: hasattr(m, "_getConstraints")
-            for m in filter(f, self._iterManaged()):
+            for m in filter(lambda m: hasattr(m, "_getConstraints"), self._iterManaged()):
                 constraints.update(m._getConstraints(recurse))
 
         constraints.update(self._constraints)
@@ -837,8 +834,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         restraints = set(self._restraints)
         if recurse:
-            f = lambda m: hasattr(m, "_getRestraints")
-            for m in filter(f, self._iterManaged()):
+            for m in filter(lambda m: hasattr(m, "_getRestraints"), self._iterManaged()):
                 restraints.update(m._getRestraints(recurse))
 
         return restraints

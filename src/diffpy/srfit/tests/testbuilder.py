@@ -157,7 +157,7 @@ class TestBuilder(unittest.TestCase):
         eq.x.setValue(x)
         eq.B.setValue(B)
         eq.C.setValue(C)
-        f = lambda A, x, B, C: A * sin(0.5 * x) + divide(B, C)
+        f = lambda A, x, B, C: A * sin(0.5 * x) + divide(B, C)  # noqa: E731
         self.assertTrue(array_equal(eq(), f(A, x, B, C)))
 
         # Make sure that the arguments of eq are listed in the order in which
@@ -170,7 +170,7 @@ class TestBuilder(unittest.TestCase):
         sigma = 0.1
         eq.x.setValue(x)
         eq.sigma.setValue(sigma)
-        f = lambda x, sigma: sqrt(e ** (-0.5 * (x / sigma) ** 2))
+        f = lambda x, sigma: sqrt(e ** (-0.5 * (x / sigma) ** 2))  # noqa: E731
         self.assertTrue(numpy.allclose(eq(), f(x, sigma)))
 
         self.assertEqual(eq.args, [eq.x, eq.sigma])
@@ -246,7 +246,7 @@ class TestBuilder(unittest.TestCase):
         sigma = builder.ArgumentBuilder(name="sigma", value=0.1)
         beq = sqrt(e ** (-0.5 * (x / sigma) ** 2))
         eq = beq.getEquation()
-        f = lambda x, sigma: sqrt(e ** (-0.5 * (x / sigma) ** 2))
+        f = lambda x, sigma: sqrt(e ** (-0.5 * (x / sigma) ** 2))  # noqa: E731
         self.assertTrue(numpy.allclose(eq(), numpy.sqrt(e ** (-0.5 * (_x / 0.1) ** 2))))
 
         # Equation with Equation

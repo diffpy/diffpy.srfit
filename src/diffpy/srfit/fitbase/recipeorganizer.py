@@ -944,7 +944,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             the screen width.  Do not trim when negative or 0.
         """
         regexp = re.compile(pattern)
-        pmatch = lambda s: (len(s.split(None, 1)) < 2 or regexp.search(s.split(None, 1)[0]))
+        pmatch = lambda s: (len(s.split(None, 1)) < 2 or regexp.search(s.split(None, 1)[0]))  # noqa: E731
         # Show sub objects and their parameters
         lines = []
         tlines = self._formatManaged()

@@ -16,6 +16,9 @@
 """Helper routines for testing."""
 
 import sys
+import os.path
+import tempfile
+
 import six
 
 import diffpy.srfit.equation.literals as literals
@@ -109,4 +112,34 @@ def capturestdout(f, *args, **kwargs):
         sys.stdout = savestdout
     return fp.getvalue()
 
-# End of file
+
+def capturefilewrite(f, *args, **kwargs):
+    """Capture output written by function to a temporary file.
+
+    Parameters
+    ----------
+    f : callable
+        The function which writes output to some file path.
+        It must take filename as its first argument.
+
+    Returns
+    -------
+    content : str
+        The content written to the file by the `f` call.
+
+    Raises
+    ------
+    FileNotFoundError
+        When `f` call does not write the specified file argument.
+    """
+    tf = tempfile.NamedTemporaryFile()
+    tf.close()
+    assert not os.path.exists(tf.name)
+    try:
+        f(tf.name, *args, **kwargs)
+        with open(tf.name) as fp:
+            rv = fp.read()
+    finally:
+        if os.path.exists(tf.name):
+            os.remove(tf.name)
+    return rv

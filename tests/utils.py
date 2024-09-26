@@ -15,13 +15,13 @@
 
 """Helper routines for testing."""
 
+import logging as logger
 import sys
 
 import six
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
-import logging as logger
 
 # Resolve availability of optional third-party packages.
 

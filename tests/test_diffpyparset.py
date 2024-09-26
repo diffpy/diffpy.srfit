@@ -19,7 +19,6 @@ import pickle
 import unittest
 
 import numpy
-
 from utils import _msg_nostructure, has_structure
 
 # Global variables to be assigned in setUp

@@ -18,7 +18,6 @@
 import unittest
 
 import numpy
-
 from utils import _msg_nopyobjcryst, has_pyobjcryst
 
 # Global variables to be assigned in setUp

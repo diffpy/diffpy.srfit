@@ -20,10 +20,10 @@ import re
 import unittest
 
 from numpy import allclose, arange, array, array_equal, ones_like
+from utils import datafile
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.profile import Profile
-from utils import datafile
 
 
 class TestProfile(unittest.TestCase):

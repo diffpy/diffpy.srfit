@@ -19,7 +19,7 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import _msg_nopyobjcryst, has_pyobjcryst
+from utils import _msg_nopyobjcryst, has_pyobjcryst
 
 # Global variables to be assigned in setUp
 ObjCrystCrystalParSet = spacegroups = None

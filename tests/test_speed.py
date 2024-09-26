@@ -23,7 +23,7 @@ import numpy
 
 import diffpy.srfit.equation.literals as literals
 import diffpy.srfit.equation.visitors as visitors
-from diffpy.srfit.tests.utils import _makeArgs
+from utils import _makeArgs
 
 x = numpy.arange(0, 20, 0.05)
 

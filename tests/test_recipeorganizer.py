@@ -27,7 +27,7 @@ from diffpy.srfit.fitbase.recipeorganizer import (
     RecipeOrganizer,
     equationFromString,
 )
-from diffpy.srfit.tests.utils import capturestdout
+from utils import capturestdout
 
 # ----------------------------------------------------------------------------
 

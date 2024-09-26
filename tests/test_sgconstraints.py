@@ -19,7 +19,7 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import (
+from utils import (
     _msg_nopyobjcryst,
     _msg_nostructure,
     datafile,

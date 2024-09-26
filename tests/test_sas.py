@@ -21,7 +21,7 @@ import numpy
 
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
 from diffpy.srfit.sas.sasimport import sasimport
-from diffpy.srfit.tests.utils import _msg_nosas, datafile, has_sas
+from utils import _msg_nosas, datafile, has_sas
 
 # ----------------------------------------------------------------------------
 

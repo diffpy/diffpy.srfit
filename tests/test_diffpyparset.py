@@ -20,7 +20,7 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import _msg_nostructure, has_structure
+from utils import _msg_nostructure, has_structure
 
 # Global variables to be assigned in setUp
 Atom = Lattice = Structure = DiffpyStructureParSet = None

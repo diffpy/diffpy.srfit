@@ -23,7 +23,7 @@ from numpy import allclose, arange, array, array_equal, ones_like
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.tests.utils import datafile
+from utils import datafile
 
 
 class TestProfile(unittest.TestCase):

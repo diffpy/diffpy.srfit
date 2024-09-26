@@ -23,7 +23,7 @@ import numpy
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.pdf import PDFContribution, PDFGenerator, PDFParser
-from diffpy.srfit.tests.utils import (
+from utils import (
     _msg_nosrreal,
     _msg_nostructure,
     datafile,

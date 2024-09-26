@@ -19,7 +19,7 @@ import unittest
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import initializeRecipe
-from diffpy.srfit.tests.utils import datafile
+from utils import datafile
 
 
 class TestInitializeRecipe(unittest.TestCase):

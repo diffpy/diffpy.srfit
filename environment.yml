@@ -1,0 +1,6 @@
+name: diffpy.srfit
+channels:
+  - conda-forge
+dependencies:
+  - python=3
+  - pip

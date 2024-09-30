@@ -138,4 +138,3 @@ diffpy.srfit.fitbase.profileparser module
     :members:
     :undoc-members:
     :show-inheritance:
-

@@ -32,4 +32,3 @@ diffpy.srfit.exceptions module
     :members:
     :undoc-members:
     :show-inheritance:
-

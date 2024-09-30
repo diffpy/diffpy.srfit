@@ -17,9 +17,10 @@
 
 import unittest
 
+from utils import _makeArgs, noObserversInGlobalBuilders
+
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation import Equation
-from diffpy.srfit.tests.utils import _makeArgs, noObserversInGlobalBuilders
 
 
 class TestEquation(unittest.TestCase):

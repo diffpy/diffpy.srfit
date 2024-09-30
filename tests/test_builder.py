@@ -18,10 +18,10 @@
 import unittest
 
 import numpy
+from utils import _makeArgs, noObserversInGlobalBuilders
 
 import diffpy.srfit.equation.builder as builder
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.tests.utils import _makeArgs, noObserversInGlobalBuilders
 
 
 class TestBuilder(unittest.TestCase):

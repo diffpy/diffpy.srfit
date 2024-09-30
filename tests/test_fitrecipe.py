@@ -18,12 +18,12 @@
 import unittest
 
 from numpy import array_equal, dot, linspace, pi, sin
+from utils import capturestdout
 
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.tests.utils import capturestdout
 
 
 class TestFitRecipe(unittest.TestCase):

@@ -20,10 +20,10 @@ from __future__ import print_function
 import random
 
 import numpy
+from utils import _makeArgs
 
 import diffpy.srfit.equation.literals as literals
 import diffpy.srfit.equation.visitors as visitors
-from diffpy.srfit.tests.utils import _makeArgs
 
 x = numpy.arange(0, 20, 0.05)
 

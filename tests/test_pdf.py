@@ -20,16 +20,10 @@ import pickle
 import unittest
 
 import numpy
+from utils import _msg_nosrreal, _msg_nostructure, datafile, has_srreal, has_structure
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.pdf import PDFContribution, PDFGenerator, PDFParser
-from diffpy.srfit.tests.utils import (
-    _msg_nosrreal,
-    _msg_nostructure,
-    datafile,
-    has_srreal,
-    has_structure,
-)
 
 # ----------------------------------------------------------------------------
 

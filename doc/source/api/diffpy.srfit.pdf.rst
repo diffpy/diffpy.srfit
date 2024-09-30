@@ -58,4 +58,3 @@ diffpy.srfit.pdf.pdfcontribution module
     :members:
     :undoc-members:
     :show-inheritance:
-

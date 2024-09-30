@@ -18,4 +18,3 @@ diffpy.srfit.interface.interface module
     :members:
     :undoc-members:
     :show-inheritance:
-

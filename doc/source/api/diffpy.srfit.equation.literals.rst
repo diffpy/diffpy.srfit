@@ -42,4 +42,3 @@ diffpy.srfit.equation.literals.operators module
     :members:
     :undoc-members:
     :show-inheritance:
-

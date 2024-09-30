@@ -50,4 +50,3 @@ diffpy.srfit.equation.visitors.printer module
     :members:
     :undoc-members:
     :show-inheritance:
-

@@ -1,12 +1,41 @@
-.. image:: https://travis-ci.org/diffpy/diffpy.srfit.svg?branch=master
-   :target: https://travis-ci.org/diffpy/diffpy.srfit
+|Icon| |title|_
+===============
 
-.. image:: https://codecov.io/gh/diffpy/diffpy.srfit/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/diffpy/diffpy.srfit
+.. |title| replace:: diffpy.srfit
+.. _title: https://diffpy.github.io/diffpy.srfit
 
+.. |Icon| image:: https://avatars.githubusercontent.com/diffpy
+        :target: https://diffpy.github.io/diffpy.srfit
+        :height: 100px
 
-diffpy.srfit
-========================================================================
+|PyPi| |Forge| |PythonVersion| |PR|
+
+|CI| |Codecov| |Black| |Tracking|
+
+.. |Black| image:: https://img.shields.io/badge/code_style-black-black
+        :target: https://github.com/psf/black
+
+.. |CI| image:: https://github.com/diffpy/diffpy.srfit/actions/workflows/matrix-and-codecov-on-merge-to-main.yml/badge.svg
+        :target: https://github.com/diffpy/diffpy.srfit/actions/workflows/matrix-and-codecov-on-merge-to-main.yml
+
+.. |Codecov| image:: https://codecov.io/gh/diffpy/diffpy.srfit/branch/main/graph/badge.svg
+        :target: https://codecov.io/gh/diffpy/diffpy.srfit
+
+.. |Forge| image:: https://img.shields.io/conda/vn/conda-forge/diffpy.srfit
+        :target: https://anaconda.org/conda-forge/diffpy.srfit
+
+.. |PR| image:: https://img.shields.io/badge/PR-Welcome-29ab47ff
+
+.. |PyPi| image:: https://img.shields.io/pypi/v/diffpy.srfit
+        :target: https://pypi.org/project/diffpy.srfit/
+
+.. |PythonVersion| image:: https://img.shields.io/pypi/pyversions/diffpy.srfit
+        :target: https://pypi.org/project/diffpy.srfit/
+
+.. |Tracking| image:: https://img.shields.io/badge/issue_tracking-github-blue
+        :target: https://github.com/diffpy/diffpy.srfit/issues
+
+Python package for structure refinement from diffraction data.
 
 Configurable code for solving atomic structures.
 
@@ -35,7 +64,14 @@ co-refinements with other techniques.
 For more information about the diffpy.srfit library, see the users manual at
 http://diffpy.github.io/diffpy.srfit.
 
-REQUIREMENTS
+Citation
+--------
+
+If you use diffpy.srfit in a scientific publication, we would like you to cite this package as
+
+        diffpy.srfit Package, https://github.com/diffpy/diffpy.srfit
+
+Requirements
 ------------------------------------------------------------------------
 
 The diffpy.srfit package requires Python 3.5 or later or 2.7 and
@@ -79,68 +115,79 @@ Linux some of the required software can be installed using ::
 For other required packages see their respective web pages for installation
 instructions.
 
+Installation
+------------
 
-INSTALLATION
-------------------------------------------------------------------------
+The preferred method is to use `Miniconda Python
+<https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html>`_
+and install from the "conda-forge" channel of Conda packages.
 
-The preferred method is to use Anaconda Python and install from the
-"diffpy" channel of Anaconda packages ::
+To add "conda-forge" to the conda channels, run the following in a terminal. ::
 
-   conda config --add channels diffpy
-   conda install diffpy.srfit
+        conda config --add channels conda-forge
 
-diffpy.srfit is also included in the "diffpy-cmi" collection
-of packages for structure analysis ::
+We want to install our packages in a suitable conda environment.
+The following creates and activates a new environment named ``diffpy.srfit_env`` ::
 
-   conda install diffpy-cmi
+        conda create -n diffpy.srfit_env python=3
+        conda activate diffpy.srfit_env
 
-Another option is to use ``easy_install`` to download and install the
-latest release from `Python Package Index <https://pypi.python.org>`_ ::
+Then, to fully install ``diffpy.srfit`` in our active environment, run ::
 
-   easy_install diffpy.srfit
+        conda install diffpy.srfit
 
-If you prefer to install from sources, make sure all required software
-packages are in place and then run ::
+Another option is to use ``pip`` to download and install the latest release from
+`Python Package Index <https://pypi.python.org>`_.
+To install using ``pip`` into your ``diffpy.srfit_env`` environment, type ::
 
-   python setup.py install
+        pip install diffpy.srfit
 
-You may need to use ``sudo`` with system Python so the process is
-allowed to put files to the system directories.  If administrator (root)
-access is not available, consult the output from
-``python setup.py install --help`` for options to install to a
-user-writable locations.  The installation integrity can be verified by
-changing to the HOME directory and running ::
+If you prefer to install from sources, after installing the dependencies, obtain the source archive from
+`GitHub <https://github.com/diffpy/diffpy.srfit/>`_. Once installed, ``cd`` into your ``diffpy.srfit`` directory
+and run the following ::
 
-   python -m diffpy.srfit.tests.run
+        pip install .
 
+Support and Contribute
+----------------------
 
-DEVELOPMENT
-------------------------------------------------------------------------
+`Diffpy user group <https://groups.google.com/g/diffpy-users>`_ is the discussion forum for general questions and discussions about the use of diffpy.srfit. Please join the diffpy.srfit users community by joining the Google group. The diffpy.srfit project welcomes your expertise and enthusiasm!
+
+If you see a bug or want to request a feature, please `report it as an issue <https://github.com/diffpy/diffpy.srfit/issues>`_ and/or `submit a fix as a PR <https://github.com/diffpy/diffpy.srfit/pulls>`_. You can also post it to the `Diffpy user group <https://groups.google.com/g/diffpy-users>`_.
 
 diffpy.srfit is an open-source software developed as a part of the DiffPy-CMI
-complex modeling initiative at the Brookhaven National Laboratory.  The
-diffpy.srfit sources are hosted at
-https://github.com/diffpy/diffpy.srfit.
+complex modeling initiative at the Brookhaven National Laboratory.
 
-Feel free to fork the project and contribute.  To install diffpy.srfit
+Feel free to fork the project and contribute. To install diffpy.srfit
 in a development mode, with its sources being directly used by Python
-rather than copied to a package directory, use ::
+rather than copied to a package directory, use the following in the root
+directory ::
 
-   python setup.py develop --user
+        pip install -e .
 
+To ensure code quality and to prevent accidental commits into the default branch, please set up the use of our pre-commit
+hooks.
 
-ACKNOWLEDGEMENT
+1. Install pre-commit in your working environment by running ``conda install pre-commit``.
+
+2. Initialize pre-commit (one time only) ``pre-commit install``.
+
+Thereafter your code will be linted by black and isort and checked against flake8 before you can commit.
+If it fails by black or isort, just rerun and it should pass (black and isort will modify the files so should
+pass after they are modified). If the flake8 test fails please see the error messages and fix them manually before
+trying to commit again.
+
+Improvements and fixes are always appreciated.
+
+Before contribuing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.srfit/blob/main/CODE_OF_CONDUCT.rst>`_.
+
+Acknowledgement
 ------------------------------------------------------------------------
 
 The source code in *observable.py* was derived from the 1.0 version
 of the Caltech "Pyre" project.
 
+Contact
+-------
 
-CONTACTS
-------------------------------------------------------------------------
-
-For more information on diffpy.srfit please visit the project web-page
-
-http://www.diffpy.org
-
-or email Prof. Simon Billinge at sb2896@columbia.edu.
+For more information on diffpy.srfit please visit the project `web-page <https://diffpy.github.io/>`_ or email Prof. Simon Billinge at sb2896@columbia.edu.

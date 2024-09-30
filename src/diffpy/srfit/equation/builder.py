@@ -666,10 +666,10 @@ def __wrapSrFitOperators():
     def is_exported_type(cls):
         """Check if the class should be wrapped as OperatorBuilder."""
         return (
-            inspect.isclass(cls) and
-            issubclass(cls, opmod.Operator) and
-            not inspect.isabstract(cls) and
-            cls not in excluded_types
+            inspect.isclass(cls)
+            and issubclass(cls, opmod.Operator)
+            and not inspect.isabstract(cls)
+            and cls not in excluded_types
         )
 
     # create OperatorBuilder objects

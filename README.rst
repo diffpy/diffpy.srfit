@@ -67,9 +67,16 @@ http://diffpy.github.io/diffpy.srfit.
 Citation
 --------
 
-If you use diffpy.srfit in a scientific publication, we would like you to cite this package as
+If you use this program for a scientific research that leads
+to publication, we ask that you acknowledge use of the program
+by citing the following paper in your publication:
 
-        diffpy.srfit Package, https://github.com/diffpy/diffpy.srfit
+   P. Juhás, C. L. Farrow, X. Yang, K. R. Knox and S. J. L. Billinge,
+   `Complex modeling: a strategy and software program for combining
+   multiple information sources to solve ill posed structure and
+   nanostructure inverse problems
+   <http://dx.doi.org/10.1107/S2053273315014473>`__,
+   *Acta Crystallogr. A* **71**, 562-568 (2015).
 
 Requirements
 ------------------------------------------------------------------------
@@ -156,7 +163,7 @@ Support and Contribute
 If you see a bug or want to request a feature, please `report it as an issue <https://github.com/diffpy/diffpy.srfit/issues>`_ and/or `submit a fix as a PR <https://github.com/diffpy/diffpy.srfit/pulls>`_. You can also post it to the `Diffpy user group <https://groups.google.com/g/diffpy-users>`_.
 
 diffpy.srfit is an open-source software developed as a part of the DiffPy-CMI
-complex modeling initiative at the Brookhaven National Laboratory.
+complex modeling initiative at Columbia University.
 
 Feel free to fork the project and contribute. To install diffpy.srfit
 in a development mode, with its sources being directly used by Python

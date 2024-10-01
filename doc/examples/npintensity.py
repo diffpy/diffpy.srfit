@@ -47,13 +47,7 @@ from __future__ import print_function
 import numpy
 from gaussianrecipe import scipyOptimize
 
-from diffpy.srfit.fitbase import (
-    FitContribution,
-    FitRecipe,
-    FitResults,
-    Profile,
-    ProfileGenerator,
-)
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile, ProfileGenerator
 from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
 # Example Code

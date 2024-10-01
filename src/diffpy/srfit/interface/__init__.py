@@ -21,15 +21,11 @@ scripting.
 """
 
 
-from diffpy.srfit.interface.interface import ParameterInterface
+from diffpy.srfit.interface.interface import FitRecipeInterface, ParameterInterface, RecipeOrganizerInterface
 
 _parameter_interface = ParameterInterface
 
-from diffpy.srfit.interface.interface import RecipeOrganizerInterface
-
 _recipeorganizer_interface = RecipeOrganizerInterface
-
-from diffpy.srfit.interface.interface import FitRecipeInterface
 
 _fitrecipe_interface = FitRecipeInterface
 

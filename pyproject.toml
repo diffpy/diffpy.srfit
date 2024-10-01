@@ -5,19 +5,36 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "diffpy.srfit"
 dynamic=['version', 'dependencies']
+authors = [
+  { name="Simon J.L. Billinge group", email="simon.billinge@gmail.com" },
+]
+maintainers = [
+  { name="Simon J.L. Billinge group", email="simon.billinge@gmail.com" },
+]
+description = "Python package for structure refinement from diffraction data."
+keywords = ['optimization', 'constraints', 'restraints', 'structure refinement', 'complex modeling']
+readme = "README.rst"
+requires-python = ">=3.10"
 classifiers = [
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: Science/Research',
+        'License :: Free To Use But Restricted',
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX',
         'Operating System :: Unix',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Topic :: Scientific/Engineering :: Physics',
         'Topic :: Scientific/Engineering :: Chemistry',
 ]
 
+[project.urls]
+Homepage = "https://github.com/diffpy/diffpy.srfit/"
+Issues = "https://github.com/diffpy/diffpy.srfit/issues/"
 
 [tool.setuptools-git-versioning]
 enabled = true

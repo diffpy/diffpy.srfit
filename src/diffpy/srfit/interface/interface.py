@@ -12,13 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Interface enhancements for Parameter-type classes.
 
-Most interface additions can thought of by considering the classes in SrFit to
-be sets of parameters. "+=" adds a new parameter, when that makes sense. "|="
-is the 'union' of these sets, and in general is used to combine different
-objects. See individual interface classes for specifics.
+Most interface additions can thought of by considering the classes in
+SrFit to be sets of parameters. "+=" adds a new parameter, when that
+makes sense. "|=" is the 'union' of these sets, and in general is used
+to combine different objects. See individual interface classes for
+specifics.
 """
 
 __all__ = [
@@ -36,7 +36,7 @@ class ParameterInterface(object):
     """Mix-in class for enhancing the Parameter interface."""
 
     def __lshift__(self, v):
-        """setValue with <<
+        """SetValue with <<
 
         Think of '<<' as injecting a value
 
@@ -58,7 +58,7 @@ class RecipeOrganizerInterface(object):
     """Mix-in class for enhancing the RecipeOrganizer interface."""
 
     def __imul__(self, args):
-        """constrain with *=
+        """Constrain with *=
 
         Think of '*' as a push-pin.
 
@@ -68,7 +68,7 @@ class RecipeOrganizerInterface(object):
         return self
 
     def __imod__(self, args):
-        """restrain with %=
+        """Restrain with %=
 
         This of '%' as a loose rope.
 
@@ -106,7 +106,7 @@ class FitRecipeInterface(object):
     """Mix-in class for enhancing the FitRecipe interface."""
 
     def __ior__(self, args):
-        """addContribution with |=
+        """AddContribution with |=
 
         Think of "|" as the union of components.
 
@@ -116,12 +116,12 @@ class FitRecipeInterface(object):
         return self
 
     def __iadd__(self, args):
-        """addVar or newVar with +=
+        """AddVar or newVar with +=
 
         Think of "+" as addition of a variable.
 
-        This accepts a single argument or an iterable of single arguments or
-        argument tuples.
+        This accepts a single argument or an iterable of single
+        arguments or argument tuples.
         """
 
         # Want to detect addVar or newVar

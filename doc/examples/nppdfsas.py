@@ -12,38 +12,31 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of combining PDF and SAS nanoparticles data.
 
-This is an example of using both PDF and SAS data in the same fit. This fits a
-crystal model to the PDF while fitting a shape model to both the SAS profile
-and the PDF data. Using the same shape for the PDF and SAS provides a feedback
-mechanism into the fit that allows the PDF and SAS portions of the fit to guide
-one another, and in the end gives the shape of the nanoparticle that agrees
-best with both the PDF and SAS data.
+This is an example of using both PDF and SAS data in the same fit. This
+fits a crystal model to the PDF while fitting a shape model to both the
+SAS profile and the PDF data. Using the same shape for the PDF and SAS
+provides a feedback mechanism into the fit that allows the PDF and SAS
+portions of the fit to guide one another, and in the end gives the shape
+of the nanoparticle that agrees best with both the PDF and SAS data.
 """
 
 import numpy
-
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.pdf.characteristicfunctions import SASCF
-from diffpy.srfit.sas import SASParser, SASGenerator
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
-
-from gaussianrecipe import scipyOptimize
+from diffpy.srfit.sas import SASGenerator, SASParser
 
 
 def makeRecipe(ciffile, grdata, iqdata):
-    """Make complex-modeling recipe where I(q) and G(r) are fit
-    simultaneously.
+    """Make complex-modeling recipe where I(q) and G(r) are fit simultaneously.
 
-    The fit I(q) is fed into the calculation of G(r), which provides feedback
-    for the fit parameters of both.
-
+    The fit I(q) is fed into the calculation of G(r), which provides
+    feedback for the fit parameters of both.
     """
 
     # Create a PDF contribution as before

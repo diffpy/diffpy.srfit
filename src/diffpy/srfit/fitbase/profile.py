@@ -12,24 +12,23 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """The Profile class containing the physical and calculated data.
 
-Profile holds the arrays representing an observed profile, a selected subset of
-the observed profile and a calculated profile. Profiles are used by Calculators
-to store a calculated signal, and by FitContributions to help calculate a
-residual equation.
+Profile holds the arrays representing an observed profile, a selected
+subset of the observed profile and a calculated profile. Profiles are
+used by Calculators to store a calculated signal, and by
+FitContributions to help calculate a residual equation.
 """
 
 __all__ = ["Parameter", "Profile"]
 
-import six
 import numpy
+import six
 
-from diffpy.srfit.util.observable import Observable
+from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.validatable import Validatable
-from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.util.observable import Observable
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8
@@ -66,7 +65,6 @@ class Profile(Observable, Validatable):
                 constrained to.
     meta    --  A dictionary of metadata. This is only set if provided by a
                 parser.
-
     """
 
     def __init__(self):
@@ -114,7 +112,6 @@ class Profile(Observable, Validatable):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
-
         """
         x, y, junk, dy = parser.getData()
         self.meta = dict(parser.getMetaData())
@@ -133,7 +130,6 @@ class Profile(Observable, Validatable):
 
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
-
         """
         if len(yobs) != len(xobs):
             raise ValueError("xobs and yobs are different lengths")
@@ -269,7 +265,6 @@ class Profile(Observable, Validatable):
 
         This will create y and dy on the specified grid if xobs, yobs and
         dyobs exist.
-
         """
         x = numpy.asarray(x)
         if self.xobs is not None:
@@ -292,17 +287,16 @@ class Profile(Observable, Validatable):
     def loadtxt(self, *args, **kw):
         """Use numpy.loadtxt to load data.
 
-        Arguments are passed to numpy.loadtxt.
-        unpack = True is enforced.
-        The first two arrays returned by numpy.loadtxt are assumed to be x and
-        y.  If there is a third array, it is assumed to by dy. Any other arrays
-        are ignored. These are passed to setObservedProfile.
+        Arguments are passed to numpy.loadtxt. unpack = True is
+        enforced. The first two arrays returned by numpy.loadtxt are
+        assumed to be x and y.  If there is a third array, it is assumed
+        to by dy. Any other arrays are ignored. These are passed to
+        setObservedProfile.
 
-        Raises ValueError if the call to numpy.loadtxt returns fewer than 2
-        arrays.
+        Raises ValueError if the call to numpy.loadtxt returns fewer
+        than 2 arrays.
 
         Returns the x, y and dy arrays loaded from the file
-
         """
         if len(args) == 8 and not args[-1]:
             args = list(args)
@@ -360,7 +354,6 @@ class Profile(Observable, Validatable):
         """Invalidate cached state.
 
         This will force any observer to invalidate its state.
-
         """
         self.ycalc = None
         self.notify(other)
@@ -373,7 +366,6 @@ class Profile(Observable, Validatable):
         This validates that x, y, and dy are the same length.
 
         Raises SrFitError if validation fails.
-
         """
         datanotset = any(
             v is None
@@ -407,7 +399,6 @@ def rebinArray(A, xold, xnew):
     This uses cubic spline interpolation.
 
     Returns: A new array over the new sampling array.
-
     """
     if numpy.array_equal(xold, xnew):
         return A

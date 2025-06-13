@@ -12,17 +12,16 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 import unittest
 
-from numpy import linspace, array_equal, pi, sin, dot
+from numpy import array_equal, dot, linspace, pi, sin
 
-from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
-from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.tests.utils import capturestdout
 
 

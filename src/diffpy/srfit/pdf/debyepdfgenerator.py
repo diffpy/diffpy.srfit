@@ -12,13 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """PDF profile generator using the Debye equation.
 
 The DebyePDFGenerator class can take a diffpy.structure,
-pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and calculate
-the PDF from it. This generator is especially appropriate for isolated
-scatterers, such as nanoparticles and molecules.
+pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and
+calculate the PDF from it. This generator is especially appropriate for
+isolated scatterers, such as nanoparticles and molecules.
 """
 
 __all__ = ["DebyePDFGenerator"]
@@ -63,7 +62,6 @@ class DebyePDFGenerator(BasePDFGenerator):
     delta2  --  See Managed Parameters.
     qbroad  --  See Managed Parameters.
     qdamp   --  See Managed Parameters.
-
     """
 
     def setStructure(self, stru, name="phase", periodic=False):
@@ -82,7 +80,6 @@ class DebyePDFGenerator(BasePDFGenerator):
                     False). Note that some structures do not support
                     periodicity, in which case this will have no effect on the
                     PDF calculation.
-
         """
         return BasePDFGenerator.setStructure(self, stru, name, periodic)
 
@@ -101,7 +98,6 @@ class DebyePDFGenerator(BasePDFGenerator):
         periodic -- The structure should be treated as periodic (default True).
                     Note that some structures do not support periodicity, in
                     which case this will be ignored.
-
         """
         return BasePDFGenerator.setPhase(self, parset, periodic)
 

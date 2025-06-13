@@ -12,11 +12,10 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """TagManager class.
 
-The TagManager class takes hashable objects and assigns tags to them. Objects
-can then be easily referenced via their assigned tags.
+The TagManager class takes hashable objects and assigns tags to them.
+Objects can then be easily referenced via their assigned tags.
 """
 
 __all__ = ["TagManager"]
@@ -33,7 +32,6 @@ class TagManager(object):
                         cannot be found (bool, True). If this is False, then a
                         KeyError will be thrown when a tag cannot be found.
     _tagdict        --  A dictionary of tags to sets of tagged objects.
-
     """
 
     def __init__(self):
@@ -55,7 +53,6 @@ class TagManager(object):
         *tags   --  Tags to apply to obj.
 
         Raises TypeError if obj is not hashable.
-
         """
         for tag in tags:
             oset = self._tagdict.setdefault(str(tag), set())
@@ -71,7 +68,6 @@ class TagManager(object):
 
         Raises KeyError if a passed tag does not apply to obj and self.silent
         is False
-
         """
         if not tags:
             tags = self.tags(obj)
@@ -105,7 +101,6 @@ class TagManager(object):
         """Get all objects that have any of the passed tags.
 
         Returns set
-
         """
         if not tags:
             return set()
@@ -129,7 +124,6 @@ class TagManager(object):
 
         Raises KeyError if a passed tag does not exist. This ignores
         self.silent.
-
         """
         keys = self._tagdict.keys()
         for tag in tags:
@@ -141,8 +135,8 @@ class TagManager(object):
     def __getObjectSet(self, tag):
         """Helper function for getting an object set with given tag.
 
-        Raises KeyError if a passed tag does not exist and self.silent is False
-
+        Raises KeyError if a passed tag does not exist and self.silent
+        is False
         """
         oset = self._tagdict.get(str(tag))
         if oset is None:

@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Bond-valence sum calculator from SrReal wrapped as a Restraint.
 
 This can be used as an addition to a cost function during a structure
@@ -21,8 +20,8 @@ refinement to keep the bond-valence sum within tolerable limits.
 
 __all__ = ["BVSRestraint"]
 
-from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.restraint import Restraint
 
 
 class BVSRestraint(Restraint):
@@ -38,7 +37,6 @@ class BVSRestraint(Restraint):
     scaled  --  A flag indicating if the restraint is scaled (multiplied)
                 by the unrestrained point-average chi^2 (chi^2/numpoints)
                 (default False).
-
     """
 
     def __init__(self, parset, sig=1, scaled=False):
@@ -49,7 +47,6 @@ class BVSRestraint(Restraint):
         scaled  --  A flag indicating if the restraint is scaled
                     (multiplied) by the unrestrained point-average chi^2
                     (chi^2/numpoints) (bool, default False).
-
         """
         from diffpy.srreal.bvscalculator import BVSCalculator
 
@@ -64,7 +61,6 @@ class BVSRestraint(Restraint):
 
         w   --  The point-average chi^2 which is optionally used to scale the
                 penalty (float, default 1.0).
-
         """
         # Get the bvms from the BVSCalculator
         stru = self._parset._getSrRealStructure()
@@ -84,7 +80,6 @@ class BVSRestraint(Restraint):
         """This evaluates the calculator.
 
         Raises SrFitError if validation fails.
-
         """
         from numpy import nan
 

@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 import unittest
@@ -21,8 +20,7 @@ import numpy
 
 import diffpy.srfit.equation.builder as builder
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.tests.utils import _makeArgs
-from diffpy.srfit.tests.utils import noObserversInGlobalBuilders
+from diffpy.srfit.tests.utils import _makeArgs, noObserversInGlobalBuilders
 
 
 class TestBuilder(unittest.TestCase):
@@ -148,7 +146,7 @@ class TestBuilder(unittest.TestCase):
 
     def testParseEquation(self):
 
-        from numpy import sin, divide, sqrt, array_equal, e
+        from numpy import array_equal, divide, e, sin, sqrt
 
         factory = builder.EquationFactory()
 

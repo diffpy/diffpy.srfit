@@ -12,9 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
-"""
-Definition of __version__, __date__, __timestamp__, __git_commit__.
+"""Definition of __version__, __date__, __timestamp__, __git_commit__.
 
 Notes
 -----
@@ -27,7 +25,6 @@ __all__ = ["__date__", "__git_commit__", "__timestamp__", "__version__"]
 import os.path
 
 from pkg_resources import resource_filename
-
 
 # obtain version information from the version.cfg file
 cp = dict(version="", date="", commit="", timestamp="0")

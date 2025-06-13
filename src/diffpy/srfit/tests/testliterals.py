@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for the diffpy.srfit.equation.literals module."""
 
 import unittest

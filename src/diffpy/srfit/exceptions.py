@@ -12,7 +12,6 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-
 """
 Exceptions used for SrFit - specific errors.
 """

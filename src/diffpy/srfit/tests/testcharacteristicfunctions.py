@@ -12,15 +12,14 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for sas package."""
 
 import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import has_sas, _msg_nosas
 from diffpy.srfit.sas.sasimport import sasimport
+from diffpy.srfit.tests.utils import _msg_nosas, has_sas
 
 # Global variables to be assigned in setUp
 cf = None
@@ -96,7 +95,7 @@ class TestSASCF(unittest.TestCase):
         return
 
     def testCylinder(self):
-        """Make sure cylinder works over different r-ranges"""
+        """Make sure cylinder works over different r-ranges."""
         radius = 100
         length = 30
 

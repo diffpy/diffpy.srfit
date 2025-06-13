@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of simplified fitting.
 
 This is like gaussianrecipe.py, but it uses the SimpleRecipe, which

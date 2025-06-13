@@ -12,20 +12,21 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 import unittest
 
+import numpy
+
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
-from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
+from diffpy.srfit.fitbase.recipeorganizer import (
+    RecipeContainer,
+    RecipeOrganizer,
+    equationFromString,
+)
 from diffpy.srfit.tests.utils import capturestdout
-
-import numpy
 
 # ----------------------------------------------------------------------------
 

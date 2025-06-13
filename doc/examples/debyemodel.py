@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of fitting the Debye model to experimental Debye-Waller factors.
 
 In this example, we build a fit recipe that uses an external function that can
@@ -34,15 +33,9 @@ Extensions
 """
 
 import numpy
-
-from diffpy.srfit.fitbase import (
-    FitContribution,
-    FitRecipe,
-    Profile,
-    FitResults,
-)
-
 from gaussianrecipe import scipyOptimize
+
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 
 # The data
 data = """\
@@ -65,25 +58,25 @@ data = """\
 def makeRecipe():
     """Make the recipe for the fit.
 
-    The instructions for what we want to refine, and how to refine it will be
-    defined within a FitRecipe instance. The job of a FitRecipe is to collect
-    and associate all the data, the fitting equations, fitting variables,
-    constraints and restrations. We will demonstrate each of these within the
-    code.
+    The instructions for what we want to refine, and how to refine it
+    will be defined within a FitRecipe instance. The job of a FitRecipe
+    is to collect and associate all the data, the fitting equations,
+    fitting variables, constraints and restrations. We will demonstrate
+    each of these within the code.
 
-    Data is held within a Profile object. The Profile is simply a container
-    that holds the data, and the theoretical profile once it has been
-    calculated.
+    Data is held within a Profile object. The Profile is simply a
+    container that holds the data, and the theoretical profile once it
+    has been calculated.
 
-    Data is associated with a fitting equation within a FitContribution. The
-    FitContribution defines the equation and parameters that will be adjusted
-    to fit the data. The fitting equation can be defined within a function or
-    optionally within the ProfileGenerator class. We won't need the
-    ProfileGenerator class in this example since the signature of the fitting
-    equation (the 'debye' function defined below) is so simple. The
-    FitContribution also defines the residual function to optimize for the
-    data/equation pair. This can be modified, but we won't do that here.
-
+    Data is associated with a fitting equation within a FitContribution.
+    The FitContribution defines the equation and parameters that will be
+    adjusted to fit the data. The fitting equation can be defined within
+    a function or optionally within the ProfileGenerator class. We won't
+    need the ProfileGenerator class in this example since the signature
+    of the fitting equation (the 'debye' function defined below) is so
+    simple. The FitContribution also defines the residual function to
+    optimize for the data/equation pair. This can be modified, but we
+    won't do that here.
     """
 
     ## The Profile
@@ -214,7 +207,7 @@ def debye(T, m, thetaD):
 
 
 def adps(m, thetaD, T):
-    """Calculates atomic displacement factors within the Debye model
+    """Calculates atomic displacement factors within the Debye model.
 
     <u^2> = (3h^2/4 pi^2 m kB thetaD)(phi(thetaD/T)/(ThetaD/T) + 1/4)
 
@@ -225,14 +218,13 @@ def adps(m, thetaD, T):
 
     return:
     Uiso -- float -- the thermal factor from the Debye recipe at temp T
-
     """
     h = 6.6260755e-34  # Planck's constant. J.s of m^2.kg/s
     kB = 1.3806503e-23  # Boltzmann's constant. J/K
     amu = 1.66053886e-27  # Atomic mass unit. kg
 
     def __phi(x):
-        """evaluates the phi integral needed in Debye calculation
+        """Evaluates the phi integral needed in Debye calculation.
 
         phi(x) = (1/x) int_0^x xi/(exp(xi)-1) dxi
 
@@ -241,11 +233,10 @@ def adps(m, thetaD, T):
 
         returns:
         phi -- float -- value of the phi function
-
         """
 
         def __debyeKernel(xi):
-            """function needed by debye calculators"""
+            """Function needed by debye calculators."""
             y = xi / (numpy.exp(xi) - 1)
             return y
 

@@ -12,15 +12,14 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 import unittest
 
-from diffpy.srfit.fitbase.restraint import Restraint
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.equation.builder import EquationFactory
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.restraint import Restraint
 
 
 class TestRestraint(unittest.TestCase):

@@ -12,16 +12,19 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests space group constraints."""
 
 import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import has_pyobjcryst, _msg_nopyobjcryst
-from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from diffpy.srfit.tests.utils import (
+    _msg_nopyobjcryst,
+    _msg_nostructure,
+    datafile,
+    has_pyobjcryst,
+    has_structure,
+)
 
 # ----------------------------------------------------------------------------
 
@@ -33,9 +36,8 @@ class TestSGConstraints(unittest.TestCase):
         """Make sure that all Parameters are constrained properly.
 
         This tests constrainSpaceGroup from
-        diffpy.srfit.structure.sgconstraints, which is performed automatically
-        when an ObjCrystCrystalParSet is created.
-
+        diffpy.srfit.structure.sgconstraints, which is performed
+        automatically when an ObjCrystCrystalParSet is created.
         """
         from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
 
@@ -206,8 +208,8 @@ def makeLaMnO3_P1():
 
 
 def makeLaMnO3():
-    from pyobjcryst.crystal import Crystal
     from pyobjcryst.atom import Atom
+    from pyobjcryst.crystal import Crystal
     from pyobjcryst.scatteringpower import ScatteringPowerAtom
 
     pi = numpy.pi

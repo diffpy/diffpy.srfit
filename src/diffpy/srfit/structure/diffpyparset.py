@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Adapters for interfacing a diffpy.structure.Structure with SrFit.
 
 A diffpy.structure.Structure object is meant to be passed to a
@@ -30,8 +29,7 @@ DiffpyAtomParSet      --  Adapter for diffpy.structure.Atom
 
 __all__ = ["DiffpyStructureParSet"]
 
-from diffpy.srfit.fitbase.parameter import ParameterProxy
-from diffpy.srfit.fitbase.parameter import ParameterAdapter
+from diffpy.srfit.fitbase.parameter import ParameterAdapter, ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
 from diffpy.srfit.util.argbinders import bind2nd
@@ -81,14 +79,12 @@ class DiffpyAtomParSet(ParameterSet):
                     or ParameterProxy). Note that the Bij and Bji parameters
                     are the same. (Bij = 8*pi**2*Uij)
     Biso        --  Isotropic ADP (ParameterAdapter).
-
     """
 
     def __init__(self, name, atom):
-        """Initialize
+        """Initialize.
 
         atom    --  A diffpy.structure.Atom instance
-
         """
         ParameterSet.__init__(self, name)
         self.atom = atom
@@ -178,14 +174,12 @@ class DiffpyLatticeParSet(ParameterSet):
 
     Managed Parameters:
     a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterAdapter).
-
     """
 
     def __init__(self, lattice):
-        """Initialize
+        """Initialize.
 
         lattice --  A diffpy.structure.Lattice instance
-
         """
         ParameterSet.__init__(self, "lattice")
         self.angunits = "deg"
@@ -241,15 +235,13 @@ class DiffpyStructureParSet(SrRealParSet):
                     starting from zero. Thus, for nickel in P1 symmetry, the
                     managed DiffpyAtomParSets will be named "Ni0", "Ni1", "Ni2"
                     and "Ni3".
-
     """
 
     def __init__(self, name, stru):
-        """Initialize
+        """Initialize.
 
         name    --  A name for the structure
         stru    --  A diffpy.structure.Structure instance
-
         """
         SrRealParSet.__init__(self, name)
         self.stru = stru
@@ -288,21 +280,19 @@ class DiffpyStructureParSet(SrRealParSet):
     def getScatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
-        The site positions must be accessible from the list entries via the
-        names "x", "y", and "z". The ADPs must be accessible as well, but the
-        name and nature of the ADPs (U-factors, B-factors, isotropic,
-        anisotropic) depends on the adapted structure.
-
+        The site positions must be accessible from the list entries via
+        the names "x", "y", and "z". The ADPs must be accessible as
+        well, but the name and nature of the ADPs (U-factors, B-factors,
+        isotropic, anisotropic) depends on the adapted structure.
         """
         return self.atoms
 
     def _getSrRealStructure(self):
         """Get the structure object for use with SrReal calculators.
 
-        If this is periodic, then return the structure, otherwise, pass it
-        inside of a nosymmetry wrapper. This takes the extra step of wrapping
-        the structure in a nometa wrapper.
-
+        If this is periodic, then return the structure, otherwise, pass
+        it inside of a nosymmetry wrapper. This takes the extra step of
+        wrapping the structure in a nometa wrapper.
         """
         from diffpy.srreal.structureadapter import nometa
 

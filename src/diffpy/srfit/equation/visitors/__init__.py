@@ -12,23 +12,24 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Visitors that perform on Literal networks.
 
-Visitors are designed to traverse and extract information from Literal networks
-(diffpy.srfit.equation.literals). Visitors are used to validate, print and
-extracting Arguments from Literal networks.
+Visitors are designed to traverse and extract information from Literal
+networks (diffpy.srfit.equation.literals). Visitors are used to
+validate, print and extracting Arguments from Literal networks.
 
-The Literal-Visitor relationship is that described by the Visitor pattern
-(http://en.wikipedia.org/wiki/Visitor_pattern).
+The Literal-Visitor relationship is that described by the Visitor
+pattern (
+
+http://en.wikipedia.org/wiki/Visitor_pattern).
 """
 
 from __future__ import print_function
 
 from diffpy.srfit.equation.visitors.argfinder import ArgFinder
 from diffpy.srfit.equation.visitors.printer import Printer
-from diffpy.srfit.equation.visitors.validator import Validator
 from diffpy.srfit.equation.visitors.swapper import Swapper
+from diffpy.srfit.equation.visitors.validator import Validator
 
 
 def getArgs(literal, getconsts=True):
@@ -81,8 +82,8 @@ def validate(literal):
 def swap(literal, oldlit, newlit):
     """Swap one literal for another in a Literal tree.
 
-    Corrections are done in-place unless literal is oldlit, in which case the
-    return value is newlit.
+    Corrections are done in-place unless literal is oldlit, in which
+    case the return value is newlit.
 
     Returns the literal tree with oldlit swapped for newlit.
     """

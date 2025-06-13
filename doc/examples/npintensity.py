@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of using ProfileGenerators in FitContributions.
 
 This is an example of building a ProfileGenerator and using it in a
@@ -45,13 +44,16 @@ Extensions
 from __future__ import print_function
 
 import numpy
-
-from diffpy.srfit.fitbase import ProfileGenerator, Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
-
 from gaussianrecipe import scipyOptimize
+
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+    ProfileGenerator,
+)
+from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
 ####### Example Code
 
@@ -59,31 +61,31 @@ from gaussianrecipe import scipyOptimize
 class IntensityGenerator(ProfileGenerator):
     """A class for calculating intensity using the Debye equation.
 
-    Calculating intensity from a structure is difficult in general. This class
-    takes a diffpy.structure.Structure instance and from that generates a
-    theoretical intensity signal. Unlike the example in gaussianrecipe.py, the
-    intensity generator is not simple. It must take a structure object and some
-    Parameters, and from that generate a signal. At the same time, the
-    structure itself (the lattice, atom positions, thermal parameters, etc.)
-    needs to be refinable.  Thus we define this ProfileGenerator to help us
-    interface which exposes the Parameters required by the calculation and
-    provides a way for a FitContribution to perform that calculation.
+    Calculating intensity from a structure is difficult in general. This
+    class takes a diffpy.structure.Structure instance and from that
+    generates a theoretical intensity signal. Unlike the example in
+    gaussianrecipe.py, the intensity generator is not simple. It must
+    take a structure object and some Parameters, and from that generate
+    a signal. At the same time, the structure itself (the lattice, atom
+    positions, thermal parameters, etc.) needs to be refinable.  Thus we
+    define this ProfileGenerator to help us interface which exposes the
+    Parameters required by the calculation and provides a way for a
+    FitContribution to perform that calculation.
 
-    The purpose of a ProfileGenerator is to
-    1) provide a function that generates a profile signal
-    2) organize the Parameters required for the calculation
+    The purpose of a ProfileGenerator is to 1) provide a function that
+    generates a profile signal 2) organize the Parameters required for
+    the calculation
 
-    This generator wraps the 'iofq' function defined below. Knowledge of this
-    function is not required for this example.
-
+    This generator wraps the 'iofq' function defined below. Knowledge of
+    this function is not required for this example.
     """
 
     def __init__(self, name):
         """Define our generator.
 
-        In this example we will keep count of how many times the calculation
-        gets performed. The 'count' attribute will be used to store the count.
-
+        In this example we will keep count of how many times the
+        calculation gets performed. The 'count' attribute will be used
+        to store the count.
         """
         ProfileGenerator.__init__(self, name)
         # Count the calls
@@ -133,7 +135,6 @@ class IntensityGenerator(ProfileGenerator):
 
         The diffpy.structure.Structure instance is held within the
         DiffpyStructureParSet as the 'stru' attribute.
-
         """
         # Load the structure from file
         from diffpy.structure import Structure
@@ -158,12 +159,12 @@ class IntensityGenerator(ProfileGenerator):
     def __call__(self, q):
         """Calculate the intensity.
 
-        This ProfileGenerator will be used in a FitContribution that will be
-        optimized to fit some data.  By the time this function is evaluated,
-        the diffpy.structure.Structure instance has been updated by the
-        optimizer via the DiffpyStructureParSet defined in setStructure.  Thus,
-        we need only call iofq with the internal structure object.
-
+        This ProfileGenerator will be used in a FitContribution that
+        will be optimized to fit some data.  By the time this function
+        is evaluated, the diffpy.structure.Structure instance has been
+        updated by the optimizer via the DiffpyStructureParSet defined
+        in setStructure.  Thus, we need only call iofq with the internal
+        structure object.
         """
         self.count += 1
         print("iofq called", self.count)
@@ -178,7 +179,6 @@ def makeRecipe(strufile, datname):
 
     This will create a FitContribution that uses the IntensityGenerator,
     associate this with a Profile, and use this to define a FitRecipe.
-
     """
 
     ## The Profile
@@ -371,7 +371,6 @@ def iofq(S, q):
 
     This uses cctbx for the calculation of the f_i if it is available,
     otherwise f_i = 1.
-
     """
     # The functions we need
     sinc = numpy.sinc
@@ -455,7 +454,6 @@ def getXScatteringFactor(el, q):
     """Get the x-ray scattering factor for an element over the q range.
 
     If cctbx is not available, f(q) = 1 is used.
-
     """
     try:
         import cctbx.eltbx.xray_scattering as xray
@@ -484,7 +482,6 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl=1):
     sig     --  The broadening factor
     bkgc    --  A parameter that gives minor control of the background.
     nl      --  Noise level (0, inf), default 1, larger -> less noise.
-
     """
 
     from diffpy.structure import Structure

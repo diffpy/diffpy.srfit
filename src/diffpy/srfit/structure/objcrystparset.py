@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Wrappers for adapting pyobjcryst.crystal.Crystal to a srfit ParameterSet.
 
 This will adapt a Crystal or Molecule object from pyobjcryst into the
@@ -40,13 +39,16 @@ ObjCrystDihedralAngleParameter
 __all__ = ["ObjCrystMoleculeParSet", "ObjCrystCrystalParSet"]
 
 import numpy
+from pyobjcryst.molecule import (
+    GetBondAngle,
+    GetBondLength,
+    GetDihedralAngle,
+    StretchModeBondAngle,
+    StretchModeBondLength,
+    StretchModeTorsion,
+)
 
-from pyobjcryst.molecule import GetBondLength, GetBondAngle, GetDihedralAngle
-from pyobjcryst.molecule import StretchModeBondLength, StretchModeBondAngle
-from pyobjcryst.molecule import StretchModeTorsion
-
-from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter
-from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter, ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
 
@@ -67,16 +69,14 @@ class ObjCrystScattererParSet(ParameterSet):
     x, y, z     --  Scatterer position in crystal coordinates (ParameterWraper)
     occ         --  Occupancy of the scatterer on its crystal site
                     (ParameterWraper)
-
     """
 
     def __init__(self, name, scat, parent):
-        """Initialize
+        """Initialize.
 
         name    --  The name of the scatterer
         scat    --  The pyobjcryst.Scatterer instance
         parent  --  The ParameterSet this belongs to
-
         """
         ParameterSet.__init__(self, name)
         self.scat = scat
@@ -120,16 +120,14 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
                 --  Anisotropic displacement factor for scatterer
                 (ParameterAdapter or ParameterProxy). Note that the Bij and Bji
                 parameters are the same.
-
     """
 
     def __init__(self, name, atom, parent):
-        """Initialize
+        """Initialize.
 
         name    --  The name of the scatterer
         scat    --  The Scatterer instance
         parent  --  The ObjCrystCrystalParSet this belongs to
-
         """
         ObjCrystScattererParSet.__init__(self, name, atom, parent)
         sp = atom.GetScatteringPower()
@@ -187,16 +185,14 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
     Other attributes are inherited from
     diffpy.srfit.fitbase.parameterset.ParameterSet
-
     """
 
     def __init__(self, name, molecule, parent=None):
-        """Initialize
+        """Initialize.
 
         name    --  The name of the scatterer
         molecule    --  The pyobjcryst.Molecule instance
         parent  --  The ObjCrystCrystalParSet this belongs to (default None).
-
         """
         ObjCrystScattererParSet.__init__(self, name, molecule, parent)
         self.stru = molecule
@@ -239,7 +235,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         """Set this structure to use symmetry.
 
         This structure object does not support symmetry.
-
         """
         return
 
@@ -255,9 +250,8 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
     def _getSrRealStructure(self):
         """Get the structure object for use with SrReal calculators.
 
-        Molecule objects are never periodic. Return the object and let the
-        SrReal adapters do the proper thing.
-
+        Molecule objects are never periodic. Return the object and let
+        the SrReal adapters do the proper thing.
         """
         return self.stru
 
@@ -276,20 +270,18 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
     def getScatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
-        The site positions must be accessible from the list entries via the
-        names "x", "y", and "z". The ADPs must be accessible as well, but the
-        name and nature of the ADPs (U-factors, B-factors, isotropic,
-        anisotropic) depends on the adapted structure.
-
+        The site positions must be accessible from the list entries via
+        the names "x", "y", and "z". The ADPs must be accessible as
+        well, but the name and nature of the ADPs (U-factors, B-factors,
+        isotropic, anisotropic) depends on the adapted structure.
         """
         return self.atoms
 
     def wrapRestraints(self):
         """Wrap the restraints implicit to the molecule.
 
-        This will wrap MolBonds, MolBondAngles and MolDihedralAngles of the
-        Molecule as ObjCrystMoleculeRestraint objects.
-
+        This will wrap MolBonds, MolBondAngles and MolDihedralAngles of
+        the Molecule as ObjCrystMoleculeRestraint objects.
         """
         # Wrap restraints. Restraints wrapped in this way cannot be modified
         # from within this class.
@@ -319,7 +311,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         The Parameters will be given the concatenated name of its constituents.
         bond lengths: "bl_aname1_aname2"
         bond angles: "ba_aname1_aname2_aname3"
-
         """
         for mode in self.scat.GetStretchModeBondLengthList():
             name1 = mode.mpAtom0.GetName()
@@ -385,7 +376,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         Returns the ObjCrystBondLengthRestraint object for use with the 'unrestrain'
         method.
-
         """
         res = ObjCrystBondLengthRestraint(
             atom1, atom2, length, sigma, delta, scaled
@@ -412,7 +402,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         Returns the ObjCrystBondLengthRestraint object for use with the
         'unrestrain' method.
-
         """
         return self.restrainBondLength(
             par.atom1, par.atom2, length, sigma, delta, scaled
@@ -439,7 +428,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         Returns the ObjCrystBondAngleRestraint object for use with the
         'unrestrain' method.
-
         """
         res = ObjCrystBondAngleRestraint(
             atom1, atom2, atom3, angle, sigma, delta, scaled
@@ -466,7 +454,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         Returns the ObjCrystBondAngleRestraint object for use with the
         'unrestrain' method.
-
         """
         return self.restrainBondAngle(
             par.atom1, par.atom2, par.atom3, angle, sigma, delta, scaled
@@ -493,7 +480,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         Returns the ObjCrystDihedralAngleRestraint object for use with the
         'unrestrain' method.
-
         """
         res = ObjCrystDihedralAngleRestraint(
             atom1, atom2, atom3, atom4, angle, sigma, delta, scaled
@@ -521,7 +507,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         Returns the ObjCrystDihedralAngleRestraint object for use with the
         'unrestrain' method.
-
         """
         return self.restrainDihedralAngle(
             par.atom1,
@@ -553,7 +538,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
                     (default False)
 
         Returns the new ObjCrystBondLengthParameter.
-
         """
         par = ObjCrystBondLengthParameter(name, atom1, atom2, value, const)
         self.addParameter(par)
@@ -581,7 +565,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
                     (default False).
 
         Returns the new ObjCrystBondAngleParameter.
-
         """
         par = ObjCrystBondAngleParameter(
             name, atom1, atom2, atom3, value, const
@@ -613,7 +596,6 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
                     (default False).
 
         Returns the new ObjCrystDihedralAngleParameter.
-
         """
         par = ObjCrystDihedralAngleParameter(
             name, atom1, atom2, atom3, atom4, value, const
@@ -648,16 +630,14 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
                 --  Anisotropic displacement factor for scatterer
                 (ParameterAdapter or ParameterProxy). Note that the Bij and Bji
                 parameters are the same.
-
     """
 
     def __init__(self, name, scat, parent):
-        """Initialize
+        """Initialize.
 
         name    --  The name of the scatterer
         scat    --  The Scatterer instance
         parent  --  The ObjCrystCrystalParSet this belongs to
-
         """
         ObjCrystScattererParSet.__init__(self, name, scat, parent)
         sp = scat.GetScatteringPower()
@@ -714,7 +694,6 @@ class ObjCrystMoleculeRestraint(object):
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False).
-
     """
 
     def __init__(self, res, scaled=False):
@@ -724,7 +703,6 @@ class ObjCrystMoleculeRestraint(object):
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False).
-
         """
         self.res = res
         self.scaled = scaled
@@ -735,7 +713,6 @@ class ObjCrystMoleculeRestraint(object):
 
         w   --  The point-average chi^2 which is optionally used to scale the
                 penalty (default 1.0).
-
         """
         penalty = self.res.GetLogLikelihood()
         if self.scaled:
@@ -759,7 +736,6 @@ class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)
-
     """
 
     def __init__(self, atom1, atom2, length, sigma, delta, scaled=False):
@@ -773,7 +749,6 @@ class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False)
-
         """
         self.atom1 = atom1
         self.atom2 = atom2
@@ -816,7 +791,6 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)
-
     """
 
     def __init__(self, atom1, atom2, atom3, angle, sigma, delta, scaled=False):
@@ -832,7 +806,6 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False).
-
         """
         self.atom1 = atom1
         self.atom2 = atom2
@@ -879,7 +852,6 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
     scaled  --  A flag indicating if the restraint is scaled (multiplied) by
                 the unrestrained point-average chi^2 (chi^2/numpoints) (default
                 False)
-
     """
 
     def __init__(
@@ -897,7 +869,6 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False).
-
         """
         self.atom1 = atom1
         self.atom2 = atom2
@@ -944,7 +915,6 @@ class StretchModeParameter(Parameter):
     keepcenter  --  Flag indicating whether to keep the center of mass of the
                     molecule stationary within the crystal when changing the
                     value of the parameter (bool, default True).
-
     """
 
     def __init__(self, name, value=None, const=False):
@@ -957,7 +927,6 @@ class StretchModeParameter(Parameter):
                     pi).
 
         Raises ValueError if the name is not a valid attribute identifier
-
         """
         Parameter.__init__(self, name, value, const)
         self.keepcenter = True
@@ -983,10 +952,10 @@ class StretchModeParameter(Parameter):
         """Associate ObjCrystMolAtomParSets with the Parameter.
 
         This will associate additional ObjCrystMolAtomParSets with the
-        Parameter. These will be mutated in the exact same way as the primary
-        mutated ObjCrystMolAtomParSet. This is useful when a group of atoms
-        should move rigidly in response to a change in a bond property.
-
+        Parameter. These will be mutated in the exact same way as the
+        primary mutated ObjCrystMolAtomParSet. This is useful when a
+        group of atoms should move rigidly in response to a change in a
+        bond property.
         """
         if not hasattr(atomlist, "__iter__"):
             atomlist = [atomlist]
@@ -1006,10 +975,9 @@ class StretchModeParameter(Parameter):
     def notify(self, other=()):
         """Notify all mutated Parameters and observers.
 
-        Some of the mutated parameters will be observing us. At the same time
-        we need to observe them. Observable won't let us do both, so we notify
-        the Parameters that we mutate directly.
-
+        Some of the mutated parameters will be observing us. At the same
+        time we need to observe them. Observable won't let us do both,
+        so we notify the Parameters that we mutate directly.
         """
         noneother = ()
         # Notify the atoms that have moved
@@ -1075,7 +1043,6 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
                 own value. The callable takes no arguments.
     bounds  --  A 2-list defining the bounds on the Parameter. This can be
                 used by some optimizers when the Parameter is varied.
-
     """
 
     def __init__(self, name, atom1, atom2, value=None, const=False, mode=None):
@@ -1093,7 +1060,6 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         mode    --  An extant pyobjcryst.molecule.StretchModeBondLength to use.
                     If this is None (default), then a new StretchModeBondLength
                     will be built.
-
         """
 
         # Create the mode
@@ -1132,7 +1098,6 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         value   --  An optional value for the Parameter (default None). If this
                     is not None, then the Parameter will get a new value,
                     constant or otherwise.
-
         """
         StretchModeParameter.setConst(self, const, value)
 
@@ -1145,10 +1110,9 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
     def getValue(self):
         """This calculates the value if it might have been changed.
 
-        There is no guarantee that the ObjCrystMolAtomParSets underlying the
-        bond won't change, so the bond length is calculated if necessary each
-        time this is called.
-
+        There is no guarantee that the ObjCrystMolAtomParSets underlying
+        the bond won't change, so the bond length is calculated if
+        necessary each time this is called.
         """
         if self._value is None:
             val = GetBondLength(self.atom1.scat, self.atom2.scat)
@@ -1191,7 +1155,6 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
                 own value. The callable takes no arguments.
     bounds  --  A 2-list defining the bounds on the Parameter. This can be
                 used by some optimizers when the Parameter is varied.
-
     """
 
     def __init__(
@@ -1212,7 +1175,6 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
                     (default False).
         mode    --  A pre-built mode to place in this Parameter. If this is
                     None (default), then a StretchMode will be built.
-
         """
 
         # Create the stretch mode
@@ -1254,7 +1216,6 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         value   --  An optional value for the Parameter (default None). If this
                     is not None, then the Parameter will get a new value,
                     constant or otherwise.
-
         """
         StretchModeParameter.setConst(self, const, value)
         for a in [self.atom1, self.atom2, self.atom3]:
@@ -1266,10 +1227,9 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
     def getValue(self):
         """This calculates the value if it might have been changed.
 
-        There is no guarantee that the MolAtoms underlying the bond angle won't
-        change, so the bond angle is calculated if necessary each time this is
-        called.
-
+        There is no guarantee that the MolAtoms underlying the bond
+        angle won't change, so the bond angle is calculated if necessary
+        each time this is called.
         """
         if self._value is None:
             val = GetBondAngle(
@@ -1317,7 +1277,6 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
                 own value. The callable takes no arguments.
     bounds  --  A 2-list defining the bounds on the Parameter. This can be
                 used by some optimizers when the Parameter is varied.
-
     """
 
     def __init__(
@@ -1349,7 +1308,6 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
                     (default False).
         mode    --  A pre-built mode to place in this Parameter. If this is
                     None (default), then a StretchMode will be built.
-
         """
 
         # Create the stretch mode
@@ -1392,7 +1350,6 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
         value   --  An optional value for the Parameter (default None). If this
                     is not None, then the Parameter will get a new value,
                     constant or otherwise.
-
         """
         StretchModeParameter.setConst(self, const, value)
         for a in [self.atom1, self.atom2, self.atom3, self.atom4]:
@@ -1404,10 +1361,9 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
     def getValue(self):
         """This calculates the value if it might have been changed.
 
-        There is no guarantee that the ObjCrystMolAtomParSets underlying the
-        dihedral angle won't change from some other Parameter, so the value is
-        recalculated each time.
-
+        There is no guarantee that the ObjCrystMolAtomParSets underlying
+        the dihedral angle won't change from some other Parameter, so
+        the value is recalculated each time.
         """
         if self._value is None:
             val = GetDihedralAngle(
@@ -1449,15 +1405,13 @@ class ObjCrystCrystalParSet(SrRealParSet):
                     ObjCrystMoleculeParSet), where <sname> is the name of the
                     adapted pyobjcryst.atom.Atom or
                     pyobjcryst.molecule.Molecule.
-
     """
 
     def __init__(self, name, cryst):
-        """Initialize
+        """Initialize.
 
         name    --  A name for this ParameterSet
         cryst   --  An pyobjcryst.Crystal instance.
-
         """
         SrRealParSet.__init__(self, name)
         self.angunits = "rad"
@@ -1530,9 +1484,9 @@ class ObjCrystCrystalParSet(SrRealParSet):
         This uses the actual space group operations from the
         pyobjcryst.spacegroup.SpaceGroup instance so there is no abiguity about
         the actual space group.
-
         """
         import copy
+
         from diffpy.structure.spacegroups import GetSpaceGroup, SymOp
 
         name = sgobjcryst.GetName()
@@ -1580,11 +1534,10 @@ class ObjCrystCrystalParSet(SrRealParSet):
     def getScatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
-        The site positions must be accessible from the list entries via the
-        names "x", "y", and "z". The ADPs must be accessible as well, but the
-        name and nature of the ADPs (U-factors, B-factors, isotropic,
-        anisotropic) depends on the adapted structure.
-
+        The site positions must be accessible from the list entries via
+        the names "x", "y", and "z". The ADPs must be accessible as
+        well, but the name and nature of the ADPs (U-factors, B-factors,
+        isotropic, anisotropic) depends on the adapted structure.
         """
         return self.scatterers
 

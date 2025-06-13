@@ -12,10 +12,10 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """This module contains parsers for PDF data.
 
-PDFParser is suitable for parsing data generated from PDFGetN and PDFGetX.
+PDFParser is suitable for parsing data generated from PDFGetN and
+PDFGetX.
 
 See the class documentation for more information.
 """
@@ -23,6 +23,7 @@ See the class documentation for more information.
 __all__ = ["PDFParser"]
 
 import re
+
 import numpy
 
 from diffpy.srfit.exceptions import ParseError
@@ -73,7 +74,6 @@ class PDFParser(ProfileParser):
     scale       --  Data scale (float)
     temperature --  Temperature (float)
     doping      --  Doping (float)
-
     """
 
     _format = "PDF"
@@ -89,7 +89,6 @@ class PDFParser(ProfileParser):
         patstring   --  A string containing the pattern
 
         Raises ParseError if the string cannot be parsed
-
         """
         # useful regex patterns:
         rx = {"f": r"[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE][-+]?\d+)?"}

@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """This module contains parsers for SAS data.
 
 SASParser uses the sas DataLoader class to load data.
@@ -65,7 +64,6 @@ class SASParser(ProfileParser):
     Metadata - These may appear in the metadata dictionary
 
     datainfo    --  The DataInfo object used to do the data parsing.
-
     """
 
     _format = "SAS"
@@ -80,7 +78,6 @@ class SASParser(ProfileParser):
 
         Raises IOError if the file cannot be read
         Raises ParseError if the file cannot be parsed
-
         """
 
         Loader = sasimport("sas.dataloader.loader").Loader
@@ -113,7 +110,6 @@ class SASParser(ProfileParser):
         patstring   --  A string containing the pattern
 
         Raises ParseError if the string cannot be parsed
-
         """
         # This calls on parseFile, as that is how the sas data loader works.
         import tempfile

@@ -12,8 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
-"""Unit tests for tagmanager.py"""
+"""Unit tests for tagmanager.py."""
 
 import unittest
 
@@ -32,7 +31,7 @@ class TestTagManager(unittest.TestCase):
         return
 
     def test_tag(self):
-        """check TagManager.tag()"""
+        """Check TagManager.tag()"""
         m = self.m
         obj = 3
         m.tag(obj, "3", "three")
@@ -47,7 +46,7 @@ class TestTagManager(unittest.TestCase):
         return
 
     def test_untag(self):
-        """check TagManager.untag()"""
+        """Check TagManager.untag()"""
         m = self.m
         obj = 3
         m.tag(obj, "3", "three", "tri", "tres", "trois")
@@ -68,7 +67,7 @@ class TestTagManager(unittest.TestCase):
         return
 
     def test_union_and_intersection(self):
-        """check TagManager.union() and TagManager.intersection()"""
+        """Check TagManager.union() and TagManager.intersection()"""
         m = self.m
         m.tag(3, "3", "number")
         m.tag(4, "4", "number")
@@ -92,7 +91,7 @@ class TestTagManager(unittest.TestCase):
         return
 
     def test_hasTags(self):
-        """check TagManager.hasTags()"""
+        """Check TagManager.hasTags()"""
         m = self.m
         m.tag(3, "3", "number")
         m.tag(4, "4", "number")

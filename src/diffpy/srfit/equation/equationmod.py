@@ -12,28 +12,21 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """The Equation class for holding and evaluating an equation.
 
-Equation is a functor that holds a Literal tree that defines an equation. It's
-__call__ method evaluates the equation at the most recent value of its
-Arguments. The non-constant arguments are accessible as attributes of the
-Equation instance and can be passed as arguments to __call__.
+Equation is a functor that holds a Literal tree that defines an
+equation. It's __call__ method evaluates the equation at the most recent
+value of its Arguments. The non-constant arguments are accessible as
+attributes of the Equation instance and can be passed as arguments to
+__call__.
 
-Example
-> # make a Literal tree. Here's a simple one
-> add = AdditionOperator()
-> a = Argument(name="a") # Don't forget to name these!
-> b = Argument(name="b")
-> add.addLiteral(a)
-> add.addLiteral(b)
-> # make an Equation instance and pass the root
-> eq = Equation(root = add)
-> eq(a=3, b=4) # returns 7
-> eq(a=2) # remembers b=4, returns 6
-> eq.a.setValue(-3)
-> eq.b.setValue(3)
-> eq() # uses last assignment of a and b, returns 0
+Example > # make a Literal tree. Here's a simple one > add =
+AdditionOperator() > a = Argument(name="a") # Don't forget to name
+these! > b = Argument(name="b") > add.addLiteral(a) > add.addLiteral(b)
+> # make an Equation instance and pass the root > eq = Equation(root =
+add) > eq(a=3, b=4) # returns 7 > eq(a=2) # remembers b=4, returns 6 >
+eq.a.setValue(-3) > eq.b.setValue(3) > eq() # uses last assignment of a
+and b, returns 0
 
 See the class documentation for more information.
 """
@@ -42,9 +35,9 @@ __all__ = ["Equation"]
 
 from collections import OrderedDict
 
-from diffpy.srfit.equation.visitors import validate, getArgs, swap
-from diffpy.srfit.equation.literals.operators import Operator
 from diffpy.srfit.equation.literals.literal import Literal
+from diffpy.srfit.equation.literals.operators import Operator
+from diffpy.srfit.equation.visitors import getArgs, swap, validate
 
 
 class Equation(Operator):
@@ -89,7 +82,6 @@ class Equation(Operator):
         root    --  The root node of the Literal tree (default None). If root
                     is not passed here, you must call the 'setRoot' method to
                     set or change the root node.
-
         """
         # Operator stuff. We circumvent Operator.__init__ since we're using
         # args as a property. We cannot set it, as the Operator tries to do.
@@ -109,8 +101,8 @@ class Equation(Operator):
     def operation(self, *args, **kw):
         """Evaluate this Equation object.
 
-        Same as the __call__ method.  This method is used via
-        the Operator interface.
+        Same as the __call__ method.  This method is used via the
+        Operator interface.
 
         Return the result of __call__(*args, **kw).
         """
@@ -146,7 +138,6 @@ class Equation(Operator):
 
         Raises:
         ValueError if errors are found in the Literal tree.
-
         """
 
         # Validate the new root
@@ -173,12 +164,12 @@ class Equation(Operator):
     def __call__(self, *args, **kw):
         """Call the equation.
 
-        New Argument values are acceped as arguments or keyword assignments (or
-        both).  The order of accepted arguments is given by the args
-        attribute.  The Equation will remember values set in this way.
+        New Argument values are acceped as arguments or keyword
+        assignments (or both).  The order of accepted arguments is given
+        by the args attribute.  The Equation will remember values set in
+        this way.
 
-        Raises
-        ValueError when a passed argument cannot be found
+        Raises ValueError when a passed argument cannot be found
         """
         # Process args
         for idx, val in enumerate(args):
@@ -201,7 +192,6 @@ class Equation(Operator):
         """Swap a literal in the equation for another.
 
         Note that this may change the root and the operation interface
-
         """
         newroot = swap(self.root, oldlit, newlit)
         self.setRoot(newroot)

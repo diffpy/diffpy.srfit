@@ -12,19 +12,18 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of a PDF using the PDFContribution helper class.
 
-This is example of fitting the fcc nickel structure to measured PDF data.
-It uses the PDFContribution class to simplify fit setup.
+This is example of fitting the fcc nickel structure to measured PDF
+data. It uses the PDFContribution class to simplify fit setup.
 """
 
-from diffpy.structure import Structure
-from diffpy.srfit.pdf import PDFContribution
-from diffpy.srfit.fitbase import FitRecipe, FitResults
-
-from gaussianrecipe import scipyOptimize
 from crystalpdf import plotResults
+from gaussianrecipe import scipyOptimize
+
+from diffpy.srfit.fitbase import FitRecipe, FitResults
+from diffpy.srfit.pdf import PDFContribution
+from diffpy.structure import Structure
 
 ####### Example Code
 

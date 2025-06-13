@@ -12,37 +12,35 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Base classes and tools for constructing a FitRecipe.
 
 RecipeContainer is the base class for organizing Parameters, and other
 RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that
-incorporates equation building, constraints and Restraints.  equationFromString
-creates an Equation instance from a string.
+incorporates equation building, constraints and Restraints.
+equationFromString creates an Equation instance from a string.
 """
 
 __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
-from numpy import inf
+import re
 from collections import OrderedDict
 from itertools import chain, groupby
-import re
 
 import six
+from numpy import inf
 
-from diffpy.srfit.fitbase.constraint import Constraint
-from diffpy.srfit.fitbase.restraint import Restraint
-from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.configurable import Configurable
-from diffpy.srfit.fitbase.validatable import Validatable
-
-from diffpy.srfit.util.observable import Observable
 from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
-from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.fitbase.configurable import Configurable
+from diffpy.srfit.fitbase.constraint import Constraint
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.restraint import Restraint
+from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _recipeorganizer_interface
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
+from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.util.observable import Observable
 
 
 class RecipeContainer(Observable, Configurable, Validatable):
@@ -198,8 +196,9 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def __delattr__(self, name):
         """Delete parameters with del.
 
-        This does not allow deletion of non-parameters, as this may require
-        configuration changes that are not yet handled in a general way.
+        This does not allow deletion of non-parameters, as this may
+        require configuration changes that are not yet handled in a
+        general way.
         """
         if name in self._parameters:
             self._removeParameter(self._parameters[name])
@@ -327,8 +326,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _flush(self, other):
         """Invalidate cached state.
 
-        This will force any observer to invalidate its state. By default this
-        does nothing.
+        This will force any observer to invalidate its state. By default
+        this does nothing.
         """
         self.notify(other)
         return
@@ -336,7 +335,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates that contained Parameters and managed objects are valid.
+        This validates that contained Parameters and managed objects are
+        valid.
 
         Raises AttributeError if validation fails.
         """
@@ -393,8 +393,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def _newParameter(self, name, value, check=True):
         """Add a new Parameter to the container.
 
-        This creates a new Parameter and adds it to the container using the
-        _addParameter method.
+        This creates a new Parameter and adds it to the container using
+        the _addParameter method.
 
         Returns the Parameter.
         """
@@ -426,11 +426,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def _removeParameter(self, par):
         """Remove a parameter.
 
-        This de-registers the Parameter with the _eqfactory. The Parameter will
-        remain part of built equations.
+        This de-registers the Parameter with the _eqfactory. The
+        Parameter will remain part of built equations.
 
-        Note that constraints and restraints involving the Parameter are not
-        modified.
+        Note that constraints and restraints involving the Parameter are
+        not modified.
 
         Raises ValueError if par is not part of the RecipeOrganizer.
         """
@@ -747,7 +747,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return
 
     def restrain(self, res, lb=-inf, ub=inf, sig=1, scaled=False, ns={}):
-        """Restrain an expression to specified bounds
+        """Restrain an expression to specified bounds.
 
         res     --  An equation string or Parameter to restrain.
         lb      --  The lower bound on the restraint evaluation (default -inf).
@@ -857,8 +857,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def _validate(self):
         """Validate my state.
 
-        This performs RecipeContainer validations.
-        This validates contained Restraints and Constraints.
+        This performs RecipeContainer validations. This validates
+        contained Restraints and Constraints.
 
         Raises AttributeError if validation fails.
         """

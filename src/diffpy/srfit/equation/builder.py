@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Classes and utilities for creating equations.
 
 The EquationFactory class is used to create an equation (an Equation instance)
@@ -98,13 +97,13 @@ _builders = {}
 
 import inspect
 import numbers
-import numpy
 
+import numpy
 import six
 
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.equation.literals.literal import Literal
 from diffpy.srfit.equation.equationmod import Equation
+from diffpy.srfit.equation.literals.literal import Literal
 
 
 class EquationFactory(object):
@@ -185,11 +184,12 @@ class EquationFactory(object):
     def registerOperator(self, name, op):
         """Register an Operator literal with the factory.
 
-        Operators can be used with or without arguments (or parentheses) in an
-        equation string.  If used with arguments, then the Operator will use
-        the passed arguments as arguments for the operation. If used without
-        arguments, it is assumed that the operator is already populated with
-        arguments, and those will be used.
+        Operators can be used with or without arguments (or parentheses)
+        in an equation string.  If used with arguments, then the
+        Operator will use the passed arguments as arguments for the
+        operation. If used without arguments, it is assumed that the
+        operator is already populated with arguments, and those will be
+        used.
 
         Returns the registered builder.
         """
@@ -223,13 +223,14 @@ class EquationFactory(object):
     def registerBuilder(self, name, builder):
         """Register builder in this module so it can be used in makeEquation.
 
-        If an extant builder with the given name is already registered, this
-        will replace all instances of the old builder's literal in the
-        factory's equation set with the new builder's literal. Note that this
-        may lead to errors if one of the replacements causes a self-reference.
+        If an extant builder with the given name is already registered,
+        this will replace all instances of the old builder's literal in
+        the factory's equation set with the new builder's literal. Note
+        that this may lead to errors if one of the replacements causes a
+        self-reference.
 
-        Raises ValueError if the new builder's literal causes a self-reference
-        in an existing equation.
+        Raises ValueError if the new builder's literal causes a self-
+        reference in an existing equation.
         """
         if not isinstance(name, six.string_types):
             raise TypeError("Name must be a string")
@@ -256,8 +257,8 @@ class EquationFactory(object):
     def deRegisterBuilder(self, name):
         """De-register a builder by name.
 
-        This does not change the equations that use the Literal wrapped by the
-        builder.
+        This does not change the equations that use the Literal wrapped
+        by the builder.
         """
         if name in self.builders:
             del self.builders[name]
@@ -266,10 +267,11 @@ class EquationFactory(object):
     def wipeout(self, eq):
         """Invalidate the specified equation and remove it from the factory.
 
-        This will remove the equation from the purview of the factory and
-        also change its formula to return NaN.  This ensures that eq does
-        not observe any object in the factory and thus prevents its indirect
-        pickling with the factory because of observer callback function.
+        This will remove the equation from the purview of the factory
+        and also change its formula to return NaN.  This ensures that eq
+        does not observe any object in the factory and thus prevents its
+        indirect pickling with the factory because of observer callback
+        function.
 
         No return value.
         """
@@ -333,14 +335,14 @@ class EquationFactory(object):
     def _getUndefinedArgs(self, eqstr):
         """Get the undefined arguments from eqstr.
 
-        This tokenizes eqstr and extracts undefined arguments. An undefined
-        argument is defined as any token that is not a special character that
-        does not correspond to a builder.
+        This tokenizes eqstr and extracts undefined arguments. An
+        undefined argument is defined as any token that is not a special
+        character that does not correspond to a builder.
 
         Raises SyntaxError if the equation string uses invalid syntax.
         """
-        import tokenize
         import token
+        import tokenize
 
         interface = six.StringIO(eqstr).readline
         # output is an iterator. Each entry (token) is a 5-tuple
@@ -411,8 +413,8 @@ class BaseBuilder(object):
     def getEquation(self):
         """Get the equation built by this object.
 
-        The equation will given the name "_eq_<root>" where "<root>" is the
-        name of the root node.
+        The equation will given the name "_eq_<root>" where "<root>" is
+        the name of the root node.
         """
         # We need to make a name for this, so we name it after its root
         name = "_eq_%s" % self.literal.name
@@ -661,8 +663,7 @@ def getBuilder(name):
 
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module
-    namespace.
-    """
+    namespace."""
     for name in dir(numpy):
         op = getattr(numpy, name)
         if isinstance(op, numpy.ufunc):
@@ -677,8 +678,7 @@ __wrapNumpyOperators()
 def __wrapSrFitOperators():
     """Export all non-base operators from the
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
-    instances in the module namespace.
-    """
+    instances in the module namespace."""
     opmod = literals.operators
     excluded_types = set((opmod.CustomOperator, opmod.UFuncOperator))
     # check if opmod member should be wrapped as OperatorBuilder

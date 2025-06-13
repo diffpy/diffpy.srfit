@@ -12,21 +12,17 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-
-"""
-Picklable storage of callable objects using weak references.
-"""
+"""Picklable storage of callable objects using weak references."""
 
 
-import weakref
 import types
+import weakref
 
 import six
 
 
 class WeakBoundMethod(object):
-    """\
-    Callable wrapper to a bound method stored as a weak reference.
+    """\ Callable wrapper to a bound method stored as a weak reference.
 
     Support storage of bound methods without keeping the associated objects
     alive forever.  Provide facility for a fallback function to be used

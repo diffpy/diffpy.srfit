@@ -12,29 +12,23 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of fitting a crystal-like nanoparticle (nanocrystal) PDF.
 
-This is an example of modeling the PDF from a nanocrystal as an attenuated bulk
-PDF. This involves a crystal PDF calculation and a spherical nanoparticle
-characteristic function.
-The equation we model is
-Gnano(r) = f(r) * Gbulk(r),
-where f(r) is the nanoparticle characteristic function for the nanoparticle
-shape. Functions for calculating the characteristic function in the
+This is an example of modeling the PDF from a nanocrystal as an
+attenuated bulk PDF. This involves a crystal PDF calculation and a
+spherical nanoparticle characteristic function. The equation we model is
+Gnano(r) = f(r) * Gbulk(r), where f(r) is the nanoparticle
+characteristic function for the nanoparticle shape. Functions for
+calculating the characteristic function in the
 diffpy.srfit.pdf.characteristicfunctions module.
 """
 
 import numpy
-
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
-
-from gaussianrecipe import scipyOptimize
 
 
 def makeRecipe(ciffile, grdata):

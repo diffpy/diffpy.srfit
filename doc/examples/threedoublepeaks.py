@@ -12,19 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of fitting a three double peaks to simulated data."""
 
 from __future__ import print_function
 
 import numpy
 
-from diffpy.srfit.fitbase import (
-    FitContribution,
-    FitRecipe,
-    Profile,
-    FitResults,
-)
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults, Profile
 
 ####### Example Code
 
@@ -32,18 +26,15 @@ from diffpy.srfit.fitbase import (
 def makeRecipe():
     """Make a FitRecipe for fitting three double-gaussian curves to data.
 
-    The separation and amplitude ratio of the double peaks follows a specific
-    relationship.  The peaks are broadend according to their position and they
-    sit on top of a background. We are seeking the absolute locations of the
-    peaks as well as their amplitudes.
+    The separation and amplitude ratio of the double peaks follows a
+    specific relationship.  The peaks are broadend according to their
+    position and they sit on top of a background. We are seeking the
+    absolute locations of the peaks as well as their amplitudes.
 
     The independent variable is t. The relationship between the double
-    peaks is
-    sin(t2) / l2 = sin(t1) / l1
-    amplitude(peak2) = r * amplitude(peak1)
-    The values of l1, l2 and r come from experiment. For this example, we
-    use l1 = 1.012, l2 = 1.0 and r = 0.23.
-
+    peaks is sin(t2) / l2 = sin(t1) / l1 amplitude(peak2) = r *
+    amplitude(peak1) The values of l1, l2 and r come from experiment.
+    For this example, we use l1 = 1.012, l2 = 1.0 and r = 0.23.
     """
 
     ## The Profile
@@ -66,9 +57,8 @@ def makeRecipe():
     def delta(t, mu):
         """Calculate a delta-function.
 
-        We don't have perfect precision, so we must make this a very thin
-        Gaussian.
-
+        We don't have perfect precision, so we must make this a very
+        thin Gaussian.
         """
         sig = t[1] - t[0]
         return gaussian(t, mu, sig)
@@ -115,7 +105,7 @@ def makeRecipe():
     recipe.addVar(contribution.mu31, 33.0)
 
     # Constrain the position of the second double peak
-    from numpy import sin, arcsin
+    from numpy import arcsin, sin
 
     def peakloc(mu):
         """Calculate the location of the second peak given the first."""
@@ -175,10 +165,9 @@ def makeRecipe():
 def scipyOptimize(recipe):
     """Optimize the recipe created above using scipy.
 
-    The FitRecipe we created in makeRecipe has a 'residual' method that we can
-    be minimized using a scipy optimizer. The details are described in the
-    source.
-
+    The FitRecipe we created in makeRecipe has a 'residual' method that
+    we can be minimized using a scipy optimizer. The details are
+    described in the source.
     """
 
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from

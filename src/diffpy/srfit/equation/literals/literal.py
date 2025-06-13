@@ -12,12 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Literal base class used to construct equation trees.
 
-Literals are base pieces of the equation hierarchy. The 'identify' method
-identifies the Literal to a visitor by calling the identifying method of the
-vistior.
+Literals are base pieces of the equation hierarchy. The 'identify'
+method identifies the Literal to a visitor by calling the identifying
+method of the vistior.
 """
 
 __all__ = ["Literal"]
@@ -34,7 +33,6 @@ class Literal(Observable, LiteralABC):
     Attributes
     name    --  A name for this Literal (default None).
     _value  --  The value of the Literal.
-
     """
 
     name = None

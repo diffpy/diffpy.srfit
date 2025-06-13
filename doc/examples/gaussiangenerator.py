@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of using ProfileGenerators in FitContributions.
 
 This is an example of building a ProfileGenerator and using it in a
@@ -41,8 +40,7 @@ Extensions
 
 from numpy import exp
 
-from diffpy.srfit.fitbase import ProfileGenerator, Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, ProfileGenerator
 
 ####### Example Code
 
@@ -50,20 +48,19 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe
 class GaussianGenerator(ProfileGenerator):
     """A class for calculating a Gaussian profile.
 
-    Generating a Gaussian is not difficult, as was shown in gaussianrecipe.py.
-    Here we create a class that encapsulates this functionality. Placing this
-    class in a python module would make it possible to import it and reuse it,
-    thereby saving future code writing and debugging.
+    Generating a Gaussian is not difficult, as was shown in
+    gaussianrecipe.py. Here we create a class that encapsulates this
+    functionality. Placing this class in a python module would make it
+    possible to import it and reuse it, thereby saving future code
+    writing and debugging.
 
-    The purpose of a ProfileGenerator is to
-    1) provide a function that generates a profile signal
-    2) organize the Parameters required for the calculation
+    The purpose of a ProfileGenerator is to 1) provide a function that
+    generates a profile signal 2) organize the Parameters required for
+    the calculation
 
-    Thus, this class overloads the __init__ method to create the necessary
-    Parameters for the calculation, and the __call__ method to generate the
-    signal.
-
-
+    Thus, this class overloads the __init__ method to create the
+    necessary Parameters for the calculation, and the __call__ method to
+    generate the signal.
     """
 
     def __init__(self, name):
@@ -78,7 +75,6 @@ class GaussianGenerator(ProfileGenerator):
         A       --  The amplitude
         x0      --  The center
         sigma   --  The width
-
         """
         # This initializes various parts of the generator
         ProfileGenerator.__init__(self, name)
@@ -95,9 +91,8 @@ class GaussianGenerator(ProfileGenerator):
     def __call__(self, x):
         """Calculate the profile.
 
-        Here we calculate the Gaussian profile given the independent variable,
-        x. We will define it as we did in gaussianrecipe.py.
-
+        Here we calculate the Gaussian profile given the independent
+        variable, x. We will define it as we did in gaussianrecipe.py.
         """
         # First we must get the values of the Parameters. Since we used
         # _newParameter to create them, the Parameters are accessible as
@@ -122,7 +117,6 @@ def makeRecipe():
 
     This will create a FitContribution that uses the GaussianGenerator,
     associate this with a Profile, and use this to define a FitRecipe.
-
     """
 
     ## The Profile

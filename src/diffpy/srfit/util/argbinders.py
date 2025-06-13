@@ -12,10 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-
-"""
-Functions for binding arguments of callable objects.
-"""
+"""Functions for binding arguments of callable objects."""
 
 
 class bind2nd(object):

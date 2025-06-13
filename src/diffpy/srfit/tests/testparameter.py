@@ -12,13 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 import unittest
 
-from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.parameter import ParameterAdapter, ParameterProxy
+from diffpy.srfit.fitbase.parameter import Parameter, ParameterAdapter, ParameterProxy
 
 
 class TestParameter(unittest.TestCase):

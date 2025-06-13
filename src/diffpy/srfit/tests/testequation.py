@@ -12,15 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 import unittest
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation import Equation
-from diffpy.srfit.tests.utils import _makeArgs
-from diffpy.srfit.tests.utils import noObserversInGlobalBuilders
+from diffpy.srfit.tests.utils import _makeArgs, noObserversInGlobalBuilders
 
 
 class TestEquation(unittest.TestCase):

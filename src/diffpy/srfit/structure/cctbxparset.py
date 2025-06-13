@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Wrappers for interfacing cctbx crystal with SrFit.
 
 This wraps a cctbx.crystal as a ParameterSet with a similar hierarchy, which
@@ -36,7 +35,7 @@ __all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet", "CCTBXCrystalParSet"]
 
 
 class CCTBXScattererParSet(ParameterSet):
-    """A wrapper for cctbx.xray.scatterer
+    """A wrapper for cctbx.xray.scatterer.
 
     This class derives from ParameterSet.
 
@@ -48,16 +47,14 @@ class CCTBXScattererParSet(ParameterSet):
     occupancy   --  Occupancy of the atom on its crystal location
                     (ParameterAdapter)
     Uiso        --  Isotropic scattering factor (ParameterAdapter).
-
     """
 
     def __init__(self, name, strups, idx):
-        """Initialize
+        """Initialize.
 
         name    --  The name of this scatterer.
         strups  --  The CCTBXCrystalParSet that contains the cctbx structure
         idx     --  The index of the scatterer in the structure.
-
         """
         ParameterSet.__init__(self, name)
         self.strups = strups
@@ -129,15 +126,13 @@ class CCTBXUnitCellParSet(ParameterSet):
     Attributes:
     name    --  Always "unitcell".
     a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterAdapter).
-
     """
 
     def __init__(self, strups):
-        """Initialize
+        """Initialize.
 
         strups  --  The CCTBXCrystalParSet that contains the cctbx structure
                     and the unit cell we're wrapper.
-
         """
         ParameterSet.__init__(self, "unitcell")
         self.strups = strups
@@ -199,15 +194,13 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     stru        --  The adapted cctbx structure object.
     scatterers  --  The list of ScattererParSets.
     unitcell    --  The CCTBXUnitCellParSet for the structure.
-
     """
 
     def __init__(self, name, stru):
-        """Initialize
+        """Initialize.
 
         name    --  A name for this
         stru    --  A CCTBX structure instance.
-
         """
         ParameterSet.__init__(self, name)
         self.stru = stru
@@ -238,9 +231,9 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         """Update the unit_cell to a change in lattice parameters.
 
         This remakes the unit cell according to a change in the lattice
-        parameters. Call this function before using the CCTBXCrystalParSet.
-        The unit_cell will only be remade if necessary.
-
+        parameters. Call this function before using the
+        CCTBXCrystalParSet. The unit_cell will only be remade if
+        necessary.
         """
         if not self._update:
             return
@@ -282,11 +275,10 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     def getScatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
-        The site positions must be accessible from the list entries via the
-        names "x", "y", and "z". The ADPs must be accessible as well, but the
-        name and nature of the ADPs (U-factors, B-factors, isotropic,
-        anisotropic) depends on the adapted structure.
-
+        The site positions must be accessible from the list entries via
+        the names "x", "y", and "z". The ADPs must be accessible as
+        well, but the name and nature of the ADPs (U-factors, B-factors,
+        isotropic, anisotropic) depends on the adapted structure.
         """
         return self.scatterers
 

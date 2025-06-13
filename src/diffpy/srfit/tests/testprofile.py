@@ -12,17 +12,16 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
-import unittest
-import re
 import io
+import re
+import unittest
 
-from numpy import array, arange, array_equal, ones_like, allclose
+from numpy import allclose, arange, array, array_equal, ones_like
 
-from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.tests.utils import datafile
 
 
@@ -179,7 +178,7 @@ class TestProfile(unittest.TestCase):
         return
 
     def testLoadtxt(self):
-        """Test the loadtxt method"""
+        """Test the loadtxt method."""
 
         prof = self.profile
         data = datafile("testdata.txt")

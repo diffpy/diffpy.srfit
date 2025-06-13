@@ -12,13 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Constraint class.
 
-Constraints are used by a FitRecipe (and other RecipeOrganizers) to organize
-constraint equations. They store a Parameter object and an Equation object that
-is used to compute its value. The Constraint.constrain method is used to create
-this association.
+Constraints are used by a FitRecipe (and other RecipeOrganizers) to
+organize constraint equations. They store a Parameter object and an
+Equation object that is used to compute its value. The
+Constraint.constrain method is used to create this association.
 """
 
 __all__ = ["Constraint"]
@@ -37,7 +36,6 @@ class Constraint(Validatable):
     par     --  A Parameter that is the subject of the constraint.
     eq      --  An equation whose evaluation is used to set the value of the
                 constraint.
-
     """
 
     def __init__(self):
@@ -49,11 +47,10 @@ class Constraint(Validatable):
     def constrain(self, par, eq):
         """Constrain a Parameter according to an Equation.
 
-        The parameter will be set constant once it is constrained. This will
-        keep it from being constrained multiple times.
+        The parameter will be set constant once it is constrained. This
+        will keep it from being constrained multiple times.
 
         Raises a ValueError if par is const.
-
         """
 
         if par.const:
@@ -88,11 +85,9 @@ class Constraint(Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates that par is not None.
-        This validates eq.
+        This validates that par is not None. This validates eq.
 
         Raises SrFitError if validation fails.
-
         """
         if self.par is None:
             raise SrFitError("par is None")

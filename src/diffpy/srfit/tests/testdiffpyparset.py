@@ -12,15 +12,14 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for diffpy.srfit.structure package."""
 
-import unittest
 import pickle
+import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from diffpy.srfit.tests.utils import _msg_nostructure, has_structure
 
 # Global variables to be assigned in setUp
 Atom = Lattice = Structure = DiffpyStructureParSet = None
@@ -33,8 +32,8 @@ class TestParameterAdapter(unittest.TestCase):
 
     def setUp(self):
         global Atom, Lattice, Structure, DiffpyStructureParSet
-        from diffpy.structure import Atom, Lattice, Structure
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+        from diffpy.structure import Atom, Lattice, Structure
 
         return
 

@@ -12,12 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """The FitResults and ContributionResults classes for storing results of a fit.
 
-The FitResults class is used to display the current state of a FitRecipe. It
-stores the state, and uses it to calculate useful statistics, which can be
-displayed on screen or saved to file.
+The FitResults class is used to display the current state of a
+FitRecipe. It stores the state, and uses it to calculate useful
+statistics, which can be displayed on screen or saved to file.
 """
 
 from __future__ import print_function
@@ -25,12 +24,13 @@ from __future__ import print_function
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import re
-import numpy
 from collections import OrderedDict
 
-from diffpy.srfit.util.inpututils import inputToString
+import numpy
+
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
+from diffpy.srfit.util.inpututils import inputToString
 
 
 class FitResults(object):
@@ -67,7 +67,6 @@ class FitResults(object):
 
     Each of these attributes, except the recipe, are created or updated when
     the update method is called.
-
     """
 
     def __init__(self, recipe, update=True, showfixed=True, showcon=False):
@@ -78,7 +77,6 @@ class FitResults(object):
                     True).
         showcon --  Show fixed variables in the output (default True).
         showcon --  Show constraint values in the output (default False).
-
         """
         self.recipe = recipe
         self.conresults = OrderedDict()
@@ -168,7 +166,6 @@ class FitResults(object):
 
         This code borrowed from PARK. It finds the pseudo-inverse of the
         Jacobian using the singular value decomposition.
-
         """
         try:
             J = self._calculateJacobian()
@@ -183,15 +180,14 @@ class FitResults(object):
     def _calculateJacobian(self):
         """Calculate the Jacobian for the fitting.
 
-        Adapted from PARK.
-        Returns the derivative wrt the fit variables at point p.
+        Adapted from PARK. Returns the derivative wrt the fit variables
+        at point p.
 
-        This also calculates the derivatives of the constrained parameters
-        while we're at it.
+        This also calculates the derivatives of the constrained
+        parameters while we're at it.
 
-        Numeric derivatives are calculated based on step, where step is the
-        portion of variable value. E.g. step = dv/v.
-
+        Numeric derivatives are calculated based on step, where step is
+        the portion of variable value. E.g. step = dv/v.
         """
         recipe = self.recipe
         step = self.derivstep
@@ -307,7 +303,6 @@ class FitResults(object):
         update  --  Flag indicating whether to call update() (default False).
 
         Returns a string containing the formatted results.
-
         """
         if update:
             self.update()
@@ -485,7 +480,6 @@ class FitResults(object):
         header  --  A header to add to the output (default "")
         footer  --  A footer to add to the output (default "")
         update  --  Flag indicating whether to call update() (default False).
-
         """
         print(self.formatResults(header, footer, update).rstrip())
         return
@@ -500,11 +494,10 @@ class FitResults(object):
         header  --  A header to add to the output (default "")
         footer  --  A footer to add to the output (default "")
         update  --  Flag indicating whether to call update() (default False).
-
         """
         # Save the time and user
-        from time import ctime
         from getpass import getuser
+        from time import ctime
 
         myheader = "Results written: " + ctime() + "\n"
         myheader += "produced by " + getuser() + "\n"
@@ -545,7 +538,6 @@ class ContributionResults(object):
                     RecipeContainer._locateManagedObject method).
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
-
     """
 
     def __init__(self, con, weight, fitres):
@@ -554,7 +546,6 @@ class ContributionResults(object):
         con     --  The FitContribution
         weight  --  The weight of the FitContribution in the recipe
         fitres  --  The FitResults instance to contain this ContributionResults
-
         """
         self.x = None
         self.y = None
@@ -638,7 +629,6 @@ def resultsDictionary(results):
 
     results --  An open file-like object, name of a file that contains
                 results from FitResults or a string containing fit results.
-
     """
     resstr = inputToString(results)
 
@@ -665,7 +655,6 @@ def initializeRecipe(recipe, results):
     recipe  --  A configured recipe with variables
     results --  An open file-like object, name of a file that contains
                 results from FitResults or a string containing fit results.
-
     """
 
     mpairs = resultsDictionary(results)

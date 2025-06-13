@@ -18,9 +18,8 @@ from diffpy.srfit.util.weakrefcallable import weak_ref
 
 
 class Observable(object):
-    """
-    Provide notification support for classes that maintain dynamic associations with multiple
-    clients.
+    """Provide notification support for classes that maintain dynamic
+    associations with multiple clients.
 
     Observers, i.e. clients of the observable, register event handlers that will be invoked to
     notify them whenever something interesting happens to the observable. The nature of what is
@@ -36,13 +35,10 @@ class Observable(object):
       addObserver: registers its callable argument with the list of handlers to invoke
       removeObserver: remove an event handler from the list of handlers to invoke
       notify: invoke the registered handlers in the order in which they were registered
-
     """
 
     def notify(self, other=()):
-        """
-        Notify all observers
-        """
+        """Notify all observers."""
         # build a list before notification, just in case the observer's callback behavior
         # involves removing itself from our callback set
         semaphors = (self,) + other
@@ -52,25 +48,19 @@ class Observable(object):
 
     # callback management
     def addObserver(self, callable):
-        """
-        Add callable to the set of observers
-        """
+        """Add callable to the set of observers."""
         f = weak_ref(callable, fallback=_fbRemoveObserver)
         self._observers.add(f)
         return
 
     def removeObserver(self, callable):
-        """
-        Remove callable from the set of observers
-        """
+        """Remove callable from the set of observers."""
         f = weak_ref(callable)
         self._observers.remove(f)
         return
 
     def hasObserver(self, callable):
-        """
-        True if `callable` is present in the set of observers.
-        """
+        """True if `callable` is present in the set of observers."""
         f = weak_ref(callable)
         rv = f in self._observers
         return rv

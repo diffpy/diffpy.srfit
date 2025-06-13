@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of fitting the Debye recipe to experimental Debye-Waller factors.
 
 This is an extension of example in debyemodel.py. The recipe we create will
@@ -34,9 +33,9 @@ Extensions
   done.
 """
 
-from diffpy.srfit.fitbase import FitRecipe, FitResults
-
 from debyemodel import makeRecipe, scipyOptimize
+
+from diffpy.srfit.fitbase import FitRecipe, FitResults
 
 ####### Example Code
 
@@ -45,13 +44,14 @@ def makeRecipeII():
     """Make a recipe for fitting low and high temperature regions.
 
     We will fit the low and high temperature parts of Debye curve
-    simultaneously with the same Debye temperature, but different offsets.
+    simultaneously with the same Debye temperature, but different
+    offsets.
 
     We will make two FitRecipes using the makeRecipe function from
-    debyemodel.py and extract the configured FitContribution from each. We will
-    use different fitting ranges for each FitContribution and constrain the
-    Debye temperature in each FitContribution to be the same.
-
+    debyemodel.py and extract the configured FitContribution from each.
+    We will use different fitting ranges for each FitContribution and
+    constrain the Debye temperature in each FitContribution to be the
+    same.
     """
 
     # We'll throw these away. We just want the FitContributions that are

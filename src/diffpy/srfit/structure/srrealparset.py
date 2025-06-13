@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Structure wrapper class for structures compatible with SrReal."""
 
 __all__ = ["SrRealParSet"]
@@ -32,7 +31,6 @@ class SrRealParSet(BaseStructureParSet):
     _usesymmetry    --  A flag indicating if SrReal calculators that operate on
                         this object should use symmetry. By default this is
                         True.
-
     """
 
     def __init__(self, *args, **kw):
@@ -57,7 +55,6 @@ class SrRealParSet(BaseStructureParSet):
                     (chi^2/numpoints) (default False).
 
         Returns the BVSRestraint object for use with the 'unrestrain' method.
-
         """
 
         # Create the Restraint object
@@ -72,8 +69,8 @@ class SrRealParSet(BaseStructureParSet):
     def useSymmetry(self, use=True):
         """Set this structure to use symmetry.
 
-        This determines how the structure is treated by SrReal calculators.
-
+        This determines how the structure is treated by SrReal
+        calculators.
         """
         self._usesymmetry = bool(use)
         return
@@ -85,9 +82,8 @@ class SrRealParSet(BaseStructureParSet):
     def _getSrRealStructure(self):
         """Get the structure object for use with SrReal calculators.
 
-        If this is periodic, then return the structure, otherwise, pass it
-        inside of a nosymmetry wrapper.
-
+        If this is periodic, then return the structure, otherwise, pass
+        it inside of a nosymmetry wrapper.
         """
         from diffpy.srreal.structureadapter import nosymmetry
 

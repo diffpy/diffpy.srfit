@@ -12,16 +12,15 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Helper routines for testing."""
 
 import sys
+
 import six
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
 from diffpy.srfit.tests import logger
-
 
 # Resolve availability of optional third-party packages.
 
@@ -87,7 +86,8 @@ def _makeArgs(num):
 def noObserversInGlobalBuilders():
     """True if no observer function leaks to global builder objects.
 
-    Ensure objects are not immortal due to a reference from static value.
+    Ensure objects are not immortal due to a reference from static
+    value.
     """
     from diffpy.srfit.equation.builder import _builders
 

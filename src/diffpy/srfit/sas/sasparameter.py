@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """SAS profile generator.
 
 The SASGenerator class wraps a sas.models.BaseModel object as a
@@ -39,8 +38,6 @@ class SASParameter(Parameter):
                 bounds are unrelated to restraints on a Parameter.
     _model  --  The BaseModel to which the underlying parameter belongs.
     _parname    --  The name of the underlying BaseModel parameter.
-
-
     """
 
     def __init__(self, name, model, parname=None):
@@ -50,7 +47,6 @@ class SASParameter(Parameter):
         model   --  The BaseModel to which the underlying parameter belongs
         parname --  Name of parameter used by the model. If this is None
                     (default), then name is used.
-
         """
         self._parname = parname or name
         val = model.getParam(self._parname)

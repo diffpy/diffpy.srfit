@@ -12,14 +12,14 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """PDF profile generator.
 
-The PDFGenerator class can take a diffpy.structure, pyobjcryst.crystal.Crystal
-or pyobjcryst.molecule.Molecule object and calculate the crystal PDF from it.
-The passed structure object is wrapped in a StructureParameter set, which makes
-its attributes refinable. See the class definition for more details and the
-examples for its use.
+The PDFGenerator class can take a diffpy.structure,
+pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and
+calculate the crystal PDF from it. The passed structure object is
+wrapped in a StructureParameter set, which makes its attributes
+refinable. See the class definition for more details and the examples
+for its use.
 """
 
 __all__ = ["PDFGenerator"]
@@ -63,7 +63,6 @@ class PDFGenerator(BasePDFGenerator):
     delta2  --  See Managed Parameters.
     qbroad  --  See Managed Parameters.
     qdamp   --  See Managed Parameters.
-
     """
 
     def __init__(self, name="pdf"):

@@ -12,37 +12,38 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """FitRecipe class.
 
-FitRecipes organize FitContributions, variables, Restraints and Constraints to
-create a recipe of the system you wish to optimize. From the client's
-perspective, the FitRecipe is a residual calculator. The residual method does
-the work of updating variable values, which get propagated to the Parameters of
-the underlying FitContributions via the variables and Constraints.  This class
-needs no special knowledge of the type of FitContribution or data being used.
-Thus, it is suitable for combining residual equations from various types of
-refinements into a single residual.
+FitRecipes organize FitContributions, variables, Restraints and
+Constraints to create a recipe of the system you wish to optimize. From
+the client's perspective, the FitRecipe is a residual calculator. The
+residual method does the work of updating variable values, which get
+propagated to the Parameters of the underlying FitContributions via the
+variables and Constraints.  This class needs no special knowledge of the
+type of FitContribution or data being used. Thus, it is suitable for
+combining residual equations from various types of refinements into a
+single residual.
 
-Variables added to a FitRecipe can be tagged with string identifiers. Variables
-can be later retrieved or manipulated by tag. The tag name "__fixed" is
-reserved.
+Variables added to a FitRecipe can be tagged with string identifiers.
+Variables can be later retrieved or manipulated by tag. The tag name
+"__fixed" is reserved.
 
-See the examples in the documentation for how to create an optimization problem
-using FitRecipe.
+See the examples in the documentation for how to create an optimization
+problem using FitRecipe.
 """
 
 __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
-from numpy import array, concatenate, sqrt, dot
-import six
 
-from diffpy.srfit.interface import _fitrecipe_interface
-from diffpy.srfit.util.tagmanager import TagManager
+import six
+from numpy import array, concatenate, dot, sqrt
+
+from diffpy.srfit.fitbase.fithook import PrintFitHook
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
-from diffpy.srfit.fitbase.fithook import PrintFitHook
+from diffpy.srfit.interface import _fitrecipe_interface
+from diffpy.srfit.util.tagmanager import TagManager
 
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
@@ -290,7 +291,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         This will prepare the data attributes to be used in the residual
         calculation.
 
-        This updates the local restraints with those of the contributions.
+        This updates the local restraints with those of the
+        contributions.
 
         Raises AttributeError if there are variables without a value.
         """
@@ -377,8 +379,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def __collectConstraintsAndRestraints(self):
         """Collect the Constraints and Restraints from subobjects."""
-        from itertools import chain
         from functools import cmp_to_key
+        from itertools import chain
 
         rset = set(self._restraints)
         cdict = {}
@@ -560,7 +562,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         return par
 
     def __getVarAndCheck(self, var):
-        """Get the actual variable from var
+        """Get the actual variable from var.
 
         var     --  A variable of the FitRecipe, or the name of a variable.
 
@@ -578,13 +580,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def __getVarsFromArgs(self, *args, **kw):
         """Get a list of variables from passed arguments.
 
-        This method accepts string or variable arguments. An argument of "all"
-        selects all variables. Keyword arguments must be parameter names,
-        followed by a value to assign to the fixed variable. This method is
-        used by the fix and free methods.
+        This method accepts string or variable arguments. An argument of
+        "all" selects all variables. Keyword arguments must be parameter
+        names, followed by a value to assign to the fixed variable. This
+        method is used by the fix and free methods.
 
-        Raises ValueError if an unknown variable, name or tag is passed, or if
-        a tag is passed in a keyword.
+        Raises ValueError if an unknown variable, name or tag is passed,
+        or if a tag is passed in a keyword.
         """
         # Process args. Each variable is tagged with its name, so this is easy.
         strargs = set(
@@ -623,12 +625,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         A fixed variable is not refined.  Variables are free by default.
 
-        This method accepts string or variable arguments. An argument of "all"
-        selects all variables. Keyword arguments must be parameter names,
-        followed by a value to assign to the fixed variable.
+        This method accepts string or variable arguments. An argument of
+        "all" selects all variables. Keyword arguments must be parameter
+        names, followed by a value to assign to the fixed variable.
 
-        Raises ValueError if an unknown Parameter, name or tag is passed, or if
-        a tag is passed in a keyword.
+        Raises ValueError if an unknown Parameter, name or tag is
+        passed, or if a tag is passed in a keyword.
         """
         # Check the inputs and get the variables from them
         varargs = self.__getVarsFromArgs(*args, **kw)
@@ -646,15 +648,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def free(self, *args, **kw):
         """Free a parameter by reference, name or tag.
 
-        A free variable is refined.  Variables are free by default. Constrained
-        variables are not free.
+        A free variable is refined.  Variables are free by default.
+        Constrained variables are not free.
 
-        This method accepts string or variable arguments. An argument of "all"
-        selects all variables. Keyword arguments must be parameter names,
-        followed by a value to assign to the fixed variable.
+        This method accepts string or variable arguments. An argument of
+        "all" selects all variables. Keyword arguments must be parameter
+        names, followed by a value to assign to the fixed variable.
 
-        Raises ValueError if an unknown Parameter, name or tag is passed, or if
-        a tag is passed in a keyword.
+        Raises ValueError if an unknown Parameter, name or tag is
+        passed, or if a tag is passed in a keyword.
         """
         # Check the inputs and get the variables from them
         varargs = self.__getVarsFromArgs(*args, **kw)
@@ -773,8 +775,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def getBounds(self):
         """Get the bounds on variables in a list.
 
-        Returns a list of (lb, ub) pairs, where lb is the lower bound and ub is
-        the upper bound.
+        Returns a list of (lb, ub) pairs, where lb is the lower bound
+        and ub is the upper bound.
         """
         return [v.bounds for v in self._parameters.values() if self.isFree(v)]
 

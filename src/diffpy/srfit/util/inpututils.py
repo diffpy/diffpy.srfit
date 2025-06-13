@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Input utilities."""
 
 __all__ = ["inputToString"]
@@ -32,7 +31,6 @@ def inputToString(inpt):
     Returns the input in a string
     Raises IOError if the input is supected to be a file name, but the file
     cannot be found.
-
     """
     # Get the input into a string
     inptstr = ""

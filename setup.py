@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 # Installation script for diffpy.srfit
-
 """diffpy.srfit - framework for setting up complex modeling refinements.
 
 Packages:   diffpy.srfit
@@ -10,7 +9,8 @@ Packages:   diffpy.srfit
 import os
 import re
 import sys
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 # Use this version when git data are not available, like in git zip archive.
 # Update when tagging a new release.
@@ -27,7 +27,7 @@ gitarchivecfgfile = os.path.join(MYDIR, ".gitarchive.cfg")
 
 
 def gitinfo():
-    from subprocess import Popen, PIPE
+    from subprocess import PIPE, Popen
 
     kw = dict(stdout=PIPE, cwd=MYDIR, universal_newlines=True)
     proc = Popen(["git", "describe", "--match=v[[:digit:]]*"], **kw)

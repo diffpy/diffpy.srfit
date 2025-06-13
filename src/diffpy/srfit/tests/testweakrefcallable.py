@@ -12,18 +12,15 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-
-"""
-Unit tests for the weakrefcallable module.
-"""
+"""Unit tests for the weakrefcallable module."""
 
 
-import unittest
 import pickle
+import unittest
 
 from diffpy.srfit.fitbase import FitContribution
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.util.weakrefcallable import weak_ref, WeakBoundMethod
+from diffpy.srfit.util.weakrefcallable import WeakBoundMethod, weak_ref
 
 # ----------------------------------------------------------------------------
 
@@ -46,14 +43,14 @@ class TestWeakBoundMethod(unittest.TestCase):
         return
 
     def test___init__(self):
-        """check WeakBoundMethod.__init__()"""
+        """Check WeakBoundMethod.__init__()"""
         self.assertTrue(self.w.fallback is _fallback_example)
         wf = weak_ref(self.f._flush)
         self.assertTrue(None is wf.fallback)
         return
 
     def test___call__(self):
-        """check WeakBoundMethod.__call__()"""
+        """Check WeakBoundMethod.__call__()"""
         f = self.f
         self.assertEqual(7, f.evaluate())
         self.assertEqual(7, f._eq._value)
@@ -69,7 +66,7 @@ class TestWeakBoundMethod(unittest.TestCase):
         return
 
     def test___hash__(self):
-        """check WeakBoundMethod.__hash__()"""
+        """Check WeakBoundMethod.__hash__()"""
         f1 = FitContribution("f1")
         w1 = weak_ref(f1._flush)
         h0 = hash(w1)
@@ -82,7 +79,7 @@ class TestWeakBoundMethod(unittest.TestCase):
         return
 
     def test___eq__(self):
-        """check WeakBoundMethod.__eq__()"""
+        """Check WeakBoundMethod.__eq__()"""
         f1 = FitContribution("f1")
         w1 = weak_ref(f1._flush)
         w2 = weak_ref(f1._flush)
@@ -112,7 +109,7 @@ class TestWeakBoundMethod(unittest.TestCase):
         return
 
     def test_observable_deregistration(self):
-        """check if Observable drops dead Observer."""
+        """Check if Observable drops dead Observer."""
         f = self.f
         x = f.newParameter("x", 5)
         f.setEquation("3 * x")

@@ -12,12 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Usability interface for SrFit.
 
-The classes and functions in this package are designed to unobtrusively mix
-with base SrFit objects and provide them with interface enhancements for
-scripting.
+The classes and functions in this package are designed to unobtrusively
+mix with base SrFit objects and provide them with interface enhancements
+for scripting.
 """
 
 

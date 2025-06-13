@@ -12,17 +12,16 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 from __future__ import print_function
 
 import random
+
 import numpy
 
-import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
-
+import diffpy.srfit.equation.visitors as visitors
 from diffpy.srfit.tests.utils import _makeArgs
 
 x = numpy.arange(0, 20, 0.05)
@@ -150,8 +149,7 @@ def speedTest2(mutate=2):
     eq.b7.setValue(2.0)
     eq.b8.setValue(2.0)
 
-    from numpy import exp
-    from numpy import polyval
+    from numpy import exp, polyval
 
     def f(A0, qsig, sigma1, sigma2, b1, b2, b3, b4, b5, b6, b7, b8):
         return A0 * exp(-((x * qsig) ** 2)) * (
@@ -200,7 +198,6 @@ def speedTest3(mutate=2):
     Results - sympy is 10 to 24 times faster without using arrays (ouch!).
             - diffpy.srfit.equation is slightly slower when using arrays, but
               not considerably worse than versus numpy alone.
-
     """
 
     from diffpy.srfit.equation.builder import EquationFactory
@@ -230,8 +227,8 @@ def speedTest3(mutate=2):
     eq.b7.setValue(2.0)
     eq.b8.setValue(2.0)
 
-    from sympy import var, exp, lambdify
     from numpy import polyval
+    from sympy import exp, lambdify, var
 
     A0, qsig, sigma1, sigma2, b1, b2, b3, b4, b5, b6, b7, b8, xx = vars = var(
         "A0 qsig sigma1 sigma2 b1 b2 b3 b4 b5 b6 b7 b8 xx"
@@ -290,7 +287,6 @@ def speedTest4(mutate=2):
     Results - sympy is 10 to 24 times faster without using arrays (ouch!).
             - diffpy.srfit.equation is slightly slower when using arrays, but
               not considerably worse than versus numpy alone.
-
     """
 
     from diffpy.srfit.equation.builder import EquationFactory
@@ -305,8 +301,8 @@ def speedTest4(mutate=2):
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
 
-    from sympy import var, lambdify
     from numpy import polyval
+    from sympy import lambdify, var
 
     b1, b2, b3, b4, b5, b6, b7, b8, xx = vars = var(
         "b1 b2 b3 b4 b5 b6 b7 b8 xx"
@@ -473,15 +469,7 @@ if __name__ == "__main__":
     for i in range(1, 9):
         weightedTest(i)
     """
-    """
-    from diffpy.srfit.equation.builder import EquationFactory
-    import random
-    import cProfile
-    cProfile.run('profileTest()', 'prof')
-    import pstats
-    p = pstats.Stats('prof')
-    p.strip_dirs()
-    p.sort_stats('time')
-    p.print_stats(10)
-    profileTest()
-    """
+    """From diffpy.srfit.equation.builder import EquationFactory import random
+    import cProfile cProfile.run('profileTest()', 'prof') import pstats p =
+    pstats.Stats('prof') p.strip_dirs() p.sort_stats('time') p.print_stats(10)
+    profileTest()"""

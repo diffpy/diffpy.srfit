@@ -66,12 +66,13 @@ class PDFGenerator(BasePDFGenerator):
 
     """
 
-    def __init__(self, name = "pdf"):
-        """Initialize the generator.
-        """
+    def __init__(self, name="pdf"):
+        """Initialize the generator."""
         from diffpy.srreal.pdfcalculator import PDFCalculator
+
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(PDFCalculator())
         return
+
 
 # End class PDFGenerator

@@ -22,7 +22,7 @@ import time
 # sys.path.insert(0, os.path.abspath('../../..'))
 
 # abbreviations
-ab_authors = u'Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge group'
+ab_authors = "Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge group"
 
 # -- General configuration -----------------------------------------------------
 
@@ -32,38 +32,39 @@ ab_authors = u'Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge group'
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.intersphinx',
-    'm2r',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.intersphinx",
+    "m2r",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-source_suffix = ['.rst', '.md']
+source_suffix = [".rst", ".md"]
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = u'diffpy.srfit'
-copyright = u'%Y, Brookhaven National Laboratory'
+project = "diffpy.srfit"
+copyright = "%Y, Brookhaven National Laboratory"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-sys.path.insert(0, os.path.abspath('../../..'))
+sys.path.insert(0, os.path.abspath("../../.."))
 from setup import versiondata
-fullversion = versiondata.get('DEFAULT', 'version')
+
+fullversion = versiondata.get("DEFAULT", "version")
 # The short X.Y version.
-version = ''.join(fullversion.split('.post')[:1])
+version = "".join(fullversion.split(".post")[:1])
 # The full version, including alpha/beta/rc tags.
 release = fullversion
 
@@ -74,13 +75,13 @@ release = fullversion
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
 # today = ''
-today_seconds = versiondata.getint('DEFAULT', 'timestamp')
-today = time.strftime('%B %d, %Y', time.localtime(today_seconds))
+today_seconds = versiondata.getint("DEFAULT", "timestamp")
+today = time.strftime("%B %d, %Y", time.localtime(today_seconds))
 year = today.split()[-1]
 # Else, today_fmt is used as the format for a strftime call.
 # today_fmt = '%B %d, %Y'
 # substitute YEAR in the copyright string
-copyright = copyright.replace('%Y', year)
+copyright = copyright.replace("%Y", year)
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -101,10 +102,10 @@ exclude_patterns = []
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
-modindex_common_prefix = ['diffpy.srfit.']
+modindex_common_prefix = ["diffpy.srfit."]
 
 # Display all warnings for missing links.
 nitpicky = True
@@ -113,14 +114,14 @@ nitpicky = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_py3doc_enhanced_theme'
+html_theme = "sphinx_py3doc_enhanced_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    'collapsiblesidebar' : 'true',
-    'navigation_with_keys' : 'true',
+    "collapsiblesidebar": "true",
+    "navigation_with_keys": "true",
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -189,27 +190,30 @@ html_split_index = True
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'srfitdoc'
+htmlhelp_basename = "srfitdoc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
 
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-# 'papersize': 'letterpaper',
-
-# The font size ('10pt', '11pt' or '12pt').
-# 'pointsize': '10pt',
-
-# Additional stuff for the LaTeX preamble.
-# 'preamble': '',
+    # The paper size ('letterpaper' or 'a4paper').
+    # 'papersize': 'letterpaper',
+    # The font size ('10pt', '11pt' or '12pt').
+    # 'pointsize': '10pt',
+    # Additional stuff for the LaTeX preamble.
+    # 'preamble': '',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'srfit_manual.tex', u'diffpy.srfit documentation',
-   ab_authors, 'manual'),
+    (
+        "index",
+        "srfit_manual.tex",
+        "diffpy.srfit documentation",
+        ab_authors,
+        "manual",
+    ),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -238,8 +242,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'diffpy.srfit', u'diffpy.srfit documentation',
-     ab_authors, 1)
+    ("index", "diffpy.srfit", "diffpy.srfit documentation", ab_authors, 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -252,9 +255,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'diffpy.srfit', u'diffpy.srfit documentation',
-   ab_authors, 'diffpy.srfit', 'One line description of project.',
-   'Miscellaneous'),
+    (
+        "index",
+        "diffpy.srfit",
+        "diffpy.srfit documentation",
+        ab_authors,
+        "diffpy.srfit",
+        "One line description of project.",
+        "Miscellaneous",
+    ),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -269,6 +278,6 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'numpy': ('https://docs.scipy.org/doc/numpy', None),
-    'python' : ('https://docs.python.org/3.7', None),
+    "numpy": ("https://docs.scipy.org/doc/numpy", None),
+    "python": ("https://docs.python.org/3.7", None),
 }

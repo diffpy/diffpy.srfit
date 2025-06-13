@@ -32,6 +32,7 @@ from crystalpdf import plotResults
 
 ####### Example Code
 
+
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
@@ -46,7 +47,7 @@ def makeRecipe(ciffile, datname):
     parser = PDFParser()
     parser.parseFile(datname)
     profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax = 20)
+    profile.setCalculationRange(xmax=20)
 
     ## The ProfileGenerator
     # This time we use the CreateCrystalFromCIF method of pyobjcryst.crystal to
@@ -60,7 +61,7 @@ def makeRecipe(ciffile, datname):
     ## The FitContribution
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname="r")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
@@ -89,7 +90,7 @@ def makeRecipe(ciffile, datname):
     for par in phase.sgpars:
         recipe.addVar(par)
     # set the initial thermal factor to a non-zero value
-    assert hasattr(recipe, 'B11_0')
+    assert hasattr(recipe, "B11_0")
     recipe.B11_0 = 0.1
 
     # We now select non-structural parameters to refine.
@@ -102,6 +103,7 @@ def makeRecipe(ciffile, datname):
 
     # Give the recipe away so it can be used!
     return recipe
+
 
 if __name__ == "__main__":
 

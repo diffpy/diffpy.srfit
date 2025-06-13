@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-"""Simple FitRecipe class that includes a FitContribution and Profile.
-"""
+"""Simple FitRecipe class that includes a FitContribution and Profile."""
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
@@ -68,7 +67,7 @@ class SimpleRecipe(FitRecipe):
 
     """
 
-    def __init__(self, name = "fit", conclass = FitContribution):
+    def __init__(self, name="fit", conclass=FitContribution):
         """Initialization."""
         FitRecipe.__init__(self, name)
         self.fithooks[0].verbose = 3
@@ -76,11 +75,14 @@ class SimpleRecipe(FitRecipe):
         self.profile = Profile()
         contribution.setProfile(self.profile)
         self.addContribution(contribution)
-        self.results = FitResults(self, update = False)
+        self.results = FitResults(self, update=False)
 
         # Adopt all the FitContribution methods
-        public = [aname for aname in dir(contribution) if aname not in
-                dir(self) and not aname.startswith("_")]
+        public = [
+            aname
+            for aname in dir(contribution)
+            if aname not in dir(self) and not aname.startswith("_")
+        ]
         for mname in public:
             method = getattr(contribution, mname)
             setattr(self, mname, method)
@@ -95,7 +97,7 @@ class SimpleRecipe(FitRecipe):
         """
         return self.profile.loadParsedData(parser)
 
-    def setObservedProfile(self, xobs, yobs, dyobs = None):
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         Arguments
@@ -110,7 +112,6 @@ class SimpleRecipe(FitRecipe):
 
         """
         return self.profile.setObservedProfile(xobs, yobs, dyobs)
-
 
     def setCalculationRange(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
@@ -146,7 +147,6 @@ class SimpleRecipe(FitRecipe):
         """
         return self.profile.setCalculationRange(xmin, xmax, dx)
 
-
     def setCalculationPoints(self, x):
         """Set the calculation points.
 
@@ -178,7 +178,7 @@ class SimpleRecipe(FitRecipe):
         return self.profile.loadtxt(*args, **kw)
 
     # FitContribution
-    def setEquation(self, eqstr, ns = {}):
+    def setEquation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual.
@@ -195,11 +195,12 @@ class SimpleRecipe(FitRecipe):
         variable.
 
         """
-        self.contribution.setEquation(eqstr, ns = {})
+        self.contribution.setEquation(eqstr, ns={})
         # Extract variables
         for par in self.contribution:
             # Skip Profile  Parameters
-            if par.name in ("x", "y", "dy"): continue
+            if par.name in ("x", "y", "dy"):
+                continue
             if par.value is None:
                 par.value = 0
             if par.name not in self._parameters:
@@ -212,7 +213,7 @@ class SimpleRecipe(FitRecipe):
 
     # FitResults methods
 
-    def printResults(self, header = "", footer = ""):
+    def printResults(self, header="", footer=""):
         """Format and print the results.
 
         header  --  A header to add to the output (default "")
@@ -222,7 +223,7 @@ class SimpleRecipe(FitRecipe):
         self.results.printResults(header, footer, True)
         return
 
-    def saveResults(self, filename, header = "", footer = ""):
+    def saveResults(self, filename, header="", footer=""):
         """Format and save the results.
 
         filename -  Name of the save file.
@@ -231,6 +232,7 @@ class SimpleRecipe(FitRecipe):
 
         """
         self.results.saveResults(filename, header, footer, True)
+
 
 # End class SimpleRecipe
 

@@ -74,18 +74,18 @@ class TestEquation(unittest.TestCase):
         self.assertTrue(v3 is eq.v3)
         self.assertTrue(v4 is eq.v4)
 
-        self.assertEqual(20, eq()) # 20 = 2.5*(1+3)*(4-2)
-        self.assertEqual(20, eq.getValue()) # same as above
-        self.assertEqual(20, eq.value) # same as above
-        self.assertEqual(25, eq(v1=2)) # 25 = 2.5*(2+3)*(4-2)
-        self.assertEqual(50, eq(v2=0)) # 50 = 2.5*(2+3)*(4-0)
-        self.assertEqual(30, eq(v3=1)) # 30 = 2.5*(2+1)*(4-0)
-        self.assertEqual(0, eq(v4=0)) # 20 = 2.5*(2+1)*(0-0)
+        self.assertEqual(20, eq())  # 20 = 2.5*(1+3)*(4-2)
+        self.assertEqual(20, eq.getValue())  # same as above
+        self.assertEqual(20, eq.value)  # same as above
+        self.assertEqual(25, eq(v1=2))  # 25 = 2.5*(2+3)*(4-2)
+        self.assertEqual(50, eq(v2=0))  # 50 = 2.5*(2+3)*(4-0)
+        self.assertEqual(30, eq(v3=1))  # 30 = 2.5*(2+1)*(4-0)
+        self.assertEqual(0, eq(v4=0))  # 20 = 2.5*(2+1)*(0-0)
 
         # Try some swapping
         eq.swap(v4, v1)
         self.assertTrue(eq._value is None)
-        self.assertEqual(15, eq()) # 15 = 2.5*(2+1)*(2-0)
+        self.assertEqual(15, eq())  # 15 = 2.5*(2+1)*(2-0)
         args = eq.args
         self.assertTrue(v4 not in args)
 
@@ -160,18 +160,18 @@ class TestEquation(unittest.TestCase):
         self.assertTrue(eq._value is None)
         v1.value = 1
 
-        self.assertEqual(20, eq()) # 20 = 2.5*(1+3)*(4-2)
-        self.assertEqual(20, eq.getValue()) # same as above
-        self.assertEqual(20, eq.value) # same as above
-        self.assertEqual(25, eq(v1=2)) # 25 = 2.5*(2+3)*(4-2)
-        self.assertEqual(50, eq(v2=0)) # 50 = 2.5*(2+3)*(4-0)
-        self.assertEqual(30, eq(v3=1)) # 30 = 2.5*(2+1)*(4-0)
-        self.assertEqual(0, eq(v4=0)) # 20 = 2.5*(2+1)*(0-0)
+        self.assertEqual(20, eq())  # 20 = 2.5*(1+3)*(4-2)
+        self.assertEqual(20, eq.getValue())  # same as above
+        self.assertEqual(20, eq.value)  # same as above
+        self.assertEqual(25, eq(v1=2))  # 25 = 2.5*(2+3)*(4-2)
+        self.assertEqual(50, eq(v2=0))  # 50 = 2.5*(2+3)*(4-0)
+        self.assertEqual(30, eq(v3=1))  # 30 = 2.5*(2+1)*(4-0)
+        self.assertEqual(0, eq(v4=0))  # 20 = 2.5*(2+1)*(0-0)
 
         # Try some swapping.
         eq.swap(v4, v1)
         self.assertTrue(eq._value is None)
-        self.assertEqual(15, eq()) # 15 = 2.5*(2+1)*(2-0)
+        self.assertEqual(15, eq())  # 15 = 2.5*(2+1)*(2-0)
         args = eq.args
         self.assertTrue(v4 not in args)
 

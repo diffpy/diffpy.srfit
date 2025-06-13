@@ -37,6 +37,7 @@ from gaussianrecipe import scipyOptimize
 
 ####### Example Code
 
+
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
@@ -53,7 +54,7 @@ def makeRecipe(ciffile, datname):
     parser = PDFParser()
     parser.parseFile(datname)
     profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax = 20)
+    profile.setCalculationRange(xmax=20)
 
     ## The ProfileGenerator
     # The PDFGenerator is for configuring and calculating a PDF profile. Here,
@@ -72,7 +73,7 @@ def makeRecipe(ciffile, datname):
     # before.
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname="r")
 
     ## Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
@@ -95,6 +96,7 @@ def makeRecipe(ciffile, datname):
     # documentation for more details. The 'constrainAsSpaceGroup' method may
     # create new Parameters, which it returns in a SpaceGroupParameters object.
     from diffpy.srfit.structure import constrainAsSpaceGroup
+
     sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
 
     # The SpaceGroupParameters object returned by 'constrainAsSpaceGroup' holds
@@ -124,6 +126,7 @@ def makeRecipe(ciffile, datname):
     # Give the recipe away so it can be used!
     return recipe
 
+
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
@@ -135,16 +138,18 @@ def plotResults(recipe):
     diff = g - gcalc + diffzero
 
     import pylab
-    pylab.plot(r,g,'bo',label="G(r) Data")
-    pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,diff,'g-',label="G(r) diff")
-    pylab.plot(r,diffzero,'k-')
+
+    pylab.plot(r, g, "bo", label="G(r) Data")
+    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
+    pylab.plot(r, diff, "g-", label="G(r) diff")
+    pylab.plot(r, diffzero, "k-")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
 
     pylab.show()
     return
+
 
 if __name__ == "__main__":
 

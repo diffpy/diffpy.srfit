@@ -13,11 +13,15 @@
 #
 ##############################################################################
 
-"""SAS calculation tools.
-"""
+"""SAS calculation tools."""
 
-__all__ = ["SASGenerator", "SASParser", "SASProfile", "PrCalculator",
-           "CFCalculator"]
+__all__ = [
+    "SASGenerator",
+    "SASParser",
+    "SASProfile",
+    "PrCalculator",
+    "CFCalculator",
+]
 
 from .sasgenerator import SASGenerator
 from .sasparser import SASParser

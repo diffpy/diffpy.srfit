@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-"""PDF calculation tools.
-"""
+"""PDF calculation tools."""
 
 __all__ = ["PDFGenerator", "DebyePDFGenerator", "PDFContribution", "PDFParser"]
 

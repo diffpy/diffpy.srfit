@@ -55,9 +55,9 @@ class TestProfile(unittest.TestCase):
         prof = self.profile
         prof.setObservedProfile(x, y, dy)
 
-        self.assertTrue( array_equal(x, prof.xobs) )
-        self.assertTrue( array_equal(y, prof.yobs) )
-        self.assertTrue( array_equal(dy, prof.dyobs) )
+        self.assertTrue(array_equal(x, prof.xobs))
+        self.assertTrue(array_equal(y, prof.yobs))
+        self.assertTrue(array_equal(dy, prof.dyobs))
 
         # Make a profile with undefined dy
         x = arange(0, 10, 0.1)
@@ -66,17 +66,16 @@ class TestProfile(unittest.TestCase):
 
         self.profile.setObservedProfile(x, y, dy)
 
-        self.assertTrue( array_equal(x, prof.xobs) )
-        self.assertTrue( array_equal(y, prof.yobs) )
-        self.assertTrue( array_equal(ones_like(prof.xobs), prof.dyobs))
+        self.assertTrue(array_equal(x, prof.xobs))
+        self.assertTrue(array_equal(y, prof.yobs))
+        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dyobs))
 
         # Get the ranged profile to make sure its the same
-        self.assertTrue( array_equal(x, prof.x) )
-        self.assertTrue( array_equal(y, prof.y) )
-        self.assertTrue( array_equal(ones_like(prof.xobs), prof.dy))
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dy))
 
         return
-
 
     def testSetCalculationRange(self):
         """Test the setCalculationRange method."""
@@ -110,26 +109,28 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(array_equal(y, prof.y))
         self.assertTrue(array_equal(dy, prof.dy))
         # Test xmin > xmax
-        self.assertRaises(ValueError, prof.setCalculationRange,
-                          xmin=10, xmax=3)
+        self.assertRaises(
+            ValueError, prof.setCalculationRange, xmin=10, xmax=3
+        )
         # Test xmax - xmin < dx
-        self.assertRaises(ValueError, prof.setCalculationRange,
-                          xmin=3, xmax=3.9, dx=1.0)
+        self.assertRaises(
+            ValueError, prof.setCalculationRange, xmin=3, xmax=3.9, dx=1.0
+        )
         # Test dx <= 0
         self.assertRaises(ValueError, prof.setCalculationRange, dx=0)
         self.assertRaises(ValueError, prof.setCalculationRange, dx=-0.000001)
         # using string other than 'obs'
-        self.assertRaises(ValueError, prof.setCalculationRange, xmin='oobs')
-        self.assertRaises(ValueError, prof.setCalculationRange, xmax='oobs')
-        self.assertRaises(ValueError, prof.setCalculationRange, dx='oobs')
+        self.assertRaises(ValueError, prof.setCalculationRange, xmin="oobs")
+        self.assertRaises(ValueError, prof.setCalculationRange, xmax="oobs")
+        self.assertRaises(ValueError, prof.setCalculationRange, dx="oobs")
         # This should be alright
         prof.setCalculationRange(3, 5)
-        prof.setCalculationRange(xmin='obs', xmax=7, dx=0.001)
+        prof.setCalculationRange(xmin="obs", xmax=7, dx=0.001)
         self.assertEqual(5001, len(prof.x))
         self.assertEqual(len(prof.x), len(prof.y))
         self.assertEqual(len(prof.x), len(prof.dy))
         # Test an internal bound
-        prof.setCalculationRange(4, 7, dx='obs')
+        prof.setCalculationRange(4, 7, dx="obs")
         self.assertTrue(array_equal(prof.x, arange(4, 7.1, 0.5)))
         self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
         self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
@@ -158,7 +159,6 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(array_equal(prof.x, arange(4.5, 6.1, 0.5)))
         return
 
-
     def testSetCalculationPoints(self):
         """Test the setCalculationPoints method."""
         prof = self.profile
@@ -170,11 +170,11 @@ class TestProfile(unittest.TestCase):
         # Test without data
         xcalc = arange(3, 12.2, 0.2)
         prof.setCalculationPoints(xcalc)
-        self.assertTrue( array_equal(xcalc, prof.x) )
+        self.assertTrue(array_equal(xcalc, prof.x))
 
         # Add the data. This should change the bounds of the calculation array.
         prof.setObservedProfile(x, y, dy)
-        self.assertTrue( array_equal(arange(3, 10.1, 0.2), prof.x ) )
+        self.assertTrue(array_equal(arange(3, 10.1, 0.2), prof.x))
 
         return
 
@@ -190,17 +190,17 @@ class TestProfile(unittest.TestCase):
             self.assertAlmostEqual(1.802192e-3, p.dy[0])
 
         # Test normal load
-        prof.loadtxt(data, usecols=(0,1,3))
+        prof.loadtxt(data, usecols=(0, 1, 3))
         _test(prof)
 
         # Test trying to not set unpack
-        prof.loadtxt(data, usecols=(0,1,3), unpack = False)
+        prof.loadtxt(data, usecols=(0, 1, 3), unpack=False)
         _test(prof)
-        prof.loadtxt(data, float, '#', None, None, 0, (0,1,3), False)
+        prof.loadtxt(data, float, "#", None, None, 0, (0, 1, 3), False)
         _test(prof)
 
         # Try not including dy
-        prof.loadtxt(data, usecols=(0,1))
+        prof.loadtxt(data, usecols=(0, 1))
         self.assertAlmostEqual(1e-2, prof.x[0])
         self.assertAlmostEqual(1.105784e-1, prof.y[0])
         self.assertAlmostEqual(1, prof.dy[0])
@@ -209,22 +209,22 @@ class TestProfile(unittest.TestCase):
         self.assertRaises(ValueError, prof.loadtxt, data, usecols=(0,))
         return
 
-
     def test_savetxt(self):
         "Check the savetxt method."
         prof = self.profile
-        self.assertRaises(SrFitError, prof.savetxt, 'foo')
+        self.assertRaises(SrFitError, prof.savetxt, "foo")
         xobs = arange(-2, 3.01, 0.25)
-        yobs = xobs ** 2
+        yobs = xobs**2
         prof.setObservedProfile(xobs, yobs)
         prof.ycalc = yobs.copy()
         fp = io.BytesIO()
         prof.savetxt(fp)
         txt = fp.getvalue().decode()
-        self.assertTrue(re.match(r'^# x +ycalc +y +dy\b', txt))
-        nlines = len(txt.strip().split('\n'))
+        self.assertTrue(re.match(r"^# x +ycalc +y +dy\b", txt))
+        nlines = len(txt.strip().split("\n"))
         self.assertEqual(22, nlines)
         return
+
 
 # End of class TestProfile
 

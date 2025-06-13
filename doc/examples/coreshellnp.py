@@ -74,6 +74,7 @@ def makeRecipe(stru1, stru2, datname):
     # phases, we implicitly assume that the core-shell correlations contribute
     # very little to the PDF.
     from diffpy.srfit.pdf.characteristicfunctions import sphericalCF, shellCF
+
     contribution.registerFunction(sphericalCF, name="f_CdS")
     contribution.registerFunction(shellCF, name="f_ZnS")
 
@@ -140,10 +141,11 @@ def plotResults(recipe):
     diff = g - gcalc + diffzero
 
     import pylab
-    pylab.plot(r, g, 'bo', label="G(r) Data")
-    pylab.plot(r, gcalc, 'r-', label="G(r) Fit")
-    pylab.plot(r, diff, 'g-', label="G(r) diff")
-    pylab.plot(r, diffzero, 'k-')
+
+    pylab.plot(r, g, "bo", label="G(r) Data")
+    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
+    pylab.plot(r, diff, "g-", label="G(r) diff")
+    pylab.plot(r, diffzero, "k-")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
@@ -165,6 +167,7 @@ def main():
     stru2 = loadCrystal(znsciffile)
     recipe = makeRecipe(stru1, stru2, data)
     from diffpy.srfit.fitbase.fithook import PlotFitHook
+
     recipe.pushFitHook(PlotFitHook())
     recipe.fithooks[0].verbose = 3
 

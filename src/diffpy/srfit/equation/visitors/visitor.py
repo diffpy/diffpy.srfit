@@ -29,6 +29,7 @@ See the Visitor class for the required methods that each Visitor must overload.
 
 __all__ = ["Visitor"]
 
+
 class Visitor(object):
     """Abstract class for all visitors to a Literal tree.
 
@@ -56,7 +57,9 @@ class Visitor(object):
     # throw an exception
     def _abstract(self, method):
         raise NotImplementedError(
-            "class '%s' should override method '%s'" % (self.__class__.__name__, method))
+            "class '%s' should override method '%s'"
+            % (self.__class__.__name__, method)
+        )
 
 
 # End of file

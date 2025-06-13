@@ -71,7 +71,9 @@ class FitHook(object):
         """
         return
 
+
 # End class FitHook
+
 
 class PrintFitHook(FitHook):
     """Base class for inspecting the progress of a FitRecipe refinement.
@@ -148,13 +150,15 @@ class PrintFitHook(FitHook):
             print("Variables")
             vnames = recipe.getNames()
             vals = recipe.getValues()
-            byname = lambda nv : sortKeyForNumericString(nv[0])
+            byname = lambda nv: sortKeyForNumericString(nv[0])
             items = sorted(zip(vnames, vals), key=byname)
             for name, val in items:
                 print("  %s = %f" % (name, val))
         return
 
+
 # End class PrintFitHook
+
 
 # TODO - Display the chi^2 on the plot during refinement.
 class PlotFitHook(FitHook):
@@ -185,20 +189,20 @@ class PlotFitHook(FitHook):
 
             # Create a subplot
             if nc > 1:
-                pylab.subplot(nrows, ncols, idx+1)
-            pdata = pylab.plot(p.x, p.y, 'bo')[0]
-            pfit = pylab.plot(p.x, p.y, 'r-')[0]
+                pylab.subplot(nrows, ncols, idx + 1)
+            pdata = pylab.plot(p.x, p.y, "bo")[0]
+            pfit = pylab.plot(p.x, p.y, "r-")[0]
             self._plots.append((pdata, pfit))
             pylab.xlabel(xname)
             pylab.ylabel(yname)
             pylab.title(name)
 
         # Set up some event handling, so things behave nicely.
-        #def redraw(event):
+        # def redraw(event):
         #    canvas = event.canvas
         #    canvas.draw()
         #    return
-        #pylab.connect('resize_event', redraw)
+        # pylab.connect('resize_event', redraw)
 
         return
 

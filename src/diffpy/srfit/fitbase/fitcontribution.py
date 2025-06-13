@@ -31,6 +31,7 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.exceptions import SrFitError
 
+
 class FitContribution(ParameterSet):
     """FitContribution class.
 
@@ -80,7 +81,7 @@ class FitContribution(ParameterSet):
         self._manage(self._generators)
         return
 
-    def setProfile(self, profile, xname = None, yname = None, dyname = None):
+    def setProfile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
         profile --  A Profile that specifies the calculation points and that
@@ -121,9 +122,9 @@ class FitContribution(ParameterSet):
         xpar = ParameterProxy(xname, self.profile.xpar)
         ypar = ParameterProxy(yname, self.profile.ypar)
         dypar = ParameterProxy(dyname, self.profile.dypar)
-        self.addParameter(xpar, check = False)
-        self.addParameter(ypar, check = False)
-        self.addParameter(dypar, check = False)
+        self.addParameter(xpar, check=False)
+        self.addParameter(ypar, check=False)
+        self.addParameter(dypar, check=False)
 
         # If we have ProfileGenerators, set their Profiles.
         for gen in self._generators.values():
@@ -131,12 +132,11 @@ class FitContribution(ParameterSet):
 
         # If we have _eq, but not _reseq, set the residual
         if self._eq is not None and self._reseq is None:
-            self.setResidualEquation('chiv')
+            self.setResidualEquation("chiv")
 
         return
 
-
-    def addProfileGenerator(self, gen, name = None):
+    def addProfileGenerator(self, gen, name=None):
         """Add a ProfileGenerator to be used by this FitContribution.
 
         The ProfileGenerator is given a name so that it can be used as part of
@@ -176,7 +176,7 @@ class FitContribution(ParameterSet):
 
         return
 
-    def setEquation(self, eqstr, ns = {}):
+    def setEquation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual
@@ -197,8 +197,7 @@ class FitContribution(ParameterSet):
 
         """
         # Build the equation instance.
-        eq = equationFromString(eqstr, self._eqfactory,
-                                buildargs=True, ns=ns)
+        eq = equationFromString(eqstr, self._eqfactory, buildargs=True, ns=ns)
         eq.name = "eq"
 
         # Register any new Parameters.
@@ -212,10 +211,9 @@ class FitContribution(ParameterSet):
 
         # Set the residual if we need to
         if self.profile is not None and self._reseq is None:
-            self.setResidualEquation('chiv')
+            self.setResidualEquation("chiv")
 
         return
-
 
     def getEquation(self):
         """Get math expression string for the active profile equation.
@@ -224,11 +222,11 @@ class FitContribution(ParameterSet):
         equation has not been set yet.
         """
         from diffpy.srfit.equation.visitors import getExpression
+
         rv = ""
         if self._eq is not None:
             rv = getExpression(self._eq)
         return rv
-
 
     def setResidualEquation(self, eqstr):
         """Set the residual equation for the FitContribution.
@@ -271,7 +269,6 @@ class FitContribution(ParameterSet):
 
         return
 
-
     def getResidualEquation(self):
         """Get math expression string for the active residual equation.
 
@@ -279,11 +276,11 @@ class FitContribution(ParameterSet):
         equation has not been configured yet.
         """
         from diffpy.srfit.equation.visitors import getExpression
+
         rv = ""
         if self._reseq is not None:
-            rv = getExpression(self._reseq, eqskip='eq$')
+            rv = getExpression(self._reseq, eqskip="eq$")
         return rv
-
 
     def residual(self):
         """Calculate the residual for this fitcontribution.
@@ -306,15 +303,12 @@ class FitContribution(ParameterSet):
         # the following will not recompute the equation.
         return self._reseq()
 
-
     def evaluate(self):
-        """Evaluate the contribution equation and update profile.ycalc.
-        """
+        """Evaluate the contribution equation and update profile.ycalc."""
         yc = self._eq()
         if self.profile is not None:
             self.profile.ycalc = yc
         return yc
-
 
     def _validate(self):
         """Validate my state.
@@ -332,6 +326,7 @@ class FitContribution(ParameterSet):
 
         # Try to get the value of eq.
         from diffpy.srfit.equation.visitors import validate
+
         try:
             validate(self._eq)
         except ValueError as e:
@@ -343,7 +338,7 @@ class FitContribution(ParameterSet):
         try:
             val = self._eq()
         except TypeError as e:
-            raise SrFitError("_eq cannot be evaluated: %s"%e)
+            raise SrFitError("_eq cannot be evaluated: %s" % e)
 
         if val is None:
             raise SrFitError("_eq evaluates to None")
@@ -360,5 +355,6 @@ class FitContribution(ParameterSet):
         if val is None:
             raise SrFitError("residual evaluates to None")
         return
+
 
 # End of file

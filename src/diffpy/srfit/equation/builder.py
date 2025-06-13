@@ -77,9 +77,16 @@ example.
 > eq = beq.makeEquation()
 """
 
-__all__ = ["EquationFactory", "BaseBuilder", "ArgumentBuilder",
-           "OperatorBuilder", "wrapArgument", "wrapOperator", "wrapFunction",
-           "getBuilder"]
+__all__ = [
+    "EquationFactory",
+    "BaseBuilder",
+    "ArgumentBuilder",
+    "OperatorBuilder",
+    "wrapArgument",
+    "wrapOperator",
+    "wrapFunction",
+    "getBuilder",
+]
 
 # NOTE - the builder cannot handle numpy arrays on the left of a binary
 # operation because the array will automatically loop the operator of the
@@ -125,8 +132,9 @@ class EquationFactory(object):
         self.registerConstant("e", numpy.e)
         return
 
-    def makeEquation(self, eqstr, buildargs = True, argclass =
-            literals.Argument, argkw = {}):
+    def makeEquation(
+        self, eqstr, buildargs=True, argclass=literals.Argument, argkw={}
+    ):
         """Make an equation from an equation string.
 
         Arguments
@@ -152,7 +160,7 @@ class EquationFactory(object):
         # handle scalar numbers or numpy arrays
         if isinstance(beq, (numbers.Number, numpy.ndarray)):
             lit = literals.Argument(value=beq, const=True)
-            eq = Equation(name='', root=lit)
+            eq = Equation(name="", root=lit)
         else:
             eq = beq.getEquation()
             self.equations.add(eq)
@@ -255,7 +263,6 @@ class EquationFactory(object):
             del self.builders[name]
         return
 
-
     def wipeout(self, eq):
         """Invalidate the specified equation and remove it from the factory.
 
@@ -272,10 +279,9 @@ class EquationFactory(object):
         self.equations.discard(eq)
         # invalidate this equation to clean up any observer relations of
         # objects in the factory towards its literals tree.
-        nan = literals.Argument('nan', value=numpy.nan, const=True)
+        nan = literals.Argument("nan", value=numpy.nan, const=True)
         eq.setRoot(nan)
         return
-
 
     def _prepareBuilders(self, eqstr, buildargs, argclass, argkw):
         """Prepare builders so that equation string can be evaluated.
@@ -309,14 +315,14 @@ class EquationFactory(object):
         # this is disallowed.
         if not buildargs and eqargs:
             eqargsstr = ", ".join(eqargs)
-            msg = "The equation contains undefined arguments: %s"%eqargsstr
+            msg = "The equation contains undefined arguments: %s" % eqargsstr
             raise ValueError(msg)
 
         # Make the arguments
         newargs = set()
         for argname in eqargs:
-            arg = argclass(name = argname, **argkw)
-            argbuilder = ArgumentBuilder(name = argname, arg = arg)
+            arg = argclass(name=argname, **argkw)
+            argbuilder = ArgumentBuilder(name=argname, arg=arg)
             newargs.add(arg)
             self.registerBuilder(argname, argbuilder)
 
@@ -353,7 +359,7 @@ class EquationFactory(object):
                 if tok[0] in (token.NAME, token.OP):
                     args.add(tok[1])
         except tokenize.TokenError:
-            m = "invalid syntax: '%s'"%eqstr
+            m = "invalid syntax: '%s'" % eqstr
             raise SyntaxError(m)
 
         # Scan the tokens for names that do not correspond to registered
@@ -363,17 +369,21 @@ class EquationFactory(object):
             # Move genuine varibles to the eqargs dictionary
             if (
                 # Check registered builders
-                tok in self.builders or
+                tok in self.builders
+                or
                 # Check symbols
-                tok in EquationFactory.symbols or
+                tok in EquationFactory.symbols
+                or
                 # Check ignored characters
                 tok in EquationFactory.ignore
-                ):
+            ):
                 args.remove(tok)
 
         return args
 
+
 # End class EquationFactory
+
 
 class BaseBuilder(object):
     """Class for building equations.
@@ -392,10 +402,11 @@ class BaseBuilder(object):
 
     def __call__(self, *args):
         """Raises exception for easier debugging."""
-        m = "%s (%s) cannot accept arguments"%\
-            (self.literal.name, self.__class__.__name__)
+        m = "%s (%s) cannot accept arguments" % (
+            self.literal.name,
+            self.__class__.__name__,
+        )
         raise TypeError(m)
-
 
     def getEquation(self):
         """Get the equation built by this object.
@@ -404,11 +415,11 @@ class BaseBuilder(object):
         name of the root node.
         """
         # We need to make a name for this, so we name it after its root
-        name = "_eq_%s"%self.literal.name
+        name = "_eq_%s" % self.literal.name
         eq = Equation(name, self.literal)
         return eq
 
-    def __evalBinary(self, other, OperatorClass, onleft = True):
+    def __evalBinary(self, other, OperatorClass, onleft=True):
         """Evaluate a binary function.
 
         Other can be an BaseBuilder or a constant.
@@ -498,7 +509,9 @@ class BaseBuilder(object):
     def __neg__(self):
         return self.__evalUnary(literals.NegationOperator)
 
+
 ## These are used by the class.
+
 
 class ArgumentBuilder(BaseBuilder):
     """BaseBuilder wrapper around an Argument literal.
@@ -510,7 +523,7 @@ class ArgumentBuilder(BaseBuilder):
     literal     --  The Argument wrapped by this instance.
     """
 
-    def __init__(self, value = None, name = None, const = False, arg = None):
+    def __init__(self, value=None, name=None, const=False, arg=None):
         """Create an ArgumentBuilder instance, containing a new Argument.
 
         Arguments
@@ -524,13 +537,16 @@ class ArgumentBuilder(BaseBuilder):
         """
         BaseBuilder.__init__(self)
         if arg is None:
-            self.literal = literals.Argument(value=value, name=name,
-                    const=const)
+            self.literal = literals.Argument(
+                value=value, name=name, const=const
+            )
         else:
             self.literal = arg
         return
 
+
 # end class ArgumentBuilder
+
 
 class OperatorBuilder(BaseBuilder):
     """BaseBuilder wrapper around an Operator literal.
@@ -540,7 +556,7 @@ class OperatorBuilder(BaseBuilder):
     name        --  The name of the operator to be wrapped
     """
 
-    def __init__(self, name, op = None):
+    def __init__(self, name, op=None):
         """Wrap an Operator or a function by name.
 
         Arguments
@@ -573,42 +589,50 @@ class OperatorBuilder(BaseBuilder):
             self.literal = literals.UFuncOperator(ufunc)
         # Here the Operator is already specified.  We can copy its attributes
         # to a new Operator inside of the new OperatorBuilder.
-        op = literals.makeOperator(name=self.literal.name,
-                                   symbol=self.literal.symbol,
-                                   nin=self.literal.nin,
-                                   nout=self.literal.nout,
-                                   operation=self.literal.operation)
+        op = literals.makeOperator(
+            name=self.literal.name,
+            symbol=self.literal.symbol,
+            nin=self.literal.nin,
+            nout=self.literal.nout,
+            operation=self.literal.operation,
+        )
         newobj.literal = op
 
         # Now that we have a literal, let's check our inputs
         literal = newobj.literal
         if literal.nin >= 0 and len(args) != literal.nin:
-            raise ValueError("%s takes %i arguments (%i given)"%\
-                    (self.literal, self.literal.nin, len(args)))
+            raise ValueError(
+                "%s takes %i arguments (%i given)"
+                % (self.literal, self.literal.nin, len(args))
+            )
 
         # Wrap scalar arguments
         for i, arg in enumerate(args):
             # Wrap the argument if it is not already
             if not isinstance(arg, BaseBuilder):
-                name = self.name + "_%i"%i
-                arg = ArgumentBuilder(value = arg, name = name, const = True)
+                name = self.name + "_%i" % i
+                arg = ArgumentBuilder(value=arg, name=name, const=True)
             newobj.literal.addLiteral(arg.literal)
 
         return newobj
+
 
 # end class OperatorBuilder
 
 # Utility functions
 
+
 def wrapArgument(name, arg):
     """Wrap an Argument as a builder."""
-    argbuilder = ArgumentBuilder(arg = arg)
+    argbuilder = ArgumentBuilder(arg=arg)
     return argbuilder
+
 
 def wrapOperator(name, op):
     """Wrap an Operator as a builder."""
     opbuilder = OperatorBuilder(name, op)
     return opbuilder
+
 
 def wrapFunction(name, func, nin=2, nout=1):
     """Wrap a function in an OperatorBuilder instance.
@@ -620,18 +644,20 @@ def wrapFunction(name, func, nin=2, nout=1):
 
     Returns the OperatorBuilder instance that wraps the function.
     """
-    op = literals.makeOperator(name=name, symbol=name,
-                               nin=nin, nout=nout,
-                               operation=func)
+    op = literals.makeOperator(
+        name=name, symbol=name, nin=nin, nout=nout, operation=func
+    )
 
     # Create the OperatorBuilder
     opbuilder = OperatorBuilder(name, op)
 
     return opbuilder
 
+
 def getBuilder(name):
     """Get an operator from the global builders dictionary."""
     return _builders[name]
+
 
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module
@@ -642,7 +668,10 @@ def __wrapNumpyOperators():
         if isinstance(op, numpy.ufunc):
             _builders[name] = OperatorBuilder(name)
     return
+
+
 __wrapNumpyOperators()
+
 
 # Register other functions as well
 def __wrapSrFitOperators():
@@ -653,16 +682,20 @@ def __wrapSrFitOperators():
     opmod = literals.operators
     excluded_types = set((opmod.CustomOperator, opmod.UFuncOperator))
     # check if opmod member should be wrapped as OperatorBuilder
-    is_exported_type = lambda cls : (
-        inspect.isclass(cls) and issubclass(cls, opmod.Operator) and
-        not inspect.isabstract(cls) and
-        not cls in excluded_types)
+    is_exported_type = lambda cls: (
+        inspect.isclass(cls)
+        and issubclass(cls, opmod.Operator)
+        and not inspect.isabstract(cls)
+        and not cls in excluded_types
+    )
     # create OperatorBuilder objects
     for nm, opclass in inspect.getmembers(opmod, is_exported_type):
         op = opclass()
         assert op.name, "Unnamed Operator should never appear here."
         _builders[op.name] = OperatorBuilder(op.name, op)
     return
+
+
 __wrapSrFitOperators()
 
 # End of file

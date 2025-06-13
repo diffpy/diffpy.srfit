@@ -46,6 +46,7 @@ from diffpy.srfit.fitbase import FitContribution, FitRecipe
 
 ####### Example Code
 
+
 class GaussianGenerator(ProfileGenerator):
     """A class for calculating a Gaussian profile.
 
@@ -86,9 +87,9 @@ class GaussianGenerator(ProfileGenerator):
         # ProfileGenerator. The signature is
         # _newParameter(name, value).
         # See the API for full details.
-        self._newParameter('A', 1.0)
-        self._newParameter('x0', 0.0)
-        self._newParameter('sigma', 1.0)
+        self._newParameter("A", 1.0)
+        self._newParameter("x0", 0.0)
+        self._newParameter("sigma", 1.0)
         return
 
     def __call__(self, x):
@@ -107,12 +108,14 @@ class GaussianGenerator(ProfileGenerator):
 
         # Now we can use them. Note that we imported exp from numpy at the top
         # of the module.
-        y = A * exp(-0.5*(x-x0)**2/sigma**2)
+        y = A * exp(-0.5 * (x - x0) ** 2 / sigma**2)
 
         # Now return the value.
         return y
 
+
 # End class GaussianGenerator
+
 
 def makeRecipe():
     """Create a recipe that uses the GaussianGenerator.
@@ -159,7 +162,7 @@ def makeRecipe():
     # gaussianrecipe.py so we can expect the same output.
     recipe.addVar(generator.A, 1)
     recipe.addVar(generator.x0, 5)
-    recipe.addVar(generator.sigma, name = "sig")
+    recipe.addVar(generator.sigma, name="sig")
     recipe.sig.value = 1
 
     # Give the recipe away so it can be used!
@@ -171,6 +174,7 @@ if __name__ == "__main__":
     # We can use main from gaussianrecipe.py, since this doesn't care if we use
     # a ProfileGenerator or not.
     from gaussianrecipe import main
+
     main()
 
 # End of file

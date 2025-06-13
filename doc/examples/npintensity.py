@@ -55,6 +55,7 @@ from gaussianrecipe import scipyOptimize
 
 ####### Example Code
 
+
 class IntensityGenerator(ProfileGenerator):
     """A class for calculating intensity using the Debye equation.
 
@@ -136,6 +137,7 @@ class IntensityGenerator(ProfileGenerator):
         """
         # Load the structure from file
         from diffpy.structure import Structure
+
         stru = Structure()
         stru.read(strufile)
 
@@ -166,6 +168,7 @@ class IntensityGenerator(ProfileGenerator):
         self.count += 1
         print("iofq called", self.count)
         return iofq(self.phase.stru, q)
+
 
 # End class IntensityGenerator
 
@@ -200,7 +203,7 @@ def makeRecipe(strufile, datname):
     # use it in equations with this name.
     contribution = FitContribution("bucky")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "q")
+    contribution.setProfile(profile, xname="q")
 
     # Now we're ready to define the fitting equation for the FitContribution.
     # We need to modify the intensity calculation, and we'll do that from
@@ -233,8 +236,13 @@ def makeRecipe(strufile, datname):
     # function and registering it with the FitContribution.
     pi = numpy.pi
     exp = numpy.exp
+
     def gaussian(q, q0, width):
-        return 1/(2*pi*width**2)**0.5 * exp(-0.5 * ((q-q0)/width)**2)
+        return (
+            1
+            / (2 * pi * width**2) ** 0.5
+            * exp(-0.5 * ((q - q0) / width) ** 2)
+        )
 
     # This registers the python function and extracts the name and creates
     # Parameters from the arguments.
@@ -294,6 +302,7 @@ def makeRecipe(strufile, datname):
     # Give the recipe away so it can be used!
     return recipe
 
+
 def main():
 
     # Make the data and the recipe
@@ -315,13 +324,14 @@ def main():
     # 'iofq' from the IntensityGenerator.
     rescount = recipe.fithooks[0].count
     calcount = recipe.bucky.I.count
-    footer = "iofq called %i%% of the time"%int(100.0*calcount/rescount)
-    res.printResults(footer = footer)
+    footer = "iofq called %i%% of the time" % int(100.0 * calcount / rescount)
+    res.printResults(footer=footer)
 
     # Plot!
     plotResults(recipe)
 
     return
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -335,10 +345,11 @@ def plotResults(recipe):
     diff = I - Icalc
 
     import pylab
-    pylab.plot(q,I,'ob',label="I(Q) Data")
-    pylab.plot(q,Icalc,'r-',label="I(Q) Fit")
-    pylab.plot(q,diff,'g-',label="I(Q) diff")
-    pylab.plot(q,bkgd,'c-',label="Bkgd. Fit")
+
+    pylab.plot(q, I, "ob", label="I(Q) Data")
+    pylab.plot(q, Icalc, "r-", label="I(Q) Fit")
+    pylab.plot(q, diff, "g-", label="I(Q) diff")
+    pylab.plot(q, bkgd, "c-", label="Bkgd. Fit")
     pylab.xlabel(r"$Q (\AA^{-1})$")
     pylab.ylabel("Intensity (arb. units)")
     pylab.legend(loc=1)
@@ -371,9 +382,9 @@ def iofq(S, q):
 
     # The precision of distance measurements
     deltad = 1e-6
-    dmult = int(1/deltad)
+    dmult = int(1 / deltad)
     deltau = deltad**2
-    umult = int(1/deltau)
+    umult = int(1 / deltau)
 
     pairdict = {}
     elcount = {}
@@ -395,11 +406,11 @@ def iofq(S, q):
 
             # Get the distance to the desired precision
             d = S.distance(i, j)
-            D = int(d*dmult)
+            D = int(d * dmult)
 
             # Get the DW factor to the same precision
             ss = S[i].Uisoequiv + S[j].Uisoequiv
-            SS = int(ss*umult)
+            SS = int(ss * umult)
 
             # Record the multiplicity of this pair
             key = (els[0], els[1], D, SS)
@@ -439,6 +450,7 @@ def iofq(S, q):
 
     return y
 
+
 def getXScatteringFactor(el, q):
     """Get the x-ray scattering factor for an element over the q range.
 
@@ -447,15 +459,17 @@ def getXScatteringFactor(el, q):
     """
     try:
         import cctbx.eltbx.xray_scattering as xray
+
         wk1995 = xray.wk1995(el)
         g = wk1995.fetch()
         # at_stol - at sin(theta)/lambda = Q/(4*pi)
-        f = numpy.asarray( map( g.at_stol, q/(4*numpy.pi) ) )
+        f = numpy.asarray(map(g.at_stol, q / (4 * numpy.pi)))
         return f
     except ImportError:
         return 1
 
-def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
+
+def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl=1):
     """Make some fake data and save it to file.
 
     Make some data to fit. This uses iofq to calculate an intensity curve, and
@@ -474,6 +488,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
     """
 
     from diffpy.structure import Structure
+
     S = Structure()
     S.read(strufile)
 
@@ -487,11 +502,11 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
 
     # We want to broaden the peaks as well. This simulates instrument effects.
     q0 = q[len(q) // 2]
-    g = numpy.exp(-0.5*((q-q0)/sig)**2)
-    y = numpy.convolve(y, g, mode='same')/sum(g)
+    g = numpy.exp(-0.5 * ((q - q0) / sig) ** 2)
+    y = numpy.convolve(y, g, mode="same") / sum(g)
 
     # Add a polynomial background.
-    bkgd = (q + bkgc)**2 * (1.5*max(q) - q)**5
+    bkgd = (q + bkgc) ** 2 * (1.5 * max(q) - q) ** 5
     bkgd *= 0.2 * max(y) / max(bkgd)
 
     y += bkgd
@@ -500,11 +515,11 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl = 1):
     y *= scale
 
     # Calculate the uncertainty
-    u = (y/nl)**0.5
+    u = (y / nl) ** 0.5
 
     # And apply the noise
     if nl > 0:
-        y = numpy.random.poisson(y*nl) / nl
+        y = numpy.random.poisson(y * nl) / nl
 
     # Now save it
     numpy.savetxt(datname, numpy.transpose([q, y, u]))

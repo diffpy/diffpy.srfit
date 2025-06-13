@@ -31,7 +31,7 @@ from diffpy.srfit.equation.visitors.validator import Validator
 from diffpy.srfit.equation.visitors.swapper import Swapper
 
 
-def getArgs(literal, getconsts = True):
+def getArgs(literal, getconsts=True):
     """Get the Arguments of a Literal tree.
 
     getconsts   --  If True (default), then Arguments designated as constant
@@ -72,7 +72,7 @@ def validate(literal):
     v = Validator()
     errors = literal.identify(v)
     if errors:
-        m = "Errors found in Literal tree '%s'\n"%literal
+        m = "Errors found in Literal tree '%s'\n" % literal
         m += "\n".join(errors)
         raise ValueError(m)
     return

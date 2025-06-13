@@ -41,7 +41,7 @@ class Constraint(Validatable):
     """
 
     def __init__(self):
-        """Initialization. """
+        """Initialization."""
         self.par = None
         self.eq = None
         return
@@ -57,10 +57,10 @@ class Constraint(Validatable):
         """
 
         if par.const:
-            raise ValueError("The parameter '%s' is constant"%par)
+            raise ValueError("The parameter '%s' is constant" % par)
 
         if par.constrained:
-            raise ValueError("The parameter '%s' is already constrained"%par)
+            raise ValueError("The parameter '%s' is already constrained" % par)
 
         par.constrained = True
 
@@ -100,6 +100,7 @@ class Constraint(Validatable):
             raise SrFitError("eq is None")
         self.par._validate()
         from diffpy.srfit.equation.visitors import validate
+
         try:
             validate(self.eq)
         except ValueError as e:
@@ -116,5 +117,6 @@ class Constraint(Validatable):
                 raise SrFitError("eq evaluates to None")
 
         return
+
 
 # End of file

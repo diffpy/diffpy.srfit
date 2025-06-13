@@ -47,15 +47,14 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(fc._eq is None)
         self.assertTrue(fc._reseq is None)
         # check type checking
-        fc1 = FitContribution('test1')
-        self.assertRaises(TypeError, fc1.setProfile, 'invalid')
+        fc1 = FitContribution("test1")
+        self.assertRaises(TypeError, fc1.setProfile, "invalid")
         # check if residual equation is set up when possible
-        fc2 = FitContribution('test2')
-        fc2.setEquation('A * x')
+        fc2 = FitContribution("test2")
+        fc2.setEquation("A * x")
         fc2.setProfile(profile)
         self.assertFalse(fc2._reseq is None)
         return
-
 
     def testAddProfileGenerator(self):
         fc = self.fitcontribution
@@ -115,7 +114,7 @@ class TestContribution(unittest.TestCase):
         profile = self.profile
         profile.setObservedProfile(xobs, yobs)
         xobs2 = arange(0, 10, 0.8)
-        yobs2 = 0.5*xobs2
+        yobs2 = 0.5 * xobs2
         profile2 = Profile()
         profile2.setObservedProfile(xobs2, yobs2)
         gen = self.gen
@@ -144,7 +143,6 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(array_equal(fc._eq(), gen.value))
         self.assertEqual(len(xobs2), len(fc.residual()))
         return
-
 
     def testResidual(self):
         """Test the residual, which requires all other methods."""
@@ -195,7 +193,7 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(fc._eq._value is None)
         self.assertTrue(fc._reseq._value is None)
         xobs = arange(0, 10, 0.5)
-        yobs = 9*sin(xobs)
+        yobs = 9 * sin(xobs)
         profile.setObservedProfile(xobs, yobs)
         self.assertTrue(fc._eq._value is None)
         self.assertTrue(fc._reseq._value is None)
@@ -207,24 +205,24 @@ class TestContribution(unittest.TestCase):
         fc.setEquation("2*I")
         fc.setResidualEquation("resv")
         chiv = fc.residual()
-        self.assertAlmostEqual(sum((2*xobs-yobs)**2)/sum(yobs**2),
-                dot(chiv, chiv))
+        self.assertAlmostEqual(
+            sum((2 * xobs - yobs) ** 2) / sum(yobs**2), dot(chiv, chiv)
+        )
 
         # Make a custom residual.
         fc.setResidualEquation("abs(eq-y)**0.5")
         chiv = fc.residual()
-        self.assertAlmostEqual(sum(abs(2*xobs-yobs)), dot(chiv, chiv))
+        self.assertAlmostEqual(sum(abs(2 * xobs - yobs)), dot(chiv, chiv))
 
         # Test configuration checks
-        fc1 = FitContribution('test1')
-        self.assertRaises(SrFitError, fc1.setResidualEquation, 'chiv')
+        fc1 = FitContribution("test1")
+        self.assertRaises(SrFitError, fc1.setResidualEquation, "chiv")
         fc1.setProfile(self.profile)
-        self.assertRaises(SrFitError, fc1.setResidualEquation, 'chiv')
-        fc1.setEquation('A * x')
-        fc1.setResidualEquation('chiv')
+        self.assertRaises(SrFitError, fc1.setResidualEquation, "chiv")
+        fc1.setEquation("A * x")
+        fc1.setResidualEquation("chiv")
         self.assertTrue(noObserversInGlobalBuilders())
         return
-
 
     def test_setEquation(self):
         """Check replacement of removed parameters."""
@@ -234,61 +232,55 @@ class TestContribution(unittest.TestCase):
         self.assertEqual(7, fc.evaluate())
         fc.removeParameter(fc.x)
         x = arange(0, 10, 0.5)
-        fc.newParameter('x', x)
+        fc.newParameter("x", x)
         self.assertTrue(array_equal(5 + x, fc.evaluate()))
         self.assertTrue(noObserversInGlobalBuilders())
         return
 
-
     def test_getEquation(self):
         """Check getting the current profile simulation formula."""
         fc = self.fitcontribution
-        self.assertEqual('', fc.getEquation())
+        self.assertEqual("", fc.getEquation())
         fc.setEquation("A * sin(x + 5)")
-        self.assertEqual('(A * sin((x + 5)))', fc.getEquation())
+        self.assertEqual("(A * sin((x + 5)))", fc.getEquation())
         self.assertTrue(noObserversInGlobalBuilders())
         return
-
 
     def test_getResidualEquation(self):
         """Check getting the current formula for residual equation."""
         fc = self.fitcontribution
-        self.assertEqual('', fc.getResidualEquation())
+        self.assertEqual("", fc.getResidualEquation())
         fc.setProfile(self.profile)
-        fc.setEquation('A * x + B')
-        self.assertEqual('((eq - y) / dy)', fc.getResidualEquation())
-        fc.setResidualEquation('2 * (eq - y)')
-        self.assertEqual('(2 * (eq - y))', fc.getResidualEquation())
+        fc.setEquation("A * x + B")
+        self.assertEqual("((eq - y) / dy)", fc.getResidualEquation())
+        fc.setResidualEquation("2 * (eq - y)")
+        self.assertEqual("(2 * (eq - y))", fc.getResidualEquation())
         return
 
-
     def test_releaseOldEquations(self):
-        """Ensure EquationFactory does not hold to obsolete Equations.
-        """
+        """Ensure EquationFactory does not hold to obsolete Equations."""
         fc = self.fitcontribution
         self.assertEqual(0, len(fc._eqfactory.equations))
         for i in range(5):
-            fc.setEquation('A * x + B')
+            fc.setEquation("A * x + B")
         self.assertEqual(1, len(fc._eqfactory.equations))
         fc.setProfile(self.profile)
         for i in range(5):
-            fc.setResidualEquation('chiv')
+            fc.setResidualEquation("chiv")
         self.assertEqual(2, len(fc._eqfactory.equations))
         return
 
-
     def test_registerFunction(self):
-        """Ensure registered function works after second setEquation call.
-        """
+        """Ensure registered function works after second setEquation call."""
         fc = self.fitcontribution
-        fsquare = lambda x : x**2
-        fc.registerFunction(fsquare, name='fsquare')
-        fc.setEquation('fsquare')
+        fsquare = lambda x: x**2
+        fc.registerFunction(fsquare, name="fsquare")
+        fc.setEquation("fsquare")
         fc.x.setValue(5)
         self.assertEqual(25, fc.evaluate())
         fc.x << 6
         self.assertEqual(36, fc.evaluate())
-        fc.setEquation('fsquare + 5')
+        fc.setEquation("fsquare + 5")
         self.assertEqual(41, fc.evaluate())
         fc.x << -1
         self.assertEqual(6, fc.evaluate())

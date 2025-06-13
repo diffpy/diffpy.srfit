@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-"""Structure wrapper class for structures compatible with SrReal.
-"""
+"""Structure wrapper class for structures compatible with SrReal."""
 
 __all__ = ["SrRealParSet"]
 
@@ -42,7 +41,7 @@ class SrRealParSet(BaseStructureParSet):
         self.stru = None
         return
 
-    def restrainBVS(self, sig = 1, scaled = False):
+    def restrainBVS(self, sig=1, scaled=False):
         """Restrain the bond-valence sum to zero.
 
         This adds a penalty to the cost function equal to
@@ -70,7 +69,7 @@ class SrRealParSet(BaseStructureParSet):
         # Return the Restraint object
         return res
 
-    def useSymmetry(self, use = True):
+    def useSymmetry(self, use=True):
         """Set this structure to use symmetry.
 
         This determines how the structure is treated by SrReal calculators.
@@ -91,6 +90,7 @@ class SrRealParSet(BaseStructureParSet):
 
         """
         from diffpy.srreal.structureadapter import nosymmetry
+
         if self._usesymmetry:
             return self.stru
         return nosymmetry(self.stru)

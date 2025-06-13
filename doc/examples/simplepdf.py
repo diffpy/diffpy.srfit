@@ -28,13 +28,14 @@ from crystalpdf import plotResults
 
 ####### Example Code
 
+
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
     # Work directly with a custom PDFContribution to load the data
     contribution = PDFContribution("nickel")
     contribution.loadData(datname)
-    contribution.setCalculationRange(xmin = 1, xmax = 20, dx = 0.1)
+    contribution.setCalculationRange(xmin=1, xmax=20, dx=0.1)
 
     # and the phase
     stru = Structure()
@@ -49,6 +50,7 @@ def makeRecipe(ciffile, datname):
     phase = contribution.nickel.phase
 
     from diffpy.srfit.structure import constrainAsSpaceGroup
+
     sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
 
     for par in sgpars.latpars:
@@ -57,11 +59,12 @@ def makeRecipe(ciffile, datname):
         recipe.addVar(par, 0.005)
 
     recipe.addVar(contribution.scale, 1)
-    recipe.addVar(contribution.qdamp, 0.03, fixed = True)
+    recipe.addVar(contribution.qdamp, 0.03, fixed=True)
     recipe.addVar(contribution.nickel.delta2, 5)
 
     # Give the recipe away so it can be used!
     return recipe
+
 
 if __name__ == "__main__":
 

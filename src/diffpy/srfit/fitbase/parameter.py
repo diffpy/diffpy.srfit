@@ -53,7 +53,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
     """
 
-    def __init__(self, name, value = None, const = False):
+    def __init__(self, name, value=None, const=False):
         """Initialization.
 
         name    --  The name of this Parameter (must be a valid attribute
@@ -86,7 +86,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         Argument.setValue(self, val)
         return self
 
-    def setConst(self, const = True, value = None):
+    def setConst(self, const=True, value=None):
         """Toggle the Parameter as constant.
 
         const   --  Flag indicating if the parameter is constant (default
@@ -103,7 +103,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
             self.setValue(value)
         return self
 
-
     def boundRange(self, lb=None, ub=None):
         """Set lower and upper bound of the Parameter.
 
@@ -118,8 +117,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
             self.bounds[1] = ub
         return self
 
-
-    def boundWindow(self, lr = 0, ur = None):
+    def boundWindow(self, lr=0, ur=None):
         """Create bounds centered on the current value of the Parameter.
 
         lr  --  The radius of the lower bound (default 0). The lower bound is
@@ -148,10 +146,12 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
         """
         if self.value is None:
-            raise SrFitError("value of '%s' is None"%self.name)
+            raise SrFitError("value of '%s' is None" % self.name)
         return
 
+
 # End class Parameter
+
 
 class ParameterProxy(Parameter):
     """A Parameter proxy for another parameter.
@@ -164,7 +164,6 @@ class ParameterProxy(Parameter):
     par     --  The Parameter this is a proxy for.
 
     """
-
 
     def __init__(self, name, par):
         """Initialization.
@@ -185,15 +184,13 @@ class ParameterProxy(Parameter):
 
     @property
     def constrained(self):
-        """A flag indicating if the proxied Parameter is constrained.
-        """
+        """A flag indicating if the proxied Parameter is constrained."""
         return self.par.constrained
 
     @constrained.setter
     def constrained(self, value):
         self.par.constrained = bool(value)
         return
-
 
     @property
     def bounds(self):
@@ -209,7 +206,6 @@ class ParameterProxy(Parameter):
         self.par.bounds = value
         return
 
-
     @property
     def _observers(self):
         return self.par._observers
@@ -220,26 +216,21 @@ class ParameterProxy(Parameter):
     def setValue(self, val):
         return self.par.setValue(val)
 
-
     @wraps(Parameter.getValue)
     def getValue(self):
         return self.par.getValue()
-
 
     @wraps(Parameter.setConst)
     def setConst(self, const=True, value=None):
         return self.par.setConst(const, value)
 
-
     @wraps(Parameter.boundRange)
     def boundRange(self, lb=None, ub=None):
         return self.par.boundRange(lb, ub)
 
-
     @wraps(Parameter.boundWindow)
     def boundWindow(self, lr=0, ur=None):
         return self.par.boundWindow(lr, ur)
-
 
     def _validate(self):
         """Validate my state.
@@ -254,6 +245,7 @@ class ParameterProxy(Parameter):
         self.par._validate()
         return
 
+
 # End class ParameterProxy
 
 
@@ -265,7 +257,7 @@ class ParameterAdapter(Parameter):
 
     """
 
-    def __init__(self, name, obj, getter = None, setter = None, attr = None):
+    def __init__(self, name, obj, getter=None, setter=None, attr=None):
         """Wrap an object as a Parameter.
 
         name    --  The name of this Parameter.
@@ -325,6 +317,7 @@ class ParameterAdapter(Parameter):
             self.setter(self.obj, value)
             self.notify()
         return self
+
 
 # End class ParameterAdapter
 

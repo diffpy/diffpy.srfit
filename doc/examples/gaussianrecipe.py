@@ -46,9 +46,15 @@ will leave you with a much better understanding of how SrFit works.
 
 from __future__ import print_function
 
-from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    Profile,
+    FitResults,
+)
 
 ####### Example Code
+
 
 def main():
     """The workflow of creating, running and inspecting a fit."""
@@ -150,10 +156,11 @@ def makeRecipe():
     # Here we create a Variable named 'sig', which is tied to the 'sigma'
     # Parameter of our FitContribution. We give it an initial value through the
     # FitRecipe instance.
-    recipe.addVar(contribution.sigma, name = "sig")
+    recipe.addVar(contribution.sigma, name="sig")
     recipe.sig.value = 1
 
     return recipe
+
 
 def scipyOptimize(recipe):
     """Optimize the recipe created above using scipy.
@@ -169,10 +176,12 @@ def scipyOptimize(recipe):
     # (recipe.residual) and the starting values of the Variables
     # (recipe.getValues()).
     from scipy.optimize.minpack import leastsq
+
     print("Fit using scipy's LM optimizer")
     leastsq(recipe.residual, recipe.getValues())
 
     return
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -189,14 +198,16 @@ def plotResults(recipe):
 
     # This stuff is specific to pylab from the matplotlib distribution.
     import pylab
-    pylab.plot(x, y, 'b.', label = "observed Gaussian")
-    pylab.plot(x, ycalc, 'g-', label = "calculated Gaussian")
-    pylab.legend(loc = (0.0,0.8))
+
+    pylab.plot(x, y, "b.", label="observed Gaussian")
+    pylab.plot(x, ycalc, "g-", label="calculated Gaussian")
+    pylab.legend(loc=(0.0, 0.8))
     pylab.xlabel("x")
     pylab.ylabel("y")
 
     pylab.show()
     return
+
 
 if __name__ == "__main__":
 

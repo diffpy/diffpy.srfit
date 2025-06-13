@@ -27,37 +27,33 @@ from diffpy.srfit.util.weakrefcallable import weak_ref, WeakBoundMethod
 
 # ----------------------------------------------------------------------------
 
+
 class TestWeakBoundMethod(unittest.TestCase):
 
     def setUp(self):
-        self.f = FitContribution('f')
-        self.f.setEquation('7')
+        self.f = FitContribution("f")
+        self.f.setEquation("7")
         self.w = weak_ref(self.f._eq._flush, fallback=_fallback_example)
         return
-
 
     def tearDown(self):
         self.f = None
         self.assertTrue(None is self.w._wref())
-        obj, args, kw = self.w('any', 'argument', foo=37)
+        obj, args, kw = self.w("any", "argument", foo=37)
         self.assertTrue(obj is self.w)
-        self.assertEqual(('any', 'argument'), args)
-        self.assertEqual({'foo' : 37}, kw)
+        self.assertEqual(("any", "argument"), args)
+        self.assertEqual({"foo": 37}, kw)
         return
 
-
     def test___init__(self):
-        """check WeakBoundMethod.__init__()
-        """
+        """check WeakBoundMethod.__init__()"""
         self.assertTrue(self.w.fallback is _fallback_example)
         wf = weak_ref(self.f._flush)
         self.assertTrue(None is wf.fallback)
         return
 
-
     def test___call__(self):
-        """check WeakBoundMethod.__call__()
-        """
+        """check WeakBoundMethod.__call__()"""
         f = self.f
         self.assertEqual(7, f.evaluate())
         self.assertEqual(7, f._eq._value)
@@ -65,18 +61,16 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.w(())
         self.assertTrue(None is f._eq._value)
         # check WeakBoundMethod behavior with no fallback
-        x = Parameter('x', value=3)
+        x = Parameter("x", value=3)
         wgetx = weak_ref(x.getValue)
         self.assertEqual(3, wgetx())
         del x
         self.assertRaises(ReferenceError, wgetx)
         return
 
-
     def test___hash__(self):
-        """check WeakBoundMethod.__hash__()
-        """
-        f1 = FitContribution('f1')
+        """check WeakBoundMethod.__hash__()"""
+        f1 = FitContribution("f1")
         w1 = weak_ref(f1._flush)
         h0 = hash(w1)
         del f1
@@ -87,11 +81,9 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertEqual(hash(w1c1), hash(w1c2))
         return
 
-
     def test___eq__(self):
-        """check WeakBoundMethod.__eq__()
-        """
-        f1 = FitContribution('f1')
+        """check WeakBoundMethod.__eq__()"""
+        f1 = FitContribution("f1")
         w1 = weak_ref(f1._flush)
         w2 = weak_ref(f1._flush)
         self.assertEqual(w1, w2)
@@ -108,10 +100,8 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertEqual(w1, w1cc)
         return
 
-
     def test_pickling(self):
-        """Verify unpickling works when it involves __hash__ call.
-        """
+        """Verify unpickling works when it involves __hash__ call."""
         holder = set([self.w])
         objs = [holder, self.f._eq, self.w]
         data = pickle.dumps(objs)
@@ -121,13 +111,11 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertTrue(feq2 is w2._wref())
         return
 
-
     def test_observable_deregistration(self):
-        """check if Observable drops dead Observer.
-        """
+        """check if Observable drops dead Observer."""
         f = self.f
-        x = f.newParameter('x', 5)
-        f.setEquation('3 * x')
+        x = f.newParameter("x", 5)
+        f.setEquation("3 * x")
         self.assertEqual(15, f.evaluate())
         self.assertEqual(15, f._eq._value)
         # get one of the observer callables that are associated with f
@@ -146,15 +134,17 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertEqual(0, len(x._observers))
         return
 
+
 # End of class TestWeakBoundMethod
 
 # Local Routines -------------------------------------------------------------
+
 
 def _fallback_example(wbm, *args, **kwargs):
     return (wbm, args, kwargs)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
 
 # End of file

@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Argument class.
 
 Arguments are the leaves of an equation tree, in essense a variable or a
@@ -21,9 +20,11 @@ constant.
 
 __all__ = ["Argument"]
 
-from numpy import ndarray, array_equal
+from numpy import array_equal, ndarray
+
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 from diffpy.srfit.equation.literals.literal import Literal
+
 
 class Argument(Literal, ArgumentABC):
     """Argument class.
@@ -34,12 +35,11 @@ class Argument(Literal, ArgumentABC):
                 Constants may be given special treatment by the Visitors.
     _value  --  The value of the Argument. Modified with 'setValue'.
     value   --  Property for 'getValue' and 'setValue'.
-
     """
 
     const = None
 
-    def __init__(self, name = None, value = None, const = False):
+    def __init__(self, name=None, value=None, const=False):
         """Initialization."""
         Literal.__init__(self, name)
         self.const = const
@@ -58,7 +58,6 @@ class Argument(Literal, ArgumentABC):
         """Set the value of the Literal.
 
         val --  The value to assign
-
         """
         if isinstance(self._value, ndarray) or isinstance(val, ndarray):
             notequiv = not array_equal(self._value, val)
@@ -69,7 +68,7 @@ class Argument(Literal, ArgumentABC):
             self.notify()
         return
 
-    value = property( lambda self: self.getValue(),
-            lambda self, val: self.setValue(val))
+    value = property(lambda self: self.getValue(), lambda self, val: self.setValue(val))
+
 
 # End of file

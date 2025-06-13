@@ -12,17 +12,16 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Interface enhancements for Parameter-type classes.
 
-Most interface additions can thought of by considering the classes in SrFit to
-be sets of parameters. "+=" adds a new parameter, when that makes sense. "|="
-is the 'union' of these sets, and in general is used to combine different
-objects. See individual interface classes for specifics.
+Most interface additions can thought of by considering the classes in
+SrFit to be sets of parameters. "+=" adds a new parameter, when that
+makes sense. "|=" is the 'union' of these sets, and in general is used
+to combine different objects. See individual interface classes for
+specifics.
 """
 
-__all__ = ["ParameterInterface", "FitRecipeInterface",
-           "RecipeOrganizerInterface"]
+__all__ = ["ParameterInterface", "FitRecipeInterface", "RecipeOrganizerInterface"]
 
 import six
 
@@ -33,7 +32,7 @@ class ParameterInterface(object):
     """Mix-in class for enhancing the Parameter interface."""
 
     def __lshift__(self, v):
-        """setValue with <<
+        """SetValue with <<
 
         Think of '<<' as injecting a value
 
@@ -45,15 +44,17 @@ class ParameterInterface(object):
             self.value = v
         return self
 
+
 # End class ParameterInterface
 
 # ----------------------------------------------------------------------------
+
 
 class RecipeOrganizerInterface(object):
     """Mix-in class for enhancing the RecipeOrganizer interface."""
 
     def __imul__(self, args):
-        """constrain with *=
+        """Constrain with *=
 
         Think of '*' as a push-pin.
 
@@ -63,7 +64,7 @@ class RecipeOrganizerInterface(object):
         return self
 
     def __imod__(self, args):
-        """restrain with %=
+        """Restrain with %=
 
         This of '%' as a loose rope.
 
@@ -79,6 +80,7 @@ class RecipeOrganizerInterface(object):
 
         This accepts arguments for a single function call.
         """
+
         # Want to detect _addParameter or _newParameter
         def f(*args):
             if isinstance(args[0], six.string_types):
@@ -90,15 +92,17 @@ class RecipeOrganizerInterface(object):
         _applyargs(args, f)
         return self
 
+
 # End class RecipeOrganizerInterface
 
 # ----------------------------------------------------------------------------
+
 
 class FitRecipeInterface(object):
     """Mix-in class for enhancing the FitRecipe interface."""
 
     def __ior__(self, args):
-        """addContribution with |=
+        """AddContribution with |=
 
         Think of "|" as the union of components.
 
@@ -108,13 +112,14 @@ class FitRecipeInterface(object):
         return self
 
     def __iadd__(self, args):
-        """addVar or newVar with +=
+        """AddVar or newVar with +=
 
         Think of "+" as addition of a variable.
 
-        This accepts a single argument or an iterable of single arguments or
-        argument tuples.
+        This accepts a single argument or an iterable of single
+        arguments or argument tuples.
         """
+
         # Want to detect addVar or newVar
         def f(*args):
             if isinstance(args[0], six.string_types):
@@ -126,9 +131,11 @@ class FitRecipeInterface(object):
         _applymanyargs(args, f)
         return self
 
+
 # End class FitRecipeInterface
 
 # Local helper functions -----------------------------------------------------
+
 
 def _applymanyargs(args, f):
     """Apply arguments to a function.
@@ -138,17 +145,18 @@ def _applymanyargs(args, f):
     (arg1, arg2, ...)
     ((arg1a, arg1b, ...), ...)
     """
-    if not hasattr(args, '__iter__'):
+    if not hasattr(args, "__iter__"):
         f(args)
         return
 
     for arg in args:
-        if hasattr(arg, '__iter__'):
+        if hasattr(arg, "__iter__"):
             f(*arg)
         else:
             f(arg)
 
     return
+
 
 def _applyargs(args, f):
     """Apply arguments to a function.
@@ -158,10 +166,11 @@ def _applyargs(args, f):
     (arg1, arg2, ...)
     ((arg1a, arg1b, ...), ...)
     """
-    if not hasattr(args, '__iter__'):
+    if not hasattr(args, "__iter__"):
         f(args)
     else:
         f(*args)
     return
+
 
 # End of file

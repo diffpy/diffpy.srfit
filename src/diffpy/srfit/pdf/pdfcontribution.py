@@ -12,16 +12,16 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """PDFContribution class.
 
-This is a custom FitContribution that simplifies the creation of PDF fits.
+This is a custom FitContribution that simplifies the creation of PDF
+fits.
 """
 
 __all__ = ["PDFContribution"]
 
-from diffpy.srfit.fitbase import FitContribution
-from diffpy.srfit.fitbase import Profile
+from diffpy.srfit.fitbase import FitContribution, Profile
+
 
 class PDFContribution(FitContribution):
     """PDFContribution class.
@@ -59,20 +59,18 @@ class PDFContribution(FitContribution):
     scale   --  Scale factor
     qbroad  --  Resolution peak broadening term
     qdamp   --  Resolution peak dampening term
-
     """
 
     def __init__(self, name):
         """Create the PDFContribution.
 
         name        --  The name of the contribution.
-
         """
         FitContribution.__init__(self, name)
         self._meta = {}
         # Add the profile
         profile = Profile()
-        self.setProfile(profile, xname = "r")
+        self.setProfile(profile, xname="r")
 
         # Need a parameter for the overall scale, in the case that this is a
         # multi-phase fit.
@@ -92,21 +90,21 @@ class PDFContribution(FitContribution):
 
         data    --  An open file-like object, name of a file that contains data
                     or a string containing the data.
-
         """
         # Get the data into a string
         from diffpy.srfit.util.inpututils import inputToString
+
         datstr = inputToString(data)
 
         # Load data with a PDFParser
         from diffpy.srfit.pdf.pdfparser import PDFParser
+
         parser = PDFParser()
         parser.parseString(datstr)
 
         # Pass it to the profile
         self.profile.loadParsedData(parser)
         return
-
 
     def setCalculationRange(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
@@ -142,9 +140,8 @@ class PDFContribution(FitContribution):
         """
         return self.profile.setCalculationRange(xmin, xmax, dx)
 
-
     def savetxt(self, fname, **kwargs):
-        """Call numpy.savetxt with x, ycalc, y, dy
+        """Call numpy.savetxt with x, ycalc, y, dy.
 
         This calls on the built-in Profile.
 
@@ -154,7 +151,7 @@ class PDFContribution(FitContribution):
 
     # Phase methods
 
-    def addStructure(self, name, stru, periodic = True):
+    def addStructure(self, name, stru, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
         name    --  A name to give the generator that will manage the PDF
@@ -175,14 +172,15 @@ class PDFContribution(FitContribution):
 
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)
-
         """
         # Based on periodic, create the proper generator.
         if periodic:
             from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
+
             gen = PDFGenerator(name)
         else:
             from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
+
             gen = DebyePDFGenerator(name)
 
         # Set up the generator
@@ -191,7 +189,7 @@ class PDFContribution(FitContribution):
 
         return gen.phase
 
-    def addPhase(self, name, parset, periodic = True):
+    def addPhase(self, name, parset, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
         name    --  A name to give the generator that will manage the PDF
@@ -213,14 +211,15 @@ class PDFContribution(FitContribution):
 
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)
-
         """
         # Based on periodic, create the proper generator.
         if periodic:
             from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
+
             gen = PDFGenerator(name)
         else:
             from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
+
             gen = DebyePDFGenerator(name)
 
         # Set up the generator
@@ -232,9 +231,8 @@ class PDFContribution(FitContribution):
     def _setupGenerator(self, gen):
         """Setup a generator.
 
-        The generator must already have a managed SrRealParSet, added with
-        setStructure or setPhase.
-
+        The generator must already have a managed SrRealParSet, added
+        with setStructure or setPhase.
         """
         # Add the generator to this FitContribution
         self.addProfileGenerator(gen)
@@ -268,14 +266,12 @@ class PDFContribution(FitContribution):
         val = self.profile.meta.get(kwd)
         return val
 
-
-    def setScatteringType(self, type = "X"):
+    def setScatteringType(self, type="X"):
         """Set the scattering type.
 
         type    --   "X" for x-ray or "N" for neutron
 
         Raises ValueError if type is not "X" or "N"
-
         """
         self._meta["stype"] = type
         for gen in self._generators.values():
@@ -283,7 +279,10 @@ class PDFContribution(FitContribution):
         return
 
     def getScatteringType(self):
-        """Get the scattering type. See 'setScatteringType'."""
+        """Get the scattering type.
+
+        See 'setScatteringType'.
+        """
         return self._getMetaValue("stype")
 
     def setQmax(self, qmax):
@@ -298,8 +297,7 @@ class PDFContribution(FitContribution):
         return self._getMetaValue("qmax")
 
     def setQmin(self, qmin):
-        """Set the qmin value.
-        """
+        """Set the qmin value."""
         self._meta["qmin"] = qmin
         for gen in self._generators.values():
             gen.setQmin(qmin)
@@ -308,5 +306,6 @@ class PDFContribution(FitContribution):
     def getQmin(self):
         """Get the qmin value."""
         return self._getMetaValue("qmin")
+
 
 # End of file

@@ -12,9 +12,7 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
-"""Class for adapting a sas DataInfo objects to the Profile interface.
-"""
+"""Class for adapting a sas DataInfo objects to the Profile interface."""
 
 __all__ = ["SASProfile"]
 
@@ -55,14 +53,12 @@ class SASProfile(Profile):
                 parser.
 
     _datainfo   --  The DataInfo object this wraps.
-
     """
 
     def __init__(self, datainfo):
         """Initialize the attributes.
 
         datainfo   --  The DataInfo object this wraps.
-
         """
         self._datainfo = datainfo
         Profile.__init__(self)
@@ -75,7 +71,7 @@ class SASProfile(Profile):
             self._dyobs = self._datainfo.dy
         return
 
-    def setObservedProfile(self, xobs, yobs, dyobs = None):
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         This is overloaded to change the value within the datainfo object.
@@ -89,7 +85,6 @@ class SASProfile(Profile):
 
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
-
         """
         Profile.setObservedProfile(self, xobs, yobs, dyobs)
         # Copy the arrays to the _datainfo attribute.

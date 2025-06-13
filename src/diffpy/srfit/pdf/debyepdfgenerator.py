@@ -12,13 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """PDF profile generator using the Debye equation.
 
 The DebyePDFGenerator class can take a diffpy.structure,
-pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and calculate
-the PDF from it. This generator is especially appropriate for isolated
-scatterers, such as nanoparticles and molecules.
+pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and
+calculate the PDF from it. This generator is especially appropriate for
+isolated scatterers, such as nanoparticles and molecules.
 """
 
 __all__ = ["DebyePDFGenerator"]
@@ -63,10 +62,9 @@ class DebyePDFGenerator(BasePDFGenerator):
     delta2  --  See Managed Parameters.
     qbroad  --  See Managed Parameters.
     qdamp   --  See Managed Parameters.
-
     """
 
-    def setStructure(self, stru, name = "phase", periodic = False):
+    def setStructure(self, stru, name="phase", periodic=False):
         """Set the structure that will be used to calculate the PDF.
 
         This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
@@ -82,12 +80,10 @@ class DebyePDFGenerator(BasePDFGenerator):
                     False). Note that some structures do not support
                     periodicity, in which case this will have no effect on the
                     PDF calculation.
-
         """
         return BasePDFGenerator.setStructure(self, stru, name, periodic)
 
-
-    def setPhase(self, parset, periodic = False):
+    def setPhase(self, parset, periodic=False):
         """Set the phase that will be used to calculate the PDF.
 
         Set the phase directly with a DiffpyStructureParSet,
@@ -102,18 +98,17 @@ class DebyePDFGenerator(BasePDFGenerator):
         periodic -- The structure should be treated as periodic (default True).
                     Note that some structures do not support periodicity, in
                     which case this will be ignored.
-
         """
         return BasePDFGenerator.setPhase(self, parset, periodic)
 
-
-    def __init__(self, name = "pdf"):
-        """Initialize the generator.
-        """
+    def __init__(self, name="pdf"):
+        """Initialize the generator."""
         from diffpy.srreal.pdfcalculator import DebyePDFCalculator
+
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(DebyePDFCalculator())
         return
+
 
 # End class DebyePDFGenerator
 

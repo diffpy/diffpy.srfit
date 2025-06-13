@@ -12,15 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
-"""PDF calculation tools.
-"""
+"""PDF calculation tools."""
 
 __all__ = ["PDFGenerator", "DebyePDFGenerator", "PDFContribution", "PDFParser"]
 
-from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
 from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
 from diffpy.srfit.pdf.pdfcontribution import PDFContribution
+from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
 from diffpy.srfit.pdf.pdfparser import PDFParser
 
 # End of file

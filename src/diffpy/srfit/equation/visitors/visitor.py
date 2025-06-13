@@ -12,12 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Base visitor class.
 
 Visitors work with Literal trees to perform a specified action. They are
-designed according to the visitor pattern
-(http://en.wikipedia.org/wiki/Visitor_pattern).
+designed according to the visitor pattern (
+http://en.wikipedia.org/wiki/Visitor_pattern).
 
 Visitors work with the following Literal classes
 (diffpy.srfit.equation.literals):
@@ -29,11 +28,11 @@ See the Visitor class for the required methods that each Visitor must overload.
 
 __all__ = ["Visitor"]
 
+
 class Visitor(object):
     """Abstract class for all visitors to a Literal tree.
 
     See implemented visitors for examples of use.
-
     """
 
     def onArgument(self, arg):
@@ -47,16 +46,16 @@ class Visitor(object):
     def onEquation(self, eq):
         """Process an Equation node.
 
-        Equations are specialized Operators. They don't need to be specifically
-        supported by a Visitor.
-
+        Equations are specialized Operators. They don't need to be
+        specifically supported by a Visitor.
         """
         return self.onOperator(eq)
 
     # throw an exception
     def _abstract(self, method):
         raise NotImplementedError(
-            "class '%s' should override method '%s'" % (self.__class__.__name__, method))
+            "class '%s' should override method '%s'" % (self.__class__.__name__, method)
+        )
 
 
 # End of file

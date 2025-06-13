@@ -12,13 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
-"""Unit tests for tagmanager.py
-"""
+"""Unit tests for tagmanager.py."""
 
 import unittest
 
 from diffpy.srfit.util.tagmanager import TagManager
+
 
 ##############################################################################
 class TestTagManager(unittest.TestCase):
@@ -32,8 +31,7 @@ class TestTagManager(unittest.TestCase):
         return
 
     def test_tag(self):
-        """check TagManager.tag()
-        """
+        """Check TagManager.tag()"""
         m = self.m
         obj = 3
         m.tag(obj, "3", "three")
@@ -48,8 +46,7 @@ class TestTagManager(unittest.TestCase):
         return
 
     def test_untag(self):
-        """check TagManager.untag()
-        """
+        """Check TagManager.untag()"""
         m = self.m
         obj = 3
         m.tag(obj, "3", "three", "tri", "tres", "trois")
@@ -70,12 +67,11 @@ class TestTagManager(unittest.TestCase):
         return
 
     def test_union_and_intersection(self):
-        """check TagManager.union() and TagManager.intersection()
-        """
+        """Check TagManager.union() and TagManager.intersection()"""
         m = self.m
         m.tag(3, "3", "number")
         m.tag(4, "4", "number")
-        objs = set([3,4])
+        objs = set([3, 4])
         self.assertEqual(m.union(), set())
         self.assertEqual(m.union("number"), objs)
         self.assertEqual(m.union("3"), set([3]))
@@ -95,22 +91,22 @@ class TestTagManager(unittest.TestCase):
         return
 
     def test_hasTags(self):
-        """check TagManager.hasTags()
-        """
+        """Check TagManager.hasTags()"""
         m = self.m
         m.tag(3, "3", "number")
         m.tag(4, "4", "number")
-        self.assertTrue( m.hasTags(3, "3") )
-        self.assertTrue( m.hasTags(3, "3", "number") )
-        self.assertFalse( m.hasTags(3, "3", "4") )
+        self.assertTrue(m.hasTags(3, "3"))
+        self.assertTrue(m.hasTags(3, "3", "number"))
+        self.assertFalse(m.hasTags(3, "3", "4"))
         self.assertRaises(KeyError, m.hasTags, 3, "fail")
         m.silent = True
         self.assertFalse(m.hasTags(3, "fail"))
         return
 
+
 # End of class TestTagManager
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
 
 # End of file

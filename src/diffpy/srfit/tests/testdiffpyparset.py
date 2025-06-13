@@ -12,39 +12,39 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for diffpy.srfit.structure package."""
 
-import unittest
 import pickle
+import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from diffpy.srfit.tests.utils import _msg_nostructure, has_structure
 
 # Global variables to be assigned in setUp
 Atom = Lattice = Structure = DiffpyStructureParSet = None
 
 # ----------------------------------------------------------------------------
 
+
 @unittest.skipUnless(has_structure, _msg_nostructure)
 class TestParameterAdapter(unittest.TestCase):
 
     def setUp(self):
         global Atom, Lattice, Structure, DiffpyStructureParSet
-        from diffpy.structure import Atom, Lattice, Structure
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
-        return
+        from diffpy.structure import Atom, Lattice, Structure
 
+        return
 
     def testDiffpyStructureParSet(self):
         """Test the structure conversion."""
 
-        a1 = Atom("Cu", xyz = numpy.array([.0, .1, .2]), Uisoequiv = 0.003)
-        a2 = Atom("Ag", xyz = numpy.array([.3, .4, .5]), Uisoequiv = 0.002)
+        a1 = Atom("Cu", xyz=numpy.array([0.0, 0.1, 0.2]), Uisoequiv=0.003)
+        a2 = Atom("Ag", xyz=numpy.array([0.3, 0.4, 0.5]), Uisoequiv=0.002)
         l = Lattice(2.5, 2.5, 2.5, 90, 90, 90)
 
-        dsstru = Structure([a1,a2], l)
+        dsstru = Structure([a1, a2], l)
         # Structure makes copies
         a1 = dsstru[0]
         a2 = dsstru[1]
@@ -63,14 +63,14 @@ class TestParameterAdapter(unittest.TestCase):
             self.assertEqual(a2.Bisoequiv, s.Ag0.Biso.getValue())
             for i in range(1, 4):
                 for j in range(i, 4):
-                    uijstru = getattr(a1, "U%i%i"%(i,j))
-                    uij = getattr(s.Cu0, "U%i%i"%(i,j)).getValue()
-                    uji = getattr(s.Cu0, "U%i%i"%(j,i)).getValue()
+                    uijstru = getattr(a1, "U%i%i" % (i, j))
+                    uij = getattr(s.Cu0, "U%i%i" % (i, j)).getValue()
+                    uji = getattr(s.Cu0, "U%i%i" % (j, i)).getValue()
                     self.assertEqual(uijstru, uij)
                     self.assertEqual(uijstru, uji)
-                    bijstru = getattr(a1, "B%i%i"%(i,j))
-                    bij = getattr(s.Cu0, "B%i%i"%(i,j)).getValue()
-                    bji = getattr(s.Cu0, "B%i%i"%(j,i)).getValue()
+                    bijstru = getattr(a1, "B%i%i" % (i, j))
+                    bij = getattr(s.Cu0, "B%i%i" % (i, j)).getValue()
+                    bji = getattr(s.Cu0, "B%i%i" % (j, i)).getValue()
                     self.assertEqual(bijstru, bij)
                     self.assertEqual(bijstru, bji)
 
@@ -78,7 +78,6 @@ class TestParameterAdapter(unittest.TestCase):
             self.assertEqual(a1.xyz[1], s.Cu0.y.getValue())
             self.assertEqual(a1.xyz[2], s.Cu0.z.getValue())
             return
-
 
         def _testLattice():
 
@@ -114,10 +113,8 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertNotEqual(d, dsstru.lattice.dist(a1.xyz, a2.xyz))
         return
 
-
     def test___repr__(self):
-        """Test representation of DiffpyStructureParSet objects.
-        """
+        """Test representation of DiffpyStructureParSet objects."""
         lat = Lattice(3, 3, 2, 90, 90, 90)
         atom = Atom("C", [0, 0.2, 0.5])
         stru = Structure([atom], lattice=lat)
@@ -127,10 +124,8 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertEqual(repr(atom), repr(dsps.atoms[0]))
         return
 
-
     def test_pickling(self):
-        """Test pickling of DiffpyStructureParSet.
-        """
+        """Test pickling of DiffpyStructureParSet."""
         stru = Structure([Atom("C", [0, 0.2, 0.5])])
         dsps = DiffpyStructureParSet("dsps", stru)
         data = pickle.dumps(dsps)
@@ -138,6 +133,7 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertEqual(1, len(dsps2.atoms))
         self.assertEqual(0.2, dsps2.atoms[0].y.value)
         return
+
 
 # End of class TestParameterAdapter
 

@@ -12,24 +12,24 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """FitContribution class.
 
 FitContributions generate a residual function for a FitRecipe. A
-FitContribution associates an Equation for generating a signal, optionally one
-or more ProfileGenerators or Calculators that help in this, and a Profile that
-holds the observed and calculated signals.
+FitContribution associates an Equation for generating a signal,
+optionally one or more ProfileGenerators or Calculators that help in
+this, and a Profile that holds the observed and calculated signals.
 
 See the examples in the documention for how to use a FitContribution.
 """
 
 __all__ = ["FitContribution"]
 
-from diffpy.srfit.fitbase.parameterset import ParameterSet
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.srfit.fitbase.parameter import ParameterProxy
-from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.fitbase.parameterset import ParameterSet
+from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+
 
 class FitContribution(ParameterSet):
     """FitContribution class.
@@ -63,7 +63,6 @@ class FitContribution(ParameterSet):
     Properties
     names           --  Variable names (read only). See getNames.
     values          --  Variable values (read only). See getValues.
-
     """
 
     def __init__(self, name):
@@ -80,7 +79,7 @@ class FitContribution(ParameterSet):
         self._manage(self._generators)
         return
 
-    def setProfile(self, profile, xname = None, yname = None, dyname = None):
+    def setProfile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
         profile --  A Profile that specifies the calculation points and that
@@ -97,7 +96,6 @@ class FitContribution(ParameterSet):
                     this is None (default), then the name specified by the
                     Profile for this parameter will be used.  This variable is
                     usable within string equations with the specified name.
-
         """
         # Enforce type of the profile argument
         if not isinstance(profile, Profile):
@@ -121,9 +119,9 @@ class FitContribution(ParameterSet):
         xpar = ParameterProxy(xname, self.profile.xpar)
         ypar = ParameterProxy(yname, self.profile.ypar)
         dypar = ParameterProxy(dyname, self.profile.dypar)
-        self.addParameter(xpar, check = False)
-        self.addParameter(ypar, check = False)
-        self.addParameter(dypar, check = False)
+        self.addParameter(xpar, check=False)
+        self.addParameter(ypar, check=False)
+        self.addParameter(dypar, check=False)
 
         # If we have ProfileGenerators, set their Profiles.
         for gen in self._generators.values():
@@ -131,12 +129,11 @@ class FitContribution(ParameterSet):
 
         # If we have _eq, but not _reseq, set the residual
         if self._eq is not None and self._reseq is None:
-            self.setResidualEquation('chiv')
+            self.setResidualEquation("chiv")
 
         return
 
-
-    def addProfileGenerator(self, gen, name = None):
+    def addProfileGenerator(self, gen, name=None):
         """Add a ProfileGenerator to be used by this FitContribution.
 
         The ProfileGenerator is given a name so that it can be used as part of
@@ -155,7 +152,6 @@ class FitContribution(ParameterSet):
         Raises ValueError if the ProfileGenerator has no name.
         Raises ValueError if the ProfileGenerator has the same name as some
         other managed object.
-
         """
         if name is None:
             name = gen.name
@@ -176,7 +172,7 @@ class FitContribution(ParameterSet):
 
         return
 
-    def setEquation(self, eqstr, ns = {}):
+    def setEquation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual
@@ -194,11 +190,9 @@ class FitContribution(ParameterSet):
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
-
         """
         # Build the equation instance.
-        eq = equationFromString(eqstr, self._eqfactory,
-                                buildargs=True, ns=ns)
+        eq = equationFromString(eqstr, self._eqfactory, buildargs=True, ns=ns)
         eq.name = "eq"
 
         # Register any new Parameters.
@@ -212,10 +206,9 @@ class FitContribution(ParameterSet):
 
         # Set the residual if we need to
         if self.profile is not None and self._reseq is None:
-            self.setResidualEquation('chiv')
+            self.setResidualEquation("chiv")
 
         return
-
 
     def getEquation(self):
         """Get math expression string for the active profile equation.
@@ -224,11 +217,11 @@ class FitContribution(ParameterSet):
         equation has not been set yet.
         """
         from diffpy.srfit.equation.visitors import getExpression
+
         rv = ""
         if self._eq is not None:
             rv = getExpression(self._eq)
         return rv
-
 
     def setResidualEquation(self, eqstr):
         """Set the residual equation for the FitContribution.
@@ -249,7 +242,6 @@ class FitContribution(ParameterSet):
         Raises SrFitError if the Profile is not yet defined.
         Raises ValueError if eqstr depends on a Parameter that is not part of
         the FitContribution.
-
         """
         if self.profile is None:
             raise SrFitError("Assign the Profile first")
@@ -271,7 +263,6 @@ class FitContribution(ParameterSet):
 
         return
 
-
     def getResidualEquation(self):
         """Get math expression string for the active residual equation.
 
@@ -279,11 +270,11 @@ class FitContribution(ParameterSet):
         equation has not been configured yet.
         """
         from diffpy.srfit.equation.visitors import getExpression
+
         rv = ""
         if self._reseq is not None:
-            rv = getExpression(self._reseq, eqskip='eq$')
+            rv = getExpression(self._reseq, eqskip="eq$")
         return rv
-
 
     def residual(self):
         """Calculate the residual for this fitcontribution.
@@ -298,7 +289,6 @@ class FitContribution(ParameterSet):
 
         The residual equation can be changed with the setResidualEquation
         method.
-
         """
         # Assign the calculated profile
         self.profile.ycalc = self._eq()
@@ -306,32 +296,28 @@ class FitContribution(ParameterSet):
         # the following will not recompute the equation.
         return self._reseq()
 
-
     def evaluate(self):
-        """Evaluate the contribution equation and update profile.ycalc.
-        """
+        """Evaluate the contribution equation and update profile.ycalc."""
         yc = self._eq()
         if self.profile is not None:
             self.profile.ycalc = yc
         return yc
 
-
     def _validate(self):
         """Validate my state.
 
-        This performs profile validations.
-        This performs ProfileGenerator validations.
-        This validates _eq.
-        This validates _reseq and residual.
+        This performs profile validations. This performs
+        ProfileGenerator validations. This validates _eq. This validates
+        _reseq and residual.
 
         Raises SrFitError if validation fails.
-
         """
         self.profile._validate()
         ParameterSet._validate(self)
 
         # Try to get the value of eq.
         from diffpy.srfit.equation.visitors import validate
+
         try:
             validate(self._eq)
         except ValueError as e:
@@ -343,7 +329,7 @@ class FitContribution(ParameterSet):
         try:
             val = self._eq()
         except TypeError as e:
-            raise SrFitError("_eq cannot be evaluated: %s"%e)
+            raise SrFitError("_eq cannot be evaluated: %s" % e)
 
         if val is None:
             raise SrFitError("_eq evaluates to None")
@@ -360,5 +346,6 @@ class FitContribution(ParameterSet):
         if val is None:
             raise SrFitError("residual evaluates to None")
         return
+
 
 # End of file

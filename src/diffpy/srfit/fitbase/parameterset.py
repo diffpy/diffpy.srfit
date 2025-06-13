@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """ParameterSet class.
 
 ParameterSets organize Parameters, Constraints, Restraints and other
@@ -56,14 +55,12 @@ class ParameterSet(RecipeOrganizer):
     Properties
     names           --  Variable names (read only). See getNames.
     values          --  Variable values (read only). See getValues.
-
     """
 
     def __init__(self, name):
         """Initialize.
 
         name    --  The name of this ParameterSet.
-
         """
         RecipeOrganizer.__init__(self, name)
 
@@ -84,7 +81,6 @@ class ParameterSet(RecipeOrganizer):
         Raises ValueError if the ParameterSet has no name.
         Raises ValueError if the ParameterSet has the same name as some other
         managed object.
-
         """
         self._addObject(parset, self._parsets, True)
         return
@@ -93,22 +89,21 @@ class ParameterSet(RecipeOrganizer):
         """Remove a ParameterSet from the hierarchy.
 
         Raises ValueError if parset is not managed by this object.
-
         """
         self._removeObject(parset, self._parsets)
         return
 
-    def setConst(self, const = True):
+    def setConst(self, const=True):
         """Set every parameter within the set to a constant.
 
         const   --  Flag indicating if the parameter is constant (default
                     True).
-
         """
         for par in self.iterPars():
             par.setConst(const)
 
         return
+
 
 # End class ParameterSet
 

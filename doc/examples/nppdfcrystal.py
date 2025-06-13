@@ -12,29 +12,29 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of fitting a crystal-like nanoparticle (nanocrystal) PDF.
 
-This is an example of modeling the PDF from a nanocrystal as an attenuated bulk
-PDF. This involves a crystal PDF calculation and a spherical nanoparticle
-characteristic function.
-The equation we model is
-Gnano(r) = f(r) * Gbulk(r),
-where f(r) is the nanoparticle characteristic function for the nanoparticle
-shape. Functions for calculating the characteristic function in the
+This is an example of modeling the PDF from a nanocrystal as an
+attenuated bulk PDF. This involves a crystal PDF calculation and a
+spherical nanoparticle characteristic function. The equation we model is
+Gnano(r) = f(r) * Gbulk(r), where f(r) is the nanoparticle
+characteristic function for the nanoparticle shape. Functions for
+calculating the characteristic function in the
 diffpy.srfit.pdf.characteristicfunctions module.
 """
 
 import numpy
-
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+)
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
 
-from gaussianrecipe import scipyOptimize
 
 def makeRecipe(ciffile, grdata):
     """Make a recipe to model a crystal-like nanoparticle PDF."""
@@ -45,10 +45,10 @@ def makeRecipe(ciffile, grdata):
     pdfparser = PDFParser()
     pdfparser.parseFile(grdata)
     pdfprofile.loadParsedData(pdfparser)
-    pdfprofile.setCalculationRange(xmin = 0.1, xmax = 20)
+    pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
-    pdfcontribution.setProfile(pdfprofile, xname = "r")
+    pdfcontribution.setProfile(pdfprofile, xname="r")
 
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)
@@ -58,7 +58,8 @@ def makeRecipe(ciffile, grdata):
 
     # Register the nanoparticle shape factor.
     from diffpy.srfit.pdf.characteristicfunctions import sphericalCF
-    pdfcontribution.registerFunction(sphericalCF, name = "f")
+
+    pdfcontribution.registerFunction(sphericalCF, name="f")
 
     # Now we set up the fitting equation.
     pdfcontribution.setEquation("f * G")
@@ -79,6 +80,7 @@ def makeRecipe(ciffile, grdata):
 
     return recipe
 
+
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
@@ -96,18 +98,20 @@ def plotResults(recipe):
     fr *= max(g) / fr[0]
 
     import pylab
-    pylab.plot(r,g,'bo',label="G(r) Data")
-    pylab.plot(r, gcryst,'y--',label="G(r) Crystal")
-    pylab.plot(r, fr,'k--',label="f(r) calculated (scaled)")
-    pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,diff,'g-',label="G(r) diff")
-    pylab.plot(r, diffzero,'k-')
+
+    pylab.plot(r, g, "bo", label="G(r) Data")
+    pylab.plot(r, gcryst, "y--", label="G(r) Crystal")
+    pylab.plot(r, fr, "k--", label="f(r) calculated (scaled)")
+    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
+    pylab.plot(r, diff, "g-", label="G(r) diff")
+    pylab.plot(r, diffzero, "k-")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
 
     pylab.show()
     return
+
 
 if __name__ == "__main__":
 

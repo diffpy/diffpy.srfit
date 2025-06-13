@@ -12,10 +12,10 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """This module contains parsers for PDF data.
 
-PDFParser is suitable for parsing data generated from PDFGetN and PDFGetX.
+PDFParser is suitable for parsing data generated from PDFGetN and
+PDFGetX.
 
 See the class documentation for more information.
 """
@@ -23,10 +23,12 @@ See the class documentation for more information.
 __all__ = ["PDFParser"]
 
 import re
+
 import numpy
 
 from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
+
 
 class PDFParser(ProfileParser):
     """Class for holding a diffraction pattern.
@@ -72,7 +74,6 @@ class PDFParser(ProfileParser):
     scale       --  Data scale (float)
     temperature --  Temperature (float)
     doping      --  Doping (float)
-
     """
 
     _format = "PDF"
@@ -88,18 +89,17 @@ class PDFParser(ProfileParser):
         patstring   --  A string containing the pattern
 
         Raises ParseError if the string cannot be parsed
-
         """
         # useful regex patterns:
-        rx = { 'f' : r'[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE][-+]?\d+)?' }
+        rx = {"f": r"[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE][-+]?\d+)?"}
         # find where does the data start
-        res = re.search(r'^#+ start data\s*(?:#.*\s+)*', patstring, re.M)
+        res = re.search(r"^#+ start data\s*(?:#.*\s+)*", patstring, re.M)
         # start_data is position where the first data line starts
         if res:
             start_data = res.end()
         else:
             # find line that starts with a floating point number
-            regexp = r'^\s*%(f)s' % rx
+            regexp = r"^\s*%(f)s" % rx
             res = re.search(regexp, patstring, re.M)
             if res:
                 start_data = res.start()
@@ -109,19 +109,19 @@ class PDFParser(ProfileParser):
         databody = patstring[start_data:].strip()
 
         # find where the metadata starts
-        metadata = ''
-        res = re.search(r'^#+\ +metadata\b\n', header, re.M)
+        metadata = ""
+        res = re.search(r"^#+\ +metadata\b\n", header, re.M)
         if res:
-            metadata = header[res.end():]
-            header = header[:res.start()]
+            metadata = header[res.end() :]
+            header = header[: res.start()]
 
         # parse header
         meta = self._meta
         # stype
-        if re.search('(x-?ray|PDFgetX)', header, re.I):
-            meta["stype"] = 'X'
-        elif re.search('(neutron|PDFgetN)', header, re.I):
-            meta["stype"] = 'N'
+        if re.search("(x-?ray|PDFgetX)", header, re.I):
+            meta["stype"] = "X"
+        elif re.search("(neutron|PDFgetN)", header, re.I):
+            meta["stype"] = "N"
         # qmin
         regexp = r"\bqmin *= *(%(f)s)\b" % rx
         res = re.search(regexp, header, re.I)
@@ -156,12 +156,12 @@ class PDFParser(ProfileParser):
         regexp = r"\b(?:temp|temperature|T)\ *=\ *(%(f)s)\b" % rx
         res = re.search(regexp, header)
         if res:
-            meta['temperature'] = float(res.groups()[0])
+            meta["temperature"] = float(res.groups()[0])
         # doping
         regexp = r"\b(?:x|doping)\ *=\ *(%(f)s)\b" % rx
         res = re.search(regexp, header)
         if res:
-            meta['doping'] = float(res.groups()[0])
+            meta["doping"] = float(res.groups()[0])
 
         # parsing gerneral metadata
         if metadata:
@@ -170,12 +170,12 @@ class PDFParser(ProfileParser):
                 res = re.search(regexp, metadata, re.M)
                 if res:
                     meta[res.groups()[0]] = float(res.groups()[1])
-                    metadata = metadata[res.end():]
+                    metadata = metadata[res.end() :]
                 else:
                     break
 
         # read actual data - robs, Gobs, drobs, dGobs
-        inf_or_nan = re.compile('(?i)^[+-]?(NaN|Inf)\\b')
+        inf_or_nan = re.compile("(?i)^[+-]?(NaN|Inf)\\b")
         has_drobs = True
         has_dGobs = True
         # raise ParseError if something goes wrong
@@ -190,15 +190,13 @@ class PDFParser(ProfileParser):
                 robs.append(float(v[0]))
                 Gobs.append(float(v[1]))
                 # drobs is valid if all values are defined and positive
-                has_drobs = (has_drobs and
-                        len(v) > 2 and not inf_or_nan.match(v[2]))
+                has_drobs = has_drobs and len(v) > 2 and not inf_or_nan.match(v[2])
                 if has_drobs:
                     v2 = float(v[2])
                     has_drobs = v2 > 0.0
                     drobs.append(v2)
                 # dGobs is valid if all values are defined and positive
-                has_dGobs = (has_dGobs and
-                        len(v) > 3 and not inf_or_nan.match(v[3]))
+                has_dGobs = has_dGobs and len(v) > 3 and not inf_or_nan.match(v[3])
                 if has_dGobs:
                     v3 = float(v[3])
                     has_dGobs = v3 > 0.0
@@ -219,5 +217,6 @@ class PDFParser(ProfileParser):
 
         self._banks.append([robs, Gobs, drobs, dGobs])
         return
+
 
 # End of PDFParser

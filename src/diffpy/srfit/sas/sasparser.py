@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """This module contains parsers for SAS data.
 
 SASParser uses the sas DataLoader class to load data.
@@ -65,7 +64,6 @@ class SASParser(ProfileParser):
     Metadata - These may appear in the metadata dictionary
 
     datainfo    --  The DataInfo object used to do the data parsing.
-
     """
 
     _format = "SAS"
@@ -80,10 +78,9 @@ class SASParser(ProfileParser):
 
         Raises IOError if the file cannot be read
         Raises ParseError if the file cannot be parsed
-
         """
 
-        Loader = sasimport('sas.dataloader.loader').Loader
+        Loader = sasimport("sas.dataloader.loader").Loader
         loader = Loader()
 
         try:
@@ -113,12 +110,12 @@ class SASParser(ProfileParser):
         patstring   --  A string containing the pattern
 
         Raises ParseError if the string cannot be parsed
-
         """
         # This calls on parseFile, as that is how the sas data loader works.
         import tempfile
+
         fh, fn = tempfile.mkstemp()
-        outfile = open(fn, 'w')
+        outfile = open(fn, "w")
         fn.write(patstring)
         outfile.close()
         self.parseFile(fn)
@@ -127,6 +124,7 @@ class SASParser(ProfileParser):
 
         # Close the temporary file and delete it
         import os
+
         os.close(fh)
         os.remove(fn)
         return

@@ -12,13 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Nanoparticle form factor P(r) calculator.
 
 The PrCalculator class wraps a sas.pr.invertor.Invertor object as a
-Calculator. This is not wrapped as a ProfileGenerator because it will be used
-to share information between SAS I(Q) to PDF G(r), but it does not use the same
-profile as the PDF, which is where the calculator will be applied.
+Calculator. This is not wrapped as a ProfileGenerator because it will be
+used to share information between SAS I(Q) to PDF G(r), but it does not
+use the same profile as the PDF, which is where the calculator will be
+applied.
 """
 
 __all__ = ["PrCalculator", "CFCalculator"]
@@ -52,14 +52,12 @@ class PrCalculator(Calculator):
     q           --  The q-values of the I(q) signal
     iq          --  The I(q) signal
     diq         --  The uncertainty in I(q)
-
     """
 
     def __init__(self, name):
         """Initialize the generator.
 
         name        --  A name for the PrCalculator
-
         """
         Calculator.__init__(self, name)
 
@@ -67,7 +65,8 @@ class PrCalculator(Calculator):
         global Invertor
         if Invertor is None:
             from diffpy.srfit.sas.sasimport import sasimport
-            Invertor = sasimport('sas.pr.invertor').Invertor
+
+            Invertor = sasimport("sas.pr.invertor").Invertor
 
         self._invertor = Invertor()
 
@@ -97,7 +96,9 @@ class PrCalculator(Calculator):
         pr = numpy.array(pr)
         return self.scale.value * pr
 
+
 # End class PrCalculator
+
 
 class CFCalculator(PrCalculator):
     """A class for calculating the characteristic function (CF) from data.
@@ -117,7 +118,6 @@ class CFCalculator(PrCalculator):
     q           --  The q-values of the I(q) signal
     iq          --  The I(q) signal
     diq         --  The uncertainty in I(q)
-
     """
 
     def __call__(self, r):
@@ -129,5 +129,6 @@ class CFCalculator(PrCalculator):
             # other choice.
             fr[0] = 1
         return fr
+
 
 # End class CFCalculator

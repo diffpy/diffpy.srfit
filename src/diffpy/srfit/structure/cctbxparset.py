@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Wrappers for interfacing cctbx crystal with SrFit.
 
 This wraps a cctbx.crystal as a ParameterSet with a similar hierarchy, which
@@ -32,12 +31,11 @@ from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 
-__all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet",
-           "CCTBXCrystalParSet"]
+__all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet", "CCTBXCrystalParSet"]
 
 
 class CCTBXScattererParSet(ParameterSet):
-    """A wrapper for cctbx.xray.scatterer
+    """A wrapper for cctbx.xray.scatterer.
 
     This class derives from ParameterSet.
 
@@ -49,32 +47,33 @@ class CCTBXScattererParSet(ParameterSet):
     occupancy   --  Occupancy of the atom on its crystal location
                     (ParameterAdapter)
     Uiso        --  Isotropic scattering factor (ParameterAdapter).
-
     """
 
     def __init__(self, name, strups, idx):
-        """Initialize
+        """Initialize.
 
         name    --  The name of this scatterer.
         strups  --  The CCTBXCrystalParSet that contains the cctbx structure
         idx     --  The index of the scatterer in the structure.
-
         """
         ParameterSet.__init__(self, name)
         self.strups = strups
         self.idx = idx
 
         # x, y, z, occupancy
-        self.addParameter(ParameterAdapter("x", None, self._xyzgetter(0),
-            self._xyzsetter(0)))
-        self.addParameter(ParameterAdapter("y", None, self._xyzgetter(1),
-            self._xyzsetter(1)))
-        self.addParameter(ParameterAdapter("z", None, self._xyzgetter(2),
-            self._xyzsetter(2)))
-        self.addParameter(ParameterAdapter("occupancy", None, self._getocc,
-            self._setocc))
-        self.addParameter(ParameterAdapter("Uiso", None, self._getuiso,
-            self._setuiso))
+        self.addParameter(
+            ParameterAdapter("x", None, self._xyzgetter(0), self._xyzsetter(0))
+        )
+        self.addParameter(
+            ParameterAdapter("y", None, self._xyzgetter(1), self._xyzsetter(1))
+        )
+        self.addParameter(
+            ParameterAdapter("z", None, self._xyzgetter(2), self._xyzsetter(2))
+        )
+        self.addParameter(
+            ParameterAdapter("occupancy", None, self._getocc, self._setocc)
+        )
+        self.addParameter(ParameterAdapter("Uiso", None, self._getuiso, self._setuiso))
         return
 
     # Getters and setters
@@ -115,7 +114,9 @@ class CCTBXScattererParSet(ParameterSet):
 
     element = property(_getElem)
 
+
 # End class CCTBXScattererParSet
+
 
 class CCTBXUnitCellParSet(ParameterSet):
     """A wrapper for cctbx unit_cell object.
@@ -123,32 +124,36 @@ class CCTBXUnitCellParSet(ParameterSet):
     Attributes:
     name    --  Always "unitcell".
     a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterAdapter).
-
     """
 
     def __init__(self, strups):
-        """Initialize
+        """Initialize.
 
         strups  --  The CCTBXCrystalParSet that contains the cctbx structure
                     and the unit cell we're wrapper.
-
         """
         ParameterSet.__init__(self, "unitcell")
         self.strups = strups
         self._latpars = list(self.strups.stru.unit_cell().parameters())
 
-        self.addParameter(ParameterAdapter("a", None, self._latgetter(0),
-            self._latsetter(0)))
-        self.addParameter(ParameterAdapter("b", None, self._latgetter(1),
-            self._latsetter(1)))
-        self.addParameter(ParameterAdapter("c", None, self._latgetter(2),
-            self._latsetter(2)))
-        self.addParameter(ParameterAdapter("alpha", None, self._latgetter(3),
-            self._latsetter(3)))
-        self.addParameter(ParameterAdapter("beta", None, self._latgetter(4),
-            self._latsetter(4)))
-        self.addParameter(ParameterAdapter("gamma", None, self._latgetter(5),
-            self._latsetter(5)))
+        self.addParameter(
+            ParameterAdapter("a", None, self._latgetter(0), self._latsetter(0))
+        )
+        self.addParameter(
+            ParameterAdapter("b", None, self._latgetter(1), self._latsetter(1))
+        )
+        self.addParameter(
+            ParameterAdapter("c", None, self._latgetter(2), self._latsetter(2))
+        )
+        self.addParameter(
+            ParameterAdapter("alpha", None, self._latgetter(3), self._latsetter(3))
+        )
+        self.addParameter(
+            ParameterAdapter("beta", None, self._latgetter(4), self._latsetter(4))
+        )
+        self.addParameter(
+            ParameterAdapter("gamma", None, self._latgetter(5), self._latsetter(5))
+        )
 
         return
 
@@ -173,6 +178,7 @@ class CCTBXUnitCellParSet(ParameterSet):
 
 # FIXME - Special positions should be constant.
 
+
 class CCTBXCrystalParSet(BaseStructureParSet):
     """A wrapper for CCTBX structure.
 
@@ -180,15 +186,13 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     stru        --  The adapted cctbx structure object.
     scatterers  --  The list of ScattererParSets.
     unitcell    --  The CCTBXUnitCellParSet for the structure.
-
     """
 
     def __init__(self, name, stru):
-        """Initialize
+        """Initialize.
 
         name    --  A name for this
         stru    --  A CCTBX structure instance.
-
         """
         ParameterSet.__init__(self, name)
         self.stru = stru
@@ -201,14 +205,15 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         for s in stru.scatterers():
             el = s.element_symbol()
             i = cdict.get(el, 0)
-            sname = "%s%i"%(el,i)
-            cdict[el] = i+1
+            sname = "%s%i" % (el, i)
+            cdict[el] = i + 1
             scatterer = CCTBXScattererParSet(sname, self, i)
             self.addParameterSet(scatterer)
             self.scatterers.append(scatterer)
 
         # Constrain the lattice
         from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
+
         symbol = self.getSpaceGroup()
         _constrainSpaceGroup(self, symbol)
 
@@ -218,9 +223,9 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         """Update the unit_cell to a change in lattice parameters.
 
         This remakes the unit cell according to a change in the lattice
-        parameters. Call this function before using the CCTBXCrystalParSet.
-        The unit_cell will only be remade if necessary.
-
+        parameters. Call this function before using the
+        CCTBXCrystalParSet. The unit_cell will only be remade if
+        necessary.
         """
         if not self._update:
             return
@@ -231,16 +236,11 @@ class CCTBXCrystalParSet(BaseStructureParSet):
 
         # Create the symmetry object
         from cctbx.crystal import symmetry
-        symm = symmetry(
-                unit_cell = self.unitcell._latpars,
-                space_group_symbol = sgn
-                )
+
+        symm = symmetry(unit_cell=self.unitcell._latpars, space_group_symbol=sgn)
 
         # Now the new structure
-        newstru = stru.__class__(
-                crystal_symmetry = symm,
-                scatterers = stru.scatterers()
-                )
+        newstru = stru.__class__(crystal_symmetry=symm, scatterers=stru.scatterers())
 
         self.unitcell._latpars = list(newstru.unit_cell().parameters())
 
@@ -263,11 +263,10 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     def getScatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
-        The site positions must be accessible from the list entries via the
-        names "x", "y", and "z". The ADPs must be accessible as well, but the
-        name and nature of the ADPs (U-factors, B-factors, isotropic,
-        anisotropic) depends on the adapted structure.
-
+        The site positions must be accessible from the list entries via
+        the names "x", "y", and "z". The ADPs must be accessible as
+        well, but the name and nature of the ADPs (U-factors, B-factors,
+        isotropic, anisotropic) depends on the adapted structure.
         """
         return self.scatterers
 
@@ -276,7 +275,6 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         sg = self.stru.space_group()
         t = sg.type()
         return t.lookup_symbol()
-
 
 
 # End class CCTBXCrystalParSet

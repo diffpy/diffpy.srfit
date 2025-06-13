@@ -12,21 +12,20 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Restraints class.
 
 Restraints are used by RecipeOrganizers to organize restraint equations.
-Restraints store an Equation, bounds on its value, and the form of the penalty
-function for breaking a restraint. This penalty is added to the residual
-equation calculated by a FitRecipe.
+Restraints store an Equation, bounds on its value, and the form of the
+penalty function for breaking a restraint. This penalty is added to the
+residual equation calculated by a FitRecipe.
 """
 
 __all__ = ["Restraint"]
 
 from numpy import inf
 
-from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase.validatable import Validatable
 
 
 class Restraint(Validatable):
@@ -46,10 +45,9 @@ class Restraint(Validatable):
     (max(0, lb - val, val - ub)/sig)**2
     and val is the value of the calculated equation.  This is multipled by the
     average chi^2 if scaled is True.
-
     """
 
-    def __init__(self, eq, lb = -inf, ub = inf, sig = 1, scaled = False):
+    def __init__(self, eq, lb=-inf, ub=inf, sig=1, scaled=False):
         """Restrain an equation to specified bounds.
 
         eq      --  An equation whose evaluation is compared against the
@@ -62,7 +60,6 @@ class Restraint(Validatable):
         scaled  --  A flag indicating if the restraint is scaled (multiplied)
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (bool, default False).
-
         """
         self.eq = eq
         self.lb = float(lb)
@@ -71,17 +68,16 @@ class Restraint(Validatable):
         self.scaled = bool(scaled)
         return
 
-    def penalty(self, w = 1.0):
+    def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
         w   --  The point-average chi^2 which is optionally used to scale the
                 penalty (default 1.0).
 
         Returns the penalty as a float
-
         """
         val = self.eq()
-        penalty = (max(0, self.lb - val, val - self.ub) / self.sig)**2
+        penalty = (max(0, self.lb - val, val - self.ub) / self.sig) ** 2
 
         if self.scaled:
             penalty *= w
@@ -94,11 +90,11 @@ class Restraint(Validatable):
         This validates eq.
 
         Raises SrFitError if validation fails.
-
         """
         if self.eq is None:
             raise SrFitError("eq is None")
         from diffpy.srfit.equation.visitors import validate
+
         try:
             validate(self.eq)
         except ValueError as e:
@@ -114,6 +110,7 @@ class Restraint(Validatable):
                 raise SrFitError("eq evaluates to None")
 
         return
+
 
 # End class Restraint
 

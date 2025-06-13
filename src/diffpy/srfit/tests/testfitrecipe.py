@@ -12,17 +12,16 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 import unittest
 
-from numpy import linspace, array_equal, pi, sin, dot
+from numpy import array_equal, dot, linspace, pi, sin
 
-from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
-from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.tests.utils import capturestdout
 
 
@@ -152,16 +151,17 @@ class TestFitRecipe(unittest.TestCase):
 
         # Change the c value to 1 so that the equation evaluates as sin(x+1)
         x = self.profile.x
-        y = sin(x+1)
+        y = sin(x + 1)
         self.recipe.cont.c.setValue(1)
         res = self.recipe.residual()
-        self.assertTrue(array_equal(y-self.profile.y, res))
+        self.assertTrue(array_equal(y - self.profile.y, res))
 
         # Try some constraints
         # Make c = 2*A, A = Avar
         var = self.recipe.newVar("Avar")
-        self.recipe.constrain(self.fitcontribution.c,
-                              "2*A", {"A": self.fitcontribution.A})
+        self.recipe.constrain(
+            self.fitcontribution.c, "2*A", {"A": self.fitcontribution.A}
+        )
         self.assertEqual(2, self.fitcontribution.c.value)
         self.recipe.constrain(self.fitcontribution.A, var)
         self.assertEqual(1, var.getValue())
@@ -170,9 +170,9 @@ class TestFitRecipe(unittest.TestCase):
         self.assertEqual(2, self.fitcontribution.c.value)
         # The equation should evaluate to sin(x+2)
         x = self.profile.x
-        y = sin(x+2)
+        y = sin(x + 2)
         res = self.recipe.residual()
-        self.assertTrue(array_equal(y-self.profile.y, res))
+        self.assertTrue(array_equal(y - self.profile.y, res))
 
         # Now try some restraints. We want c to be exactly zero. It should give
         # a penalty of (c-0)**2, which is 4 in this case
@@ -202,9 +202,9 @@ class TestFitRecipe(unittest.TestCase):
         self.fitcontribution.constrain(self.fitcontribution.c, "2*A")
         # This should evaluate to sin(x+2)
         x = self.profile.x
-        y = sin(x+2)
+        y = sin(x + 2)
         res = self.recipe.residual()
-        self.assertTrue(array_equal(y-self.profile.y, res))
+        self.assertTrue(array_equal(y - self.profile.y, res))
 
         # Add a restraint at the fitcontribution level.
         r1 = self.fitcontribution.restrain(self.fitcontribution.c, 0, 0, 1)
@@ -212,7 +212,7 @@ class TestFitRecipe(unittest.TestCase):
         # The chi2 is the same as above, plus 4
         res = self.recipe.residual()
         x = self.profile.x
-        y = sin(x+2)
+        y = sin(x + 2)
         chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
         self.assertAlmostEqual(chi2, dot(res, res))
 
@@ -241,24 +241,25 @@ class TestFitRecipe(unittest.TestCase):
     def testPrintFitHook(self):
         "check output from default PrintFitHook."
         self.recipe.addVar(self.fitcontribution.c)
-        self.recipe.restrain('c', lb=5)
-        pfh, = self.recipe.getFitHooks()
+        self.recipe.restrain("c", lb=5)
+        (pfh,) = self.recipe.getFitHooks()
         out = capturestdout(self.recipe.scalarResidual)
-        self.assertEqual('', out)
+        self.assertEqual("", out)
         pfh.verbose = 1
         out = capturestdout(self.recipe.scalarResidual)
         self.assertTrue(out.strip().isdigit())
-        self.assertFalse('\nRestraints:' in out)
+        self.assertFalse("\nRestraints:" in out)
         pfh.verbose = 2
         out = capturestdout(self.recipe.scalarResidual)
-        self.assertTrue('\nResidual:' in out)
-        self.assertTrue('\nRestraints:' in out)
-        self.assertFalse('\nVariables' in out)
+        self.assertTrue("\nResidual:" in out)
+        self.assertTrue("\nRestraints:" in out)
+        self.assertFalse("\nVariables" in out)
         pfh.verbose = 3
         out = capturestdout(self.recipe.scalarResidual)
-        self.assertTrue('\nVariables' in out)
-        self.assertTrue('c = ' in out)
+        self.assertTrue("\nVariables" in out)
+        self.assertTrue("c = " in out)
         return
+
 
 # End of class TestFitRecipe
 

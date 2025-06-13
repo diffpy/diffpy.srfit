@@ -19,7 +19,6 @@ branches:
   except:
     - /^v[0-9]/
 
-
 before_install:
   - MYNAME=diffpy.srfit
   - MYCOMMIT="$(git rev-parse HEAD)"
@@ -28,25 +27,25 @@ before_install:
   - MYPYTHON=python; MYPIP=pip
   - NOSYS=true; NOAPT=true; NOBREW=true; NOMC=true
   - if ${MYUSEMC}; then
-        NOMC=false;
+    NOMC=false;
     elif [[ ${TRAVIS_OS_NAME} == linux ]]; then
-        NOAPT=false; NOSYS=false;
-        MYPIPFLAGS="--user";
+    NOAPT=false; NOSYS=false;
+    MYPIPFLAGS="--user";
     elif [[ ${TRAVIS_OS_NAME} == osx ]]; then
-        NOBREW=false; NOSYS=false;
-        MYPYTHON=python3;
-        MYPIP=pip3;
-        MYPIPFLAGS="--user";
+    NOBREW=false; NOSYS=false;
+    MYPYTHON=python3;
+    MYPIP=pip3;
+    MYPIPFLAGS="--user";
     fi
   - MYMCREPO=https://repo.anaconda.com/miniconda
   - case ${TRAVIS_OS_NAME} in
     linux)
-        MYMCBUNDLE=Miniconda3-latest-Linux-x86_64.sh ;;
+    MYMCBUNDLE=Miniconda3-latest-Linux-x86_64.sh ;;
     osx)
-        MYMCBUNDLE=Miniconda3-latest-MacOSX-x86_64.sh ;;
+    MYMCBUNDLE=Miniconda3-latest-MacOSX-x86_64.sh ;;
     *)
-        echo "Unsupported operating system." >&2;
-        exit 2 ;;
+    echo "Unsupported operating system." >&2;
+    exit 2 ;;
     esac
   - MYRUNDIR=${PWD}/build/rundir
 
@@ -67,11 +66,11 @@ before_install:
   - $NOAPT || test "${TRAVIS_OS_NAME}" = "linux" || exit $?
   - $NOAPT || PATH="$(echo "$PATH" | sed 's,:/opt/pyenv/[^:]*,,g')"
   - $NOAPT || test "$(which python)" = "/usr/bin/python" || (
-                  which python; exit 1)
+    which python; exit 1)
   - $NOAPT || sudo apt-get update -qq
   - $NOAPT || sudo apt-get install -y
-                  python-dev python-setuptools python-numpy
-                  build-essential
+    python-dev python-setuptools python-numpy
+    build-essential
 
   - $NOBREW || test "${TRAVIS_OS_NAME}" = "osx" || exit $?
   - $NOBREW || brew update
@@ -81,18 +80,17 @@ before_install:
   - $NOSYS || devutils/makesdist
   - $NOSYS || MYTARBUNDLE="$(ls -t "${PWD}"/dist/*.tar.gz | head -1)"
 
-
 install:
   - $NOMC || conda build --python=${MYPYTHON_VERSION} conda-recipe
   - $NOMC || conda render --python=${MYPYTHON_VERSION} --output conda-recipe |
-                sed 's,.*/,,; s/[.]tar[.]bz2$//; s/-/=/g' > /tmp/mypackage.txt
+    sed 's,.*/,,; s/[.]tar[.]bz2$//; s/-/=/g' > /tmp/mypackage.txt
   - $NOMC || source activate testenv
   - $NOMC || conda install --yes --use-local --file=/tmp/mypackage.txt
   - $NOMC || conda install --yes
-                diffpy.structure pyobjcryst "diffpy.srreal>=1.3.0"
+    diffpy.structure pyobjcryst "diffpy.srreal>=1.3.0"
   # TODO - always install srfit-sasview when ready for Python 3.
   - if $MYUSEMC && [[ "$MYPYTHON_VERSION" == 2.7 ]]; then
-        conda install --yes srfit-sasview;
+    conda install --yes srfit-sasview;
     fi
 
   - $NOSYS || $MYPIP install $MYPIPFLAGS coverage
@@ -103,19 +101,16 @@ install:
   - cd ${MYRUNDIR}
   - MYGIT_REV=$($MYPYTHON -c "import ${MYNAME}.version as v; print(v.__git_commit__)")
   - if [[ "${MYCOMMIT}" != "${MYGIT_REV}" ]]; then
-        echo "Version mismatch ${MYCOMMIT} vs ${MYGIT_REV}.";
-        exit 1;
+    echo "Version mismatch ${MYCOMMIT} vs ${MYGIT_REV}.";
+    exit 1;
     fi
-
 
 before_script:
   - $NOBREW || USER_BASE="$(python3 -c 'import site; print(site.USER_BASE)')"
   - $NOBREW || PATH="${USER_BASE}/bin:${PATH}"
 
-
 script:
   - coverage run --source ${MYNAME} -m ${MYNAME}.tests.run
-
 
 after_success:
   # do not post coverage reports when testing with system Python.

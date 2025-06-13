@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Visitor for extracting the Argument entries in a Literal tree.
 
 ArgFinder extracts all Arguments from a literal true.
@@ -29,16 +28,14 @@ class ArgFinder(Visitor):
     Attributes
     args    --  The list of collected Arguments
     getconsts  --  Flag indicating whether to grab constant arguments.
-
     """
 
-    def __init__(self, getconsts = True):
+    def __init__(self, getconsts=True):
         """Initialize.
 
         Arguments
         getconsts   --  Flag indicating whether to grap constant arguments
                         (default True).
-
         """
         self.args = []
         self.getconsts = getconsts
@@ -60,5 +57,6 @@ class ArgFinder(Visitor):
         for arg in op.args:
             arg.identify(self)
         return self.args
+
 
 # End of file

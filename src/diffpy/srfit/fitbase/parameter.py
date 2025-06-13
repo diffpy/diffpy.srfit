@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Parameter classes.
 
 Parameters encapsulate an adjustable parameter within SrFit.
@@ -29,12 +28,12 @@ from functools import wraps
 
 import numpy
 
-from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.equation.literals import Argument
-from diffpy.srfit.util.nameutils import validateName
-from diffpy.srfit.util.argbinders import bind2nd
-from diffpy.srfit.interface import _parameter_interface
+from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.validatable import Validatable
+from diffpy.srfit.interface import _parameter_interface
+from diffpy.srfit.util.argbinders import bind2nd
+from diffpy.srfit.util.nameutils import validateName
 
 
 class Parameter(_parameter_interface, Argument, Validatable):
@@ -50,10 +49,9 @@ class Parameter(_parameter_interface, Argument, Validatable):
     bounds  --  A 2-list defining the bounds on the Parameter. This can be
                 used by some optimizers when the Parameter is varied. See
                 FitRecipe.getBounds and FitRecipe.boundsToRestraints.
-
     """
 
-    def __init__(self, name, value = None, const = False):
+    def __init__(self, name, value=None, const=False):
         """Initialization.
 
         name    --  The name of this Parameter (must be a valid attribute
@@ -63,7 +61,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
                     pi).
 
         Raises ValueError if the name is not a valid attribute identifier
-
         """
         self.constrained = False
         self.bounds = [-numpy.inf, +numpy.inf]
@@ -81,12 +78,11 @@ class Parameter(_parameter_interface, Argument, Validatable):
                     (default), then the upper bound will not be alterered.
 
         Returns self so that mutators can be chained.
-
         """
         Argument.setValue(self, val)
         return self
 
-    def setConst(self, const = True, value = None):
+    def setConst(self, const=True, value=None):
         """Toggle the Parameter as constant.
 
         const   --  Flag indicating if the parameter is constant (default
@@ -96,13 +92,11 @@ class Parameter(_parameter_interface, Argument, Validatable):
                     constant or otherwise.
 
         Returns self so that mutators can be chained.
-
         """
         self.const = bool(const)
         if value is not None:
             self.setValue(value)
         return self
-
 
     def boundRange(self, lb=None, ub=None):
         """Set lower and upper bound of the Parameter.
@@ -118,8 +112,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
             self.bounds[1] = ub
         return self
 
-
-    def boundWindow(self, lr = 0, ur = None):
+    def boundWindow(self, lr=0, ur=None):
         """Create bounds centered on the current value of the Parameter.
 
         lr  --  The radius of the lower bound (default 0). The lower bound is
@@ -129,7 +122,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
                 lower radius is used.
 
         Returns self so that mutators can be chained.
-
         """
         val = self.getValue()
         lb = val - lr
@@ -145,13 +137,14 @@ class Parameter(_parameter_interface, Argument, Validatable):
         This validates that value is not None.
 
         Raises SrFitError if validation fails.
-
         """
         if self.value is None:
-            raise SrFitError("value of '%s' is None"%self.name)
+            raise SrFitError("value of '%s' is None" % self.name)
         return
 
+
 # End class Parameter
+
 
 class ParameterProxy(Parameter):
     """A Parameter proxy for another parameter.
@@ -162,9 +155,7 @@ class ParameterProxy(Parameter):
     name    --  A name for this ParameterProxy. Names should be unique within a
                 RecipeOrganizer and should be valid attribute names.
     par     --  The Parameter this is a proxy for.
-
     """
-
 
     def __init__(self, name, par):
         """Initialization.
@@ -173,7 +164,6 @@ class ParameterProxy(Parameter):
         par     --  The Parameter this is a proxy for.
 
         Raises ValueError if the name is not a valid attribute identifier
-
         """
         validateName(name)
 
@@ -185,8 +175,7 @@ class ParameterProxy(Parameter):
 
     @property
     def constrained(self):
-        """A flag indicating if the proxied Parameter is constrained.
-        """
+        """A flag indicating if the proxied Parameter is constrained."""
         return self.par.constrained
 
     @constrained.setter
@@ -194,13 +183,13 @@ class ParameterProxy(Parameter):
         self.par.constrained = bool(value)
         return
 
-
     @property
     def bounds(self):
         """List of lower and upper bounds of the proxied Parameter.
 
-        This can be used by some optimizers when the Parameter is varied.
-        See FitRecipe.getBounds and FitRecipe.boundsToRestraints.
+        This can be used by some optimizers when the Parameter is
+        varied. See FitRecipe.getBounds and
+        FitRecipe.boundsToRestraints.
         """
         return self.par.bounds
 
@@ -208,7 +197,6 @@ class ParameterProxy(Parameter):
     def bounds(self, value):
         self.par.bounds = value
         return
-
 
     @property
     def _observers(self):
@@ -220,26 +208,21 @@ class ParameterProxy(Parameter):
     def setValue(self, val):
         return self.par.setValue(val)
 
-
     @wraps(Parameter.getValue)
     def getValue(self):
         return self.par.getValue()
-
 
     @wraps(Parameter.setConst)
     def setConst(self, const=True, value=None):
         return self.par.setConst(const, value)
 
-
     @wraps(Parameter.boundRange)
     def boundRange(self, lb=None, ub=None):
         return self.par.boundRange(lb, ub)
 
-
     @wraps(Parameter.boundWindow)
     def boundWindow(self, lr=0, ur=None):
         return self.par.boundWindow(lr, ur)
-
 
     def _validate(self):
         """Validate my state.
@@ -247,12 +230,12 @@ class ParameterProxy(Parameter):
         This validates that value and par are not None.
 
         Raises SrFitError if validation fails.
-
         """
         if self.par is None:
             raise SrFitError("par is None")
         self.par._validate()
         return
+
 
 # End class ParameterProxy
 
@@ -262,10 +245,9 @@ class ParameterAdapter(Parameter):
 
     This class wraps an object as a Parameter. The getValue and setValue
     methods defer to the data of the wrapped object.
-
     """
 
-    def __init__(self, name, obj, getter = None, setter = None, attr = None):
+    def __init__(self, name, obj, getter=None, setter=None, attr=None):
         """Wrap an object as a Parameter.
 
         name    --  The name of this Parameter.
@@ -288,7 +270,6 @@ class ParameterAdapter(Parameter):
 
         Raises ValueError if exactly one of getter or setter is not None, or if
         getter, setter and attr are all None.
-
         """
         if getter is None and setter is None and attr is None:
             raise ValueError("Specify attribute access")
@@ -325,6 +306,7 @@ class ParameterAdapter(Parameter):
             self.setter(self.obj, value)
             self.notify()
         return self
+
 
 # End class ParameterAdapter
 

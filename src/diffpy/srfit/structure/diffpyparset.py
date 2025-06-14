@@ -182,15 +182,9 @@ class DiffpyLatticeParSet(ParameterSet):
         self.addParameter(ParameterAdapter("a", lat, _latgetter("a"), _latsetter("a")))
         self.addParameter(ParameterAdapter("b", lat, _latgetter("b"), _latsetter("b")))
         self.addParameter(ParameterAdapter("c", lat, _latgetter("c"), _latsetter("c")))
-        self.addParameter(
-            ParameterAdapter("alpha", lat, _latgetter("alpha"), _latsetter("alpha"))
-        )
-        self.addParameter(
-            ParameterAdapter("beta", lat, _latgetter("beta"), _latsetter("beta"))
-        )
-        self.addParameter(
-            ParameterAdapter("gamma", lat, _latgetter("gamma"), _latsetter("gamma"))
-        )
+        self.addParameter(ParameterAdapter("alpha", lat, _latgetter("alpha"), _latsetter("alpha")))
+        self.addParameter(ParameterAdapter("beta", lat, _latgetter("beta"), _latsetter("beta")))
+        self.addParameter(ParameterAdapter("gamma", lat, _latgetter("gamma"), _latsetter("gamma")))
         return
 
     def __repr__(self):

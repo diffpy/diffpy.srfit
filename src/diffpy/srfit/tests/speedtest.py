@@ -232,9 +232,7 @@ def speedTest3(mutate=2):
     )
     f = lambdify(
         vars,
-        A0
-        * exp(-((xx * qsig) ** 2))
-        * (exp(-(((xx - 1.0) / sigma1) ** 2)) + exp(-(((xx - 2.0) / sigma2) ** 2)))
+        A0 * exp(-((xx * qsig) ** 2)) * (exp(-(((xx - 1.0) / sigma1) ** 2)) + exp(-(((xx - 2.0) / sigma2) ** 2)))
         + polyval([b1, b2, b3, b4, b5, b6, b7, b8], xx),
         "numpy",
     )

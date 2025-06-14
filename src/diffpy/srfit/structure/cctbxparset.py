@@ -61,18 +61,10 @@ class CCTBXScattererParSet(ParameterSet):
         self.idx = idx
 
         # x, y, z, occupancy
-        self.addParameter(
-            ParameterAdapter("x", None, self._xyzgetter(0), self._xyzsetter(0))
-        )
-        self.addParameter(
-            ParameterAdapter("y", None, self._xyzgetter(1), self._xyzsetter(1))
-        )
-        self.addParameter(
-            ParameterAdapter("z", None, self._xyzgetter(2), self._xyzsetter(2))
-        )
-        self.addParameter(
-            ParameterAdapter("occupancy", None, self._getocc, self._setocc)
-        )
+        self.addParameter(ParameterAdapter("x", None, self._xyzgetter(0), self._xyzsetter(0)))
+        self.addParameter(ParameterAdapter("y", None, self._xyzgetter(1), self._xyzsetter(1)))
+        self.addParameter(ParameterAdapter("z", None, self._xyzgetter(2), self._xyzsetter(2)))
+        self.addParameter(ParameterAdapter("occupancy", None, self._getocc, self._setocc))
         self.addParameter(ParameterAdapter("Uiso", None, self._getuiso, self._setuiso))
         return
 
@@ -136,24 +128,12 @@ class CCTBXUnitCellParSet(ParameterSet):
         self.strups = strups
         self._latpars = list(self.strups.stru.unit_cell().parameters())
 
-        self.addParameter(
-            ParameterAdapter("a", None, self._latgetter(0), self._latsetter(0))
-        )
-        self.addParameter(
-            ParameterAdapter("b", None, self._latgetter(1), self._latsetter(1))
-        )
-        self.addParameter(
-            ParameterAdapter("c", None, self._latgetter(2), self._latsetter(2))
-        )
-        self.addParameter(
-            ParameterAdapter("alpha", None, self._latgetter(3), self._latsetter(3))
-        )
-        self.addParameter(
-            ParameterAdapter("beta", None, self._latgetter(4), self._latsetter(4))
-        )
-        self.addParameter(
-            ParameterAdapter("gamma", None, self._latgetter(5), self._latsetter(5))
-        )
+        self.addParameter(ParameterAdapter("a", None, self._latgetter(0), self._latsetter(0)))
+        self.addParameter(ParameterAdapter("b", None, self._latgetter(1), self._latsetter(1)))
+        self.addParameter(ParameterAdapter("c", None, self._latgetter(2), self._latsetter(2)))
+        self.addParameter(ParameterAdapter("alpha", None, self._latgetter(3), self._latsetter(3)))
+        self.addParameter(ParameterAdapter("beta", None, self._latgetter(4), self._latsetter(4)))
+        self.addParameter(ParameterAdapter("gamma", None, self._latgetter(5), self._latsetter(5)))
 
         return
 

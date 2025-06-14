@@ -69,9 +69,7 @@ class TestEquationFromString(unittest.TestCase):
         self.assertTrue("p3" not in factory.builders)
 
         # Pass and use an unregistered parameter
-        self.assertRaises(
-            ValueError, equationFromString, "p1+p2+p3+p4", factory, {"p3": p3}
-        )
+        self.assertRaises(ValueError, equationFromString, "p1+p2+p3+p4", factory, {"p3": p3})
 
         # Try to overload a registered parameter
         self.assertRaises(ValueError, equationFromString, "p1+p2", factory, {"p2": p4})
@@ -404,15 +402,11 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         self.m.g.center.setValue(3.0)
 
-        self.assertTrue(
-            numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), g(x))
-        )
+        self.assertTrue(numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), g(x)))
 
         self.m.g.center.setValue(5.0)
 
-        self.assertTrue(
-            numpy.array_equal(numpy.exp(-0.5 * ((x - 5.0) / 0.1) ** 2), g(x))
-        )
+        self.assertTrue(numpy.array_equal(numpy.exp(-0.5 * ((x - 5.0) / 0.1) ** 2), g(x)))
 
         # Use this in another equation
 
@@ -441,9 +435,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m.c.setValue(3.0)
         self.m.w.setValue(0.1)
 
-        self.assertTrue(
-            numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), eq())
-        )
+        self.assertTrue(numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), eq()))
 
         # Use this in another equation
         eq2 = self.m.registerStringFunction("g/x - 1", "pdf")

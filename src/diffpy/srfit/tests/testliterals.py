@@ -64,9 +64,7 @@ class TestArgument(unittest.TestCase):
 class TestCustomOperator(unittest.TestCase):
 
     def setUp(self):
-        self.op = literals.makeOperator(
-            name="add", symbol="+", operation=numpy.add, nin=2, nout=1
-        )
+        self.op = literals.makeOperator(name="add", symbol="+", operation=numpy.add, nin=2, nout=1)
         return
 
     def testInit(self):
@@ -137,16 +135,12 @@ class TestCustomOperator(unittest.TestCase):
         # Test for self-references
 
         # Try to add self
-        op1 = literals.makeOperator(
-            name="add", symbol="+", operation=numpy.add, nin=2, nout=1
-        )
+        op1 = literals.makeOperator(name="add", symbol="+", operation=numpy.add, nin=2, nout=1)
         op1.addLiteral(a)
         self.assertRaises(ValueError, op1.addLiteral, op1)
 
         # Try to add argument that contains self
-        op2 = literals.makeOperator(
-            name="sub", symbol="-", operation=numpy.subtract, nin=2, nout=1
-        )
+        op2 = literals.makeOperator(name="sub", symbol="-", operation=numpy.subtract, nin=2, nout=1)
         op2.addLiteral(op1)
         self.assertRaises(ValueError, op1.addLiteral, op2)
 

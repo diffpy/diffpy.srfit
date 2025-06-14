@@ -112,13 +112,7 @@ def spheroidalCF2(r, psize, axrat):
         f1 = (
             1
             - 3 * r / (4 * d * v) * (1 - r2 / (4 * d2) * (1 + 2.0 / (3 * v2)))
-            - 3
-            * r
-            / (4 * d)
-            * (1 - r2 / (4 * d2))
-            * v
-            / sqrt(1 - v2)
-            * atanh(sqrt(1 - v2))
+            - 3 * r / (4 * d) * (1 - r2 / (4 * d2)) * v / sqrt(1 - v2) * atanh(sqrt(1 - v2))
         )
 
         r = rx[numpy.logical_and(rx > v * psize, rx <= psize)]
@@ -144,13 +138,7 @@ def spheroidalCF2(r, psize, axrat):
         f1 = (
             1
             - 3 * r / (4 * d * v) * (1 - r2 / (4 * d2) * (1 + 2.0 / (3 * v2)))
-            - 3
-            * r
-            / (4 * d)
-            * (1 - r2 / (4 * d2))
-            * v
-            / sqrt(v2 - 1)
-            * atan(sqrt(v2 - 1))
+            - 3 * r / (4 * d) * (1 - r2 / (4 * d2)) * v / sqrt(v2 - 1) * atan(sqrt(v2 - 1))
         )
 
         r = rx[numpy.logical_and(rx > psize, rx <= v * psize)]
@@ -217,16 +205,8 @@ def lognormalSphericalCF(r, psize, psig):
 
     return (
         0.5 * erfc((-mu - 3 * s * s + log(r)) / (sqrt2 * s))
-        + 0.25
-        * r
-        * r
-        * r
-        * erfc((-mu + log(r)) / (sqrt2 * s))
-        * exp(-3 * mu - 4.5 * s * s)
-        - 0.75
-        * r
-        * erfc((-mu - 2 * s * s + log(r)) / (sqrt2 * s))
-        * exp(-mu - 2.5 * s * s)
+        + 0.25 * r * r * r * erfc((-mu + log(r)) / (sqrt2 * s)) * exp(-3 * mu - 4.5 * s * s)
+        - 0.75 * r * erfc((-mu - 2 * s * s + log(r)) / (sqrt2 * s)) * exp(-mu - 2.5 * s * s)
     )
 
 
@@ -288,13 +268,7 @@ def shellCF2(r, a, delta):
     dmr2 = dmr**2
 
     f = (
-        r
-        * (
-            16 * a * a2
-            + 12 * a * d * dmr
-            + 36 * a2 * (2 * d - r)
-            + 3 * dmr2 * (2 * d + r)
-        )
+        r * (16 * a * a2 + 12 * a * d * dmr + 36 * a2 * (2 * d - r) + 3 * dmr2 * (2 * d + r))
         + 2 * dmr2 * (r * (2 * d + r) - 12 * a2) * sign(dmr)
         - 2 * (2 * a - r) ** 2 * (r * (4 * a + r) - 3 * d2) * sign(2 * a - r)
         + r * (4 * a - 2 * d + r) * (2 * a - d - r) ** 2 * sign(2 * a - d - r)

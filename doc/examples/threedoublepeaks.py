@@ -138,17 +138,11 @@ def makeRecipe():
     recipe.sig0.value = 0.001
     recipe.dsig.value = 4.0
     recipe.constrain(contribution.sig11, "sig(sig0, dsig, mu11)")
-    recipe.constrain(
-        contribution.sig12, "sig(sig0, dsig, mu12)", ns={"mu12": contribution.mu12}
-    )
+    recipe.constrain(contribution.sig12, "sig(sig0, dsig, mu12)", ns={"mu12": contribution.mu12})
     recipe.constrain(contribution.sig21, "sig(sig0, dsig, mu21)")
-    recipe.constrain(
-        contribution.sig22, "sig(sig0, dsig, mu22)", ns={"mu22": contribution.mu22}
-    )
+    recipe.constrain(contribution.sig22, "sig(sig0, dsig, mu22)", ns={"mu22": contribution.mu22})
     recipe.constrain(contribution.sig31, "sig(sig0, dsig, mu31)")
-    recipe.constrain(
-        contribution.sig32, "sig(sig0, dsig, mu32)", ns={"mu32": contribution.mu32}
-    )
+    recipe.constrain(contribution.sig32, "sig(sig0, dsig, mu32)", ns={"mu32": contribution.mu32})
 
     # Also the background
     recipe.addVar(contribution.b0, 0, tag="bkgd")

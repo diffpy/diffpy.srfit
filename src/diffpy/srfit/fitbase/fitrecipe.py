@@ -89,20 +89,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """
 
     fixednames = property(
-        lambda self: [
-            v.name
-            for v in self._parameters.values()
-            if not (self.isFree(v) or self.isConstrained(v))
-        ],
+        lambda self: [v.name for v in self._parameters.values() if not (self.isFree(v) or self.isConstrained(v))],
         doc="names of the fixed refinable variables",
     )
     fixedvalues = property(
         lambda self: array(
-            [
-                v.value
-                for v in self._parameters.values()
-                if not (self.isFree(v) or self.isConstrained(v))
-            ]
+            [v.value for v in self._parameters.values() if not (self.isFree(v) or self.isConstrained(v))]
         ),
         doc="values of the fixed refinable variables",
     )
@@ -246,10 +238,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         # Calculate the bare chiv
         chiv = concatenate(
-            [
-                wi * ci.residual().flatten()
-                for wi, ci in zip(self._weights, self._contributions.values())
-            ]
+            [wi * ci.residual().flatten() for wi, ci in zip(self._weights, self._contributions.values())]
         )
 
         # Calculate the point-average chi^2

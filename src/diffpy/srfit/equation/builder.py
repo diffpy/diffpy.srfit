@@ -599,10 +599,7 @@ class OperatorBuilder(BaseBuilder):
         # Now that we have a literal, let's check our inputs
         literal = newobj.literal
         if literal.nin >= 0 and len(args) != literal.nin:
-            raise ValueError(
-                "%s takes %i arguments (%i given)"
-                % (self.literal, self.literal.nin, len(args))
-            )
+            raise ValueError("%s takes %i arguments (%i given)" % (self.literal, self.literal.nin, len(args)))
 
         # Wrap scalar arguments
         for i, arg in enumerate(args):
@@ -642,9 +639,7 @@ def wrapFunction(name, func, nin=2, nout=1):
 
     Returns the OperatorBuilder instance that wraps the function.
     """
-    op = literals.makeOperator(
-        name=name, symbol=name, nin=nin, nout=nout, operation=func
-    )
+    op = literals.makeOperator(name=name, symbol=name, nin=nin, nout=nout, operation=func)
 
     # Create the OperatorBuilder
     opbuilder = OperatorBuilder(name, op)

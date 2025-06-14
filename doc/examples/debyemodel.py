@@ -253,9 +253,7 @@ def adps(m, thetaD, T):
         return phi
 
     m = m * amu
-    u2 = (3 * h**2 / (4 * numpy.pi**2 * m * kB * thetaD)) * (
-        __phi(thetaD / T) / (thetaD / T) + 1.0 / 4.0
-    )
+    u2 = (3 * h**2 / (4 * numpy.pi**2 * m * kB * thetaD)) * (__phi(thetaD / T) / (thetaD / T) + 1.0 / 4.0)
 
     return u2 * 1e20
 

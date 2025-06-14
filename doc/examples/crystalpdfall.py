@@ -218,9 +218,7 @@ if __name__ == "__main__":
     xdata_sini = "data/si90ni10-q27r60-xray.gr"
 
     # Make the recipe
-    recipe = makeRecipe(
-        ciffile_ni, ciffile_si, xdata_ni, ndata_ni, xdata_si, xdata_sini
-    )
+    recipe = makeRecipe(ciffile_ni, ciffile_si, xdata_ni, ndata_ni, xdata_si, xdata_sini)
 
     # Optimize
     scipyOptimize(recipe)

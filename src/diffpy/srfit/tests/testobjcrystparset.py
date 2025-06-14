@@ -354,12 +354,8 @@ class TestParameterAdapter(unittest.TestCase):
         m = cryst.c60
 
         # Restrain some dihedral angles.
-        res0 = m.restrainDihedralAngle(
-            m.atoms[0], m.atoms[5], m.atoms[8], m.atoms[41], 1.1, 0.1, 0.1
-        )
-        res1 = m.restrainDihedralAngle(
-            m.atoms[0], m.atoms[7], m.atoms[44], m.atoms[2], 1.1, 0.1, 0.1
-        )
+        res0 = m.restrainDihedralAngle(m.atoms[0], m.atoms[5], m.atoms[8], m.atoms[41], 1.1, 0.1, 0.1)
+        res1 = m.restrainDihedralAngle(m.atoms[0], m.atoms[7], m.atoms[44], m.atoms[2], 1.1, 0.1, 0.1)
 
         # make sure that we have some restraints in the molecule
         self.assertTrue(2, len(m._restraints))

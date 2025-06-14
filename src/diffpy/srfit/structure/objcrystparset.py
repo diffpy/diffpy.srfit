@@ -399,9 +399,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Returns the ObjCrystBondLengthRestraint object for use with the
         'unrestrain' method.
         """
-        return self.restrainBondLength(
-            par.atom1, par.atom2, length, sigma, delta, scaled
-        )
+        return self.restrainBondLength(par.atom1, par.atom2, length, sigma, delta, scaled)
 
     def restrainBondAngle(self, atom1, atom2, atom3, angle, sigma, delta, scaled=False):
         """Add a bond angle restraint.
@@ -423,9 +421,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Returns the ObjCrystBondAngleRestraint object for use with the
         'unrestrain' method.
         """
-        res = ObjCrystBondAngleRestraint(
-            atom1, atom2, atom3, angle, sigma, delta, scaled
-        )
+        res = ObjCrystBondAngleRestraint(atom1, atom2, atom3, angle, sigma, delta, scaled)
         self._restraints.add(res)
 
         return res
@@ -447,13 +443,9 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Returns the ObjCrystBondAngleRestraint object for use with the
         'unrestrain' method.
         """
-        return self.restrainBondAngle(
-            par.atom1, par.atom2, par.atom3, angle, sigma, delta, scaled
-        )
+        return self.restrainBondAngle(par.atom1, par.atom2, par.atom3, angle, sigma, delta, scaled)
 
-    def restrainDihedralAngle(
-        self, atom1, atom2, atom3, atom4, angle, sigma, delta, scaled=False
-    ):
+    def restrainDihedralAngle(self, atom1, atom2, atom3, atom4, angle, sigma, delta, scaled=False):
         """Add a dihedral angle restraint.
 
         This creates an instance of ObjCrystDihedralAngleRestraint and adds it
@@ -473,9 +465,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Returns the ObjCrystDihedralAngleRestraint object for use with the
         'unrestrain' method.
         """
-        res = ObjCrystDihedralAngleRestraint(
-            atom1, atom2, atom3, atom4, angle, sigma, delta, scaled
-        )
+        res = ObjCrystDihedralAngleRestraint(atom1, atom2, atom3, atom4, angle, sigma, delta, scaled)
         self._restraints.add(res)
 
         return res
@@ -498,9 +488,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Returns the ObjCrystDihedralAngleRestraint object for use with the
         'unrestrain' method.
         """
-        return self.restrainDihedralAngle(
-            par.atom1, par.atom2, par.atom3, par.atom4, angle, sigma, delta, scaled
-        )
+        return self.restrainDihedralAngle(par.atom1, par.atom2, par.atom3, par.atom4, angle, sigma, delta, scaled)
 
     def addBondLengthParameter(self, name, atom1, atom2, value=None, const=False):
         """Add a bond length to the Molecule.
@@ -550,9 +538,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return par
 
-    def addDihedralAngleParameter(
-        self, name, atom1, atom2, atom3, atom4, value=None, const=False
-    ):
+    def addDihedralAngleParameter(self, name, atom1, atom2, atom3, atom4, value=None, const=False):
         """Add a dihedral angle to the Molecule.
 
         This creates a ObjCrystDihedralAngleParameter to the
@@ -574,9 +560,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         Returns the new ObjCrystDihedralAngleParameter.
         """
-        par = ObjCrystDihedralAngleParameter(
-            name, atom1, atom2, atom3, atom4, value, const
-        )
+        par = ObjCrystDihedralAngleParameter(name, atom1, atom2, atom3, atom4, value, const)
         self.addParameter(par)
 
         return par
@@ -737,9 +721,7 @@ class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
         return
 
     # Give access to the parameters of the restraint
-    length = property(
-        lambda self: self.res.GetLength0(), lambda self, val: self.res.SetLength0(val)
-    )
+    length = property(lambda self: self.res.GetLength0(), lambda self, val: self.res.SetLength0(val))
     sigma = property(
         lambda self: self.res.GetLengthSigma(),
         lambda self, val: self.res.SetLengthSigma(val),
@@ -794,9 +776,7 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
         return
 
     # Give access to the parameters of the restraint
-    angle = property(
-        lambda self: self.res.GetAngle0(), lambda self, val: self.res.SetAngle0(val)
-    )
+    angle = property(lambda self: self.res.GetAngle0(), lambda self, val: self.res.SetAngle0(val))
     sigma = property(
         lambda self: self.res.GetAngleSigma(),
         lambda self, val: self.res.SetAngleSigma(val),
@@ -847,17 +827,13 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
         self.atom4 = atom4
 
         m = self.atom1.scat.GetMolecule()
-        res = m.AddDihedralAngle(
-            atom1.scat, atom2.scat, atom3.scat, atom4.scat, angle, sigma, delta
-        )
+        res = m.AddDihedralAngle(atom1.scat, atom2.scat, atom3.scat, atom4.scat, angle, sigma, delta)
 
         ObjCrystMoleculeRestraint.__init__(self, res, scaled)
         return
 
     # Give access to the parameters of the restraint
-    angle = property(
-        lambda self: self.res.GetAngle0(), lambda self, val: self.res.SetAngle0(val)
-    )
+    angle = property(lambda self: self.res.GetAngle0(), lambda self, val: self.res.SetAngle0(val))
     sigma = property(
         lambda self: self.res.GetAngleSigma(),
         lambda self, val: self.res.SetAngleSigma(val),
@@ -1243,9 +1219,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
                 used by some optimizers when the Parameter is varied.
     """
 
-    def __init__(
-        self, name, atom1, atom2, atom3, atom4, value=None, const=False, mode=None
-    ):
+    def __init__(self, name, atom1, atom2, atom3, atom4, value=None, const=False, mode=None):
         """Create a ObjCrystDihedralAngleParameter.
 
         name    --  The name of the ObjCrystDihedralAngleParameter
@@ -1320,9 +1294,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
         the value is recalculated each time.
         """
         if self._value is None:
-            val = GetDihedralAngle(
-                self.atom1.scat, self.atom2.scat, self.atom3.scat, self.atom4.scat
-            )
+            val = GetDihedralAngle(self.atom1.scat, self.atom2.scat, self.atom3.scat, self.atom4.scat)
             Parameter.setValue(self, val)
 
         return self._value

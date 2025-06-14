@@ -65,9 +65,7 @@ class TestPDFParset(unittest.TestCase):
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)
 
-        testy = numpy.array(
-            [1.144, 2.258, 3.312, 4.279, 5.135, 5.862, 6.445, 6.875, 7.150, 7.272]
-        )
+        testy = numpy.array([1.144, 2.258, 3.312, 4.279, 5.135, 5.862, 6.445, 6.875, 7.150, 7.272])
         diff = testy - y[:10]
         res = numpy.dot(diff, diff)
         self.assertAlmostEqual(0, res)

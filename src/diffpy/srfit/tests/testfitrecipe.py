@@ -159,9 +159,7 @@ class TestFitRecipe(unittest.TestCase):
         # Try some constraints
         # Make c = 2*A, A = Avar
         var = self.recipe.newVar("Avar")
-        self.recipe.constrain(
-            self.fitcontribution.c, "2*A", {"A": self.fitcontribution.A}
-        )
+        self.recipe.constrain(self.fitcontribution.c, "2*A", {"A": self.fitcontribution.A})
         self.assertEqual(2, self.fitcontribution.c.value)
         self.recipe.constrain(self.fitcontribution.A, var)
         self.assertEqual(1, var.getValue())

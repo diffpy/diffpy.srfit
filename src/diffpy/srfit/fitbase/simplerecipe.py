@@ -76,11 +76,7 @@ class SimpleRecipe(FitRecipe):
         self.results = FitResults(self, update=False)
 
         # Adopt all the FitContribution methods
-        public = [
-            aname
-            for aname in dir(contribution)
-            if aname not in dir(self) and not aname.startswith("_")
-        ]
+        public = [aname for aname in dir(contribution) if aname not in dir(self) and not aname.startswith("_")]
         for mname in public:
             method = getattr(contribution, mname)
             setattr(self, mname, method)

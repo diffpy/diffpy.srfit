@@ -204,9 +204,7 @@ class TestContribution(unittest.TestCase):
         fc.setEquation("2*I")
         fc.setResidualEquation("resv")
         chiv = fc.residual()
-        self.assertAlmostEqual(
-            sum((2 * xobs - yobs) ** 2) / sum(yobs**2), dot(chiv, chiv)
-        )
+        self.assertAlmostEqual(sum((2 * xobs - yobs) ** 2) / sum(yobs**2), dot(chiv, chiv))
 
         # Make a custom residual.
         fc.setResidualEquation("abs(eq-y)**0.5")

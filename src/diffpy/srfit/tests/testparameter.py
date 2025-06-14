@@ -88,9 +88,7 @@ class TestParameterAdapter(unittest.TestCase):
         l = Parameter("l", 3.14)
 
         # Try Accessor adaptation
-        la = ParameterAdapter(
-            "l", l, getter=Parameter.getValue, setter=Parameter.setValue
-        )
+        la = ParameterAdapter("l", l, getter=Parameter.getValue, setter=Parameter.setValue)
 
         self.assertEqual(l.name, la.name)
         self.assertEqual(l.getValue(), la.getValue())

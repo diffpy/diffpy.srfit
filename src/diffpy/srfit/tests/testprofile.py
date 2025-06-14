@@ -110,9 +110,7 @@ class TestProfile(unittest.TestCase):
         # Test xmin > xmax
         self.assertRaises(ValueError, prof.setCalculationRange, xmin=10, xmax=3)
         # Test xmax - xmin < dx
-        self.assertRaises(
-            ValueError, prof.setCalculationRange, xmin=3, xmax=3.9, dx=1.0
-        )
+        self.assertRaises(ValueError, prof.setCalculationRange, xmin=3, xmax=3.9, dx=1.0)
         # Test dx <= 0
         self.assertRaises(ValueError, prof.setCalculationRange, dx=0)
         self.assertRaises(ValueError, prof.setCalculationRange, dx=-0.000001)

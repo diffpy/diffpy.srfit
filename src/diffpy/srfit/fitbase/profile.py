@@ -86,18 +86,10 @@ class Profile(Observable, Validatable):
         return
 
     # We want x, y, ycalc and dy to stay in-sync with xpar, ypar and dypar
-    x = property(
-        lambda self: self.xpar.getValue(), lambda self, val: self.xpar.setValue(val)
-    )
-    y = property(
-        lambda self: self.ypar.getValue(), lambda self, val: self.ypar.setValue(val)
-    )
-    dy = property(
-        lambda self: self.dypar.getValue(), lambda self, val: self.dypar.setValue(val)
-    )
-    ycalc = property(
-        lambda self: self.ycpar.getValue(), lambda self, val: self.ycpar.setValue(val)
-    )
+    x = property(lambda self: self.xpar.getValue(), lambda self, val: self.xpar.setValue(val))
+    y = property(lambda self: self.ypar.getValue(), lambda self, val: self.ypar.setValue(val))
+    dy = property(lambda self: self.dypar.getValue(), lambda self, val: self.dypar.setValue(val))
+    ycalc = property(lambda self: self.ycpar.getValue(), lambda self, val: self.ycpar.setValue(val))
 
     # We want xobs, yobs and dyobs to be read-only
     xobs = property(lambda self: self._xobs)
@@ -192,15 +184,9 @@ class Profile(Observable, Validatable):
             return True
 
         # resolve new low and high bounds for x
-        lo = (
-            self.x[0] if xmin is None else self.xobs[0] if _isobs(xmin) else float(xmin)
-        )
+        lo = self.x[0] if xmin is None else self.xobs[0] if _isobs(xmin) else float(xmin)
         lo = max(lo, self.xobs[0])
-        hi = (
-            self.x[-1]
-            if xmax is None
-            else self.xobs[-1] if _isobs(xmax) else float(xmax)
-        )
+        hi = self.x[-1] if xmax is None else self.xobs[-1] if _isobs(xmax) else float(xmax)
         hi = min(hi, self.xobs[-1])
         # determine if we need to clip the original grid
         clip = True
@@ -359,10 +345,7 @@ class Profile(Observable, Validatable):
 
         Raises SrFitError if validation fails.
         """
-        datanotset = any(
-            v is None
-            for v in [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs]
-        )
+        datanotset = any(v is None for v in [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs])
         if datanotset:
             raise SrFitError("Missing data")
         if len(self.x) != len(self.y) or len(self.x) != len(self.dy):

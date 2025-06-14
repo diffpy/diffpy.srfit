@@ -889,9 +889,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             w0 = max(len(n) for n in self._parameters)
             w1 = ((w0 + len(prefix) + 1) // 4 + 1) * 4
             fmt = formatstr.replace("W", str(w1))
-            lines.extend(
-                fmt.format(prefix + n, p.value) for n, p in self._parameters.items()
-            )
+            lines.extend(fmt.format(prefix + n, p.value) for n, p in self._parameters.items())
         # Recurse into managed objects.
         for obj in self._iterManaged():
             if hasattr(obj, "_formatManaged"):
@@ -967,9 +965,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             the screen width.  Do not trim when negative or 0.
         """
         regexp = re.compile(pattern)
-        pmatch = lambda s: (
-            len(s.split(None, 1)) < 2 or regexp.search(s.split(None, 1)[0])
-        )
+        pmatch = lambda s: (len(s.split(None, 1)) < 2 or regexp.search(s.split(None, 1)[0]))
         # Show sub objects and their parameters
         lines = []
         tlines = self._formatManaged()
@@ -1014,9 +1010,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 # End RecipeOrganizer
 
 
-def equationFromString(
-    eqstr, factory, ns={}, buildargs=False, argclass=Parameter, argkw={}
-):
+def equationFromString(eqstr, factory, ns={}, buildargs=False, argclass=Parameter, argkw={}):
     """Make an equation from a string.
 
     eqstr   --  A string representation of the equation. The equation must

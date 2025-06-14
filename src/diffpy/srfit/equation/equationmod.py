@@ -20,12 +20,18 @@ __call__ method evaluates the equation at the most recent value of its
 Arguments. The non-constant arguments are accessible as attributes of the
 Equation instance and can be passed as arguments to __call__.
 
-Example > # make a Literal tree. Here's a simple one > add = AdditionOperator()
-> a = Argument(name="a") # Don't forget to name these! > b = Argument(name="b")
-> add.addLiteral(a) > add.addLiteral(b) > # make an Equation instance and pass
-the root > eq = Equation(root = add) > eq(a=3, b=4) # returns 7 > eq(a=2) #
-remembers b=4, returns 6 > eq.a.setValue(-3) > eq.b.setValue(3) > eq() # uses
-last assignment of a and b, returns 0
+Example
+> # make a Literal tree. Here's a simple one
+> add = AdditionOperator()
+> a = Argument(name="a") # Don't forget to name these!
+> b = Argument(name="b")
+> add.addLiteral(a)
+> add.addLiteral(b)
+> # make an Equation instance and pass the root > eq = Equation(root = add)
+> eq(a=3, b=4) # returns 7 > eq(a=2) # remembers b=4, returns 6
+> eq.a.setValue(-3)
+> eq.b.setValue(3)
+> eq() # uses last assignment of a and b, returns 0
 
 See the class documentation for more information.
 """

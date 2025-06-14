@@ -432,7 +432,15 @@ if __name__ == "__main__":
     for i in range(1, 9):
         weightedTest(i)
     """
-    """From diffpy.srfit.equation.builder import EquationFactory import random
-    import cProfile cProfile.run('profileTest()', 'prof') import pstats p =
-    pstats.Stats('prof') p.strip_dirs() p.sort_stats('time') p.print_stats(10)
-    profileTest()"""
+    """
+    from diffpy.srfit.equation.builder import EquationFactory
+    import random
+    import cProfile
+    cProfile.run('profileTest()', 'prof')
+    import pstats
+    p = pstats.Stats('prof')
+    p.strip_dirs()
+    p.sort_stats('time')
+    p.print_stats(10)
+    profileTest()
+    """

@@ -21,9 +21,8 @@ Literals to produce a new value.
 
 Literal networks can be evaluated or have other actions performed on them by
 Visitors (in diffpy.srfit.equation.visitors). The Literal-Visitor relationship
-is that described by the Visitor pattern (
-
-http://en.wikipedia.org/wiki/Visitor_pattern).
+is that described by the Visitor pattern
+(http://en.wikipedia.org/wiki/Visitor_pattern).
 """
 
 __all__ = ["Argument", "Operator", "BinaryOperator", "CustomOperator",

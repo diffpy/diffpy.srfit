@@ -86,7 +86,8 @@ class Constraint(Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates that par is not None. This validates eq.
+        This validates that par is not None.
+        This validates eq.
 
         Raises SrFitError if validation fails.
         """

@@ -15,8 +15,7 @@
 
 """Modules and classes that adapt structure representations to the ParameterSet
 interface and automatic structure constraint generation from space group
-information.
-"""
+information."""
 
 
 def struToParameterSet(name, stru):
@@ -29,7 +28,6 @@ def struToParameterSet(name, stru):
     name    --  A name to give the structure.
 
     Raises TypeError if stru cannot be adapted
-
     """
     from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
     if DiffpyStructureParSet.canAdapt(stru):

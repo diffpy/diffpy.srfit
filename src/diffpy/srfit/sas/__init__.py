@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-"""SAS calculation tools.
-"""
+"""SAS calculation tools."""
 
 __all__ = ["SASGenerator", "SASParser", "SASProfile", "PrCalculator",
            "CFCalculator"]

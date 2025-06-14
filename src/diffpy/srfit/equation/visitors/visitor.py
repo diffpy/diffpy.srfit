@@ -16,8 +16,8 @@
 """Base visitor class.
 
 Visitors work with Literal trees to perform a specified action. They are
-designed according to the visitor pattern
-(http://en.wikipedia.org/wiki/Visitor_pattern).
+designed according to the visitor pattern (
+http://en.wikipedia.org/wiki/Visitor_pattern).
 
 Visitors work with the following Literal classes
 (diffpy.srfit.equation.literals):
@@ -33,7 +33,6 @@ class Visitor(object):
     """Abstract class for all visitors to a Literal tree.
 
     See implemented visitors for examples of use.
-
     """
 
     def onArgument(self, arg):
@@ -49,7 +48,6 @@ class Visitor(object):
 
         Equations are specialized Operators. They don't need to be specifically
         supported by a Visitor.
-
         """
         return self.onOperator(eq)
 

@@ -34,7 +34,6 @@ class TestSGConstraints(unittest.TestCase):
         This tests constrainSpaceGroup from
         diffpy.srfit.structure.sgconstraints, which is performed automatically
         when an ObjCrystCrystalParSet is created.
-
         """
         from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
 
@@ -163,8 +162,7 @@ class TestSGConstraints(unittest.TestCase):
 
     @unittest.skipUnless(has_structure, _msg_nostructure)
     def test_ConstrainAsSpaceGroup_args(self):
-        """Test the arguments processing of constrainAsSpaceGroup function.
-        """
+        """Test the arguments processing of constrainAsSpaceGroup function."""
         from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
         from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
         from diffpy.structure.spacegroups import GetSpaceGroup

@@ -81,14 +81,12 @@ class DiffpyAtomParSet(ParameterSet):
                     or ParameterProxy). Note that the Bij and Bji parameters
                     are the same. (Bij = 8*pi**2*Uij)
     Biso        --  Isotropic ADP (ParameterAdapter).
-
     """
 
     def __init__(self, name, atom):
-        """Initialize
+        """Initialize.
 
         atom    --  A diffpy.structure.Atom instance
-
         """
         ParameterSet.__init__(self, name)
         self.atom = atom
@@ -174,14 +172,12 @@ class DiffpyLatticeParSet(ParameterSet):
 
     Managed Parameters:
     a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterAdapter).
-
     """
 
     def __init__(self, lattice):
-        """Initialize
+        """Initialize.
 
         lattice --  A diffpy.structure.Lattice instance
-
         """
         ParameterSet.__init__(self, "lattice")
         self.angunits = "deg"
@@ -224,15 +220,13 @@ class DiffpyStructureParSet(SrRealParSet):
                     starting from zero. Thus, for nickel in P1 symmetry, the
                     managed DiffpyAtomParSets will be named "Ni0", "Ni1", "Ni2"
                     and "Ni3".
-
     """
 
     def __init__(self, name, stru):
-        """Initialize
+        """Initialize.
 
         name    --  A name for the structure
         stru    --  A diffpy.structure.Structure instance
-
         """
         SrRealParSet.__init__(self, name)
         self.stru = stru
@@ -274,7 +268,6 @@ class DiffpyStructureParSet(SrRealParSet):
         names "x", "y", and "z". The ADPs must be accessible as well, but the
         name and nature of the ADPs (U-factors, B-factors, isotropic,
         anisotropic) depends on the adapted structure.
-
         """
         return self.atoms
 
@@ -284,7 +277,6 @@ class DiffpyStructureParSet(SrRealParSet):
         If this is periodic, then return the structure, otherwise, pass it
         inside of a nosymmetry wrapper. This takes the extra step of wrapping
         the structure in a nometa wrapper.
-
         """
         from diffpy.srreal.structureadapter import nometa
         stru = SrRealParSet._getSrRealStructure(self)

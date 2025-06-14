@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-"""Simple FitRecipe class that includes a FitContribution and Profile.
-"""
+"""Simple FitRecipe class that includes a FitContribution and Profile."""
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
@@ -65,7 +64,6 @@ class SimpleRecipe(FitRecipe):
     Properties
     names           --  Variable names (read only). See getNames.
     values          --  Variable values (read only). See getValues.
-
     """
 
     def __init__(self, name = "fit", conclass = FitContribution):
@@ -91,7 +89,6 @@ class SimpleRecipe(FitRecipe):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
-
         """
         return self.profile.loadParsedData(parser)
 
@@ -107,7 +104,6 @@ class SimpleRecipe(FitRecipe):
 
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
-
         """
         return self.profile.setObservedProfile(xobs, yobs, dyobs)
 
@@ -156,24 +152,21 @@ class SimpleRecipe(FitRecipe):
 
         This will create y and dy on the specified grid if xobs, yobs and
         dyobs exist.
-
         """
         return self.profile.setCalculationPoints(x)
 
     def loadtxt(self, *args, **kw):
         """Use numpy.loadtxt to load data.
 
-        Arguments are passed to numpy.loadtxt.
-        unpack = True is enforced.
-        The first two arrays returned by numpy.loadtxt are assumed to be x and
-        y.  If there is a third array, it is assumed to by dy. Any other arrays
-        are ignored. These are passed to setObservedProfile.
+        Arguments are passed to numpy.loadtxt. unpack = True is enforced.
+        The first two arrays returned by numpy.loadtxt are assumed to be x and y.
+        If there is a third array, it is assumed to by dy. Any other arrays are
+        ignored. These are passed to setObservedProfile.
 
         Raises ValueError if the call to numpy.loadtxt returns fewer than 2
         arrays.
 
         Returns the x, y and dy arrays loaded from the file
-
         """
         return self.profile.loadtxt(*args, **kw)
 
@@ -193,7 +186,6 @@ class SimpleRecipe(FitRecipe):
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
-
         """
         self.contribution.setEquation(eqstr, ns = {})
         # Extract variables
@@ -217,7 +209,6 @@ class SimpleRecipe(FitRecipe):
 
         header  --  A header to add to the output (default "")
         footer  --  A footer to add to the output (default "")
-
         """
         self.results.printResults(header, footer, True)
         return
@@ -228,7 +219,6 @@ class SimpleRecipe(FitRecipe):
         filename -  Name of the save file.
         header  --  A header to add to the output (default "")
         footer  --  A footer to add to the output (default "")
-
         """
         self.results.saveResults(filename, header, footer, True)
 

@@ -41,7 +41,6 @@ class FitHook(object):
     method.) The methods in this class are called during the preparation of the
     FitRecipe for refinement, and during the residual call. See the class
     methods for a description of their purpose.
-
     """
 
     def reset(self, recipe):
@@ -50,7 +49,6 @@ class FitHook(object):
         This is called whenever FitRecipe._prepare is called, which is whenever
         a configurational change to the fit hierarchy takes place, such as
         adding a new ParameterSet, constraint or restraint.
-
         """
         return
 
@@ -58,7 +56,6 @@ class FitHook(object):
         """This is called within FitRecipe.residual, before the calculation.
 
         recipe  --  The FitRecipe instance
-
         """
         return
 
@@ -67,7 +64,6 @@ class FitHook(object):
 
         recipe  --  The FitRecipe instance
         chiv    --  The residual vector
-
         """
         return
 
@@ -87,7 +83,6 @@ class PrintFitHook(FitHook):
                 1   --  print the count during the precall
                 2   --  print the residual during the postcall
                 >=3 --  print the variables during the postcall
-
     """
 
     def __init__(self):
@@ -102,7 +97,6 @@ class PrintFitHook(FitHook):
         This is called whenever FitRecipe._prepare is called, which is whenever
         a configurational change to the fit hierarchy takes place, such as
         adding a new ParameterSet, constraint or restraint.
-
         """
         self.count = 0
         return
@@ -111,7 +105,6 @@ class PrintFitHook(FitHook):
         """This is called within FitRecipe.residual, before the calculation.
 
         recipe  --  The FitRecipe instance
-
         """
         self.count += 1
         if self.verbose > 0:
@@ -123,7 +116,6 @@ class PrintFitHook(FitHook):
 
         recipe  --  The FitRecipe instance
         chiv    --  The residual vector
-
         """
         if self.verbose < 2:
             return
@@ -209,7 +201,6 @@ class PlotFitHook(FitHook):
 
         recipe  --  The FitRecipe instance
         chiv    --  The residual vector
-
         """
         FitHook.postcall(self, recipe, chiv)
         import pylab

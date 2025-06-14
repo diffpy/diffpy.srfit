@@ -327,7 +327,6 @@ class TestParameterAdapter(unittest.TestCase):
 
         Note that this cannot work with co-linear points as the direction of
         rotation cannot be defined in this case.
-
         """
         occryst = self.occryst
         ocmol = self.ocmol
@@ -600,7 +599,6 @@ class TestCreateSpaceGroup(unittest.TestCase):
 
     This makes sure that the space groups created by the structure parameter
     set are correct.
-
     """
 
     def setUp(self):

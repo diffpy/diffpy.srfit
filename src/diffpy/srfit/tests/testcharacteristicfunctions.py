@@ -98,7 +98,7 @@ class TestSASCF(unittest.TestCase):
 
 
     def testCylinder(self):
-        """Make sure cylinder works over different r-ranges"""
+        """Make sure cylinder works over different r-ranges."""
         radius = 100
         length = 30
 

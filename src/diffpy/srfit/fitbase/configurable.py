@@ -30,7 +30,6 @@ class Configurable(object):
     _configobjs     --  Set of Configureables in a hierarcy or instances.
                         Messasges get passed up the hierarcy to a FitReciple
                         via these objects.
-
     """
 
     def __init__(self):
@@ -48,7 +47,6 @@ class Configurable(object):
 
         The passed obj is only stored if it is a a Configurable, otherwise this
         method quietly exits.
-
         """
         if isinstance(obj, Configurable):
             self._configobjs.add(obj)

@@ -116,8 +116,7 @@ class TestParameterAdapter(unittest.TestCase):
 
 
     def test___repr__(self):
-        """Test representation of DiffpyStructureParSet objects.
-        """
+        """Test representation of DiffpyStructureParSet objects."""
         lat = Lattice(3, 3, 2, 90, 90, 90)
         atom = Atom("C", [0, 0.2, 0.5])
         stru = Structure([atom], lattice=lat)
@@ -129,8 +128,7 @@ class TestParameterAdapter(unittest.TestCase):
 
 
     def test_pickling(self):
-        """Test pickling of DiffpyStructureParSet.
-        """
+        """Test pickling of DiffpyStructureParSet."""
         stru = Structure([Atom("C", [0, 0.2, 0.5])])
         dsps = DiffpyStructureParSet("dsps", stru)
         data = pickle.dumps(dsps)

@@ -13,9 +13,7 @@
 #
 ##############################################################################
 
-"""
-Picklable storage of callable objects using weak references.
-"""
+"""Picklable storage of callable objects using weak references."""
 
 
 import weakref
@@ -25,8 +23,7 @@ import six
 
 
 class WeakBoundMethod(object):
-    """\
-    Callable wrapper to a bound method stored as a weak reference.
+    """\ Callable wrapper to a bound method stored as a weak reference.
 
     Support storage of bound methods without keeping the associated objects
     alive forever.  Provide facility for a fallback function to be used
@@ -118,8 +115,7 @@ class WeakBoundMethod(object):
     # support pickling of this type
 
     def __getstate__(self):
-        """Return state with a resolved weak reference.
-        """
+        """Return state with a resolved weak reference."""
         mobj = self._wref()
         nm = self.function.__name__
         amsg = "Unable to pickle this unbound function by name."
@@ -132,8 +128,7 @@ class WeakBoundMethod(object):
 
 
     def __setstate__(self, state):
-        """Restore the weak reference in this wrapper upon unpickling.
-        """
+        """Restore the weak reference in this wrapper upon unpickling."""
         (self._class, nm, self.fallback, mobj) = state
         self.function = getattr(self._class, nm)
         if mobj is None:

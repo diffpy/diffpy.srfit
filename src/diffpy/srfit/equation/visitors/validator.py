@@ -39,7 +39,6 @@ class Validator(Visitor):
     errors  --  List of strings describing errors.
     _nin    --  Variable for counting the number input arguments for an
                 operator.
-
     """
 
     def __init__(self):
@@ -58,7 +57,6 @@ class Validator(Visitor):
 
         The Argument must be an instance of ArgumentABC from
         diffpy.srfit.equation.literals.abcs
-
         """
         if not isinstance(arg, ArgumentABC):
             m = msg%(arg, ArgumentABC.__name__)
@@ -71,7 +69,6 @@ class Validator(Visitor):
 
         The Operator must be an instance of OperatorABC from
         diffpy.srfit.equation.literals.abcs
-
         """
 
         if not isinstance(op, OperatorABC):

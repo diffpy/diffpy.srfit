@@ -67,7 +67,6 @@ class FitResults(object):
 
     Each of these attributes, except the recipe, are created or updated when
     the update method is called.
-
     """
 
     def __init__(self, recipe, update = True, showfixed = True, showcon =
@@ -79,7 +78,6 @@ class FitResults(object):
                     True).
         showcon --  Show fixed variables in the output (default True).
         showcon --  Show constraint values in the output (default False).
-
         """
         self.recipe = recipe
         self.conresults = OrderedDict()
@@ -166,7 +164,6 @@ class FitResults(object):
 
         This code borrowed from PARK. It finds the pseudo-inverse of the
         Jacobian using the singular value decomposition.
-
         """
         try:
             J = self._calculateJacobian()
@@ -181,15 +178,14 @@ class FitResults(object):
     def _calculateJacobian(self):
         """Calculate the Jacobian for the fitting.
 
-        Adapted from PARK.
-        Returns the derivative wrt the fit variables at point p.
+        Adapted from PARK. Returns the derivative wrt the fit variables at
+        point p.
 
         This also calculates the derivatives of the constrained parameters
         while we're at it.
 
         Numeric derivatives are calculated based on step, where step is the
         portion of variable value. E.g. step = dv/v.
-
         """
         recipe = self.recipe
         step = self.derivstep
@@ -305,7 +301,6 @@ class FitResults(object):
         update  --  Flag indicating whether to call update() (default False).
 
         Returns a string containing the formatted results.
-
         """
         if update:
             self.update()
@@ -483,7 +478,6 @@ class FitResults(object):
         header  --  A header to add to the output (default "")
         footer  --  A footer to add to the output (default "")
         update  --  Flag indicating whether to call update() (default False).
-
         """
         print(self.formatResults(header, footer, update).rstrip())
         return
@@ -499,7 +493,6 @@ class FitResults(object):
         header  --  A header to add to the output (default "")
         footer  --  A footer to add to the output (default "")
         update  --  Flag indicating whether to call update() (default False).
-
         """
         # Save the time and user
         from time import ctime
@@ -541,7 +534,6 @@ class ContributionResults(object):
                     RecipeContainer._locateManagedObject method).
     convals     --  Values of the constrained parameters.
     conunc      --  Uncertainties in the constraint values.
-
     """
 
     def __init__(self, con, weight, fitres):
@@ -550,7 +542,6 @@ class ContributionResults(object):
         con     --  The FitContribution
         weight  --  The weight of the FitContribution in the recipe
         fitres  --  The FitResults instance to contain this ContributionResults
-
         """
         self.x = None
         self.y = None
@@ -632,7 +623,6 @@ def resultsDictionary(results):
 
     results --  An open file-like object, name of a file that contains
                 results from FitResults or a string containing fit results.
-
     """
     resstr = inputToString(results)
 
@@ -656,7 +646,6 @@ def initializeRecipe(recipe, results):
     recipe  --  A configured recipe with variables
     results --  An open file-like object, name of a file that contains
                 results from FitResults or a string containing fit results.
-
     """
 
     mpairs = resultsDictionary(results)

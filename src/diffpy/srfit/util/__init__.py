@@ -13,16 +13,14 @@
 #
 ##############################################################################
 
-"""
-Utilities and constants used throughout SrFit.
-"""
+"""Utilities and constants used throughout SrFit."""
 
 _DASHEDLINE = 78 * '-'
 
 
 def sortKeyForNumericString(s):
-    """\
-    Compute key for sorting strings according to their integer numeric value.
+    """\ Compute key for sorting strings according to their integer numeric
+    value.
 
     Each string gets split to string and integer segments to create keys
     for comparison.  Signs, decimal points and exponents are ignored.

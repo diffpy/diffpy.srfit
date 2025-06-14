@@ -259,9 +259,9 @@ class EquationFactory(object):
     def wipeout(self, eq):
         """Invalidate the specified equation and remove it from the factory.
 
-        This will remove the equation from the purview of the factory and
-        also change its formula to return NaN.  This ensures that eq does
-        not observe any object in the factory and thus prevents its indirect
+        This will remove the equation from the purview of the factory and also
+        change its formula to return NaN.  This ensures that eq does not
+        observe any object in the factory and thus prevents its indirect
         pickling with the factory because of observer callback function.
 
         No return value.
@@ -635,8 +635,7 @@ def getBuilder(name):
 
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module
-    namespace.
-    """
+    namespace."""
     for name in dir(numpy):
         op = getattr(numpy, name)
         if isinstance(op, numpy.ufunc):
@@ -648,8 +647,7 @@ __wrapNumpyOperators()
 def __wrapSrFitOperators():
     """Export all non-base operators from the
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
-    instances in the module namespace.
-    """
+    instances in the module namespace."""
     opmod = literals.operators
     excluded_types = set((opmod.CustomOperator, opmod.UFuncOperator))
     # check if opmod member should be wrapped as OperatorBuilder

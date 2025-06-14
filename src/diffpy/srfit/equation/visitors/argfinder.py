@@ -29,7 +29,6 @@ class ArgFinder(Visitor):
     Attributes
     args    --  The list of collected Arguments
     getconsts  --  Flag indicating whether to grab constant arguments.
-
     """
 
     def __init__(self, getconsts = True):
@@ -38,7 +37,6 @@ class ArgFinder(Visitor):
         Arguments
         getconsts   --  Flag indicating whether to grap constant arguments
                         (default True).
-
         """
         self.args = []
         self.getconsts = getconsts

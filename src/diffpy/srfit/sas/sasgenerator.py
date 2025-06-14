@@ -37,7 +37,6 @@ class SASGenerator(ProfileGenerator):
     is set for the BaseModel, the dispersion "width" will be accessible under
     "<parname>_width", where <parname> is the name a parameter adjusted by
     dispersion.
-
     """
 
     def __init__(self, name, model):
@@ -45,7 +44,6 @@ class SASGenerator(ProfileGenerator):
 
         name    --  A name for the SASGenerator
         model   --  SASModel object this adapts.
-
         """
         ProfileGenerator.__init__(self, name)
 

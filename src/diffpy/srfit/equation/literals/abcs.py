@@ -25,7 +25,10 @@ import six
 
 @six.add_metaclass(ABCMeta)
 class LiteralABC(object):
-    """Abstract Base Class for Literal. See Literal for usage."""
+    """Abstract Base Class for Literal.
+
+    See Literal for usage.
+    """
 
     @abstractmethod
     def identify(self, visitor): pass
@@ -39,7 +42,10 @@ class LiteralABC(object):
 
 
 class ArgumentABC(LiteralABC):
-    """Abstract Base Class for Argument. See Argument for usage."""
+    """Abstract Base Class for Argument.
+
+    See Argument for usage.
+    """
 
     @abstractmethod
     def setValue(self, value): pass
@@ -51,7 +57,10 @@ class ArgumentABC(LiteralABC):
 
 
 class OperatorABC(LiteralABC):
-    """Abstract Base Class for Operator. See Operator for usage."""
+    """Abstract Base Class for Operator.
+
+    See Operator for usage.
+    """
 
     @abstractmethod
     def addLiteral(self, literal): pass

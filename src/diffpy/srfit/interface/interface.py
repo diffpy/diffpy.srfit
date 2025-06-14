@@ -33,7 +33,7 @@ class ParameterInterface(object):
     """Mix-in class for enhancing the Parameter interface."""
 
     def __lshift__(self, v):
-        """setValue with <<
+        """SetValue with <<
 
         Think of '<<' as injecting a value
 
@@ -53,7 +53,7 @@ class RecipeOrganizerInterface(object):
     """Mix-in class for enhancing the RecipeOrganizer interface."""
 
     def __imul__(self, args):
-        """constrain with *=
+        """Constrain with *=
 
         Think of '*' as a push-pin.
 
@@ -63,7 +63,7 @@ class RecipeOrganizerInterface(object):
         return self
 
     def __imod__(self, args):
-        """restrain with %=
+        """Restrain with %=
 
         This of '%' as a loose rope.
 
@@ -98,7 +98,7 @@ class FitRecipeInterface(object):
     """Mix-in class for enhancing the FitRecipe interface."""
 
     def __ior__(self, args):
-        """addContribution with |=
+        """AddContribution with |=
 
         Think of "|" as the union of components.
 
@@ -108,7 +108,7 @@ class FitRecipeInterface(object):
         return self
 
     def __iadd__(self, args):
-        """addVar or newVar with +=
+        """AddVar or newVar with +=
 
         Think of "+" as addition of a variable.
 

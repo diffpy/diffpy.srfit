@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-"""Unit tests for diffpy.srfit.
-"""
+"""Unit tests for diffpy.srfit."""
 
 import unittest
 import logging
@@ -26,7 +25,7 @@ del logging
 
 
 def testsuite(pattern=''):
-    '''Create a unit tests suite for diffpy.srfit package.
+    """Create a unit tests suite for diffpy.srfit package.
 
     Parameters
     ----------
@@ -39,7 +38,7 @@ def testsuite(pattern=''):
     -------
     suite : `unittest.TestSuite`
         The TestSuite object containing the matching tests.
-    '''
+    """
     import re
     from os.path import dirname
     from itertools import chain
@@ -70,12 +69,12 @@ def testsuite(pattern=''):
 
 
 def test():
-    '''Execute all unit tests for the diffpy.srfit package.
+    """Execute all unit tests for the diffpy.srfit package.
 
     Returns
     -------
     result : `unittest.TestResult`
-    '''
+    """
     suite = testsuite()
     runner = unittest.TextTestRunner()
     result = runner.run(suite)

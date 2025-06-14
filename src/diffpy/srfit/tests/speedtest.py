@@ -188,7 +188,6 @@ def speedTest3(mutate = 2):
     Results - sympy is 10 to 24 times faster without using arrays (ouch!).
             - diffpy.srfit.equation is slightly slower when using arrays, but
               not considerably worse than versus numpy alone.
-
     """
 
     from diffpy.srfit.equation.builder import EquationFactory
@@ -262,7 +261,6 @@ def speedTest4(mutate = 2):
     Results - sympy is 10 to 24 times faster without using arrays (ouch!).
             - diffpy.srfit.equation is slightly slower when using arrays, but
               not considerably worse than versus numpy alone.
-
     """
 
     from diffpy.srfit.equation.builder import EquationFactory

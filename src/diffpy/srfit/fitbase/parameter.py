@@ -50,7 +50,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
     bounds  --  A 2-list defining the bounds on the Parameter. This can be
                 used by some optimizers when the Parameter is varied. See
                 FitRecipe.getBounds and FitRecipe.boundsToRestraints.
-
     """
 
     def __init__(self, name, value = None, const = False):
@@ -63,7 +62,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
                     pi).
 
         Raises ValueError if the name is not a valid attribute identifier
-
         """
         self.constrained = False
         self.bounds = [-numpy.inf, +numpy.inf]
@@ -81,7 +79,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
                     (default), then the upper bound will not be alterered.
 
         Returns self so that mutators can be chained.
-
         """
         Argument.setValue(self, val)
         return self
@@ -96,7 +93,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
                     constant or otherwise.
 
         Returns self so that mutators can be chained.
-
         """
         self.const = bool(const)
         if value is not None:
@@ -129,7 +125,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
                 lower radius is used.
 
         Returns self so that mutators can be chained.
-
         """
         val = self.getValue()
         lb = val - lr
@@ -145,7 +140,6 @@ class Parameter(_parameter_interface, Argument, Validatable):
         This validates that value is not None.
 
         Raises SrFitError if validation fails.
-
         """
         if self.value is None:
             raise SrFitError("value of '%s' is None"%self.name)
@@ -162,7 +156,6 @@ class ParameterProxy(Parameter):
     name    --  A name for this ParameterProxy. Names should be unique within a
                 RecipeOrganizer and should be valid attribute names.
     par     --  The Parameter this is a proxy for.
-
     """
 
 
@@ -173,7 +166,6 @@ class ParameterProxy(Parameter):
         par     --  The Parameter this is a proxy for.
 
         Raises ValueError if the name is not a valid attribute identifier
-
         """
         validateName(name)
 
@@ -185,8 +177,7 @@ class ParameterProxy(Parameter):
 
     @property
     def constrained(self):
-        """A flag indicating if the proxied Parameter is constrained.
-        """
+        """A flag indicating if the proxied Parameter is constrained."""
         return self.par.constrained
 
     @constrained.setter
@@ -199,8 +190,8 @@ class ParameterProxy(Parameter):
     def bounds(self):
         """List of lower and upper bounds of the proxied Parameter.
 
-        This can be used by some optimizers when the Parameter is varied.
-        See FitRecipe.getBounds and FitRecipe.boundsToRestraints.
+        This can be used by some optimizers when the Parameter is varied. See
+        FitRecipe.getBounds and FitRecipe.boundsToRestraints.
         """
         return self.par.bounds
 
@@ -247,7 +238,6 @@ class ParameterProxy(Parameter):
         This validates that value and par are not None.
 
         Raises SrFitError if validation fails.
-
         """
         if self.par is None:
             raise SrFitError("par is None")
@@ -262,7 +252,6 @@ class ParameterAdapter(Parameter):
 
     This class wraps an object as a Parameter. The getValue and setValue
     methods defer to the data of the wrapped object.
-
     """
 
     def __init__(self, name, obj, getter = None, setter = None, attr = None):
@@ -288,7 +277,6 @@ class ParameterAdapter(Parameter):
 
         Raises ValueError if exactly one of getter or setter is not None, or if
         getter, setter and attr are all None.
-
         """
         if getter is None and setter is None and attr is None:
             raise ValueError("Specify attribute access")

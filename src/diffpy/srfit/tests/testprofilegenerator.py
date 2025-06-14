@@ -79,8 +79,7 @@ class TestProfileGenerator(unittest.TestCase):
 
 
     def test_pickling(self):
-        """Test pickling of ProfileGenerator.
-        """
+        """Test pickling of ProfileGenerator."""
         data = pickle.dumps(self.gen)
         gen2 = pickle.loads(data)
         self.assertEqual('test', gen2.name)

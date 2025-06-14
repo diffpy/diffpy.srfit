@@ -748,7 +748,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     def restrain(self, res, lb = -inf, ub = inf, sig = 1, scaled = False, ns =
             {}):
-        """Restrain an expression to specified bounds
+        """Restrain an expression to specified bounds.
 
         res     --  An equation string or Parameter to restrain.
         lb      --  The lower bound on the restraint evaluation (default -inf).
@@ -858,8 +858,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def _validate(self):
         """Validate my state.
 
-        This performs RecipeContainer validations.
-        This validates contained Restraints and Constraints.
+        This performs RecipeContainer validations. This validates contained
+        Restraints and Constraints.
 
         Raises AttributeError if validation fails.
         """

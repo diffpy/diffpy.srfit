@@ -27,7 +27,8 @@ def isIdentifier(s):
 
     From http://code.activestate.com/recipes/413487/
     """
-    if reident.match(s) is None: return False
+    if reident.match(s) is None:
+        return False
     return True
 
 
@@ -38,7 +39,7 @@ def validateName(name):
     """
     # Check that the name is valid
     if not isIdentifier(name):
-        raise ValueError("Name '%s' is not a valid identifier"%name)
+        raise ValueError(f"Name {name} is not a valid identifier")
     return
 
 # End of file

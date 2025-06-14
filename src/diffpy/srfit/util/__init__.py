@@ -19,7 +19,7 @@ _DASHEDLINE = 78 * '-'
 
 
 def sortKeyForNumericString(s):
-    """\ Compute key for sorting strings according to their integer numeric
+    """Compute key for sorting strings according to their integer numeric
     value.
 
     Each string gets split to string and integer segments to create keys
@@ -44,6 +44,7 @@ def sortKeyForNumericString(s):
     rv = tuple((int(w) if i % 2 else w)
                for i, w in enumerate(rx.split(s)))
     return rv
+
 
 sortKeyForNumericString._rx = None
 

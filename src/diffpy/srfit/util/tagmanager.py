@@ -41,11 +41,9 @@ class TagManager(object):
         self.silent = True
         return
 
-
     def alltags(self):
         """Get all tags managed by the TagManager."""
         return self._tagdict.keys()
-
 
     def tag(self, obj, *tags):
         """Tag an object.
@@ -61,7 +59,6 @@ class TagManager(object):
             oset = self._tagdict.setdefault(str(tag), set())
             oset.add(obj)
         return
-
 
     def untag(self, obj, *tags):
         """Remove tags from an object.
@@ -84,7 +81,6 @@ class TagManager(object):
 
         return
 
-
     def tags(self, obj):
         """Get all tags on an object.
 
@@ -92,7 +88,6 @@ class TagManager(object):
         """
         tags = [k for (k, v) in self._tagdict.items() if obj in v]
         return tags
-
 
     def hasTags(self, obj, *tags):
         """Determine if an object has all passed tags.
@@ -102,7 +97,6 @@ class TagManager(object):
         setgen = (self.__getObjectSet(t) for t in tags)
         result = all(obj in s for s in setgen)
         return result
-
 
     def union(self, *tags):
         """Get all objects that have any of the passed tags.
@@ -115,7 +109,6 @@ class TagManager(object):
         objs = functools.reduce(set.union, setgen)
         return objs
 
-
     def intersection(self, *tags):
         """Get all objects that have all of the passed tags.
 
@@ -127,7 +120,6 @@ class TagManager(object):
         objs = functools.reduce(set.intersection, setgen)
         return objs
 
-
     def verifyTags(self, *tags):
         """Check that tags are all extant.
 
@@ -138,9 +130,7 @@ class TagManager(object):
         for tag in tags:
             if tag not in keys:
                 raise KeyError("Tag '%s' does not exist" % tag)
-
         return True
-
 
     def __getObjectSet(self, tag):
         """Helper function for getting an object set with given tag.
@@ -153,7 +143,6 @@ class TagManager(object):
                 raise KeyError("Tag '%s' does not exist" % tag)
             oset = set()
         return oset
-
 
 # End class TagManager
 

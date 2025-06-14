@@ -545,7 +545,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
 
     def __getVarAndCheck(self, var):
-        """Get the actual variable from var
+        """Get the actual variable from var.
 
         var     --  A variable of the FitRecipe, or the name of a variable.
 

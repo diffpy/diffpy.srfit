@@ -203,8 +203,7 @@ class TestBuilder(unittest.TestCase):
 
 
     def test_parse_constant(self):
-        """Verify parsing of constant numeric expressions.
-        """
+        """Verify parsing of constant numeric expressions."""
         factory = builder.EquationFactory()
         eq = factory.makeEquation('3.12 + 2')
         self.assertTrue(isinstance(eq, builder.Equation))

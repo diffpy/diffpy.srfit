@@ -71,7 +71,6 @@ class BasePDFGenerator(ProfileGenerator):
     delta2  --  See Managed Parameters.
     qbroad  --  See Managed Parameters.
     qdamp   --  See Managed Parameters.
-
     """
 
     def __init__(self, name = "pdf"):
@@ -95,7 +94,6 @@ class BasePDFGenerator(ProfileGenerator):
 
         Setting the calculator creates Parameters from the variable attributes
         of the SrReal calculator.
-
         """
         self._calc = calc
         for pname in self.__class__._parnames:
@@ -172,7 +170,10 @@ class BasePDFGenerator(ProfileGenerator):
         return
 
     def getScatteringType(self):
-        """Get the scattering type. See 'setScatteringType'."""
+        """Get the scattering type.
+
+        See 'setScatteringType'.
+        """
         return self._calc.getRadiationType()
 
     def setQmax(self, qmax):
@@ -186,8 +187,7 @@ class BasePDFGenerator(ProfileGenerator):
         return self._calc.qmax
 
     def setQmin(self, qmin):
-        """Set the qmin value.
-        """
+        """Set the qmin value."""
         self._calc.qmin = qmin
         self.meta["qmin"] = self.getQmin()
         return
@@ -212,7 +212,6 @@ class BasePDFGenerator(ProfileGenerator):
                     True). Note that some structures do not support
                     periodicity, in which case this will have no effect on the
                     PDF calculation.
-
         """
 
         # Create the ParameterSet
@@ -238,7 +237,6 @@ class BasePDFGenerator(ProfileGenerator):
         periodic -- The structure should be treated as periodic (default True).
                     Note that some structures do not support periodicity, in
                     which case this will be ignored.
-
         """
         # Store the ParameterSet for easy access
         self._phase = parset
@@ -264,11 +262,10 @@ class BasePDFGenerator(ProfileGenerator):
     def _validate(self):
         """Validate my state.
 
-        This validates that the phase is not None.
-        This performs ProfileGenerator validations.
+        This validates that the phase is not None. This performs
+        ProfileGenerator validations.
 
         Raises SrFitError if validation fails.
-
         """
         if self._calc is None:
             raise SrFitError("_calc is None")
@@ -285,7 +282,6 @@ class BasePDFGenerator(ProfileGenerator):
         the crystal has been updated by the optimizer via the ObjCrystParSet
         created in setCrystal. Thus, we need only call pdf with the internal
         structure object.
-
         """
         if not numpy.array_equal(r, self._lastr):
             self._prepare(r)

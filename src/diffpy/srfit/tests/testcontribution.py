@@ -263,8 +263,7 @@ class TestContribution(unittest.TestCase):
 
 
     def test_releaseOldEquations(self):
-        """Ensure EquationFactory does not hold to obsolete Equations.
-        """
+        """Ensure EquationFactory does not hold to obsolete Equations."""
         fc = self.fitcontribution
         self.assertEqual(0, len(fc._eqfactory.equations))
         for i in range(5):
@@ -278,8 +277,7 @@ class TestContribution(unittest.TestCase):
 
 
     def test_registerFunction(self):
-        """Ensure registered function works after second setEquation call.
-        """
+        """Ensure registered function works after second setEquation call."""
         fc = self.fitcontribution
         fsquare = lambda x : x**2
         fc.registerFunction(fsquare, name='fsquare')

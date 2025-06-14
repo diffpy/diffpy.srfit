@@ -33,7 +33,6 @@ class BaseStructureParSet(ParameterSet):
 
     Attributes:
     stru    --  The adapted object
-
     """
 
     @classmethod
@@ -50,7 +49,6 @@ class BaseStructureParSet(ParameterSet):
 
         Lattice must also have the "angunits" attribute, which is either "deg"
         or "rad", to signify degrees or radians.
-
         """
         raise NotImplementedError("The must be overloaded")
 
@@ -61,6 +59,5 @@ class BaseStructureParSet(ParameterSet):
         names "x", "y", and "z". The ADPs must be accessible as well, but the
         name and nature of the ADPs (U-factors, B-factors, isotropic,
         anisotropic) depends on the adapted structure.
-
         """
         raise NotImplementedError("The must be overloaded")

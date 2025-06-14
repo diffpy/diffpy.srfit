@@ -37,11 +37,10 @@ class Constraint(Validatable):
     par     --  A Parameter that is the subject of the constraint.
     eq      --  An equation whose evaluation is used to set the value of the
                 constraint.
-
     """
 
     def __init__(self):
-        """Initialization. """
+        """Initialization."""
         self.par = None
         self.eq = None
         return
@@ -53,7 +52,6 @@ class Constraint(Validatable):
         keep it from being constrained multiple times.
 
         Raises a ValueError if par is const.
-
         """
 
         if par.const:
@@ -88,11 +86,9 @@ class Constraint(Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates that par is not None.
-        This validates eq.
+        This validates that par is not None. This validates eq.
 
         Raises SrFitError if validation fails.
-
         """
         if self.par is None:
             raise SrFitError("par is None")

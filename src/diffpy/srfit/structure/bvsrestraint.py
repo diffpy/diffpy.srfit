@@ -38,7 +38,6 @@ class BVSRestraint(Restraint):
     scaled  --  A flag indicating if the restraint is scaled (multiplied)
                 by the unrestrained point-average chi^2 (chi^2/numpoints)
                 (default False).
-
     """
 
     def __init__(self, parset, sig = 1, scaled = False):
@@ -49,7 +48,6 @@ class BVSRestraint(Restraint):
         scaled  --  A flag indicating if the restraint is scaled
                     (multiplied) by the unrestrained point-average chi^2
                     (chi^2/numpoints) (bool, default False).
-
         """
         from diffpy.srreal.bvscalculator import BVSCalculator
         self._calc = BVSCalculator()
@@ -63,7 +61,6 @@ class BVSRestraint(Restraint):
 
         w   --  The point-average chi^2 which is optionally used to scale the
                 penalty (float, default 1.0).
-
         """
         # Get the bvms from the BVSCalculator
         stru = self._parset._getSrRealStructure()
@@ -82,7 +79,6 @@ class BVSRestraint(Restraint):
         """This evaluates the calculator.
 
         Raises SrFitError if validation fails.
-
         """
         from numpy import nan
         p = self.penalty()

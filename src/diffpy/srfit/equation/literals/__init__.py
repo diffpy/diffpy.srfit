@@ -16,13 +16,14 @@
 """Building blocks for defining a lazy evaluation network.
 
 Literals are the building blocks of the evaluation network. An Argument holds
-the name and value of an equation variable. Operators are used to compose
-other Literals to produce a new value.
+the name and value of an equation variable. Operators are used to compose other
+Literals to produce a new value.
 
 Literal networks can be evaluated or have other actions performed on them by
 Visitors (in diffpy.srfit.equation.visitors). The Literal-Visitor relationship
-is that described by the Visitor pattern
-(http://en.wikipedia.org/wiki/Visitor_pattern).
+is that described by the Visitor pattern (
+
+http://en.wikipedia.org/wiki/Visitor_pattern).
 """
 
 __all__ = ["Argument", "Operator", "BinaryOperator", "CustomOperator",

@@ -19,8 +19,9 @@ Visitors are designed to traverse and extract information from Literal networks
 (diffpy.srfit.equation.literals). Visitors are used to validate, print and
 extracting Arguments from Literal networks.
 
-The Literal-Visitor relationship is that described by the Visitor pattern
-(http://en.wikipedia.org/wiki/Visitor_pattern).
+The Literal-Visitor relationship is that described by the Visitor pattern (
+
+http://en.wikipedia.org/wiki/Visitor_pattern).
 """
 
 from __future__ import print_function

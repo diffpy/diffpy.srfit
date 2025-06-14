@@ -174,8 +174,7 @@ class TestPDFGenerator(unittest.TestCase):
 
 
     def test_setQmin(self):
-        """Verify qmin is propagated to the calculator object.
-        """
+        """Verify qmin is propagated to the calculator object."""
         gen = self.gen
         self.assertEqual(0, gen.getQmin())
         self.assertEqual(0, gen._calc.qmin)
@@ -198,8 +197,7 @@ class TestPDFContribution(unittest.TestCase):
 
 
     def test_setQmax(self):
-        """check PDFContribution.setQmax()
-        """
+        """Check PDFContribution.setQmax()"""
         from diffpy.structure import Structure
         pc = self.pc
         pc.setQmax(21)
@@ -212,8 +210,7 @@ class TestPDFContribution(unittest.TestCase):
 
 
     def test_getQmax(self):
-        """check PDFContribution.getQmax()
-        """
+        """Check PDFContribution.getQmax()"""
         from diffpy.structure import Structure
         # cover all code branches in PDFContribution._getMetaValue
         # (1) contribution metadata

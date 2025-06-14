@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-"""
-Definition of __version__, __date__, __timestamp__, __git_commit__.
+"""Definition of __version__, __date__, __timestamp__, __git_commit__.
 
 Notes
 -----

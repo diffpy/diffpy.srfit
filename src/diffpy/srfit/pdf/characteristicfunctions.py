@@ -16,10 +16,9 @@
 """Form factors (characteristic functions) used in PDF nanoshape fitting.
 
 These are used to calculate the attenuation of the PDF due to a finite size.
-For a crystal-like nanoparticle, one can calculate the PDF via
-Gnano(r) = f(r) Gcryst(r),
-where f(r) is the nanoparticle characteristic function and
-Gcryst(f) is the crystal PDF.
+For a crystal-like nanoparticle, one can calculate the PDF via Gnano(r) = f(r)
+Gcryst(r), where f(r) is the nanoparticle characteristic function and Gcryst(f)
+is the crystal PDF.
 
 These functions are meant to be imported and added to a FitContribution using
 the 'registerFunction' method of that class.
@@ -46,7 +45,6 @@ def sphericalCF(r, psize):
 
     From Kodama et al., Acta Cryst. A, 62, 444-453
     (converted from radius to diameter)
-
     """
     f = numpy.zeros(numpy.shape(r), dtype=float)
     if psize > 0:
@@ -67,7 +65,6 @@ def spheroidalCF(r, erad, prad):
     erad < prad equates to a prolate spheroid
     erad > prad equates to a oblate spheroid
     erad == prad is a sphere
-
     """
     psize = 2.0 * erad
     pelpt = 1.0 * prad / erad
@@ -83,7 +80,6 @@ def spheroidalCF2(r, psize, axrat):
     axrat  --  The ratio of axis lengths
 
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
-
     """
     pelpt = 1.0 * axrat
 
@@ -187,7 +183,6 @@ def sheetCF(r, sthick):
     sthick  --  Thickness of nanosheet
 
     From Kodama et al., Acta Cryst. A, 62, 444-453
-
     """
     # handle zero or negative sthick.  make it work for scalars and arrays.
     if sthick <= 0:
@@ -215,7 +210,6 @@ def shellCF(r, radius, thickness):
     outer radius = radius + thickness
 
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
-
     """
     d = 1.0*thickness
     a = 1.0*radius + d/2.0
@@ -230,7 +224,6 @@ def shellCF2(r, a, delta):
     outer radius = a + thickness/2
 
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
-
     """
     a = 1.0*a
     d = 1.0*delta
@@ -271,7 +264,6 @@ class SASCF(Calculator):
     is set for the BaseModel, the dispersion "width" will be accessible under
     "<parname>_width", where <parname> is the name a parameter adjusted by
     dispersion.
-
     """
 
     def __init__(self, name, model):
@@ -279,7 +271,6 @@ class SASCF(Calculator):
 
         name    --  A name for the SASCF
         model   --  SASModel object this adapts.
-
         """
         Calculator.__init__(self, name)
 
@@ -301,7 +292,8 @@ class SASCF(Calculator):
         return
 
     def __call__(self, r):
-        """Calculate the characteristic function from the transform of the BaseModel."""
+        """Calculate the characteristic function from the transform of the
+        BaseModel."""
 
         # Determine q-values.
         # We want very fine r-spacing so we can properly normalize f(r). This

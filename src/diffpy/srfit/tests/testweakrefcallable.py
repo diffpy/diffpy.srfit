@@ -13,9 +13,7 @@
 #
 ##############################################################################
 
-"""
-Unit tests for the weakrefcallable module.
-"""
+"""Unit tests for the weakrefcallable module."""
 
 
 import unittest
@@ -47,8 +45,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 
 
     def test___init__(self):
-        """check WeakBoundMethod.__init__()
-        """
+        """Check WeakBoundMethod.__init__()"""
         self.assertTrue(self.w.fallback is _fallback_example)
         wf = weak_ref(self.f._flush)
         self.assertTrue(None is wf.fallback)
@@ -56,8 +53,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 
 
     def test___call__(self):
-        """check WeakBoundMethod.__call__()
-        """
+        """Check WeakBoundMethod.__call__()"""
         f = self.f
         self.assertEqual(7, f.evaluate())
         self.assertEqual(7, f._eq._value)
@@ -74,8 +70,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 
 
     def test___hash__(self):
-        """check WeakBoundMethod.__hash__()
-        """
+        """Check WeakBoundMethod.__hash__()"""
         f1 = FitContribution('f1')
         w1 = weak_ref(f1._flush)
         h0 = hash(w1)
@@ -89,8 +84,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 
 
     def test___eq__(self):
-        """check WeakBoundMethod.__eq__()
-        """
+        """Check WeakBoundMethod.__eq__()"""
         f1 = FitContribution('f1')
         w1 = weak_ref(f1._flush)
         w2 = weak_ref(f1._flush)
@@ -110,8 +104,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 
 
     def test_pickling(self):
-        """Verify unpickling works when it involves __hash__ call.
-        """
+        """Verify unpickling works when it involves __hash__ call."""
         holder = set([self.w])
         objs = [holder, self.f._eq, self.w]
         data = pickle.dumps(objs)
@@ -123,8 +116,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 
 
     def test_observable_deregistration(self):
-        """check if Observable drops dead Observer.
-        """
+        """Check if Observable drops dead Observer."""
         f = self.f
         x = f.newParameter('x', 5)
         f.setEquation('3 * x')

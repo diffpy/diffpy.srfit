@@ -35,7 +35,6 @@ class Observable(object):
       addObserver: registers its callable argument with the list of handlers to invoke
       removeObserver: remove an event handler from the list of handlers to invoke
       notify: invoke the registered handlers in the order in which they were registered
-
     """
 
 

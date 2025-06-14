@@ -63,12 +63,10 @@ class PDFGenerator(BasePDFGenerator):
     delta2  --  See Managed Parameters.
     qbroad  --  See Managed Parameters.
     qdamp   --  See Managed Parameters.
-
     """
 
     def __init__(self, name = "pdf"):
-        """Initialize the generator.
-        """
+        """Initialize the generator."""
         from diffpy.srreal.pdfcalculator import PDFCalculator
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(PDFCalculator())

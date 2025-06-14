@@ -21,22 +21,14 @@ associated with a FitContribution to help calculate a profile.
 
 To define a ProfileGenerator, one must implement the required Parameters and
 ParameterSets as well as overload the __call__ method with the calculation. A
-very simple example is
-> class Gaussian(ProfileGenerator):
->
->    def __init__(self):
->        # Initialize and give this a name
->        ProfileGenerator.__init__(self, "g")
->        # Add amplitude, center and width parameters
->        self.newParameter("amp", 0)
->        self.newParameter("center", 0)
->        self.newParameter("width", 0)
->
->    def __call__(self, x):
->        a = self.amp.getValue()
->        x0 = self.center.getValue()
->        w = self.width.getValue()
->        return a * exp(-0.5*((x-x0)/w)**2)
+very simple example is > class Gaussian(ProfileGenerator): > >    def
+__init__(self): >        # Initialize and give this a name >
+ProfileGenerator.__init__(self, "g") >        # Add amplitude, center and width
+parameters >        self.newParameter("amp", 0) >
+self.newParameter("center", 0) >        self.newParameter("width", 0) > >
+def __call__(self, x): >        a = self.amp.getValue() >        x0 =
+self.center.getValue() >        w = self.width.getValue() >        return a *
+exp(-0.5*((x-x0)/w)**2)
 
 More examples can be found in the example directory of the documentation.
 """
@@ -117,7 +109,6 @@ class ProfileGenerator(Operator, ParameterSet):
         This method must be overloaded.
 
         This method only takes the independent variables to calculate over.
-
         """
         return x
 
@@ -137,7 +128,6 @@ class ProfileGenerator(Operator, ParameterSet):
 
         profile --  A Profile that specifies the calculation points and which
                     will store the calculated signal.
-
         """
         if self.profile is not None:
             self.profile.removeObserver(self._flush)
@@ -156,20 +146,17 @@ class ProfileGenerator(Operator, ParameterSet):
 
         This can be used to configure a ProfileGenerator upon a change in the
         metadata. This method gets called whenever the Profile is set.
-
         """
         return
 
     def _validate(self):
         """Validate my state.
 
-        This performs profile validations.
-        This performs ParameterSet validations.
-        This does not validate the operation, since this could be costly. The
-        operation should be validated with a containing equation.
+        This performs profile validations. This performs ParameterSet
+        validations. This does not validate the operation, since this could be
+        costly. The operation should be validated with a containing equation.
 
         Raises SrFitError if validation fails.
-
         """
         if self.profile is None:
             raise SrFitError("profile is None")

@@ -194,8 +194,7 @@ class TestConvolutionOperator(unittest.TestCase):
 class TestArrayOperator(unittest.TestCase):
 
     def test_value(self):
-        """Check ArrayOperator.value.
-        """
+        """Check ArrayOperator.value."""
         x = literals.Argument('x', 1.0)
         y = literals.Argument('y', 2.0)
         z = literals.Argument('z', 3.0)

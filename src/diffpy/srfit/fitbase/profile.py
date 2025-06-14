@@ -66,7 +66,6 @@ class Profile(Observable, Validatable):
                 constrained to.
     meta    --  A dictionary of metadata. This is only set if provided by a
                 parser.
-
     """
 
     def __init__(self):
@@ -106,7 +105,6 @@ class Profile(Observable, Validatable):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
-
         """
         x, y, junk, dy = parser.getData()
         self.meta = dict(parser.getMetaData())
@@ -125,7 +123,6 @@ class Profile(Observable, Validatable):
 
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
-
         """
         if len(yobs) != len(xobs):
             raise ValueError("xobs and yobs are different lengths")
@@ -254,7 +251,6 @@ class Profile(Observable, Validatable):
 
         This will create y and dy on the specified grid if xobs, yobs and
         dyobs exist.
-
         """
         x = numpy.asarray(x)
         if self.xobs is not None:
@@ -277,17 +273,15 @@ class Profile(Observable, Validatable):
     def loadtxt(self, *args, **kw):
         """Use numpy.loadtxt to load data.
 
-        Arguments are passed to numpy.loadtxt.
-        unpack = True is enforced.
-        The first two arrays returned by numpy.loadtxt are assumed to be x and
-        y.  If there is a third array, it is assumed to by dy. Any other arrays
-        are ignored. These are passed to setObservedProfile.
+        Arguments are passed to numpy.loadtxt. unpack = True is enforced. The
+        first two arrays returned by numpy.loadtxt are assumed to be x and y.
+        If there is a third array, it is assumed to by dy. Any other arrays are
+        ignored. These are passed to setObservedProfile.
 
         Raises ValueError if the call to numpy.loadtxt returns fewer than 2
         arrays.
 
         Returns the x, y and dy arrays loaded from the file
-
         """
         if len(args) == 8 and not args[-1]:
             args = list(args)
@@ -347,7 +341,6 @@ class Profile(Observable, Validatable):
         """Invalidate cached state.
 
         This will force any observer to invalidate its state.
-
         """
         self.ycalc = None
         self.notify(other)
@@ -356,11 +349,10 @@ class Profile(Observable, Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates that x, y, dy, xobx, yobs and dyobs are not None.
-        This validates that x, y, and dy are the same length.
+        This validates that x, y, dy, xobx, yobs and dyobs are not None. This
+        validates that x, y, and dy are the same length.
 
         Raises SrFitError if validation fails.
-
         """
         datanotset = any(v is None for v in
                 [self.x, self.y, self.dy, self.xobs, self.yobs, self.dyobs])
@@ -384,7 +376,6 @@ def rebinArray(A, xold, xnew):
     This uses cubic spline interpolation.
 
     Returns: A new array over the new sampling array.
-
     """
     if numpy.array_equal(xold, xnew):
         return A

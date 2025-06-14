@@ -87,7 +87,6 @@ class Calculator(Operator, ParameterSet):
         This method must be overloaded. When overloading, you should specify
         the arguments explicitly, otherwise the parameters must be specified
         when adding the Calculator to a RecipeOrganizer.
-
         """
         return 0
 
@@ -98,12 +97,11 @@ class Calculator(Operator, ParameterSet):
     def _validate(self):
         """Validate my state.
 
-        This performs ParameterSet validations.
-        This does not validate the operation, since this could be costly. The
-        operation should be validated with a containing equation.
+        This performs ParameterSet validations. This does not validate the
+        operation, since this could be costly. The operation should be
+        validated with a containing equation.
 
         Raises AttributeError if validation fails.
-
         """
         ParameterSet._validate(self)
 

@@ -13,8 +13,7 @@
 #
 ##############################################################################
 
-"""Swapper for replacing a Literal in an equation with another Literals.
-"""
+"""Swapper for replacing a Literal in an equation with another Literals."""
 
 __all__ = ["Swapper"]
 
@@ -29,7 +28,6 @@ class Swapper(Visitor):
     Attributes:
     newlit  --  The literal to be placed into the literal tree.
     oldlit  --  The literal to be replaced.
-
     """
 
     def __init__(self, oldlit, newlit):
@@ -38,7 +36,6 @@ class Swapper(Visitor):
         oldlit  --  The literal to be replaced.
         newlit  --  The literal to be placed into the literal tree. See the
                     class for how the replacement takes place.
-
         """
 
         self.newlit = newlit
@@ -52,7 +49,6 @@ class Swapper(Visitor):
         """Process an Argument node.
 
         Tell the parent to swap the old Argument with the replacement Literal.
-
         """
 
         if arg is self.oldlit:
@@ -64,7 +60,6 @@ class Swapper(Visitor):
         """Process an Operator node.
 
         Tell the parent to swap the old Operator with the replacement Literal.
-
         """
 
         # Check to see if we need to swap out this Operator. If so, then we
@@ -122,7 +117,6 @@ class Swapper(Visitor):
         """Process an Equation node.
 
         This looks at the equation itself as well as the root.
-
         """
         if eq is self.oldlit:
             self._swap = True

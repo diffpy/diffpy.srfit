@@ -63,7 +63,6 @@ class DebyePDFGenerator(BasePDFGenerator):
     delta2  --  See Managed Parameters.
     qbroad  --  See Managed Parameters.
     qdamp   --  See Managed Parameters.
-
     """
 
     def setStructure(self, stru, name = "phase", periodic = False):
@@ -82,7 +81,6 @@ class DebyePDFGenerator(BasePDFGenerator):
                     False). Note that some structures do not support
                     periodicity, in which case this will have no effect on the
                     PDF calculation.
-
         """
         return BasePDFGenerator.setStructure(self, stru, name, periodic)
 
@@ -102,14 +100,12 @@ class DebyePDFGenerator(BasePDFGenerator):
         periodic -- The structure should be treated as periodic (default True).
                     Note that some structures do not support periodicity, in
                     which case this will be ignored.
-
         """
         return BasePDFGenerator.setPhase(self, parset, periodic)
 
 
     def __init__(self, name = "pdf"):
-        """Initialize the generator.
-        """
+        """Initialize the generator."""
         from diffpy.srreal.pdfcalculator import DebyePDFCalculator
         BasePDFGenerator.__init__(self, name)
         self._setCalculator(DebyePDFCalculator())

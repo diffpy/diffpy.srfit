@@ -15,10 +15,10 @@
 
 """Nanoparticle form factor P(r) calculator.
 
-The PrCalculator class wraps a sas.pr.invertor.Invertor object as a
-Calculator. This is not wrapped as a ProfileGenerator because it will be used
-to share information between SAS I(Q) to PDF G(r), but it does not use the same
-profile as the PDF, which is where the calculator will be applied.
+The PrCalculator class wraps a sas.pr.invertor.Invertor object as a Calculator.
+This is not wrapped as a ProfileGenerator because it will be used to share
+information between SAS I(Q) to PDF G(r), but it does not use the same profile
+as the PDF, which is where the calculator will be applied.
 """
 
 __all__ = ["PrCalculator", "CFCalculator"]
@@ -52,14 +52,12 @@ class PrCalculator(Calculator):
     q           --  The q-values of the I(q) signal
     iq          --  The I(q) signal
     diq         --  The uncertainty in I(q)
-
     """
 
     def __init__(self, name):
         """Initialize the generator.
 
         name        --  A name for the PrCalculator
-
         """
         Calculator.__init__(self, name)
 
@@ -117,7 +115,6 @@ class CFCalculator(PrCalculator):
     q           --  The q-values of the I(q) signal
     iq          --  The I(q) signal
     diq         --  The uncertainty in I(q)
-
     """
 
     def __call__(self, r):

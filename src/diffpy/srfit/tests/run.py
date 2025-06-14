@@ -13,7 +13,7 @@
 #
 ##############################################################################
 
-"""Convenience module for executing all unit tests with
+"""Convenience module for executing all unit tests with.
 
 python -m diffpy.srfit.tests.run
 """

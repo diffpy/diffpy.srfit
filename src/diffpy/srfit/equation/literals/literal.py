@@ -33,7 +33,6 @@ class Literal(Observable,LiteralABC):
     Attributes
     name    --  A name for this Literal (default None).
     _value  --  The value of the Literal.
-
     """
 
     name = None

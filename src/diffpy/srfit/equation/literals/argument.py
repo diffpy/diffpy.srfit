@@ -34,7 +34,6 @@ class Argument(Literal, ArgumentABC):
                 Constants may be given special treatment by the Visitors.
     _value  --  The value of the Argument. Modified with 'setValue'.
     value   --  Property for 'getValue' and 'setValue'.
-
     """
 
     const = None
@@ -58,7 +57,6 @@ class Argument(Literal, ArgumentABC):
         """Set the value of the Literal.
 
         val --  The value to assign
-
         """
         if isinstance(self._value, ndarray) or isinstance(val, ndarray):
             notequiv = not array_equal(self._value, val)

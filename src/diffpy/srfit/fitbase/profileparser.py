@@ -58,7 +58,6 @@ class ProfileParser(object):
                     will not exist if data was not read from file.
     nbanks      --  The number of banks parsed.
     bank        --  The chosen bank number.
-
     """
 
     _format = ""
@@ -89,7 +88,6 @@ class ProfileParser(object):
         patstring   --  A string containing the pattern
 
         Raises ParseError if the string cannot be parsed
-
         """
         raise NotImplementedError()
 
@@ -103,7 +101,6 @@ class ProfileParser(object):
 
         Raises IOError if the file cannot be read
         Raises ParseError if the file cannot be parsed
-
         """
         infile = open(filename, 'r')
         self._banks = []
@@ -135,7 +132,6 @@ class ProfileParser(object):
         index  --  index of bank (integer, starting at 0).
 
         Raises IndexError if requesting a bank that does not exist
-
         """
         if index is None:
             index = self._meta.get("bank", 0)
@@ -169,7 +165,6 @@ class ProfileParser(object):
 
         This returns (x, y, dx, dy) tuple for the bank. dx is 0 if it cannot
         be determined from the data format.
-
         """
         self.selectBank(index)
 

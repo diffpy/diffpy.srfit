@@ -77,7 +77,6 @@ def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
                         and gamma is fixed to 120.
     Cubic           --  b and c are constrained to a, and alpha, beta and
                         gamma are fixed to 90.
-
     """
 
     from diffpy.structure.spacegroups import GetSpaceGroup, SpaceGroup
@@ -97,7 +96,6 @@ def _constrainAsSpaceGroup(phase, sg, scatterers = None,
 
     Arguments: As constrainAsSpaceGroup, except
     sg          --  diffpy.structure.spacegroups.SpaceGroup instance
-
     """
 
     from diffpy.structure.symmetryutilities import stdUsymbols
@@ -125,14 +123,12 @@ class BaseSpaceGroupParameters(RecipeContainer):
 
     Attributes
     name    --  "sgpars"
-
     """
 
     def __init__(self, name = "sgpars"):
         """Create the BaseSpaceGroupParameters object.
 
         This initializes the attributes.
-
         """
         RecipeContainer.__init__(self, name)
         return
@@ -145,7 +141,6 @@ class BaseSpaceGroupParameters(RecipeContainer):
                     the specified name has already been inserted.
 
         Raises ValueError if the Parameter has no name.
-
         """
         # Store the Parameter
         RecipeContainer._addObject(self, par, self._parameters, check)
@@ -180,7 +175,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     _adppars    --  BaseSpaceGroupParameters of free ADPs that are constrained
                     to.
     adppars     --  Property that populates _adppars.
-
     """
 
     def __init__(self, phase, sg, scatterers, sgoffset, constrainlat,
@@ -203,7 +197,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
                     isotropic ADPs will be constrainted via the anisotropic
                     ADPs.
-
         """
         BaseSpaceGroupParameters.__init__(self)
         self._latpars = None
@@ -265,7 +258,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         """Constrain the structure to the space group.
 
         This works as described by the constrainAsSpaceGroup method.
-
         """
 
         # Start by clearing the constraints
@@ -290,7 +282,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         """Clear old constraints.
 
         This only clears constraints where new ones are going to be applied.
-
         """
         phase = self.phase
         scatterers = self.scatterers
@@ -369,7 +360,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         """Constrain the positions.
 
         positions   --  The coordinates of the scatterers.
-
         """
 
         from diffpy.structure.symmetryutilities import SymmetryConstraints
@@ -409,7 +399,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         """Constrain the ADPs.
 
         positions   --  The coordinates of the scatterers.
-
         """
 
         from diffpy.structure.symmetryutilities import stdUsymbols
@@ -502,11 +491,10 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
 
     def __addPar(self, parname, par):
-        """Constrain a parameter via proxy with a specified name
+        """Constrain a parameter via proxy with a specified name.
 
         par     --  Parameter to constrain
         idx     --  Index to identify scatterer from which par comes
-
         """
         newpar = ParameterProxy(parname, par)
         self.addParameter(newpar)
@@ -519,9 +507,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 # New York (1969), p.60
 
 def _constrainTriclinic(lattice):
-    """Make constraints for Triclinic systems.
-
-    """
+    """Make constraints for Triclinic systems."""
     return
 
 def _constrainMonoclinic(lattice):
@@ -529,7 +515,6 @@ def _constrainMonoclinic(lattice):
 
     alpha and beta are fixed to 90 unless alpha != beta and alpha == gamma, in
     which case alpha and gamma are constrained to 90.
-
     """
     afactor = 1
     if lattice.angunits == "rad": afactor = deg2rad
@@ -548,7 +533,6 @@ def _constrainOrthorhombic(lattice):
     """Make constraints for Orthorhombic systems.
 
     alpha, beta and gamma are constrained to 90
-
     """
     afactor = 1
     if lattice.angunits == "rad": afactor = deg2rad
@@ -562,7 +546,6 @@ def _constrainTetragonal(lattice):
     """Make constraints for Tetragonal systems.
 
     b is constrained to a and alpha, beta and gamma are constrained to 90.
-
     """
     afactor = 1
     if lattice.angunits == "rad": afactor = deg2rad
@@ -576,10 +559,9 @@ def _constrainTetragonal(lattice):
 def _constrainTrigonal(lattice):
     """Make constraints for Trigonal systems.
 
-    If gamma == 120, then b is constrained to a, alpha and beta are
-    constrained to 90 and gamma is constrained to 120. Otherwise, b and c
-    are constrained to a, beta and gamma are constrained to alpha.
-
+    If gamma == 120, then b is constrained to a, alpha and beta are constrained
+    to 90 and gamma is constrained to 120. Otherwise, b and c are constrained
+    to a, beta and gamma are constrained to alpha.
     """
     afactor = 1
     if lattice.angunits == "rad": afactor = deg2rad
@@ -602,7 +584,6 @@ def _constrainHexagonal(lattice):
 
     b is constrained to a, alpha and beta are constrained to 90 and gamma is
     constrained to 120.
-
     """
     afactor = 1
     if lattice.angunits == "rad": afactor = deg2rad
@@ -618,7 +599,6 @@ def _constrainCubic(lattice):
     """Make constraints for Cubic systems.
 
     b and c are constrained to a, alpha, beta and gamma are constrained to 90.
-
     """
     afactor = 1
     if lattice.angunits == "rad": afactor = deg2rad
@@ -652,7 +632,6 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
     ns          --  namespace to draw extra names from (default {})
 
     Returns the parameter if it is free.
-
     """
     par = scatterer.get(parname)
 

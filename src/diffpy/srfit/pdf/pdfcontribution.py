@@ -59,14 +59,12 @@ class PDFContribution(FitContribution):
     scale   --  Scale factor
     qbroad  --  Resolution peak broadening term
     qdamp   --  Resolution peak dampening term
-
     """
 
     def __init__(self, name):
         """Create the PDFContribution.
 
         name        --  The name of the contribution.
-
         """
         FitContribution.__init__(self, name)
         self._meta = {}
@@ -92,7 +90,6 @@ class PDFContribution(FitContribution):
 
         data    --  An open file-like object, name of a file that contains data
                     or a string containing the data.
-
         """
         # Get the data into a string
         from diffpy.srfit.util.inpututils import inputToString
@@ -144,7 +141,7 @@ class PDFContribution(FitContribution):
 
 
     def savetxt(self, fname, **kwargs):
-        """Call numpy.savetxt with x, ycalc, y, dy
+        """Call numpy.savetxt with x, ycalc, y, dy.
 
         This calls on the built-in Profile.
 
@@ -175,7 +172,6 @@ class PDFContribution(FitContribution):
 
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)
-
         """
         # Based on periodic, create the proper generator.
         if periodic:
@@ -213,7 +209,6 @@ class PDFContribution(FitContribution):
 
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)
-
         """
         # Based on periodic, create the proper generator.
         if periodic:
@@ -234,7 +229,6 @@ class PDFContribution(FitContribution):
 
         The generator must already have a managed SrRealParSet, added with
         setStructure or setPhase.
-
         """
         # Add the generator to this FitContribution
         self.addProfileGenerator(gen)
@@ -275,7 +269,6 @@ class PDFContribution(FitContribution):
         type    --   "X" for x-ray or "N" for neutron
 
         Raises ValueError if type is not "X" or "N"
-
         """
         self._meta["stype"] = type
         for gen in self._generators.values():
@@ -283,7 +276,10 @@ class PDFContribution(FitContribution):
         return
 
     def getScatteringType(self):
-        """Get the scattering type. See 'setScatteringType'."""
+        """Get the scattering type.
+
+        See 'setScatteringType'.
+        """
         return self._getMetaValue("stype")
 
     def setQmax(self, qmax):
@@ -298,8 +294,7 @@ class PDFContribution(FitContribution):
         return self._getMetaValue("qmax")
 
     def setQmin(self, qmin):
-        """Set the qmin value.
-        """
+        """Set the qmin value."""
         self._meta["qmin"] = qmin
         for gen in self._generators.values():
             gen.setQmin(qmin)

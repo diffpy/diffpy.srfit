@@ -21,8 +21,9 @@ visitor, or otherwise inspected.
 
 The Operator class contains all the information necessary to be identified and
 evaluated by a Visitor. Thus, a single onOperator method exists in the Visitor
-base class. Other Operators can be derived from Operator (see AdditionOperator),
-but they all identify themselves with the Visitor.onOperator method.
+base class. Other Operators can be derived from Operator (see
+AdditionOperator), but they all identify themselves with the Visitor.onOperator
+method.
 """
 
 __all__ = ["Operator", "AdditionOperator", "SubtractionOperator",
@@ -103,7 +104,6 @@ class Operator(Literal, OperatorABC):
         leftmost argument. The last is the rightmost.
 
         Raises ValueError if the literal causes a self-reference.
-
         """
         # Make sure we don't have self-reference
         self._loopCheck(literal)
@@ -134,8 +134,7 @@ class Operator(Literal, OperatorABC):
 
 
 class UnaryOperator(Operator):
-    """
-    Abstract class for an unary operator with one input and one result.
+    """Abstract class for an unary operator with one input and one result.
 
     This base class defines the `nin` and `nout` attributes.  The derived
     concrete operator must provide the remaining abstract attributes
@@ -148,8 +147,7 @@ class UnaryOperator(Operator):
 
 
 class BinaryOperator(Operator):
-    """
-    Abstract class for a binary operator with two inputs and one result.
+    """Abstract class for a binary operator with two inputs and one result.
 
     This base class defines the `nin` and `nout` attributes.  The derived
     concrete operator must define the remaining abstract attributes
@@ -162,8 +160,7 @@ class BinaryOperator(Operator):
 
 
 class CustomOperator(Operator):
-    """
-    Concrete class for a user-defined Operator.
+    """Concrete class for a user-defined Operator.
 
     Use the `makeOperator` factory function to create an instance.
     """

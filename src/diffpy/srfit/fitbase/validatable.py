@@ -26,7 +26,6 @@ class Validatable(object):
     """Validatable class.
 
     A Validatable has state that must be validated by a FitRecipe.
-
     """
 
     def _validateOthers(self, iterable):
@@ -35,7 +34,6 @@ class Validatable(object):
         This is provided as a convenience for derived classes.  No need to
         overload this. Call this method from overloaded _validate with an
         iterable of other Validatables.
-
         """
         for obj in iterable:
             if obj is self: continue
@@ -50,7 +48,6 @@ class Validatable(object):
         Overload this in a derived class.
 
         Raises AttributeError if validation fails.
-
         """
         # Validate self here.
         # Then validate others.

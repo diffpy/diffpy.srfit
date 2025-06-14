@@ -179,7 +179,7 @@ class TestProfile(unittest.TestCase):
         return
 
     def testLoadtxt(self):
-        """Test the loadtxt method"""
+        """Test the loadtxt method."""
 
         prof = self.profile
         data = datafile("testdata.txt")

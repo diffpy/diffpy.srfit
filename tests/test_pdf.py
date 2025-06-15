@@ -21,9 +21,9 @@ import io
 
 import numpy
 
-from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import has_srreal, _msg_nosrreal
-from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from .utils import datafile
+from .utils import has_srreal, _msg_nosrreal
+from .utils import has_structure, _msg_nostructure
 from diffpy.srfit.pdf import PDFGenerator, PDFParser, PDFContribution
 from diffpy.srfit.exceptions import SrFitError
 

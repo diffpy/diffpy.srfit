@@ -24,7 +24,7 @@ from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.exceptions import SrFitError
-from diffpy.srfit.tests.utils import noObserversInGlobalBuilders
+from .utils import noObserversInGlobalBuilders
 
 
 class TestContribution(unittest.TestCase):

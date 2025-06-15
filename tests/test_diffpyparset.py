@@ -20,7 +20,7 @@ import pickle
 
 import numpy
 
-from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from .utils import has_structure, _msg_nostructure
 
 # Global variables to be assigned in setUp
 Atom = Lattice = Structure = DiffpyStructureParSet = None

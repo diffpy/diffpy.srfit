@@ -19,9 +19,9 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import datafile
-from diffpy.srfit.tests.utils import has_pyobjcryst, _msg_nopyobjcryst
-from diffpy.srfit.tests.utils import has_structure, _msg_nostructure
+from .utils import datafile
+from .utils import has_pyobjcryst, _msg_nopyobjcryst
+from .utils import has_structure, _msg_nostructure
 
 # ----------------------------------------------------------------------------
 

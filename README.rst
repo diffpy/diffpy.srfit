@@ -35,9 +35,32 @@
 .. |Tracking| image:: https://img.shields.io/badge/issue_tracking-github-blue
         :target: https://github.com/diffpy/diffpy.srfit/issues
 
+diffpy.srfit
+============
+
 Configurable code for solving atomic structures.
 
-* LONGER DESCRIPTION HERE
+The diffpy.srfit package provides the framework for building a global optimizer
+on the fly from components such as function calculators (that calculate
+different data spectra), regression algorithms and structure models.  The
+software is capable of co-refinement using multiple information sources or
+models. It provides a uniform interface for various regression algorithms. The
+target function being optimized can be specified by the user according to the
+data available.
+
+Within the diffpy.srfit framework, any parameter used in describing the
+structure of a material can be passed as a refinable variable to the global
+optimizer.  Once parameters are declared as variables they can easily be turned
+"on" or "off", i.e. fixed or allowed to vary. Additionally, variables may be
+constrained to obey mathematical relationships with other parameters or
+variables used in the structural model. Restraints can be applied to
+variables, which adds a penalty to the refinement process commensurate with the
+deviation from the known value or range. The cost function can also be
+customized by the user. If the refinement contains multiple models, each model
+can have its own cost function which will be properly weighted and combined to
+obtain the total cost function. Additionally, diffpy.srfit is designed to be
+extensible, allowing the user to integrate external calculators to perform
+co-refinements with other techniques.
 
 For more information about the diffpy.srfit library, please consult our `online documentation <https://diffpy.github.io/diffpy.srfit>`_.
 
@@ -46,7 +69,13 @@ Citation
 
 If you use diffpy.srfit in a scientific publication, we would like you to cite this package as
 
-        diffpy.srfit Package, https://github.com/diffpy/diffpy.srfit
+
+   P. Juhás, C. L. Farrow, X. Yang, K. R. Knox and S. J. L. Billinge,
+   `Complex modeling: a strategy and software program for combining
+   multiple information sources to solve ill posed structure and
+   nanostructure inverse problems
+   <http://dx.doi.org/10.1107/S2053273315014473>`__,
+   *Acta Crystallogr. A* **71**, 562-568 (2015).
 
 Installation
 ------------
@@ -70,6 +99,30 @@ To confirm that the installation was successful, type ::
         python -c "import diffpy.srfit; print(diffpy.srfit.__version__)"
 
 The output should print the latest version displayed on the badges above.
+
+This will install the minimal `diffpy.srfit` installation.  It will often be used
+as along with other packages for manipulating and computing crystal structures
+and so on.  We also therefore recommend installing the following:
+
+* ``diffpy.structure`` - crystal structure container and parsers,
+  https://github.com/diffpy/diffpy.structure
+* ``pyobjcryst`` - Crystal and Molecule storage, rigid units, bond
+  length and bond angle restraints, https://github.com/diffpy/pyobjcryst
+
+Optimizations involving pair distribution functions PDF or bond valence
+sums require
+
+* ``diffpy.srreal`` - python library for PDF calculation,
+  https://github.com/diffpy/diffpy.srreal
+
+Optimizations involving small angle scattering or shape characteristic
+functions from the diffpy.srfit.sas module require
+
+* ``sas`` - module for calculation of P(R) in small-angle scattering
+  from the SasView project, http://www.sasview.org
+
+Fallback Installation
+---------------------
 
 If the above does not work, you can use ``pip`` to download and install the latest release from
 `Python Package Index <https://pypi.python.org>`_.
@@ -125,3 +178,6 @@ Acknowledgements
 ----------------
 
 ``diffpy.srfit`` is built and maintained with `scikit-package <https://scikit-package.github.io/scikit-package/>`_.
+
+The source code in *observable.py* was derived from the 1.0 version
+of the Caltech "Pyre" project.

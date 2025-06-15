@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# diffpy.srfit      by DANSE Diffraction group
-#                   Simon J. L. Billinge
-#                   (c) 2008 The Trustees of Columbia University
-#                   in the City of New York.  All rights reserved.
+# (c) 2008-2025 The Trustees of Columbia University in the City of New York.
+# All rights reserved.
 #
-# File coded by:    Chris Farrow
+# File coded by: Christopher Farrow, Pavol Juhas, and members of the Billinge Group.
 #
-# See AUTHORS.txt for a list of people who contributed.
-# See LICENSE_DANSE.txt for license information.
+# See GitHub contributions for a more detailed list of contributors.
+# https://github.com/diffpy/diffpy.srfit/graphs/contributors
+#
+# See LICENSE.rst for license information.
 #
 ##############################################################################
-
 """Complex modeling framework for structure refinement and solution.
 
 SrFit is a tool for coherently combining known information about a material to
@@ -31,9 +30,10 @@ are encouraged to work through the examples described in the documentation to
 learn how to use and customize the various parts of SrFit.
 """
 
-__all__ = ["__version__"]
-
 # package version
 from diffpy.srfit.version import __version__
+
+# silence the pyflakes syntax checker
+assert __version__ or True
 
 # End of file

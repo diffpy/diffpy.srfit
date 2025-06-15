@@ -39,11 +39,9 @@ def testsuite(pattern=""):
         The TestSuite object containing the matching tests.
     """
     import re
+    from importlib.resources import as_file, files
     from itertools import chain
     from os.path import dirname
-
-    from importlib.resources import files, as_file
-
 
     loader = unittest.defaultTestLoader
     thisdir = resource_filename(__name__, "")

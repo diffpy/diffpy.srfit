@@ -41,7 +41,7 @@ class Operator(Literal, OperatorABC):
     """Abstract class for specifying a general operator.
 
     This class provides several methods that are common to a derived
-    classes for concrete concrete operations.
+    classes for concrete operations.
 
     Class Attributes
     ----------------

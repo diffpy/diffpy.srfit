@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Abstract Base Classes for Literals."""
 
 __all__ = ["LiteralABC", "ArgumentABC", "OperatorABC"]
@@ -31,12 +30,15 @@ class LiteralABC(object):
     """
 
     @abstractmethod
-    def identify(self, visitor): pass
+    def identify(self, visitor):
+        pass
 
     @abstractmethod
-    def getValue(self): pass
+    def getValue(self):
+        pass
 
     name = abstractproperty(None, None)
+
 
 # End class LiteralABC
 
@@ -48,10 +50,12 @@ class ArgumentABC(LiteralABC):
     """
 
     @abstractmethod
-    def setValue(self, value): pass
+    def setValue(self, value):
+        pass
 
     const = abstractproperty(None, None)
     value = abstractproperty(None, None)
+
 
 # End class ArgumentABC
 
@@ -63,7 +67,8 @@ class OperatorABC(LiteralABC):
     """
 
     @abstractmethod
-    def addLiteral(self, literal): pass
+    def addLiteral(self, literal):
+        pass
 
     args = abstractproperty(None, None)
     nin = abstractproperty(None, None)
@@ -71,5 +76,6 @@ class OperatorABC(LiteralABC):
     operation = abstractproperty(None, None)
     symbol = abstractproperty(None, None)
     value = abstractproperty(None, None)
+
 
 # End class OperatorABC

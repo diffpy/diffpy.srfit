@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Class for adapting a sas DataInfo objects to the Profile interface."""
 
 __all__ = ["SASProfile"]
@@ -72,7 +71,7 @@ class SASProfile(Profile):
             self._dyobs = self._datainfo.dy
         return
 
-    def setObservedProfile(self, xobs, yobs, dyobs = None):
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         This is overloaded to change the value within the datainfo object.

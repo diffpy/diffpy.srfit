@@ -12,12 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Swapper for replacing a Literal in an equation with another Literals."""
 
 __all__ = ["Swapper"]
 
 from diffpy.srfit.equation.visitors.visitor import Visitor
+
 
 class Swapper(Visitor):
     """Swapper for swapping out one literal for another in a literal tree.
@@ -48,7 +48,8 @@ class Swapper(Visitor):
     def onArgument(self, arg):
         """Process an Argument node.
 
-        Tell the parent to swap the old Argument with the replacement Literal.
+        Tell the parent to swap the old Argument with the replacement
+        Literal.
         """
 
         if arg is self.oldlit:
@@ -59,7 +60,8 @@ class Swapper(Visitor):
     def onOperator(self, op):
         """Process an Operator node.
 
-        Tell the parent to swap the old Operator with the replacement Literal.
+        Tell the parent to swap the old Operator with the replacement
+        Literal.
         """
 
         # Check to see if we need to swap out this Operator. If so, then we
@@ -108,7 +110,6 @@ class Swapper(Visitor):
                 newlit.addObserver(op._flush)
                 op._flush(other=())
 
-
             self._swap = False
 
         return
@@ -136,5 +137,6 @@ class Swapper(Visitor):
         eq.setRoot(eq.root)
 
         return
+
 
 # End of file

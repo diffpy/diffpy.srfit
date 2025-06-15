@@ -12,11 +12,10 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Validatable class.
 
-A Validatable has state that must be validated before a FitRecipe can first
-calculate the residual.
+A Validatable has state that must be validated before a FitRecipe can
+first calculate the residual.
 """
 
 __all__ = ["Validatable"]
@@ -31,12 +30,13 @@ class Validatable(object):
     def _validateOthers(self, iterable):
         """Method to validate configuration of Validatables in iterable.
 
-        This is provided as a convenience for derived classes.  No need to
-        overload this. Call this method from overloaded _validate with an
-        iterable of other Validatables.
+        This is provided as a convenience for derived classes.  No need
+        to overload this. Call this method from overloaded _validate
+        with an iterable of other Validatables.
         """
         for obj in iterable:
-            if obj is self: continue
+            if obj is self:
+                continue
             if isinstance(obj, Validatable):
                 obj._validate()
 
@@ -52,6 +52,7 @@ class Validatable(object):
         # Validate self here.
         # Then validate others.
         return
+
 
 # End class Validatable
 

@@ -38,13 +38,14 @@ class Observable(object):
       the list of handlers to invoke notify: invoke the registered
       handlers in the order in which they were registered
     """
+
     def notify(self, other=()):
         """Notify all observers."""
         # build a list before notification, just in case the observer's
         # callback behavior involves removing itself from our callback set
-        semaphors = (self,) + other
+        semaphores = (self,) + other
         for callable in tuple(self._observers):
-            callable(semaphors)
+            callable(semaphores)
         return
 
     # callback management
@@ -74,17 +75,19 @@ class Observable(object):
         self._observers = set()
         return
 
+
 # end of class Observable
 
 # Local helpers --------------------------------------------------------------
 
 
-def _fbRemoveObserver(fobs, semaphors):
+def _fbRemoveObserver(fobs, semaphores):
     # Remove WeakBoundMethod `fobs` from the observers of notifying object.
     # This is called from Observable.notify when the WeakBoundMethod
     # associated object dies.
-    observable = semaphors[0]
+    observable = semaphores[0]
     observable.removeObserver(fobs)
     return
+
 
 # end of file

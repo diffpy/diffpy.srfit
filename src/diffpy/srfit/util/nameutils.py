@@ -12,14 +12,13 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Name utilities."""
 
 __all__ = ["isIdentifier", "validateName"]
 
 import re
 
-reident = re.compile(r'^[a-zA-Z_]\w*$')
+reident = re.compile(r"^[a-zA-Z_]\w*$")
 
 
 def isIdentifier(s):
@@ -41,5 +40,6 @@ def validateName(name):
     if not isIdentifier(name):
         raise ValueError(f"Name {name} is not a valid identifier")
     return
+
 
 # End of file

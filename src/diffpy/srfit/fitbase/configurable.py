@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Configurable class.
 
 A Configurable has state of which a FitRecipe must be aware.
@@ -45,12 +44,13 @@ class Configurable(object):
     def _storeConfigurable(self, obj):
         """Store a Configurable.
 
-        The passed obj is only stored if it is a a Configurable, otherwise this
-        method quietly exits.
+        The passed obj is only stored if it is a a Configurable,
+        otherwise this method quietly exits.
         """
         if isinstance(obj, Configurable):
             self._configobjs.add(obj)
         return
+
 
 # End class Configurable
 

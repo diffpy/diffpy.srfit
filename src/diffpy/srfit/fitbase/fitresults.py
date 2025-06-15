@@ -12,12 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """The FitResults and ContributionResults classes for storing results of a fit.
 
-The FitResults class is used to display the current state of a FitRecipe. It
-stores the state, and uses it to calculate useful statistics, which can be
-displayed on screen or saved to file.
+The FitResults class is used to display the current state of a
+FitRecipe. It stores the state, and uses it to calculate useful
+statistics, which can be displayed on screen or saved to file.
 """
 
 from __future__ import print_function
@@ -25,12 +24,13 @@ from __future__ import print_function
 __all__ = ["FitResults", "ContributionResults", "initializeRecipe"]
 
 import re
-import numpy
 from collections import OrderedDict
 
-from diffpy.srfit.util.inpututils import inputToString
+import numpy
+
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
+from diffpy.srfit.util.inpututils import inputToString
 
 
 class FitResults(object):
@@ -69,8 +69,7 @@ class FitResults(object):
     the update method is called.
     """
 
-    def __init__(self, recipe, update = True, showfixed = True, showcon =
-            False):
+    def __init__(self, recipe, update=True, showfixed=True, showcon=False):
         """Initialize the attributes.
 
         recipe   --  The recipe containing the results
@@ -137,15 +136,18 @@ class FitResults(object):
             self._calculateCovariance()
 
             # Get the variable uncertainties
-            self.varunc = [self.cov[i,i]**0.5 for i in \
-                    range(len(self.varnames))]
+            self.varunc = [
+                self.cov[i, i] ** 0.5 for i in range(len(self.varnames))
+            ]
 
             # Get the constraint uncertainties
             self._calculateConstraintUncertainties()
 
         # Store the fitting arrays and metrics for each FitContribution.
         self.conresults = OrderedDict()
-        for con, weight in zip(recipe._contributions.values(), recipe._weights):
+        for con, weight in zip(
+            recipe._contributions.values(), recipe._weights
+        ):
             self.conresults[con.name] = ContributionResults(con, weight, self)
 
         # Calculate the metrics
@@ -167,8 +169,8 @@ class FitResults(object):
         """
         try:
             J = self._calculateJacobian()
-            u,s,vh = numpy.linalg.svd(J,0)
-            self.cov = numpy.dot(vh.T.conj()/s**2,vh)
+            u, s, vh = numpy.linalg.svd(J, 0)
+            self.cov = numpy.dot(vh.T.conj() / s**2, vh)
         except numpy.linalg.LinAlgError:
             self.messages.append("Cannot compute covariance matrix.")
             l = len(self.varvals)
@@ -178,14 +180,14 @@ class FitResults(object):
     def _calculateJacobian(self):
         """Calculate the Jacobian for the fitting.
 
-        Adapted from PARK. Returns the derivative wrt the fit variables at
-        point p.
+        Adapted from PARK. Returns the derivative wrt the fit variables
+        at point p.
 
-        This also calculates the derivatives of the constrained parameters
-        while we're at it.
+        This also calculates the derivatives of the constrained
+        parameters while we're at it.
 
-        Numeric derivatives are calculated based on step, where step is the
-        portion of variable value. E.g. step = dv/v.
+        Numeric derivatives are calculated based on step, where step is
+        the portion of variable value. E.g. step = dv/v.
         """
         recipe = self.recipe
         step = self.derivstep
@@ -203,7 +205,7 @@ class FitResults(object):
         # The list of constraint derivatives with respect to variables
         # The forward difference would be faster, but perhaps not as accurate.
         conr = []
-        for k,v in enumerate(pvals):
+        for k, v in enumerate(pvals):
             h = delta[k]
             pvals[k] = v + h
             rk = self.recipe.residual(pvals)
@@ -223,14 +225,14 @@ class FitResults(object):
                 val = con.par.getValue()
                 if numpy.isscalar(val):
                     cond[i] -= con.par.getValue()
-                    cond[i] /= 2*h
+                    cond[i] /= 2 * h
                 else:
                     cond[i] = 0.0
 
             conr.append(cond)
 
             pvals[k] = v
-            r.append(rk/(2*h))
+            r.append(rk / (2 * h))
 
         # Reset the constrained parameters to their original values
         for con in recipe._oconstraints:
@@ -290,7 +292,7 @@ class FitResults(object):
             self.conunc.append(sig2c**0.5)
         return
 
-    def formatResults(self, header = "", footer = "", update = False):
+    def formatResults(self, header="", footer="", update=False):
         """Format the results and return them in a string.
 
         This function is called by printResults and saveResults. Overloading
@@ -308,7 +310,7 @@ class FitResults(object):
         lines = []
         corrmin = 0.25
         p = self.precision
-        pe = "%-" + "%i.%ie" % (p+6, p)
+        pe = "%-" + "%i.%ie" % (p + 6, p)
         pet = "%" + ".%ie" % (p,)
         # Check to see if the uncertainty values are reliable.
         certain = True
@@ -335,12 +337,14 @@ class FitResults(object):
         lines.append(l)
         lines.append(_DASHEDLINE)
         formatstr = "%-14s %.8f"
-        lines.append(formatstr%("Residual",self.residual))
-        lines.append(formatstr%("Contributions", self.residual - self.penalty))
-        lines.append(formatstr%("Restraints", self.penalty))
-        lines.append(formatstr%("Chi2",self.chi2))
-        lines.append(formatstr%("Reduced Chi2",self.rchi2))
-        lines.append(formatstr%("Rw",self.rw))
+        lines.append(formatstr % ("Residual", self.residual))
+        lines.append(
+            formatstr % ("Contributions", self.residual - self.penalty)
+        )
+        lines.append(formatstr % ("Restraints", self.penalty))
+        lines.append(formatstr % ("Chi2", self.chi2))
+        lines.append(formatstr % ("Reduced Chi2", self.rchi2))
+        lines.append(formatstr % ("Rw", self.rw))
 
         ## Per-FitContribution results
         if len(self.conresults) > 1:
@@ -357,12 +361,12 @@ class FitResults(object):
             for name in keys:
                 res = self.conresults[name]
                 lines.append("")
-                namestr = name + " (%f)"%res.weight
+                namestr = name + " (%f)" % res.weight
                 lines.append(namestr)
-                lines.append("-"*len(namestr))
-                lines.append(formatstr%("Residual",res.residual))
-                lines.append(formatstr%("Chi2",res.chi2))
-                lines.append(formatstr%("Rw",res.rw))
+                lines.append("-" * len(namestr))
+                lines.append(formatstr % ("Residual", res.residual))
+                lines.append(formatstr % ("Chi2", res.chi2))
+                lines.append(formatstr % ("Rw", res.rw))
 
         ## The variables
         if self.varnames:
@@ -370,7 +374,7 @@ class FitResults(object):
             l = "Variables"
             if not certain:
                 m = "Uncertainties invalid"
-                l += " (%s)"%m
+                l += " (%s)" % m
             lines.append(l)
             lines.append(_DASHEDLINE)
 
@@ -380,11 +384,11 @@ class FitResults(object):
             varlines = []
 
             w = max(map(len, varnames))
-            w = str(w+1)
+            w = str(w + 1)
             # Format the lines
-            formatstr = "%-"+w+"s " + pe + " +/- " + pet
+            formatstr = "%-" + w + "s " + pe + " +/- " + pet
             for name, val, unc in zip(varnames, varvals, varunc):
-                varlines.append(formatstr%(name, val, unc))
+                varlines.append(formatstr % (name, val, unc))
 
             varlines.sort()
             lines.extend(varlines)
@@ -396,13 +400,12 @@ class FitResults(object):
             lines.append("Fixed Variables")
             lines.append(_DASHEDLINE)
             w = max(map(len, self.fixednames))
-            w = str(w+1)
-            formatstr = "%-"+w+"s " + pet
+            w = str(w + 1)
+            formatstr = "%-" + w + "s " + pet
             for name, val in zip(self.fixednames, self.fixedvals):
-                varlines.append(formatstr%(name, val))
+                varlines.append(formatstr % (name, val))
             varlines.sort()
             lines.extend(varlines)
-
 
         ## The constraints
         if self.connames and self.showcon:
@@ -427,16 +430,16 @@ class FitResults(object):
                     vals[name] = (val, unc)
 
             keys.sort(key=numstr)
-            w = str(w+1)
-            formatstr = "%-"+w+"s %- 15f +/- %-15f"
+            w = str(w + 1)
+            formatstr = "%-" + w + "s %- 15f +/- %-15f"
             for name in keys:
                 val, unc = vals[name]
-                lines.append(formatstr%(name, val, unc))
+                lines.append(formatstr % (name, val, unc))
 
         ## Variable correlations
         lines.append("")
-        corint = int(corrmin*100)
-        l = "Variable Correlations greater than %i%%"%corint
+        corint = int(corrmin * 100)
+        l = "Variable Correlations greater than %i%%" % corint
         if not certain:
             l += " (Correlations invalid)"
         lines.append(l)
@@ -446,33 +449,32 @@ class FitResults(object):
         n = len(self.varnames)
         for i in range(n):
             for j in range(i + 1, n):
-                name = "corr(%s, %s)"%(varnames[i], varnames[j])
-                val = (self.cov[i,j]/(self.cov[i,i] * self.cov[j,j])**0.5)
+                name = "corr(%s, %s)" % (varnames[i], varnames[j])
+                val = self.cov[i, j] / (self.cov[i, i] * self.cov[j, j]) ** 0.5
                 if abs(val) > corrmin:
                     cornames.append(name)
                     tup.append((val, name))
 
-        tup.sort(key=lambda vn : abs(vn[0]))
+        tup.sort(key=lambda vn: abs(vn[0]))
         tup.reverse()
 
         if cornames:
             w = max(map(len, cornames))
             w = str(w + 1)
-            formatstr = "%-"+w+"s  %.4f"
+            formatstr = "%-" + w + "s  %.4f"
             for val, name in tup:
-                lines.append(formatstr%(name, val))
+                lines.append(formatstr % (name, val))
         else:
-            lines.append("No correlations greater than %i%%"%corint)
-
+            lines.append("No correlations greater than %i%%" % corint)
 
         # User-defined footer
         if footer:
             lines.append(footer)
 
-        out = "\n".join(lines) + '\n'
+        out = "\n".join(lines) + "\n"
         return out
 
-    def printResults(self, header = "", footer = "", update = False):
+    def printResults(self, header="", footer="", update=False):
         """Format and print the results.
 
         header  --  A header to add to the output (default "")
@@ -485,8 +487,7 @@ class FitResults(object):
     def __str__(self):
         return self.formatResults()
 
-
-    def saveResults(self, filename, header = "", footer = "", update = False):
+    def saveResults(self, filename, header="", footer="", update=False):
         """Format and save the results.
 
         filename -  Name of the save file.
@@ -495,19 +496,22 @@ class FitResults(object):
         update  --  Flag indicating whether to call update() (default False).
         """
         # Save the time and user
-        from time import ctime
         from getpass import getuser
+        from time import ctime
+
         myheader = "Results written: " + ctime() + "\n"
         myheader += "produced by " + getuser() + "\n"
         header = myheader + header
 
         res = self.formatResults(header, footer, update)
-        f = open(filename, 'w')
+        f = open(filename, "w")
         f.write(res)
         f.close()
         return
 
+
 # End class FitResults
+
 
 class ContributionResults(object):
     """Class for processing, storing FitContribution results.
@@ -600,13 +604,14 @@ class ContributionResults(object):
         # We take absolute values in case the signal is complex
         num = numpy.abs(self.y - self.ycalc)
         y = numpy.abs(self.y)
-        chiv = num/self.dy
+        chiv = num / self.dy
         self.cumchi2 = numpy.cumsum(chiv**2)
         # avoid index error for empty array
         self.chi2 = self.cumchi2[-1:].sum()
         yw = y / self.dy
         yw2tot = numpy.dot(yw, yw)
-        if yw2tot == 0.0:  yw2tot = 1.0
+        if yw2tot == 0.0:
+            yw2tot = 1.0
         self.cumrw = numpy.sqrt(self.cumchi2 / yw2tot)
         # avoid index error for empty array
         self.rw = self.cumrw[-1:].sum()
@@ -614,6 +619,7 @@ class ContributionResults(object):
 
 
 # End class ContributionResults
+
 
 def resultsDictionary(results):
     """Get dictionary of results from file.
@@ -626,8 +632,10 @@ def resultsDictionary(results):
     """
     resstr = inputToString(results)
 
-    rx = {'f' : r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?",
-          'n' : r'[a-zA-Z_]\w*'}
+    rx = {
+        "f": r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?",
+        "n": r"[a-zA-Z_]\w*",
+    }
     pat = r"(%(n)s)\s+(%(f)s)" % rx
 
     matches = re.findall(pat, resstr)
@@ -635,6 +643,7 @@ def resultsDictionary(results):
     matches.reverse()
     mpairs = dict(matches)
     return mpairs
+
 
 def initializeRecipe(recipe, results):
     """Initialize the variables of a recipe from a results file.

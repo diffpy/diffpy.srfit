@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Input utilities."""
 
 __all__ = ["inputToString"]
@@ -40,11 +39,12 @@ def inputToString(inpt):
     # TODO remove handling of string input accept only file or filename
     # FIXME check for typos in the file name
     elif os.path.exists(inpt) or (len(inpt) < 80 and inpt.count("\n") == 0):
-        with open(inpt, 'r') as infile:
+        with open(inpt, "r") as infile:
             inptstr = infile.read()
     else:
         inptstr = inpt
 
     return inptstr
+
 
 # End of file

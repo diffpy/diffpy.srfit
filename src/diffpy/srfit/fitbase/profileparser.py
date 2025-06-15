@@ -12,12 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """This module contains classes for parsing profiles from files.
 
-ProfileParser is a base class for parsing data. It can interact with a Profile
-object to automatically set the Profile's data and metadata. Each specific file
-format must be encapsulated in a ProfileParser subclass.
+ProfileParser is a base class for parsing data. It can interact with a
+Profile object to automatically set the Profile's data and metadata.
+Each specific file format must be encapsulated in a ProfileParser
+subclass.
 
 See the class documentation for more information.
 """
@@ -102,7 +102,7 @@ class ProfileParser(object):
         Raises IOError if the file cannot be read
         Raises ParseError if the file cannot be parsed
         """
-        infile = open(filename, 'r')
+        infile = open(filename, "r")
         self._banks = []
         self._meta = {}
         filestring = infile.read()
@@ -151,7 +151,7 @@ class ProfileParser(object):
         self._x, self._y, self._dx, self._dy = self._banks[index]
         return
 
-    def getData(self, index = None):
+    def getData(self, index=None):
         """Get the data.
 
         This method should only be called after the data has been parsed.  The
@@ -173,5 +173,6 @@ class ProfileParser(object):
     def getMetaData(self):
         """Get the parsed metadata."""
         return self._meta
+
 
 # End of ProfileParser

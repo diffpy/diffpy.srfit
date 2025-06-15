@@ -12,37 +12,38 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """FitRecipe class.
 
-FitRecipes organize FitContributions, variables, Restraints and Constraints to
-create a recipe of the system you wish to optimize. From the client's
-perspective, the FitRecipe is a residual calculator. The residual method does
-the work of updating variable values, which get propagated to the Parameters of
-the underlying FitContributions via the variables and Constraints.  This class
-needs no special knowledge of the type of FitContribution or data being used.
-Thus, it is suitable for combining residual equations from various types of
-refinements into a single residual.
+FitRecipes organize FitContributions, variables, Restraints and
+Constraints to create a recipe of the system you wish to optimize. From
+the client's perspective, the FitRecipe is a residual calculator. The
+residual method does the work of updating variable values, which get
+propagated to the Parameters of the underlying FitContributions via the
+variables and Constraints.  This class needs no special knowledge of the
+type of FitContribution or data being used. Thus, it is suitable for
+combining residual equations from various types of refinements into a
+single residual.
 
-Variables added to a FitRecipe can be tagged with string identifiers. Variables
-can be later retrieved or manipulated by tag. The tag name "__fixed" is
-reserved.
+Variables added to a FitRecipe can be tagged with string identifiers.
+Variables can be later retrieved or manipulated by tag. The tag name
+"__fixed" is reserved.
 
-See the examples in the documentation for how to create an optimization problem
-using FitRecipe.
+See the examples in the documentation for how to create an optimization
+problem using FitRecipe.
 """
 
 __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
-from numpy import array, concatenate, sqrt, dot
-import six
 
-from diffpy.srfit.interface import _fitrecipe_interface
-from diffpy.srfit.util.tagmanager import TagManager
+import six
+from numpy import array, concatenate, dot, sqrt
+
+from diffpy.srfit.fitbase.fithook import PrintFitHook
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
-from diffpy.srfit.fitbase.fithook import PrintFitHook
+from diffpy.srfit.interface import _fitrecipe_interface
+from diffpy.srfit.util.tagmanager import TagManager
 
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
@@ -87,18 +88,28 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     bounds2         --  Bounds on parameters (read only). See getBounds2.
     """
 
-    fixednames = property(lambda self:
-            [v.name for v in self._parameters.values()
-                if not (self.isFree(v) or self.isConstrained(v))],
-            doc='names of the fixed refinable variables')
-    fixedvalues = property(lambda self:
-            array([v.value for v in self._parameters.values()
-                if not (self.isFree(v) or self.isConstrained(v))]),
-            doc='values of the fixed refinable variables')
+    fixednames = property(
+        lambda self: [
+            v.name
+            for v in self._parameters.values()
+            if not (self.isFree(v) or self.isConstrained(v))
+        ],
+        doc="names of the fixed refinable variables",
+    )
+    fixedvalues = property(
+        lambda self: array(
+            [
+                v.value
+                for v in self._parameters.values()
+                if not (self.isFree(v) or self.isConstrained(v))
+            ]
+        ),
+        doc="values of the fixed refinable variables",
+    )
     bounds = property(lambda self: self.getBounds())
     bounds2 = property(lambda self: self.getBounds2())
 
-    def __init__(self, name = "fit"):
+    def __init__(self, name="fit"):
         """Initialization."""
         RecipeOrganizer.__init__(self, name)
         self.fithooks = []
@@ -119,7 +130,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def pushFitHook(self, fithook, index = None):
+    def pushFitHook(self, fithook, index=None):
         """Add a FitHook to be called within the residual method.
 
         The hook is an object for reporting updates, or more fundamentally,
@@ -138,7 +149,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._updateConfiguration()
         return
 
-    def popFitHook(self, fithook = None, index = -1):
+    def popFitHook(self, fithook=None, index=-1):
         """Remove a FitHook by index or reference.
 
         fithook --  FitHook instance to remove from the sequence. If this is
@@ -164,7 +175,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         del self.fithooks[:]
         return
 
-    def addContribution(self, con, weight = 1.0):
+    def addContribution(self, con, weight=1.0):
         """Add a FitContribution to the FitRecipe.
 
         con     --  The FitContribution to be stored.
@@ -203,7 +214,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._removeObject(parset, self._parsets)
         return
 
-    def residual(self, p = []):
+    def residual(self, p=[]):
         """Calculate the vector residual to be optimized.
 
         Arguments
@@ -234,22 +245,25 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             con.update()
 
         # Calculate the bare chiv
-        chiv = concatenate([
-            wi * ci.residual().flatten()
-            for wi, ci in zip(self._weights, self._contributions.values())])
+        chiv = concatenate(
+            [
+                wi * ci.residual().flatten()
+                for wi, ci in zip(self._weights, self._contributions.values())
+            ]
+        )
 
         # Calculate the point-average chi^2
-        w = dot(chiv, chiv)/len(chiv)
+        w = dot(chiv, chiv) / len(chiv)
         # Now we must append the restraints
-        penalties = [ sqrt(res.penalty(w)) for res in self._restraintlist ]
-        chiv = concatenate( [ chiv, penalties ] )
+        penalties = [sqrt(res.penalty(w)) for res in self._restraintlist]
+        chiv = concatenate([chiv, penalties])
 
         for fithook in self.fithooks:
             fithook.postcall(self, chiv)
 
         return chiv
 
-    def scalarResidual(self, p = []):
+    def scalarResidual(self, p=[]):
         """Calculate the scalar residual to be optimized.
 
         Arguments
@@ -267,7 +281,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         chiv = self.residual(p)
         return dot(chiv, chiv)
 
-    def __call__(self, p = []):
+    def __call__(self, p=[]):
         """Same as scalarResidual method."""
         return self.scalarResidual(p)
 
@@ -277,7 +291,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         This will prepare the data attributes to be used in the residual
         calculation.
 
-        This updates the local restraints with those of the contributions.
+        This updates the local restraints with those of the
+        contributions.
 
         Raises AttributeError if there are variables without a value.
         """
@@ -318,14 +333,16 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         # Check for profile values
         for con in self._contributions.values():
             if con.profile is None:
-                m = "FitContribution '%s' does not have a Profile"%con.name
+                m = "FitContribution '%s' does not have a Profile" % con.name
                 raise AttributeError(m)
-            if con.profile.x is None or\
-                con.profile.y is None or\
-                con.profile.dy is None:
+            if (
+                con.profile.x is None
+                or con.profile.y is None
+                or con.profile.dy is None
+            ):
 
-                    m = "Profile for '%s' is missing data"%con.name
-                    raise AttributeError(m)
+                m = "Profile for '%s' is missing data" % con.name
+                raise AttributeError(m)
         return
 
     def __verifyParameters(self):
@@ -344,7 +361,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         for par in badpars:
             objlist = self._locateManagedObject(par)
             names = [obj.name for obj in objlist]
-            badnames.append( ".".join(names) )
+            badnames.append(".".join(names))
 
         # Construct an error message, if necessary
         m = ""
@@ -362,14 +379,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def __collectConstraintsAndRestraints(self):
         """Collect the Constraints and Restraints from subobjects."""
-        from itertools import chain
         from functools import cmp_to_key
+        from itertools import chain
+
         rset = set(self._restraints)
         cdict = {}
 
         for org in chain(self._contributions.values(), self._parsets.values()):
-            rset.update( org._getRestraints() )
-            cdict.update( org._getConstraints() )
+            rset.update(org._getRestraints())
+            cdict.update(org._getConstraints())
         cdict.update(self._constraints)
 
         # The order of the restraint list does not matter
@@ -386,7 +404,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             # Now check the constraint's equation for constrained arguments
             for arg in con.eq.args:
                 if arg in cdict:
-                    depmap[con].add( cdict[arg] )
+                    depmap[con].add(cdict[arg])
 
         # Turn the dependency map into multi-level map.
         def _extendDeps(con):
@@ -422,8 +440,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     # Variable manipulation
 
-    def addVar(self, par, value = None, name = None, fixed = False, tag = None,
-            tags = []):
+    def addVar(
+        self, par, value=None, name=None, fixed=False, tag=None, tags=[]
+    ):
         """Add a variable to be refined.
 
         par     --  A Parameter that will be varied during a fit.
@@ -448,10 +467,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         name = name or par.name
 
         if par.const:
-            raise ValueError("The parameter '%s' is constant"%par)
+            raise ValueError("The parameter '%s' is constant" % par)
 
         if par.constrained:
-            raise ValueError("The parameter '%s' is constrained"%par)
+            raise ValueError("The parameter '%s' is constrained" % par)
 
         var = ParameterProxy(name, par)
         if value is not None:
@@ -487,13 +506,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def __delattr__(self, name):
         if name in self._parameters:
-            self.delVar( self._parameters[name] )
+            self.delVar(self._parameters[name])
             return
         super(FitRecipe, self).__delattr__(name)
         return
 
-
-    def newVar(self, name, value = None, fixed = False, tag = None, tags = []):
+    def newVar(self, name, value=None, fixed=False, tag=None, tags=[]):
         """Create a new variable of the fit.
 
         This method lets new variables be created that are not tied to a
@@ -543,7 +561,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.fix(par.name)
         return par
 
-
     def __getVarAndCheck(self, var):
         """Get the actual variable from var.
 
@@ -563,30 +580,32 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def __getVarsFromArgs(self, *args, **kw):
         """Get a list of variables from passed arguments.
 
-        This method accepts string or variable arguments. An argument of "all"
-        selects all variables. Keyword arguments must be parameter names,
-        followed by a value to assign to the fixed variable. This method is
-        used by the fix and free methods.
+        This method accepts string or variable arguments. An argument of
+        "all" selects all variables. Keyword arguments must be parameter
+        names, followed by a value to assign to the fixed variable. This
+        method is used by the fix and free methods.
 
-        Raises ValueError if an unknown variable, name or tag is passed, or if
-        a tag is passed in a keyword.
+        Raises ValueError if an unknown variable, name or tag is passed,
+        or if a tag is passed in a keyword.
         """
         # Process args. Each variable is tagged with its name, so this is easy.
-        strargs = set([arg for arg in args if isinstance(arg, six.string_types)])
+        strargs = set(
+            [arg for arg in args if isinstance(arg, six.string_types)]
+        )
         varargs = set(args) - strargs
         # Check that the tags are valid
         alltags = set(self._tagmanager.alltags())
         badtags = strargs - alltags
         if badtags:
             names = ",".join(badtags)
-            raise ValueError("Variables or tags cannot be found (%s)"% names)
+            raise ValueError("Variables or tags cannot be found (%s)" % names)
 
         # Check that variables are valid
         allvars = set(self._parameters.values())
         badvars = varargs - allvars
         if badvars:
             names = ",".join(v.name for v in badvars)
-            raise ValueError("Variables cannot be found (%s)"% names)
+            raise ValueError("Variables cannot be found (%s)" % names)
 
         # Make sure that we only have parameters in kw
         kwnames = set(kw.keys())
@@ -594,7 +613,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         badkw = kwnames - allnames
         if badkw:
             names = ",".join(badkw)
-            raise ValueError("Tags cannot be passed as keywords (%s)"% names)
+            raise ValueError("Tags cannot be passed as keywords (%s)" % names)
 
         # Now get all the objects referred to in the arguments.
         varargs |= self._tagmanager.union(*strargs)
@@ -606,16 +625,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         A fixed variable is not refined.  Variables are free by default.
 
-        This method accepts string or variable arguments. An argument of "all"
-        selects all variables. Keyword arguments must be parameter names,
-        followed by a value to assign to the fixed variable.
+        This method accepts string or variable arguments. An argument of
+        "all" selects all variables. Keyword arguments must be parameter
+        names, followed by a value to assign to the fixed variable.
 
-        Raises ValueError if an unknown Parameter, name or tag is passed, or if
-        a tag is passed in a keyword.
+        Raises ValueError if an unknown Parameter, name or tag is
+        passed, or if a tag is passed in a keyword.
         """
         # Check the inputs and get the variables from them
         varargs = self.__getVarsFromArgs(*args, **kw)
-
 
         # Fix all of these
         for var in varargs:
@@ -630,15 +648,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def free(self, *args, **kw):
         """Free a parameter by reference, name or tag.
 
-        A free variable is refined.  Variables are free by default. Constrained
-        variables are not free.
+        A free variable is refined.  Variables are free by default.
+        Constrained variables are not free.
 
-        This method accepts string or variable arguments. An argument of "all"
-        selects all variables. Keyword arguments must be parameter names,
-        followed by a value to assign to the fixed variable.
+        This method accepts string or variable arguments. An argument of
+        "all" selects all variables. Keyword arguments must be parameter
+        names, followed by a value to assign to the fixed variable.
 
-        Raises ValueError if an unknown Parameter, name or tag is passed, or if
-        a tag is passed in a keyword.
+        Raises ValueError if an unknown Parameter, name or tag is
+        passed, or if a tag is passed in a keyword.
         """
         # Check the inputs and get the variables from them
         varargs = self.__getVarsFromArgs(*args, **kw)
@@ -656,7 +674,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def isFree(self, var):
         """Check if a variable is fixed."""
-        return (not self._tagmanager.hasTags(var, self._fixedtag))
+        return not self._tagmanager.hasTags(var, self._fixedtag)
 
     def unconstrain(self, *pars):
         """Unconstrain a Parameter.
@@ -692,7 +710,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def constrain(self, par, con, ns = {}):
+    def constrain(self, par, con, ns={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
@@ -722,13 +740,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             if par is None:
                 par = ns.get(name)
             if par is None:
-                raise ValueError("The parameter '%s' cannot be found"%name)
+                raise ValueError("The parameter '%s' cannot be found" % name)
 
         if con in self._parameters.keys():
             con = self._parameters[con]
 
         if par.const:
-            raise ValueError("The parameter '%s' is constant"%par)
+            raise ValueError("The parameter '%s' is constant" % par)
 
         # This will pass the value of a constrained parameter to the initial
         # value of a parameter constraint.
@@ -744,11 +762,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         RecipeOrganizer.constrain(self, par, con, ns)
         return
 
-
     def getValues(self):
         """Get the current values of the variables in a list."""
-        return array([v.value for v in self._parameters.values() if
-            self.isFree(v)])
+        return array(
+            [v.value for v in self._parameters.values() if self.isFree(v)]
+        )
 
     def getNames(self):
         """Get the names of the variables in a list."""
@@ -757,8 +775,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def getBounds(self):
         """Get the bounds on variables in a list.
 
-        Returns a list of (lb, ub) pairs, where lb is the lower bound and ub is
-        the upper bound.
+        Returns a list of (lb, ub) pairs, where lb is the lower bound
+        and ub is the upper bound.
         """
         return [v.bounds for v in self._parameters.values() if self.isFree(v)]
 
@@ -772,7 +790,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ub = array([b[1] for b in bounds])
         return lb, ub
 
-    def boundsToRestraints(self, sig = 1, scaled = False):
+    def boundsToRestraints(self, sig=1, scaled=False):
         """Turn all bounded parameters into restraints.
 
         The bounds become limits on the restraint.
@@ -785,13 +803,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if not hasattr(sig, "__iter__"):
             sig = [sig] * len(pars)
         for par, x in zip(pars, sig):
-            self.restrain(par, par.bounds[0], par.bounds[1], sig = x,
-                    scaled = scaled)
+            self.restrain(
+                par, par.bounds[0], par.bounds[1], sig=x, scaled=scaled
+            )
         return
 
     def _applyValues(self, p):
         """Apply variable values to the variables."""
-        if len(p) == 0: return
+        if len(p) == 0:
+            return
         vargen = (v for v in self._parameters.values() if self.isFree(v))
         for var, pval in zip(vargen, p):
             var.setValue(pval)
@@ -801,5 +821,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Notify RecipeContainers in hierarchy of configuration change."""
         self._ready = False
         return
+
 
 # End of file

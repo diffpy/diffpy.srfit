@@ -12,10 +12,9 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Utilities and constants used throughout SrFit."""
 
-_DASHEDLINE = 78 * '-'
+_DASHEDLINE = 78 * "-"
 
 
 def sortKeyForNumericString(s):
@@ -39,10 +38,10 @@ def sortKeyForNumericString(s):
     """
     if sortKeyForNumericString._rx is None:
         import re
-        sortKeyForNumericString._rx = re.compile(r'(\d+)')
+
+        sortKeyForNumericString._rx = re.compile(r"(\d+)")
     rx = sortKeyForNumericString._rx
-    rv = tuple((int(w) if i % 2 else w)
-               for i, w in enumerate(rx.split(s)))
+    rv = tuple((int(w) if i % 2 else w) for i, w in enumerate(rx.split(s)))
     return rv
 
 

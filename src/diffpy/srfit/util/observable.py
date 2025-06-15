@@ -38,6 +38,7 @@ class Observable(object):
       the list of handlers to invoke notify: invoke the registered
       handlers in the order in which they were registered
     """
+
     def notify(self, other=()):
         """Notify all observers."""
         # build a list before notification, just in case the observer's
@@ -74,6 +75,7 @@ class Observable(object):
         self._observers = set()
         return
 
+
 # end of class Observable
 
 # Local helpers --------------------------------------------------------------
@@ -86,5 +88,6 @@ def _fbRemoveObserver(fobs, semaphors):
     observable = semaphors[0]
     observable.removeObserver(fobs)
     return
+
 
 # end of file

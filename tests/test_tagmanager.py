@@ -12,12 +12,12 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Unit tests for tagmanager.py."""
 
 import unittest
 
 from diffpy.srfit.util.tagmanager import TagManager
+
 
 ##############################################################################
 class TestTagManager(unittest.TestCase):
@@ -71,7 +71,7 @@ class TestTagManager(unittest.TestCase):
         m = self.m
         m.tag(3, "3", "number")
         m.tag(4, "4", "number")
-        objs = set([3,4])
+        objs = set([3, 4])
         self.assertEqual(m.union(), set())
         self.assertEqual(m.union("number"), objs)
         self.assertEqual(m.union("3"), set([3]))
@@ -95,17 +95,18 @@ class TestTagManager(unittest.TestCase):
         m = self.m
         m.tag(3, "3", "number")
         m.tag(4, "4", "number")
-        self.assertTrue( m.hasTags(3, "3") )
-        self.assertTrue( m.hasTags(3, "3", "number") )
-        self.assertFalse( m.hasTags(3, "3", "4") )
+        self.assertTrue(m.hasTags(3, "3"))
+        self.assertTrue(m.hasTags(3, "3", "number"))
+        self.assertFalse(m.hasTags(3, "3", "4"))
         self.assertRaises(KeyError, m.hasTags, 3, "fail")
         m.silent = True
         self.assertFalse(m.hasTags(3, "fail"))
         return
 
+
 # End of class TestTagManager
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
 
 # End of file

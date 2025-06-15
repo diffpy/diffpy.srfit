@@ -12,15 +12,14 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Tests for refinableobj module."""
 
 import unittest
 
-from diffpy.srfit.fitbase.restraint import Restraint
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.equation.builder import EquationFactory
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.restraint import Restraint
 
 
 class TestRestraint(unittest.TestCase):
@@ -63,6 +62,7 @@ class TestRestraint(unittest.TestCase):
 
         # Make a really large number to check the upper bound
         import numpy
+
         r.ub = numpy.inf
         p1.setValue(1e100)
         self.assertEqual(0, r.penalty())

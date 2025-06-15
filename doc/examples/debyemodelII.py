@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of fitting the Debye recipe to experimental Debye-Waller factors.
 
 This is an extension of example in debyemodel.py. The recipe we create will
@@ -34,23 +33,25 @@ Extensions
   done.
 """
 
-from diffpy.srfit.fitbase import FitRecipe, FitResults
-
 from debyemodel import makeRecipe, scipyOptimize
 
+from diffpy.srfit.fitbase import FitRecipe, FitResults
+
 ####### Example Code
+
 
 def makeRecipeII():
     """Make a recipe for fitting low and high temperature regions.
 
     We will fit the low and high temperature parts of Debye curve
-    simultaneously with the same Debye temperature, but different offsets.
+    simultaneously with the same Debye temperature, but different
+    offsets.
 
     We will make two FitRecipes using the makeRecipe function from
-    debyemodel.py and extract the configured FitContribution from each. We will
-    use different fitting ranges for each FitContribution and constrain the
-    Debye temperature in each FitContribution to be the same.
-
+    debyemodel.py and extract the configured FitContribution from each.
+    We will use different fitting ranges for each FitContribution and
+    constrain the Debye temperature in each FitContribution to be the
+    same.
     """
 
     # We'll throw these away. We just want the FitContributions that are
@@ -81,14 +82,15 @@ def makeRecipeII():
     # Vary the offset from each FitContribution separately, while keeping the
     # Debye temperatures the same. We give each offset variable a different
     # name in the recipe so it retains its identity.
-    recipe.addVar(recipe.lowT.offset, name = "lowToffset")
-    recipe.addVar(recipe.highT.offset, name = "highToffset")
+    recipe.addVar(recipe.lowT.offset, name="lowToffset")
+    recipe.addVar(recipe.highT.offset, name="highToffset")
     # We create a new Variable and use the recipe's "constrain" method to
     # associate the Debye temperature parameters with that variable.
     recipe.newVar("thetaD", 100)
     recipe.constrain(recipe.lowT.thetaD, "thetaD")
     recipe.constrain(recipe.highT.thetaD, "thetaD")
     return recipe
+
 
 def plotResults(recipe):
     """Display the results contained within a refined FitRecipe."""
@@ -99,8 +101,8 @@ def plotResults(recipe):
 
     # We want to extend the fitting range to its full extent so we can get a
     # nice full plot.
-    recipe.lowT.profile.setCalculationRange(xmin='obs', xmax='obs')
-    recipe.highT.profile.setCalculationRange(xmin='obs', xmax='obs')
+    recipe.lowT.profile.setCalculationRange(xmin="obs", xmax="obs")
+    recipe.highT.profile.setCalculationRange(xmin="obs", xmax="obs")
     T = recipe.lowT.profile.x
     U = recipe.lowT.profile.y
     # We can use a FitContribution's 'evaluateEquation' method to evaluate
@@ -114,17 +116,22 @@ def plotResults(recipe):
 
     # Now we can plot this.
     import pylab
-    pylab.plot(T,U,'o',label="Pb $U_{iso}$ Data")
-    lbl1 = r"$T_d$=%3.1f K, lowToff=%1.5f $\AA^2$"% (abs(thetaD),lowToffset)
-    lbl2 = r"$T_d$=%3.1f K, highToff=%1.5f $\AA^2$"% (abs(thetaD),highToffset)
-    pylab.plot(T,lowU,label=lbl1)
-    pylab.plot(T,highU,label=lbl2)
+
+    pylab.plot(T, U, "o", label="Pb $U_{iso}$ Data")
+    lbl1 = r"$T_d$=%3.1f K, lowToff=%1.5f $\AA^2$" % (abs(thetaD), lowToffset)
+    lbl2 = r"$T_d$=%3.1f K, highToff=%1.5f $\AA^2$" % (
+        abs(thetaD),
+        highToffset,
+    )
+    pylab.plot(T, lowU, label=lbl1)
+    pylab.plot(T, highU, label=lbl2)
     pylab.xlabel("T (K)")
     pylab.ylabel(r"$U_{iso} (\AA^2)$")
-    pylab.legend(loc = (0.0,0.8))
+    pylab.legend(loc=(0.0, 0.8))
 
     pylab.show()
     return
+
 
 def main():
 

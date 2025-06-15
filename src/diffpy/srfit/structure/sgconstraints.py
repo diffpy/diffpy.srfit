@@ -12,22 +12,29 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Code to set space group constraints for a crystal structure."""
 
 
 import re
+
 import numpy
 
-from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.parameter import ParameterProxy
+from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 
 __all__ = ["constrainAsSpaceGroup"]
 
 
-def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
-        sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
-        adpsymbols = None, isosymbol = "Uiso"):
+def constrainAsSpaceGroup(
+    phase,
+    spacegroup,
+    scatterers=None,
+    sgoffset=[0, 0, 0],
+    constrainlat=True,
+    constrainadps=True,
+    adpsymbols=None,
+    isosymbol="Uiso",
+):
     """Constrain the structure to the space group.
 
     This applies space group constraints to a StructureParSet with P1
@@ -84,14 +91,30 @@ def constrainAsSpaceGroup(phase, spacegroup, scatterers = None,
     sg = spacegroup
     if not isinstance(spacegroup, SpaceGroup):
         sg = GetSpaceGroup(spacegroup)
-    sgp = _constrainAsSpaceGroup(phase, sg, scatterers, sgoffset,
-            constrainlat, constrainadps, adpsymbols, isosymbol)
+    sgp = _constrainAsSpaceGroup(
+        phase,
+        sg,
+        scatterers,
+        sgoffset,
+        constrainlat,
+        constrainadps,
+        adpsymbols,
+        isosymbol,
+    )
 
     return sgp
 
-def _constrainAsSpaceGroup(phase, sg, scatterers = None,
-        sgoffset = [0, 0, 0], constrainlat = True, constrainadps = True,
-        adpsymbols = None, isosymbol = "Uiso"):
+
+def _constrainAsSpaceGroup(
+    phase,
+    sg,
+    scatterers=None,
+    sgoffset=[0, 0, 0],
+    constrainlat=True,
+    constrainadps=True,
+    adpsymbols=None,
+    isosymbol="Uiso",
+):
     """Restricted interface to constrainAsSpaceGroup.
 
     Arguments: As constrainAsSpaceGroup, except
@@ -105,12 +128,22 @@ def _constrainAsSpaceGroup(phase, sg, scatterers = None,
     if adpsymbols is None:
         adpsymbols = stdUsymbols
 
-    sgp = SpaceGroupParameters(phase, sg, scatterers, sgoffset,
-            constrainlat, constrainadps, adpsymbols, isosymbol)
+    sgp = SpaceGroupParameters(
+        phase,
+        sg,
+        scatterers,
+        sgoffset,
+        constrainlat,
+        constrainadps,
+        adpsymbols,
+        isosymbol,
+    )
 
     return sgp
 
+
 # End constrainAsSpaceGroup
+
 
 class BaseSpaceGroupParameters(RecipeContainer):
     """Base class for holding space group Parameters.
@@ -125,7 +158,7 @@ class BaseSpaceGroupParameters(RecipeContainer):
     name    --  "sgpars"
     """
 
-    def __init__(self, name = "sgpars"):
+    def __init__(self, name="sgpars"):
         """Create the BaseSpaceGroupParameters object.
 
         This initializes the attributes.
@@ -133,7 +166,7 @@ class BaseSpaceGroupParameters(RecipeContainer):
         RecipeContainer.__init__(self, name)
         return
 
-    def addParameter(self, par, check = True):
+    def addParameter(self, par, check=True):
         """Store a Parameter.
 
         par     --  The Parameter to be stored.
@@ -146,7 +179,9 @@ class BaseSpaceGroupParameters(RecipeContainer):
         RecipeContainer._addObject(self, par, self._parameters, check)
         return
 
+
 # End class BaseSpaceGroupParameters
+
 
 class SpaceGroupParameters(BaseSpaceGroupParameters):
     """Class for holding and creating space group Parameters.
@@ -177,8 +212,17 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     adppars     --  Property that populates _adppars.
     """
 
-    def __init__(self, phase, sg, scatterers, sgoffset, constrainlat,
-            constrainadps, adpsymbols, isosymbol):
+    def __init__(
+        self,
+        phase,
+        sg,
+        scatterers,
+        sgoffset,
+        constrainlat,
+        constrainadps,
+        adpsymbols,
+        isosymbol,
+    ):
         """Create the SpaceGroupParameters object.
 
         Arguments:
@@ -219,13 +263,16 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
     def __iter__(self):
         """Iterate over top-level parameters."""
-        if self._latpars is None or\
-                self._xyzpars is None or\
-                self._adppars is None:
-                    self._makeConstraints()
+        if (
+            self._latpars is None
+            or self._xyzpars is None
+            or self._adppars is None
+        ):
+            self._makeConstraints()
         return RecipeContainer.__iter__(self)
 
     latpars = property(lambda self: self._getLatPars())
+
     def _getLatPars(self):
         """Accessor for _latpars."""
         if self._latpars is None:
@@ -233,9 +280,10 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         return self._latpars
 
     xyzpars = property(lambda self: self._getXYZPars())
+
     def _getXYZPars(self):
         """Accessor for _xyzpars."""
-        positions =  []
+        positions = []
         for scatterer in self.scatterers:
             xyz = [scatterer.x, scatterer.y, scatterer.z]
             positions.append([p.value for p in xyz])
@@ -244,9 +292,10 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         return self._xyzpars
 
     adppars = property(lambda self: self._getADPPars())
+
     def _getADPPars(self):
         """Accessor for _adppars."""
-        positions =  []
+        positions = []
         for scatterer in self.scatterers:
             xyz = [scatterer.x, scatterer.y, scatterer.z]
             positions.append([p.value for p in xyz])
@@ -266,7 +315,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         scatterers = self.scatterers
 
         # Prepare positions
-        positions =  []
+        positions = []
         for scatterer in scatterers:
             xyz = [scatterer.x, scatterer.y, scatterer.z]
             positions.append([p.value for p in xyz])
@@ -277,11 +326,11 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         return
 
-
     def _clearConstraints(self):
         """Clear old constraints.
 
-        This only clears constraints where new ones are going to be applied.
+        This only clears constraints where new ones are going to be
+        applied.
         """
         phase = self.phase
         scatterers = self.scatterers
@@ -300,8 +349,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         if self.constrainlat:
 
             lattice = phase.getLattice()
-            latpars =  [lattice.a, lattice.b, lattice.c, lattice.alpha,
-                    lattice.beta, lattice.gamma]
+            latpars = [
+                lattice.a,
+                lattice.b,
+                lattice.c,
+                lattice.alpha,
+                lattice.beta,
+                lattice.gamma,
+            ]
             for par in latpars:
                 if lattice.isConstrained(par):
                     lattice.unconstrain(par)
@@ -329,7 +384,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _constrainLattice(self):
         """Constrain the lattice parameters."""
 
-        if not self.constrainlat: return
+        if not self.constrainlat:
+            return
 
         phase = self.phase
         sg = self.sg
@@ -345,8 +401,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         # Now get the unconstrained, non-constant lattice pars and store them.
         self._latpars = BaseSpaceGroupParameters("latpars")
-        latpars =  [lattice.a, lattice.b, lattice.c, lattice.alpha,
-                lattice.beta, lattice.gamma]
+        latpars = [
+            lattice.a,
+            lattice.b,
+            lattice.c,
+            lattice.alpha,
+            lattice.beta,
+            lattice.gamma,
+        ]
         pars = [p for p in latpars if not p.const and not p.constrained]
         for par in pars:
             # FIXME - the original parameter will still appear as
@@ -375,9 +437,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         self._xyzpars = BaseSpaceGroupParameters("xyzpars")
 
         # Make proxies to the free xyz parameters
-        xyznames = [name[:1]+"_"+name[1:] for name, val in g.pospars]
+        xyznames = [name[:1] + "_" + name[1:] for name, val in g.pospars]
         for pname in xyznames:
-            name, idx = pname.rsplit('_', 1)
+            name, idx = pname.rsplit("_", 1)
             idx = int(idx)
             par = scatterers[idx].get(name)
             newpar = self.__addPar(pname, par)
@@ -390,8 +452,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
             # Extract the constraint equation from the formula
             for parname, formula in fp.items():
-                _makeconstraint(parname, formula, scatterer, idx,
-                        self._parameters)
+                _makeconstraint(
+                    parname, formula, scatterer, idx, self._parameters
+                )
 
         return
 
@@ -401,10 +464,13 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         positions   --  The coordinates of the scatterers.
         """
 
-        from diffpy.structure.symmetryutilities import stdUsymbols
-        from diffpy.structure.symmetryutilities import SymmetryConstraints
+        from diffpy.structure.symmetryutilities import (
+            SymmetryConstraints,
+            stdUsymbols,
+        )
 
-        if not self.constrainadps: return
+        if not self.constrainadps:
+            return
 
         sg = self.sg
         sgoffset = self.sgoffset
@@ -427,10 +493,10 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 nonadps.append(sidx)
                 continue
 
-            Uij = numpy.zeros((3,3), dtype=float)
+            Uij = numpy.zeros((3, 3), dtype=float)
             for idx, par in enumerate(pars):
                 i, j = _idxtoij[idx]
-                Uij[i,j] = Uij[j,i] = par.getValue()
+                Uij[i, j] = Uij[j, i] = par.getValue()
 
             Uijs.append(Uij)
 
@@ -450,7 +516,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         isoidx = []
         isonames = []
         for pname in adpnames:
-            name, idx = pname.rsplit('_', 1)
+            name, idx = pname.rsplit("_", 1)
             idx = int(idx)
             # Check for isotropic ADPs
             scatterer = scatterers[idx]
@@ -471,24 +537,26 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         # Constrain dependent isotropics
         for idx, isoname in zip(isoidx[:], isonames):
             for j in g.coremap[idx]:
-                if j == idx: continue
+                if j == idx:
+                    continue
                 isoidx.append(j)
                 scatterer = scatterers[j]
-                scatterer.constrain(isosymbol, isoname, ns = self._parameters)
+                scatterer.constrain(isosymbol, isoname, ns=self._parameters)
 
         fadp = g.UFormulas(adpnames)
 
         # Constrain dependent anisotropics. We use the fact that an
         # anisotropic cannot be dependent on an isotropic.
         for idx, tmp in enumerate(zip(scatterers, fadp)):
-            if idx in isoidx: continue
+            if idx in isoidx:
+                continue
             scatterer, fa = tmp
             # Extract the constraint equation from the formula
             for stdparname, formula in fa.items():
                 pname = adpmap[stdparname]
-                _makeconstraint(pname, formula, scatterer, idx,
-                        self._parameters)
-
+                _makeconstraint(
+                    pname, formula, scatterer, idx, self._parameters
+                )
 
     def __addPar(self, parname, par):
         """Constrain a parameter via proxy with a specified name.
@@ -500,24 +568,28 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         self.addParameter(newpar)
         return newpar
 
+
 # End class SpaceGroupParameters
 
 # crystal system rules
 # ref: Benjamin, W. A., Introduction to crystallography,
 # New York (1969), p.60
 
+
 def _constrainTriclinic(lattice):
     """Make constraints for Triclinic systems."""
     return
 
+
 def _constrainMonoclinic(lattice):
     """Make constraints for Monoclinic systems.
 
-    alpha and beta are fixed to 90 unless alpha != beta and alpha == gamma, in
-    which case alpha and gamma are constrained to 90.
+    alpha and beta are fixed to 90 unless alpha != beta and alpha ==
+    gamma, in which case alpha and gamma are constrained to 90.
     """
     afactor = 1
-    if lattice.angunits == "rad": afactor = deg2rad
+    if lattice.angunits == "rad":
+        afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.alpha.setConst(True, ang90)
     beta = lattice.beta.getValue()
@@ -529,26 +601,31 @@ def _constrainMonoclinic(lattice):
         lattice.beta.setConst(True, ang90)
     return
 
+
 def _constrainOrthorhombic(lattice):
     """Make constraints for Orthorhombic systems.
 
     alpha, beta and gamma are constrained to 90
     """
     afactor = 1
-    if lattice.angunits == "rad": afactor = deg2rad
+    if lattice.angunits == "rad":
+        afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.alpha.setConst(True, ang90)
     lattice.beta.setConst(True, ang90)
     lattice.gamma.setConst(True, ang90)
     return
 
+
 def _constrainTetragonal(lattice):
     """Make constraints for Tetragonal systems.
 
-    b is constrained to a and alpha, beta and gamma are constrained to 90.
+    b is constrained to a and alpha, beta and gamma are constrained to
+    90.
     """
     afactor = 1
-    if lattice.angunits == "rad": afactor = deg2rad
+    if lattice.angunits == "rad":
+        afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.alpha.setConst(True, ang90)
     lattice.beta.setConst(True, ang90)
@@ -556,15 +633,17 @@ def _constrainTetragonal(lattice):
     lattice.constrain(lattice.b, lattice.a)
     return
 
+
 def _constrainTrigonal(lattice):
     """Make constraints for Trigonal systems.
 
-    If gamma == 120, then b is constrained to a, alpha and beta are constrained
-    to 90 and gamma is constrained to 120. Otherwise, b and c are constrained
-    to a, beta and gamma are constrained to alpha.
+    If gamma == 120, then b is constrained to a, alpha and beta are
+    constrained to 90 and gamma is constrained to 120. Otherwise, b and
+    c are constrained to a, beta and gamma are constrained to alpha.
     """
     afactor = 1
-    if lattice.angunits == "rad": afactor = deg2rad
+    if lattice.angunits == "rad":
+        afactor = deg2rad
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
     if lattice.gamma.getValue() == ang120:
@@ -579,14 +658,16 @@ def _constrainTrigonal(lattice):
         lattice.constrain(lattice.gamma, lattice.alpha)
     return
 
+
 def _constrainHexagonal(lattice):
     """Make constraints for Hexagonal systems.
 
-    b is constrained to a, alpha and beta are constrained to 90 and gamma is
-    constrained to 120.
+    b is constrained to a, alpha and beta are constrained to 90 and
+    gamma is constrained to 120.
     """
     afactor = 1
-    if lattice.angunits == "rad": afactor = deg2rad
+    if lattice.angunits == "rad":
+        afactor = deg2rad
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
     lattice.constrain(lattice.b, lattice.a)
@@ -595,13 +676,16 @@ def _constrainHexagonal(lattice):
     lattice.gamma.setConst(True, ang120)
     return
 
+
 def _constrainCubic(lattice):
     """Make constraints for Cubic systems.
 
-    b and c are constrained to a, alpha, beta and gamma are constrained to 90.
+    b and c are constrained to a, alpha, beta and gamma are constrained
+    to 90.
     """
     afactor = 1
-    if lattice.angunits == "rad": afactor = deg2rad
+    if lattice.angunits == "rad":
+        afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.constrain(lattice.b, lattice.a)
     lattice.constrain(lattice.c, lattice.a)
@@ -610,19 +694,21 @@ def _constrainCubic(lattice):
     lattice.gamma.setConst(True, ang90)
     return
 
+
 # This is used to map the correct crystal system to the proper constraint
 # function.
 _constraintMap = {
-  "Triclinic"  : _constrainTriclinic,
-  "Monoclinic" : _constrainMonoclinic,
-  "Orthorhombic" : _constrainOrthorhombic,
-  "Tetragonal" : _constrainTetragonal,
-  "Trigonal"   : _constrainTrigonal,
-  "Hexagonal"  : _constrainHexagonal,
-  "Cubic"      : _constrainCubic
+    "Triclinic": _constrainTriclinic,
+    "Monoclinic": _constrainMonoclinic,
+    "Orthorhombic": _constrainOrthorhombic,
+    "Tetragonal": _constrainTetragonal,
+    "Trigonal": _constrainTrigonal,
+    "Hexagonal": _constrainHexagonal,
+    "Cubic": _constrainCubic,
 }
 
-def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
+
+def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     """Constrain a parameter according to a formula.
 
     parname     --  Name of parameter
@@ -638,10 +724,10 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
     if par is None:
         return
 
-    compname = "%s_%i"%(parname, idx)
+    compname = "%s_%i" % (parname, idx)
 
     # Check to see if this parameter is free
-    pat = r'%s *([+-] *\d+)?$' % compname
+    pat = r"%s *([+-] *\d+)?$" % compname
     if re.match(pat, formula):
         return par
 
@@ -654,8 +740,9 @@ def _makeconstraint(parname, formula, scatterer, idx, ns = {}):
     # If we got here, then we have a constraint equation
     # Fix any division issues
     formula = formula.replace("/", "*1.0/")
-    scatterer.constrain(par, formula, ns = ns)
+    scatterer.constrain(par, formula, ns=ns)
     return
+
 
 def _getFloat(formula):
     """Get a float from a formula string, or None if this is not possible."""
@@ -663,6 +750,7 @@ def _getFloat(formula):
         return eval(formula)
     except NameError:
         return None
+
 
 # Constants needed above
 _idxtoij = [(0, 0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2)]

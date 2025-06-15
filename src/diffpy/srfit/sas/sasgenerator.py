@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """SAS profile generator.
 
 The SASGenerator class wraps a sas.models.BaseModel object as a
@@ -66,5 +65,6 @@ class SASGenerator(ProfileGenerator):
     def __call__(self, q):
         """Calculate I(Q) for the BaseModel."""
         return self._model.evalDistribution(q)
+
 
 # End class SASGenerator

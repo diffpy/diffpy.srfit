@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of fitting a Gaussian to simulated data.
 
 This is an example of building a fit recipe that can be driven by an optimizer
@@ -46,9 +45,15 @@ will leave you with a much better understanding of how SrFit works.
 
 from __future__ import print_function
 
-from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile, FitResults
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+)
 
 ####### Example Code
+
 
 def main():
     """The workflow of creating, running and inspecting a fit."""
@@ -78,17 +83,16 @@ def main():
 def makeRecipe():
     """Make a FitRecipe for fitting a Gaussian curve to data.
 
-    The instructions for what we want to refine, and how to refine it will be
-    defined within a FitRecipe instance. The job of a FitRecipe is to collect
-    and associate all the data, the fitting equations, fitting variables,
-    constraints and restraints. The configured recipe provides a 'residual'
-    function and the initial variable values that an optimizer can use to
-    refine the variables to minimize the disagreement between the calculated
-    profile and the data.
+    The instructions for what we want to refine, and how to refine it
+    will be defined within a FitRecipe instance. The job of a FitRecipe
+    is to collect and associate all the data, the fitting equations,
+    fitting variables, constraints and restraints. The configured recipe
+    provides a 'residual' function and the initial variable values that
+    an optimizer can use to refine the variables to minimize the
+    disagreement between the calculated profile and the data.
 
-    Once we define the FitRecipe, we can send it an optimizer to be optimized.
-    See the 'scipyOptimize' function.
-
+    Once we define the FitRecipe, we can send it an optimizer to be
+    optimized. See the 'scipyOptimize' function.
     """
 
     ## The Profile
@@ -150,18 +154,18 @@ def makeRecipe():
     # Here we create a Variable named 'sig', which is tied to the 'sigma'
     # Parameter of our FitContribution. We give it an initial value through the
     # FitRecipe instance.
-    recipe.addVar(contribution.sigma, name = "sig")
+    recipe.addVar(contribution.sigma, name="sig")
     recipe.sig.value = 1
 
     return recipe
 
+
 def scipyOptimize(recipe):
     """Optimize the recipe created above using scipy.
 
-    The FitRecipe we created in makeRecipe has a 'residual' method that we can
-    be minimized using a scipy optimizer. The details are described in the
-    source.
-
+    The FitRecipe we created in makeRecipe has a 'residual' method that
+    we can be minimized using a scipy optimizer. The details are
+    described in the source.
     """
 
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
@@ -169,10 +173,12 @@ def scipyOptimize(recipe):
     # (recipe.residual) and the starting values of the Variables
     # (recipe.getValues()).
     from scipy.optimize.minpack import leastsq
+
     print("Fit using scipy's LM optimizer")
     leastsq(recipe.residual, recipe.getValues())
 
     return
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -189,14 +195,16 @@ def plotResults(recipe):
 
     # This stuff is specific to pylab from the matplotlib distribution.
     import pylab
-    pylab.plot(x, y, 'b.', label = "observed Gaussian")
-    pylab.plot(x, ycalc, 'g-', label = "calculated Gaussian")
-    pylab.legend(loc = (0.0,0.8))
+
+    pylab.plot(x, y, "b.", label="observed Gaussian")
+    pylab.plot(x, ycalc, "g-", label="calculated Gaussian")
+    pylab.legend(loc=(0.0, 0.8))
     pylab.xlabel("x")
     pylab.ylabel("y")
 
     pylab.show()
     return
+
 
 if __name__ == "__main__":
 

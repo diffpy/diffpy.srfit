@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Modules and classes that adapt structure representations to the ParameterSet
 interface and automatic structure constraint generation from space group
 information."""
@@ -30,18 +29,22 @@ def struToParameterSet(name, stru):
     Raises TypeError if stru cannot be adapted
     """
     from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+
     if DiffpyStructureParSet.canAdapt(stru):
         return DiffpyStructureParSet(name, stru)
 
     from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
+
     if ObjCrystCrystalParSet.canAdapt(stru):
         return ObjCrystCrystalParSet(name, stru)
 
     from diffpy.srfit.structure.objcrystparset import ObjCrystMoleculeParSet
+
     if ObjCrystMoleculeParSet.canAdapt(stru):
         return ObjCrystMoleculeParSet(name, stru)
 
     from diffpy.srfit.structure.cctbxparset import CCTBXCrystalParSet
+
     if CCTBXCrystalParSet.canAdapt(stru):
         return CCTBXCrystalParSet(name, stru)
 

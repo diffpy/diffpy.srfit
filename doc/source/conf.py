@@ -32,7 +32,9 @@ sys.path.insert(0, str(Path("../..").resolve()))
 sys.path.insert(0, str(Path("../../src").resolve()))
 
 # abbreviations
-ab_authors = "Christopher Farrow, Pavol Juhas, and members of the Billinge Group"
+ab_authors = (
+    "Christopher Farrow, Pavol Juhas, and members of the Billinge Group"
+)
 
 # -- General configuration ------------------------------------------------
 

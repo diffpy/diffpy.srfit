@@ -42,7 +42,8 @@ def testsuite(pattern=""):
     from itertools import chain
     from os.path import dirname
 
-    from pkg_resources import resource_filename
+    from importlib.resources import files, as_file
+
 
     loader = unittest.defaultTestLoader
     thisdir = resource_filename(__name__, "")

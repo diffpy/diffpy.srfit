@@ -9,9 +9,10 @@ Copyright (c) 2014, Australian Synchrotron Research Program Inc., ("ASRP")
 Copyright (c) 2006-2007, Board of Trustees of Michigan State University
 Copyright (c) 2008-2012, The Trustees of Columbia University in the City
     of New York
-
 Copyright (c) 2014-2019, Brookhaven Science Associates, Brookhaven National
     Laboratory
+Copyright (c) 2020-2025, The Trustees of Columbia University in the City
+    of New York
 
 
 The "DiffPy-CMI" is distributed subject to the following license conditions:

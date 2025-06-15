@@ -21,8 +21,8 @@ import numpy
 
 import diffpy.srfit.equation.builder as builder
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.tests.utils import _makeArgs
-from diffpy.srfit.tests.utils import noObserversInGlobalBuilders
+from .utils import _makeArgs
+from .utils import noObserversInGlobalBuilders
 
 
 class TestBuilder(unittest.TestCase):

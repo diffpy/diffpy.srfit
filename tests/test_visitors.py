@@ -19,7 +19,7 @@ import unittest
 
 import diffpy.srfit.equation.visitors as visitors
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.tests.utils import _makeArgs
+from .utils import _makeArgs
 
 class TestValidator(unittest.TestCase):
 
@@ -194,7 +194,7 @@ class TestSwapper(unittest.TestCase):
         self.assertTrue(plus2.hasObserver(mult._flush))
 
         # plus2 has no arguments yet. Verify this.
-        self.assertRaises(ValueError, mult.getValue)
+        self.assertRaises(TypeError, mult.getValue)
         # Add the arguments to plus2.
         plus2.addLiteral(v4)
         plus2.addLiteral(v5)

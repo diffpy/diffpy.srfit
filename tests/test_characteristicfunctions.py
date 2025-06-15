@@ -19,7 +19,7 @@ import unittest
 
 import numpy
 
-from diffpy.srfit.tests.utils import has_sas, _msg_nosas
+from .utils import has_sas, _msg_nosas
 from diffpy.srfit.sas.sasimport import sasimport
 
 # Global variables to be assigned in setUp

@@ -23,7 +23,7 @@ from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
-from diffpy.srfit.tests.utils import capturestdout
+from .utils import capturestdout
 
 import numpy
 

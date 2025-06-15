@@ -145,7 +145,7 @@ def makeRecipe():
     # We would like to 'suggest' that the offset should remain positive. This
     # is somethine that we know about the system that might help the refinement
     # converge to a physically reasonable result.  We will do this with a soft
-    # contraint, or restraint. Here we restrain the offset variable to between
+    # constraint, or restraint. Here we restrain the offset variable to between
     # 0 and infinity. We tell the recipe that we want to scale the penalty for
     # breaking the restraint by the point-average chi^2 value so that the
     # restraint is roughly as significant as any other data point throughout

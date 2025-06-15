@@ -86,7 +86,7 @@ class PDFContribution(FitContribution):
         """Load the data in various formats.
 
         This uses the PDFParser to load the data and then passes it to the
-        build-in profile with loadParsedData.
+        built-in profile with loadParsedData.
 
         data    --  An open file-like object, name of a file that contains data
                     or a string containing the data.

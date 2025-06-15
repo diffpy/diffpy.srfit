@@ -132,7 +132,7 @@ def makeRecipe(
     recipe.constrain(xgenerator_sini_si.scale, "1 - pscale_sini_ni")
 
     # The qdamp parameters are too correlated to vary so we fix them based on
-    # previous measurments.
+    # previous measurements.
     xgenerator_ni.qdamp.value = 0.055
     xgenerator_si.qdamp.value = 0.051
     ngenerator_ni.qdamp.value = 0.030

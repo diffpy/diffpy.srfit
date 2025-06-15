@@ -43,7 +43,7 @@ class Restraint(Validatable):
 
     The penalty is calculated as
     (max(0, lb - val, val - ub)/sig)**2
-    and val is the value of the calculated equation.  This is multipled by the
+    and val is the value of the calculated equation.  This is multiplied by the
     average chi^2 if scaled is True.
     """
 

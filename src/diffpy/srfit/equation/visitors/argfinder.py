@@ -34,7 +34,7 @@ class ArgFinder(Visitor):
         """Initialize.
 
         Arguments
-        getconsts   --  Flag indicating whether to grap constant arguments
+        getconsts   --  Flag indicating whether to parse constant arguments
                         (default True).
         """
         self.args = []

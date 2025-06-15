@@ -368,7 +368,7 @@ class EquationFactory(object):
         # builders. These will be treated as arguments that need to be
         # generated.
         for tok in set(args):
-            # Move genuine varibles to the eqargs dictionary
+            # Move genuine variables to the eqargs dictionary
             if (
                 # Check registered builders
                 tok in self.builders
@@ -427,13 +427,13 @@ class BaseBuilder(object):
         Other can be an BaseBuilder or a constant.
 
         onleft  --  Indicates that the operator was passed on the left side
-                    (defualt True).
+                    (default True).
         """
         # Create the Operator
         op = OperatorClass()
 
         # onleft takes care of non-commutative operators, and assures that the
-        # ordering is perserved.
+        # ordering is preserved.
         if onleft:
             # Add the literals to the operator
             op.addLiteral(self.literal)

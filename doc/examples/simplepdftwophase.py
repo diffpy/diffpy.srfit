@@ -52,7 +52,7 @@ def makeRecipe(niciffile, siciffile, datname):
     # for free by the PDFContribution. We simply need to add it to the recipe.
     recipe.addVar(contribution.qdamp, 0.03)
 
-    # Vary the gloabal scale as well.
+    # Vary the global scale as well.
     recipe.addVar(contribution.scale, 1)
 
     # Now we can configure the structural parameters. Since we're using

@@ -201,7 +201,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         ObjCrystScattererParSet.__init__(self, name, molecule, parent)
         self.stru = molecule
 
-        # Add orientiation quaternion
+        # Add orientation quaternion
         self.addParameter(ParameterAdapter("q0", self.scat, attr="Q0"))
         self.addParameter(ParameterAdapter("q1", self.scat, attr="Q1"))
         self.addParameter(ParameterAdapter("q2", self.scat, attr="Q2"))
@@ -1486,7 +1486,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
         sgobjcryst  --  A pyobjcryst.spacegroup.SpaceGroup instance.
 
         This uses the actual space group operations from the
-        pyobjcryst.spacegroup.SpaceGroup instance so there is no abiguity about
+        pyobjcryst.spacegroup.SpaceGroup instance so there is no ambiguity about
         the actual space group.
         """
         import copy

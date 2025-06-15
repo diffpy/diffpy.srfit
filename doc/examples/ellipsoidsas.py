@@ -71,7 +71,7 @@ def makeRecipe(datname):
 
     ## Configure the fit variables
     # The SASGenerator uses the parameters from the params and dispersion
-    # attribues of the model. These vary from model to model, but are adopted
+    # attributes of the model. These vary from model to model, but are adopted
     # as SrFit Parameters within the generator. Whereas the dispersion
     # parameters are accessible as, e.g. "radius.width", within the
     # SASGenerator these are named like "radius_width".

@@ -58,7 +58,7 @@ def constrainAsSpaceGroup(
                     U22, etc.). The names must be given in the same order
                     as stdUsymbols.
     isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
-                isotropic ADPs will be constrainted via the anisotropic ADPs.
+                isotropic ADPs will be constrained via the anisotropic ADPs.
 
     New Parameters that are used in constraints are created within a
     SpaceGroupParameters object, which is returned from this function.
@@ -239,7 +239,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     same order as
                     diffpy.structure.symmetryutilities.stdUsymbols.
         isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
-                    isotropic ADPs will be constrainted via the anisotropic
+                    isotropic ADPs will be constrained via the anisotropic
                     ADPs.
         """
         BaseSpaceGroupParameters.__init__(self)

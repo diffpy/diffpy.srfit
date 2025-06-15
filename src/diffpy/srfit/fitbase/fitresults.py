@@ -155,7 +155,7 @@ class FitResults(object):
         self.residual = numpy.dot(res, res)
         self._calculateMetrics()
 
-        # Calcualte the restraints penalty
+        # Calculate the restraints penalty
         w = self.chi2 / len(res)
         self.penalty = sum([r.penalty(w) for r in recipe._restraintlist])
 
@@ -600,7 +600,7 @@ class ContributionResults(object):
 
     # FIXME: factor rw, chi2, cumrw, cumchi2 to separate functions.
     def _calculateMetrics(self):
-        """Calculte chi2 and Rw of the recipe."""
+        """Calculate chi2 and Rw of the recipe."""
         # We take absolute values in case the signal is complex
         num = numpy.abs(self.y - self.ycalc)
         y = numpy.abs(self.y)

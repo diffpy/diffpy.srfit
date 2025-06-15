@@ -479,7 +479,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         passed in the equation string, as this will be handled automatically.
 
         f           --  The callable to register. If this is an Equation
-                        instance, then all that needs to be provied is a name.
+                        instance, then all that needs to be provided is a name.
         name        --  The name of the function to be used in equations. If
                         this is None (default), the method will try to
                         determine the name of the function automatically.
@@ -722,7 +722,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def getConstrainedPars(self, recurse=False):
         """Get a list of constrained managed Parameters in this object.
 
-        recurse --  Recurse into managed objects and retrive their constrained
+        recurse --  Recurse into managed objects and retrieve their constrained
                     Parameters as well (default False).
         """
         const = self._getConstraints(recurse)
@@ -762,7 +762,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         The penalty is calculated as
         (max(0, lb - val, val - ub)/sig)**2
-        and val is the value of the calculated equation.  This is multipled by
+        and val is the value of the calculated equation.  This is multiplied by
         the average chi^2 if scaled is True.
 
         Raises ValueError if ns uses a name that is already used for a

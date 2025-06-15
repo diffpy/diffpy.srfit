@@ -193,7 +193,7 @@ def lognormalSphericalCF(r, psize, psig):
     psize  --  The mean particle diameter
     psig   --  The log-normal width of the particle diameter
 
-    Here, r is the independent variable, mu is the mean of the distrubution
+    Here, r is the independent variable, mu is the mean of the distribution
     (not of the particle size), and s is the width of the distribution. This is
     the characteristic function for the lognormal distribution of particle
     diameter:

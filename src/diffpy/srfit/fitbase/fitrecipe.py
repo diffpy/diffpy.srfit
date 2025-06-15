@@ -517,7 +517,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         This method lets new variables be created that are not tied to a
         Parameter.  Orphan variables may cause a fit to fail, depending on the
         optimization routine, and therefore should only be created to be used
-        in contraint or restraint equations.
+        in constraint or restraint equations.
 
         name    --  The name of the variable. The variable will be able to be
                     used by this name in restraint and constraint equations.

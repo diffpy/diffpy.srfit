@@ -27,7 +27,7 @@ import diffpy.srfit.equation.literals.abcs as abcs
 class TestArgument(unittest.TestCase):
 
     def testInit(self):
-        """Test that everthing initializes as expected."""
+        """Test that everything initializes as expected."""
         a = literals.Argument()
         self.assertEqual(None, a._value)
         self.assertTrue(False is a.const)
@@ -70,7 +70,7 @@ class TestCustomOperator(unittest.TestCase):
         return
 
     def testInit(self):
-        """Test that everthing initializes as expected."""
+        """Test that everything initializes as expected."""
         op = self.op
         self.assertEqual("+", op.symbol)
         self.assertEqual(numpy.add, op.operation)

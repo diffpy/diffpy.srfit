@@ -278,7 +278,7 @@ class Profile(Observable, Validatable):
             if (self.dyobs == 1).all():
                 self.dy = numpy.ones_like(self.x)
             else:
-                # FIXME - This does not follow error propogation rules and it
+                # FIXME - This does not follow error propagation rules and it
                 # introduces (more) correlation between the data points.
                 self.dy = rebinArray(self.dyobs, self.xobs, self.x)
 

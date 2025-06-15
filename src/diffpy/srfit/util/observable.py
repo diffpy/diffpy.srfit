@@ -43,9 +43,9 @@ class Observable(object):
         """Notify all observers."""
         # build a list before notification, just in case the observer's
         # callback behavior involves removing itself from our callback set
-        semaphors = (self,) + other
+        semaphores = (self,) + other
         for callable in tuple(self._observers):
-            callable(semaphors)
+            callable(semaphores)
         return
 
     # callback management
@@ -81,11 +81,11 @@ class Observable(object):
 # Local helpers --------------------------------------------------------------
 
 
-def _fbRemoveObserver(fobs, semaphors):
+def _fbRemoveObserver(fobs, semaphores):
     # Remove WeakBoundMethod `fobs` from the observers of notifying object.
     # This is called from Observable.notify when the WeakBoundMethod
     # associated object dies.
-    observable = semaphors[0]
+    observable = semaphores[0]
     observable.removeObserver(fobs)
     return
 

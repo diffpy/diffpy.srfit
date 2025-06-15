@@ -508,7 +508,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl=1):
 
     y += bkgd
 
-    # Multipy by a scale factor
+    # Multiply by a scale factor
     y *= scale
 
     # Calculate the uncertainty

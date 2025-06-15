@@ -19,7 +19,7 @@ FitContribution associates an Equation for generating a signal,
 optionally one or more ProfileGenerators or Calculators that help in
 this, and a Profile that holds the observed and calculated signals.
 
-See the examples in the documention for how to use a FitContribution.
+See the examples in the documentation for how to use a FitContribution.
 """
 
 __all__ = ["FitContribution"]
@@ -36,7 +36,7 @@ class FitContribution(ParameterSet):
 
     FitContributions organize an Equation that calculates the signal, and a
     Profile that holds the signal. ProfileGenerators and Calculators can be
-    used as well.  Contraints and Restraints can be created as part of a
+    used as well.  Constraints and Restraints can be created as part of a
     FitContribution.
 
     Attributes

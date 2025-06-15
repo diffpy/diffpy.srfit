@@ -96,7 +96,7 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe.constrain(generator_ni.qdamp, "qdamp")
     recipe.constrain(generator_si.qdamp, "qdamp")
 
-    # Vary the gloabal scale as well.
+    # Vary the global scale as well.
     recipe.addVar(contribution.scale, 1)
 
     # Now we can configure the structural parameters. Since we're using

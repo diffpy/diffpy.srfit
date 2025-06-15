@@ -16,7 +16,7 @@
 
 This is example of fitting the fcc nickel structure to measured PDF
 data. The purpose of this example is to demonstrate and describe the
-classes in configuraiton options involved with setting up a fit in this
+classes in configuration options involved with setting up a fit in this
 way. The main benefit of using SrFit for PDF refinement is the
 flexibility of modifying the PDF profile function for specific needs,
 adding restraints to a fit and the ability to simultaneously refine a

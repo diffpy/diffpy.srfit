@@ -31,7 +31,7 @@ and plot it.
 
 Extensions
 
-After reading through the code, try to perform the folowing tasks. The process
+After reading through the code, try to perform the following tasks. The process
 will leave you with a much better understanding of how SrFit works.
 
 - Play around with setting the values of the Variables and Parameters. What

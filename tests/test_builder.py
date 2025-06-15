@@ -263,7 +263,7 @@ class TestBuilder(unittest.TestCase):
         eq = beq.getEquation()
         E = builder.wrapOperator("eq", eq)
         eq2 = (2 * E).getEquation()
-        # Make sure these evaulate to the same thing
+        # Make sure these evaluate to the same thing
         self.assertEqual(eq.args, [A.literal, B.literal])
         self.assertEqual(2 * eq(), eq2())
         # Pass new arguments to the equation

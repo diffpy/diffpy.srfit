@@ -14,7 +14,7 @@
 ##############################################################################
 """Argument class.
 
-Arguments are the leaves of an equation tree, in essense a variable or a
+Arguments are the leaves of an equation tree, in essence a variable or a
 constant.
 """
 

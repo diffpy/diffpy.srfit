@@ -101,7 +101,7 @@ def makeRecipe(stru1, stru2, datname):
     recipe.constrain(generator_zns.scale, "1 - scale_CdS")
     # We also want the resolution factor to be the same on each.
 
-    # Vary the gloabal scale as well.
+    # Vary the global scale as well.
     recipe.addVar(contribution.scale, 0.3)
 
     # Now we can configure the structural parameters. We tag the different

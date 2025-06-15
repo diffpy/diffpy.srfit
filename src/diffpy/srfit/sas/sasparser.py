@@ -48,7 +48,7 @@ class SASParser(ProfileParser):
                     dy      --  A numpy array containing the uncertainty read
                                 from the file. This is 0 if the uncertainty
                                 cannot be read.
-    _x          --  Indpendent variable from the chosen bank
+    _x          --  Independent variable from the chosen bank
     _y          --  Profile from the chosen bank
     _dx         --  Uncertainty in independent variable from the chosen bank
     _dy         --  Uncertainty in profile from the chosen bank

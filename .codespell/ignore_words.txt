@@ -6,3 +6,9 @@ mater
 
 ;; Frobenius norm used in np.linalg.norm
 fro
+
+;; nin is a legit variable in builder
+nin
+
+;; highT is used for high Temperature in examples/debymodelII
+highT

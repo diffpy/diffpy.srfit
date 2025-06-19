@@ -106,9 +106,7 @@ def datafile():
     """Fixture to load a test data file from the testdata package directory."""
 
     def _datafile(filename):
-        return importlib.resources.files(
-            "diffpy.srfit.tests.testdata"
-        ).joinpath(filename)
+        return importlib.resources.files("tests.testdata").joinpath(filename)
 
     return _datafile
 

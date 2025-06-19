@@ -19,8 +19,8 @@ import unittest
 import numpy
 import pytest
 
-from diffpy.srfit.sas.sasimport import sasimport
 import diffpy.srfit.pdf.characteristicfunctions as cf
+from diffpy.srfit.sas.sasimport import sasimport
 
 # Global variables to be assigned in setUp
 cf = None
@@ -48,6 +48,7 @@ def testSphere(sas_available):
     assert res == pytest.approx(0, abs=1e-4)
     return
 
+
 def testSpheroid(sas_available):
     if not sas_available:
         pytest.skip("sas package not available")
@@ -70,6 +71,7 @@ def testSpheroid(sas_available):
     assert res == pytest.approx(0, abs=1e-4)
     return
 
+
 def testShell(sas_available):
     if not sas_available:
         pytest.skip("sas package not available")
@@ -91,6 +93,7 @@ def testShell(sas_available):
     res /= numpy.dot(fr2, fr2)
     assert res == pytest.approx(0, abs=1e-4)
     return
+
 
 def testCylinder(sas_available):
     if not sas_available:

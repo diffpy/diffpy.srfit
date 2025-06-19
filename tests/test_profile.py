@@ -18,12 +18,11 @@ import io
 import re
 import unittest
 
+import pytest
 from numpy import allclose, arange, array, array_equal, ones_like
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.profile import Profile
-
-from .utils import datafile
 
 
 class TestProfile(unittest.TestCase):
@@ -178,37 +177,6 @@ class TestProfile(unittest.TestCase):
 
         return
 
-    def testLoadtxt(self):
-        """Test the loadtxt method."""
-
-        prof = self.profile
-        data = datafile("testdata.txt")
-
-        def _test(p):
-            self.assertAlmostEqual(1e-2, p.x[0])
-            self.assertAlmostEqual(1.105784e-1, p.y[0])
-            self.assertAlmostEqual(1.802192e-3, p.dy[0])
-
-        # Test normal load
-        prof.loadtxt(data, usecols=(0, 1, 3))
-        _test(prof)
-
-        # Test trying to not set unpack
-        prof.loadtxt(data, usecols=(0, 1, 3), unpack=False)
-        _test(prof)
-        prof.loadtxt(data, float, "#", None, None, 0, (0, 1, 3), False)
-        _test(prof)
-
-        # Try not including dy
-        prof.loadtxt(data, usecols=(0, 1))
-        self.assertAlmostEqual(1e-2, prof.x[0])
-        self.assertAlmostEqual(1.105784e-1, prof.y[0])
-        self.assertAlmostEqual(1, prof.dy[0])
-
-        # Try to include too little
-        self.assertRaises(ValueError, prof.loadtxt, data, usecols=(0,))
-        return
-
     def test_savetxt(self):
         "Check the savetxt method."
         prof = self.profile
@@ -226,9 +194,38 @@ class TestProfile(unittest.TestCase):
         return
 
 
-# End of class TestProfile
+def testLoadtxt(datafile):
+    """Test the loadtxt method."""
 
-# ----------------------------------------------------------------------------
+    prof = Profile()
+    data = datafile("testdata.txt")
+
+    def _test(p):
+        assert 1e-2 == pytest.approx(p.x[0])
+        assert 1.105784e-1 == pytest.approx(p.y[0])
+        assert 1.802192e-3 == pytest.approx(p.dy[0])
+
+    # Test normal load
+    prof.loadtxt(data, usecols=(0, 1, 3))
+    _test(prof)
+
+    # Test trying to not set unpack
+    prof.loadtxt(data, usecols=(0, 1, 3), unpack=False)
+    _test(prof)
+    prof.loadtxt(data, float, "#", None, None, 0, (0, 1, 3), False)
+    _test(prof)
+
+    # Try not including dy
+    prof.loadtxt(data, usecols=(0, 1))
+    assert 1e-2 == pytest.approx(prof.x[0])
+    assert 1.105784e-1 == pytest.approx(prof.y[0])
+    assert 1 == pytest.approx(prof.dy[0])
+
+    # Try to include too little
+    with pytest.raises(ValueError):
+        prof.loadtxt(data, usecols=(0,))
+    return
+
 
 if __name__ == "__main__":
     unittest.main()

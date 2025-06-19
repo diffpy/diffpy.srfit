@@ -27,28 +27,6 @@ from tests import logger
 # Helper functions for testing -----------------------------------------------
 
 
-def _makeArgs(num):
-    args = []
-    for i in range(num):
-        j = i + 1
-        args.append(literals.Argument(name="v%i" % j, value=j))
-    return args
-
-
-def noObserversInGlobalBuilders():
-    """True if no observer function leaks to global builder objects.
-
-    Ensure objects are not immortal due to a reference from static
-    value.
-    """
-    from diffpy.srfit.equation.builder import _builders
-
-    rv = True
-    for n, b in _builders.items():
-        if b.literal and b.literal._observers:
-            rv = False
-            break
-    return rv
 
 
 

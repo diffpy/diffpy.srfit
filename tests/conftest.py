@@ -5,6 +5,9 @@ import pytest
 import logging
 
 from functools import lru_cache
+import diffpy.srfit.equation.literals as literals
+from diffpy.srfit.sas.sasimport import sasimport
+
 
 logger = logging.getLogger(__name__)
 
@@ -92,3 +95,31 @@ def datafile():
     def _datafile(filename):
         return importlib.resources.files("diffpy.srfit.tests.testdata").joinpath(filename)
     return _datafile
+
+@pytest.fixture(scope="session")
+def make_args():
+    def _makeArgs(num):
+        args = []
+        for i in range(num):
+            j = i + 1
+            args.append(literals.Argument(name="v%i" % j, value=j))
+        return args
+    return _makeArgs
+
+@pytest.fixture(scope="session")
+def noObserversInGlobalBuilders():
+    def _noObserversInGlobalBuilders():
+        """True if no observer function leaks to global builder objects.
+
+        Ensure objects are not immortal due to a reference from static
+        value.
+        """
+        from diffpy.srfit.equation.builder import _builders
+
+        rv = True
+        for n, b in _builders.items():
+            if b.literal and b.literal._observers:
+                rv = False
+                break
+        return rv
+    return _noObserversInGlobalBuilders()

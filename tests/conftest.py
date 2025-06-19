@@ -1,10 +1,12 @@
 import importlib.resources
 import json
 import logging
+import sys
 from functools import lru_cache
 from pathlib import Path
 
 import pytest
+import six
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
@@ -15,8 +17,8 @@ logger = logging.getLogger(__name__)
 @lru_cache()
 def has_sas():
     try:
-        __import__("sas.pr.invertor")
-        __import__("sas.models")
+        sasimport("sas.pr.invertor")
+        sasimport("sas.models")
         return True
     except ImportError:
         return False
@@ -25,7 +27,6 @@ def has_sas():
 # diffpy.structure
 @lru_cache()
 def has_diffpy_structure():
-    _msg_nostructure = "No module named 'diffpy.structure'"
     try:
         import diffpy.structure as m
 
@@ -40,7 +41,6 @@ def has_diffpy_structure():
 
 @lru_cache()
 def has_pyobjcryst():
-    _msg_nopyobjcryst = "No module named 'pyobjcryst'"
     try:
         import pyobjcryst as m
 
@@ -56,7 +56,6 @@ def has_pyobjcryst():
 
 @lru_cache()
 def has_diffpy_srreal():
-    _msg_nosrreal = "No module named 'diffpy.srreal'"
     try:
         import diffpy.srreal.pdfcalculator as m
 
@@ -87,7 +86,7 @@ def pyobjcryst_available():
     return has_pyobjcryst()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def user_filesystem(tmp_path):
     base_dir = Path(tmp_path)
     home_dir = base_dir / "home_dir"
@@ -102,7 +101,7 @@ def user_filesystem(tmp_path):
     yield tmp_path
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def datafile():
     """Fixture to load a test data file from the testdata package directory."""
 
@@ -144,3 +143,19 @@ def noObserversInGlobalBuilders():
         return rv
 
     return _noObserversInGlobalBuilders()
+
+
+@pytest.fixture(scope="session")
+def capturestdout():
+    def _capturestdout(f, *args, **kwargs):
+        """Capture the standard output from a call of function f."""
+        savestdout = sys.stdout
+        fp = six.StringIO()
+        try:
+            sys.stdout = fp
+            f(*args, **kwargs)
+        finally:
+            sys.stdout = savestdout
+        return fp.getvalue()
+
+    return _capturestdout

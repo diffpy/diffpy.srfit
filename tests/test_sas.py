@@ -14,8 +14,8 @@
 ##############################################################################
 """Tests for sas package."""
 
-import pytest
 import numpy
+import pytest
 
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
 from diffpy.srfit.sas.sasimport import sasimport
@@ -23,6 +23,7 @@ from diffpy.srfit.sas.sasimport import sasimport
 # ----------------------------------------------------------------------------
 # FIXME: adjust sensitivity of the pytest.approx statements when ready to test
 # with sasview installed.
+
 
 def testParser(sas_available, datafile):
     if not sas_available:
@@ -134,6 +135,7 @@ def test_generator(sas_available):
     res = numpy.dot(diff, diff)
     assert 0 == pytest.approx(res)
     return
+
 
 def testGenerator2(sas_available, datafile):
     if not sas_available:

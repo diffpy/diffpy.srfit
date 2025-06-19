@@ -18,13 +18,6 @@ import unittest
 
 import numpy
 
-from .utils import (
-    _msg_nopyobjcryst,
-    _msg_nostructure,
-    datafile,
-    has_pyobjcryst,
-    has_structure,
-)
 
 # ----------------------------------------------------------------------------
 

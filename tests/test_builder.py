@@ -47,6 +47,7 @@ def testRegisterArg(make_args, noObserversInGlobalBuilders):
     assert noObserversInGlobalBuilders
     return
 
+
 def testRegisterOperator(make_args, noObserversInGlobalBuilders):
     """Try to use an operator without arguments in an equation."""
 
@@ -79,6 +80,7 @@ def testRegisterOperator(make_args, noObserversInGlobalBuilders):
 
     assert noObserversInGlobalBuilders
     return
+
 
 def testSwapping(make_args, noObserversInGlobalBuilders):
 
@@ -140,6 +142,7 @@ def testSwapping(make_args, noObserversInGlobalBuilders):
     assert noObserversInGlobalBuilders
     return
 
+
 def testParseEquation(noObserversInGlobalBuilders):
 
     from numpy import array_equal, divide, e, sin, sqrt
@@ -172,7 +175,6 @@ def testParseEquation(noObserversInGlobalBuilders):
     f = lambda x, sigma: sqrt(e ** (-0.5 * (x / sigma) ** 2))
     assert numpy.allclose(eq(), f(x, sigma))
 
-
     assert eq.args == [eq.x, eq.sigma]
 
     # Equation with constants
@@ -193,6 +195,7 @@ def testParseEquation(noObserversInGlobalBuilders):
     assert noObserversInGlobalBuilders
     return
 
+
 def test_parse_constant():
     """Verify parsing of constant numeric expressions."""
     factory = builder.EquationFactory()
@@ -203,6 +206,7 @@ def test_parse_constant():
     with pytest.raises(ValueError):
         eq(3)
     return
+
 
 def testBuildEquation(noObserversInGlobalBuilders):
 

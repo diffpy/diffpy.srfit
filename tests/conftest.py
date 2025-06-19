@@ -5,9 +5,9 @@ from functools import lru_cache
 from pathlib import Path
 
 import pytest
+
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
-
 
 logger = logging.getLogger(__name__)
 
@@ -113,6 +113,7 @@ def datafile():
 
     return _datafile
 
+
 @pytest.fixture(scope="session")
 def make_args():
     def _makeArgs(num):
@@ -121,7 +122,9 @@ def make_args():
             j = i + 1
             args.append(literals.Argument(name="v%i" % j, value=j))
         return args
+
     return _makeArgs
+
 
 @pytest.fixture(scope="session")
 def noObserversInGlobalBuilders():
@@ -139,4 +142,5 @@ def noObserversInGlobalBuilders():
                 rv = False
                 break
         return rv
+
     return _noObserversInGlobalBuilders()

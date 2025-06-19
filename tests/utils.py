@@ -25,8 +25,6 @@ from tests import logger
 # Helper functions for testing -----------------------------------------------
 
 
-
-
 def capturestdout(f, *args, **kwargs):
     """Capture the standard output from a call of function f."""
     savestdout = sys.stdout

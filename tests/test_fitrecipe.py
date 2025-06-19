@@ -23,8 +23,6 @@ from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.profile import Profile
 
-from .utils import capturestdout
-
 
 class TestFitRecipe(unittest.TestCase):
 
@@ -239,32 +237,51 @@ class TestFitRecipe(unittest.TestCase):
 
         return
 
-    def testPrintFitHook(self):
-        "check output from default PrintFitHook."
-        self.recipe.addVar(self.fitcontribution.c)
-        self.recipe.restrain("c", lb=5)
-        (pfh,) = self.recipe.getFitHooks()
-        out = capturestdout(self.recipe.scalarResidual)
-        self.assertEqual("", out)
-        pfh.verbose = 1
-        out = capturestdout(self.recipe.scalarResidual)
-        self.assertTrue(out.strip().isdigit())
-        self.assertFalse("\nRestraints:" in out)
-        pfh.verbose = 2
-        out = capturestdout(self.recipe.scalarResidual)
-        self.assertTrue("\nResidual:" in out)
-        self.assertTrue("\nRestraints:" in out)
-        self.assertFalse("\nVariables" in out)
-        pfh.verbose = 3
-        out = capturestdout(self.recipe.scalarResidual)
-        self.assertTrue("\nVariables" in out)
-        self.assertTrue("c = " in out)
-        return
-
 
 # End of class TestFitRecipe
 
+
 # ----------------------------------------------------------------------------
+def testPrintFitHook(capturestdout):
+    "check output from default PrintFitHook."
+    recipe = FitRecipe("recipe")
+    recipe.fithooks[0].verbose = 0
+
+    # Set up the Profile
+    profile = Profile()
+    x = linspace(0, pi, 10)
+    y = sin(x)
+    profile.setObservedProfile(x, y)
+
+    # Set up the FitContribution
+    fitcontribution = FitContribution("cont")
+    fitcontribution.setProfile(profile)
+    fitcontribution.setEquation("A*sin(k*x + c)")
+    fitcontribution.A.setValue(1)
+    fitcontribution.k.setValue(1)
+    fitcontribution.c.setValue(0)
+
+    recipe.addContribution(fitcontribution)
+
+    recipe.addVar(fitcontribution.c)
+    recipe.restrain("c", lb=5)
+    (pfh,) = recipe.getFitHooks()
+    out = capturestdout(recipe.scalarResidual)
+    assert "" == out
+    pfh.verbose = 1
+    out = capturestdout(recipe.scalarResidual)
+    assert out.strip().isdigit()
+    assert "\nRestraints:" not in out
+    pfh.verbose = 2
+    out = capturestdout(recipe.scalarResidual)
+    assert "\nResidual:" in out
+    assert "\nRestraints:" in out
+    assert "\nVariables" not in out
+    pfh.verbose = 3
+    out = capturestdout(recipe.scalarResidual)
+    assert "\nVariables" in out
+    assert "c = " in out
+    return
 
 
 if __name__ == "__main__":

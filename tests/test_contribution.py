@@ -183,6 +183,7 @@ class TestContribution(unittest.TestCase):
         self.assertEqual(6, fc.evaluate())
         return
 
+
 def testResidual(noObserversInGlobalBuilders):
     """Test the residual, which requires all other methods."""
     gen = ProfileGenerator("test")
@@ -244,9 +245,9 @@ def testResidual(noObserversInGlobalBuilders):
     fc.setEquation("2*I")
     fc.setResidualEquation("resv")
     chiv = fc.residual()
-    assert (dot(chiv, chiv) ==
-            pytest.approx(sum((2 * xobs - yobs) ** 2) / sum(yobs**2)))
-
+    assert dot(chiv, chiv) == pytest.approx(
+        sum((2 * xobs - yobs) ** 2) / sum(yobs**2)
+    )
 
     # Make a custom residual.
     fc.setResidualEquation("abs(eq-y)**0.5")
@@ -265,6 +266,7 @@ def testResidual(noObserversInGlobalBuilders):
     assert noObserversInGlobalBuilders
     return
 
+
 def test_setEquation(noObserversInGlobalBuilders):
     """Check replacement of removed parameters."""
     fc = FitContribution("test")
@@ -278,6 +280,7 @@ def test_setEquation(noObserversInGlobalBuilders):
     assert noObserversInGlobalBuilders
     return
 
+
 def test_getEquation(noObserversInGlobalBuilders):
     """Check getting the current profile simulation formula."""
     fc = FitContribution("test")
@@ -286,7 +289,6 @@ def test_getEquation(noObserversInGlobalBuilders):
     assert "(A * sin((x + 5)))" == fc.getEquation()
     assert noObserversInGlobalBuilders
     return
-
 
 
 if __name__ == "__main__":

@@ -20,9 +20,7 @@ import six
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.sas.sasimport import sasimport
-
 from tests import logger
-
 
 # Helper functions for testing -----------------------------------------------
 
@@ -49,7 +47,6 @@ def noObserversInGlobalBuilders():
             rv = False
             break
     return rv
-
 
 
 def capturestdout(f, *args, **kwargs):

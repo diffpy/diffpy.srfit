@@ -1,12 +1,13 @@
-import json
-from pathlib import Path
 import importlib.resources
-import pytest
+import json
 import logging
-
 from functools import lru_cache
+from pathlib import Path
+
+import pytest
 
 logger = logging.getLogger(__name__)
+
 
 @lru_cache()
 def has_sas():
@@ -17,36 +18,45 @@ def has_sas():
     except ImportError:
         return False
 
+
 # diffpy.structure
 @lru_cache()
 def has_diffpy_structure():
     _msg_nostructure = "No module named 'diffpy.structure'"
     try:
         import diffpy.structure as m
+
         del m
         return True
     except ImportError:
         return False
-        logger.warning("Cannot import diffpy.structure, Structure tests skipped.")
+        logger.warning(
+            "Cannot import diffpy.structure, Structure tests skipped."
+        )
+
 
 @lru_cache()
 def has_pyobjcryst():
     _msg_nopyobjcryst = "No module named 'pyobjcryst'"
     try:
         import pyobjcryst as m
+
         del m
         return True
     except ImportError:
         return False
         logger.warning("Cannot import pyobjcryst, pyobjcryst tests skipped.")
 
+
 # diffpy.srreal
+
 
 @lru_cache()
 def has_diffpy_srreal():
     _msg_nosrreal = "No module named 'diffpy.srreal'"
     try:
         import diffpy.srreal.pdfcalculator as m
+
         del m
         return True
     except ImportError:
@@ -58,13 +68,16 @@ def has_diffpy_srreal():
 def sas_available():
     return has_sas()
 
+
 @pytest.fixture(scope="session")
 def diffpy_structure_available():
     return has_diffpy_structure()
 
+
 @pytest.fixture(scope="session")
 def diffpy_srreal_available():
     return has_diffpy_srreal()
+
 
 @pytest.fixture(scope="session")
 def pyobjcryst_available():
@@ -89,6 +102,10 @@ def user_filesystem(tmp_path):
 @pytest.fixture
 def datafile():
     """Fixture to load a test data file from the testdata package directory."""
+
     def _datafile(filename):
-        return importlib.resources.files("diffpy.srfit.tests.testdata").joinpath(filename)
+        return importlib.resources.files(
+            "diffpy.srfit.tests.testdata"
+        ).joinpath(filename)
+
     return _datafile

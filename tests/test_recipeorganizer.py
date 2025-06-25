@@ -27,8 +27,6 @@ from diffpy.srfit.fitbase.recipeorganizer import (
     equationFromString,
 )
 
-from .utils import capturestdout
-
 # ----------------------------------------------------------------------------
 
 
@@ -519,52 +517,57 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEqual(0, len(self.m._eqfactory.equations))
         return
 
-    def test_show(self):
-        """Verify output from the show function."""
 
-        def capture_show(*args, **kwargs):
-            rv = capturestdout(self.m.show, *args, **kwargs)
-            return rv
+def test_show(capturestdout):
+    """Verify output from the show function."""
+    organizer = RecipeOrganizer("test")
+    # Add a managed container so we can do more in-depth tests.
+    organizer._containers = {}
+    organizer._manage(organizer._containers)
 
-        self.assertEqual("", capture_show())
-        self.m._newParameter("x", 1)
-        self.m._newParameter("y", 2)
-        out1 = capture_show()
-        lines1 = out1.strip().split("\n")
-        self.assertEqual(4, len(lines1))
-        self.assertTrue("Parameters" in lines1)
-        self.assertFalse("Constraints" in lines1)
-        self.assertFalse("Restraints" in lines1)
-        self.m._newParameter("z", 7)
-        self.m.constrain("y", "3 * z")
-        out2 = capture_show()
-        lines2 = out2.strip().split("\n")
-        self.assertEqual(9, len(lines2))
-        self.assertTrue("Parameters" in lines2)
-        self.assertTrue("Constraints" in lines2)
-        self.assertFalse("Restraints" in lines2)
-        self.m.restrain("z", lb=2, ub=3, sig=0.001)
-        out3 = capture_show()
-        lines3 = out3.strip().split("\n")
-        self.assertEqual(13, len(lines3))
-        self.assertTrue("Parameters" in lines3)
-        self.assertTrue("Constraints" in lines3)
-        self.assertTrue("Restraints" in lines3)
-        out4 = capture_show(pattern="x")
-        lines4 = out4.strip().split("\n")
-        self.assertEqual(9, len(lines4))
-        out5 = capture_show(pattern="^")
-        self.assertEqual(out3, out5)
-        # check output with another level of hierarchy
-        self.m._addObject(RecipeOrganizer("foo"), self.m._containers)
-        self.m.foo._newParameter("bar", 13)
-        out6 = capture_show()
-        self.assertTrue("foo.bar" in out6)
-        # filter out foo.bar
-        out7 = capture_show("^(?!foo).")
-        self.assertFalse("foo.bar" in out7)
-        self.assertEqual(out3, out7)
-        return
+    def capture_show(*args, **kwargs):
+        rv = capturestdout(organizer.show, *args, **kwargs)
+        return rv
+
+    assert "" == capture_show()
+    organizer._newParameter("x", 1)
+    organizer._newParameter("y", 2)
+    out1 = capture_show()
+    lines1 = out1.strip().split("\n")
+    assert 4 == len(lines1)
+    assert "Parameters" in lines1
+    assert "Constraints" not in lines1
+    assert "Restraints" not in lines1
+    organizer._newParameter("z", 7)
+    organizer.constrain("y", "3 * z")
+    out2 = capture_show()
+    lines2 = out2.strip().split("\n")
+    assert 9 == len(lines2)
+    assert "Parameters" in lines2
+    assert "Constraints" in lines2
+    assert "Restraints" not in lines2
+    organizer.restrain("z", lb=2, ub=3, sig=0.001)
+    out3 = capture_show()
+    lines3 = out3.strip().split("\n")
+    assert 13 == len(lines3)
+    assert "Parameters" in lines3
+    assert "Constraints" in lines3
+    assert "Restraints" in lines3
+    out4 = capture_show(pattern="x")
+    lines4 = out4.strip().split("\n")
+    assert 9 == len(lines4)
+    out5 = capture_show(pattern="^")
+    assert out3 == out5
+    # check output with another level of hierarchy
+    organizer._addObject(RecipeOrganizer("foo"), organizer._containers)
+    organizer.foo._newParameter("bar", 13)
+    out6 = capture_show()
+    assert "foo.bar" in out6
+    # filter out foo.bar
+    out7 = capture_show("^(?!foo).")
+    assert "foo.bar" not in out7
+    assert out3 == out7
+    return
 
 
 # ----------------------------------------------------------------------------

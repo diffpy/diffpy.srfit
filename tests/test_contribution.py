@@ -13,9 +13,10 @@
 #
 ##############################################################################
 """Tests for refinableobj module."""
-
 import unittest
 
+import numpy as np
+import pytest
 from numpy import arange, array_equal, dot, sin
 
 from diffpy.srfit.exceptions import SrFitError
@@ -23,8 +24,6 @@ from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
-
-from .utils import noObserversInGlobalBuilders
 
 
 class TestContribution(unittest.TestCase):
@@ -144,108 +143,6 @@ class TestContribution(unittest.TestCase):
         self.assertEqual(len(xobs2), len(fc.residual()))
         return
 
-    def testResidual(self):
-        """Test the residual, which requires all other methods."""
-        fc = self.fitcontribution
-        profile = self.profile
-        gen = self.gen
-
-        # Add the calculator and profile
-        fc.setProfile(profile)
-        self.assertTrue(fc.profile is profile)
-        fc.addProfileGenerator(gen, "I")
-        self.assertTrue(fc._eq._value is None)
-        self.assertTrue(fc._reseq._value is None)
-        self.assertEqual(1, len(fc._generators))
-        self.assertTrue(gen.name in fc._generators)
-
-        # Let's create some data
-        xobs = arange(0, 10, 0.5)
-        yobs = xobs
-        profile.setObservedProfile(xobs, yobs)
-
-        # Check our fitting equation.
-        self.assertTrue(array_equal(fc._eq(), gen(xobs)))
-
-        # Now calculate the residual
-        chiv = fc.residual()
-        self.assertAlmostEqual(0, dot(chiv, chiv))
-
-        # Now change the equation
-        fc.setEquation("2*I")
-        self.assertTrue(fc._eq._value is None)
-        self.assertTrue(fc._reseq._value is None)
-        chiv = fc.residual()
-        self.assertAlmostEqual(dot(yobs, yobs), dot(chiv, chiv))
-
-        # Try to add a parameter
-        c = Parameter("c", 2)
-        fc._addParameter(c)
-        fc.setEquation("c*I")
-        self.assertTrue(fc._eq._value is None)
-        self.assertTrue(fc._reseq._value is None)
-        chiv = fc.residual()
-        self.assertAlmostEqual(dot(yobs, yobs), dot(chiv, chiv))
-
-        # Try something more complex
-        c.setValue(3)
-        fc.setEquation("c**2*sin(I)")
-        self.assertTrue(fc._eq._value is None)
-        self.assertTrue(fc._reseq._value is None)
-        xobs = arange(0, 10, 0.5)
-        yobs = 9 * sin(xobs)
-        profile.setObservedProfile(xobs, yobs)
-        self.assertTrue(fc._eq._value is None)
-        self.assertTrue(fc._reseq._value is None)
-
-        chiv = fc.residual()
-        self.assertAlmostEqual(0, dot(chiv, chiv))
-
-        # Choose a new residual.
-        fc.setEquation("2*I")
-        fc.setResidualEquation("resv")
-        chiv = fc.residual()
-        self.assertAlmostEqual(
-            sum((2 * xobs - yobs) ** 2) / sum(yobs**2), dot(chiv, chiv)
-        )
-
-        # Make a custom residual.
-        fc.setResidualEquation("abs(eq-y)**0.5")
-        chiv = fc.residual()
-        self.assertAlmostEqual(sum(abs(2 * xobs - yobs)), dot(chiv, chiv))
-
-        # Test configuration checks
-        fc1 = FitContribution("test1")
-        self.assertRaises(SrFitError, fc1.setResidualEquation, "chiv")
-        fc1.setProfile(self.profile)
-        self.assertRaises(SrFitError, fc1.setResidualEquation, "chiv")
-        fc1.setEquation("A * x")
-        fc1.setResidualEquation("chiv")
-        self.assertTrue(noObserversInGlobalBuilders())
-        return
-
-    def test_setEquation(self):
-        """Check replacement of removed parameters."""
-        fc = self.fitcontribution
-        fc.setEquation("x + 5")
-        fc.x.setValue(2)
-        self.assertEqual(7, fc.evaluate())
-        fc.removeParameter(fc.x)
-        x = arange(0, 10, 0.5)
-        fc.newParameter("x", x)
-        self.assertTrue(array_equal(5 + x, fc.evaluate()))
-        self.assertTrue(noObserversInGlobalBuilders())
-        return
-
-    def test_getEquation(self):
-        """Check getting the current profile simulation formula."""
-        fc = self.fitcontribution
-        self.assertEqual("", fc.getEquation())
-        fc.setEquation("A * sin(x + 5)")
-        self.assertEqual("(A * sin((x + 5)))", fc.getEquation())
-        self.assertTrue(noObserversInGlobalBuilders())
-        return
-
     def test_getResidualEquation(self):
         """Check getting the current formula for residual equation."""
         fc = self.fitcontribution
@@ -285,6 +182,113 @@ class TestContribution(unittest.TestCase):
         fc.x << -1
         self.assertEqual(6, fc.evaluate())
         return
+
+
+def testResidual(noObserversInGlobalBuilders):
+    """Test the residual, which requires all other methods."""
+    gen = ProfileGenerator("test")
+    profile = Profile()
+    fc = FitContribution("test")
+
+    # Add the calculator and profile
+    fc.setProfile(profile)
+    assert fc.profile is profile
+    fc.addProfileGenerator(gen, "I")
+    assert fc._eq._value is None
+    assert fc._reseq._value is None
+    assert 1 == len(fc._generators)
+    assert gen.name in fc._generators
+
+    # Let's create some data)
+    xobs = arange(0, 10, 0.5)
+    yobs = xobs
+    profile.setObservedProfile(xobs, yobs)
+
+    # Check our fitting equation.
+    assert np.array_equal(fc._eq(), gen(xobs))
+
+    # Now calculate the residual
+    chiv = fc.residual()
+    assert dot(chiv, chiv) == pytest.approx(0)
+
+    # Now change the equation
+    fc.setEquation("2*I")
+    assert fc._eq._value is None
+    assert fc._reseq._value is None
+    chiv = fc.residual()
+    assert dot(chiv, chiv) == pytest.approx(dot(yobs, yobs))
+
+    # Try to add a parameter
+    c = Parameter("c", 2)
+    fc._addParameter(c)
+    fc.setEquation("c*I")
+    assert fc._eq._value is None
+    assert fc._reseq._value is None
+    chiv = fc.residual()
+    assert dot(chiv, chiv) == pytest.approx(dot(yobs, yobs))
+
+    # Try something more complex
+    c.setValue(3)
+    fc.setEquation("c**2*sin(I)")
+    assert fc._eq._value is None
+    assert fc._reseq._value is None
+    xobs = arange(0, 10, 0.5)
+    yobs = 9 * sin(xobs)
+    profile.setObservedProfile(xobs, yobs)
+    assert fc._eq._value is None
+    assert fc._reseq._value is None
+
+    chiv = fc.residual()
+    assert dot(chiv, chiv) == pytest.approx(0)
+
+    # Choose a new residual.
+    fc.setEquation("2*I")
+    fc.setResidualEquation("resv")
+    chiv = fc.residual()
+    assert dot(chiv, chiv) == pytest.approx(
+        sum((2 * xobs - yobs) ** 2) / sum(yobs**2)
+    )
+
+    # Make a custom residual.
+    fc.setResidualEquation("abs(eq-y)**0.5")
+    chiv = fc.residual()
+    assert dot(chiv, chiv) == pytest.approx(sum(abs(2 * xobs - yobs)))
+
+    # Test configuration checks
+    fc1 = FitContribution("test1")
+    with pytest.raises(SrFitError):
+        fc1.setResidualEquation("chiv")
+    fc1.setProfile(profile)
+    with pytest.raises(SrFitError):
+        fc1.setResidualEquation("chiv")
+    fc1.setEquation("A * x")
+    fc1.setResidualEquation("chiv")
+    assert noObserversInGlobalBuilders
+    return
+
+
+def test_setEquation(noObserversInGlobalBuilders):
+    """Check replacement of removed parameters."""
+    fc = FitContribution("test")
+    fc.setEquation("x + 5")
+    fc.x.setValue(2)
+    assert 7 == fc.evaluate()
+    fc.removeParameter(fc.x)
+    x = arange(0, 10, 0.5)
+    fc.newParameter("x", x)
+    assert np.array_equal(5 + x, fc.evaluate())
+    assert noObserversInGlobalBuilders
+    return
+
+
+def test_getEquation(noObserversInGlobalBuilders):
+    """Check getting the current profile simulation formula."""
+    fc = FitContribution("test")
+    assert "" == fc.getEquation()
+    fc.setEquation("A * sin(x + 5)")
+    assert "(A * sin((x + 5)))" == fc.getEquation()
+    assert noObserversInGlobalBuilders
+    return
 
 
 if __name__ == "__main__":

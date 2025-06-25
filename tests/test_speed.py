@@ -14,8 +14,6 @@
 ##############################################################################
 """Tests for refinableobj module."""
 
-from __future__ import print_function
-
 import random
 
 import numpy
@@ -23,16 +21,14 @@ import numpy
 import diffpy.srfit.equation.literals as literals
 import diffpy.srfit.equation.visitors as visitors
 
-from .utils import _makeArgs
-
 x = numpy.arange(0, 20, 0.05)
 
 
-def makeLazyEquation():
+def makeLazyEquation(make_args):
     """Make a lazy equation and see how fast it is."""
 
     # Make some variables
-    v1, v2, v3, v4, v5, v6, v7 = _makeArgs(7)
+    v1, v2, v3, v4, v5, v6, v7 = make_args(7)
 
     # Make some operations
     mult = literals.MultiplicationOperator()
@@ -463,14 +459,17 @@ def profileTest():
     return
 
 
-if __name__ == "__main__":
-    for i in range(1, 13):
-        speedTest2(i)
-    """
-    for i in range(1, 9):
-        weightedTest(i)
-    """
-    """From diffpy.srfit.equation.builder import EquationFactory import random
-    import cProfile cProfile.run('profileTest()', 'prof') import pstats p =
-    pstats.Stats('prof') p.strip_dirs() p.sort_stats('time') p.print_stats(10)
-    profileTest()"""
+# if __name__ == "__main__":
+#     for i in range(1, 13):
+#         speedTest2(i)
+#     """
+#     for i in range(1, 9):
+#         weightedTest(i)
+#     """
+#     """From diffpy.srfit.equation.builder import
+#     EquationFactory import random
+#     import cProfile cProfile.run('profileTest()', 'prof')
+#     import pstats p =
+#     pstats.Stats('prof') p.strip_dirs() p.sort_stats('time')
+#     p.print_stats(10)
+#     profileTest()"""

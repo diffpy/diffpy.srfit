@@ -16,64 +16,76 @@
 
 import unittest
 
+import pytest
+
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import initializeRecipe
 
-from .utils import datafile
+
+def testInitializeFromFileName(datafile):
+    recipe = FitRecipe("recipe")
+    recipe.newVar("A", 0)
+    recipe.newVar("sig", 0)
+    recipe.newVar("x0", 0)
+    filename = datafile("results.res")
+    Aval = 5.77619823e-01
+    sigval = -9.22758690e-01
+    x0val = 6.12422115e00
+
+    assert 0 == recipe.A.value
+    assert 0 == recipe.sig.value
+    assert 0 == recipe.x0.value
+    initializeRecipe(recipe, filename)
+    assert Aval == pytest.approx(recipe.A.value)
+    assert sigval == pytest.approx(recipe.sig.value)
+    assert x0val == pytest.approx(recipe.x0.value)
+    return
 
 
-class TestInitializeRecipe(unittest.TestCase):
+def testInitializeFromFileObj(datafile):
+    recipe = FitRecipe("recipe")
+    recipe.newVar("A", 0)
+    recipe.newVar("sig", 0)
+    recipe.newVar("x0", 0)
+    filename = datafile("results.res")
+    Aval = 5.77619823e-01
+    sigval = -9.22758690e-01
+    x0val = 6.12422115e00
 
-    def setUp(self):
-        self.recipe = recipe = FitRecipe("recipe")
-        recipe.newVar("A", 0)
-        recipe.newVar("sig", 0)
-        recipe.newVar("x0", 0)
-        self.filename = datafile("results.res")
+    assert 0 == recipe.A.value
+    assert 0 == recipe.sig.value
+    assert 0 == recipe.x0.value
+    infile = open(filename, "r")
+    initializeRecipe(recipe, infile)
+    assert not infile.closed
+    infile.close()
+    assert Aval == pytest.approx(recipe.A.value)
+    assert sigval == pytest.approx(recipe.sig.value)
+    assert x0val == pytest.approx(recipe.x0.value)
+    return
 
-        self.Aval = 5.77619823e-01
-        self.sigval = -9.22758690e-01
-        self.x0val = 6.12422115e00
-        return
 
-    def testInitializeFromFileName(self):
-        recipe = self.recipe
-        self.assertEqual(0, recipe.A.value)
-        self.assertEqual(0, recipe.sig.value)
-        self.assertEqual(0, recipe.x0.value)
-        initializeRecipe(recipe, self.filename)
-        self.assertAlmostEqual(self.Aval, recipe.A.value)
-        self.assertAlmostEqual(self.sigval, recipe.sig.value)
-        self.assertAlmostEqual(self.x0val, recipe.x0.value)
-        return
+def testInitializeFromString(datafile):
+    recipe = FitRecipe("recipe")
+    recipe.newVar("A", 0)
+    recipe.newVar("sig", 0)
+    recipe.newVar("x0", 0)
+    filename = datafile("results.res")
+    Aval = 5.77619823e-01
+    sigval = -9.22758690e-01
+    x0val = 6.12422115e00
 
-    def testInitializeFromFileObj(self):
-        recipe = self.recipe
-        self.assertEqual(0, recipe.A.value)
-        self.assertEqual(0, recipe.sig.value)
-        self.assertEqual(0, recipe.x0.value)
-        infile = open(self.filename, "r")
-        initializeRecipe(recipe, infile)
-        self.assertFalse(infile.closed)
-        infile.close()
-        self.assertAlmostEqual(self.Aval, recipe.A.value)
-        self.assertAlmostEqual(self.sigval, recipe.sig.value)
-        self.assertAlmostEqual(self.x0val, recipe.x0.value)
-        return
-
-    def testInitializeFromString(self):
-        recipe = self.recipe
-        self.assertEqual(0, recipe.A.value)
-        self.assertEqual(0, recipe.sig.value)
-        self.assertEqual(0, recipe.x0.value)
-        infile = open(self.filename, "r")
-        resstr = infile.read()
-        infile.close()
-        initializeRecipe(recipe, resstr)
-        self.assertAlmostEqual(self.Aval, recipe.A.value)
-        self.assertAlmostEqual(self.sigval, recipe.sig.value)
-        self.assertAlmostEqual(self.x0val, recipe.x0.value)
-        return
+    assert 0 == recipe.A.value
+    assert 0 == recipe.sig.value
+    assert 0 == recipe.x0.value
+    infile = open(filename, "r")
+    resstr = infile.read()
+    infile.close()
+    initializeRecipe(recipe, resstr)
+    assert Aval == pytest.approx(recipe.A.value)
+    assert sigval == pytest.approx(recipe.sig.value)
+    assert x0val == pytest.approx(recipe.x0.value)
+    return
 
 
 if __name__ == "__main__":

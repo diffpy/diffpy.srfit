@@ -122,7 +122,7 @@ class Operator(Literal, OperatorABC):
     def getValue(self):
         """Get or evaluate the value of the operator."""
         if self._value is None:
-            vals = [l.value for l in self.args]
+            vals = [arg.value for arg in self.args]
             self._value = self.operation(*vals)
         return self._value
 
@@ -135,8 +135,8 @@ class Operator(Literal, OperatorABC):
 
         # Check to see if I am a dependency of the literal.
         if hasattr(literal, "args"):
-            for l in literal.args:
-                self._loopCheck(l)
+            for lit_arg in literal.args:
+                self._loopCheck(lit_arg)
         return
 
 

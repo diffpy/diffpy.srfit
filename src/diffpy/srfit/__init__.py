@@ -4,7 +4,8 @@
 # (c) 2008-2025 The Trustees of Columbia University in the City of New York.
 # All rights reserved.
 #
-# File coded by: Christopher Farrow, Pavol Juhas, and members of the Billinge Group.
+# File coded by: Christopher Farrow, Pavol Juhas, and members of the
+# Billinge Group.
 #
 # See GitHub contributions for a more detailed list of contributors.
 # https://github.com/diffpy/diffpy.srfit/graphs/contributors

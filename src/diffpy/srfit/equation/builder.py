@@ -75,6 +75,17 @@ example.
 > beq = c*f(a,b)
 > eq = beq.makeEquation()
 """
+import inspect
+import numbers
+import token
+import tokenize
+
+import numpy
+import six
+
+import diffpy.srfit.equation.literals as literals
+from diffpy.srfit.equation.equationmod import Equation
+from diffpy.srfit.equation.literals.literal import Literal
 
 __all__ = [
     "EquationFactory",
@@ -95,17 +106,6 @@ __all__ = [
 _builders = {}
 
 
-import inspect
-import numbers
-
-import numpy
-import six
-
-import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.equation.equationmod import Equation
-from diffpy.srfit.equation.literals.literal import Literal
-
-
 class EquationFactory(object):
     """A Factory for equations.
 
@@ -113,7 +113,8 @@ class EquationFactory(object):
                     factory, indexed by name.
     newargs     --  A set of new arguments created by makeEquation. This is
                     redefined whenever makeEquation is called.
-    equations   --  Set of equations that have been built by the EquationFactory.
+    equations   --  Set of equations that have been built by the
+                    EquationFactory.
     """
 
     symbols = ("+", "-", "*", "/", "**", "%", "|")
@@ -213,10 +214,10 @@ class EquationFactory(object):
             if n not in self.builders:
                 self.registerConstant(n, 0)
         opbuilder = wrapFunction(name, func, len(argnames))
-        for n in argnames:
-            b = self.builders[n]
-            l = b.literal
-            opbuilder.literal.addLiteral(l)
+        for argname in argnames:
+            builder = self.builders[argname]
+            argliteral = builder.literal
+            opbuilder.literal.addLiteral(argliteral)
 
         return self.registerBuilder(name, opbuilder)
 
@@ -341,9 +342,6 @@ class EquationFactory(object):
 
         Raises SyntaxError if the equation string uses invalid syntax.
         """
-        import token
-        import tokenize
-
         interface = six.StringIO(eqstr).readline
         # output is an iterator. Each entry (token) is a 5-tuple
         # token[0] = token type
@@ -512,7 +510,7 @@ class BaseBuilder(object):
         return self.__evalUnary(literals.NegationOperator)
 
 
-## These are used by the class.
+# These are used by the class.
 
 
 class ArgumentBuilder(BaseBuilder):
@@ -681,15 +679,18 @@ def __wrapSrFitOperators():
     instances in the module namespace."""
     opmod = literals.operators
     excluded_types = set((opmod.CustomOperator, opmod.UFuncOperator))
+
     # check if opmod member should be wrapped as OperatorBuilder
-    is_exported_type = lambda cls: (
-        inspect.isclass(cls)
-        and issubclass(cls, opmod.Operator)
-        and not inspect.isabstract(cls)
-        and not cls in excluded_types
-    )
+    def _is_exported_type(cls):
+        return (
+            inspect.isclass(cls)
+            and issubclass(cls, opmod.Operator)
+            and not inspect.isabstract(cls)
+            and cls not in excluded_types
+        )
+
     # create OperatorBuilder objects
-    for nm, opclass in inspect.getmembers(opmod, is_exported_type):
+    for nm, opclass in inspect.getmembers(opmod, _is_exported_type):
         op = opclass()
         assert op.name, "Unnamed Operator should never appear here."
         _builders[op.name] = OperatorBuilder(op.name, op)

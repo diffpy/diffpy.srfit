@@ -17,8 +17,7 @@
 import unittest
 
 import numpy
-
-from .utils import _msg_nopyobjcryst, has_pyobjcryst
+import pytest
 
 # Global variables to be assigned in setUp
 ObjCrystCrystalParSet = spacegroups = None
@@ -112,10 +111,13 @@ def makeC60():
 # ----------------------------------------------------------------------------
 
 
-@unittest.skipUnless(has_pyobjcryst, _msg_nopyobjcryst)
-class TestParameterAdapter(unittest.TestCase):
+class TestParameterAdapter:
+    @pytest.fixture(autouse=True)
+    def setup(self, pyobjcryst_available):
+        # shared setup
+        if not pyobjcryst_available:
+            pytest.skip("pyobjcryst package not available")
 
-    def setUp(self):
         global ObjCrystCrystalParSet, Crystal, Atom, Molecule
         global ScatteringPowerAtom
         from pyobjcryst.atom import Atom
@@ -134,60 +136,83 @@ class TestParameterAdapter(unittest.TestCase):
         del self.ocmol
         return
 
+    def testImplicitBondAngleRestraints(self):
+        """Test the structure with implicit bond angles."""
+        occryst = self.occryst
+        ocmol = self.ocmol
+
+        # Add some bond angles to the molecule
+        ocmol.AddBondAngle(ocmol[0], ocmol[5], ocmol[8], 1.1, 0.1, 0.1)
+        ocmol.AddBondAngle(ocmol[0], ocmol[7], ocmol[44], 1.3, 0.1, 0.1)
+
+        # make our crystal
+        cryst = ObjCrystCrystalParSet("bucky", occryst)
+        m = cryst.c60
+        m.wrapRestraints()
+
+        # make sure that we have some restraints in the molecule
+        assert 2 == len(m._restraints)
+
+        # make sure these evaluate to whatver we get from objcryst
+        res0, res1 = m._restraints
+        p0 = set([res0.penalty(), res1.penalty()])
+        angles = ocmol.GetBondAngleList()
+        p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
+        assert p0 == p1
+
+        return
+
     def testObjCrystParSet(self):
         """Test the structure conversion."""
 
         occryst = self.occryst
         ocmol = self.ocmol
-
         cryst = ObjCrystCrystalParSet("bucky", occryst)
         m = cryst.c60
 
-        self.assertEqual(cryst.name, "bucky")
+        assert cryst.name == "bucky"
 
         def _testCrystal():
-
             # Test the lattice
-            self.assertAlmostEqual(occryst.a, cryst.a.value)
-            self.assertAlmostEqual(occryst.b, cryst.b.getValue())
-            self.assertAlmostEqual(occryst.c, cryst.c.getValue())
-            self.assertAlmostEqual(occryst.alpha, cryst.alpha.getValue())
-            self.assertAlmostEqual(occryst.beta, cryst.beta.getValue())
-            self.assertAlmostEqual(occryst.gamma, cryst.gamma.getValue())
-
+            assert occryst.a == pytest.approx(cryst.a.value)
+            assert occryst.b == pytest.approx(cryst.b.getValue())
+            assert occryst.c == pytest.approx(cryst.c.getValue())
+            assert occryst.alpha == pytest.approx(cryst.alpha.getValue())
+            assert occryst.beta == pytest.approx(cryst.beta.getValue())
+            assert occryst.gamma == pytest.approx(cryst.gamma.getValue())
             return
 
         def _testMolecule():
 
             # Test position / occupancy
-            self.assertAlmostEqual(ocmol.X, m.x.getValue())
-            self.assertAlmostEqual(ocmol.Y, m.y.getValue())
-            self.assertAlmostEqual(ocmol.Z, m.z.getValue())
-            self.assertAlmostEqual(ocmol.Occupancy, m.occ.getValue())
+            assert ocmol.X == pytest.approx(m.x.getValue())
+            assert ocmol.Y == pytest.approx(m.y.getValue())
+            assert ocmol.Z == pytest.approx(m.z.getValue())
+            assert ocmol.Occupancy == pytest.approx(m.occ.getValue())
 
             # Test orientation
-            self.assertAlmostEqual(ocmol.Q0, m.q0.getValue())
-            self.assertAlmostEqual(ocmol.Q1, m.q1.getValue())
-            self.assertAlmostEqual(ocmol.Q2, m.q2.getValue())
-            self.assertAlmostEqual(ocmol.Q3, m.q3.getValue())
+            assert ocmol.Q0 == pytest.approx(m.q0.getValue())
+            assert ocmol.Q1 == pytest.approx(m.q1.getValue())
+            assert ocmol.Q2 == pytest.approx(m.q2.getValue())
+            assert ocmol.Q3 == pytest.approx(m.q3.getValue())
 
             # Check the atoms thoroughly
             for i in range(len(ocmol)):
                 oca = ocmol[i]
                 ocsp = oca.GetScatteringPower()
                 a = m.atoms[i]
-                self.assertEqual(ocsp.GetSymbol(), a.element)
-                self.assertAlmostEqual(oca.X, a.x.getValue())
-                self.assertAlmostEqual(oca.Y, a.y.getValue())
-                self.assertAlmostEqual(oca.Z, a.z.getValue())
-                self.assertAlmostEqual(oca.Occupancy, a.occ.getValue())
-                self.assertAlmostEqual(ocsp.Biso, a.Biso.getValue())
+                assert ocsp.GetSymbol() == a.element
+                assert oca.X == pytest.approx(a.x.getValue())
+                assert oca.Y == pytest.approx(a.y.getValue())
+                assert oca.Z == pytest.approx(a.z.getValue())
+                assert oca.Occupancy == pytest.approx(a.occ.getValue())
+                assert ocsp.Biso == pytest.approx(a.Biso.getValue())
             return
 
         _testCrystal()
         _testMolecule()
 
-        ## Now change some values from ObjCryst
+        # Now change some values from ObjCryst
         ocmol[0].X *= 1.1
         ocmol[0].Occupancy *= 1.1
         ocmol[0].GetScatteringPower().Biso *= 1.1
@@ -197,7 +222,7 @@ class TestParameterAdapter(unittest.TestCase):
         _testCrystal()
         _testMolecule()
 
-        ## Now change values from the srfit StructureParSet
+        # Now change values from the srfit StructureParSet
         cryst.c60.C44.x.setValue(1.1)
         cryst.c60.C44.occ.setValue(1.1)
         cryst.c60.C44.Biso.setValue(1.1)
@@ -223,40 +248,14 @@ class TestParameterAdapter(unittest.TestCase):
         m.wrapRestraints()
 
         # make sure that we have some restraints in the molecule
-        self.assertTrue(2, len(m._restraints))
+        assert 2 == len(m._restraints)
 
         # make sure these evaluate to whatver we get from objcryst
         res0, res1 = m._restraints
         p0 = set([res0.penalty(), res1.penalty()])
         bonds = ocmol.GetBondList()
         p1 = set([bonds[0].GetLogLikelihood(), bonds[1].GetLogLikelihood()])
-        self.assertEqual(p0, p1)
-
-        return
-
-    def testImplicitBondAngleRestraints(self):
-        """Test the structure with implicit bond angles."""
-        occryst = self.occryst
-        ocmol = self.ocmol
-
-        # Add some bond angles to the molecule
-        ocmol.AddBondAngle(ocmol[0], ocmol[5], ocmol[8], 1.1, 0.1, 0.1)
-        ocmol.AddBondAngle(ocmol[0], ocmol[7], ocmol[44], 1.3, 0.1, 0.1)
-
-        # make our crystal
-        cryst = ObjCrystCrystalParSet("bucky", occryst)
-        m = cryst.c60
-        m.wrapRestraints()
-
-        # make sure that we have some restraints in the molecule
-        self.assertTrue(2, len(m._restraints))
-
-        # make sure these evaluate to whatver we get from objcryst
-        res0, res1 = m._restraints
-        p0 = set([res0.penalty(), res1.penalty()])
-        angles = ocmol.GetBondAngleList()
-        p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
-        self.assertEqual(p0, p1)
+        assert p0 == p1
 
         return
 
@@ -279,14 +278,14 @@ class TestParameterAdapter(unittest.TestCase):
         m.wrapRestraints()
 
         # make sure that we have some restraints in the molecule
-        self.assertTrue(2, len(m._restraints))
+        assert 2 == len(m._restraints)
 
         # make sure these evaluate to whatver we get from objcryst
         res0, res1 = m._restraints
         p0 = set([res0.penalty(), res1.penalty()])
         angles = ocmol.GetDihedralAngleList()
         p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
-        self.assertEqual(p0, p1)
+        assert p0 == p1
 
         return
 
@@ -309,14 +308,14 @@ class TestParameterAdapter(unittest.TestCase):
         res1 = m.restrainBondLength(m.atoms[0], m.atoms[7], 3.3, 0.1, 0.1)
 
         # make sure that we have some restraints in the molecule
-        self.assertTrue(2, len(m._restraints))
+        assert 2 == len(m._restraints)
 
         # make sure these evaluate to whatver we get from objcryst
         p0 = [res0.penalty(), res1.penalty()]
         bonds = ocmol.GetBondList()
-        self.assertEqual(2, len(bonds))
+        assert 2 == len(bonds)
         p1 = [b.GetLogLikelihood() for b in bonds]
-        self.assertEqual(p0, p1)
+        assert p0 == p1
 
         return
 
@@ -342,13 +341,13 @@ class TestParameterAdapter(unittest.TestCase):
         )
 
         # make sure that we have some restraints in the molecule
-        self.assertTrue(2, len(m._restraints))
+        assert 2 == len(m._restraints)
 
         # make sure these evaluate to whatver we get from objcryst
         p0 = set([res0.penalty(), res1.penalty()])
         angles = ocmol.GetBondAngleList()
         p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
-        self.assertEqual(p0, p1)
+        assert p0 == p1
 
         return
 
@@ -370,13 +369,13 @@ class TestParameterAdapter(unittest.TestCase):
         )
 
         # make sure that we have some restraints in the molecule
-        self.assertTrue(2, len(m._restraints))
+        assert 2 == len(m._restraints)
 
         # make sure these evaluate to whatver we get from objcryst
         p0 = set([res0.penalty(), res1.penalty()])
         angles = ocmol.GetDihedralAngleList()
         p1 = set([angles[0].GetLogLikelihood(), angles[1].GetLogLikelihood()])
-        self.assertEqual(p0, p1)
+        assert p0 == p1
 
         return
 
@@ -405,7 +404,7 @@ class TestParameterAdapter(unittest.TestCase):
 
         dd = xyz0 - xyz7
         d0 = numpy.dot(dd, dd) ** 0.5
-        self.assertAlmostEqual(d0, p1.getValue(), 6)
+        assert d0 == pytest.approx(p1.getValue(), abs=1e-6)
 
         # Record the unit direction of change for later
         u = dd / d0
@@ -415,7 +414,7 @@ class TestParameterAdapter(unittest.TestCase):
         p1.setValue(scale * d0)
 
         # Verify that it has changed.
-        self.assertAlmostEqual(scale * d0, p1.getValue())
+        assert scale * d0 == pytest.approx(p1.getValue(), abs=1e-6)
 
         xyz0a = numpy.array(
             [a0.x.getValue(), a0.y.getValue(), a0.z.getValue()]
@@ -430,19 +429,19 @@ class TestParameterAdapter(unittest.TestCase):
         dda = xyz0a - xyz7a
         d1 = numpy.dot(dda, dda) ** 0.5
 
-        self.assertAlmostEqual(scale * d0, d1)
+        assert scale * d0 == pytest.approx(d1, abs=1e-6)
 
         # Verify that only the second and third atoms have moved.
 
-        self.assertTrue(numpy.array_equal(xyz0, xyz0a))
+        assert numpy.array_equal(xyz0, xyz0a)
 
         xyz7calc = xyz7 + (1 - scale) * d0 * u
         for i in range(3):
-            self.assertAlmostEqual(xyz7a[i], xyz7calc[i], 6)
+            assert xyz7a[i] == pytest.approx(xyz7calc[i], abs=1e-5)
 
         xyz20calc = xyz20 + (1 - scale) * d0 * u
         for i in range(3):
-            self.assertAlmostEqual(xyz20a[i], xyz20calc[i], 6)
+            assert xyz20a[i] == pytest.approx(xyz20calc[i], abs=1e-6)
 
         return
 
@@ -480,14 +479,14 @@ class TestParameterAdapter(unittest.TestCase):
         # Have another atom tag along for the ride
         p1.addAtoms([a25])
 
-        self.assertAlmostEqual(angle0, p1.getValue(), 6)
+        assert angle0 == pytest.approx(p1.getValue(), abs=1e-6)
 
         # Change the value
         scale = 1.05
         p1.setValue(scale * angle0)
 
         # Verify that it has changed.
-        self.assertAlmostEqual(scale * angle0, p1.getValue(), 6)
+        assert scale * angle0 == pytest.approx(p1.getValue(), abs=1e-6)
 
         xyz0a = numpy.array(
             [a0.x.getValue(), a0.y.getValue(), a0.z.getValue()]
@@ -509,14 +508,14 @@ class TestParameterAdapter(unittest.TestCase):
 
         angle1 = numpy.arccos(numpy.dot(v1a, v2a) / (d1a * d2a))
 
-        self.assertAlmostEqual(scale * angle0, angle1)
+        assert scale * angle0 == pytest.approx(angle1, abs=1e-6)
 
         # Verify that only the last two atoms have moved.
 
-        self.assertTrue(numpy.array_equal(xyz0, xyz0a))
-        self.assertTrue(numpy.array_equal(xyz7, xyz7a))
-        self.assertFalse(numpy.array_equal(xyz20, xyz20a))
-        self.assertFalse(numpy.array_equal(xyz25, xyz25a))
+        assert numpy.array_equal(xyz0, xyz0a)
+        assert numpy.array_equal(xyz7, xyz7a)
+        assert not numpy.array_equal(xyz20, xyz20a)
+        assert not numpy.array_equal(xyz25, xyz25a)
 
         return
 
@@ -561,14 +560,14 @@ class TestParameterAdapter(unittest.TestCase):
         # Have another atom tag along for the ride
         p1.addAtoms([a33])
 
-        self.assertAlmostEqual(angle0, p1.getValue(), 6)
+        assert angle0 == pytest.approx(p1.getValue(), abs=1e-6)
 
         # Change the value
         scale = 1.05
         p1.setValue(scale * angle0)
 
         # Verify that it has changed.
-        self.assertAlmostEqual(scale * angle0, p1.getValue(), 6)
+        assert scale * angle0 == pytest.approx(p1.getValue(), abs=1e-6)
 
         xyz0a = numpy.array(
             [a0.x.getValue(), a0.y.getValue(), a0.z.getValue()]
@@ -595,34 +594,34 @@ class TestParameterAdapter(unittest.TestCase):
         d123a = numpy.dot(v123a, v123a) ** 0.5
         d234a = numpy.dot(v234a, v234a) ** 0.5
         angle1 = -numpy.arccos(numpy.dot(v123a, v234a) / (d123a * d234a))
-
-        self.assertAlmostEqual(scale * angle0, angle1)
+        assert scale * angle0 == pytest.approx(angle1, abs=1e-6)
 
         # Verify that only the last two atoms have moved.
 
-        self.assertTrue(numpy.array_equal(xyz0, xyz0a))
-        self.assertTrue(numpy.array_equal(xyz7, xyz7a))
-        self.assertTrue(numpy.array_equal(xyz20, xyz20a))
-        self.assertFalse(numpy.array_equal(xyz25, xyz25a))
-        self.assertFalse(numpy.array_equal(xyz33, xyz33a))
+        assert numpy.array_equal(xyz0, xyz0a)
+        assert numpy.array_equal(xyz7, xyz7a)
+        assert numpy.array_equal(xyz20, xyz20a)
+        assert not numpy.array_equal(xyz25, xyz25a)
+        assert not numpy.array_equal(xyz33, xyz33a)
 
         return
 
 
-# End of class TestParameterAdapter
-
-# ----------------------------------------------------------------------------
-
-
-@unittest.skipUnless(has_pyobjcryst, _msg_nopyobjcryst)
-class TestCreateSpaceGroup(unittest.TestCase):
+class TestCreateSpaceGroup:
     """Test space group creation from pyobjcryst structures.
 
     This makes sure that the space groups created by the structure
     parameter set are correct.
     """
 
-    def setUp(self):
+    @pytest.fixture(autouse=True)
+    def setup(self, diffpy_structure_available, pyobjcryst_available):
+        # shared setup
+        if not diffpy_structure_available:
+            pytest.skip("diffpy.structure package not available")
+        if not pyobjcryst_available:
+            pytest.skip("pyobjcryst package not available")
+
         global ObjCrystCrystalParSet, spacegroups
         from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
         from diffpy.structure import spacegroups
@@ -665,7 +664,7 @@ class TestCreateSpaceGroup(unittest.TestCase):
                 sg = spacegroups.GetSpaceGroup(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
                 # print("dbsg: " + repr(self.sgsEquivalent(sg, sgnew)))
-                self.assertTrue(self.sgsEquivalent(sg, sgnew))
+                assert self.sgsEquivalent(sg, sgnew)
         return
 
 

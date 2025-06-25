@@ -16,17 +16,22 @@
 
 import unittest
 
+import pytest
+
 import diffpy.srfit.equation.literals as literals
 import diffpy.srfit.equation.visitors as visitors
 
 
-class TestValidator(unittest.TestCase):
+class TestValidator:
+    @pytest.fixture(autouse=True)
+    def setup(self, make_args):
+        self.make_args = make_args
 
     def testSimpleFunction(self):
         """Test a simple function."""
 
         # Make some variables
-        v1, v2, v3, v4 = _makeArgs(4)
+        v1, v2, v3, v4 = self.make_args(4)
 
         # Make some operations
         mult = literals.MultiplicationOperator()
@@ -49,25 +54,25 @@ class TestValidator(unittest.TestCase):
         # Now validate
         validator = visitors.Validator()
         mult.identify(validator)
-        self.assertEqual(4, len(validator.errors))
+        assert 4 == len(validator.errors)
 
         # Fix the equation
         minus.addLiteral(v3)
         validator.reset()
         mult.identify(validator)
-        self.assertEqual(3, len(validator.errors))
+        assert 3 == len(validator.errors)
 
         # Fix the name of plus
         plus.name = "add"
         validator.reset()
         mult.identify(validator)
-        self.assertEqual(2, len(validator.errors))
+        assert 2 == len(validator.errors)
 
         # Fix the symbol of plus
         plus.symbol = "+"
         validator.reset()
         mult.identify(validator)
-        self.assertEqual(1, len(validator.errors))
+        assert 1 == len(validator.errors)
 
         # Fix the operation of plus
         import numpy
@@ -75,24 +80,27 @@ class TestValidator(unittest.TestCase):
         plus.operation = numpy.add
         validator.reset()
         mult.identify(validator)
-        self.assertEqual(0, len(validator.errors))
+        assert 0 == len(validator.errors)
 
         # Add another literal to minus
         minus.addLiteral(v1)
         validator.reset()
         mult.identify(validator)
-        self.assertEqual(1, len(validator.errors))
+        assert 1 == len(validator.errors)
 
         return
 
 
-class TestArgFinder(unittest.TestCase):
+class TestArgFinder:
+    @pytest.fixture(autouse=True)
+    def setup(self, make_args):
+        self.make_args = make_args
 
     def testSimpleFunction(self):
         """Test a simple function."""
 
         # Make some variables
-        v1, v2, v3, v4 = _makeArgs(4)
+        v1, v2, v3, v4 = self.make_args(4)
 
         # Make some operations
         mult = literals.MultiplicationOperator()
@@ -116,33 +124,36 @@ class TestArgFinder(unittest.TestCase):
 
         # now get the args
         args = visitors.getArgs(mult)
-        self.assertEqual(4, len(args))
-        self.assertTrue(v1 in args)
-        self.assertTrue(v2 in args)
-        self.assertTrue(v3 in args)
-        self.assertTrue(v4 in args)
+        assert 4 == len(args)
+        assert v1 in args
+        assert v2 in args
+        assert v3 in args
+        assert v4 in args
 
         return
 
     def testArg(self):
         """Test just an Argument equation."""
         # Make some variables
-        v1 = _makeArgs(1)[0]
+        v1 = self.make_args(1)[0]
 
         args = visitors.getArgs(v1)
 
-        self.assertEqual(1, len(args))
-        self.assertTrue(args[0] is v1)
+        assert 1 == len(args)
+        assert args[0] == v1
         return
 
 
-class TestSwapper(unittest.TestCase):
+class TestSwapper:
+    @pytest.fixture(autouse=True)
+    def setup(self, make_args):
+        self.make_args = make_args
 
     def testSimpleFunction(self):
         """Test a simple function."""
 
         # Make some variables
-        v1, v2, v3, v4, v5 = _makeArgs(5)
+        v1, v2, v3, v4, v5 = self.make_args(5)
 
         # Make some operations
         mult = literals.MultiplicationOperator()
@@ -166,43 +177,44 @@ class TestSwapper(unittest.TestCase):
         v5.setValue(5)
 
         # Evaluate
-        self.assertEqual(8, mult.value)
+        assert 8 == mult.value
 
         # Now swap an argument
         visitors.swap(mult, v2, v5)
 
         # Check that the operator value is invalidated
-        self.assertTrue(mult._value is None)
-        self.assertFalse(v2.hasObserver(minus._flush))
-        self.assertTrue(v5.hasObserver(minus._flush))
+        assert mult._value is None
+        assert not v2.hasObserver(minus._flush)
+        assert v5.hasObserver(minus._flush)
 
         # now get the args
         args = visitors.getArgs(mult)
-        self.assertEqual(4, len(args))
-        self.assertTrue(v1 in args)
-        self.assertTrue(v2 not in args)
-        self.assertTrue(v3 in args)
-        self.assertTrue(v4 in args)
-        self.assertTrue(v5 in args)
+        assert 4 == len(args)
+        assert v1 in args
+        assert v2 not in args
+        assert v3 in args
+        assert v4 in args
+        assert v5 in args
 
         # Re-evaluate (1+3)*(4-5) = -4
-        self.assertEqual(-4, mult.value)
+        assert -4 == mult.value
 
         # Swap out the "-" operator
         plus2 = literals.AdditionOperator()
         visitors.swap(mult, minus, plus2)
-        self.assertTrue(mult._value is None)
-        self.assertFalse(minus.hasObserver(mult._flush))
-        self.assertTrue(plus2.hasObserver(mult._flush))
+        assert mult._value is None
+        assert not minus.hasObserver(mult._flush)
+        assert plus2.hasObserver(mult._flush)
 
         # plus2 has no arguments yet. Verify this.
-        self.assertRaises(TypeError, mult.getValue)
+        with pytest.raises(TypeError):
+            mult.getValue()
         # Add the arguments to plus2.
         plus2.addLiteral(v4)
         plus2.addLiteral(v5)
 
         # Re-evaluate (1+3)*(4+5) = 36
-        self.assertEqual(36, mult.value)
+        assert 36 == mult.value
 
         return
 

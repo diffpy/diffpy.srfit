@@ -24,6 +24,7 @@ __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
 import re
 from collections import OrderedDict
+from functools import partial
 from itertools import chain, groupby
 
 import six
@@ -741,8 +742,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self.unconstrain(*self._constraints)
 
         if recurse:
-            _constraint_clearer = lambda m: hasattr(m, "clearConstraints")
-            for m in filter(f, self._iterManaged()):
+            for m in filter(_has_clear_constraints, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
@@ -822,19 +822,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                     found there as well.
         """
         self.unrestrain(*self._restraints)
-
         if recurse:
-            f = lambda m: hasattr(m, "clearRestraints")
-            for m in filter(f, self._iterManaged()):
-                m.clearRestraints(recurse)
+            for msg in filter(_has_clear_restraints(), self._iterManaged()):
+                msg.clearRestraints(recurse)
         return
 
     def _getConstraints(self, recurse=True):
         """Get the constrained Parameters for this and managed sub-objects."""
         constraints = {}
         if recurse:
-            f = lambda m: hasattr(m, "_getConstraints")
-            for m in filter(f, self._iterManaged()):
+            for m in filter(_has_get_constraints(), self._iterManaged()):
                 constraints.update(m._getConstraints(recurse))
 
         constraints.update(self._constraints)
@@ -848,8 +845,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         restraints = set(self._restraints)
         if recurse:
-            f = lambda m: hasattr(m, "_getRestraints")
-            for m in filter(f, self._iterManaged()):
+            for m in filter(_has_get_restraints(), self._iterManaged()):
                 restraints.update(m._getRestraints(recurse))
 
         return restraints
@@ -968,15 +964,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             the screen width.  Do not trim when negative or 0.
         """
         regexp = re.compile(pattern)
-        pmatch = lambda s: (
-            len(s.split(None, 1)) < 2 or regexp.search(s.split(None, 1)[0])
-        )
+        _pmatch_with_re = partial(_pmatch, regexp=regexp)
         # Show sub objects and their parameters
         lines = []
         tlines = self._formatManaged()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
-            linesok = filter(pmatch, tlines)
+            linesok = filter(_pmatch_with_re, tlines)
             lastnotblank = False
             # squeeze repeated blank lines
             for lastnotblank, g in groupby(linesok, bool):
@@ -1002,7 +996,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Restraints", _DASHEDLINE])
-            lines.extend(filter(pmatch, tlines))
+            lines.extend(filter(_pmatch_with_re, tlines))
 
         # Determine effective text width tw.
         tw = textwidth if (textwidth is not None and textwidth > 0) else None
@@ -1059,5 +1053,22 @@ def equationFromString(
     return eq
 
 
-def _constraint_clearer(msg):
+def _has_clear_constraints(msg):
     return hasattr(msg, "clearConstraints")
+
+
+def _has_clear_restraints(msg):
+    return hasattr(msg, "clearRestraints")
+
+
+def _has_get_restraints(msg):
+    return hasattr(msg, "_getRestraints")
+
+
+def _has_get_constraints(msg):
+    return hasattr(msg, "_getConstraints")
+
+
+def _pmatch(inp_str, regexp):
+    parts = inp_str.split(None, 1)
+    return len(parts) < 2 or regexp.search(parts[0])

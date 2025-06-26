@@ -23,6 +23,8 @@ applied.
 
 __all__ = ["PrCalculator", "CFCalculator"]
 
+from functools import partial
+
 import numpy
 
 from diffpy.srfit.fitbase import Calculator
@@ -90,11 +92,14 @@ class PrCalculator(Calculator):
         self._invertor.y = iq
         self._invertor.err = diq
         c, c_cov = self._invertor.invert_optimize()
-        l = lambda x: self._invertor.pr(c, x)
-        pr = map(l, r)
+        _inverted_w_c = partial(self._inverted, c=c)
+        pr = map(_inverted_w_c, r)
 
         pr = numpy.array(pr)
         return self.scale.value * pr
+
+    def _inverted(self, x, c):
+        self._invertor.pr(c, x)
 
 
 # End class PrCalculator

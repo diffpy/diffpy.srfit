@@ -145,8 +145,6 @@ def testSwapping(make_args, noObserversInGlobalBuilders):
 
 def testParseEquation(noObserversInGlobalBuilders):
 
-    from numpy import array_equal, divide, e, sin, sqrt
-
     factory = builder.EquationFactory()
 
     # Scalar equation
@@ -159,8 +157,7 @@ def testParseEquation(noObserversInGlobalBuilders):
     eq.x.setValue(x)
     eq.B.setValue(B)
     eq.C.setValue(C)
-    f = lambda A, x, B, C: A * sin(0.5 * x) + divide(B, C)
-    assert array_equal(eq(), f(A, x, B, C))
+    assert numpy.array_equal(eq(), f_equation(A, x, B, C))
 
     # Make sure that the arguments of eq are listed in the order in which
     # they appear in the equations.
@@ -172,9 +169,7 @@ def testParseEquation(noObserversInGlobalBuilders):
     sigma = 0.1
     eq.x.setValue(x)
     eq.sigma.setValue(sigma)
-    f = lambda x, sigma: sqrt(e ** (-0.5 * (x / sigma) ** 2))
-    assert numpy.allclose(eq(), f(x, sigma))
-
+    assert numpy.allclose(eq(), gaussian_test(x, sigma))
     assert eq.args == [eq.x, eq.sigma]
 
     # Equation with constants
@@ -182,13 +177,13 @@ def testParseEquation(noObserversInGlobalBuilders):
     eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
     assert "sigma" in eq.argdict
     assert "x" not in eq.argdict
-    assert numpy.allclose(eq(sigma=sigma), f(x, sigma))
+    assert numpy.allclose(eq(sigma=sigma), gaussian_test(x, sigma))
     assert eq.args == [eq.sigma]
 
     # Equation with user-defined functions
     factory.registerFunction("myfunc", eq, ["sigma"])
     eq2 = factory.makeEquation("c*myfunc(sigma)")
-    assert numpy.allclose(eq2(c=2, sigma=sigma), 2 * f(x, sigma))
+    assert numpy.allclose(eq2(c=2, sigma=sigma), 2 * gaussian_test(x, sigma))
     assert "sigma" in eq2.argdict
     assert "c" in eq2.argdict
     assert eq2.args == [eq2.c, eq2.sigma]
@@ -251,8 +246,7 @@ def testBuildEquation(noObserversInGlobalBuilders):
     sigma = builder.ArgumentBuilder(name="sigma", value=0.1)
     beq = sqrt(e ** (-0.5 * (x / sigma) ** 2))
     eq = beq.getEquation()
-    f = lambda x, sigma: sqrt(e ** (-0.5 * (x / sigma) ** 2))
-    assert numpy.allclose(eq(), numpy.sqrt(e ** (-0.5 * (_x / 0.1) ** 2)))
+    assert numpy.allclose(eq(), numpy.sqrt(numpy.exp(-0.5 * (_x / 0.1) ** 2)))
 
     # Equation with Equation
     A = builder.ArgumentBuilder(name="A", value=2)
@@ -283,5 +277,9 @@ def testBuildEquation(noObserversInGlobalBuilders):
     return
 
 
-if __name__ == "__main__":
-    unittest.main()
+def f_equation(a, x, b, c):
+    return a * numpy.sin(0.5 * x) + numpy.divide(b, c)
+
+
+def gaussian_test(x, sigma):
+    return numpy.sqrt(numpy.exp(-0.5 * (x / sigma) ** 2))

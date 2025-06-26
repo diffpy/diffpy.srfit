@@ -25,7 +25,8 @@ from diffpy.srfit.fitbase import (
     Profile,
 )
 
-####### Example Code
+######
+#  Example Code
 
 
 def main():

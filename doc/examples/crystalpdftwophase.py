@@ -32,13 +32,14 @@ from diffpy.srfit.fitbase import (
 )
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 
-####### Example Code
+######
+#  Example Code
 
 
 def makeRecipe(niciffile, siciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profile
+    # The Profile
     profile = Profile()
 
     # Load data and add it to the profile
@@ -47,7 +48,7 @@ def makeRecipe(niciffile, siciffile, datname):
     profile.loadParsedData(parser)
     profile.setCalculationRange(xmax=20)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # In order to fit two phases simultaneously, we must use two PDFGenerators.
     # PDFGenerator is designed to take care of as little information as it
     # must. (Don't do too much, and do it well.) A PDFGenerator can generate
@@ -67,7 +68,7 @@ def makeRecipe(niciffile, siciffile, datname):
     stru = loadCrystal(siciffile)
     generator_si.setStructure(stru)
 
-    ## The FitContribution
+    # The FitContribution
     # Add both generators to the FitContribution. Add the Profile. This will
     # send the metadata to the generators.
     contribution = FitContribution("nisi")
@@ -85,7 +86,7 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
     recipe.newVar("scale_ni", 0.1)

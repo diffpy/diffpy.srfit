@@ -253,17 +253,18 @@ class ParameterAdapter(Parameter):
         name    --  The name of this Parameter.
         obj     --  The object to be wrapped.
         getter  --  The unbound function that can be used to access the
-                    attribute containing the parameter value. getter(obj) should
-                    return the Parameter value.  If getter is None (default),
-                    it is assumed that an attribute is accessed via attr. If
-                    attr is also specified, then the Parameter value will be
-                    accessed via getter(obj, attr).
-        setter  --  The unbound function that can be used to modify the
-                    attribute containing the parameter value. setter(obj, value)
-                    should set the attribute to the passed value. If setter is
-                    None (default), it is assumed that an attribute is accessed
+                    attribute containing the parameter value. getter(obj)
+                    should return the Parameter value.  If getter is None
+                    (default), it is assumed that an attribute is accessed
                     via attr. If attr is also specified, then the Parameter
-                    value will be set via setter(obj, attr, value).
+                    value will be accessed via getter(obj, attr).
+        setter  --  The unbound function that can be used to modify the
+                    attribute containing the parameter value.
+                    setter(obj, value) should set the attribute to the
+                    passed value. If setter is None (default), it is assumed
+                    that an attribute is accessed via attr. If attr is also
+                    specified, then the Parameter value will be set via
+                    setter(obj, attr, value).
         attr    --  The name of the attribute that contains the value of the
                     parameter. If attr is None (default), then both getter and
                     setter must be specified.

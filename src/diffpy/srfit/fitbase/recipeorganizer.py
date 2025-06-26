@@ -510,7 +510,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self._eqfactory.registerOperator(name, f)
             return f
 
-        #### Introspection code
+        # Introspection code
         if name is None or argnames is None:
 
             import inspect
@@ -547,7 +547,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 argnames = list(fncode.co_varnames)
                 argnames = argnames[offset : fncode.co_argcount]
 
-        #### End introspection code
+        # End introspection code
 
         # Make missing Parameters
         for pname in argnames:
@@ -741,7 +741,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self.unconstrain(*self._constraints)
 
         if recurse:
-            f = lambda m: hasattr(m, "clearConstraints")
+            _constraint_clearer = lambda m: hasattr(m, "clearConstraints")
             for m in filter(f, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
@@ -1057,3 +1057,7 @@ def equationFromString(
         factory.deRegisterBuilder(name)
 
     return eq
+
+
+def _constraint_clearer(msg):
+    return hasattr(msg, "clearConstraints")

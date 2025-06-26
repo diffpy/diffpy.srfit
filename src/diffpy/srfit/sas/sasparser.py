@@ -36,15 +36,15 @@ class SASParser(ProfileParser):
     _format     --  Name of the data format that this parses (string, default
                     ""). The format string is a unique identifier for the data
                     format handled by the parser.
-    _banks      --  The data from each bank. Each bank contains a (x, y, dx, dy)
-                    tuple:
+    _banks      --  The data from each bank. Each bank contains a
+                    (x, y, dx, dy) tuple:
                     x       --  A numpy array containing the independent
                                 variable read from the file.
                     y       --  A numpy array containing the profile
                                 from the file.
                     dx      --  A numpy array containing the uncertainty in x
-                                read from the file. This is 0 if the uncertainty
-                                cannot be read.
+                                read from the file. This is 0 if the
+                                uncertainty cannot be read.
                     dy      --  A numpy array containing the uncertainty read
                                 from the file. This is 0 if the uncertainty
                                 cannot be read.

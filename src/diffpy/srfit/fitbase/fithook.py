@@ -144,11 +144,15 @@ class PrintFitHook(FitHook):
             print("Variables")
             vnames = recipe.getNames()
             vals = recipe.getValues()
-            byname = lambda nv: sortKeyForNumericString(nv[0])
-            items = sorted(zip(vnames, vals), key=byname)
+            # byname = _byname()
+            items = sorted(zip(vnames, vals), key=_byname)
             for name, val in items:
                 print("  %s = %f" % (name, val))
         return
+
+
+def _byname(nv):
+    return sortKeyForNumericString(nv[0])
 
 
 # End class PrintFitHook

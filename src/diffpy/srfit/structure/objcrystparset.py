@@ -378,8 +378,10 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
                     by the unrestrained point-average chi^2 (chi^2/numpoints)
                     (default False)
 
-        Returns the ObjCrystBondLengthRestraint object for use with the 'unrestrain'
-        method.
+        Returns
+        -------
+        The ObjCrystBondLengthRestraint object for use with the
+            'unrestrain' method.
         """
         res = ObjCrystBondLengthRestraint(
             atom1, atom2, length, sigma, delta, scaled
@@ -586,7 +588,8 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         ObjCrystMoleculeParSet that can be adjusted during the fit.
 
         name    --  The name of the ObjCrystDihedralAngleParameter.
-        atom1   --  The first atom (ObjCrystMolAtomParSet) in the dihderal angle
+        atom1   --  The first atom (ObjCrystMolAtomParSet) in the dihderal
+                    angle.
         atom2   --  The second (central) atom (ObjCrystMolAtomParSet) in the
                     dihderal angle
         atom3   --  The third (central) atom (ObjCrystMolAtomParSet) in the
@@ -1486,8 +1489,8 @@ class ObjCrystCrystalParSet(SrRealParSet):
         sgobjcryst  --  A pyobjcryst.spacegroup.SpaceGroup instance.
 
         This uses the actual space group operations from the
-        pyobjcryst.spacegroup.SpaceGroup instance so there is no ambiguity about
-        the actual space group.
+        pyobjcryst.spacegroup.SpaceGroup instance so there is no ambiguity
+        about the actual space group.
         """
         import copy
 

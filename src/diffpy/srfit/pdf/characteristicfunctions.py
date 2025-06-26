@@ -216,8 +216,6 @@ def lognormalSphericalCF(r, psize, psig):
     if psig <= 0:
         return sphericalCF(r, psize)
 
-    erfc = lambda x: 1.0 - erf(x)
-
     sqrt2 = sqrt(2.0)
     s = sqrt(log(psig * psig / (1.0 * psize * psize) + 1))
     mu = log(psize) - s * s / 2
@@ -425,6 +423,10 @@ class SASCF(Calculator):
         fr[~vmask] = 1
 
         return fr
+
+
+def erfc(x):
+    return 1.0 - erf(x)
 
 
 # End of file

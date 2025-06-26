@@ -25,7 +25,8 @@ from diffpy.srfit.fitbase import (
     Profile,
 )
 
-####### Example Code
+######
+#  Example Code
 
 
 def makeRecipe():
@@ -42,7 +43,7 @@ def makeRecipe():
     For this example, we use l1 = 1.012, l2 = 1.0 and r = 0.23.
     """
 
-    ## The Profile
+    # The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
     x, y, dy = profile.loadtxt("data/threedoublepeaks.dat")
@@ -89,7 +90,7 @@ def makeRecipe():
     # c is the center of the gaussian.
     contribution.c.value = x[len(x) // 2]
 
-    ## The FitRecipe
+    # The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
     # create variables, constraints and restraints.
     recipe = FitRecipe()

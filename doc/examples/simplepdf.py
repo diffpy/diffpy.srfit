@@ -25,7 +25,8 @@ from diffpy.srfit.fitbase import FitRecipe, FitResults
 from diffpy.srfit.pdf import PDFContribution
 from diffpy.structure import Structure
 
-####### Example Code
+######
+#  Example Code
 
 
 def makeRecipe(ciffile, datname):
@@ -41,11 +42,11 @@ def makeRecipe(ciffile, datname):
     stru.read(ciffile)
     contribution.addStructure("nickel", stru)
 
-    ## Make the FitRecipe and add the FitContribution.
+    # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
     phase = contribution.nickel.phase
 
     from diffpy.srfit.structure import constrainAsSpaceGroup

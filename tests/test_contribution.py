@@ -170,8 +170,7 @@ class TestContribution(unittest.TestCase):
     def test_registerFunction(self):
         """Ensure registered function works after second setEquation call."""
         fc = self.fitcontribution
-        fsquare = lambda x: x**2
-        fc.registerFunction(fsquare, name="fsquare")
+        fc.registerFunction(_fsquare, name="fsquare")
         fc.setEquation("fsquare")
         fc.x.setValue(5)
         self.assertEqual(25, fc.evaluate())
@@ -182,6 +181,10 @@ class TestContribution(unittest.TestCase):
         fc.x << -1
         self.assertEqual(6, fc.evaluate())
         return
+
+
+def _fsquare(x):
+    return x**2
 
 
 def testResidual(noObserversInGlobalBuilders):

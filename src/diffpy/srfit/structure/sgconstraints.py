@@ -362,7 +362,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     lattice.unconstrain(par)
                 par.setConst(False)
 
-        ## Clear ADPs
+        # Clear ADPs
         if self.constrainadps:
             for scatterer in scatterers:
                 if isosymbol:

@@ -27,29 +27,29 @@ class TestParameter(unittest.TestCase):
 
     def testSetValue(self):
         """Test initialization."""
-        l = Parameter("l")
+        par_l = Parameter("l")
 
-        l.setValue(3.14)
-        self.assertAlmostEqual(3.14, l.getValue())
+        par_l.setValue(3.14)
+        self.assertAlmostEqual(3.14, par_l.getValue())
 
         # Try array
         import numpy
 
         x = numpy.arange(0, 10, 0.1)
-        l.setValue(x)
-        self.assertTrue(l.getValue() is x)
-        self.assertTrue(l.value is x)
+        par_l.setValue(x)
+        self.assertTrue(par_l.getValue() is x)
+        self.assertTrue(par_l.value is x)
 
         # Change the array
         y = numpy.arange(0, 10, 0.5)
-        l.value = y
-        self.assertTrue(l.getValue() is y)
-        self.assertTrue(l.value is y)
+        par_l.value = y
+        self.assertTrue(par_l.getValue() is y)
+        self.assertTrue(par_l.value is y)
 
         # Back to scalar
-        l.setValue(1.01)
-        self.assertAlmostEqual(1.01, l.getValue())
-        self.assertAlmostEqual(1.01, l.value)
+        par_l.setValue(1.01)
+        self.assertAlmostEqual(1.01, par_l.getValue())
+        self.assertAlmostEqual(1.01, par_l.value)
         return
 
 
@@ -57,23 +57,23 @@ class TestParameterProxy(unittest.TestCase):
 
     def testProxy(self):
         """Test the ParameterProxy class."""
-        l = Parameter("l", 3.14)
+        par_l = Parameter("l", 3.14)
 
         # Try Accessor adaptation
-        la = ParameterProxy("l2", l)
+        la = ParameterProxy("l2", par_l)
 
         self.assertEqual("l2", la.name)
-        self.assertEqual(l.getValue(), la.getValue())
+        self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the parameter
-        l.value = 2.3
-        self.assertEqual(l.getValue(), la.getValue())
-        self.assertEqual(l.value, la.value)
+        par_l.value = 2.3
+        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.value, la.value)
 
         # Change the proxy
         la.value = 3.2
-        self.assertEqual(l.getValue(), la.getValue())
-        self.assertEqual(l.value, la.value)
+        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.value, la.value)
 
         return
 
@@ -85,38 +85,38 @@ class TestParameterAdapter(unittest.TestCase):
 
         This adapts a Parameter to the Parameter interface. :)
         """
-        l = Parameter("l", 3.14)
+        par_l = Parameter("l", 3.14)
 
         # Try Accessor adaptation
         la = ParameterAdapter(
-            "l", l, getter=Parameter.getValue, setter=Parameter.setValue
+            "l", par_l, getter=Parameter.getValue, setter=Parameter.setValue
         )
 
-        self.assertEqual(l.name, la.name)
-        self.assertEqual(l.getValue(), la.getValue())
+        self.assertEqual(par_l.name, la.name)
+        self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the parameter
-        l.setValue(2.3)
-        self.assertEqual(l.getValue(), la.getValue())
+        par_l.setValue(2.3)
+        self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the adapter
         la.setValue(3.2)
-        self.assertEqual(l.getValue(), la.getValue())
+        self.assertEqual(par_l.getValue(), la.getValue())
 
         # Try Attribute adaptation
-        la = ParameterAdapter("l", l, attr="value")
+        la = ParameterAdapter("l", par_l, attr="value")
 
-        self.assertEqual(l.name, la.name)
+        self.assertEqual(par_l.name, la.name)
         self.assertEqual("value", la.attr)
-        self.assertEqual(l.getValue(), la.getValue())
+        self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the parameter
-        l.setValue(2.3)
-        self.assertEqual(l.getValue(), la.getValue())
+        par_l.setValue(2.3)
+        self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the adapter
         la.setValue(3.2)
-        self.assertEqual(l.getValue(), la.getValue())
+        self.assertEqual(par_l.getValue(), la.getValue())
 
         return
 

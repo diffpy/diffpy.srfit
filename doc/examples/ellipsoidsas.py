@@ -24,13 +24,14 @@ from diffpy.srfit.fitbase import (
 )
 from diffpy.srfit.sas import SASGenerator, SASParser
 
-####### Example Code
+######
+#  Example Code
 
 
 def makeRecipe(datname):
     """Create a fitting recipe for ellipsoidal SAS data."""
 
-    ## The Profile
+    # The Profile
     # This will be used to store the observed and calculated I(Q) data.
     profile = Profile()
 
@@ -40,7 +41,7 @@ def makeRecipe(datname):
     parser.parseFile(datname)
     profile.loadParsedData(parser)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # The SASGenerator is for configuring and calculating a SAS profile. We use
     # a sas model to configure and serve as the calculation engine of the
     # generator. This allows us to use the full sas model creation
@@ -52,7 +53,7 @@ def makeRecipe(datname):
     model = EllipsoidModel()
     generator = SASGenerator("generator", model)
 
-    ## The FitContribution
+    # The FitContribution
     # Here we associate the Profile and ProfileGenerator, as has been done
     # before.
     contribution = FitContribution("ellipsoid")
@@ -65,11 +66,11 @@ def makeRecipe(datname):
     # will have on the estimated parameter uncertainties.
     contribution.setResidualEquation("log(eq) - log(y)")
 
-    ## Make the FitRecipe and add the FitContribution.
+    # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
     # The SASGenerator uses the parameters from the params and dispersion
     # attributes of the model. These vary from model to model, but are adopted
     # as SrFit Parameters within the generator. Whereas the dispersion

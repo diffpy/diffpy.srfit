@@ -30,7 +30,8 @@ from diffpy.srfit.fitbase import (
 )
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
 
-####### Example Code
+######
+#  Example Code
 
 
 def makeProfile(datafile):
@@ -56,14 +57,14 @@ def makeRecipe(
 ):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profiles
+    # The Profiles
     # We need a profile for each data set.
     xprofile_ni = makeProfile(xdata_ni)
     xprofile_si = makeProfile(xdata_si)
     nprofile_ni = makeProfile(ndata_ni)
     xprofile_sini = makeProfile(xdata_sini)
 
-    ## The ProfileGenerators
+    # The ProfileGenerators
     # We create one for each phase and share the phases.
     xgenerator_ni = PDFGenerator("xG_ni")
     stru = loadCrystal(ciffile_ni)
@@ -84,7 +85,7 @@ def makeRecipe(
     xgenerator_sini_si = PDFGenerator("xG_sini_si")
     xgenerator_sini_si.setPhase(phase_si)
 
-    ## The FitContributions
+    # The FitContributions
     # We one of these for each data set.
     xcontribution_ni = makeContribution("xnickel", xgenerator_ni, xprofile_ni)
     xcontribution_si = makeContribution("xsilicon", xgenerator_si, xprofile_si)

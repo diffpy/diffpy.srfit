@@ -44,7 +44,8 @@ from diffpy.srfit.fitbase import (
     Profile,
 )
 
-####### Example Code
+######
+#  Example Code
 
 
 def makeRecipe(strufile, datname1, datname2):
@@ -62,7 +63,7 @@ def makeRecipe(strufile, datname1, datname2):
     structure) in both generators.
     """
 
-    ## The Profiles
+    # The Profiles
     # Create two Profiles for the two FitContributions.
     profile1 = Profile()
     profile2 = Profile()
@@ -71,7 +72,7 @@ def makeRecipe(strufile, datname1, datname2):
     profile1.loadtxt(datname1)
     x, y, u = profile2.loadtxt(datname2)
 
-    ## The ProfileGenerators
+    # The ProfileGenerators
     # Create two IntensityGenerators named "I". There will not be a name
     # conflict, since the name is only meaningful within the FitContribution
     # that holds the ProfileGenerator.  Load the structure into one and make
@@ -84,7 +85,7 @@ def makeRecipe(strufile, datname1, datname2):
     generator2 = IntensityGenerator("I")
     generator2.addParameterSet(generator1.phase)
 
-    ## The FitContributions
+    # The FitContributions
     # Create the FitContributions.
     contribution1 = FitContribution("bucky1")
     contribution1.addProfileGenerator(generator1)

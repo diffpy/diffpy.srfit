@@ -111,7 +111,7 @@ class ProfileGenerator(Operator, ParameterSet):
         """
         return x
 
-    ## No need to overload anything below here
+    # No need to overload anything below here
 
     def operation(self):
         """Evaluate the profile.

@@ -52,7 +52,8 @@ from diffpy.srfit.fitbase import (
     Profile,
 )
 
-####### Example Code
+######
+#  Example Code
 
 
 def main():
@@ -95,7 +96,7 @@ def makeRecipe():
     optimized. See the 'scipyOptimize' function.
     """
 
-    ## The Profile
+    # The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
 
@@ -103,7 +104,7 @@ def makeRecipe():
     # numpy.
     profile.loadtxt("data/gaussian.dat")
 
-    ## The FitContribution
+    # The FitContribution
     # The FitContribution associates the Profile with a fitting equation. The
     # FitContribution also stores the parameters of the fitting equation. We
     # give our FitContribution then name "g1". We will be able to access the
@@ -131,7 +132,7 @@ def makeRecipe():
     # attribute.  Parameters also have a 'name' attribute.
     contribution.A.value = 1.0
 
-    ## The FitRecipe
+    # The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
     # create variables, constraints and restraints.
     recipe = FitRecipe()

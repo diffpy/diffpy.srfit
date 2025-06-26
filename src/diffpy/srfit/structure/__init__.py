@@ -16,6 +16,8 @@
 interface and automatic structure constraint generation from space group
 information."""
 
+from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
+
 
 def struToParameterSet(name, stru):
     """Creates a ParameterSet from an structure.
@@ -50,8 +52,6 @@ def struToParameterSet(name, stru):
 
     raise TypeError("Unadaptable structure format")
 
-
-from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
 
 # silence pyflakes checker
 assert constrainAsSpaceGroup

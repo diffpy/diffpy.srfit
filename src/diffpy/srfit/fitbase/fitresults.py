@@ -108,8 +108,8 @@ class FitResults(object):
 
     def update(self):
         """Update the results according to the current state of the recipe."""
-        ## Note that the order of these operations are chosen to reduce
-        ## computation time.
+        # Note that the order of these operations are chosen to reduce
+        # computation time.
 
         recipe = self.recipe
 
@@ -173,8 +173,8 @@ class FitResults(object):
             self.cov = numpy.dot(vh.T.conj() / s**2, vh)
         except numpy.linalg.LinAlgError:
             self.messages.append("Cannot compute covariance matrix.")
-            l = len(self.varvals)
-            self.cov = numpy.zeros((l, l), dtype=float)
+            lvarvals = len(self.varvals)
+            self.cov = numpy.zeros((lvarvals, lvarvals), dtype=float)
         return
 
     def _calculateJacobian(self):
@@ -324,17 +324,19 @@ class FitResults(object):
             lines.append(header)
 
         if not certain:
-            l = "Some quantities invalid due to missing profile uncertainty"
-            if not l in self.messages:
-                self.messages.append(l)
+            err_msg = (
+                "Some quantities invalid due to missing profile uncertainty"
+            )
+            if err_msg not in self.messages:
+                self.messages.append(err_msg)
 
         lines.extend(self.messages)
 
-        ## Overall results
-        l = "Overall"
+        # Overall results
+        err_msg = "Overall"
         if not certain:
-            l += " (Chi2 and Reduced Chi2 invalid)"
-        lines.append(l)
+            err_msg += " (Chi2 and Reduced Chi2 invalid)"
+        lines.append(err_msg)
         lines.append(_DASHEDLINE)
         formatstr = "%-14s %.8f"
         lines.append(formatstr % ("Residual", self.residual))
@@ -346,16 +348,16 @@ class FitResults(object):
         lines.append(formatstr % ("Reduced Chi2", self.rchi2))
         lines.append(formatstr % ("Rw", self.rw))
 
-        ## Per-FitContribution results
+        # Per-FitContribution results
         if len(self.conresults) > 1:
             keys = list(self.conresults.keys())
             keys.sort(key=numstr)
 
             lines.append("")
-            l = "Contributions"
+            err_msg = "Contributions"
             if not certain:
-                l += " (Chi2 and Reduced Chi2 invalid)"
-            lines.append(l)
+                err_msg += " (Chi2 and Reduced Chi2 invalid)"
+            lines.append(err_msg)
             lines.append(_DASHEDLINE)
             formatstr = "%-10s %-42.8f"
             for name in keys:
@@ -368,14 +370,14 @@ class FitResults(object):
                 lines.append(formatstr % ("Chi2", res.chi2))
                 lines.append(formatstr % ("Rw", res.rw))
 
-        ## The variables
+        # The variables
         if self.varnames:
             lines.append("")
-            l = "Variables"
+            err_msg = "Variables"
             if not certain:
-                m = "Uncertainties invalid"
-                l += " (%s)" % m
-            lines.append(l)
+                err_msg2 = "Uncertainties invalid"
+                err_msg += " (%s)" % err_msg2
+            lines.append(err_msg)
             lines.append(_DASHEDLINE)
 
             varnames = self.varnames
@@ -407,13 +409,13 @@ class FitResults(object):
             varlines.sort()
             lines.extend(varlines)
 
-        ## The constraints
+        # The constraints
         if self.connames and self.showcon:
             lines.append("")
-            l = "Constrained Parameters"
+            err_msg = "Constrained Parameters"
             if not certain:
-                l += " (Uncertainties invalid)"
-            lines.append(l)
+                err_msg += " (Uncertainties invalid)"
+            lines.append(err_msg)
             lines.append(_DASHEDLINE)
 
             w = 0
@@ -436,13 +438,13 @@ class FitResults(object):
                 val, unc = vals[name]
                 lines.append(formatstr % (name, val, unc))
 
-        ## Variable correlations
+        # Variable correlations
         lines.append("")
         corint = int(corrmin * 100)
-        l = "Variable Correlations greater than %i%%" % corint
+        err_msg = "Variable Correlations greater than %i%%" % corint
         if not certain:
-            l += " (Correlations invalid)"
-        lines.append(l)
+            err_msg += " (Correlations invalid)"
+        lines.append(err_msg)
         lines.append(_DASHEDLINE)
         tup = []
         cornames = []
@@ -563,8 +565,8 @@ class ContributionResults(object):
 
     def _init(self, con, weight, fitres):
         """Initialize the attributes, for real."""
-        ## Note that the order of these operations is chosen to reduce
-        ## computation time.
+        # Note that the order of these operations is chosen to reduce
+        # computation time.
 
         if con.profile is None:
             return

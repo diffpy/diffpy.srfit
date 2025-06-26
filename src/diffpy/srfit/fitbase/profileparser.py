@@ -34,7 +34,8 @@ class ProfileParser(object):
     _format     --  Name of the data format that this parses (string, default
                     ""). The format string is a unique identifier for the data
                     format handled by the parser.
-    _banks      --  The data from each bank. Each bank contains a (x, y, dx, dy)
+    _banks      --  The data from each bank. Each bank contains a (x, y, dx,
+                    dy)
                     tuple:
                     x       --  A numpy array containing the independent
                                 variable read from the file.

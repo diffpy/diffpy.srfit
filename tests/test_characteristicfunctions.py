@@ -22,8 +22,9 @@ import pytest
 import diffpy.srfit.pdf.characteristicfunctions as cf
 from diffpy.srfit.sas.sasimport import sasimport
 
-# Global variables to be assigned in setUp
-cf = None
+# # Global variables to be assigned in setUp
+# cf = None
+# Fixme: remove this code if imports don't break on testing
 
 # ----------------------------------------------------------------------------
 

@@ -36,8 +36,8 @@ class SASProfile(Profile):
     xobs    --  Read-only property of _xobs.
     _yobs   --  A numpy array of the observed signal (default None)
     yobs    --  Read-only property of _yobs.
-    _dyobs  --  A numpy array of the uncertainty of the observed signal (default
-                None, optional).
+    _dyobs  --  A numpy array of the uncertainty of the observed signal
+                (default None, optional).
     dyobs   --  Read-only property of _dyobs.
     x       --  A numpy array of the calculated independent variable (default
                 None, property for xpar accessors).

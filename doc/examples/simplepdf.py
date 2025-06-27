@@ -12,21 +12,22 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of a PDF using the PDFContribution helper class.
 
-This is example of fitting the fcc nickel structure to measured PDF data.
-It uses the PDFContribution class to simplify fit setup.
+This is example of fitting the fcc nickel structure to measured PDF
+data. It uses the PDFContribution class to simplify fit setup.
 """
 
-from diffpy.structure import Structure
-from diffpy.srfit.pdf import PDFContribution
-from diffpy.srfit.fitbase import FitRecipe, FitResults
-
-from gaussianrecipe import scipyOptimize
 from crystalpdf import plotResults
+from gaussianrecipe import scipyOptimize
 
-####### Example Code
+from diffpy.srfit.fitbase import FitRecipe, FitResults
+from diffpy.srfit.pdf import PDFContribution
+from diffpy.structure import Structure
+
+######
+#  Example Code
+
 
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
@@ -34,21 +35,22 @@ def makeRecipe(ciffile, datname):
     # Work directly with a custom PDFContribution to load the data
     contribution = PDFContribution("nickel")
     contribution.loadData(datname)
-    contribution.setCalculationRange(xmin = 1, xmax = 20, dx = 0.1)
+    contribution.setCalculationRange(xmin=1, xmax=20, dx=0.1)
 
     # and the phase
     stru = Structure()
     stru.read(ciffile)
     contribution.addStructure("nickel", stru)
 
-    ## Make the FitRecipe and add the FitContribution.
+    # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
     phase = contribution.nickel.phase
 
     from diffpy.srfit.structure import constrainAsSpaceGroup
+
     sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
 
     for par in sgpars.latpars:
@@ -57,11 +59,12 @@ def makeRecipe(ciffile, datname):
         recipe.addVar(par, 0.005)
 
     recipe.addVar(contribution.scale, 1)
-    recipe.addVar(contribution.qdamp, 0.03, fixed = True)
+    recipe.addVar(contribution.qdamp, 0.03, fixed=True)
     recipe.addVar(contribution.nickel.delta2, 5)
 
     # Give the recipe away so it can be used!
     return recipe
+
 
 if __name__ == "__main__":
 

@@ -12,22 +12,21 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """The Calculator for Parameter-aware functions.
 
-Calculator is a functor class for producing a signal from embedded Parameters.
-Calculators can store Parameters and ParameterSets, Constraints and Restraints.
-Also, the __call__ function can be overloaded to accept external arguments.
-Calculators are used to wrap registered functions so that the function's
-Parameters are contained in an object specific to the function.  A custom
-Calculator can be added to another RecipeOrganizer with the
-'registerCalculator' method.
+Calculator is a functor class for producing a signal from embedded
+Parameters. Calculators can store Parameters and ParameterSets,
+Constraints and Restraints. Also, the __call__ function can be
+overloaded to accept external arguments. Calculators are used to wrap
+registered functions so that the function's Parameters are contained in
+an object specific to the function.  A custom Calculator can be added to
+another RecipeOrganizer with the 'registerCalculator' method.
 """
 
 __all__ = ["Calculator"]
 
-from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.equation.literals.operators import Operator
+from diffpy.srfit.fitbase.parameterset import ParameterSet
 
 
 class Calculator(Operator, ParameterSet):
@@ -84,9 +83,9 @@ class Calculator(Operator, ParameterSet):
     def __call__(self, *args):
         """Calculate something.
 
-        This method must be overloaded. When overloading, you should specify
-        the arguments explicitly, otherwise the parameters must be specified
-        when adding the Calculator to a RecipeOrganizer.
+        This method must be overloaded. When overloading, you should
+        specify the arguments explicitly, otherwise the parameters must
+        be specified when adding the Calculator to a RecipeOrganizer.
         """
         return 0
 
@@ -97,14 +96,15 @@ class Calculator(Operator, ParameterSet):
     def _validate(self):
         """Validate my state.
 
-        This performs ParameterSet validations. This does not validate the
-        operation, since this could be costly. The operation should be
-        validated with a containing equation.
+        This performs ParameterSet validations. This does not validate
+        the operation, since this could be costly. The operation should
+        be validated with a containing equation.
 
         Raises AttributeError if validation fails.
         """
         ParameterSet._validate(self)
 
         return
+
 
 # End class Calculator

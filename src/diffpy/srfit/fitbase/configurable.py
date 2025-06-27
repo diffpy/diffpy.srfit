@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Configurable class.
 
 A Configurable has state of which a FitRecipe must be aware.
@@ -27,8 +26,8 @@ class Configurable(object):
     A Configurable has state of which a FitRecipe must be aware.
 
     Attributes
-    _configobjs     --  Set of Configureables in a hierarcy or instances.
-                        Messasges get passed up the hierarcy to a FitReciple
+    _configobjs     --  Set of Configureables in a hierarchy or instances.
+                        Messages get passed up the hierarchy to a FitReciple
                         via these objects.
     """
 
@@ -45,12 +44,13 @@ class Configurable(object):
     def _storeConfigurable(self, obj):
         """Store a Configurable.
 
-        The passed obj is only stored if it is a a Configurable, otherwise this
-        method quietly exits.
+        The passed obj is only stored if it is a a Configurable,
+        otherwise this method quietly exits.
         """
         if isinstance(obj, Configurable):
             self._configobjs.add(obj)
         return
+
 
 # End class Configurable
 

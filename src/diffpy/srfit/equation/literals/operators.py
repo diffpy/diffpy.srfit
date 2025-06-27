@@ -12,24 +12,34 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Operator classes.
 
-Operators are combined with other Literals to create an equation. Operators are
-non-leaf nodes on a Literal tree. These trees can be evaluated by the Evaluator
-visitor, or otherwise inspected.
+Operators are combined with other Literals to create an equation.
+Operators are non-leaf nodes on a Literal tree. These trees can be
+evaluated by the Evaluator visitor, or otherwise inspected.
 
-The Operator class contains all the information necessary to be identified and
-evaluated by a Visitor. Thus, a single onOperator method exists in the Visitor
-base class. Other Operators can be derived from Operator (see
-AdditionOperator), but they all identify themselves with the Visitor.onOperator
-method.
+The Operator class contains all the information necessary to be
+identified and evaluated by a Visitor. Thus, a single onOperator method
+exists in the Visitor base class. Other Operators can be derived from
+Operator (see AdditionOperator), but they all identify themselves with
+the Visitor.onOperator method.
 """
 
-__all__ = ["Operator", "AdditionOperator", "SubtractionOperator",
-           "MultiplicationOperator", "DivisionOperator", "ExponentiationOperator",
-           "RemainderOperator", "NegationOperator", "ConvolutionOperator",
-           "SumOperator", "UFuncOperator", "ArrayOperator", "PolyvalOperator"]
+__all__ = [
+    "Operator",
+    "AdditionOperator",
+    "SubtractionOperator",
+    "MultiplicationOperator",
+    "DivisionOperator",
+    "ExponentiationOperator",
+    "RemainderOperator",
+    "NegationOperator",
+    "ConvolutionOperator",
+    "SumOperator",
+    "UFuncOperator",
+    "ArrayOperator",
+    "PolyvalOperator",
+]
 
 import numpy
 
@@ -41,7 +51,7 @@ class Operator(Literal, OperatorABC):
     """Abstract class for specifying a general operator.
 
     This class provides several methods that are common to a derived
-    classes for concrete concrete operations.
+    classes for concrete operations.
 
     Class Attributes
     ----------------
@@ -72,12 +82,10 @@ class Operator(Literal, OperatorABC):
     # _value : float, numpy.ndarray or None
     #     The last value of the operator or None.
 
-
     # We must declare the abstract `args` here.
     args = None
     # default for the value
     _value = None
-
 
     def __init__(self, name=None):
         """Initialize the operator object with the specified name.
@@ -92,7 +100,6 @@ class Operator(Literal, OperatorABC):
         self.args = []
         return
 
-
     def identify(self, visitor):
         """Identify self to a visitor."""
         return visitor.onOperator(self)
@@ -100,8 +107,8 @@ class Operator(Literal, OperatorABC):
     def addLiteral(self, literal):
         """Add a literal to this operator.
 
-        Note that order of operation matters. The first literal added is the
-        leftmost argument. The last is the rightmost.
+        Note that order of operation matters. The first literal added is
+        the leftmost argument. The last is the rightmost.
 
         Raises ValueError if the literal causes a self-reference.
         """
@@ -115,7 +122,7 @@ class Operator(Literal, OperatorABC):
     def getValue(self):
         """Get or evaluate the value of the operator."""
         if self._value is None:
-            vals = [l.value for l in self.args]
+            vals = [arg.value for arg in self.args]
             self._value = self.operation(*vals)
         return self._value
 
@@ -124,12 +131,12 @@ class Operator(Literal, OperatorABC):
     def _loopCheck(self, literal):
         """Check if a literal causes self-reference."""
         if literal is self:
-            raise ValueError("'%s' causes self-reference"%literal)
+            raise ValueError("'%s' causes self-reference" % literal)
 
         # Check to see if I am a dependency of the literal.
         if hasattr(literal, "args"):
-            for l in literal.args:
-                self._loopCheck(l)
+            for lit_arg in literal.args:
+                self._loopCheck(lit_arg)
         return
 
 
@@ -203,6 +210,7 @@ def makeOperator(name, symbol, operation, nin, nout):
     op.nout = nout
     return op
 
+
 # Some specified operators
 
 
@@ -275,10 +283,10 @@ def _conv(v1, v2):
     # Find the centroid of the first signal
     s1 = sum(v1)
     x1 = numpy.arange(len(v1), dtype=float)
-    c1idx = numpy.sum(v1 * x1)/s1
+    c1idx = numpy.sum(v1 * x1) / s1
     # Find the centroid of the convolution
     xc = numpy.arange(len(c), dtype=float)
-    ccidx = numpy.sum(c * xc)/sum(c)
+    ccidx = numpy.sum(c * xc) / sum(c)
     # Interpolate the convolution such that the centroids line up. This
     # uses linear interpolation.
     shift = ccidx - c1idx
@@ -288,7 +296,7 @@ def _conv(v1, v2):
     # Normalize
     sc = sum(c)
     if sc > 0:
-        c *= s1/sc
+        c *= s1 / sc
 
     return c
 
@@ -296,13 +304,14 @@ def _conv(v1, v2):
 class ConvolutionOperator(BinaryOperator):
     """Convolve two signals.
 
-    This convolves two signals such that centroid of the first array is not
-    altered by the convolution. Furthermore, the integrated amplitude of the
-    convolution is scaled to be that of the first signal. This is mean to act
-    as a convolution of a signal by a probability distribution.
+    This convolves two signals such that centroid of the first array is
+    not altered by the convolution. Furthermore, the integrated
+    amplitude of the convolution is scaled to be that of the first
+    signal. This is mean to act as a convolution of a signal by a
+    probability distribution.
 
-    Note that this is only possible when the signals are computed over the same
-    range.
+    Note that this is only possible when the signals are computed over
+    the same range.
     """
 
     name = "convolve"
@@ -366,5 +375,6 @@ class PolyvalOperator(BinaryOperator):
     symbol = "polyval"
     operation = staticmethod(numpy.polyval)
     pass
+
 
 # End of file

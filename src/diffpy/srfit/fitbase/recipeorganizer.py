@@ -12,37 +12,36 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Base classes and tools for constructing a FitRecipe.
 
 RecipeContainer is the base class for organizing Parameters, and other
 RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that
-incorporates equation building, constraints and Restraints.  equationFromString
-creates an Equation instance from a string.
+incorporates equation building, constraints and Restraints.
+equationFromString creates an Equation instance from a string.
 """
 
 __all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
 
-from numpy import inf
-from collections import OrderedDict
-from itertools import chain, groupby
 import re
+from collections import OrderedDict
+from functools import partial
+from itertools import chain, groupby
 
 import six
+from numpy import inf
 
-from diffpy.srfit.fitbase.constraint import Constraint
-from diffpy.srfit.fitbase.restraint import Restraint
-from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.configurable import Configurable
-from diffpy.srfit.fitbase.validatable import Validatable
-
-from diffpy.srfit.util.observable import Observable
 from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
-from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.fitbase.configurable import Configurable
+from diffpy.srfit.fitbase.constraint import Constraint
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.restraint import Restraint
+from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _recipeorganizer_interface
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
+from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.util.observable import Observable
 
 
 class RecipeContainer(Observable, Configurable, Validatable):
@@ -109,7 +108,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
-
     def iterPars(self, pattern="", recurse=True):
         """Iterate over the Parameters contained in this object.
 
@@ -137,7 +135,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
                         yield par
         return
 
-
     def __iter__(self):
         """Iterate over top-level parameters."""
         return iter(self._parameters.values())
@@ -158,12 +155,13 @@ class RecipeContainer(Observable, Configurable, Validatable):
             raise AttributeError(name)
         return arg
 
-
     # Ensure there is no __dir__ override in the base class.
-    assert (getattr(Observable, '__dir__', None) is
-            getattr(Configurable, '__dir__', None) is
-            getattr(Validatable, '__dir__', None) is
-            getattr(object, '__dir__', None))
+    assert (
+        getattr(Observable, "__dir__", None)
+        is getattr(Configurable, "__dir__", None)
+        is getattr(Validatable, "__dir__", None)
+        is getattr(object, "__dir__", None)
+    )
 
     def __dir__(self):
         "Return sorted list of attributes for this object."
@@ -174,7 +172,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
         rv.update(*self.__managed)
         rv = sorted(rv)
         return rv
-
 
     # Needed by __setattr__
     _parameters = OrderedDict()
@@ -192,30 +189,30 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         m = self.get(name)
         if m is not None:
-            raise AttributeError("Cannot set '%s'"%name)
+            raise AttributeError("Cannot set '%s'" % name)
 
         super(RecipeContainer, self).__setattr__(name, value)
         return
 
-
     def __delattr__(self, name):
         """Delete parameters with del.
 
-        This does not allow deletion of non-parameters, as this may require
-        configuration changes that are not yet handled in a general way.
+        This does not allow deletion of non-parameters, as this may
+        require configuration changes that are not yet handled in a
+        general way.
         """
         if name in self._parameters:
-            self._removeParameter( self._parameters[name] )
+            self._removeParameter(self._parameters[name])
             return
 
         m = self.get(name)
         if m is not None:
-            raise AttributeError("Cannot delete '%s'"%name)
+            raise AttributeError("Cannot delete '%s'" % name)
 
         super(RecipeContainer, self).__delattr__(name)
         return
 
-    def get(self, name, default = None):
+    def get(self, name, default=None):
         """Get a managed object."""
         for d in self.__managed:
             arg = d.get(name)
@@ -232,7 +229,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Get the values of managed parameters."""
         return [p.value for p in self._parameters.values()]
 
-    def _addObject(self, obj, d, check = True):
+    def _addObject(self, obj, d, check=True):
         """Add an object to a managed dictionary.
 
         obj     --  The object to be stored.
@@ -253,14 +250,18 @@ class RecipeContainer(Observable, Configurable, Validatable):
         # Check for extant object in d with same name
         oldobj = d.get(obj.name)
         if check and oldobj is not None:
-            message = "%s with name '%s' already exists"%\
-                    (obj.__class__.__name__, obj.name)
+            message = "%s with name '%s' already exists" % (
+                obj.__class__.__name__,
+                obj.name,
+            )
             raise ValueError(message)
 
         # Check for object with same name in other dictionary.
         if oldobj is None and self.get(obj.name) is not None:
-            message = "Non-%s with name '%s' already exists"%\
-                    (obj.__class__.__name__, obj.name)
+            message = "Non-%s with name '%s' already exists" % (
+                obj.__class__.__name__,
+                obj.name,
+            )
             raise ValueError(message)
 
         # Detach the old object, if there is one
@@ -326,8 +327,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _flush(self, other):
         """Invalidate cached state.
 
-        This will force any observer to invalidate its state. By default this
-        does nothing.
+        This will force any observer to invalidate its state. By default
+        this does nothing.
         """
         self.notify(other)
         return
@@ -335,7 +336,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates that contained Parameters and managed objects are valid.
+        This validates that contained Parameters and managed objects are
+        valid.
 
         Raises AttributeError if validation fails.
         """
@@ -345,6 +347,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
 
 # End class RecipeContainer
+
 
 class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     """Extended base class for organizing pieces of a FitRecipe.
@@ -391,8 +394,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def _newParameter(self, name, value, check=True):
         """Add a new Parameter to the container.
 
-        This creates a new Parameter and adds it to the container using the
-        _addParameter method.
+        This creates a new Parameter and adds it to the container using
+        the _addParameter method.
 
         Returns the Parameter.
         """
@@ -424,11 +427,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def _removeParameter(self, par):
         """Remove a parameter.
 
-        This de-registers the Parameter with the _eqfactory. The Parameter will
-        remain part of built equations.
+        This de-registers the Parameter with the _eqfactory. The
+        Parameter will remain part of built equations.
 
-        Note that constraints and restraints involving the Parameter are not
-        modified.
+        Note that constraints and restraints involving the Parameter are
+        not modified.
 
         Raises ValueError if par is not part of the RecipeOrganizer.
         """
@@ -436,7 +439,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._eqfactory.deRegisterBuilder(par.name)
         return
 
-    def registerCalculator(self, f, argnames = None):
+    def registerCalculator(self, f, argnames=None):
         """Register a Calculator so it can be used within equation strings.
 
         A Calculator is an elaborate function that can organize Parameters.
@@ -456,7 +459,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if argnames is None:
             fncode = f.__call__.__func__.__code__
             argnames = list(fncode.co_varnames)
-            argnames = argnames[1:fncode.co_argcount]
+            argnames = argnames[1 : fncode.co_argcount]
 
         for pname in argnames:
             if pname not in self._eqfactory.builders:
@@ -469,7 +472,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         eq = self._eqfactory.makeEquation(f.name)
         return eq
 
-    def registerFunction(self, f, name = None, argnames = None):
+    def registerFunction(self, f, name=None, argnames=None):
         """Register a function so it can be used within equation strings.
 
         This creates a function with this class that can be used within string
@@ -477,7 +480,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         passed in the equation string, as this will be handled automatically.
 
         f           --  The callable to register. If this is an Equation
-                        instance, then all that needs to be provied is a name.
+                        instance, then all that needs to be provided is a name.
         name        --  The name of the function to be used in equations. If
                         this is None (default), the method will try to
                         determine the name of the function automatically.
@@ -508,7 +511,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self._eqfactory.registerOperator(name, f)
             return f
 
-        #### Introspection code
+        # Introspection code
         if name is None or argnames is None:
 
             import inspect
@@ -523,12 +526,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 fncode = f.__code__
             # check class method
             elif inspect.ismethod(f):
-                    fncode = f.__func__.__code__
-                    offset = 1
+                fncode = f.__func__.__code__
+                offset = 1
             # check functor
-            elif hasattr(f, "__call__") and hasattr(f.__call__, '__func__'):
-                    fncode = f.__call__.__func__.__code__
-                    offset = 1
+            elif hasattr(f, "__call__") and hasattr(f.__call__, "__func__"):
+                fncode = f.__call__.__func__.__code__
+                offset = 1
             else:
                 m = "Cannot extract name or argnames"
                 raise ValueError(m)
@@ -536,16 +539,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             # Extract the name
             if name is None:
                 name = fncode.co_name
-                if name == '<lambda>':
+                if name == "<lambda>":
                     m = "You must supply a name name for a lambda function"
                     raise ValueError(m)
 
             # Extract the arguments
             if argnames is None:
                 argnames = list(fncode.co_varnames)
-                argnames = argnames[offset:fncode.co_argcount]
+                argnames = argnames[offset : fncode.co_argcount]
 
-        #### End introspection code
+        # End introspection code
 
         # Make missing Parameters
         for pname in argnames:
@@ -554,6 +557,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # Initialize and register
         from diffpy.srfit.fitbase.calculator import Calculator
+
         if isinstance(f, Calculator):
             for pname in argnames:
                 par = self.get(pname)
@@ -567,7 +571,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return eq
 
-    def registerStringFunction(self, fstr, name, ns = {}):
+    def registerStringFunction(self, fstr, name, ns={}):
         """Register a string function.
 
         This creates a function with this class that can be used within string
@@ -589,8 +593,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
 
         # Build the equation instance.
-        eq = equationFromString(fstr, self._eqfactory, ns = ns, buildargs =
-                True)
+        eq = equationFromString(fstr, self._eqfactory, ns=ns, buildargs=True)
         eq.name = name
 
         # Register any new Parameters.
@@ -601,8 +604,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         argnames = eq.argdict.keys()
         return self.registerFunction(eq, name, argnames)
 
-
-    def evaluateEquation(self, eqstr, ns = {}):
+    def evaluateEquation(self, eqstr, ns={}):
         """Evaluate a string equation.
 
         eqstr   --  A string equation to evaluate. The equation is evaluated at
@@ -620,8 +622,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self._eqfactory.wipeout(eq)
         return rv
 
-
-    def constrain(self, par, con, ns = {}):
+    def constrain(self, par, con, ns={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
@@ -651,16 +652,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             raise ValueError("The parameter cannot be found")
 
         if par.const:
-            raise ValueError("The parameter '%s' is constant"%par)
+            raise ValueError("The parameter '%s' is constant" % par)
 
         if isinstance(con, six.string_types):
             eqstr = con
             eq = equationFromString(con, self._eqfactory, ns)
         else:
-            eq = Equation(root = con)
+            eq = Equation(root=con)
             eqstr = con.name
 
-        eq.name = "_constraint_%s"%par.name
+        eq.name = "_constraint_%s" % par.name
 
         # Make and store the constraint
         con = Constraint()
@@ -683,7 +684,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             name = par
             par = self.get(name)
 
-        return (par in self._constraints)
+        return par in self._constraints
 
     def unconstrain(self, *pars):
         """Unconstrain a Parameter.
@@ -719,16 +720,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
-    def getConstrainedPars(self, recurse = False):
+    def getConstrainedPars(self, recurse=False):
         """Get a list of constrained managed Parameters in this object.
 
-        recurse --  Recurse into managed objects and retrive their constrained
+        recurse --  Recurse into managed objects and retrieve their constrained
                     Parameters as well (default False).
         """
         const = self._getConstraints(recurse)
         return const.keys()
 
-    def clearConstraints(self, recurse = False):
+    def clearConstraints(self, recurse=False):
         """Clear all constraints managed by this organizer.
 
         recurse --  Recurse into managed objects and clear all constraints
@@ -741,13 +742,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self.unconstrain(*self._constraints)
 
         if recurse:
-            f = lambda m : hasattr(m, "clearConstraints")
-            for m in filter(f, self._iterManaged()):
+            for m in filter(_has_clear_constraints, self._iterManaged()):
                 m.clearConstraints(recurse)
         return
 
-    def restrain(self, res, lb = -inf, ub = inf, sig = 1, scaled = False, ns =
-            {}):
+    def restrain(self, res, lb=-inf, ub=inf, sig=1, scaled=False, ns={}):
         """Restrain an expression to specified bounds.
 
         res     --  An equation string or Parameter to restrain.
@@ -763,7 +762,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         The penalty is calculated as
         (max(0, lb - val, val - ub)/sig)**2
-        and val is the value of the calculated equation.  This is multipled by
+        and val is the value of the calculated equation.  This is multiplied by
         the average chi^2 if scaled is True.
 
         Raises ValueError if ns uses a name that is already used for a
@@ -778,7 +777,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
         else:
-            eq = Equation(root = res)
+            eq = Equation(root=res)
             eqstr = res.name
 
         # Make and store the restraint
@@ -816,50 +815,46 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
-    def clearRestraints(self, recurse = False):
+    def clearRestraints(self, recurse=False):
         """Clear all restraints.
 
         recurse --  Recurse into managed objects and clear all restraints
                     found there as well.
         """
         self.unrestrain(*self._restraints)
-
         if recurse:
-            f = lambda m : hasattr(m, "clearRestraints")
-            for m in filter(f, self._iterManaged()):
-                m.clearRestraints(recurse)
+            for msg in filter(_has_clear_restraints, self._iterManaged()):
+                msg.clearRestraints(recurse)
         return
 
-    def _getConstraints(self, recurse = True):
+    def _getConstraints(self, recurse=True):
         """Get the constrained Parameters for this and managed sub-objects."""
         constraints = {}
         if recurse:
-            f = lambda m : hasattr(m, "_getConstraints")
-            for m in filter(f, self._iterManaged()):
-                constraints.update( m._getConstraints(recurse) )
+            for m in filter(_has_get_constraints, self._iterManaged()):
+                constraints.update(m._getConstraints(recurse))
 
-        constraints.update( self._constraints)
+        constraints.update(self._constraints)
 
         return constraints
 
-    def _getRestraints(self, recurse = True):
+    def _getRestraints(self, recurse=True):
         """Get the Restraints for this and embedded ParameterSets.
 
         This returns a set of Restraint objects.
         """
         restraints = set(self._restraints)
         if recurse:
-            f = lambda m : hasattr(m, "_getRestraints")
-            for m in filter(f, self._iterManaged()):
-                restraints.update( m._getRestraints(recurse) )
+            for m in filter(_has_get_restraints, self._iterManaged()):
+                restraints.update(m._getRestraints(recurse))
 
         return restraints
 
     def _validate(self):
         """Validate my state.
 
-        This performs RecipeContainer validations. This validates contained
-        Restraints and Constraints.
+        This performs RecipeContainer validations. This validates
+        contained Restraints and Constraints.
 
         Raises AttributeError if validation fails.
         """
@@ -889,9 +884,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if self._parameters:
             w0 = max(len(n) for n in self._parameters)
             w1 = ((w0 + len(prefix) + 1) // 4 + 1) * 4
-            fmt = formatstr.replace('W', str(w1))
-            lines.extend(fmt.format(prefix + n, p.value)
-                         for n, p in self._parameters.items())
+            fmt = formatstr.replace("W", str(w1))
+            lines.extend(
+                fmt.format(prefix + n, p.value)
+                for n, p in self._parameters.items()
+            )
         # Recurse into managed objects.
         for obj in self._iterManaged():
             if hasattr(obj, "_formatManaged"):
@@ -900,7 +897,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 lines.extend([""] if lines and tlines else [])
                 lines.extend(tlines)
         return lines
-
 
     def _formatConstraints(self):
         """Format constraints for showing.
@@ -927,7 +923,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         clines.sort(key=numstr)
         return clines
 
-
     def _formatRestraints(self):
         """Format restraints for showing.
 
@@ -943,12 +938,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         rset = self._getRestraints()
         rlines = []
         for res in rset:
-            line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s"%\
-                    (res.eqstr, res.lb, res.ub, res.sig, res.scaled)
+            line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s" % (
+                res.eqstr,
+                res.lb,
+                res.ub,
+                res.sig,
+                res.scaled,
+            )
             rlines.append(line)
         rlines.sort(key=numstr)
         return rlines
-
 
     def show(self, pattern="", textwidth=78):
         """Show the configuration hierarchy on the screen.
@@ -965,14 +964,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             the screen width.  Do not trim when negative or 0.
         """
         regexp = re.compile(pattern)
-        pmatch = lambda s : (len(s.split(None, 1)) < 2 or
-                             regexp.search(s.split(None, 1)[0]))
+        _pmatch_with_re = partial(_pmatch, regexp=regexp)
         # Show sub objects and their parameters
         lines = []
         tlines = self._formatManaged()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
-            linesok = filter(pmatch, tlines)
+            linesok = filter(_pmatch_with_re, tlines)
             lastnotblank = False
             # squeeze repeated blank lines
             for lastnotblank, g in groupby(linesok, bool):
@@ -998,7 +996,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             if lines:
                 lines.append("")
             lines.extend(["Restraints", _DASHEDLINE])
-            lines.extend(filter(pmatch, tlines))
+            lines.extend(filter(_pmatch_with_re, tlines))
 
         # Determine effective text width tw.
         tw = textwidth if (textwidth is not None and textwidth > 0) else None
@@ -1007,10 +1005,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             print("\n".join(s[:tw] for s in lines))
         return
 
+
 # End RecipeOrganizer
 
-def equationFromString(eqstr, factory, ns = {}, buildargs = False,
-        argclass = Parameter, argkw = {}):
+
+def equationFromString(
+    eqstr, factory, ns={}, buildargs=False, argclass=Parameter, argkw={}
+):
     """Make an equation from a string.
 
     eqstr   --  A string representation of the equation. The equation must
@@ -1050,3 +1051,24 @@ def equationFromString(eqstr, factory, ns = {}, buildargs = False,
         factory.deRegisterBuilder(name)
 
     return eq
+
+
+def _has_clear_constraints(msg):
+    return hasattr(msg, "clearConstraints")
+
+
+def _has_clear_restraints(msg):
+    return hasattr(msg, "clearRestraints")
+
+
+def _has_get_restraints(msg):
+    return hasattr(msg, "_getRestraints")
+
+
+def _has_get_constraints(msg):
+    return hasattr(msg, "_getConstraints")
+
+
+def _pmatch(inp_str, regexp):
+    parts = inp_str.split(None, 1)
+    return len(parts) < 2 or regexp.search(parts[0])

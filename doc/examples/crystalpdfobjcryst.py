@@ -12,30 +12,33 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of a PDF refinement using pyobjcryst and PDFGenerator.
 
 This example is similar to crystalpdf.py, except that here we refine a
-pyobjcryst crystal object. In this example we use internal constraints provided
-by the ObjCrystCrystalParSet structure adapter.
+pyobjcryst crystal object. In this example we use internal constraints
+provided by the ObjCrystCrystalParSet structure adapter.
 """
 
+from crystalpdf import plotResults
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+)
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
 
-from gaussianrecipe import scipyOptimize
-from crystalpdf import plotResults
+######
+#  Example Code
 
-####### Example Code
 
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profile
+    # The Profile
     # This will be used to store the observed and calculated PDF profile.
     profile = Profile()
 
@@ -46,9 +49,9 @@ def makeRecipe(ciffile, datname):
     parser = PDFParser()
     parser.parseFile(datname)
     profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax = 20)
+    profile.setCalculationRange(xmax=20)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # This time we use the CreateCrystalFromCIF method of pyobjcryst.crystal to
     # create a Crystal object. That object is passed to the PDFGenerator as in
     # the previous example.
@@ -57,16 +60,16 @@ def makeRecipe(ciffile, datname):
     generator.setStructure(stru)
     generator.setQmax(40.0)
 
-    ## The FitContribution
+    # The FitContribution
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname="r")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
 
     # As before, we get a handle to the structure parameter set. In this case,
     # it is a ObjCrystCrystalParSet instance that was created when we called
@@ -89,7 +92,7 @@ def makeRecipe(ciffile, datname):
     for par in phase.sgpars:
         recipe.addVar(par)
     # set the initial thermal factor to a non-zero value
-    assert hasattr(recipe, 'B11_0')
+    assert hasattr(recipe, "B11_0")
     recipe.B11_0 = 0.1
 
     # We now select non-structural parameters to refine.
@@ -102,6 +105,7 @@ def makeRecipe(ciffile, datname):
 
     # Give the recipe away so it can be used!
     return recipe
+
 
 if __name__ == "__main__":
 

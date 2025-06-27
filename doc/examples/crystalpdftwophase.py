@@ -12,41 +12,43 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of a PDF refinement of two-phase structure.
 
-Like the ones before, this example uses PDFGenerator to refine a structure to
-PDF data. However, for a multi-phase structure one must use multiple
-PDFGenerators. This example refines a physical mixture of nickel and silicon to
-find the structures and phase fractions.
+Like the ones before, this example uses PDFGenerator to refine a
+structure to PDF data. However, for a multi-phase structure one must use
+multiple PDFGenerators. This example refines a physical mixture of
+nickel and silicon to find the structures and phase fractions.
 """
 
 import numpy
-
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+)
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
 
-from gaussianrecipe import scipyOptimize
+######
+#  Example Code
 
-####### Example Code
 
 def makeRecipe(niciffile, siciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profile
+    # The Profile
     profile = Profile()
 
     # Load data and add it to the profile
     parser = PDFParser()
     parser.parseFile(datname)
     profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax = 20)
+    profile.setCalculationRange(xmax=20)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # In order to fit two phases simultaneously, we must use two PDFGenerators.
     # PDFGenerator is designed to take care of as little information as it
     # must. (Don't do too much, and do it well.) A PDFGenerator can generate
@@ -66,13 +68,13 @@ def makeRecipe(niciffile, siciffile, datname):
     stru = loadCrystal(siciffile)
     generator_si.setStructure(stru)
 
-    ## The FitContribution
+    # The FitContribution
     # Add both generators to the FitContribution. Add the Profile. This will
     # send the metadata to the generators.
     contribution = FitContribution("nisi")
     contribution.addProfileGenerator(generator_ni)
     contribution.addProfileGenerator(generator_si)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname="r")
 
     # Write the fitting equation. We want to sum the PDFs from each phase and
     # multiply it by a scaling factor. We also want a certain phase scaling
@@ -84,7 +86,7 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
     recipe.newVar("scale_ni", 0.1)
@@ -95,7 +97,7 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe.constrain(generator_ni.qdamp, "qdamp")
     recipe.constrain(generator_si.qdamp, "qdamp")
 
-    # Vary the gloabal scale as well.
+    # Vary the global scale as well.
     recipe.addVar(contribution.scale, 1)
 
     # Now we can configure the structural parameters. Since we're using
@@ -105,13 +107,13 @@ def makeRecipe(niciffile, siciffile, datname):
     # First the nickel parameters
     phase_ni = generator_ni.phase
     for par in phase_ni.sgpars:
-        recipe.addVar(par, name = par.name + "_ni")
-    recipe.addVar(generator_ni.delta2, name = "delta2_ni")
+        recipe.addVar(par, name=par.name + "_ni")
+    recipe.addVar(generator_ni.delta2, name="delta2_ni")
     # Next the silicon parameters
     phase_si = generator_si.phase
     for par in phase_si.sgpars:
-        recipe.addVar(par, name = par.name + "_si")
-    recipe.addVar(generator_si.delta2, name = "delta2_si")
+        recipe.addVar(par, name=par.name + "_si")
+    recipe.addVar(generator_si.delta2, name="delta2_si")
 
     # We have prior information from the earlier examples so we'll use it here
     # in the form of restraints.
@@ -121,21 +123,22 @@ def makeRecipe(niciffile, siciffile, datname):
     # derived has no uncertainty. Thus, we will tell the recipe to scale the
     # residual, which means that it will be weighted as much as the average
     # data point during the fit.
-    recipe.restrain("a_ni", lb = 3.527, ub = 3.527, scaled = True)
+    recipe.restrain("a_ni", lb=3.527, ub=3.527, scaled=True)
     # Now we do the same with the delta2 and Biso parameters (remember that
     # Biso = 8*pi**2*Uiso)
-    recipe.restrain("delta2_ni", lb = 2.22, ub = 2.22, scaled = True)
-    recipe.restrain("Biso_0_ni", lb = 0.454, ub = 0.454, scaled = True)
+    recipe.restrain("delta2_ni", lb=2.22, ub=2.22, scaled=True)
+    recipe.restrain("Biso_0_ni", lb=0.454, ub=0.454, scaled=True)
     #
     # We can do the same with the silicon values. We haven't done a thorough
     # job of measuring the uncertainties in the results, so we'll scale these
     # as well.
-    recipe.restrain("a_si", lb = 5.430, ub = 5.430, scaled = True)
-    recipe.restrain("delta2_si", lb = 3.54, ub = 3.54, scaled = True)
-    recipe.restrain("Biso_0_si", lb = 0.645, ub = 0.645, scaled = True)
+    recipe.restrain("a_si", lb=5.430, ub=5.430, scaled=True)
+    recipe.restrain("delta2_si", lb=3.54, ub=3.54, scaled=True)
+    recipe.restrain("Biso_0_si", lb=0.645, ub=0.645, scaled=True)
 
     # Give the recipe away so it can be used!
     return recipe
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -148,10 +151,11 @@ def plotResults(recipe):
     diff = g - gcalc + diffzero
 
     import pylab
-    pylab.plot(r,g,'bo',label="G(r) Data")
-    pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,diff,'g-',label="G(r) diff")
-    pylab.plot(r,diffzero,'k-')
+
+    pylab.plot(r, g, "bo", label="G(r) Data")
+    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
+    pylab.plot(r, diff, "g-", label="G(r) diff")
+    pylab.plot(r, diffzero, "k-")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)

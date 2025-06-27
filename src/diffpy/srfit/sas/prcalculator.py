@@ -12,16 +12,18 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Nanoparticle form factor P(r) calculator.
 
-The PrCalculator class wraps a sas.pr.invertor.Invertor object as a Calculator.
-This is not wrapped as a ProfileGenerator because it will be used to share
-information between SAS I(Q) to PDF G(r), but it does not use the same profile
-as the PDF, which is where the calculator will be applied.
+The PrCalculator class wraps a sas.pr.invertor.Invertor object as a
+Calculator. This is not wrapped as a ProfileGenerator because it will be
+used to share information between SAS I(Q) to PDF G(r), but it does not
+use the same profile as the PDF, which is where the calculator will be
+applied.
 """
 
 __all__ = ["PrCalculator", "CFCalculator"]
+
+from functools import partial
 
 import numpy
 
@@ -65,7 +67,8 @@ class PrCalculator(Calculator):
         global Invertor
         if Invertor is None:
             from diffpy.srfit.sas.sasimport import sasimport
-            Invertor = sasimport('sas.pr.invertor').Invertor
+
+            Invertor = sasimport("sas.pr.invertor").Invertor
 
         self._invertor = Invertor()
 
@@ -89,13 +92,18 @@ class PrCalculator(Calculator):
         self._invertor.y = iq
         self._invertor.err = diq
         c, c_cov = self._invertor.invert_optimize()
-        l = lambda x: self._invertor.pr(c, x)
-        pr = map(l, r)
+        _inverted_w_c = partial(self._inverted, c=c)
+        pr = map(_inverted_w_c, r)
 
         pr = numpy.array(pr)
         return self.scale.value * pr
 
+    def _inverted(self, x, c):
+        self._invertor.pr(c, x)
+
+
 # End class PrCalculator
+
 
 class CFCalculator(PrCalculator):
     """A class for calculating the characteristic function (CF) from data.
@@ -126,5 +134,6 @@ class CFCalculator(PrCalculator):
             # other choice.
             fr[0] = 1
         return fr
+
 
 # End class CFCalculator

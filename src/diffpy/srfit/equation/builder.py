@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Classes and utilities for creating equations.
 
 The EquationFactory class is used to create an equation (an Equation instance)
@@ -76,10 +75,28 @@ example.
 > beq = c*f(a,b)
 > eq = beq.makeEquation()
 """
+import inspect
+import numbers
+import token
+import tokenize
 
-__all__ = ["EquationFactory", "BaseBuilder", "ArgumentBuilder",
-           "OperatorBuilder", "wrapArgument", "wrapOperator", "wrapFunction",
-           "getBuilder"]
+import numpy
+import six
+
+import diffpy.srfit.equation.literals as literals
+from diffpy.srfit.equation.equationmod import Equation
+from diffpy.srfit.equation.literals.literal import Literal
+
+__all__ = [
+    "EquationFactory",
+    "BaseBuilder",
+    "ArgumentBuilder",
+    "OperatorBuilder",
+    "wrapArgument",
+    "wrapOperator",
+    "wrapFunction",
+    "getBuilder",
+]
 
 # NOTE - the builder cannot handle numpy arrays on the left of a binary
 # operation because the array will automatically loop the operator of the
@@ -89,17 +106,6 @@ __all__ = ["EquationFactory", "BaseBuilder", "ArgumentBuilder",
 _builders = {}
 
 
-import inspect
-import numbers
-import numpy
-
-import six
-
-import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.equation.literals.literal import Literal
-from diffpy.srfit.equation.equationmod import Equation
-
-
 class EquationFactory(object):
     """A Factory for equations.
 
@@ -107,7 +113,8 @@ class EquationFactory(object):
                     factory, indexed by name.
     newargs     --  A set of new arguments created by makeEquation. This is
                     redefined whenever makeEquation is called.
-    equations   --  Set of equations that have been built by the EquationFactory.
+    equations   --  Set of equations that have been built by the
+                    EquationFactory.
     """
 
     symbols = ("+", "-", "*", "/", "**", "%", "|")
@@ -125,8 +132,9 @@ class EquationFactory(object):
         self.registerConstant("e", numpy.e)
         return
 
-    def makeEquation(self, eqstr, buildargs = True, argclass =
-            literals.Argument, argkw = {}):
+    def makeEquation(
+        self, eqstr, buildargs=True, argclass=literals.Argument, argkw={}
+    ):
         """Make an equation from an equation string.
 
         Arguments
@@ -152,7 +160,7 @@ class EquationFactory(object):
         # handle scalar numbers or numpy arrays
         if isinstance(beq, (numbers.Number, numpy.ndarray)):
             lit = literals.Argument(value=beq, const=True)
-            eq = Equation(name='', root=lit)
+            eq = Equation(name="", root=lit)
         else:
             eq = beq.getEquation()
             self.equations.add(eq)
@@ -177,11 +185,12 @@ class EquationFactory(object):
     def registerOperator(self, name, op):
         """Register an Operator literal with the factory.
 
-        Operators can be used with or without arguments (or parentheses) in an
-        equation string.  If used with arguments, then the Operator will use
-        the passed arguments as arguments for the operation. If used without
-        arguments, it is assumed that the operator is already populated with
-        arguments, and those will be used.
+        Operators can be used with or without arguments (or parentheses)
+        in an equation string.  If used with arguments, then the
+        Operator will use the passed arguments as arguments for the
+        operation. If used without arguments, it is assumed that the
+        operator is already populated with arguments, and those will be
+        used.
 
         Returns the registered builder.
         """
@@ -205,23 +214,24 @@ class EquationFactory(object):
             if n not in self.builders:
                 self.registerConstant(n, 0)
         opbuilder = wrapFunction(name, func, len(argnames))
-        for n in argnames:
-            b = self.builders[n]
-            l = b.literal
-            opbuilder.literal.addLiteral(l)
+        for argname in argnames:
+            builder = self.builders[argname]
+            argliteral = builder.literal
+            opbuilder.literal.addLiteral(argliteral)
 
         return self.registerBuilder(name, opbuilder)
 
     def registerBuilder(self, name, builder):
         """Register builder in this module so it can be used in makeEquation.
 
-        If an extant builder with the given name is already registered, this
-        will replace all instances of the old builder's literal in the
-        factory's equation set with the new builder's literal. Note that this
-        may lead to errors if one of the replacements causes a self-reference.
+        If an extant builder with the given name is already registered,
+        this will replace all instances of the old builder's literal in
+        the factory's equation set with the new builder's literal. Note
+        that this may lead to errors if one of the replacements causes a
+        self-reference.
 
-        Raises ValueError if the new builder's literal causes a self-reference
-        in an existing equation.
+        Raises ValueError if the new builder's literal causes a self-
+        reference in an existing equation.
         """
         if not isinstance(name, six.string_types):
             raise TypeError("Name must be a string")
@@ -248,21 +258,21 @@ class EquationFactory(object):
     def deRegisterBuilder(self, name):
         """De-register a builder by name.
 
-        This does not change the equations that use the Literal wrapped by the
-        builder.
+        This does not change the equations that use the Literal wrapped
+        by the builder.
         """
         if name in self.builders:
             del self.builders[name]
         return
 
-
     def wipeout(self, eq):
         """Invalidate the specified equation and remove it from the factory.
 
-        This will remove the equation from the purview of the factory and also
-        change its formula to return NaN.  This ensures that eq does not
-        observe any object in the factory and thus prevents its indirect
-        pickling with the factory because of observer callback function.
+        This will remove the equation from the purview of the factory
+        and also change its formula to return NaN.  This ensures that eq
+        does not observe any object in the factory and thus prevents its
+        indirect pickling with the factory because of observer callback
+        function.
 
         No return value.
         """
@@ -272,10 +282,9 @@ class EquationFactory(object):
         self.equations.discard(eq)
         # invalidate this equation to clean up any observer relations of
         # objects in the factory towards its literals tree.
-        nan = literals.Argument('nan', value=numpy.nan, const=True)
+        nan = literals.Argument("nan", value=numpy.nan, const=True)
         eq.setRoot(nan)
         return
-
 
     def _prepareBuilders(self, eqstr, buildargs, argclass, argkw):
         """Prepare builders so that equation string can be evaluated.
@@ -309,14 +318,14 @@ class EquationFactory(object):
         # this is disallowed.
         if not buildargs and eqargs:
             eqargsstr = ", ".join(eqargs)
-            msg = "The equation contains undefined arguments: %s"%eqargsstr
+            msg = "The equation contains undefined arguments: %s" % eqargsstr
             raise ValueError(msg)
 
         # Make the arguments
         newargs = set()
         for argname in eqargs:
-            arg = argclass(name = argname, **argkw)
-            argbuilder = ArgumentBuilder(name = argname, arg = arg)
+            arg = argclass(name=argname, **argkw)
+            argbuilder = ArgumentBuilder(name=argname, arg=arg)
             newargs.add(arg)
             self.registerBuilder(argname, argbuilder)
 
@@ -327,15 +336,12 @@ class EquationFactory(object):
     def _getUndefinedArgs(self, eqstr):
         """Get the undefined arguments from eqstr.
 
-        This tokenizes eqstr and extracts undefined arguments. An undefined
-        argument is defined as any token that is not a special character that
-        does not correspond to a builder.
+        This tokenizes eqstr and extracts undefined arguments. An
+        undefined argument is defined as any token that is not a special
+        character that does not correspond to a builder.
 
         Raises SyntaxError if the equation string uses invalid syntax.
         """
-        import tokenize
-        import token
-
         interface = six.StringIO(eqstr).readline
         # output is an iterator. Each entry (token) is a 5-tuple
         # token[0] = token type
@@ -353,27 +359,31 @@ class EquationFactory(object):
                 if tok[0] in (token.NAME, token.OP):
                     args.add(tok[1])
         except tokenize.TokenError:
-            m = "invalid syntax: '%s'"%eqstr
+            m = "invalid syntax: '%s'" % eqstr
             raise SyntaxError(m)
 
         # Scan the tokens for names that do not correspond to registered
         # builders. These will be treated as arguments that need to be
         # generated.
         for tok in set(args):
-            # Move genuine varibles to the eqargs dictionary
+            # Move genuine variables to the eqargs dictionary
             if (
                 # Check registered builders
-                tok in self.builders or
+                tok in self.builders
+                or
                 # Check symbols
-                tok in EquationFactory.symbols or
+                tok in EquationFactory.symbols
+                or
                 # Check ignored characters
                 tok in EquationFactory.ignore
-                ):
+            ):
                 args.remove(tok)
 
         return args
 
+
 # End class EquationFactory
+
 
 class BaseBuilder(object):
     """Class for building equations.
@@ -392,35 +402,36 @@ class BaseBuilder(object):
 
     def __call__(self, *args):
         """Raises exception for easier debugging."""
-        m = "%s (%s) cannot accept arguments"%\
-            (self.literal.name, self.__class__.__name__)
+        m = "%s (%s) cannot accept arguments" % (
+            self.literal.name,
+            self.__class__.__name__,
+        )
         raise TypeError(m)
-
 
     def getEquation(self):
         """Get the equation built by this object.
 
-        The equation will given the name "_eq_<root>" where "<root>" is the
-        name of the root node.
+        The equation will given the name "_eq_<root>" where "<root>" is
+        the name of the root node.
         """
         # We need to make a name for this, so we name it after its root
-        name = "_eq_%s"%self.literal.name
+        name = "_eq_%s" % self.literal.name
         eq = Equation(name, self.literal)
         return eq
 
-    def __evalBinary(self, other, OperatorClass, onleft = True):
+    def __evalBinary(self, other, OperatorClass, onleft=True):
         """Evaluate a binary function.
 
         Other can be an BaseBuilder or a constant.
 
         onleft  --  Indicates that the operator was passed on the left side
-                    (defualt True).
+                    (default True).
         """
         # Create the Operator
         op = OperatorClass()
 
         # onleft takes care of non-commutative operators, and assures that the
-        # ordering is perserved.
+        # ordering is preserved.
         if onleft:
             # Add the literals to the operator
             op.addLiteral(self.literal)
@@ -498,7 +509,9 @@ class BaseBuilder(object):
     def __neg__(self):
         return self.__evalUnary(literals.NegationOperator)
 
-## These are used by the class.
+
+# These are used by the class.
+
 
 class ArgumentBuilder(BaseBuilder):
     """BaseBuilder wrapper around an Argument literal.
@@ -510,7 +523,7 @@ class ArgumentBuilder(BaseBuilder):
     literal     --  The Argument wrapped by this instance.
     """
 
-    def __init__(self, value = None, name = None, const = False, arg = None):
+    def __init__(self, value=None, name=None, const=False, arg=None):
         """Create an ArgumentBuilder instance, containing a new Argument.
 
         Arguments
@@ -524,13 +537,16 @@ class ArgumentBuilder(BaseBuilder):
         """
         BaseBuilder.__init__(self)
         if arg is None:
-            self.literal = literals.Argument(value=value, name=name,
-                    const=const)
+            self.literal = literals.Argument(
+                value=value, name=name, const=const
+            )
         else:
             self.literal = arg
         return
 
+
 # end class ArgumentBuilder
+
 
 class OperatorBuilder(BaseBuilder):
     """BaseBuilder wrapper around an Operator literal.
@@ -540,7 +556,7 @@ class OperatorBuilder(BaseBuilder):
     name        --  The name of the operator to be wrapped
     """
 
-    def __init__(self, name, op = None):
+    def __init__(self, name, op=None):
         """Wrap an Operator or a function by name.
 
         Arguments
@@ -573,42 +589,50 @@ class OperatorBuilder(BaseBuilder):
             self.literal = literals.UFuncOperator(ufunc)
         # Here the Operator is already specified.  We can copy its attributes
         # to a new Operator inside of the new OperatorBuilder.
-        op = literals.makeOperator(name=self.literal.name,
-                                   symbol=self.literal.symbol,
-                                   nin=self.literal.nin,
-                                   nout=self.literal.nout,
-                                   operation=self.literal.operation)
+        op = literals.makeOperator(
+            name=self.literal.name,
+            symbol=self.literal.symbol,
+            nin=self.literal.nin,
+            nout=self.literal.nout,
+            operation=self.literal.operation,
+        )
         newobj.literal = op
 
         # Now that we have a literal, let's check our inputs
         literal = newobj.literal
         if literal.nin >= 0 and len(args) != literal.nin:
-            raise ValueError("%s takes %i arguments (%i given)"%\
-                    (self.literal, self.literal.nin, len(args)))
+            raise ValueError(
+                "%s takes %i arguments (%i given)"
+                % (self.literal, self.literal.nin, len(args))
+            )
 
         # Wrap scalar arguments
         for i, arg in enumerate(args):
             # Wrap the argument if it is not already
             if not isinstance(arg, BaseBuilder):
-                name = self.name + "_%i"%i
-                arg = ArgumentBuilder(value = arg, name = name, const = True)
+                name = self.name + "_%i" % i
+                arg = ArgumentBuilder(value=arg, name=name, const=True)
             newobj.literal.addLiteral(arg.literal)
 
         return newobj
+
 
 # end class OperatorBuilder
 
 # Utility functions
 
+
 def wrapArgument(name, arg):
     """Wrap an Argument as a builder."""
-    argbuilder = ArgumentBuilder(arg = arg)
+    argbuilder = ArgumentBuilder(arg=arg)
     return argbuilder
+
 
 def wrapOperator(name, op):
     """Wrap an Operator as a builder."""
     opbuilder = OperatorBuilder(name, op)
     return opbuilder
+
 
 def wrapFunction(name, func, nin=2, nout=1):
     """Wrap a function in an OperatorBuilder instance.
@@ -620,18 +644,20 @@ def wrapFunction(name, func, nin=2, nout=1):
 
     Returns the OperatorBuilder instance that wraps the function.
     """
-    op = literals.makeOperator(name=name, symbol=name,
-                               nin=nin, nout=nout,
-                               operation=func)
+    op = literals.makeOperator(
+        name=name, symbol=name, nin=nin, nout=nout, operation=func
+    )
 
     # Create the OperatorBuilder
     opbuilder = OperatorBuilder(name, op)
 
     return opbuilder
 
+
 def getBuilder(name):
     """Get an operator from the global builders dictionary."""
     return _builders[name]
+
 
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module
@@ -641,7 +667,10 @@ def __wrapNumpyOperators():
         if isinstance(op, numpy.ufunc):
             _builders[name] = OperatorBuilder(name)
     return
+
+
 __wrapNumpyOperators()
+
 
 # Register other functions as well
 def __wrapSrFitOperators():
@@ -650,17 +679,24 @@ def __wrapSrFitOperators():
     instances in the module namespace."""
     opmod = literals.operators
     excluded_types = set((opmod.CustomOperator, opmod.UFuncOperator))
+
     # check if opmod member should be wrapped as OperatorBuilder
-    is_exported_type = lambda cls : (
-        inspect.isclass(cls) and issubclass(cls, opmod.Operator) and
-        not inspect.isabstract(cls) and
-        not cls in excluded_types)
+    def _is_exported_type(cls):
+        return (
+            inspect.isclass(cls)
+            and issubclass(cls, opmod.Operator)
+            and not inspect.isabstract(cls)
+            and cls not in excluded_types
+        )
+
     # create OperatorBuilder objects
-    for nm, opclass in inspect.getmembers(opmod, is_exported_type):
+    for nm, opclass in inspect.getmembers(opmod, _is_exported_type):
         op = opclass()
         assert op.name, "Unnamed Operator should never appear here."
         _builders[op.name] = OperatorBuilder(op.name, op)
     return
+
+
 __wrapSrFitOperators()
 
 # End of file

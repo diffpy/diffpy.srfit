@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of a nanoparticle PDF refinement using DebyePDFGenerator.
 
 This example is similar to crystalpdfobjcryst.py, except that it uses
@@ -21,24 +20,29 @@ the DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.
 
 import numpy
 
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+)
 from diffpy.srfit.pdf import DebyePDFGenerator
 
-####### Example Code
+######
+#  Example Code
+
 
 def makeRecipe(molecule, datname):
     """Create a recipe that uses the DebyePDFGenerator."""
 
-    ## The Profile
+    # The Profile
     profile = Profile()
 
     # Load data and add it to the profile
     profile.loadtxt(datname)
     profile.setCalculationRange(xmin=1.2, xmax=8)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # Create a DebyePDFGenerator named "G".
     generator = DebyePDFGenerator("G")
     generator.setStructure(molecule)
@@ -46,10 +50,10 @@ def makeRecipe(molecule, datname):
     generator.setQmin(0.68)
     generator.setQmax(22)
 
-    ## The FitContribution
+    # The FitContribution
     contribution = FitContribution("bucky")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname="r")
 
     # Make a FitRecipe.
     recipe = FitRecipe()
@@ -92,7 +96,7 @@ def makeRecipe(molecule, datname):
 
         # This creates a Parameter that moves the second atom according to the
         # bond length. Note that each Parameter needs a unique name.
-        par = c60.addBondLengthParameter("rad%i"%i, center, atom)
+        par = c60.addBondLengthParameter("rad%i" % i, center, atom)
         recipe.constrain(par, radius)
 
     # Add the correlation term, scale. The scale is too short to effectively
@@ -103,6 +107,7 @@ def makeRecipe(molecule, datname):
     # Give the recipe away so it can be used!
     return recipe
 
+
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
@@ -110,20 +115,22 @@ def plotResults(recipe):
     r = recipe.bucky.profile.x
     g = recipe.bucky.profile.y
     gcalc = recipe.bucky.profile.ycalc
-    diffzero =  -0.8 * max(g) * numpy.ones_like(g)
+    diffzero = -0.8 * max(g) * numpy.ones_like(g)
     diff = g - gcalc + diffzero
 
     import pylab
-    pylab.plot(r,g,'ob',label="G(r) Data")
-    pylab.plot(r,gcalc,'-r',label="G(r) Fit")
-    pylab.plot(r,diff,'-g',label="G(r) diff")
-    pylab.plot(r,diffzero,'-k')
+
+    pylab.plot(r, g, "ob", label="G(r) Data")
+    pylab.plot(r, gcalc, "-r", label="G(r) Fit")
+    pylab.plot(r, diff, "-g", label="G(r) diff")
+    pylab.plot(r, diffzero, "-k")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
 
     pylab.show()
     return
+
 
 def main():
 
@@ -135,6 +142,7 @@ def main():
 
     # Optimize
     from scipy.optimize import leastsq
+
     leastsq(recipe.residual, recipe.getValues())
 
     # Print results
@@ -146,8 +154,8 @@ def main():
 
     return
 
-c60xyz = \
-"""
+
+c60xyz = """
 3.451266498   0.685000000   0.000000000
 3.451266498  -0.685000000   0.000000000
 -3.451266498   0.685000000   0.000000000
@@ -210,6 +218,7 @@ c60xyz = \
 -2.279809890  -2.580456608  -0.724000000
 """
 
+
 def makeC60():
     """Make the C60 molecule using pyobjcryst."""
 
@@ -236,7 +245,7 @@ def makeC60():
     # Add the other atoms. They will be named C1, C2, ..., C60.
     for i, l in enumerate(c60xyz.strip().splitlines()):
         x, y, z = map(float, l.split())
-        m.AddAtom(x, y, z, sp, "C%i"%(i+1))
+        m.AddAtom(x, y, z, sp, "C%i" % (i + 1))
 
     return m
 

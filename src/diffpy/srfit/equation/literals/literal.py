@@ -12,12 +12,11 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Literal base class used to construct equation trees.
 
-Literals are base pieces of the equation hierarchy. The 'identify' method
-identifies the Literal to a visitor by calling the identifying method of the
-vistior.
+Literals are base pieces of the equation hierarchy. The 'identify'
+method identifies the Literal to a visitor by calling the identifying
+method of the vistior.
 """
 
 __all__ = ["Literal"]
@@ -25,7 +24,8 @@ __all__ = ["Literal"]
 from diffpy.srfit.equation.literals.abcs import LiteralABC
 from diffpy.srfit.util.observable import Observable
 
-class Literal(Observable,LiteralABC):
+
+class Literal(Observable, LiteralABC):
     """Abstract class for equation pieces, such as operators and arguments.
 
     Literal derives from Observable. See diffpy.srfit.util.observable.
@@ -63,6 +63,7 @@ class Literal(Observable,LiteralABC):
         return
 
     def __str__(self):
-        return "%s(%s)"%(self.__class__.__name__, self.name)
+        return "%s(%s)" % (self.__class__.__name__, self.name)
+
 
 # End of file

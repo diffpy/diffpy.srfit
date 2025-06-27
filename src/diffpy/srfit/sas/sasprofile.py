@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Class for adapting a sas DataInfo objects to the Profile interface."""
 
 __all__ = ["SASProfile"]
@@ -37,8 +36,8 @@ class SASProfile(Profile):
     xobs    --  Read-only property of _xobs.
     _yobs   --  A numpy array of the observed signal (default None)
     yobs    --  Read-only property of _yobs.
-    _dyobs  --  A numpy array of the uncertainty of the observed signal (default
-                None, optional).
+    _dyobs  --  A numpy array of the uncertainty of the observed signal
+                (default None, optional).
     dyobs   --  Read-only property of _dyobs.
     x       --  A numpy array of the calculated independent variable (default
                 None, property for xpar accessors).
@@ -72,7 +71,7 @@ class SASProfile(Profile):
             self._dyobs = self._datainfo.dy
         return
 
-    def setObservedProfile(self, xobs, yobs, dyobs = None):
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         This is overloaded to change the value within the datainfo object.

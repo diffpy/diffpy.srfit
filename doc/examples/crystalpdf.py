@@ -12,35 +12,38 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of a PDF refinement using diffpy.structure and PDFGenerator.
 
-This is example of fitting the fcc nickel structure to measured PDF data. The
-purpose of this example is to demonstrate and describe the classes in
-configuraiton options involved with setting up a fit in this way. The main
-benefit of using SrFit for PDF refinement is the flexibility of modifying the
-PDF profile function for specific needs, adding restraints to a fit and the
-ability to simultaneously refine a structure to PDF data and data from other
-sources. This example demonstrates only the basic configuration.
-
+This is example of fitting the fcc nickel structure to measured PDF
+data. The purpose of this example is to demonstrate and describe the
+classes in configuration options involved with setting up a fit in this
+way. The main benefit of using SrFit for PDF refinement is the
+flexibility of modifying the PDF profile function for specific needs,
+adding restraints to a fit and the ability to simultaneously refine a
+structure to PDF data and data from other sources. This example
+demonstrates only the basic configuration.
 """
 
 import numpy
-
-from diffpy.structure import Structure
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
-
 from gaussianrecipe import scipyOptimize
 
-####### Example Code
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+)
+from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.structure import Structure
+
+######
+#  Example Code
+
 
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profile
+    # The Profile
     # This will be used to store the observed and calculated PDF profile.
     profile = Profile()
 
@@ -53,9 +56,9 @@ def makeRecipe(ciffile, datname):
     parser = PDFParser()
     parser.parseFile(datname)
     profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax = 20)
+    profile.setCalculationRange(xmax=20)
 
-    ## The ProfileGenerator
+    # The ProfileGenerator
     # The PDFGenerator is for configuring and calculating a PDF profile. Here,
     # we want to refine a Structure object from diffpy.structure. We tell the
     # PDFGenerator that with the 'setStructure' method. All other configuration
@@ -67,18 +70,18 @@ def makeRecipe(ciffile, datname):
     stru.read(ciffile)
     generator.setStructure(stru)
 
-    ## The FitContribution
+    # The FitContribution
     # Here we associate the Profile and ProfileGenerator, as has been done
     # before.
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname = "r")
+    contribution.setProfile(profile, xname="r")
 
-    ## Make the FitRecipe and add the FitContribution.
+    # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
     recipe.addContribution(contribution)
 
-    ## Configure the fit variables
+    # Configure the fit variables
 
     # The PDFGenerator class holds the ParameterSet associated with the
     # Structure passed above in a data member named "phase". (We could have
@@ -95,6 +98,7 @@ def makeRecipe(ciffile, datname):
     # documentation for more details. The 'constrainAsSpaceGroup' method may
     # create new Parameters, which it returns in a SpaceGroupParameters object.
     from diffpy.srfit.structure import constrainAsSpaceGroup
+
     sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
 
     # The SpaceGroupParameters object returned by 'constrainAsSpaceGroup' holds
@@ -124,6 +128,7 @@ def makeRecipe(ciffile, datname):
     # Give the recipe away so it can be used!
     return recipe
 
+
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
 
@@ -135,16 +140,18 @@ def plotResults(recipe):
     diff = g - gcalc + diffzero
 
     import pylab
-    pylab.plot(r,g,'bo',label="G(r) Data")
-    pylab.plot(r, gcalc,'r-',label="G(r) Fit")
-    pylab.plot(r,diff,'g-',label="G(r) diff")
-    pylab.plot(r,diffzero,'k-')
+
+    pylab.plot(r, g, "bo", label="G(r) Data")
+    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
+    pylab.plot(r, diff, "g-", label="G(r) diff")
+    pylab.plot(r, diffzero, "k-")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
 
     pylab.show()
     return
+
 
 if __name__ == "__main__":
 

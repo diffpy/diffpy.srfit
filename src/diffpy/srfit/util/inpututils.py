@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """Input utilities."""
 
 __all__ = ["inputToString"]
@@ -20,13 +19,13 @@ __all__ = ["inputToString"]
 import os.path
 
 
-def inputToString(inpt):
+def inputToString(input):
     """Convert input from various modes to a string.
 
     This is useful when you want a method to accept a string, open file object
     or file name.
 
-    inpt    --  An open file-like object, name of a file
+    input    --  An open file-like object, name of a file
                 or a string containing the input.
 
     Returns the input in a string
@@ -35,16 +34,17 @@ def inputToString(inpt):
     """
     # Get the input into a string
     inptstr = ""
-    if hasattr(inpt, "read"):
-        inptstr = inpt.read()
+    if hasattr(input, "read"):
+        inptstr = input.read()
     # TODO remove handling of string input accept only file or filename
     # FIXME check for typos in the file name
-    elif os.path.exists(inpt) or (len(inpt) < 80 and inpt.count("\n") == 0):
-        with open(inpt, 'r') as infile:
+    elif os.path.exists(input) or (len(input) < 80 and input.count("\n") == 0):
+        with open(input, "r") as infile:
             inptstr = infile.read()
     else:
-        inptstr = inpt
+        inptstr = input
 
     return inptstr
+
 
 # End of file

@@ -12,32 +12,34 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of a PDF refinement of two-phase structure.
 
-This example uses PDFGenerator to refine a single structure two profiles.
-This will require setting up two FitContribution, each with its own
-PDFGenerator. However, the PDFGenerators will refer to the same underlying
-ObjCrystCrystalParSet.
+This example uses PDFGenerator to refine a single structure two
+profiles. This will require setting up two FitContribution, each with
+its own PDFGenerator. However, the PDFGenerators will refer to the same
+underlying ObjCrystCrystalParSet.
 """
 
 import numpy
-
+from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
+from diffpy.srfit.fitbase import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+)
 from diffpy.srfit.pdf import PDFGenerator, PDFParser
-from diffpy.srfit.fitbase import Profile
-from diffpy.srfit.fitbase import FitContribution, FitRecipe
-from diffpy.srfit.fitbase import FitResults
 
-from gaussianrecipe import scipyOptimize
+######
+#  Example Code
 
-####### Example Code
 
 def makeRecipe(ciffile, xdatname, ndatname):
     """Create a fitting recipe for crystalline PDF data."""
 
-    ## The Profiles
+    # The Profiles
     # We need a profile for each data set. This means that we will need two
     # FitContributions as well.
     xprofile = Profile()
@@ -47,14 +49,14 @@ def makeRecipe(ciffile, xdatname, ndatname):
     parser = PDFParser()
     parser.parseFile(xdatname)
     xprofile.loadParsedData(parser)
-    xprofile.setCalculationRange(xmax = 20)
+    xprofile.setCalculationRange(xmax=20)
 
     parser = PDFParser()
     parser.parseFile(ndatname)
     nprofile.loadParsedData(parser)
-    nprofile.setCalculationRange(xmax = 20)
+    nprofile.setCalculationRange(xmax=20)
 
-    ## The ProfileGenerators
+    # The ProfileGenerators
     # We need one of these for the x-ray data.
     xgenerator = PDFGenerator("G")
     stru = loadCrystal(ciffile)
@@ -79,15 +81,15 @@ def makeRecipe(ciffile, xdatname, ndatname):
     ngenerator = PDFGenerator("G")
     ngenerator.setPhase(xgenerator.phase)
 
-    ## The FitContributions
+    # The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
     xcontribution = FitContribution("xnickel")
     xcontribution.addProfileGenerator(xgenerator)
-    xcontribution.setProfile(xprofile, xname = "r")
+    xcontribution.setProfile(xprofile, xname="r")
     # and the neutron objects in another.
     ncontribution = FitContribution("nnickel")
     ncontribution.addProfileGenerator(ngenerator)
-    ncontribution.setProfile(nprofile, xname = "r")
+    ncontribution.setProfile(nprofile, xname="r")
 
     # This example is different than the previous ones in that we are composing
     # a residual function from other residuals (one for the x-ray contribution
@@ -116,7 +118,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     recipe.addVar(ngenerator.scale, 1, "nscale")
     recipe.addVar(xgenerator.qdamp, 0.01, "xqdamp")
     recipe.addVar(ngenerator.qdamp, 0.01, "nqdamp")
-    # delta2 is a non-structual material propery. Thus, we constrain together
+    # delta2 is a non-structual material property. Thus, we constrain together
     # delta2 Parameter from each PDFGenerator.
     delta2 = recipe.newVar("delta2", 2)
     recipe.constrain(xgenerator.delta2, delta2)
@@ -131,6 +133,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
 
     # Give the recipe away so it can be used!
     return recipe
+
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
@@ -149,24 +152,26 @@ def plotResults(recipe):
     ndiff = ng - ngcalc + ndiffzero
 
     import pylab
+
     pylab.subplot(2, 1, 1)
-    pylab.plot(xr,xg,'bo',label="G(r) x-ray Data")
-    pylab.plot(xr,xgcalc,'r-',label="G(r) x-ray Fit")
-    pylab.plot(xr,xdiff,'g-',label="G(r) x-ray diff")
-    pylab.plot(xr,xdiffzero,'k-')
+    pylab.plot(xr, xg, "bo", label="G(r) x-ray Data")
+    pylab.plot(xr, xgcalc, "r-", label="G(r) x-ray Fit")
+    pylab.plot(xr, xdiff, "g-", label="G(r) x-ray diff")
+    pylab.plot(xr, xdiffzero, "k-")
     pylab.legend(loc=1)
 
     pylab.subplot(2, 1, 2)
-    pylab.plot(nr,ng,'bo',label="G(r) neutron Data")
-    pylab.plot(nr,ngcalc,'r-',label="G(r) neutron Fit")
-    pylab.plot(nr,ndiff,'g-',label="G(r) neutron diff")
-    pylab.plot(nr,ndiffzero,'k-')
+    pylab.plot(nr, ng, "bo", label="G(r) neutron Data")
+    pylab.plot(nr, ngcalc, "r-", label="G(r) neutron Fit")
+    pylab.plot(nr, ndiff, "g-", label="G(r) neutron diff")
+    pylab.plot(nr, ndiffzero, "k-")
     pylab.xlabel(r"$r (\AA)$")
     pylab.ylabel(r"$G (\AA^{-2})$")
     pylab.legend(loc=1)
 
     pylab.show()
     return
+
 
 if __name__ == "__main__":
 

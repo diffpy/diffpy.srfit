@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-
 """Example of simplified fitting.
 
 This is like gaussianrecipe.py, but it uses the SimpleRecipe, which
@@ -22,7 +21,9 @@ creation.
 
 from diffpy.srfit.fitbase import SimpleRecipe
 
-####### Example Code
+######
+#  Example Code
+
 
 def main():
     """Set up a simple recipe in a few lines."""
@@ -46,12 +47,14 @@ def main():
 
     # We explicitly optimize the residual method of the SimpleRecipe
     from scipy.optimize import leastsq
+
     leastsq(recipe.residual, recipe.values)
 
     # Print the results
     recipe.printResults()
 
     return
+
 
 if __name__ == "__main__":
 

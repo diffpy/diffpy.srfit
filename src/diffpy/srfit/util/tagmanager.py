@@ -12,11 +12,10 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """TagManager class.
 
-The TagManager class takes hashable objects and assigns tags to them. Objects
-can then be easily referenced via their assigned tags.
+The TagManager class takes hashable objects and assigns tags to them.
+Objects can then be easily referenced via their assigned tags.
 """
 
 __all__ = ["TagManager"]
@@ -135,7 +134,8 @@ class TagManager(object):
     def __getObjectSet(self, tag):
         """Helper function for getting an object set with given tag.
 
-        Raises KeyError if a passed tag does not exist and self.silent is False
+        Raises KeyError if a passed tag does not exist and self.silent
+        is False
         """
         oset = self._tagdict.get(str(tag))
         if oset is None:
@@ -143,6 +143,7 @@ class TagManager(object):
                 raise KeyError("Tag '%s' does not exist" % tag)
             oset = set()
         return oset
+
 
 # End class TagManager
 

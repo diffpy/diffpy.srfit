@@ -12,7 +12,6 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-
 """This module contains parsers for SAS data.
 
 SASParser uses the sas DataLoader class to load data.
@@ -37,19 +36,19 @@ class SASParser(ProfileParser):
     _format     --  Name of the data format that this parses (string, default
                     ""). The format string is a unique identifier for the data
                     format handled by the parser.
-    _banks      --  The data from each bank. Each bank contains a (x, y, dx, dy)
-                    tuple:
+    _banks      --  The data from each bank. Each bank contains a
+                    (x, y, dx, dy) tuple:
                     x       --  A numpy array containing the independent
                                 variable read from the file.
                     y       --  A numpy array containing the profile
                                 from the file.
                     dx      --  A numpy array containing the uncertainty in x
-                                read from the file. This is 0 if the uncertainty
-                                cannot be read.
+                                read from the file. This is 0 if the
+                                uncertainty cannot be read.
                     dy      --  A numpy array containing the uncertainty read
                                 from the file. This is 0 if the uncertainty
                                 cannot be read.
-    _x          --  Indpendent variable from the chosen bank
+    _x          --  Independent variable from the chosen bank
     _y          --  Profile from the chosen bank
     _dx         --  Uncertainty in independent variable from the chosen bank
     _dy         --  Uncertainty in profile from the chosen bank
@@ -81,7 +80,7 @@ class SASParser(ProfileParser):
         Raises ParseError if the file cannot be parsed
         """
 
-        Loader = sasimport('sas.dataloader.loader').Loader
+        Loader = sasimport("sas.dataloader.loader").Loader
         loader = Loader()
 
         try:
@@ -114,8 +113,9 @@ class SASParser(ProfileParser):
         """
         # This calls on parseFile, as that is how the sas data loader works.
         import tempfile
+
         fh, fn = tempfile.mkstemp()
-        outfile = open(fn, 'w')
+        outfile = open(fn, "w")
         fn.write(patstring)
         outfile.close()
         self.parseFile(fn)
@@ -124,6 +124,7 @@ class SASParser(ProfileParser):
 
         # Close the temporary file and delete it
         import os
+
         os.close(fh)
         os.remove(fn)
         return

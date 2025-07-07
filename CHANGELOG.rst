@@ -4,6 +4,10 @@ Release notes
 
 .. current developments
 
+3.1.0
+=====
+
+
 Version 3.0.0 – 2019-03-14
 ==========================
 

@@ -33,9 +33,12 @@ class Constraint(Validatable):
     constraint owns it).
 
     Attributes
-    par     --  A Parameter that is the subject of the constraint.
-    eq      --  An equation whose evaluation is used to set the value of the
-                constraint.
+    ----------
+    par
+        A Parameter that is the subject of the constraint.
+    eq
+        An equation whose evaluation is used to set the value of the
+        constraint.
     """
 
     def __init__(self):

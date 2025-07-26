@@ -43,23 +43,33 @@ class PrCalculator(Calculator):
     This is obtained from P(r) as
     P(r) = 4 pi r**2 f(r).
 
-    Attributes:
-    _invertor   --  sas.pr.invertor.Invertor object. This object is internal,
-                    but can be configured by the user after initialization.
-                    Note that the 'x', 'y' and 'err' attributes get overwritten
-                    every time the invertor is used.
+    Attributes
+    ----------
+    _invertor
+        sas.pr.invertor.Invertor object. This object is internal,
+        but can be configured by the user after initialization.
+        Note that the 'x', 'y' and 'err' attributes get overwritten
+        every time the invertor is used.
 
-    Managed Parameters:
-    scale       --  The scale factor (default 1).
-    q           --  The q-values of the I(q) signal
-    iq          --  The I(q) signal
-    diq         --  The uncertainty in I(q)
+    Managed Parameters
+    ------------------
+    scale
+        The scale factor (default 1).
+    q
+        The q-values of the I(q) signal
+    iq
+        The I(q) signal
+    diq
+        The uncertainty in I(q)
     """
 
     def __init__(self, name):
         """Initialize the generator.
 
-        name        --  A name for the PrCalculator
+        Attributes
+        ----------
+        name
+            A name for the PrCalculator
         """
         Calculator.__init__(self, name)
 
@@ -112,17 +122,24 @@ class CFCalculator(PrCalculator):
     f(r) = P(r) / 4 pi r**2
     which is the nanoparticle form factor scaled by density.
 
-    Attributes:
-    _invertor   --  sas.pr.invertor.Invertor object. This object is internal,
-                    but can be configured by the user after initialization.
-                    Note that the 'x', 'y' and 'err' attributes get overwritten
-                    every time the invertor is used.
+    Attributes
+    ----------
+    _invertor
+        sas.pr.invertor.Invertor object. This object is internal,
+        but can be configured by the user after initialization.
+        Note that the 'x', 'y' and 'err' attributes get overwritten
+        every time the invertor is used.
 
-    Managed Parameters:
-    scale       --  The scale factor (default 1).
-    q           --  The q-values of the I(q) signal
-    iq          --  The I(q) signal
-    diq         --  The uncertainty in I(q)
+    Managed Parameters
+    ------------------
+    scale
+        The scale factor (default 1).
+    q
+        The q-values of the I(q) signal
+    iq
+        The I(q) signal
+    diq
+        The uncertainty in I(q)
     """
 
     def __call__(self, r):

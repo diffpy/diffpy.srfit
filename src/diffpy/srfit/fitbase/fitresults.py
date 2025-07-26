@@ -37,33 +37,58 @@ class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
 
     Attributes
-    recipe      --  The recipe containing the results.
-    cov         --  The covariance matrix from the recipe.
-    conresults  --  An ordered dictionary of ContributionResults for each
-                    FitContribution, indexed by the FitContribution name.
-    derivstep   --  The fractional step size for calculating numeric
-                    derivatives. Default 1e-8.
-    varnames    --  Names of the variables in the recipe.
-    varvals     --  Values of the variables in the recipe.
-    varunc      --  Uncertainties in the variable values.
-    showfixed   --  Show fixed variables (default True).
-    fixednames  --  Names of the fixed variables of the recipe.
-    fixedvals   --  Values of the fixed variables of the recipe.
-    showcon     --  Show constraint values in the output (default False).
-    connames    --  Names of the constrained parameters.
-    convals     --  Values of the constrained parameters.
-    conunc      --  Uncertainties in the constraint values.
-    residual    --  The scalar residual of the recipe.
-    penalty     --  The penalty to residual from the restraints.
-    chi2        --  The chi2 of the recipe.
-    cumchi2     --  The cumulative chi2 of the recipe.
-    rchi2       --  The reduced chi2 of the recipe.
-    rw          --  The Rw of the recipe.
-    cumrw       --  The cumulative Rw of the recipe.
-    messages    --  A list of messages about the results.
-    precision   --  The precision of numeric output (default 8).
-    _dcon       --  The derivatives of the constraint equations with respect to
-                    the variables. This is used internally.
+    ----------
+    recipe
+        The recipe containing the results.
+    cov
+        The covariance matrix from the recipe.
+    conresults
+        An ordered dictionary of ContributionResults for each
+        FitContribution, indexed by the FitContribution name.
+    derivstep
+        The fractional step size for calculating numeric
+        derivatives. Default 1e-8.
+    varnames
+        Names of the variables in the recipe.
+    varvals
+        Values of the variables in the recipe.
+    varunc
+        Uncertainties in the variable values.
+    showfixed
+        Show fixed variables (default True).
+    fixednames
+        Names of the fixed variables of the recipe.
+    fixedvals
+        Values of the fixed variables of the recipe.
+    showcon
+        Show constraint values in the output (default False).
+    connames
+        Names of the constrained parameters.
+    convals
+        Values of the constrained parameters.
+    conunc
+        Uncertainties in the constraint values.
+    residual
+        The scalar residual of the recipe.
+    penalty
+        The penalty to residual from the restraints.
+    chi2
+        The chi2 of the recipe.
+    cumchi2
+        The cumulative chi2 of the recipe.
+    rchi2
+        The reduced chi2 of the recipe.
+    rw
+        The Rw of the recipe.
+    cumrw
+        The cumulative Rw of the recipe.
+    messages
+        A list of messages about the results.
+    precision
+        The precision of numeric output (default 8).
+    _dcon
+        The derivatives of the constraint equations with respect to
+        the variables. This is used internally.
 
     Each of these attributes, except the recipe, are created or updated when
     the update method is called.
@@ -72,11 +97,17 @@ class FitResults(object):
     def __init__(self, recipe, update=True, showfixed=True, showcon=False):
         """Initialize the attributes.
 
-        recipe   --  The recipe containing the results
-        update  --  Flag indicating whether to do an immediate update (default
-                    True).
-        showcon --  Show fixed variables in the output (default True).
-        showcon --  Show constraint values in the output (default False).
+        Attributes
+        ----------
+        recipe
+            The recipe containing the results
+        update
+            Flag indicating whether to do an immediate update (default
+            True).
+        showcon
+            Show fixed variables in the output (default True).
+        showcon
+            Show constraint values in the output (default False).
         """
         self.recipe = recipe
         self.conresults = OrderedDict()
@@ -298,9 +329,14 @@ class FitResults(object):
         This function is called by printResults and saveResults. Overloading
         the formatting here will change all three functions.
 
-        header  --  A header to add to the output (default "")
-        footer  --  A footer to add to the output (default "")
-        update  --  Flag indicating whether to call update() (default False).
+        Attributes
+        ----------
+        header
+            A header to add to the output (default "")
+        footer
+            A footer to add to the output (default "")
+        update
+            Flag indicating whether to call update() (default False).
 
         Returns a string containing the formatted results.
         """
@@ -479,9 +515,14 @@ class FitResults(object):
     def printResults(self, header="", footer="", update=False):
         """Format and print the results.
 
-        header  --  A header to add to the output (default "")
-        footer  --  A footer to add to the output (default "")
-        update  --  Flag indicating whether to call update() (default False).
+        Attributes
+        ----------
+        header
+            A header to add to the output (default "")
+        footer
+            A footer to add to the output (default "")
+        update
+            Flag indicating whether to call update() (default False).
         """
         print(self.formatResults(header, footer, update).rstrip())
         return
@@ -493,9 +534,13 @@ class FitResults(object):
         """Format and save the results.
 
         filename -  Name of the save file.
-        header  --  A header to add to the output (default "")
-        footer  --  A footer to add to the output (default "")
-        update  --  Flag indicating whether to call update() (default False).
+        ----------------------------------
+        header
+            A header to add to the output (default "")
+        footer
+            A footer to add to the output (default "")
+        update
+            Flag indicating whether to call update() (default False).
         """
         # Save the time and user
         from getpass import getuser
@@ -521,33 +566,52 @@ class ContributionResults(object):
     This does not store the FitContribution.
 
     Attributes
-    y       --  The FitContribution's profile over the calculation range
-                (default None).
-    dy      --  The uncertainty in the FitContribution's profile over the
-                calculation range (default None).
-    x       --  A numpy array of the calculated independent variable for the
-                FitContribution (default None).
-    ycalc   --  A numpy array of the calculated signal for the FitContribution
-                (default None).
-    residual    --  The scalar residual of the FitContribution.
-    chi2        --  The chi2 of the FitContribution.
-    cumchi2     --  The cumulative chi2 of the FitContribution.
-    rw          --  The Rw of the FitContribution.
-    cumrw       --  The cumulative Rw of the FitContribution.
-    weight      --  The weight of the FitContribution in the recipe.
-    conlocs     --  The location of the constrained parameters in the
-                    FitContribution (see the
-                    RecipeContainer._locateManagedObject method).
-    convals     --  Values of the constrained parameters.
-    conunc      --  Uncertainties in the constraint values.
+    ----------
+    y
+        The FitContribution's profile over the calculation range
+        (default None).
+    dy
+        The uncertainty in the FitContribution's profile over the
+        calculation range (default None).
+    x
+        A numpy array of the calculated independent variable for the
+        FitContribution (default None).
+    ycalc
+        A numpy array of the calculated signal for the FitContribution
+        (default None).
+    residual
+        The scalar residual of the FitContribution.
+    chi2
+        The chi2 of the FitContribution.
+    cumchi2
+        The cumulative chi2 of the FitContribution.
+    rw
+        The Rw of the FitContribution.
+    cumrw
+        The cumulative Rw of the FitContribution.
+    weight
+        The weight of the FitContribution in the recipe.
+    conlocs
+        The location of the constrained parameters in the
+        FitContribution (see the
+        RecipeContainer._locateManagedObject method).
+    convals
+        Values of the constrained parameters.
+    conunc
+        Uncertainties in the constraint values.
     """
 
     def __init__(self, con, weight, fitres):
         """Initialize the attributes.
 
-        con     --  The FitContribution
-        weight  --  The weight of the FitContribution in the recipe
-        fitres  --  The FitResults instance to contain this ContributionResults
+        Attributes
+        ----------
+        con
+            The FitContribution
+        weight
+            The weight of the FitContribution in the recipe
+        fitres
+            The FitResults instance to contain this ContributionResults
         """
         self.x = None
         self.y = None
@@ -629,8 +693,11 @@ def resultsDictionary(results):
     This reads the results from file and stores them in a dictionary to be
     returned to the caller. The dictionary may contain non-result entries.
 
-    results --  An open file-like object, name of a file that contains
-                results from FitResults or a string containing fit results.
+    Attributes
+    ----------
+    results
+        An open file-like object, name of a file that contains
+        results from FitResults or a string containing fit results.
     """
     resstr = inputToString(results)
 
@@ -654,9 +721,13 @@ def initializeRecipe(recipe, results):
     free) in the recipe to the results values. Note that the recipe has to be
     configured, with variables. This does not reconstruct a FitRecipe.
 
-    recipe  --  A configured recipe with variables
-    results --  An open file-like object, name of a file that contains
-                results from FitResults or a string containing fit results.
+    Attributes
+    ----------
+    recipe
+        A configured recipe with variables
+    results
+        An open file-like object, name of a file that contains
+        results from FitResults or a string containing fit results.
     """
 
     mpairs = resultsDictionary(results)

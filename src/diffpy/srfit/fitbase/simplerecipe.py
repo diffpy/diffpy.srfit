@@ -29,40 +29,62 @@ class SimpleRecipe(FitRecipe):
     fit recipe.
 
     Attributes
-    profile         --  The built-in Profile object.
-    contribution    --  The built-in FitContribution object.
-    results         --  The built-in FitResults object.
-    name            --  A name for this FitRecipe.
-    fithook         --  An object to be called whenever within the residual
-                        (default FitHook()) that can pass information out of
-                        the system during a refinement.
-    _constraints    --  A dictionary of Constraints, indexed by the constrained
-                        Parameter. Constraints can be added using the
-                        'constrain' method.
-    _oconstraints   --  An ordered list of the constraints from this and all
-                        sub-components.
-    _calculators    --  A managed dictionary of Calculators.
-    _contributions  --  A managed OrderedDict of FitContributions.
-    _parameters     --  A managed OrderedDict of parameters (in this case the
-                        parameters are varied).
-    _parsets        --  A managed dictionary of ParameterSets.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from string
-    _fixed          --  A set of parameters that are not actually varied.
-    _restraintlist  --  A list of restraints from this and all sub-components.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
-    _ready          --  A flag indicating if all attributes are ready for the
-                        calculation.
-    _tagdict        --  A dictionary of tags to variables.
-    _weights        --  List of weighing factors for each FitContribution. The
-                        weights are multiplied by the residual of the
-                        FitContribution when determining the overall residual.
+    ----------
+    profile
+        The built-in Profile object.
+    contribution
+        The built-in FitContribution object.
+    results
+        The built-in FitResults object.
+    name
+        A name for this FitRecipe.
+    fithook
+        An object to be called whenever within the residual
+        (default FitHook()) that can pass information out of
+        the system during a refinement.
+    _constraints
+        A dictionary of Constraints, indexed by the constrained
+        Parameter. Constraints can be added using the
+        'constrain' method.
+    _oconstraints
+        An ordered list of the constraints from this and all
+        sub-components.
+    _calculators
+        A managed dictionary of Calculators.
+    _contributions
+        A managed OrderedDict of FitContributions.
+    _parameters
+        A managed OrderedDict of parameters (in this case the
+        parameters are varied).
+    _parsets
+        A managed dictionary of ParameterSets.
+    _eqfactory
+        A diffpy.srfit.equation.builder.EquationFactory
+        instance that is used to create constraints and
+        restraints from string
+    _fixed
+        A set of parameters that are not actually varied.
+    _restraintlist
+        A list of restraints from this and all sub-components.
+    _restraints
+        A set of Restraints. Restraints can be added using the
+        'restrain' or 'confine' methods.
+    _ready
+        A flag indicating if all attributes are ready for the
+        calculation.
+    _tagdict
+        A dictionary of tags to variables.
+    _weights
+        List of weighing factors for each FitContribution. The
+        weights are multiplied by the residual of the
+        FitContribution when determining the overall residual.
 
     Properties
-    names           --  Variable names (read only). See getNames.
-    values          --  Variable values (read only). See getValues.
+    ----------
+    names
+        Variable names (read only). See getNames.
+    values
+        Variable values (read only). See getValues.
     """
 
     def __init__(self, name="fit", conclass=FitContribution):
@@ -98,11 +120,15 @@ class SimpleRecipe(FitRecipe):
         """Set the observed profile.
 
         Arguments
-        xobs    --  Numpy array of the independent variable
-        yobs    --  Numpy array of the observed signal.
-        dyobs   --  Numpy array of the uncertainty in the observed signal. If
-                    dyobs is None (default), it will be set to 1 at each
-                    observed xobs.
+        ---------
+        xobs
+            Numpy array of the independent variable
+        yobs
+            Numpy array of the observed signal.
+        dyobs
+            Numpy array of the uncertainty in the observed signal. If
+            dyobs is None (default), it will be set to 1 at each
+            observed xobs.
 
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
@@ -147,8 +173,10 @@ class SimpleRecipe(FitRecipe):
         """Set the calculation points.
 
         Arguments
-        x   --  A non-empty numpy array containing the calculation points. If
-                xobs exists, the bounds of x will be limited to its bounds.
+        ---------
+        x
+            A non-empty numpy array containing the calculation points. If
+            xobs exists, the bounds of x will be limited to its bounds.
 
         This will create y and dy on the specified grid if xobs, yobs and
         dyobs exist.
@@ -179,11 +207,15 @@ class SimpleRecipe(FitRecipe):
         The equation will be usable within setResidualEquation as "eq", and it
         takes no arguments.
 
-        eqstr   --  A string representation of the equation. Variables will be
-                    extracted from this equation and be given an initial value
-                    of 0.
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not registered (default {}).
+        Attributes
+        ----------
+        eqstr
+            A string representation of the equation. Variables will be
+            extracted from this equation and be given an initial value
+            of 0.
+        ns
+            A dictionary of Parameters, indexed by name, that are used
+            in the eqstr, but not registered (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -209,8 +241,12 @@ class SimpleRecipe(FitRecipe):
     def printResults(self, header="", footer=""):
         """Format and print the results.
 
-        header  --  A header to add to the output (default "")
-        footer  --  A footer to add to the output (default "")
+        Attributes
+        ----------
+        header
+            A header to add to the output (default "")
+        footer
+            A footer to add to the output (default "")
         """
         self.results.printResults(header, footer, True)
         return
@@ -219,8 +255,11 @@ class SimpleRecipe(FitRecipe):
         """Format and save the results.
 
         filename -  Name of the save file.
-        header  --  A header to add to the output (default "")
-        footer  --  A footer to add to the output (default "")
+        ----------------------------------
+        header
+            A header to add to the output (default "")
+        footer
+            A footer to add to the output (default "")
         """
         self.results.saveResults(filename, header, footer, True)
 

@@ -31,8 +31,11 @@ class Literal(Observable, LiteralABC):
     Literal derives from Observable. See diffpy.srfit.util.observable.
 
     Attributes
-    name    --  A name for this Literal (default None).
-    _value  --  The value of the Literal.
+    ----------
+    name
+        A name for this Literal (default None).
+    _value
+        The value of the Literal.
     """
 
     name = None

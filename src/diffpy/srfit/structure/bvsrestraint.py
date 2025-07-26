@@ -30,23 +30,33 @@ class BVSRestraint(Restraint):
     The restraint penalty is the root-mean-square deviation of the theoretical
     and calculated bond-valence sum of a structure.
 
-    Attributes:
-    _calc   --  The SrReal BVSCalculator instance.
-    _parset --  The SrRealParSet that created this BVSRestraint.
-    sig     --  The uncertainty on the BVS (default 1).
-    scaled  --  A flag indicating if the restraint is scaled (multiplied)
-                by the unrestrained point-average chi^2 (chi^2/numpoints)
-                (default False).
+    Attributes
+    ----------
+    _calc
+        The SrReal BVSCalculator instance.
+    _parset
+        The SrRealParSet that created this BVSRestraint.
+    sig
+        The uncertainty on the BVS (default 1).
+    scaled
+        A flag indicating if the restraint is scaled (multiplied)
+        by the unrestrained point-average chi^2 (chi^2/numpoints)
+        (default False).
     """
 
     def __init__(self, parset, sig=1, scaled=False):
         """Initialize the Restraint.
 
-        parset  --  SrRealParSet that creates this BVSRestraint.
-        sig     --  The uncertainty on the BVS (default 1).
-        scaled  --  A flag indicating if the restraint is scaled
-                    (multiplied) by the unrestrained point-average chi^2
-                    (chi^2/numpoints) (bool, default False).
+        Attributes
+        ----------
+        parset
+            SrRealParSet that creates this BVSRestraint.
+        sig
+            The uncertainty on the BVS (default 1).
+        scaled
+            A flag indicating if the restraint is scaled
+            (multiplied) by the unrestrained point-average chi^2
+            (chi^2/numpoints) (bool, default False).
         """
         from diffpy.srreal.bvscalculator import BVSCalculator
 
@@ -59,8 +69,11 @@ class BVSRestraint(Restraint):
     def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
-        w   --  The point-average chi^2 which is optionally used to scale the
-                penalty (float, default 1.0).
+        Attributes
+        ----------
+        w
+            The point-average chi^2 which is optionally used to scale the
+            penalty (float, default 1.0).
         """
         # Get the bvms from the BVSCalculator
         stru = self._parset._getSrRealStructure()

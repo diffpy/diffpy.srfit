@@ -30,8 +30,10 @@ class BaseStructureParSet(ParameterSet):
     help interface the ParameterSet with the space group constraint methods in
     the sgconstraints module and to ProfileGenerators.
 
-    Attributes:
-    stru    --  The adapted object
+    Attributes
+    ----------
+    stru
+        The adapted object
     """
 
     @classmethod

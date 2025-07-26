@@ -26,9 +26,11 @@ class Configurable(object):
     A Configurable has state of which a FitRecipe must be aware.
 
     Attributes
-    _configobjs     --  Set of Configureables in a hierarchy or instances.
-                        Messages get passed up the hierarchy to a FitReciple
-                        via these objects.
+    ----------
+    _configobjs
+        Set of Configureables in a hierarchy or instances.
+        Messages get passed up the hierarchy to a FitReciple
+        via these objects.
     """
 
     def __init__(self):

@@ -39,22 +39,31 @@ class CCTBXScattererParSet(ParameterSet):
 
     This class derives from ParameterSet.
 
-    Attributes:
-    name        --  Name of the scatterer. The name is always of the form
-                    "%s%i" % (element, number), where the number is the running
-                    index of that element type (starting at 0).
-    x (y, z)    --  Atom position in crystal coordinates (ParameterAdapter)
-    occupancy   --  Occupancy of the atom on its crystal location
-                    (ParameterAdapter)
-    Uiso        --  Isotropic scattering factor (ParameterAdapter).
+    Attributes
+    ----------
+    name
+        Name of the scatterer. The name is always of the form
+        "%s%i" % (element, number), where the number is the running
+        index of that element type (starting at 0).
+        x (y, z)    --  Atom position in crystal coordinates (ParameterAdapter)
+    occupancy
+        Occupancy of the atom on its crystal location
+        (ParameterAdapter)
+    Uiso
+        Isotropic scattering factor (ParameterAdapter).
     """
 
     def __init__(self, name, strups, idx):
         """Initialize.
 
-        name    --  The name of this scatterer.
-        strups  --  The CCTBXCrystalParSet that contains the cctbx structure
-        idx     --  The index of the scatterer in the structure.
+        Attributes
+        ----------
+        name
+            The name of this scatterer.
+        strups
+            The CCTBXCrystalParSet that contains the cctbx structure
+        idx
+            The index of the scatterer in the structure.
         """
         ParameterSet.__init__(self, name)
         self.strups = strups
@@ -123,16 +132,21 @@ class CCTBXScattererParSet(ParameterSet):
 class CCTBXUnitCellParSet(ParameterSet):
     """A wrapper for cctbx unit_cell object.
 
-    Attributes:
-    name    --  Always "unitcell".
-    a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterAdapter).
+    Attributes
+    ----------
+    name
+        Always "unitcell".
+        a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterAdapter).
     """
 
     def __init__(self, strups):
         """Initialize.
 
-        strups  --  The CCTBXCrystalParSet that contains the cctbx structure
-                    and the unit cell we're wrapper.
+        Attributes
+        ----------
+        strups
+            The CCTBXCrystalParSet that contains the cctbx structure
+            and the unit cell we're wrapper.
         """
         ParameterSet.__init__(self, "unitcell")
         self.strups = strups
@@ -190,17 +204,25 @@ class CCTBXUnitCellParSet(ParameterSet):
 class CCTBXCrystalParSet(BaseStructureParSet):
     """A wrapper for CCTBX structure.
 
-    Attributes:
-    stru        --  The adapted cctbx structure object.
-    scatterers  --  The list of ScattererParSets.
-    unitcell    --  The CCTBXUnitCellParSet for the structure.
+    Attributes
+    ----------
+    stru
+        The adapted cctbx structure object.
+    scatterers
+        The list of ScattererParSets.
+    unitcell
+        The CCTBXUnitCellParSet for the structure.
     """
 
     def __init__(self, name, stru):
         """Initialize.
 
-        name    --  A name for this
-        stru    --  A CCTBX structure instance.
+        Attributes
+        ----------
+        name
+            A name for this
+        stru
+            A CCTBX structure instance.
         """
         ParameterSet.__init__(self, name)
         self.stru = stru

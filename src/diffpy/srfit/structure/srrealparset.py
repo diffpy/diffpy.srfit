@@ -26,11 +26,14 @@ class SrRealParSet(BaseStructureParSet):
     This derives from BaseStructureParSet and provides some extended
     functionality provided by SrReal.
 
-    Attributes:
-    stru            --  The adapted object
-    _usesymmetry    --  A flag indicating if SrReal calculators that operate on
-                        this object should use symmetry. By default this is
-                        True.
+    Attributes
+    ----------
+    stru
+        The adapted object
+    _usesymmetry
+        A flag indicating if SrReal calculators that operate on
+        this object should use symmetry. By default this is
+        True.
     """
 
     def __init__(self, *args, **kw):
@@ -49,10 +52,14 @@ class SrRealParSet(BaseStructureParSet):
         this is also scaled by the current point-averaged chi^2 value so the
         restraint is roughly equally weighted in the fit.
 
-        sig     --  The uncertainty on the BVS (default 1).
-        scaled  --  A flag indicating if the restraint is scaled
-                    (multiplied) by the unrestrained point-average chi^2
-                    (chi^2/numpoints) (default False).
+        Attributes
+        ----------
+        sig
+            The uncertainty on the BVS (default 1).
+        scaled
+            A flag indicating if the restraint is scaled
+            (multiplied) by the unrestrained point-average chi^2
+            (chi^2/numpoints) (default False).
 
         Returns the BVSRestraint object for use with the 'unrestrain' method.
         """

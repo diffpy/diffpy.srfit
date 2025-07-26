@@ -60,31 +60,41 @@ class DiffpyAtomParSet(ParameterSet):
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
     this class for base attributes.
 
-    Attributes:
-    atom        --  The diffpy.structure.Atom this is adapting
-    element     --  The element name (property).
+    Attributes
+    ----------
+    atom
+        The diffpy.structure.Atom this is adapting
+    element
+        The element name (property).
 
-    Managed Parameters:
-    x (y, z)    --  Atom position in crystal coordinates (ParameterAdapter)
-    occupancy   --  Occupancy of the atom on its crystal location
-                    (ParameterAdapter)
-    occ         --  Proxy for occupancy (ParameterProxy).
-    U11, U22, U33, U12, U21, U23, U32, U13, U31
-                --  Anisotropic displacement factor for atom (ParameterAdapter
-                    or ParameterProxy). Note that the Uij and Uji parameters
-                    are the same.
-    Uiso        --  Isotropic ADP (ParameterAdapter).
-    B11, B22, B33, B12, B21, B23, B32, B13, B31
-                --  Anisotropic displacement factor for atom (ParameterAdapter
-                    or ParameterProxy). Note that the Bij and Bji parameters
-                    are the same. (Bij = 8*pi**2*Uij)
-    Biso        --  Isotropic ADP (ParameterAdapter).
+    Managed Parameters
+    ------------------
+    occupancy
+        Occupancy of the atom on its crystal location
+        (ParameterAdapter)
+    occ
+        Proxy for occupancy (ParameterProxy).
+        U11, U22, U33, U12, U21, U23, U32, U13, U31
+        --  Anisotropic displacement factor for atom (ParameterAdapter
+        or ParameterProxy). Note that the Uij and Uji parameters
+        are the same.
+    Uiso
+        Isotropic ADP (ParameterAdapter).
+        B11, B22, B33, B12, B21, B23, B32, B13, B31
+        --  Anisotropic displacement factor for atom (ParameterAdapter
+        or ParameterProxy). Note that the Bij and Bji parameters
+        are the same. (Bij = 8*pi**2*Uij)
+    Biso
+        Isotropic ADP (ParameterAdapter).
     """
 
     def __init__(self, name, atom):
         """Initialize.
 
-        atom    --  A diffpy.structure.Atom instance
+        Attributes
+        ----------
+        atom
+            A diffpy.structure.Atom instance
         """
         ParameterSet.__init__(self, name)
         self.atom = atom
@@ -168,18 +178,25 @@ class DiffpyLatticeParSet(ParameterSet):
     this class for base attributes.
 
     Attributes
-    lattice     --  The diffpy.structure.Lattice this is adapting
-    name        --  Always "lattice"
-    angunits    --  "deg", the units of angle
+    ----------
+    lattice
+        The diffpy.structure.Lattice this is adapting
+    name
+        Always "lattice"
+    angunits
+        "deg", the units of angle
 
-    Managed Parameters:
-    a, b, c, alpha, beta, gamma --  The lattice parameters (ParameterAdapter).
+Managed Parameters
+------------------
     """
 
     def __init__(self, lattice):
         """Initialize.
 
-        lattice --  A diffpy.structure.Lattice instance
+        Attributes
+        ----------
+        lattice
+            A diffpy.structure.Lattice instance
         """
         ParameterSet.__init__(self, "lattice")
         self.angunits = "deg"
@@ -224,24 +241,34 @@ class DiffpyStructureParSet(SrRealParSet):
     This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
     this class for base attributes.
 
-    Attributes:
-    atoms   --  The list of DiffpyAtomParSets, provided for convenience.
-    stru    --  The diffpy.structure.Structure this is adapting
+    Attributes
+    ----------
+    atoms
+        The list of DiffpyAtomParSets, provided for convenience.
+    stru
+        The diffpy.structure.Structure this is adapting
 
-    Managed ParameterSets:
-    lattice     --  The managed DiffpyLatticeParSet
-    <el><idx>   --  A managed DiffpyAtomParSets. <el> is the atomic element and
-                    <idx> is the index of that element in the structure,
-                    starting from zero. Thus, for nickel in P1 symmetry, the
-                    managed DiffpyAtomParSets will be named "Ni0", "Ni1", "Ni2"
-                    and "Ni3".
+    Managed ParameterSets
+    ---------------------
+    lattice
+        The managed DiffpyLatticeParSet
+    <el><idx>
+        A managed DiffpyAtomParSets. <el> is the atomic element and
+        <idx> is the index of that element in the structure,
+        starting from zero. Thus, for nickel in P1 symmetry, the
+        managed DiffpyAtomParSets will be named "Ni0", "Ni1", "Ni2"
+        and "Ni3".
     """
 
     def __init__(self, name, stru):
         """Initialize.
 
-        name    --  A name for the structure
-        stru    --  A diffpy.structure.Structure instance
+        Attributes
+        ----------
+        name
+            A name for the structure
+        stru
+            A diffpy.structure.Structure instance
         """
         SrRealParSet.__init__(self, name)
         self.stru = stru

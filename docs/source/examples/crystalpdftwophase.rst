@@ -4,4 +4,4 @@
 crystalpdftwophase.py
 ========================
 
-.. literalinclude:: ../../../examples/crystalpdftwophase.py
+.. literalinclude:: ../../examples/crystalpdftwophase.py

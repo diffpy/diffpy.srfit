@@ -180,7 +180,7 @@ external program before or after interfacing with SrFit. An example of a
 customized Profile is the ``SASProfile`` class in the
 ``diffpy.srfit.sas.sasprofile`` module:
 
-.. literalinclude:: ../../../src/diffpy/srfit/sas/sasprofile.py
+.. literalinclude:: /../../src/diffpy/srfit/sas/sasprofile.py
    :pyobject: SASProfile
 
 The ``__init__`` method sets the ``xobs``, ``yobs`` and ``dyobs`` attributes of
@@ -218,7 +218,7 @@ to keep the restraint cost comparable to the residual of a single data point.
 ``Restraint`` whose penalty is the root-mean-square deviation from the expected
 and calculated BVS of a structure.
 
-.. literalinclude:: ../../../src/diffpy/srfit/structure/bvsrestraint.py
+.. literalinclude:: ../../src/diffpy/srfit/structure/bvsrestraint.py
    :pyobject: BVSRestraint
 
 Note that the penalty scaling is optional (selected by the `scaled` flag) and
@@ -230,7 +230,7 @@ restrainable object. A ``BVSRestraint`` is used to restrain a ``SrRealParSet``,
 which is a ``ParameterSet`` wrapper base class for SrReal-compatible
 structures.  The restraint is applied with the ``restrainBVS`` method.
 
-.. literalinclude:: ../../../src/diffpy/srfit/structure/srrealparset.py
+.. literalinclude:: ../../src/diffpy/srfit/structure/srrealparset.py
    :pyobject: SrRealParSet.restrainBVS
 
 The purpose of the method is to create the custom ``Restraint`` object,

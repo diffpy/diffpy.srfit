@@ -4,4 +4,4 @@
 nppdfcrystal.py
 ========================
 
-.. literalinclude:: ../../../examples/nppdfcrystal.py
+.. literalinclude:: ../../examples/nppdfcrystal.py

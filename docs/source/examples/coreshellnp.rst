@@ -4,4 +4,4 @@
 coreshellnp.py
 ========================
 
-.. literalinclude:: ../../../examples/coreshellnp.py
+.. literalinclude:: ../../examples/coreshellnp.py

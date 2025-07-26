@@ -345,7 +345,10 @@ class UFuncOperator(Operator):
 
         Arguments
 
-        op  --  A numpy ufunc
+        Attributes
+        ----------
+        op
+            A numpy ufunc
         """
         Operator.__init__(self, name=op.__name__)
         self.symbol = op.__name__

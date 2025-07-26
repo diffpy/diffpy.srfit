@@ -30,11 +30,16 @@ class Argument(Literal, ArgumentABC):
     """Argument class.
 
     Attributes
-    name    --  A name for this Argument.
-    const   --  A flag indicating whether this is considered a constant.
-                Constants may be given special treatment by the Visitors.
-    _value  --  The value of the Argument. Modified with 'setValue'.
-    value   --  Property for 'getValue' and 'setValue'.
+    ----------
+    name
+        A name for this Argument.
+    const
+        A flag indicating whether this is considered a constant.
+        Constants may be given special treatment by the Visitors.
+    _value
+        The value of the Argument. Modified with 'setValue'.
+    value
+        Property for 'getValue' and 'setValue'.
     """
 
     const = None
@@ -57,7 +62,10 @@ class Argument(Literal, ArgumentABC):
     def setValue(self, val):
         """Set the value of the Literal.
 
-        val --  The value to assign
+        Attributes
+        ----------
+        val
+            The value to assign
         """
         if isinstance(self._value, ndarray) or isinstance(val, ndarray):
             notequiv = not array_equal(self._value, val)

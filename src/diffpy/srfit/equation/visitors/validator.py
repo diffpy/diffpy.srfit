@@ -34,10 +34,13 @@ msg = "'%s' does not have the interface required by '%s'"
 class Validator(Visitor):
     """Validator error for checking validity of an equation tree.
 
-    Attributes:
-    errors  --  List of strings describing errors.
-    _nin    --  Variable for counting the number input arguments for an
-                operator.
+    Attributes
+    ----------
+    errors
+        List of strings describing errors.
+    _nin
+        Variable for counting the number input arguments for an
+        operator.
     """
 
     def __init__(self):

@@ -27,26 +27,40 @@ class SASParameter(Parameter):
     """Class adapting a sasmodel parameter to srfit Parameter.
 
     Attributes
-    name    --  A name for this Parameter.
-    const   --  A flag indicating whether this is considered a constant.
-    _value  --  The value of the Parameter. Modified with 'setValue'.
-    value   --  Property for 'getValue' and 'setValue'.
-    constrained --  A flag indicating if the Parameter is constrained
-                (default False).
-    bounds  --  A 2-list defining the bounds on the Parameter. This can be
-                used by some optimizers when the Parameter is varied. These
-                bounds are unrelated to restraints on a Parameter.
-    _model  --  The BaseModel to which the underlying parameter belongs.
-    _parname    --  The name of the underlying BaseModel parameter.
+    ----------
+    name
+        A name for this Parameter.
+    const
+        A flag indicating whether this is considered a constant.
+    _value
+        The value of the Parameter. Modified with 'setValue'.
+    value
+        Property for 'getValue' and 'setValue'.
+    constrained
+        A flag indicating if the Parameter is constrained
+        (default False).
+    bounds
+        A 2-list defining the bounds on the Parameter. This can be
+        used by some optimizers when the Parameter is varied. These
+        bounds are unrelated to restraints on a Parameter.
+    _model
+        The BaseModel to which the underlying parameter belongs.
+    _parname
+        The name of the underlying BaseModel parameter.
     """
 
     def __init__(self, name, model, parname=None):
         """Create the Parameter.
 
-        name    --  Name of the Parameter
-        model   --  The BaseModel to which the underlying parameter belongs
-        parname --  Name of parameter used by the model. If this is None
-                    (default), then name is used.
+        Attributes
+        ----------
+        name
+            Name of the Parameter
+        model
+            The BaseModel to which the underlying parameter belongs
+        parname
+            Name of parameter used by the model. If this is None
+            (default), then name is used.
         """
         self._parname = parname or name
         val = model.getParam(self._parname)

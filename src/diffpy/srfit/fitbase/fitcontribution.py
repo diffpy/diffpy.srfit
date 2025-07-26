@@ -40,29 +40,47 @@ class FitContribution(ParameterSet):
     FitContribution.
 
     Attributes
-    name            --  A name for this FitContribution.
-    profile         --  A Profile that holds the measured (and calculated)
-                        signal.
-    _calculators    --  A managed dictionary of Calculators, indexed by name.
-    _constraints    --  A set of constrained Parameters. Constraints can be
-                        added using the 'constrain' methods.
-    _generators     --  A managed dictionary of ProfileGenerators.
-    _parameters     --  A managed OrderedDict of parameters.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' method.
-    _parsets        --  A managed dictionary of ParameterSets.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from string
-    _eq             --  The FitContribution equation that will be optimized.
-    _reseq          --  The residual equation.
-    _xname          --  Name of the x-variable
-    _yname          --  Name of the y-variable
-    _dyname         --  Name of the dy-variable
+    ----------
+    name
+        A name for this FitContribution.
+    profile
+        A Profile that holds the measured (and calculated)
+        signal.
+    _calculators
+        A managed dictionary of Calculators, indexed by name.
+    _constraints
+        A set of constrained Parameters. Constraints can be
+        added using the 'constrain' methods.
+    _generators
+        A managed dictionary of ProfileGenerators.
+    _parameters
+        A managed OrderedDict of parameters.
+    _restraints
+        A set of Restraints. Restraints can be added using the
+        'restrain' method.
+    _parsets
+        A managed dictionary of ParameterSets.
+    _eqfactory
+        A diffpy.srfit.equation.builder.EquationFactory
+        instance that is used to create constraints and
+        restraints from string
+    _eq
+        The FitContribution equation that will be optimized.
+    _reseq
+        The residual equation.
+    _xname
+        Name of the x-variable
+    _yname
+        Name of the y-variable
+    _dyname
+        Name of the dy-variable
 
     Properties
-    names           --  Variable names (read only). See getNames.
-    values          --  Variable values (read only). See getValues.
+    ----------
+    names
+        Variable names (read only). See getNames.
+    values
+        Variable values (read only). See getValues.
     """
 
     def __init__(self, name):
@@ -82,20 +100,26 @@ class FitContribution(ParameterSet):
     def setProfile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
-        profile --  A Profile that specifies the calculation points and that
-                    will store the calculated signal.
-        xname   --  The name of the independent variable from the Profile. If
-                    this is None (default), then the name specified by the
-                    Profile for this parameter will be used.  This variable is
-                    usable within string equations with the specified name.
-        yname   --  The name of the observed Profile.  If this is None
-                    (default), then the name specified by the Profile for this
-                    parameter will be used.  This variable is usable within
-                    string equations with the specified name.
-        dyname  --  The name of the uncertainty in the observed Profile. If
-                    this is None (default), then the name specified by the
-                    Profile for this parameter will be used.  This variable is
-                    usable within string equations with the specified name.
+        Attributes
+        ----------
+        profile
+            A Profile that specifies the calculation points and that
+            will store the calculated signal.
+        xname
+            The name of the independent variable from the Profile. If
+            this is None (default), then the name specified by the
+            Profile for this parameter will be used.  This variable is
+            usable within string equations with the specified name.
+        yname
+            The name of the observed Profile.  If this is None
+            (default), then the name specified by the Profile for this
+            parameter will be used.  This variable is usable within
+            string equations with the specified name.
+        dyname
+            The name of the uncertainty in the observed Profile. If
+            this is None (default), then the name specified by the
+            Profile for this parameter will be used.  This variable is
+            usable within string equations with the specified name.
         """
         # Enforce type of the profile argument
         if not isinstance(profile, Profile):
@@ -145,9 +169,13 @@ class FitContribution(ParameterSet):
         Calling addProfileGenerator sets the profile equation to call the
         calculator and if there is not a profile equation already.
 
-        gen     --  A ProfileGenerator instance
-        name    --  A name for the calculator. If name is None (default), then
-                    the ProfileGenerator's name attribute will be used.
+        Attributes
+        ----------
+        gen
+            A ProfileGenerator instance
+        name
+            A name for the calculator. If name is None (default), then
+            the ProfileGenerator's name attribute will be used.
 
         Raises ValueError if the ProfileGenerator has no name.
         Raises ValueError if the ProfileGenerator has the same name as some
@@ -179,14 +207,18 @@ class FitContribution(ParameterSet):
         for this FitContribution.  The equation will be usable within
         setResidualEquation as "eq", and it takes no arguments.
 
-        eqstr   --  A string representation of the equation. Any Parameter
-                    registered by addParameter or setProfile, or function
-                    registered by setCalculator, registerFunction or
-                    registerStringFunction can be can be used in the equation
-                    by name. Other names will be turned into Parameters of this
-                    FitContribution.
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not registered (default {}).
+        Attributes
+        ----------
+        eqstr
+            A string representation of the equation. Any Parameter
+            registered by addParameter or setProfile, or function
+            registered by setCalculator, registerFunction or
+            registerStringFunction can be can be used in the equation
+            by name. Other names will be turned into Parameters of this
+            FitContribution.
+        ns
+            A dictionary of Parameters, indexed by name, that are used
+            in the eqstr, but not registered (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -226,10 +258,13 @@ class FitContribution(ParameterSet):
     def setResidualEquation(self, eqstr):
         """Set the residual equation for the FitContribution.
 
-        eqstr   --  A string representation of the residual. If eqstr is None
-                    (default), then the previous residual equation will be
-                    used, or the chi2 residual will be used if that does not
-                    exist.
+        Attributes
+        ----------
+        eqstr
+            A string representation of the residual. If eqstr is None
+            (default), then the previous residual equation will be
+            used, or the chi2 residual will be used if that does not
+            exist.
 
         Two residuals are preset for convenience, "chiv" and "resv".
         chiv is defined such that dot(chiv, chiv) = chi^2.

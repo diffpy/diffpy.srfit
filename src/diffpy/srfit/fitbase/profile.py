@@ -42,29 +42,46 @@ class Profile(Observable, Validatable):
 
     Attributes
 
-    _xobs   --  A numpy array of the observed independent variable (default
-                None)
-    xobs    --  Read-only property of _xobs.
-    _yobs   --  A numpy array of the observed signal (default None)
-    yobs    --  Read-only property of _yobs.
-    _dyobs  --  A numpy array of the uncertainty of the observed signal
-                (default None, optional).
-    dyobs   --  Read-only property of _dyobs.
-    x       --  A numpy array of the calculated independent variable (default
-                None, property for xpar accessors).
-    y       --  The profile over the calculation range (default None, property
-                for ypar accessors).
-    dy      --  The uncertainty in the profile over the calculation range
-                (default None, property for dypar accessors).
-    ycalc   --  A numpy array of the calculated signal (default None).
-    xpar    --  A Parameter that stores x (named "x").
-    ypar    --  A Parameter that stores y (named "y").
-    dypar   --  A Parameter that stores dy (named "dy").
-    ycpar   --  A Parameter that stores ycalc (named "ycalc"). This is
-                not observed by the profile, but it is present so it can be
-                constrained to.
-    meta    --  A dictionary of metadata. This is only set if provided by a
-                parser.
+    Attributes
+    ----------
+    _xobs
+        A numpy array of the observed independent variable (default
+        None)
+    xobs
+        Read-only property of _xobs.
+    _yobs
+        A numpy array of the observed signal (default None)
+    yobs
+        Read-only property of _yobs.
+    _dyobs
+        A numpy array of the uncertainty of the observed signal
+        (default None, optional).
+    dyobs
+        Read-only property of _dyobs.
+    x
+        A numpy array of the calculated independent variable (default
+        None, property for xpar accessors).
+    y
+        The profile over the calculation range (default None, property
+        for ypar accessors).
+    dy
+        The uncertainty in the profile over the calculation range
+        (default None, property for dypar accessors).
+    ycalc
+        A numpy array of the calculated signal (default None).
+    xpar
+        A Parameter that stores x (named "x").
+    ypar
+        A Parameter that stores y (named "y").
+    dypar
+        A Parameter that stores dy (named "dy").
+    ycpar
+        A Parameter that stores ycalc (named "ycalc"). This is
+        not observed by the profile, but it is present so it can be
+        constrained to.
+    meta
+        A dictionary of metadata. This is only set if provided by a
+        parser.
     """
 
     def __init__(self):
@@ -122,11 +139,15 @@ class Profile(Observable, Validatable):
         """Set the observed profile.
 
         Arguments
-        xobs    --  Numpy array of the independent variable
-        yobs    --  Numpy array of the observed signal.
-        dyobs   --  Numpy array of the uncertainty in the observed signal. If
-                    dyobs is None (default), it will be set to 1 at each
-                    observed xobs.
+        ---------
+        xobs
+            Numpy array of the independent variable
+        yobs
+            Numpy array of the observed signal.
+        dyobs
+            Numpy array of the uncertainty in the observed signal. If
+            dyobs is None (default), it will be set to 1 at each
+            observed xobs.
 
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
@@ -260,8 +281,10 @@ class Profile(Observable, Validatable):
         """Set the calculation points.
 
         Arguments
-        x   --  A non-empty numpy array containing the calculation points. If
-                xobs exists, the bounds of x will be limited to its bounds.
+        ---------
+        x
+            A non-empty numpy array containing the calculation points. If
+            xobs exists, the bounds of x will be limited to its bounds.
 
         This will create y and dy on the specified grid if xobs, yobs and
         dyobs exist.
@@ -391,10 +414,14 @@ class Profile(Observable, Validatable):
 def rebinArray(A, xold, xnew):
     """Rebin the an array by interpolating over the new x range.
 
-    Arguments:
-    A       --  Array to interpolate
-    xold    --  Old sampling array
-    xnew    --  New sampling array
+    Arguments
+    ---------
+    A
+        Array to interpolate
+    xold
+        Old sampling array
+    xnew
+        New sampling array
 
     This uses cubic spline interpolation.
 

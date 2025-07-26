@@ -35,45 +35,74 @@ class PDFParser(ProfileParser):
 
     Attributes
 
-    _format     --  Name of the data format that this parses (string, default
-                    ""). The format string is a unique identifier for the data
-                    format handled by the parser.
-    _banks      --  The data from each bank. Each bank contains a
-                    (x, y, dx, dy) tuple:
-                    x       --  A numpy array containing the independent
-                                variable read from the file.
-                    y       --  A numpy array containing the profile
-                                from the file.
-                    dx      --  A numpy array containing the uncertainty in x
-                                read from the file. This is 0 if the
-                                uncertainty cannot be read.
-                    dy      --  A numpy array containing the uncertainty read
-                                from the file. This is 0 if the uncertainty
-                                cannot be read.
-    _x          --  Independent variable from the chosen bank
-    _y          --  Profile from the chosen bank
-    _dx         --  Uncertainty in independent variable from the chosen bank
-    _dy         --  Uncertainty in profile from the chosen bank
-    _meta       --  A dictionary containing metadata read from the file.
+    Attributes
+    ----------
+    _format
+        Name of the data format that this parses (string, default
+        ""). The format string is a unique identifier for the data
+        format handled by the parser.
+    _banks
+        The data from each bank. Each bank contains a
+        (x, y, dx, dy) tuple:
+                    x
+        A numpy array containing the independent
+        variable read from the file.
+                    y
+        A numpy array containing the profile
+        from the file.
+                    dx
+        A numpy array containing the uncertainty in x
+        read from the file. This is 0 if the
+        uncertainty cannot be read.
+                    dy
+        A numpy array containing the uncertainty read
+        from the file. This is 0 if the uncertainty
+        cannot be read.
+    _x
+        Independent variable from the chosen bank
+    _y
+        Profile from the chosen bank
+    _dx
+        Uncertainty in independent variable from the chosen bank
+    _dy
+        Uncertainty in profile from the chosen bank
+    _meta
+        A dictionary containing metadata read from the file.
 
     General Metadata
 
-    filename    --  The name of the file from which data was parsed. This key
-                    will not exist if data was not read from file.
-    nbanks      --  The number of banks parsed.
-    bank        --  The chosen bank number.
+    Attributes
+    ----------
+    filename
+        The name of the file from which data was parsed. This key
+        will not exist if data was not read from file.
+    nbanks
+        The number of banks parsed.
+    bank
+        The chosen bank number.
 
     Metadata - These may appear in the metadata dictionary
 
-    stype       --  The scattering type ("X", "N")
-    qmin        --  Minimum scattering vector (float)
-    qmax        --  Maximum scattering vector (float)
-    qdamp       --  Resolution damping factor (float)
-    qbroad      --  Resolution broadening factor (float)
-    spdiameter  --  Nanoparticle diameter (float)
-    scale       --  Data scale (float)
-    temperature --  Temperature (float)
-    doping      --  Doping (float)
+    Attributes
+    ----------
+    stype
+        The scattering type ("X", "N")
+    qmin
+        Minimum scattering vector (float)
+    qmax
+        Maximum scattering vector (float)
+    qdamp
+        Resolution damping factor (float)
+    qbroad
+        Resolution broadening factor (float)
+    spdiameter
+        Nanoparticle diameter (float)
+    scale
+        Data scale (float)
+    temperature
+        Temperature (float)
+    doping
+        Doping (float)
     """
 
     _format = "PDF"
@@ -86,7 +115,9 @@ class PDFParser(ProfileParser):
         This wipes out the currently loaded data and selected bank number.
 
         Arguments
-        patstring   --  A string containing the pattern
+        ---------
+        patstring
+            A string containing the pattern
 
         Raises ParseError if the string cannot be parsed
         """

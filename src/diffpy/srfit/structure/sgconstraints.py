@@ -41,24 +41,33 @@ def constrainAsSpaceGroup(
     symmetry.  Passed scatterers are explicitly constrained to the
     specified space group. The ADPs and lattice may be constrained as well.
 
-    Arguments:
-    phase       --  A BaseStructure object.
-    spacegroup  --  The space group number, symbol or an instance of
-                    SpaceGroup class from diffpy.structure package.
-    sgoffset    --  Optional offset for sg origin (default [0, 0, 0]).
-    scatterers  --  The scatterer ParameterSets to constrain. If scatterers
-                    is None (default), then all scatterers accessible from
-                    phase.getScatterers will be constrained.
-    constrainlat    --  Flag indicating whether to constrain the lattice
-                    (default True).
-    constrainadps   --  Flag indicating whether to constrain the ADPs
-                    (default True).
-    adpsymbols  --  A list of the ADP names. By default this is equal to
-                    diffpy.structure.symmetryutilities.stdUsymbols (U11,
-                    U22, etc.). The names must be given in the same order
-                    as stdUsymbols.
-    isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
-                isotropic ADPs will be constrained via the anisotropic ADPs.
+    Arguments
+    ---------
+    phase
+        A BaseStructure object.
+    spacegroup
+        The space group number, symbol or an instance of
+        SpaceGroup class from diffpy.structure package.
+    sgoffset
+        Optional offset for sg origin (default [0, 0, 0]).
+    scatterers
+        The scatterer ParameterSets to constrain. If scatterers
+        is None (default), then all scatterers accessible from
+        phase.getScatterers will be constrained.
+    constrainlat
+        Flag indicating whether to constrain the lattice
+        (default True).
+    constrainadps
+        Flag indicating whether to constrain the ADPs
+        (default True).
+    adpsymbols
+        A list of the ADP names. By default this is equal to
+        diffpy.structure.symmetryutilities.stdUsymbols (U11,
+        U22, etc.). The names must be given in the same order
+        as stdUsymbols.
+    isosymbol
+        Symbol for isotropic ADP (default "Uiso"). If None,
+        isotropic ADPs will be constrained via the anisotropic ADPs.
 
     New Parameters that are used in constraints are created within a
     SpaceGroupParameters object, which is returned from this function.
@@ -68,22 +77,30 @@ def constrainAsSpaceGroup(
 
     The lattice constraints are applied as following.
 
-    Crystal System:
-    Triclinic       --  No constraints.
-    Monoclinic      --  alpha and beta are fixed to 90 unless alpha != beta and
-                        alpha == gamma, in which case alpha and gamma are fixed
-                        to 90.
-    Orthorhombic    --  alpha, beta and gamma are fixed to 90.
-    Tetragonal      --  b is constrained to a and alpha, beta and gamma are
-                        fixed to 90.
-    Trigonal        --  If gamma == 120, then b is constrained to a, alpha
-                        and beta are fixed to 90 and gamma is fixed to 120.
-                        Otherwise, b and c are constrained to a, beta and gamma
-                        are fixed to alpha.
-    Hexagonal       --  b is constrained to a, alpha and beta are fixed to 90
-                        and gamma is fixed to 120.
-    Cubic           --  b and c are constrained to a, and alpha, beta and
-                        gamma are fixed to 90.
+    Crystal System
+    --------------
+    Triclinic
+        No constraints.
+    Monoclinic
+        alpha and beta are fixed to 90 unless alpha != beta and
+        alpha == gamma, in which case alpha and gamma are fixed
+        to 90.
+    Orthorhombic
+        alpha, beta and gamma are fixed to 90.
+    Tetragonal
+        b is constrained to a and alpha, beta and gamma are
+        fixed to 90.
+    Trigonal
+        If gamma == 120, then b is constrained to a, alpha
+        and beta are fixed to 90 and gamma is fixed to 120.
+        Otherwise, b and c are constrained to a, beta and gamma
+        are fixed to alpha.
+    Hexagonal
+        b is constrained to a, alpha and beta are fixed to 90
+        and gamma is fixed to 120.
+    Cubic
+        b and c are constrained to a, and alpha, beta and
+        gamma are fixed to 90.
     """
 
     from diffpy.structure.spacegroups import GetSpaceGroup, SpaceGroup
@@ -118,7 +135,9 @@ def _constrainAsSpaceGroup(
     """Restricted interface to constrainAsSpaceGroup.
 
     Arguments: As constrainAsSpaceGroup, except
-    sg          --  diffpy.structure.spacegroups.SpaceGroup instance
+    -------------------------------------------
+    sg
+        diffpy.structure.spacegroups.SpaceGroup instance
     """
 
     from diffpy.structure.symmetryutilities import stdUsymbols
@@ -155,7 +174,9 @@ class BaseSpaceGroupParameters(RecipeContainer):
     scripting purposes.
 
     Attributes
-    name    --  "sgpars"
+    ----------
+    name
+        "sgpars"
     """
 
     def __init__(self, name="sgpars"):
@@ -169,9 +190,13 @@ class BaseSpaceGroupParameters(RecipeContainer):
     def addParameter(self, par, check=True):
         """Store a Parameter.
 
-        par     --  The Parameter to be stored.
-        check   --  If True (default), a ValueError is raised a Parameter of
-                    the specified name has already been inserted.
+        Attributes
+        ----------
+        par
+            The Parameter to be stored.
+        check
+            If True (default), a ValueError is raised a Parameter of
+            the specified name has already been inserted.
 
         Raises ValueError if the Parameter has no name.
         """
@@ -192,24 +217,39 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     attribute access of a ParameterSet.
 
     Attributes
-    name    --  "sgpars"
-    phase   --  The constrained BaseStructure object.
-    sg      --  The diffpy.structure.spacegroups.SpaceGroup object
-                corresponding to the space group.
-    sgoffset    --  Optional offset for the space group origin.
-    scatterers  --  The constrained scatterer ParameterSets.
-    constrainlat    --  Flag indicating whether the lattice is constrained.
-    constrainadps   --  Flag indicating whether the ADPs are constrained.
-    adpsymbols  --  A list of the ADP names.
-    _xyzpars    --  BaseSpaceGroupParameters of free xyz Parameters that are
-                    constrained to.
-    xyzpars     --  Property that populates _xyzpars.
-    _latpars    --  BaseSpaceGroupParameters of free lattice Parameters that
-                    are constrained to.
-    latpars     --  Property that populates _latpars.
-    _adppars    --  BaseSpaceGroupParameters of free ADPs that are constrained
-                    to.
-    adppars     --  Property that populates _adppars.
+    ----------
+    name
+        "sgpars"
+    phase
+        The constrained BaseStructure object.
+    sg
+        The diffpy.structure.spacegroups.SpaceGroup object
+        corresponding to the space group.
+    sgoffset
+        Optional offset for the space group origin.
+    scatterers
+        The constrained scatterer ParameterSets.
+    constrainlat
+        Flag indicating whether the lattice is constrained.
+    constrainadps
+        Flag indicating whether the ADPs are constrained.
+    adpsymbols
+        A list of the ADP names.
+    _xyzpars
+        BaseSpaceGroupParameters of free xyz Parameters that are
+        constrained to.
+    xyzpars
+        Property that populates _xyzpars.
+    _latpars
+        BaseSpaceGroupParameters of free lattice Parameters that
+        are constrained to.
+    latpars
+        Property that populates _latpars.
+    _adppars
+        BaseSpaceGroupParameters of free ADPs that are constrained
+        to.
+    adppars
+        Property that populates _adppars.
     """
 
     def __init__(
@@ -225,22 +265,31 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     ):
         """Create the SpaceGroupParameters object.
 
-        Arguments:
-        phase   --  A BaseStructure object to be constrained.
-        sg      --  The space group number or symbol (compatible with
-                    diffpy.structure.spacegroups.GetSpaceGroup.
-        sgoffset    --  Optional offset for sg origin.
-        scatterers  --  The scatterer ParameterSets to constrain. If scatterers
-                    is None, then all scatterers accessible from
-                    phase.getScatterers will be constrained.
-        constrainlat    --  Flag indicating whether to constrain the lattice.
-        constrainadps   --  Flag indicating whether to constrain the ADPs.
-        adpsymbols  --  A list of the ADP names. The names must be given in the
-                    same order as
-                    diffpy.structure.symmetryutilities.stdUsymbols.
-        isosymbol   --  Symbol for isotropic ADP (default "Uiso"). If None,
-                    isotropic ADPs will be constrained via the anisotropic
-                    ADPs.
+        Arguments
+        ---------
+        phase
+            A BaseStructure object to be constrained.
+        sg
+            The space group number or symbol (compatible with
+            diffpy.structure.spacegroups.GetSpaceGroup.
+        sgoffset
+            Optional offset for sg origin.
+        scatterers
+            The scatterer ParameterSets to constrain. If scatterers
+            is None, then all scatterers accessible from
+            phase.getScatterers will be constrained.
+        constrainlat
+            Flag indicating whether to constrain the lattice.
+        constrainadps
+            Flag indicating whether to constrain the ADPs.
+        adpsymbols
+            A list of the ADP names. The names must be given in the
+            same order as
+            diffpy.structure.symmetryutilities.stdUsymbols.
+        isosymbol
+            Symbol for isotropic ADP (default "Uiso"). If None,
+            isotropic ADPs will be constrained via the anisotropic
+            ADPs.
         """
         BaseSpaceGroupParameters.__init__(self)
         self._latpars = None
@@ -421,7 +470,10 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _constrainXYZs(self, positions):
         """Constrain the positions.
 
-        positions   --  The coordinates of the scatterers.
+        Attributes
+        ----------
+        positions
+            The coordinates of the scatterers.
         """
 
         from diffpy.structure.symmetryutilities import SymmetryConstraints
@@ -461,7 +513,10 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _constrainADPs(self, positions):
         """Constrain the ADPs.
 
-        positions   --  The coordinates of the scatterers.
+        Attributes
+        ----------
+        positions
+            The coordinates of the scatterers.
         """
 
         from diffpy.structure.symmetryutilities import (
@@ -561,8 +616,12 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def __addPar(self, parname, par):
         """Constrain a parameter via proxy with a specified name.
 
-        par     --  Parameter to constrain
-        idx     --  Index to identify scatterer from which par comes
+        Attributes
+        ----------
+        par
+            Parameter to constrain
+        idx
+            Index to identify scatterer from which par comes
         """
         newpar = ParameterProxy(parname, par)
         self.addParameter(newpar)
@@ -711,11 +770,18 @@ _constraintMap = {
 def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     """Constrain a parameter according to a formula.
 
-    parname     --  Name of parameter
-    formula     --  Constraint formula
-    scatterer   --  scatterer containing par of parname
-    idx         --  Index to identify scatterer from which par comes
-    ns          --  namespace to draw extra names from (default {})
+    Attributes
+    ----------
+    parname
+        Name of parameter
+    formula
+        Constraint formula
+    scatterer
+        scatterer containing par of parname
+    idx
+        Index to identify scatterer from which par comes
+    ns
+        namespace to draw extra names from (default {})
 
     Returns the parameter if it is free.
     """

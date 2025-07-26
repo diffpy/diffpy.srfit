@@ -56,15 +56,22 @@ class FitHook(object):
     def precall(self, recipe):
         """This is called within FitRecipe.residual, before the calculation.
 
-        recipe  --  The FitRecipe instance
+        Attributes
+        ----------
+        recipe
+            The FitRecipe instance
         """
         return
 
     def postcall(self, recipe, chiv):
         """This is called within FitRecipe.residual, after the calculation.
 
-        recipe  --  The FitRecipe instance
-        chiv    --  The residual vector
+        Attributes
+        ----------
+        recipe
+            The FitRecipe instance
+        chiv
+            The residual vector
         """
         return
 
@@ -80,12 +87,20 @@ class PrintFitHook(FitHook):
 
     Attributes
 
-    count   --  The number of times the residual has been called (default 0).
-    verbose --  An integer telling how verbose to be (default 1).
-                0   --  print nothing
-                1   --  print the count during the precall
-                2   --  print the residual during the postcall
-                >=3 --  print the variables during the postcall
+    Attributes
+    ----------
+    count
+        The number of times the residual has been called (default 0).
+    verbose
+        An integer telling how verbose to be (default 1).
+                0
+        print nothing
+                1
+        print the count during the precall
+                2
+        print the residual during the postcall
+                >=3
+        print the variables during the postcall
     """
 
     def __init__(self):
@@ -108,7 +123,10 @@ class PrintFitHook(FitHook):
     def precall(self, recipe):
         """This is called within FitRecipe.residual, before the calculation.
 
-        recipe  --  The FitRecipe instance
+        Attributes
+        ----------
+        recipe
+            The FitRecipe instance
         """
         self.count += 1
         if self.verbose > 0:
@@ -118,8 +136,12 @@ class PrintFitHook(FitHook):
     def postcall(self, recipe, chiv):
         """This is called within FitRecipe.residual, after the calculation.
 
-        recipe  --  The FitRecipe instance
-        chiv    --  The residual vector
+        Attributes
+        ----------
+        recipe
+            The FitRecipe instance
+        chiv
+            The residual vector
         """
         if self.verbose < 2:
             return
@@ -209,8 +231,12 @@ class PlotFitHook(FitHook):
 
         Find data and plot it.
 
-        recipe  --  The FitRecipe instance
-        chiv    --  The residual vector
+        Attributes
+        ----------
+        recipe
+            The FitRecipe instance
+        chiv
+            The residual vector
         """
         FitHook.postcall(self, recipe, chiv)
         import pylab

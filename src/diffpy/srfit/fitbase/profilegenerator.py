@@ -50,37 +50,60 @@ class ProfileGenerator(Operator, ParameterSet):
     an evaluation network.
 
     Attributes
-    name            --  A name for this organizer.
-    profile         --  A Profile instance that contains the calculation range
-                        and will contain the generated profile.
-    meta            --  A dictionary of metadata needed by the generator.
-    eq              --  The Equation object used to wrap this ProfileGenerator.
-                        This is set when the ProfileGenerator is added to a
-                        FitContribution.
-    _calculators    --  A managed dictionary of Calculators, indexed by name.
-    _constraints    --  A set of constrained Parameters. Constraints can be
-                        added using the 'constrain' methods.
-    _parameters     --  A managed OrderedDict of contained Parameters.
-    _parsets        --  A managed dictionary of ParameterSets.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used create Equations from string.
+    ----------
+    name
+        A name for this organizer.
+    profile
+        A Profile instance that contains the calculation range
+        and will contain the generated profile.
+    meta
+        A dictionary of metadata needed by the generator.
+    eq
+        The Equation object used to wrap this ProfileGenerator.
+        This is set when the ProfileGenerator is added to a
+        FitContribution.
+    _calculators
+        A managed dictionary of Calculators, indexed by name.
+    _constraints
+        A set of constrained Parameters. Constraints can be
+        added using the 'constrain' methods.
+    _parameters
+        A managed OrderedDict of contained Parameters.
+    _parsets
+        A managed dictionary of ParameterSets.
+    _restraints
+        A set of Restraints. Restraints can be added using the
+        'restrain' or 'confine' methods.
+    _eqfactory
+        A diffpy.srfit.equation.builder.EquationFactory
+        instance that is used create Equations from string.
 
     Operator Attributes
-    args    --  List of Literal arguments, set with 'addLiteral'
-    name    --  A name for this operator. e.g. "add" or "sin"
-    nin     --  Number of inputs (<1 means this is variable)
-    nout    --  Number of outputs
-    operation   --  Function that performs the operation. e.g. numpy.add. In
-                this case, operation is an instance method.
-    symbol  --  The symbolic representation. e.g. "+" or "sin"
-    _value  --  The value of the Operator.
-    value   --  Property for 'getValue'.
+    -------------------
+    args
+        List of Literal arguments, set with 'addLiteral'
+    name
+        A name for this operator. e.g. "add" or "sin"
+    nin
+        Number of inputs (<1 means this is variable)
+    nout
+        Number of outputs
+    operation
+        Function that performs the operation. e.g. numpy.add. In
+        this case, operation is an instance method.
+    symbol
+        The symbolic representation. e.g. "+" or "sin"
+    _value
+        The value of the Operator.
+    value
+        Property for 'getValue'.
 
     Properties
-    names           --  Variable names (read only). See getNames.
-    values          --  Variable values (read only). See getValues.
+    ----------
+    names
+        Variable names (read only). See getNames.
+    values
+        Variable values (read only). See getValues.
     """
 
     # define abstract attributes from the Operator base.
@@ -124,8 +147,11 @@ class ProfileGenerator(Operator, ParameterSet):
     def setProfile(self, profile):
         """Assign the profile.
 
-        profile --  A Profile that specifies the calculation points and which
-                    will store the calculated signal.
+        Attributes
+        ----------
+        profile
+            A Profile that specifies the calculation points and which
+            will store the calculated signal.
         """
         if self.profile is not None:
             self.profile.removeObserver(self._flush)

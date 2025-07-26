@@ -40,27 +40,41 @@ class ParameterSet(RecipeOrganizer):
     methods.
 
     Attributes
-    name            --  A name for this organizer.
-    _calculators    --  A managed dictionary of Calculators, indexed by name.
-    _constraints    --  A set of constrained Parameters. Constraints can be
-                        added using the 'constrain' methods.
-    _parameters     --  A managed OrderedDict of parameters.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' methods.
-    _parsets        --  A managed dictionary of ParameterSets.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from string equations.
+    ----------
+    name
+        A name for this organizer.
+    _calculators
+        A managed dictionary of Calculators, indexed by name.
+    _constraints
+        A set of constrained Parameters. Constraints can be
+        added using the 'constrain' methods.
+    _parameters
+        A managed OrderedDict of parameters.
+    _restraints
+        A set of Restraints. Restraints can be added using the
+        'restrain' methods.
+    _parsets
+        A managed dictionary of ParameterSets.
+    _eqfactory
+        A diffpy.srfit.equation.builder.EquationFactory
+        instance that is used to create constraints and
+        restraints from string equations.
 
     Properties
-    names           --  Variable names (read only). See getNames.
-    values          --  Variable values (read only). See getValues.
+    ----------
+    names
+        Variable names (read only). See getNames.
+    values
+        Variable values (read only). See getValues.
     """
 
     def __init__(self, name):
         """Initialize.
 
-        name    --  The name of this ParameterSet.
+        Attributes
+        ----------
+        name
+            The name of this ParameterSet.
         """
         RecipeOrganizer.__init__(self, name)
 
@@ -76,7 +90,10 @@ class ParameterSet(RecipeOrganizer):
     def addParameterSet(self, parset):
         """Add a ParameterSet to the hierarchy.
 
-        parset  --  The ParameterSet to be stored.
+        Attributes
+        ----------
+        parset
+            The ParameterSet to be stored.
 
         Raises ValueError if the ParameterSet has no name.
         Raises ValueError if the ParameterSet has the same name as some other
@@ -96,8 +113,11 @@ class ParameterSet(RecipeOrganizer):
     def setConst(self, const=True):
         """Set every parameter within the set to a constant.
 
-        const   --  Flag indicating if the parameter is constant (default
-                    True).
+        Attributes
+        ----------
+        const
+            Flag indicating if the parameter is constant (default
+            True).
         """
         for par in self.iterPars():
             par.setConst(const)

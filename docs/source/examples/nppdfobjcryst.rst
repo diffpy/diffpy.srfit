@@ -4,4 +4,4 @@
 nppdfobjcryst.py
 ========================
 
-.. literalinclude:: ../../../examples/nppdfobjcryst.py
+.. literalinclude:: ../../examples/nppdfobjcryst.py

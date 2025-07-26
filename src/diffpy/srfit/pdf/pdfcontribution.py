@@ -32,39 +32,62 @@ class PDFContribution(FitContribution):
     attributes (see setPhase).
 
     Attributes
-    name            --  A name for this FitContribution.
-    profile         --  A Profile that holds the measured (and calculated)
-                        signal.
-    _meta           --  Metadata dictionary. This is specific to this object,
-                        and not shared with the profile. This is used to record
-                        configuration options, like qmax.
-    _calculators    --  A managed dictionary of Calculators, indexed by name.
-    _constraints    --  A set of constrained Parameters. Constraints can be
-                        added using the 'constrain' methods.
-    _generators     --  A managed dictionary of ProfileGenerators.
-    _parameters     --  A managed OrderedDict of parameters.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
-    _parsets        --  A managed dictionary of ParameterSets.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from string
-    _eq             --  The FitContribution equation that will be optimized.
-    _reseq          --  The residual equation.
-    _xname          --  Name of the x-variable
-    _yname          --  Name of the y-variable
-    _dyname         --  Name of the dy-variable
+    ----------
+    name
+        A name for this FitContribution.
+    profile
+        A Profile that holds the measured (and calculated)
+        signal.
+    _meta
+        Metadata dictionary. This is specific to this object,
+        and not shared with the profile. This is used to record
+        configuration options, like qmax.
+    _calculators
+        A managed dictionary of Calculators, indexed by name.
+    _constraints
+        A set of constrained Parameters. Constraints can be
+        added using the 'constrain' methods.
+    _generators
+        A managed dictionary of ProfileGenerators.
+    _parameters
+        A managed OrderedDict of parameters.
+    _restraints
+        A set of Restraints. Restraints can be added using the
+        'restrain' or 'confine' methods.
+    _parsets
+        A managed dictionary of ParameterSets.
+    _eqfactory
+        A diffpy.srfit.equation.builder.EquationFactory
+        instance that is used to create constraints and
+        restraints from string
+    _eq
+        The FitContribution equation that will be optimized.
+    _reseq
+        The residual equation.
+    _xname
+        Name of the x-variable
+    _yname
+        Name of the y-variable
+    _dyname
+        Name of the dy-variable
 
-    Managed Parameters:
-    scale   --  Scale factor
-    qbroad  --  Resolution peak broadening term
-    qdamp   --  Resolution peak dampening term
+    Managed Parameters
+    ------------------
+    scale
+        Scale factor
+    qbroad
+        Resolution peak broadening term
+    qdamp
+        Resolution peak dampening term
     """
 
     def __init__(self, name):
         """Create the PDFContribution.
 
-        name        --  The name of the contribution.
+        Attributes
+        ----------
+        name
+            The name of the contribution.
         """
         FitContribution.__init__(self, name)
         self._meta = {}
@@ -88,8 +111,11 @@ class PDFContribution(FitContribution):
         This uses the PDFParser to load the data and then passes it to the
         built-in profile with loadParsedData.
 
-        data    --  An open file-like object, name of a file that contains data
-                    or a string containing the data.
+        Attributes
+        ----------
+        data
+            An open file-like object, name of a file that contains data
+            or a string containing the data.
         """
         # Get the data into a string
         from diffpy.srfit.util.inpututils import inputToString
@@ -154,21 +180,26 @@ class PDFContribution(FitContribution):
     def addStructure(self, name, stru, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
-        name    --  A name to give the generator that will manage the PDF
-                    calculation from the passed structure. The adapted
-                    structure will be accessible via the name "phase" as an
-                    attribute of the generator, e.g.
-                    contribution.name.phase, where 'contribution' is this
-                    contribution and 'name' is passed name.
-                    (default), then the name will be set as "phase".
-        stru    --  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
-                    pyobjcryst.molecule.Molecule instance.  Default None.
-        periodic -- The structure should be treated as periodic.  If this is
-                    True (default), then a PDFGenerator will be used to
-                    calculate the PDF from the phase. Otherwise, a
-                    DebyePDFGenerator will be used. Note that some structures
-                    do not support periodicity, in which case this may be
-                    ignored.
+        Attributes
+        ----------
+        name
+            A name to give the generator that will manage the PDF
+            calculation from the passed structure. The adapted
+            structure will be accessible via the name "phase" as an
+            attribute of the generator, e.g.
+            contribution.name.phase, where 'contribution' is this
+            contribution and 'name' is passed name.
+            (default), then the name will be set as "phase".
+        stru
+            diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
+            pyobjcryst.molecule.Molecule instance.  Default None.
+        periodic
+            The structure should be treated as periodic.  If this is
+            True (default), then a PDFGenerator will be used to
+            calculate the PDF from the phase. Otherwise, a
+            DebyePDFGenerator will be used. Note that some structures
+            do not support periodicity, in which case this may be
+            ignored.
 
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)
@@ -192,22 +223,27 @@ class PDFContribution(FitContribution):
     def addPhase(self, name, parset, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
-        name    --  A name to give the generator that will manage the PDF
-                    calculation from the passed parameter phase. The parset
-                    will be accessible via the name "phase" as an attribute
-                    of the generator, e.g., contribution.name.phase, where
-                    'contribution' is this contribution and 'name' is passed
-                    name.
-        parset  --  A SrRealParSet that holds the structural information.
-                    This can be used to share the phase between multiple
-                    BasePDFGenerators, and have the changes in one reflect in
-                    another.
-        periodic -- The structure should be treated as periodic.  If this is
-                    True (default), then a PDFGenerator will be used to
-                    calculate the PDF from the phase. Otherwise, a
-                    DebyePDFGenerator will be used. Note that some structures
-                    do not support periodicity, in which case this may be
-                    ignored.
+        Attributes
+        ----------
+        name
+            A name to give the generator that will manage the PDF
+            calculation from the passed parameter phase. The parset
+            will be accessible via the name "phase" as an attribute
+            of the generator, e.g., contribution.name.phase, where
+            'contribution' is this contribution and 'name' is passed
+            name.
+        parset
+            A SrRealParSet that holds the structural information.
+            This can be used to share the phase between multiple
+            BasePDFGenerators, and have the changes in one reflect in
+            another.
+        periodic
+            The structure should be treated as periodic.  If this is
+            True (default), then a PDFGenerator will be used to
+            calculate the PDF from the phase. Otherwise, a
+            DebyePDFGenerator will be used. Note that some structures
+            do not support periodicity, in which case this may be
+            ignored.
 
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)
@@ -269,7 +305,10 @@ class PDFContribution(FitContribution):
     def setScatteringType(self, type="X"):
         """Set the scattering type.
 
-        type    --   "X" for x-ray or "N" for neutron
+        Attributes
+        ----------
+        type
+            "X" for x-ray or "N" for neutron
 
         Raises ValueError if type is not "X" or "N"
         """

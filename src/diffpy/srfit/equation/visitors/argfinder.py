@@ -26,16 +26,21 @@ class ArgFinder(Visitor):
     """ArgFinder extracts Arguments from a Literal tree.
 
     Attributes
-    args    --  The list of collected Arguments
-    getconsts  --  Flag indicating whether to grab constant arguments.
+    ----------
+    args
+        The list of collected Arguments
+    getconsts
+        Flag indicating whether to grab constant arguments.
     """
 
     def __init__(self, getconsts=True):
         """Initialize.
 
-        Arguments
-        getconsts   --  Flag indicating whether to parse constant arguments
-                        (default True).
+        Parameters
+        ----------
+        getconsts
+            Flag indicating whether to parse constant arguments
+            (default True).
         """
         self.args = []
         self.getconsts = getconsts

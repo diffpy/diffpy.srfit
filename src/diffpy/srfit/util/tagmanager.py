@@ -28,10 +28,14 @@ class TagManager(object):
 
     Manage tags on hashable objects. Tags are strings that carry metadata.
 
-    silent          --  Flag indicating whether to silently pass by when a tag
-                        cannot be found (bool, True). If this is False, then a
-                        KeyError will be thrown when a tag cannot be found.
-    _tagdict        --  A dictionary of tags to sets of tagged objects.
+    Attributes
+    ----------
+    silent
+        Flag indicating whether to silently pass by when a tag
+        cannot be found (bool, True). If this is False, then a
+        KeyError will be thrown when a tag cannot be found.
+    _tagdict
+        A dictionary of tags to sets of tagged objects.
     """
 
     def __init__(self):
@@ -49,8 +53,12 @@ class TagManager(object):
 
         Tags are stored as strings.
 
-        obj     --  Any hashable object to be untagged.
-        *tags   --  Tags to apply to obj.
+        Attributes
+        ----------
+        obj
+            Any hashable object to be untagged.
+        *tags
+            Tags to apply to obj.
 
         Raises TypeError if obj is not hashable.
         """
@@ -62,9 +70,13 @@ class TagManager(object):
     def untag(self, obj, *tags):
         """Remove tags from an object.
 
-        obj     --  Any hashable object to be untagged.
-        *tags   --  Tags to remove from obj. If this is empty, then all
-                    tags will be removed from obj.
+        Attributes
+        ----------
+        obj
+            Any hashable object to be untagged.
+        *tags
+            Tags to remove from obj. If this is empty, then all
+            tags will be removed from obj.
 
         Raises KeyError if a passed tag does not apply to obj and self.silent
         is False

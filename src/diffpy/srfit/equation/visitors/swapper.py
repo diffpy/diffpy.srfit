@@ -25,17 +25,24 @@ class Swapper(Visitor):
     Note that this cannot swap out a root node of a literal tree. This case
     must be tested for explicitly.
 
-    Attributes:
-    newlit  --  The literal to be placed into the literal tree.
-    oldlit  --  The literal to be replaced.
+    Attributes
+    ----------
+    newlit
+        The literal to be placed into the literal tree.
+    oldlit
+        The literal to be replaced.
     """
 
     def __init__(self, oldlit, newlit):
         """Initialize.
 
-        oldlit  --  The literal to be replaced.
-        newlit  --  The literal to be placed into the literal tree. See the
-                    class for how the replacement takes place.
+        Attributes
+        ----------
+        oldlit
+            The literal to be replaced.
+        newlit
+            The literal to be placed into the literal tree. See the
+            class for how the replacement takes place.
         """
 
         self.newlit = newlit

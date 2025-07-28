@@ -40,25 +40,37 @@ class Parameter(_parameter_interface, Argument, Validatable):
     """Parameter class.
 
     Attributes
-    name    --  A name for this Parameter.
-    const   --  A flag indicating whether this is considered a constant.
-    _value  --  The value of the Parameter. Modified with 'setValue'.
-    value   --  Property for 'getValue' and 'setValue'.
-    constrained --  A flag indicating if the Parameter is constrained
-                (default False).
-    bounds  --  A 2-list defining the bounds on the Parameter. This can be
-                used by some optimizers when the Parameter is varied. See
-                FitRecipe.getBounds and FitRecipe.boundsToRestraints.
+    ----------
+    name
+        A name for this Parameter.
+    const
+        A flag indicating whether this is considered a constant.
+    _value
+        The value of the Parameter. Modified with 'setValue'.
+    value
+        Property for 'getValue' and 'setValue'.
+    constrained
+        A flag indicating if the Parameter is constrained
+        (default False).
+    bounds
+        A 2-list defining the bounds on the Parameter. This can be
+        used by some optimizers when the Parameter is varied. See
+        FitRecipe.getBounds and FitRecipe.boundsToRestraints.
     """
 
     def __init__(self, name, value=None, const=False):
         """Initialization.
 
-        name    --  The name of this Parameter (must be a valid attribute
-                    identifier)
-        value   --  The initial value of this Parameter (default 0).
-        const   --  A flag inticating whether the Parameter is a constant (like
-                    pi).
+        Attributes
+        ----------
+        name
+            The name of this Parameter (must be a valid attribute
+            identifier)
+        value
+            The initial value of this Parameter (default 0).
+        const
+            A flag inticating whether the Parameter is a constant (like
+            pi).
 
         Raises ValueError if the name is not a valid attribute identifier
         """
@@ -71,11 +83,16 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def setValue(self, val):
         """Set the value of the Parameter and the bounds.
 
-        val     --  The value to assign.
-        lb      --  The lower bounds for the bounds list. If this is None
-                    (default), then the lower bound will not be alterered.
-        ub      --  The upper bounds for the bounds list. If this is None
-                    (default), then the upper bound will not be alterered.
+        Attributes
+        ----------
+        val
+            The value to assign.
+        lb
+            The lower bounds for the bounds list. If this is None
+            (default), then the lower bound will not be alterered.
+        ub
+            The upper bounds for the bounds list. If this is None
+            (default), then the upper bound will not be alterered.
 
         Returns self so that mutators can be chained.
         """
@@ -85,11 +102,15 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def setConst(self, const=True, value=None):
         """Toggle the Parameter as constant.
 
-        const   --  Flag indicating if the parameter is constant (default
-                    True).
-        value   --  An optional value for the parameter (default None). If this
-                    is not None, then the parameter will get a new value,
-                    constant or otherwise.
+        Attributes
+        ----------
+        const
+            Flag indicating if the parameter is constant (default
+            True).
+        value
+            An optional value for the parameter (default None). If this
+            is not None, then the parameter will get a new value,
+            constant or otherwise.
 
         Returns self so that mutators can be chained.
         """
@@ -101,8 +122,12 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def boundRange(self, lb=None, ub=None):
         """Set lower and upper bound of the Parameter.
 
-        lb  -- The lower bound for the bounds list.
-        ub  -- The upper bound for the bounds list.
+        Attributes
+        ----------
+        lb
+            The lower bound for the bounds list.
+        ub
+            The upper bound for the bounds list.
 
         Returns self so that mutators can be chained.
         """
@@ -115,11 +140,15 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def boundWindow(self, lr=0, ur=None):
         """Create bounds centered on the current value of the Parameter.
 
-        lr  --  The radius of the lower bound (default 0). The lower bound is
-                computed as value - lr.
-        ur  --  The radius of the upper bound. The upper bound is computed as
-                value + ur. If this is None (default), then the value of the
-                lower radius is used.
+        Attributes
+        ----------
+        lr
+            The radius of the lower bound (default 0). The lower bound is
+            computed as value - lr.
+        ur
+            The radius of the upper bound. The upper bound is computed as
+            value + ur. If this is None (default), then the value of the
+            lower radius is used.
 
         Returns self so that mutators can be chained.
         """
@@ -152,16 +181,23 @@ class ParameterProxy(Parameter):
     This allows for the same parameter to have multiple names.
 
     Attributes
-    name    --  A name for this ParameterProxy. Names should be unique within a
-                RecipeOrganizer and should be valid attribute names.
-    par     --  The Parameter this is a proxy for.
+    ----------
+    name
+        A name for this ParameterProxy. Names should be unique within a
+        RecipeOrganizer and should be valid attribute names.
+    par
+        The Parameter this is a proxy for.
     """
 
     def __init__(self, name, par):
         """Initialization.
 
-        name    --  The name of this ParameterProxy.
-        par     --  The Parameter this is a proxy for.
+        Attributes
+        ----------
+        name
+            The name of this ParameterProxy.
+        par
+            The Parameter this is a proxy for.
 
         Raises ValueError if the name is not a valid attribute identifier
         """
@@ -250,24 +286,31 @@ class ParameterAdapter(Parameter):
     def __init__(self, name, obj, getter=None, setter=None, attr=None):
         """Wrap an object as a Parameter.
 
-        name    --  The name of this Parameter.
-        obj     --  The object to be wrapped.
-        getter  --  The unbound function that can be used to access the
-                    attribute containing the parameter value. getter(obj)
-                    should return the Parameter value.  If getter is None
-                    (default), it is assumed that an attribute is accessed
-                    via attr. If attr is also specified, then the Parameter
-                    value will be accessed via getter(obj, attr).
-        setter  --  The unbound function that can be used to modify the
-                    attribute containing the parameter value.
-                    setter(obj, value) should set the attribute to the
-                    passed value. If setter is None (default), it is assumed
-                    that an attribute is accessed via attr. If attr is also
-                    specified, then the Parameter value will be set via
-                    setter(obj, attr, value).
-        attr    --  The name of the attribute that contains the value of the
-                    parameter. If attr is None (default), then both getter and
-                    setter must be specified.
+        Attributes
+        ----------
+        name
+            The name of this Parameter.
+        obj
+            The object to be wrapped.
+        getter
+            The unbound function that can be used to access the
+            attribute containing the parameter value. getter(obj)
+            should return the Parameter value.  If getter is None
+            (default), it is assumed that an attribute is accessed
+            via attr. If attr is also specified, then the Parameter
+            value will be accessed via getter(obj, attr).
+        setter
+            The unbound function that can be used to modify the
+            attribute containing the parameter value.
+            setter(obj, value) should set the attribute to the
+            passed value. If setter is None (default), it is assumed
+            that an attribute is accessed via attr. If attr is also
+            specified, then the Parameter value will be set via
+            setter(obj, attr, value).
+        attr
+            The name of the attribute that contains the value of the
+            parameter. If attr is None (default), then both getter and
+            setter must be specified.
 
         Raises ValueError if exactly one of getter or setter is not None, or if
         getter, setter and attr are all None.

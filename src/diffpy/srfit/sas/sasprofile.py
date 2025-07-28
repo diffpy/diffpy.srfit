@@ -31,34 +31,56 @@ class SASProfile(Profile):
 
     Attributes
 
-    _xobs   --  A numpy array of the observed independent variable (default
-                None)
-    xobs    --  Read-only property of _xobs.
-    _yobs   --  A numpy array of the observed signal (default None)
-    yobs    --  Read-only property of _yobs.
-    _dyobs  --  A numpy array of the uncertainty of the observed signal
-                (default None, optional).
-    dyobs   --  Read-only property of _dyobs.
-    x       --  A numpy array of the calculated independent variable (default
-                None, property for xpar accessors).
-    y       --  The profile over the calculation range (default None, property
-                for ypar accessors).
-    dy      --  The uncertainty in the profile over the calculation range
-                (default None, property for dypar accessors).
-    ycalc   --  A numpy array of the calculated signal (default None).
-    xpar    --  A ProfileParameter that stores x (named "x").
-    ypar    --  A ProfileParameter that stores y (named "y").
-    dypar   --  A ProfileParameter that stores dy (named "dy").
-    meta    --  A dictionary of metadata. This is only set if provided by a
-                parser.
+    Attributes
+    ----------
+    _xobs
+        A numpy array of the observed independent variable (default
+        None)
+    xobs
+        Read-only property of _xobs.
+    _yobs
+        A numpy array of the observed signal (default None)
+    yobs
+        Read-only property of _yobs.
+    _dyobs
+        A numpy array of the uncertainty of the observed signal
+        (default None, optional).
+    dyobs
+        Read-only property of _dyobs.
+    x
+        A numpy array of the calculated independent variable (default
+        None, property for xpar accessors).
+    y
+        The profile over the calculation range (default None, property
+        for ypar accessors).
+    dy
+        The uncertainty in the profile over the calculation range
+        (default None, property for dypar accessors).
+    ycalc
+        A numpy array of the calculated signal (default None).
+    xpar
+        A ProfileParameter that stores x (named "x").
+    ypar
+        A ProfileParameter that stores y (named "y").
+    dypar
+        A ProfileParameter that stores dy (named "dy").
+    meta
+        A dictionary of metadata. This is only set if provided by a
+        parser.
 
-    _datainfo   --  The DataInfo object this wraps.
+    Attributes
+    ----------
+    _datainfo
+        The DataInfo object this wraps.
     """
 
     def __init__(self, datainfo):
         """Initialize the attributes.
 
-        datainfo   --  The DataInfo object this wraps.
+        Attributes
+        ----------
+        datainfo
+            The DataInfo object this wraps.
         """
         self._datainfo = datainfo
         Profile.__init__(self)
@@ -76,12 +98,16 @@ class SASProfile(Profile):
 
         This is overloaded to change the value within the datainfo object.
 
-        Arguments
-        xobs    --  Numpy array of the independent variable
-        yobs    --  Numpy array of the observed signal.
-        dyobs   --  Numpy array of the uncertainty in the observed signal. If
-                    dyobs is None (default), it will be set to 1 at each
-                    observed xobs.
+        Parameters
+        ----------
+        xobs
+            Numpy array of the independent variable
+        yobs
+            Numpy array of the observed signal.
+        dyobs
+            Numpy array of the uncertainty in the observed signal. If
+            dyobs is None (default), it will be set to 1 at each
+            observed xobs.
 
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)

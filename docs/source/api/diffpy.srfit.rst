@@ -14,17 +14,12 @@ Subpackages
 -----------
 
 .. toctree::
-   diffpy.srfit.example_package
-
-Submodules
-----------
-
-|module|
---------
-
-.. |module| replace:: diffpy.srfit.example_submodule module
-
-.. automodule:: diffpy.srfit.example_submodule
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   diffpy.srfit.equation
+   diffpy.srfit.equation.literals
+   diffpy.srfit.equation.visitors
+   diffpy.srfit.fitbase
+   diffpy.srfit.interface
+   diffpy.srfit.pdf
+   diffpy.srfit.sas
+   diffpy.srfit.structure
+   diffpy.srfit.util

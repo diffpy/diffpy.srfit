@@ -50,42 +50,65 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
 
     Attributes
-    name            --  A name for this FitRecipe.
-    fithooks        --  List of FitHook instances that can pass information out
-                        of the system during a refinement. By default, the is
-                        populated by a PrintFitHook instance.
-    _constraints    --  A dictionary of Constraints, indexed by the constrained
-                        Parameter. Constraints can be added using the
-                        'constrain' method.
-    _oconstraints   --  An ordered list of the constraints from this and all
-                        sub-components.
-    _calculators    --  A managed dictionary of Calculators.
-    _contributions  --  A managed OrderedDict of FitContributions.
-    _parameters     --  A managed OrderedDict of parameters (in this case the
-                        parameters are varied).
-    _parsets        --  A managed dictionary of ParameterSets.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used to create constraints and
-                        restraints from string
-    _restraintlist  --  A list of restraints from this and all sub-components.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
-    _ready          --  A flag indicating if all attributes are ready for the
-                        calculation.
-    _tagmanager     --  A TagManager instance for managing tags on Parameters.
-    _weights        --  List of weighing factors for each FitContribution. The
-                        weights are multiplied by the residual of the
-                        FitContribution when determining the overall residual.
-    _fixedtag       --  "__fixed", used for tagging variables as fixed. Don't
-                        use this tag unless you want issues.
+    ----------
+    name
+        A name for this FitRecipe.
+    fithooks
+        List of FitHook instances that can pass information out
+        of the system during a refinement. By default, the is
+        populated by a PrintFitHook instance.
+    _constraints
+        A dictionary of Constraints, indexed by the constrained
+        Parameter. Constraints can be added using the
+        'constrain' method.
+    _oconstraints
+        An ordered list of the constraints from this and all
+        sub-components.
+    _calculators
+        A managed dictionary of Calculators.
+    _contributions
+        A managed OrderedDict of FitContributions.
+    _parameters
+        A managed OrderedDict of parameters (in this case the
+        parameters are varied).
+    _parsets
+        A managed dictionary of ParameterSets.
+    _eqfactory
+        A diffpy.srfit.equation.builder.EquationFactory
+        instance that is used to create constraints and
+        restraints from string
+    _restraintlist
+        A list of restraints from this and all sub-components.
+    _restraints
+        A set of Restraints. Restraints can be added using the
+        'restrain' or 'confine' methods.
+    _ready
+        A flag indicating if all attributes are ready for the
+        calculation.
+    _tagmanager
+        A TagManager instance for managing tags on Parameters.
+    _weights
+        List of weighing factors for each FitContribution. The
+        weights are multiplied by the residual of the
+        FitContribution when determining the overall residual.
+    _fixedtag
+        "__fixed", used for tagging variables as fixed. Don't
+        use this tag unless you want issues.
 
     Properties
-    names           --  Variable names (read only). See getNames.
-    values          --  Variable values (read only). See getValues.
-    fixednames      --  Names of the fixed refinable variables (read only).
-    fixedvalues     --  Values of the fixed refinable variables (read only).
-    bounds          --  Bounds on parameters (read only). See getBounds.
-    bounds2         --  Bounds on parameters (read only). See getBounds2.
+    ----------
+    names
+        Variable names (read only). See getNames.
+    values
+        Variable values (read only). See getValues.
+    fixednames
+        Names of the fixed refinable variables (read only).
+    fixedvalues
+        Values of the fixed refinable variables (read only).
+    bounds
+        Bounds on parameters (read only). See getBounds.
+    bounds2
+        Bounds on parameters (read only). See getBounds2.
     """
 
     fixednames = property(
@@ -138,9 +161,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         diffpy.srfit.fitbase.fithook.FitHook class for the required interface.
         Added FitHooks will be called sequentially during refinement.
 
-        fithook --  FitHook instance to add to the sequence
-        index   --  Index for inserting fithook into the list of fit hooks.  If
-                    this is None (default), the fithook is added to the end.
+        Attributes
+        ----------
+        fithook
+            FitHook instance to add to the sequence
+        index
+            Index for inserting fithook into the list of fit hooks.  If
+            this is None (default), the fithook is added to the end.
         """
         if index is None:
             index = len(self.fithooks)
@@ -152,9 +179,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def popFitHook(self, fithook=None, index=-1):
         """Remove a FitHook by index or reference.
 
-        fithook --  FitHook instance to remove from the sequence. If this is
-                    None (default), default to index.
-        index   --  Index of FitHook instance to remove (default -1).
+        Attributes
+        ----------
+        fithook
+            FitHook instance to remove from the sequence. If this is
+            None (default), default to index.
+        index
+            Index of FitHook instance to remove (default -1).
 
         Raises ValueError if fithook is not None, but is not present in the
         sequence.
@@ -178,7 +209,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def addContribution(self, con, weight=1.0):
         """Add a FitContribution to the FitRecipe.
 
-        con     --  The FitContribution to be stored.
+        Attributes
+        ----------
+        con
+            The FitContribution to be stored.
 
         Raises ValueError if the FitContribution has no name
         Raises ValueError if the FitContribution has the same name as some
@@ -197,7 +231,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def addParameterSet(self, parset):
         """Add a ParameterSet to the hierarchy.
 
-        parset  --  The ParameterSet to be stored.
+        Attributes
+        ----------
+        parset
+            The ParameterSet to be stored.
 
         Raises ValueError if the ParameterSet has no name.
         Raises ValueError if the ParameterSet has the same name as some other
@@ -217,12 +254,14 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def residual(self, p=[]):
         """Calculate the vector residual to be optimized.
 
-        Arguments
-        p   --  The list of current variable values, provided in the same order
-                as the '_parameters' list. If p is an empty iterable (default),
-                then it is assumed that the parameters have already been
-                updated in some other way, and the explicit update within this
-                function is skipped.
+        Parameters
+        ----------
+        p
+            The list of current variable values, provided in the same order
+            as the '_parameters' list. If p is an empty iterable (default),
+            then it is assumed that the parameters have already been
+            updated in some other way, and the explicit update within this
+            function is skipped.
 
         The residual is by default the weighted concatenation of each
         FitContribution's residual, plus the value of each restraint. The array
@@ -266,12 +305,14 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def scalarResidual(self, p=[]):
         """Calculate the scalar residual to be optimized.
 
-        Arguments
-        p   --  The list of current variable values, provided in the same order
-                as the '_parameters' list. If p is an empty iterable (default),
-                then it is assumed that the parameters have already been
-                updated in some other way, and the explicit update within this
-                function is skipped.
+        Parameters
+        ----------
+        p
+            The list of current variable values, provided in the same order
+            as the '_parameters' list. If p is an empty iterable (default),
+            then it is assumed that the parameters have already been
+            updated in some other way, and the explicit update within this
+            function is skipped.
 
         The residual is by default the weighted concatenation of each
         FitContribution's residual, plus the value of each restraint. The array
@@ -445,17 +486,25 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     ):
         """Add a variable to be refined.
 
-        par     --  A Parameter that will be varied during a fit.
-        value   --  An initial value for the variable. If this is None
-                    (default), then the current value of par will be used.
-        name    --  A name for this variable. If name is None (default), then
-                    the name of the parameter will be used.
-        fixed   --  Fix the variable so that it does not vary (default False).
-        tag     --  A tag for the variable. This can be used to retrieve, fix
-                    or free variables by tag (default None). Note that a
-                    variable is automatically tagged with its name and "all".
-        tags    --  A list of tags (default []). Both tag and tags can be
-                    applied.
+        Attributes
+        ----------
+        par
+            A Parameter that will be varied during a fit.
+        value
+            An initial value for the variable. If this is None
+            (default), then the current value of par will be used.
+        name
+            A name for this variable. If name is None (default), then
+            the name of the parameter will be used.
+        fixed
+            Fix the variable so that it does not vary (default False).
+        tag
+            A tag for the variable. This can be used to retrieve, fix
+            or free variables by tag (default None). Note that a
+            variable is automatically tagged with its name and "all".
+        tags
+            A list of tags (default []). Both tag and tags can be
+            applied.
 
         Returns the ParameterProxy (variable) for the passed Parameter.
 
@@ -495,7 +544,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Note that constraints and restraints involving the variable are not
         modified.
 
-        var     --  A variable of the FitRecipe.
+        Attributes
+        ----------
+        var
+            A variable of the FitRecipe.
 
         Raises ValueError if var is not part of the FitRecipe.
         """
@@ -519,19 +571,26 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         optimization routine, and therefore should only be created to be used
         in constraint or restraint equations.
 
-        name    --  The name of the variable. The variable will be able to be
-                    used by this name in restraint and constraint equations.
-        value   --  An initial value for the variable. If this is None
-                    (default), then the variable will be given the value of the
-                    first non-None-valued Parameter constrained to it. If this
-                    fails, an error will be thrown when 'residual' is called.
-        fixed   --  Fix the variable so that it does not vary (default False).
-                    The variable will still be managed by the FitRecipe.
-        tag     --  A tag for the variable. This can be used to fix and free
-                    variables by tag (default None). Note that a variable is
-                    automatically tagged with its name and "all".
-        tags    --  A list of tags (default []). Both tag and tags can be
-                    applied.
+        Attributes
+        ----------
+        name
+            The name of the variable. The variable will be able to be
+            used by this name in restraint and constraint equations.
+        value
+            An initial value for the variable. If this is None
+            (default), then the variable will be given the value of the
+            first non-None-valued Parameter constrained to it. If this
+            fails, an error will be thrown when 'residual' is called.
+        fixed
+            Fix the variable so that it does not vary (default False).
+            The variable will still be managed by the FitRecipe.
+        tag
+            A tag for the variable. This can be used to fix and free
+            variables by tag (default None). Note that a variable is
+            automatically tagged with its name and "all".
+        tags
+            A list of tags (default []). Both tag and tags can be
+            applied.
 
         Returns the new variable (Parameter instance).
         """
@@ -564,7 +623,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def __getVarAndCheck(self, var):
         """Get the actual variable from var.
 
-        var     --  A variable of the FitRecipe, or the name of a variable.
+        Attributes
+        ----------
+        var
+            A variable of the FitRecipe, or the name of a variable.
 
         Returns the variable or None if the variable cannot be found in the
         _parameters list.
@@ -682,7 +744,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         This removes any constraints on a Parameter. If the Parameter is also a
         variable of the recipe, it will be freed as well.
 
-        *pars   --  The names of Parameters or Parameters to unconstrain.
+        Attributes
+        ----------
+        *pars
+            The names of Parameters or Parameters to unconstrain.
 
 
         Raises ValueError if the Parameter is not constrained.
@@ -719,14 +784,19 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         and its current value is None. A constrained variable will be set as
         fixed.
 
-        par     --  The Parameter to constrain.
-        con     --  A string representation of the constraint equation or a
-                    Parameter to constrain to.  A constraint equation must
-                    consist of numpy operators and "known" Parameters.
-                    Parameters are known if they are in the ns argument, or if
-                    they are managed by this object.
-        ns      --  A dictionary of Parameters, indexed by name, that are used
-                    in the eqstr, but not part of this object (default {}).
+        Attributes
+        ----------
+        par
+            The Parameter to constrain.
+        con
+            A string representation of the constraint equation or a
+            Parameter to constrain to.  A constraint equation must
+            consist of numpy operators and "known" Parameters.
+            Parameters are known if they are in the ns argument, or if
+            they are managed by this object.
+        ns
+            A dictionary of Parameters, indexed by name, that are used
+            in the eqstr, but not part of this object (default {}).
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -795,9 +865,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         The bounds become limits on the restraint.
 
-        sig     --  The uncertainty on the bounds (scalar or iterable,
-                    default 1).
-        scaled  --  Scale the restraints, see restrain.
+        Attributes
+        ----------
+        sig
+            The uncertainty on the bounds (scalar or iterable,
+            default 1).
+        scaled
+            Scale the restraints, see restrain.
         """
         pars = self._parameters.values()
         if not hasattr(sig, "__iter__"):

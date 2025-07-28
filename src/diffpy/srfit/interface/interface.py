@@ -40,7 +40,10 @@ class ParameterInterface(object):
 
         Think of '<<' as injecting a value
 
-        v   --  value or Argument derivative
+        Attributes
+        ----------
+        v
+            value or Argument derivative
         """
         if isinstance(v, ArgumentABC):
             self.value = v.value

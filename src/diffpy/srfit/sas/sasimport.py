@@ -18,7 +18,10 @@
 def sasimport(modname):
     """Import specified module from the SasView sas package.
 
-    modname  -- absolute module name contained in the sas package.
+    Attributes
+    ----------
+    modname
+        absolute module name contained in the sas package.
 
     When specified import does not work directly, try older API-s and raise
     DeprecationWarning.  Raise ImportError if nothing works.

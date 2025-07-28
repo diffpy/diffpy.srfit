@@ -47,8 +47,12 @@ from diffpy.srfit.fitbase.calculator import Calculator
 def sphericalCF(r, psize):
     """Spherical nanoparticle characteristic function.
 
-    r       --  distance of interaction
-    psize   --  The particle diameter
+    Attributes
+    ----------
+    r
+        distance of interaction
+    psize
+        The particle diameter
 
     From Kodama et al., Acta Cryst. A, 62, 444-453
     (converted from radius to diameter)
@@ -67,8 +71,12 @@ def spheroidalCF(r, erad, prad):
 
     Spheroid with radii (erad, erad, prad)
 
-    prad    --  polar radius
-    erad    --  equatorial radius
+    Attributes
+    ----------
+    prad
+        polar radius
+    erad
+        equatorial radius
 
     erad < prad equates to a prolate spheroid
     erad > prad equates to a oblate spheroid
@@ -84,9 +92,14 @@ def spheroidalCF2(r, psize, axrat):
 
     Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)
 
-    r      --  distance of interaction
-    psize  --  The equatorial diameter
-    axrat  --  The ratio of axis lengths
+    Attributes
+    ----------
+    r
+        distance of interaction
+    psize
+        The equatorial diameter
+    axrat
+        The ratio of axis lengths
 
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
     """
@@ -189,9 +202,14 @@ def lognormalSphericalCF(r, psize, psig):
     """Spherical nanoparticle characteristic function with lognormal size
     distribution.
 
-    r      --  distance of interaction
-    psize  --  The mean particle diameter
-    psig   --  The log-normal width of the particle diameter
+    Attributes
+    ----------
+    r
+        distance of interaction
+    psize
+        The mean particle diameter
+    psig
+        The log-normal width of the particle diameter
 
     Here, r is the independent variable, mu is the mean of the distribution
     (not of the particle size), and s is the width of the distribution. This is
@@ -240,8 +258,12 @@ def lognormalSphericalCF(r, psize, psig):
 def sheetCF(r, sthick):
     """Nanosheet characteristic function.
 
-    r       --  distance of interaction
-    sthick  --  Thickness of nanosheet
+    Attributes
+    ----------
+    r
+        distance of interaction
+    sthick
+        Thickness of nanosheet
 
     From Kodama et al., Acta Cryst. A, 62, 444-453
     """
@@ -265,8 +287,12 @@ def sheetCF(r, sthick):
 def shellCF(r, radius, thickness):
     """Spherical shell characteristic function.
 
-    radius      --  Inner radius
-    thickness   --  Thickness of shell
+    Attributes
+    ----------
+    radius
+        Inner radius
+    thickness
+        Thickness of shell
 
     outer radius = radius + thickness
 
@@ -280,8 +306,12 @@ def shellCF(r, radius, thickness):
 def shellCF2(r, a, delta):
     """Spherical shell characteristic function.
 
-    a       --  Central radius
-    delta   --  Thickness of shell
+    Attributes
+    ----------
+    a
+        Central radius
+    delta
+        Thickness of shell
 
     outer radius = a + thickness/2
 
@@ -325,8 +355,10 @@ class SASCF(Calculator):
     f(r) = 1 / (4 pi r) * SINFT(I(Q)),
     where "SINFT" represents the sine Fourier transform.
 
-    Attributes:
-    _model      --  BaseModel object this adapts.
+    Attributes
+    ----------
+    _model
+        BaseModel object this adapts.
 
     Managed Parameters:
     These depend on the parameters of the BaseModel object held by _model. They
@@ -339,8 +371,12 @@ class SASCF(Calculator):
     def __init__(self, name, model):
         """Initialize the generator.
 
-        name    --  A name for the SASCF
-        model   --  SASModel object this adapts.
+        Attributes
+        ----------
+        name
+            A name for the SASCF
+        model
+            SASModel object this adapts.
         """
         Calculator.__init__(self, name)
 

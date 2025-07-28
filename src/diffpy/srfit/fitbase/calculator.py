@@ -36,30 +36,50 @@ class Calculator(Operator, ParameterSet):
     calculate a generic signal.
 
     Attributes
-    name            --  A name for this organizer.
-    meta            --  A dictionary of metadata needed by the calculator.
-    _calculators    --  A managed dictionary of Calculators, indexed by name.
-    _constraints    --  A set of constrained Parameters. Constraints can be
-                        added using the 'constrain' methods.
-    _parameters     --  A managed OrderedDict of contained Parameters.
-    _parsets        --  A managed dictionary of ParameterSets.
-    _restraints     --  A set of Restraints. Restraints can be added using the
-                        'restrain' or 'confine' methods.
-    _eqfactory      --  A diffpy.srfit.equation.builder.EquationFactory
-                        instance that is used create Equations from string.
+    ----------
+    name
+        A name for this organizer.
+    meta
+        A dictionary of metadata needed by the calculator.
+    _calculators
+        A managed dictionary of Calculators, indexed by name.
+    _constraints
+        A set of constrained Parameters. Constraints can be
+        added using the 'constrain' methods.
+    _parameters
+        A managed OrderedDict of contained Parameters.
+    _parsets
+        A managed dictionary of ParameterSets.
+    _restraints
+        A set of Restraints. Restraints can be added using the
+        'restrain' or 'confine' methods.
+    _eqfactory
+        A diffpy.srfit.equation.builder.EquationFactory
+        instance that is used create Equations from string.
 
     Operator Attributes
-    args    --  List of Literal arguments
-    nin     --  Number of inputs (<1 means this is variable)
-    nout    --  Number of outputs (1)
-    operation   --  Function that performs the operation, self.__call__
-    symbol  --  Same as name
-    _value  --  The value of the Operator.
-    value   --  Property for 'getValue'.
+    -------------------
+    args
+        List of Literal arguments
+    nin
+        Number of inputs (<1 means this is variable)
+    nout
+        Number of outputs (1)
+    operation
+        Function that performs the operation, self.__call__
+    symbol
+        Same as name
+    _value
+        The value of the Operator.
+    value
+        Property for 'getValue'.
 
     Properties
-    names           --  Variable names (read only). See getNames.
-    values          --  Variable values (read only). See getValues.
+    ----------
+    names
+        Variable names (read only). See getNames.
+    values
+        Variable values (read only). See getValues.
     """
 
     # define abstract attributes from the Operator base.

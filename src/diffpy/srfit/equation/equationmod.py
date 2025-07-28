@@ -56,19 +56,32 @@ class Equation(Operator):
     accepts new argument values for the literal tree.
 
     Attributes
-    root    --  The root Literal of the equation tree
-    argdict --  An OrderedDict of Arguments from the root.
-    args    --  Property that gets the values of argdict.
+    ----------
+    root
+        The root Literal of the equation tree
+    argdict
+        An OrderedDict of Arguments from the root.
+    args
+        Property that gets the values of argdict.
 
     Operator Attributes
-    args    --  List of Literal arguments, set with 'addLiteral'
-    name    --  A name for this operator. e.g. "add" or "sin"
-    nin     --  Number of inputs (<1 means this is variable)
-    nout    --  Number of outputs
-    operation   --  Function that performs the operation. e.g. numpy.add.
-    symbol  --  The symbolic representation. e.g. "+" or "sin".
-    _value  --  The value of the Operator.
-    value   --  Property for 'getValue'.
+    -------------------
+    args
+        List of Literal arguments, set with 'addLiteral'
+    name
+        A name for this operator. e.g. "add" or "sin"
+    nin
+        Number of inputs (<1 means this is variable)
+    nout
+        Number of outputs
+    operation
+        Function that performs the operation. e.g. numpy.add.
+    symbol
+        The symbolic representation. e.g. "+" or "sin".
+    _value
+        The value of the Operator.
+    value
+        Property for 'getValue'.
     """
 
     # define abstract attributes from the Operator base.
@@ -78,10 +91,14 @@ class Equation(Operator):
     def __init__(self, name=None, root=None):
         """Initialize.
 
-        name    --  A name for this Equation.
-        root    --  The root node of the Literal tree (default None). If root
-                    is not passed here, you must call the 'setRoot' method to
-                    set or change the root node.
+        Attributes
+        ----------
+        name
+            A name for this Equation.
+        root
+            The root node of the Literal tree (default None). If root
+            is not passed here, you must call the 'setRoot' method to
+            set or change the root node.
         """
         # Operator stuff. We circumvent Operator.__init__ since we're using
         # args as a property. We cannot set it, as the Operator tries to do.
@@ -127,7 +144,7 @@ class Equation(Operator):
     )
 
     def __dir__(self):
-        "Return sorted list of attributes for this object."
+        """Return sorted list of attributes for this object."""
         rv = set(dir(type(self)))
         rv.update(self.__dict__, self.argdict)
         rv = sorted(rv)

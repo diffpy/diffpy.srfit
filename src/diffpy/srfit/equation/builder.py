@@ -109,12 +109,17 @@ _builders = {}
 class EquationFactory(object):
     """A Factory for equations.
 
-    builders    --  A dictionary of BaseBuilders registered with the
-                    factory, indexed by name.
-    newargs     --  A set of new arguments created by makeEquation. This is
-                    redefined whenever makeEquation is called.
-    equations   --  Set of equations that have been built by the
-                    EquationFactory.
+    Attributes
+    ----------
+    builders
+        A dictionary of BaseBuilders registered with the
+        factory, indexed by name.
+    newargs
+        A set of new arguments created by makeEquation. This is
+        redefined whenever makeEquation is called.
+    equations
+        Set of equations that have been built by the
+        EquationFactory.
     """
 
     symbols = ("+", "-", "*", "/", "**", "%", "|")
@@ -137,21 +142,26 @@ class EquationFactory(object):
     ):
         """Make an equation from an equation string.
 
-        Arguments
-        eqstr       --  An equation in string form using standard python
-                        syntax.  The equation string can use any function
-                        registered literal or function, including numpy ufuncs
-                        that are automatically registered.
-        buildargs   --  A flag indicating whether missing arguments can be
-                        created by the Factory (default True). If False, then
-                        the a ValueError will be raised if there are undefined
-                        arguments in the eqstr. Built arguments will be of type
-                        argclass.
-        argclass    --  Class to use when creating new Arguments (default
-                        diffpy.srfit.equation.literals.Argument). The class
-                        constructor must accept the 'name' key word.
-        argkw       --  Key word dictionary to pass to the argclass constructor
-                        (default {}).
+        Parameters
+        ----------
+        eqstr
+            An equation in string form using standard python
+            syntax.  The equation string can use any function
+            registered literal or function, including numpy ufuncs
+            that are automatically registered.
+        buildargs
+            A flag indicating whether missing arguments can be
+            created by the Factory (default True). If False, then
+            the a ValueError will be raised if there are undefined
+            arguments in the eqstr. Built arguments will be of type
+            argclass.
+        argclass
+            Class to use when creating new Arguments (default
+            diffpy.srfit.equation.literals.Argument). The class
+            constructor must accept the 'name' key word.
+        argkw
+            Key word dictionary to pass to the argclass constructor
+            (default {}).
 
         Returns a callable Literal representing the equation string.
         """
@@ -202,11 +212,16 @@ class EquationFactory(object):
 
         This will register a builder for the function.
 
-        name    --  The name of the function
-        func    --  A callable python object
-        argnames--  The argument names for func. If these names do not
-                    correspond to builders, then new constants with value 0
-                    will be created for each name.
+        Attributes
+        ----------
+        name
+            The name of the function
+        func
+            A callable python object
+        argnames
+            The argument names for func. If these names do not
+            correspond to builders, then new constants with value 0
+            will be created for each name.
 
         Returns the registered builder.
         """
@@ -293,17 +308,22 @@ class EquationFactory(object):
         arguments, and creates new arguments if allowed. In the process it
         rebuilds the newargs attribute.
 
-        Arguments
-        eqstr       --  An equation in string as specified in the makeEquation
-                        method.
-        buildargs   --  A flag indicating whether missing arguments can be
-                        created by the factory. If False, then the a ValueError
-                        will be raised if there are undefined arguments in the
-                        eqstr.
-        argclass    --  Class to use when creating new Arguments. The class
-                        constructor must accept the 'name' key word.
-        argkw       --  Key word dictionary to pass to the argclass
-                        constructor.
+        Parameters
+        ----------
+        eqstr
+            An equation in string as specified in the makeEquation
+            method.
+        buildargs
+            A flag indicating whether missing arguments can be
+            created by the factory. If False, then the a ValueError
+            will be raised if there are undefined arguments in the
+            eqstr.
+        argclass
+            Class to use when creating new Arguments. The class
+            constructor must accept the 'name' key word.
+        argkw
+            Key word dictionary to pass to the argclass
+            constructor.
 
         Raises ValueError if new arguments must be created, but this is
         disallowed due to the buildargs flag.
@@ -392,7 +412,9 @@ class BaseBuilder(object):
     arguments can be other BaseBuilder instances or constants.
 
     Attributes
-    literal     --  The equation Literal being built by this instance.
+    ----------
+    literal
+        The equation Literal being built by this instance.
     """
 
     def __init__(self):
@@ -424,8 +446,11 @@ class BaseBuilder(object):
 
         Other can be an BaseBuilder or a constant.
 
-        onleft  --  Indicates that the operator was passed on the left side
-                    (default True).
+        Attributes
+        ----------
+        onleft
+            Indicates that the operator was passed on the left side
+            (default True).
         """
         # Create the Operator
         op = OperatorClass()
@@ -520,20 +545,27 @@ class ArgumentBuilder(BaseBuilder):
     arguments can be other BaseBuilder instances or constants.
 
     Attributes
-    literal     --  The Argument wrapped by this instance.
+    ----------
+    literal
+        The Argument wrapped by this instance.
     """
 
     def __init__(self, value=None, name=None, const=False, arg=None):
         """Create an ArgumentBuilder instance, containing a new Argument.
 
-        Arguments
-        value   --  The value of the wrapped Argument (float, default None)
-        name    --  The name of the wrapped Argument (string, default None)
-        const   --  Flag indicating whether the Argument is constant (bool,
-                    default False)
-        arg     --  A pre-defined Argument to use. If this is None (default),
-                    then a new Argument will be created from value, name and
-                    const.
+        Parameters
+        ----------
+        value
+            The value of the wrapped Argument (float, default None)
+        name
+            The name of the wrapped Argument (string, default None)
+        const
+            Flag indicating whether the Argument is constant (bool,
+            default False)
+        arg
+            A pre-defined Argument to use. If this is None (default),
+            then a new Argument will be created from value, name and
+            const.
         """
         BaseBuilder.__init__(self)
         if arg is None:
@@ -552,19 +584,25 @@ class OperatorBuilder(BaseBuilder):
     """BaseBuilder wrapper around an Operator literal.
 
     Attributes
-    literal     --  The Operator wrapped by this instance.
-    name        --  The name of the operator to be wrapped
+    ----------
+    literal
+        The Operator wrapped by this instance.
+    name
+        The name of the operator to be wrapped
     """
 
     def __init__(self, name, op=None):
         """Wrap an Operator or a function by name.
 
-        Arguments
-        name    --  The name of the wrapped Operator
-        op      --  If specified, this sets the literal attribute as this
-                    operator (default None). Otherwise, the name is assumed to
-                    be that of a numpy ufunc, which is used to specify the
-                    Operator.
+        Parameters
+        ----------
+        name
+            The name of the wrapped Operator
+        op
+            If specified, this sets the literal attribute as this
+            operator (default None). Otherwise, the name is assumed to
+            be that of a numpy ufunc, which is used to specify the
+            Operator.
         """
         BaseBuilder.__init__(self)
         self.name = name
@@ -576,7 +614,10 @@ class OperatorBuilder(BaseBuilder):
 
         This creates a new builder that encapsulates the operation.
 
-        args    --  Arguments of the operation.
+        Attributes
+        ----------
+        args
+            Arguments of the operation.
 
         Raises ValueError if self.literal.nin >= 0 and len(args) != op.nin
         """
@@ -637,10 +678,16 @@ def wrapOperator(name, op):
 def wrapFunction(name, func, nin=2, nout=1):
     """Wrap a function in an OperatorBuilder instance.
 
-    name    --  The name of the function
-    func    --  A callable python object
-    nin     --  The number of input arguments (default 2)
-    nout    --  The number of return values (default 1)
+    Attributes
+    ----------
+    name
+        The name of the function
+    func
+        A callable python object
+    nin
+        The number of input arguments (default 2)
+    nout
+        The number of return values (default 1)
 
     Returns the OperatorBuilder instance that wraps the function.
     """

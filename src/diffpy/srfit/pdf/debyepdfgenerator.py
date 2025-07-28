@@ -32,36 +32,56 @@ class DebyePDFGenerator(BasePDFGenerator):
     pyobjcryst.molecule.Molecule instances. Note that the managed Parameters
     are not created until the structure is added.
 
-    Attributes:
-    _calc   --  DebyePDFCalculator instance for calculating the PDF
-    _phase  --  The structure ParameterSets used to calculate the profile.
-    stru    --  The structure objected adapted by _phase.
-    _lastr  --  The last value of r over which the PDF was calculated. This is
-                used to configure the calculator when r changes.
+    Attributes
+    ----------
+    _calc
+        DebyePDFCalculator instance for calculating the PDF
+    _phase
+        The structure ParameterSets used to calculate the profile.
+    stru
+        The structure objected adapted by _phase.
+    _lastr
+        The last value of r over which the PDF was calculated. This is
+        used to configure the calculator when r changes.
 
-    Managed Parameters:
-    scale   --  Scale factor
-    delta1  --  Linear peak broadening term
-    delta2  --  Quadratic peak broadening term
-    qbroad  --  Resolution peak broadening term
-    qdamp   --  Resolution peak dampening term
+    Managed Parameters
+    ------------------
+    scale
+        Scale factor
+    delta1
+        Linear peak broadening term
+    delta2
+        Quadratic peak broadening term
+    qbroad
+        Resolution peak broadening term
+    qdamp
+        Resolution peak dampening term
 
     Managed ParameterSets:
     The structure ParameterSet (SrRealStructure instance) used to calculate the
     profile is named by the user.
 
-    Usable Metadata:
-    stype   --  The scattering type "X" for x-ray, "N" for neutron (see
-                'setScatteringType').
-    qmax    --  The maximum scattering vector used to generate the PDF (see
-                setQmax).
-    qmin    --  The minimum scattering vector used to generate the PDF (see
-                setQmin).
-    scale   --  See Managed Parameters.
-    delta1  --  See Managed Parameters.
-    delta2  --  See Managed Parameters.
-    qbroad  --  See Managed Parameters.
-    qdamp   --  See Managed Parameters.
+    Usable Metadata
+    ---------------
+    stype
+        The scattering type "X" for x-ray, "N" for neutron (see
+        'setScatteringType').
+    qmax
+        The maximum scattering vector used to generate the PDF (see
+        setQmax).
+    qmin
+        The minimum scattering vector used to generate the PDF (see
+        setQmin).
+    scale
+        See Managed Parameters.
+    delta1
+        See Managed Parameters.
+    delta2
+        See Managed Parameters.
+    qbroad
+        See Managed Parameters.
+    qdamp
+        See Managed Parameters.
     """
 
     def setStructure(self, stru, name="phase", periodic=False):
@@ -72,14 +92,19 @@ class DebyePDFGenerator(BasePDFGenerator):
         See those classes (located in diffpy.srfit.structure) for how they are
         used. The resulting ParameterSet will be managed by this generator.
 
-        stru    --  diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
-                    pyobjcryst.molecule.Molecule instance.  Default None.
-        name    --  A name to give to the managed ParameterSet that adapts stru
-                    (default "phase").
-        periodic -- The structure should be treated as periodic (default
-                    False). Note that some structures do not support
-                    periodicity, in which case this will have no effect on the
-                    PDF calculation.
+        Attributes
+        ----------
+        stru
+            diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
+            pyobjcryst.molecule.Molecule instance.  Default None.
+        name
+            A name to give to the managed ParameterSet that adapts stru
+            (default "phase").
+        periodic
+            The structure should be treated as periodic (default
+            False). Note that some structures do not support
+            periodicity, in which case this will have no effect on the
+            PDF calculation.
         """
         return BasePDFGenerator.setStructure(self, stru, name, periodic)
 
@@ -91,13 +116,17 @@ class DebyePDFGenerator(BasePDFGenerator):
         object (from diffpy or pyobjcryst).  The passed ParameterSet will be
         managed by this generator.
 
-        parset  --  A SrRealParSet that holds the structural information.
-                    This can be used to share the phase between multiple
-                    BasePDFGenerators, and have the changes in one reflect in
-                    another.
-        periodic -- The structure should be treated as periodic (default True).
-                    Note that some structures do not support periodicity, in
-                    which case this will be ignored.
+        Attributes
+        ----------
+        parset
+            A SrRealParSet that holds the structural information.
+            This can be used to share the phase between multiple
+            BasePDFGenerators, and have the changes in one reflect in
+            another.
+        periodic
+            The structure should be treated as periodic (default True).
+            Note that some structures do not support periodicity, in
+            which case this will be ignored.
         """
         return BasePDFGenerator.setPhase(self, parset, periodic)
 

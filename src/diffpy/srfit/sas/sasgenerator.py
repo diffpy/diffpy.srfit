@@ -27,8 +27,10 @@ from diffpy.srfit.sas.sasparameter import SASParameter
 class SASGenerator(ProfileGenerator):
     """A class for calculating I(Q) from a scattering type.
 
-    Attributes:
-    _model      --  BaseModel object this adapts.
+    Attributes
+    ----------
+    _model
+        BaseModel object this adapts.
 
     Managed Parameters:
     These depend on the parameters of the BaseModel object held by _model. They
@@ -41,8 +43,12 @@ class SASGenerator(ProfileGenerator):
     def __init__(self, name, model):
         """Initialize the generator.
 
-        name    --  A name for the SASGenerator
-        model   --  SASModel object this adapts.
+        Attributes
+        ----------
+        name
+            A name for the SASGenerator
+        model
+            SASModel object this adapts.
         """
         ProfileGenerator.__init__(self, name)
 

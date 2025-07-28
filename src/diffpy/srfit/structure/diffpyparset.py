@@ -174,20 +174,20 @@ def _latsetter(par):
 class DiffpyLatticeParSet(ParameterSet):
     """A wrapper for diffpy.structure.Lattice.
 
-    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
-    this class for base attributes.
+        This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
+        this class for base attributes.
 
-    Attributes
-    ----------
-    lattice
-        The diffpy.structure.Lattice this is adapting
-    name
-        Always "lattice"
-    angunits
-        "deg", the units of angle
+        Attributes
+        ----------
+        lattice
+            The diffpy.structure.Lattice this is adapting
+        name
+            Always "lattice"
+        angunits
+            "deg", the units of angle
 
-Managed Parameters
-------------------
+    Managed Parameters
+    ------------------
     """
 
     def __init__(self, lattice):

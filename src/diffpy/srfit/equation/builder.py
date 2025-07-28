@@ -708,8 +708,7 @@ def getBuilder(name):
 
 def __wrapNumpyOperators():
     """Export all numpy operators as OperatorBuilder instances in the module
-    namespace.
-    """
+    namespace."""
     for name in dir(numpy):
         op = getattr(numpy, name)
         if isinstance(op, numpy.ufunc):
@@ -724,8 +723,7 @@ __wrapNumpyOperators()
 def __wrapSrFitOperators():
     """Export all non-base operators from the
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
-    instances in the module namespace.
-    """
+    instances in the module namespace."""
     opmod = literals.operators
     excluded_types = set((opmod.CustomOperator, opmod.UFuncOperator))
 

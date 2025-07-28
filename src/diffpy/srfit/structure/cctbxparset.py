@@ -136,7 +136,18 @@ class CCTBXUnitCellParSet(ParameterSet):
     ----------
     name
         Always "unitcell".
-        a, b, c, alpha, beta, gamma --  Unit cell parameters (ParameterAdapter).
+    a
+        Unit cell parameters (ParameterAdapter).
+    b
+        Unit cell parameters (ParameterAdapter).
+    c
+        Unit cell parameters (ParameterAdapter).
+    alpha
+        Unit cell parameters (ParameterAdapter).
+    beta
+        Unit cell parameters (ParameterAdapter).
+    gamma
+        Unit cell parameters (ParameterAdapter).
     """
 
     def __init__(self, strups):

@@ -1658,36 +1658,36 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
 class ObjCrystCrystalParSet(SrRealParSet):
     """A adaptor for pyobjcryst.crystal.Crystal instance.
 
-        This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See
-        this class for base attributes.
+    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet.
+    See this class for base attributes.
 
-        Attributes
-        ----------
-        stru
-            The adapted pyobjcryst.Crystal.
-        scatterers
-            The list of aggregated ScattererParSets (either
-            ObjCrystAtomParSet or ObjCrystMoleculeParSet), provided for
-            convenience.
-        _sgpars
-            A BaseSpaceGroupParameters object containing free structure
-            Parameters. See the diffpy.srfit.structure.sgconstraints
-            module.
-        sgpars
-            property that creates _sgpars when it is needed.
-        angunits
-            "rad", the units of angle
+    Attributes
+    ----------
+    stru
+        The adapted pyobjcryst.Crystal.
+    scatterers
+        The list of aggregated ScattererParSets (either
+        ObjCrystAtomParSet or ObjCrystMoleculeParSet), provided for
+        convenience.
+    _sgpars
+        A BaseSpaceGroupParameters object containing free structure
+        Parameters. See the diffpy.srfit.structure.sgconstraints
+        module.
+    sgpars
+        property that creates _sgpars when it is needed.
+    angunits
+        "rad", the units of angle
 
-    Managed Parameters
-    ------------------
-
-        Managed ParameterSets
-        ---------------------
-        <sname>
-            A ObjCrystScattererParSet (either ObjCrystAtomParSet or
-            ObjCrystMoleculeParSet), where <sname> is the name of the
-            adapted pyobjcryst.atom.Atom or
-            pyobjcryst.molecule.Molecule.
+    Parameters
+    ----------
+    x
+        Scatterer position in crystal coordinates (ParameterWraper)
+    y
+        Scatterer position in crystal coordinates (ParameterWraper)
+    z
+        Scatterer position in crystal coordinates (ParameterWraper)
+    occ
+        Occupancy of the scatterer on its crystal site (ParameterWraper)
     """
 
     def __init__(self, name, cryst):

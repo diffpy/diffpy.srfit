@@ -41,8 +41,8 @@ def constrainAsSpaceGroup(
     symmetry.  Passed scatterers are explicitly constrained to the
     specified space group. The ADPs and lattice may be constrained as well.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     phase
         A BaseStructure object.
     spacegroup
@@ -265,8 +265,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     ):
         """Create the SpaceGroupParameters object.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         phase
             A BaseStructure object to be constrained.
         sg

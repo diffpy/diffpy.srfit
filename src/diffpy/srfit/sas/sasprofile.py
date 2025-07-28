@@ -98,8 +98,8 @@ class SASProfile(Profile):
 
         This is overloaded to change the value within the datainfo object.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         xobs
             Numpy array of the independent variable
         yobs

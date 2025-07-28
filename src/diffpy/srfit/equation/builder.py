@@ -142,8 +142,8 @@ class EquationFactory(object):
     ):
         """Make an equation from an equation string.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         eqstr
             An equation in string form using standard python
             syntax.  The equation string can use any function
@@ -308,8 +308,8 @@ class EquationFactory(object):
         arguments, and creates new arguments if allowed. In the process it
         rebuilds the newargs attribute.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         eqstr
             An equation in string as specified in the makeEquation
             method.
@@ -553,8 +553,8 @@ class ArgumentBuilder(BaseBuilder):
     def __init__(self, value=None, name=None, const=False, arg=None):
         """Create an ArgumentBuilder instance, containing a new Argument.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         value
             The value of the wrapped Argument (float, default None)
         name
@@ -594,8 +594,8 @@ class OperatorBuilder(BaseBuilder):
     def __init__(self, name, op=None):
         """Wrap an Operator or a function by name.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         name
             The name of the wrapped Operator
         op

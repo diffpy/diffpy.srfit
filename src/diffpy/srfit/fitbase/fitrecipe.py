@@ -254,8 +254,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def residual(self, p=[]):
         """Calculate the vector residual to be optimized.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         p
             The list of current variable values, provided in the same order
             as the '_parameters' list. If p is an empty iterable (default),
@@ -305,8 +305,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def scalarResidual(self, p=[]):
         """Calculate the scalar residual to be optimized.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         p
             The list of current variable values, provided in the same order
             as the '_parameters' list. If p is an empty iterable (default),

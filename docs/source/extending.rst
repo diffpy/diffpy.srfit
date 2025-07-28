@@ -180,7 +180,7 @@ external program before or after interfacing with SrFit. An example of a
 customized Profile is the ``SASProfile`` class in the
 ``diffpy.srfit.sas.sasprofile`` module:
 
-.. literalinclude:: /../../src/diffpy/srfit/sas/sasprofile.py
+.. literalinclude:: ../../src/diffpy/srfit/sas/sasprofile.py
    :pyobject: SASProfile
 
 The ``__init__`` method sets the ``xobs``, ``yobs`` and ``dyobs`` attributes of

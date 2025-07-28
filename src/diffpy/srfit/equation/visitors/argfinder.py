@@ -36,8 +36,8 @@ class ArgFinder(Visitor):
     def __init__(self, getconsts=True):
         """Initialize.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         getconsts
             Flag indicating whether to parse constant arguments
             (default True).

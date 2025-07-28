@@ -138,8 +138,8 @@ class Profile(Observable, Validatable):
     def setObservedProfile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         xobs
             Numpy array of the independent variable
         yobs
@@ -280,8 +280,8 @@ class Profile(Observable, Validatable):
     def setCalculationPoints(self, x):
         """Set the calculation points.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         x
             A non-empty numpy array containing the calculation points. If
             xobs exists, the bounds of x will be limited to its bounds.
@@ -414,8 +414,8 @@ class Profile(Observable, Validatable):
 def rebinArray(A, xold, xnew):
     """Rebin the an array by interpolating over the new x range.
 
-    Arguments
-    ---------
+    Parameters
+    ----------
     A
         Array to interpolate
     xold

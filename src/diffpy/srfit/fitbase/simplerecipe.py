@@ -119,8 +119,8 @@ class SimpleRecipe(FitRecipe):
     def setObservedProfile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         xobs
             Numpy array of the independent variable
         yobs
@@ -172,8 +172,8 @@ class SimpleRecipe(FitRecipe):
     def setCalculationPoints(self, x):
         """Set the calculation points.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         x
             A non-empty numpy array containing the calculation points. If
             xobs exists, the bounds of x will be limited to its bounds.

@@ -94,8 +94,8 @@ class SASParser(ProfileParser):
 
         This wipes out the currently loaded data and selected bank number.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         filename
             The name of the file to parse
 
@@ -129,8 +129,8 @@ class SASParser(ProfileParser):
 
         This wipes out the currently loaded data and selected bank number.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         patstring
             A string containing the pattern
 

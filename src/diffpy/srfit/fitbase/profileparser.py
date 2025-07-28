@@ -103,8 +103,8 @@ class ProfileParser(object):
 
         This wipes out the currently loaded data and selected bank number.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         patstring
             A string containing the pattern
 
@@ -117,8 +117,8 @@ class ProfileParser(object):
 
         This wipes out the currently loaded data and selected bank number.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         filename
             The name of the file to parse
 
@@ -151,8 +151,8 @@ class ProfileParser(object):
         parser is used to parse more data. This uses python list notation, so
         index -n returns the nth bank from the end.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         index
             index of bank (integer, starting at 0).
 
@@ -184,8 +184,8 @@ class ProfileParser(object):
         parser is used to parse more data. This uses python list notation, so
         index -n returns the nth bank from the end.
 
-        Arguments
-        ---------
+        Parameters
+        ----------
         index
             index of bank (integer, starting at 0, default None). If
             index is None then the currently selected bank is used.

@@ -82,7 +82,15 @@ class SASProfile(Profile):
         datainfo
             The DataInfo object this wraps.
         """
-        self._datainfo = datainfo
+        # Handle case where datainfo is a list (new sasdata behavior)
+        if isinstance(datainfo, list):
+            if len(datainfo) == 0:
+                raise ValueError("Empty datainfo list provided")
+            # Use the first data object if it's a list
+            self._datainfo = datainfo[0]
+        else:
+            # Single datainfo object (legacy behavior)
+            self._datainfo = datainfo
         Profile.__init__(self)
 
         self._xobs = self._datainfo.x

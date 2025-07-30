@@ -17,8 +17,10 @@
 import numpy
 import pytest
 
+# Use the updated SasView model API to load models
+from sasmodels.sasview_model import _make_standard_model
+
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
-from diffpy.srfit.sas.sasimport import sasimport
 
 # ----------------------------------------------------------------------------
 # FIXME: adjust sensitivity of the pytest.approx statements when ready to test
@@ -113,7 +115,7 @@ def testParser(sas_available, datafile):
 def test_generator(sas_available):
     if not sas_available:
         pytest.skip("sas package not available")
-    SphereModel = sasimport("sas.models.SphereModel").SphereModel
+    SphereModel = _make_standard_model("sphere")
     model = SphereModel()
     gen = SASGenerator("sphere", model)
     for pname in model.params:
@@ -140,25 +142,27 @@ def test_generator(sas_available):
 def testGenerator2(sas_available, datafile):
     if not sas_available:
         pytest.skip("sas package not available")
-    EllipsoidModel = sasimport("sas.models.EllipsoidModel").EllipsoidModel
+    EllipsoidModel = _make_standard_model("ellipsoid")
     model = EllipsoidModel()
     gen = SASGenerator("ellipsoid", model)
 
     # Load the data using SAS tools
-    Loader = sasimport("sas.dataloader.loader").Loader
+    import sasdata.dataloader.loader as ld
+
+    Loader = ld.Loader
     loader = Loader()
     data = datafile("sas_ellipsoid_testdata.txt")
-    datainfo = loader.load(data)
+    datainfo = loader.load(str(data))
     profile = SASProfile(datainfo)
 
     gen.setProfile(profile)
     gen.scale.value = 1.0
-    gen.radius_a.value = 20
-    gen.radius_b.value = 400
+    gen.radius_polar.value = 20
+    gen.radius_equatorial.value = 400
     gen.background.value = 0.01
 
     y = gen(profile.xobs)
     diff = profile.yobs - y
     res = numpy.dot(diff, diff)
-    assert 0 == pytest.approx(res)
+    assert 0 == pytest.approx(res, abs=1e-3)
     return

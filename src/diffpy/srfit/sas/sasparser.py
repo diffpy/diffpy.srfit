@@ -22,7 +22,6 @@ __all__ = ["SASParser"]
 
 from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
-from diffpy.srfit.sas.sasimport import sasimport
 
 
 class SASParser(ProfileParser):
@@ -102,9 +101,14 @@ class SASParser(ProfileParser):
         Raises IOError if the file cannot be read
         Raises ParseError if the file cannot be parsed
         """
+        import sasdata.dataloader.loader as ld
 
-        Loader = sasimport("sas.dataloader.loader").Loader
+        Loader = ld.Loader
         loader = Loader()
+
+        # Convert Path object to string if needed
+        if not isinstance(filename, str):
+            filename = str(filename)
 
         try:
             data = loader.load(filename)
@@ -118,7 +122,16 @@ class SASParser(ProfileParser):
         self._meta["filename"] = filename
         self._meta["datainfo"] = data
 
-        self._banks.append([data.x, data.y, data.dx, data.dy])
+        # Handle case where loader returns a list of data objects
+        if isinstance(data, list):
+            # If it's a list, iterate through each data object
+            for data_obj in data:
+                self._banks.append(
+                    [data_obj.x, data_obj.y, data_obj.dx, data_obj.dy]
+                )
+        else:
+            # If it's a single data object, use it directly
+            self._banks.append([data.x, data.y, data.dx, data.dy])
         self.selectBank(0)
         return
 

@@ -7,7 +7,6 @@ import pytest
 import six
 
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.sas.sasimport import sasimport
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +14,11 @@ logger = logging.getLogger(__name__)
 @lru_cache()
 def has_sas():
     try:
-        sasimport("sas.pr.invertor")
-        sasimport("sas.models")
+        import sas
+        import sasmodels
+
+        del sas
+        del sasmodels
         return True
     except ImportError:
         return False

@@ -4,7 +4,7 @@
 
 **Changed:**
 
-* Refactored code utilizing sasmodels to use the new sasview api.
+* <news item>
 
 **Deprecated:**
 
@@ -16,7 +16,7 @@
 
 **Fixed:**
 
-* <news item>
+* Refactored code utilizing sasmodels to use the new sasview api.
 
 **Security:**
 

@@ -18,9 +18,11 @@ import numpy
 import pytest
 
 # Use the updated SasView model API to load models
-from sasmodels.sasview_model import _make_standard_model
+from sasmodels.sasview_model import find_model, load_standard_models
 
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
+
+load_standard_models()
 
 # ----------------------------------------------------------------------------
 # FIXME: adjust sensitivity of the pytest.approx statements when ready to test
@@ -115,7 +117,7 @@ def testParser(sas_available, datafile):
 def test_generator(sas_available):
     if not sas_available:
         pytest.skip("sas package not available")
-    SphereModel = _make_standard_model("sphere")
+    SphereModel = find_model("sphere")
     model = SphereModel()
     gen = SASGenerator("sphere", model)
     for pname in model.params:
@@ -142,14 +144,14 @@ def test_generator(sas_available):
 def testGenerator2(sas_available, datafile):
     if not sas_available:
         pytest.skip("sas package not available")
-    EllipsoidModel = _make_standard_model("ellipsoid")
+    EllipsoidModel = find_model("ellipsoid")
     model = EllipsoidModel()
     gen = SASGenerator("ellipsoid", model)
 
     # Load the data using SAS tools
-    import sasdata.dataloader.loader as ld
+    import sasdata.dataloader.loader as sas_dataloader
 
-    Loader = ld.Loader
+    Loader = sas_dataloader.Loader
     loader = Loader()
     data = datafile("sas_ellipsoid_testdata.txt")
     datainfo = loader.load(str(data))

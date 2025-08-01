@@ -101,17 +101,13 @@ class SASParser(ProfileParser):
         Raises IOError if the file cannot be read
         Raises ParseError if the file cannot be parsed
         """
-        import sasdata.dataloader.loader as ld
+        import sasdata.dataloader.loader as sas_dataloader
 
-        Loader = ld.Loader
+        Loader = sas_dataloader.Loader
         loader = Loader()
 
-        # Convert Path object to string if needed
-        if not isinstance(filename, str):
-            filename = str(filename)
-
         try:
-            data = loader.load(filename)
+            data = loader.load(str(filename))
         except RuntimeError as e:
             raise ParseError(e)
         except ValueError as e:
@@ -122,16 +118,10 @@ class SASParser(ProfileParser):
         self._meta["filename"] = filename
         self._meta["datainfo"] = data
 
-        # Handle case where loader returns a list of data objects
-        if isinstance(data, list):
-            # If it's a list, iterate through each data object
-            for data_obj in data:
-                self._banks.append(
-                    [data_obj.x, data_obj.y, data_obj.dx, data_obj.dy]
-                )
-        else:
-            # If it's a single data object, use it directly
-            self._banks.append([data.x, data.y, data.dx, data.dy])
+        for data_obj in data:
+            self._banks.append(
+                [data_obj.x, data_obj.y, data_obj.dx, data_obj.dy]
+            )
         self.selectBank(0)
         return
 

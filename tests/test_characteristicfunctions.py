@@ -18,11 +18,11 @@ import unittest
 
 import numpy
 import pytest
-
-# Use the updated SasView model API to load models
-from sasmodels.sasview_model import _make_standard_model
+from sasmodels.sasview_model import find_model, load_standard_models
 
 import diffpy.srfit.pdf.characteristicfunctions as cf
+
+load_standard_models()
 
 # # Global variables to be assigned in setUp
 # cf = None
@@ -36,7 +36,7 @@ def testSphere(sas_available):
         pytest.skip("sas package not available")
     radius = 25
     # Calculate sphere cf from SphereModel
-    SphereModel = _make_standard_model("sphere")
+    SphereModel = find_model("sphere")
     model = SphereModel()
     model.setParam("radius", radius)
     ff = cf.SASCF("sphere", model)
@@ -58,7 +58,7 @@ def testSpheroid(sas_available):
     prad = 20.9
     erad = 33.114
     # Calculate cf from EllipsoidModel
-    EllipsoidModel = _make_standard_model("ellipsoid")
+    EllipsoidModel = find_model("ellipsoid")
     model = EllipsoidModel()
     model.setParam("radius_polar", prad)
     model.setParam("radius_equatorial", erad)
@@ -81,7 +81,7 @@ def testShell(sas_available):
     radius = 19.2
     thickness = 7.8
     # Calculate cf from VesicleModel
-    VesicleModel = _make_standard_model("vesicle")
+    VesicleModel = find_model("vesicle")
     model = VesicleModel()
     model.setParam("radius", radius)
     model.setParam("thickness", thickness)
@@ -105,7 +105,7 @@ def testCylinder(sas_available):
     radius = 100
     length = 30
 
-    CylinderModel = _make_standard_model("cylinder")
+    CylinderModel = find_model("cylinder")
     model = CylinderModel()
     model.setParam("radius", radius)
     model.setParam("length", length)

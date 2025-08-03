@@ -166,5 +166,7 @@ def testGenerator2(sas_available, datafile):
     y = gen(profile.xobs)
     diff = profile.yobs - y
     res = numpy.dot(diff, diff)
+    # FIXME: go back to default tolerance when we figure out why
+    # the models are not identical
     assert 0 == pytest.approx(res, abs=1e-3)
     return

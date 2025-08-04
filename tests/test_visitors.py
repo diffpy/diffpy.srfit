@@ -207,7 +207,7 @@ class TestSwapper:
         assert plus2.hasObserver(mult._flush)
 
         # plus2 has no arguments yet. Verify this.
-        with pytest.raises(TypeError):
+        with pytest.raises(ValueError):
             mult.getValue()
         # Add the arguments to plus2.
         plus2.addLiteral(v4)

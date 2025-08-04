@@ -115,7 +115,7 @@ class TestCustomOperator(unittest.TestCase):
         """Test adding a literal to an operator node."""
         op = self.op
 
-        self.assertRaises(TypeError, op.getValue)
+        self.assertRaises(ValueError, op.getValue)
         op._value = 1
         self.assertEqual(op.getValue(), 1)
 
@@ -124,7 +124,7 @@ class TestCustomOperator(unittest.TestCase):
         b = literals.Argument(name="b", value=0)
 
         op.addLiteral(a)
-        self.assertRaises(TypeError, op.getValue)
+        self.assertRaises(ValueError, op.getValue)
 
         op.addLiteral(b)
         self.assertAlmostEqual(0, op.value)

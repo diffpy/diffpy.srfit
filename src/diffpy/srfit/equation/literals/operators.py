@@ -123,7 +123,13 @@ class Operator(Literal, OperatorABC):
         """Get or evaluate the value of the operator."""
         if self._value is None:
             vals = [arg.value for arg in self.args]
-            self._value = self.operation(*vals)
+            try:
+                self._value = self.operation(*vals)
+            except Exception as e:
+                raise ValueError(
+                    "Error evaluating operator '%s' with arguments %s : %s"
+                    % (self, vals, e)
+                )
         return self._value
 
     value = property(lambda self: self.getValue())

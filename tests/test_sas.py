@@ -22,8 +22,6 @@ from sasmodels.sasview_model import find_model, load_standard_models
 
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
 
-load_standard_models()
-
 # ----------------------------------------------------------------------------
 # FIXME: adjust sensitivity of the pytest.approx statements when ready to test
 # with sasview installed.
@@ -33,6 +31,7 @@ def testParser(sas_available, datafile):
     if not sas_available:
         pytest.skip("sas package not available")
 
+    load_standard_models()
     data = datafile("sas_ascii_test_1.txt")
     parser = SASParser()
     parser.parseFile(data)
@@ -117,6 +116,7 @@ def testParser(sas_available, datafile):
 def test_generator(sas_available):
     if not sas_available:
         pytest.skip("sas package not available")
+    load_standard_models()
     SphereModel = find_model("sphere")
     model = SphereModel()
     gen = SASGenerator("sphere", model)
@@ -144,6 +144,7 @@ def test_generator(sas_available):
 def testGenerator2(sas_available, datafile):
     if not sas_available:
         pytest.skip("sas package not available")
+    load_standard_models()
     EllipsoidModel = find_model("ellipsoid")
     model = EllipsoidModel()
     gen = SASGenerator("ellipsoid", model)

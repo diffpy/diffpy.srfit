@@ -22,8 +22,6 @@ from sasmodels.sasview_model import find_model, load_standard_models
 
 import diffpy.srfit.pdf.characteristicfunctions as cf
 
-load_standard_models()
-
 # # Global variables to be assigned in setUp
 # cf = None
 # Fixme: remove this code if imports don't break on testing
@@ -39,6 +37,8 @@ def testSphere(sas_available):
         + "remove skip when our code is refactored to use the "
         + "latest sasview API"
     )
+
+    load_standard_models()
     radius = 25
     # Calculate sphere cf from SphereModel
     SphereModel = find_model("sphere")
@@ -65,6 +65,8 @@ def testSpheroid(sas_available):
         + "remove skip when our code is refactored to use the "
         + "latest sasview API"
     )
+
+    load_standard_models()
     prad = 20.9
     erad = 33.114
     # Calculate cf from EllipsoidModel
@@ -93,6 +95,8 @@ def testShell(sas_available):
         + "remove skip when our code is refactored to use the "
         + "latest sasview API"
     )
+
+    load_standard_models()
     radius = 19.2
     thickness = 7.8
     # Calculate cf from VesicleModel
@@ -121,6 +125,7 @@ def testCylinder(sas_available):
         + "remove skip when our code is refactored to use the "
         + "latest sasview API"
     )
+    load_standard_models()
     """Make sure cylinder works over different r-ranges."""
     radius = 100
     length = 30

@@ -32,7 +32,13 @@ load_standard_models()
 
 
 def testSphere(sas_available):
-    pytest.skip("calculate_ER() not available")
+    # if not sas_available:
+    # pytest.skip("sas package not available")
+    pytest.skip(
+        "sas characteristic functions not currently working, "
+        + "remove skip when our code is refactored to use the "
+        + "latest sasview API"
+    )
     radius = 25
     # Calculate sphere cf from SphereModel
     SphereModel = find_model("sphere")
@@ -52,7 +58,13 @@ def testSphere(sas_available):
 
 
 def testSpheroid(sas_available):
-    pytest.skip("calculate_ER() not available")
+    # if not sas_available:
+    # pytest.skip("sas package not available")
+    pytest.skip(
+        "sas characteristic functions not currently working, "
+        + "remove skip when our code is refactored to use the "
+        + "latest sasview API"
+    )
     prad = 20.9
     erad = 33.114
     # Calculate cf from EllipsoidModel
@@ -74,7 +86,13 @@ def testSpheroid(sas_available):
 
 
 def testShell(sas_available):
-    pytest.skip("calculate_ER() not available")
+    # if not sas_available:
+    # pytest.skip("sas package not available")
+    pytest.skip(
+        "sas characteristic functions not currently working, "
+        + "remove skip when our code is refactored to use the "
+        + "latest sasview API"
+    )
     radius = 19.2
     thickness = 7.8
     # Calculate cf from VesicleModel
@@ -96,7 +114,13 @@ def testShell(sas_available):
 
 
 def testCylinder(sas_available):
-    pytest.skip("calculate_ER() not available")
+    # if not sas_available:
+    # pytest.skip("sas package not available")
+    pytest.skip(
+        "sas characteristic functions not currently working, "
+        + "remove skip when our code is refactored to use the "
+        + "latest sasview API"
+    )
     """Make sure cylinder works over different r-ranges."""
     radius = 100
     length = 30

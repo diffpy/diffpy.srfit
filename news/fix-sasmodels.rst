@@ -4,7 +4,7 @@
 
 **Changed:**
 
-* <news item>
+* Temporarily removed support for SAS characteristic functions until we can migrate to the new sasview api.
 
 **Deprecated:**
 
@@ -16,7 +16,7 @@
 
 **Fixed:**
 
-* Refactored code utilizing sasmodels to use the new sasview api.
+* <news item>
 
 **Security:**
 

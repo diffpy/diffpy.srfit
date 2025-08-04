@@ -122,6 +122,9 @@ class SASParser(ProfileParser):
             self._banks.append(
                 [data_obj.x, data_obj.y, data_obj.dx, data_obj.dy]
             )
+        # FIXME: Revisit when we refactor the SAS characteristic functions.
+        # Why is a list imported but only the first element is taken?
+        # Is this desired behavior?
         self.selectBank(0)
         return
 

@@ -416,8 +416,8 @@ class SASCF(Calculator):
         # We also have to make a q-spacing small enough to compute out to at
         # least the size of the signal.
         raise NotImplementedError(
-            "As of release 3.2.0, these are not working but we hope to have "
-            + "them working again in a future release."
+            "As of release 3.2.0, SAS characteristic functions are not working"
+            + " but we hope to have them working again in a future release."
         )
 
         dr = min(0.01, r[1] - r[0])

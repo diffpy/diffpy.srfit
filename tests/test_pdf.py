@@ -160,6 +160,7 @@ def testGenerator(
 
     stru = PDFFitStructure()
     ciffile = datafile("ni.cif")
+    ciffile = str(ciffile)
     stru.read(ciffile)
     for i in range(4):
         stru[i].Bisoequiv = 1
@@ -298,7 +299,9 @@ def test_pickling(
 
     pc = PDFContribution("pdf")
     pc.loadData(datafile("ni-q27r100-neutron.gr"))
-    ni = loadStructure(datafile("ni.cif"))
+    ciffile = datafile("ni.cif")
+    ciffile = str(ciffile)
+    ni = loadStructure(ciffile)
     ni.Uisoequiv = 0.003
     pc.addStructure("ni", ni)
     pc.setCalculationRange(0, 10)

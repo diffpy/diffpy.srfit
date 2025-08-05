@@ -22,7 +22,6 @@ __all__ = ["SASParser"]
 
 from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
-from diffpy.srfit.sas.sasimport import sasimport
 
 
 class SASParser(ProfileParser):
@@ -102,12 +101,13 @@ class SASParser(ProfileParser):
         Raises IOError if the file cannot be read
         Raises ParseError if the file cannot be parsed
         """
+        import sasdata.dataloader.loader as sas_dataloader
 
-        Loader = sasimport("sas.dataloader.loader").Loader
+        Loader = sas_dataloader.Loader
         loader = Loader()
 
         try:
-            data = loader.load(filename)
+            data = loader.load(str(filename))
         except RuntimeError as e:
             raise ParseError(e)
         except ValueError as e:
@@ -118,7 +118,13 @@ class SASParser(ProfileParser):
         self._meta["filename"] = filename
         self._meta["datainfo"] = data
 
-        self._banks.append([data.x, data.y, data.dx, data.dy])
+        for data_obj in data:
+            self._banks.append(
+                [data_obj.x, data_obj.y, data_obj.dx, data_obj.dy]
+            )
+        # FIXME: Revisit when we refactor the SAS characteristic functions.
+        # Why is a list imported but only the first element is taken?
+        # Is this desired behavior?
         self.selectBank(0)
         return
 

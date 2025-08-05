@@ -82,7 +82,7 @@ class SASProfile(Profile):
         datainfo
             The DataInfo object this wraps.
         """
-        self._datainfo = datainfo
+        self._datainfo = datainfo[0]
         Profile.__init__(self)
 
         self._xobs = self._datainfo.x

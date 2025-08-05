@@ -17,9 +17,6 @@
 import numpy
 import pytest
 
-# Use the updated SasView model API to load models
-from sasmodels.sasview_model import find_model, load_standard_models
-
 from diffpy.srfit.sas import SASGenerator, SASParser, SASProfile
 
 # ----------------------------------------------------------------------------
@@ -31,7 +28,6 @@ def testParser(sas_available, datafile):
     if not sas_available:
         pytest.skip("sas package not available")
 
-    load_standard_models()
     data = datafile("sas_ascii_test_1.txt")
     parser = SASParser()
     parser.parseFile(data)
@@ -116,6 +112,8 @@ def testParser(sas_available, datafile):
 def test_generator(sas_available):
     if not sas_available:
         pytest.skip("sas package not available")
+    from sasmodels.sasview_model import find_model, load_standard_models
+
     load_standard_models()
     SphereModel = find_model("sphere")
     model = SphereModel()
@@ -144,6 +142,8 @@ def test_generator(sas_available):
 def testGenerator2(sas_available, datafile):
     if not sas_available:
         pytest.skip("sas package not available")
+    from sasmodels.sasview_model import find_model, load_standard_models
+
     load_standard_models()
     EllipsoidModel = find_model("ellipsoid")
     model = EllipsoidModel()

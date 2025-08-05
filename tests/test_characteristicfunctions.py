@@ -18,7 +18,6 @@ import unittest
 
 import numpy
 import pytest
-from sasmodels.sasview_model import find_model, load_standard_models
 
 import diffpy.srfit.pdf.characteristicfunctions as cf
 
@@ -37,6 +36,8 @@ def testSphere(sas_available):
         + "remove skip when our code is refactored to use the "
         + "latest sasview API"
     )
+
+    from sasmodels.sasview_model import find_model, load_standard_models
 
     load_standard_models()
     radius = 25
@@ -65,6 +66,8 @@ def testSpheroid(sas_available):
         + "remove skip when our code is refactored to use the "
         + "latest sasview API"
     )
+
+    from sasmodels.sasview_model import find_model, load_standard_models
 
     load_standard_models()
     prad = 20.9
@@ -96,6 +99,8 @@ def testShell(sas_available):
         + "latest sasview API"
     )
 
+    from sasmodels.sasview_model import find_model, load_standard_models
+
     load_standard_models()
     radius = 19.2
     thickness = 7.8
@@ -125,6 +130,8 @@ def testCylinder(sas_available):
         + "remove skip when our code is refactored to use the "
         + "latest sasview API"
     )
+    from sasmodels.sasview_model import find_model, load_standard_models
+
     load_standard_models()
     """Make sure cylinder works over different r-ranges."""
     radius = 100

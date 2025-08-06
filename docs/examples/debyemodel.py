@@ -91,8 +91,8 @@ def makeRecipe():
 
     # Load data and add it to the profile. It is our responsibility to get our
     # data into the profile.
-    xydy = numpy.array(map(float, data.split()), dtype=float).reshape(-1, 3)
-    x, y, dy = numpy.hsplit(xydy, 3)
+    xydy = numpy.array(data.split(), dtype=float).reshape(-1, 3)
+    x, y, dy = xydy.T
     profile.setObservedProfile(x, y, dy)
 
     # The FitContribution

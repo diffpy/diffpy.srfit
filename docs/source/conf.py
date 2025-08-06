@@ -52,7 +52,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx_rtd_theme",
     "sphinx_copybutton",
-    "m2r2",
+    "m2r",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -302,7 +302,7 @@ texinfo_documents = [
         "diffpy.srfit Documentation",
         ab_authors,
         "diffpy.srfit",
-        "One line description of project.",
+        "Configurable code for solving atomic structures.",
         "Miscellaneous",
     ),
 ]

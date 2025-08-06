@@ -302,7 +302,7 @@ texinfo_documents = [
         "diffpy.srfit Documentation",
         ab_authors,
         "diffpy.srfit",
-        "One line description of project.",
+        "Configurable code for solving atomic structures.",
         "Miscellaneous",
     ),
 ]

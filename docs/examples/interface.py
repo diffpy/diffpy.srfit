@@ -53,7 +53,7 @@ def main():
     #           loosely tying parameters to a value.
     r = FitRecipe()
     r |= c
-    r += (c.A, 0.5), (c.x0, 5), "sig"
+    r += (c.A, 0.5), (c.x0, 5), ("sig", 1)
     r *= c.sigma, "sig"
     r %= c.A, 0.5, 0.5
 

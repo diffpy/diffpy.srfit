@@ -1,0 +1,1336 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.fitbase.recipeorganizer &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=cca77546"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.fitbase.recipeorganizer</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.srfit.fitbase.recipeorganizer</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2008 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
+<span class="sd">&quot;&quot;&quot;Base classes and tools for constructing a FitRecipe.</span>
+
+<span class="sd">RecipeContainer is the base class for organizing Parameters, and other</span>
+<span class="sd">RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that</span>
+<span class="sd">incorporates equation building, constraints and Restraints.</span>
+<span class="sd">equationFromString creates an Equation instance from a string.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RecipeContainer&quot;</span><span class="p">,</span> <span class="s2">&quot;RecipeOrganizer&quot;</span><span class="p">,</span> <span class="s2">&quot;equationFromString&quot;</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">groupby</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">six</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Equation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">EquationFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.configurable</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configurable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.constraint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Constraint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.restraint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Restraint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.validatable</span><span class="w"> </span><span class="kn">import</span> <span class="n">Validatable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">_recipeorganizer_interface</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">_DASHEDLINE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">sortKeyForNumericString</span> <span class="k">as</span> <span class="n">numstr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util.nameutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">validateName</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util.observable</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observable</span>
+
+
+<div class="viewcode-block" id="RecipeContainer">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeContainer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RecipeContainer</span><span class="p">(</span><span class="n">Observable</span><span class="p">,</span> <span class="n">Configurable</span><span class="p">,</span> <span class="n">Validatable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for organizing pieces of a FitRecipe.</span>
+
+<span class="sd">    RecipeContainers are hierarchical organizations of Parameters and other</span>
+<span class="sd">    RecipeContainers. This class provides attribute-access to these contained</span>
+<span class="sd">    objects.  Parameters and other RecipeContainers can be found within the</span>
+<span class="sd">    hierarchy with the _locateManagedObject method.</span>
+
+<span class="sd">    A RecipeContainer can manage dictionaries for that store various objects.</span>
+<span class="sd">    These dictionaries can be added to the RecipeContainer using the _manage</span>
+<span class="sd">    method. RecipeContainer methods that add, remove or retrieve objects will</span>
+<span class="sd">    work with any managed dictionary. This makes it easy to add new types of</span>
+<span class="sd">    objects to be contained by a RecipeContainer. By default, the</span>
+<span class="sd">    RecipeContainer is configured to manage an OrderedDict of Parameter</span>
+<span class="sd">    objects.</span>
+
+<span class="sd">    RecipeContainer is an Observable, and observes its managed objects and</span>
+<span class="sd">    Parameters. This allows hierarchical calculation elements, such as</span>
+<span class="sd">    ProfileGenerator, to detect changes in Parameters and Restraints on which</span>
+<span class="sd">    it may depend.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name</span>
+<span class="sd">        A name for this RecipeContainer. Names should be unique</span>
+<span class="sd">        within a RecipeContainer and should be valid attribute</span>
+<span class="sd">        names.</span>
+<span class="sd">    _parameters</span>
+<span class="sd">        A managed OrderedDict of contained Parameters.</span>
+<span class="sd">    __managed</span>
+<span class="sd">        A list of managed dictionaries. This is used for</span>
+<span class="sd">        attribute access, addition and removal.</span>
+<span class="sd">    _configobjs</span>
+<span class="sd">        A set of configurable objects that must know of</span>
+<span class="sd">        configuration changes within this object.</span>
+
+<span class="sd">    Properties</span>
+<span class="sd">    ----------</span>
+<span class="sd">    names</span>
+<span class="sd">        Variable names (read only). See getNames.</span>
+<span class="sd">    values</span>
+<span class="sd">        Variable values (read only). See getValues.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNames</span><span class="p">())</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValues</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">Observable</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">Configurable</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">validateName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__managed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_manage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Manage a dictionary of objects.</span>
+
+<span class="sd">        This adds the dictionary to the __managed list. Dictionaries in</span>
+<span class="sd">        __managed are used for attribute access, addition, and removal.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__managed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_iterManaged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get iterator over managed objects.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">chain</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__managed</span><span class="p">))</span>
+
+<div class="viewcode-block" id="RecipeContainer.iterPars">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeContainer.iterPars">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iterPars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over the Parameters contained in this object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pattern : str</span>
+<span class="sd">            Iterate over parameters with names matching this regular</span>
+<span class="sd">            expression (all parameters by default).</span>
+<span class="sd">        recurse : bool</span>
+<span class="sd">            Recurse into managed objects when True (default).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">par</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">recurse</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># Iterate over objects within the managed dictionaries.</span>
+        <span class="n">managed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__managed</span><span class="p">[:]</span>
+        <span class="n">managed</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">managed</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;iterPars&quot;</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">iterPars</span><span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="n">pattern</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="n">par</span>
+        <span class="k">return</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over top-level parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get number of top-level parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get top-level parameters by index.&quot;&quot;&quot;</span>
+        <span class="c1"># need to wrap this in a list for python 3 compatibility.</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gives access to the contained objects as attributes.&quot;&quot;&quot;</span>
+        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">arg</span>
+
+    <span class="c1"># Ensure there is no __dir__ override in the base class.</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="n">Observable</span><span class="p">,</span> <span class="s2">&quot;__dir__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="ow">is</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Configurable</span><span class="p">,</span> <span class="s2">&quot;__dir__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="ow">is</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Validatable</span><span class="p">,</span> <span class="s2">&quot;__dir__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="ow">is</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;__dir__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return sorted list of attributes for this object.&quot;&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
+        <span class="n">rv</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+        <span class="c1"># self.get fetches looks up for items in all managed dictionaries.</span>
+        <span class="c1"># Add keys from each dictionary in self.__managed.</span>
+        <span class="n">rv</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">__managed</span><span class="p">)</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span>
+
+    <span class="c1"># Needed by __setattr__</span>
+    <span class="n">_parameters</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">__managed</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parameter access and object checking.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">:</span>
+            <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Parameter</span><span class="p">):</span>
+                <span class="n">par</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">par</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">return</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Cannot set &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">RecipeContainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__delattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete parameters with del.</span>
+
+<span class="sd">        This does not allow deletion of non-parameters, as this may</span>
+<span class="sd">        require configuration changes that are not yet handled in a</span>
+<span class="sd">        general way.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_removeParameter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+            <span class="k">return</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Cannot delete &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">RecipeContainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__delattr__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="RecipeContainer.get">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeContainer.get">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a managed object.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__managed</span><span class="p">:</span>
+            <span class="n">arg</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">arg</span>
+
+        <span class="k">return</span> <span class="n">default</span></div>
+
+
+<div class="viewcode-block" id="RecipeContainer.getNames">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeContainer.getNames">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getNames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the names of managed parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="RecipeContainer.getValues">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeContainer.getValues">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getValues</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the values of managed parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_addObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an object to a managed dictionary.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        obj</span>
+<span class="sd">            The object to be stored.</span>
+<span class="sd">        d</span>
+<span class="sd">            The managed dictionary to store the object in.</span>
+<span class="sd">        check</span>
+<span class="sd">            If True (default), a ValueError is raised an object of the</span>
+<span class="sd">            given name already exists.</span>
+
+<span class="sd">        Raises ValueError if the object has no name.</span>
+<span class="sd">        Raises ValueError if the object has the same name as some other managed</span>
+<span class="sd">        object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check name</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has no name&quot;</span> <span class="o">%</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="c1"># Check for extant object in d with same name</span>
+        <span class="n">oldobj</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">check</span> <span class="ow">and</span> <span class="n">oldobj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> with name &#39;</span><span class="si">%s</span><span class="s2">&#39; already exists&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="c1"># Check for object with same name in other dictionary.</span>
+        <span class="k">if</span> <span class="n">oldobj</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;Non-</span><span class="si">%s</span><span class="s2"> with name &#39;</span><span class="si">%s</span><span class="s2">&#39; already exists&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="c1"># Detach the old object, if there is one</span>
+        <span class="k">if</span> <span class="n">oldobj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">oldobj</span><span class="o">.</span><span class="n">removeObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+
+        <span class="c1"># Add the object</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span>
+
+        <span class="c1"># Observe the object</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+
+        <span class="c1"># Store this as a configurable object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_storeConfigurable</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_removeObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove an object from a managed dictionary.</span>
+
+<span class="sd">        Raises ValueError if obj is not part of the dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; is not part of the </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">removeObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_locateManagedObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the location a managed object within the hierarchy.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        obj</span>
+<span class="sd">            The object to find.</span>
+
+<span class="sd">        Returns a list of objects. The first member of the list is this object,</span>
+<span class="sd">        and each subsequent member is a sub-object of the previous one.  The</span>
+<span class="sd">        last entry in the list is obj. If obj cannot be found, the list is</span>
+<span class="sd">        empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
+
+        <span class="c1"># This handles the case that an object is asked to locate itself.</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">loc</span>
+
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterManaged</span><span class="p">():</span>
+
+            <span class="c1"># Check locally for the object</span>
+            <span class="k">if</span> <span class="n">m</span> <span class="ow">is</span> <span class="n">obj</span><span class="p">:</span>
+                <span class="n">loc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">loc</span>
+
+            <span class="c1"># Check within managed objects</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="s2">&quot;_locateManagedObject&quot;</span><span class="p">):</span>
+
+                <span class="n">subloc</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">_locateManagedObject</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">subloc</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">loc</span> <span class="o">+</span> <span class="n">subloc</span>
+
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Invalidate cached state.</span>
+
+<span class="sd">        This will force any observer to invalidate its state. By default</span>
+<span class="sd">        this does nothing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
+
+<span class="sd">        This validates that contained Parameters and managed objects are</span>
+<span class="sd">        valid.</span>
+
+<span class="sd">        Raises AttributeError if validation fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">iterable</span> <span class="o">=</span> <span class="n">chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterManaged</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validateOthers</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+
+<span class="c1"># End class RecipeContainer</span>
+
+
+<div class="viewcode-block" id="RecipeOrganizer">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RecipeOrganizer</span><span class="p">(</span><span class="n">_recipeorganizer_interface</span><span class="p">,</span> <span class="n">RecipeContainer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extended base class for organizing pieces of a FitRecipe.</span>
+
+<span class="sd">    This class extends RecipeContainer by organizing constraints and</span>
+<span class="sd">    Restraints, as well as Equations that can be used in Constraint and</span>
+<span class="sd">    Restraint equations.  These constraints and Restraints can be placed at any</span>
+<span class="sd">    level and a flattened list of them can be retrieved with the</span>
+<span class="sd">    _getConstraints and _getRestraints methods.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name</span>
+<span class="sd">        A name for this organizer. Names should be unique</span>
+<span class="sd">        within a RecipeOrganizer and should be valid attribute</span>
+<span class="sd">        names.</span>
+<span class="sd">    _calculators</span>
+<span class="sd">        A managed dictionary of Calculators, indexed by name.</span>
+<span class="sd">    _parameters</span>
+<span class="sd">        A managed OrderedDict of contained Parameters.</span>
+<span class="sd">    _constraints</span>
+<span class="sd">        A dictionary of Constraints, indexed by the constrained</span>
+<span class="sd">        Parameter. Constraints can be added using the</span>
+<span class="sd">        &#39;constrain&#39; method.</span>
+<span class="sd">    _restraints</span>
+<span class="sd">        A set of Restraints. Restraints can be added using the</span>
+<span class="sd">        &#39;restrain&#39; method.</span>
+<span class="sd">    _eqfactory</span>
+<span class="sd">        A diffpy.srfit.equation.builder.EquationFactory</span>
+<span class="sd">        instance that is used create Equations from string.</span>
+
+<span class="sd">    Properties</span>
+<span class="sd">    ----------</span>
+<span class="sd">    names</span>
+<span class="sd">        Variable names (read only). See getNames.</span>
+<span class="sd">    values</span>
+<span class="sd">        Variable values (read only). See getValues.</span>
+
+<span class="sd">    Raises ValueError if the name is not a valid attribute identifier</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">RecipeContainer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span> <span class="o">=</span> <span class="n">EquationFactory</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calculators</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculators</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Parameter management</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_newParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new Parameter to the container.</span>
+
+<span class="sd">        This creates a new Parameter and adds it to the container using</span>
+<span class="sd">        the _addParameter method.</span>
+
+<span class="sd">        Returns the Parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_addParameter</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">check</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">p</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_addParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a Parameter.</span>
+
+<span class="sd">        Parameters added in this way are registered with the _eqfactory.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par</span>
+<span class="sd">            The Parameter to be stored.</span>
+<span class="sd">        check</span>
+<span class="sd">            If True (default), a ValueError is raised a Parameter of</span>
+<span class="sd">            the specified name has already been inserted.</span>
+
+<span class="sd">        Raises ValueError if the Parameter has no name.</span>
+<span class="sd">        Raises ValueError if the Parameter has the same name as a contained</span>
+<span class="sd">        RecipeContainer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Store the Parameter</span>
+        <span class="n">RecipeContainer</span><span class="o">.</span><span class="n">_addObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">,</span> <span class="n">check</span><span class="p">)</span>
+
+        <span class="c1"># Register the Parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">registerArgument</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_removeParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a parameter.</span>
+
+<span class="sd">        This de-registers the Parameter with the _eqfactory. The</span>
+<span class="sd">        Parameter will remain part of built equations.</span>
+
+<span class="sd">        Note that constraints and restraints involving the Parameter are</span>
+<span class="sd">        not modified.</span>
+
+<span class="sd">        Raises ValueError if par is not part of the RecipeOrganizer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_removeObject</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">deRegisterBuilder</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="RecipeOrganizer.registerCalculator">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.registerCalculator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerCalculator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">argnames</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a Calculator so it can be used within equation strings.</span>
+
+<span class="sd">        A Calculator is an elaborate function that can organize Parameters.</span>
+<span class="sd">        This creates a function with this class that can be used within string</span>
+<span class="sd">        equations. The resulting equation can be used in a string with</span>
+<span class="sd">        arguments like a function or without, in which case the values of the</span>
+<span class="sd">        Parameters created from argnames will be be used to compute the value.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        f</span>
+<span class="sd">            The Calculator to register.</span>
+<span class="sd">        argnames</span>
+<span class="sd">            The names of the arguments to f (list or None).</span>
+<span class="sd">            If this is None, then the argument names will be</span>
+<span class="sd">            extracted from the function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">registerOperator</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_addObject</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculators</span><span class="p">)</span>
+        <span class="c1"># Register arguments of the calculator</span>
+        <span class="k">if</span> <span class="n">argnames</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fncode</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="fm">__call__</span><span class="o">.</span><span class="vm">__func__</span><span class="o">.</span><span class="vm">__code__</span>
+            <span class="n">argnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fncode</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">)</span>
+            <span class="n">argnames</span> <span class="o">=</span> <span class="n">argnames</span><span class="p">[</span><span class="mi">1</span> <span class="p">:</span> <span class="n">fncode</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">argnames</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">builders</span><span class="p">:</span>
+                <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_newParameter</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pname</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">addLiteral</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+        <span class="c1"># Now return an equation object</span>
+        <span class="n">eq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">makeEquation</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">eq</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.registerFunction">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.registerFunction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">argnames</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a function so it can be used within equation strings.</span>
+
+<span class="sd">        This creates a function with this class that can be used within string</span>
+<span class="sd">        equations.  The resulting equation does not require the arguments to be</span>
+<span class="sd">        passed in the equation string, as this will be handled automatically.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        f</span>
+<span class="sd">            The callable to register. If this is an Equation</span>
+<span class="sd">            instance, then all that needs to be provided is a name.</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the function to be used in equations. If</span>
+<span class="sd">            this is None (default), the method will try to</span>
+<span class="sd">            determine the name of the function automatically.</span>
+<span class="sd">        argnames</span>
+<span class="sd">            The names of the arguments to f (list or None).</span>
+<span class="sd">            If this is None (default), then the argument names will</span>
+<span class="sd">            be extracted from the function.</span>
+
+<span class="sd">        Note that name and argnames can be extracted from regular python</span>
+<span class="sd">        functions (of type &#39;function&#39;), bound class methods and callable</span>
+<span class="sd">        classes.</span>
+
+<span class="sd">        Raises TypeError if name or argnames cannot be automatically</span>
+<span class="sd">        extracted.</span>
+<span class="sd">        Raises TypeError if an automatically extracted name is &#39;&lt;lambda&gt;&#39;.</span>
+<span class="sd">        Raises ValueError if f is an Equation object and name is None.</span>
+
+<span class="sd">        Returns the callable Equation object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the function is an equation, we treat it specially. This is</span>
+        <span class="c1"># required so that the objects observed by the root get observed if the</span>
+        <span class="c1"># Equation is used within another equation. It is assumed that a plain</span>
+        <span class="c1"># function is not observable.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Equation</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;Equation must be given a name&quot;</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">registerOperator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">f</span>
+
+        <span class="c1"># Introspection code</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">argnames</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+
+            <span class="n">fncode</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="c1"># This will let us offset the argument list to eliminate &#39;self&#39;</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># check regular functions</span>
+            <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isfunction</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="n">fncode</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__code__</span>
+            <span class="c1"># check class method</span>
+            <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">ismethod</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="n">fncode</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__func__</span><span class="o">.</span><span class="vm">__code__</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="c1"># check functor</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;__call__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="fm">__call__</span><span class="p">,</span> <span class="s2">&quot;__func__&quot;</span><span class="p">):</span>
+                <span class="n">fncode</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="fm">__call__</span><span class="o">.</span><span class="vm">__func__</span><span class="o">.</span><span class="vm">__code__</span>
+                <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;Cannot extract name or argnames&quot;</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+            <span class="c1"># Extract the name</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">fncode</span><span class="o">.</span><span class="n">co_name</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&lt;lambda&gt;&quot;</span><span class="p">:</span>
+                    <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;You must supply a name name for a lambda function&quot;</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+            <span class="c1"># Extract the arguments</span>
+            <span class="k">if</span> <span class="n">argnames</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">argnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fncode</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">)</span>
+                <span class="n">argnames</span> <span class="o">=</span> <span class="n">argnames</span><span class="p">[</span><span class="n">offset</span> <span class="p">:</span> <span class="n">fncode</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">]</span>
+
+        <span class="c1"># End introspection code</span>
+
+        <span class="c1"># Make missing Parameters</span>
+        <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">argnames</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">builders</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_newParameter</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Initialize and register</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calculator</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Calculator</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">argnames</span><span class="p">:</span>
+                <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pname</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">addLiteral</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">registerOperator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">registerFunction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">argnames</span><span class="p">)</span>
+
+        <span class="c1"># Now we can create the Equation and return it to the user.</span>
+        <span class="n">eq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">makeEquation</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">eq</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.registerStringFunction">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.registerStringFunction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerStringFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fstr</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a string function.</span>
+
+<span class="sd">        This creates a function with this class that can be used within string</span>
+<span class="sd">        equations.  The resulting equation does not require the arguments to be</span>
+<span class="sd">        passed in the function string, as this will be handled automatically.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fstr</span>
+<span class="sd">            A string equation to register.</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the function to be used in equations.</span>
+<span class="sd">        ns</span>
+<span class="sd">            A dictionary of Parameters, indexed by name, that are</span>
+<span class="sd">            used in fstr, but not part of the FitRecipe (default</span>
+<span class="sd">            {}).</span>
+
+<span class="sd">        Raises ValueError if ns uses a name that is already used for another</span>
+<span class="sd">        managed object.</span>
+<span class="sd">        Raises ValueError if the function name is the name of another managed</span>
+<span class="sd">        object.</span>
+
+<span class="sd">        Returns the callable Equation object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Build the equation instance.</span>
+        <span class="n">eq</span> <span class="o">=</span> <span class="n">equationFromString</span><span class="p">(</span><span class="n">fstr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="n">ns</span><span class="p">,</span> <span class="n">buildargs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">eq</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="c1"># Register any new Parameters.</span>
+        <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">newargs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_addParameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+        <span class="c1"># Register the equation as a callable function.</span>
+        <span class="n">argnames</span> <span class="o">=</span> <span class="n">eq</span><span class="o">.</span><span class="n">argdict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">registerFunction</span><span class="p">(</span><span class="n">eq</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">argnames</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.evaluateEquation">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.evaluateEquation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluateEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate a string equation.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eqstr</span>
+<span class="sd">            A string equation to evaluate. The equation is evaluated at</span>
+<span class="sd">            the current value of the registered Parameters.</span>
+<span class="sd">        ns</span>
+<span class="sd">            A dictionary of Parameters, indexed by name, that are</span>
+<span class="sd">            used in fstr, but not part of the FitRecipe (default {}).</span>
+
+<span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
+<span class="sd">        variable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eq</span> <span class="o">=</span> <span class="n">equationFromString</span><span class="p">(</span><span class="n">eqstr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="n">eq</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">wipeout</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.constrain">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.constrain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">constrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">con</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain a parameter to an equation.</span>
+
+<span class="sd">        Note that only one constraint can exist on a Parameter at a time.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par</span>
+<span class="sd">            The name of a Parameter or a Parameter to constrain.</span>
+<span class="sd">        con</span>
+<span class="sd">            A string representation of the constraint equation or a</span>
+<span class="sd">            Parameter to constrain to.  A constraint equation must</span>
+<span class="sd">            consist of numpy operators and &quot;known&quot; Parameters.</span>
+<span class="sd">            Parameters are known if they are in the ns argument, or if</span>
+<span class="sd">            they are managed by this object.</span>
+<span class="sd">        ns</span>
+<span class="sd">            A dictionary of Parameters, indexed by name, that are used</span>
+<span class="sd">            in the parameter, but not part of this object (default {}).</span>
+
+<span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
+<span class="sd">        variable.</span>
+<span class="sd">        Raises ValueError if par is a string but not part of this object or in</span>
+<span class="sd">        ns.</span>
+<span class="sd">        Raises ValueError if par is marked as constant.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">par</span>
+            <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">par</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">par</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">par</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The parameter cannot be found&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">const</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The parameter &#39;</span><span class="si">%s</span><span class="s2">&#39; is constant&quot;</span> <span class="o">%</span> <span class="n">par</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">eqstr</span> <span class="o">=</span> <span class="n">con</span>
+            <span class="n">eq</span> <span class="o">=</span> <span class="n">equationFromString</span><span class="p">(</span><span class="n">con</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">eq</span> <span class="o">=</span> <span class="n">Equation</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">con</span><span class="p">)</span>
+            <span class="n">eqstr</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="n">eq</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;_constraint_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">par</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="c1"># Make and store the constraint</span>
+        <span class="n">con</span> <span class="o">=</span> <span class="n">Constraint</span><span class="p">()</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">eq</span><span class="p">)</span>
+        <span class="c1"># Store the equation string so it can be shown later.</span>
+        <span class="n">con</span><span class="o">.</span><span class="n">eqstr</span> <span class="o">=</span> <span class="n">eqstr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">[</span><span class="n">par</span><span class="p">]</span> <span class="o">=</span> <span class="n">con</span>
+
+        <span class="c1"># Our configuration changed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_updateConfiguration</span><span class="p">()</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.isConstrained">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.isConstrained">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">isConstrained</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if a Parameter is constrained in this object.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par</span>
+<span class="sd">            The name of a Parameter or a Parameter to check.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">par</span>
+            <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.unconstrain">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.unconstrain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unconstrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">pars</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unconstrain a Parameter.</span>
+
+<span class="sd">        This removes any constraints on a Parameter.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *pars</span>
+<span class="sd">            The names of Parameters or Parameters to unconstrain.</span>
+
+
+<span class="sd">        Raises ValueError if the Parameter is not constrained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">update</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">pars</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">par</span>
+                <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">par</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The parameter cannot be found&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">[</span><span class="n">par</span><span class="p">]</span><span class="o">.</span><span class="n">unconstrain</span><span class="p">()</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">[</span><span class="n">par</span><span class="p">]</span>
+                <span class="n">update</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="c1"># Our configuration changed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_updateConfiguration</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The parameter is not constrained&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.getConstrainedPars">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.getConstrainedPars">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getConstrainedPars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of constrained managed Parameters in this object.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        recurse</span>
+<span class="sd">            Recurse into managed objects and retrieve their constrained</span>
+<span class="sd">            Parameters as well (default False).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">const</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getConstraints</span><span class="p">(</span><span class="n">recurse</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">const</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.clearConstraints">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.clearConstraints">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clearConstraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all constraints managed by this organizer.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        recurse</span>
+<span class="sd">            Recurse into managed objects and clear all constraints</span>
+<span class="sd">            found there as well.</span>
+
+<span class="sd">        This removes constraints that are held in this organizer, no matter</span>
+<span class="sd">        where the constrained parameters are from.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unconstrain</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">recurse</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="n">_has_clear_constraints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterManaged</span><span class="p">()):</span>
+                <span class="n">m</span><span class="o">.</span><span class="n">clearConstraints</span><span class="p">(</span><span class="n">recurse</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.restrain">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.restrain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="n">inf</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">inf</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Restrain an expression to specified bounds.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        res</span>
+<span class="sd">            An equation string or Parameter to restrain.</span>
+<span class="sd">        lb</span>
+<span class="sd">            The lower bound on the restraint evaluation (default -inf).</span>
+<span class="sd">        ub</span>
+<span class="sd">            The lower bound on the restraint evaluation (default inf).</span>
+<span class="sd">        sig</span>
+<span class="sd">            The uncertainty on the bounds (default 1).</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False).</span>
+<span class="sd">        ns</span>
+<span class="sd">            A dictionary of Parameters, indexed by name, that are used</span>
+<span class="sd">            in the equation string, but not part of the RecipeOrganizer</span>
+<span class="sd">            (default {}).</span>
+
+<span class="sd">        The penalty is calculated as</span>
+<span class="sd">        (max(0, lb - val, val - ub)/sig)**2</span>
+<span class="sd">        and val is the value of the calculated equation.  This is multiplied by</span>
+<span class="sd">        the average chi^2 if scaled is True.</span>
+
+<span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
+<span class="sd">        Parameter.</span>
+<span class="sd">        Raises ValueError if res depends on a Parameter that is not part of</span>
+<span class="sd">        the RecipeOrganizer and that is not defined in ns.</span>
+
+<span class="sd">        Returns the Restraint object for use with the &#39;unrestrain&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">eqstr</span> <span class="o">=</span> <span class="n">res</span>
+            <span class="n">eq</span> <span class="o">=</span> <span class="n">equationFromString</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">eq</span> <span class="o">=</span> <span class="n">Equation</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">res</span><span class="p">)</span>
+            <span class="n">eqstr</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="c1"># Make and store the restraint</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">Restraint</span><span class="p">(</span><span class="n">eq</span><span class="p">,</span> <span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">eqstr</span> <span class="o">=</span> <span class="n">eqstr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addRestraint</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.addRestraint">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.addRestraint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addRestraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a Restraint instance to the RecipeOrganizer.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        res</span>
+<span class="sd">            A Restraint instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="c1"># Our configuration changed. Notify observers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_updateConfiguration</span><span class="p">()</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.unrestrain">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.unrestrain">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unrestrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">ress</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a Restraint from the RecipeOrganizer.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *ress</span>
+<span class="sd">            Restraints returned from the &#39;restrain&#39; method or added</span>
+<span class="sd">            with the &#39;addRestraint&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">update</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">restuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">ress</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">restuple</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+                <span class="n">update</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+            <span class="c1"># Our configuration changed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_updateConfiguration</span><span class="p">()</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="RecipeOrganizer.clearRestraints">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.clearRestraints">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clearRestraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all restraints.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        recurse</span>
+<span class="sd">            Recurse into managed objects and clear all restraints</span>
+<span class="sd">            found there as well.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unrestrain</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">recurse</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="n">_has_clear_restraints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterManaged</span><span class="p">()):</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">clearRestraints</span><span class="p">(</span><span class="n">recurse</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getConstraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the constrained Parameters for this and managed sub-objects.&quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">recurse</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="n">_has_get_constraints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterManaged</span><span class="p">()):</span>
+                <span class="n">constraints</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">_getConstraints</span><span class="p">(</span><span class="n">recurse</span><span class="p">))</span>
+
+        <span class="n">constraints</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">constraints</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getRestraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Restraints for this and embedded ParameterSets.</span>
+
+<span class="sd">        This returns a set of Restraint objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">restraints</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">recurse</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="n">_has_get_restraints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterManaged</span><span class="p">()):</span>
+                <span class="n">restraints</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">_getRestraints</span><span class="p">(</span><span class="n">recurse</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">restraints</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
+
+<span class="sd">        This performs RecipeContainer validations. This validates</span>
+<span class="sd">        contained Restraints and Constraints.</span>
+
+<span class="sd">        Raises AttributeError if validation fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">RecipeContainer</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">iterable</span> <span class="o">=</span> <span class="n">chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validateOthers</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># For printing the configured recipe to screen</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_formatManaged</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Format hierarchy of managed parameters for showing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        prefix : str</span>
+<span class="sd">            The leading string to be prefixed to each parameter name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            List of formatted lines, one per each Parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">formatstr</span> <span class="o">=</span> <span class="s2">&quot;{:&lt;W}</span><span class="si">{}</span><span class="s2">&quot;</span>
+        <span class="c1"># Format own parameters.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">:</span>
+            <span class="n">w0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">)</span>
+            <span class="n">w1</span> <span class="o">=</span> <span class="p">((</span><span class="n">w0</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="n">formatstr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">w1</span><span class="p">))</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="c1"># Recurse into managed objects.</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterManaged</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;_formatManaged&quot;</span><span class="p">):</span>
+                <span class="n">oprefix</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+                <span class="n">tlines</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">_formatManaged</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="n">oprefix</span><span class="p">)</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">lines</span> <span class="ow">and</span> <span class="n">tlines</span> <span class="k">else</span> <span class="p">[])</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tlines</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lines</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_formatConstraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Format constraints for showing.</span>
+
+<span class="sd">        This collects constraints on all levels of the hierarchy and displays</span>
+<span class="sd">        them with respect to this level.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            List of formatted lines displaying the defined constraints.</span>
+<span class="sd">            Return empty list when no constraints were defined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getConstraints</span><span class="p">()</span>
+        <span class="c1"># Find each constraint and format the equation</span>
+        <span class="n">clines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">par</span><span class="p">,</span> <span class="n">con</span> <span class="ow">in</span> <span class="n">cdict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_locateManagedObject</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">loc</span><span class="p">:</span>
+                <span class="n">locstr</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+                <span class="n">clines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> &lt;-- </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">locstr</span><span class="p">,</span> <span class="n">con</span><span class="o">.</span><span class="n">eqstr</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">clines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> &lt;-- </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">con</span><span class="o">.</span><span class="n">eqstr</span><span class="p">))</span>
+        <span class="n">clines</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">numstr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">clines</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_formatRestraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Format restraints for showing.</span>
+
+<span class="sd">        This collects restraints on all levels of the hierarchy and displays</span>
+<span class="sd">        them with respect to this level.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            List of formatted lines displaying the defined restraints.</span>
+<span class="sd">            Return empty list when no restraints were defined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getRestraints</span><span class="p">()</span>
+        <span class="n">rlines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">rset</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: lb = </span><span class="si">%f</span><span class="s2">, ub = </span><span class="si">%f</span><span class="s2">, sig = </span><span class="si">%f</span><span class="s2">, scaled = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">eqstr</span><span class="p">,</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">lb</span><span class="p">,</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">ub</span><span class="p">,</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">sig</span><span class="p">,</span>
+                <span class="n">res</span><span class="o">.</span><span class="n">scaled</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">rlines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">rlines</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">numstr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rlines</span>
+
+<div class="viewcode-block" id="RecipeOrganizer.show">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.RecipeOrganizer.show">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">textwidth</span><span class="o">=</span><span class="mi">78</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show the configuration hierarchy on the screen.</span>
+
+<span class="sd">        This will print out a summary of all contained objects.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        pattern : str, optional</span>
+<span class="sd">            Limit output to only those parameters that match this regular</span>
+<span class="sd">            expression (match all by default).</span>
+<span class="sd">        textwidth : int, optional</span>
+<span class="sd">            Trim formatted lines at this text width to avoid folding at</span>
+<span class="sd">            the screen width.  Do not trim when negative or 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">regexp</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="n">_pmatch_with_re</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_pmatch</span><span class="p">,</span> <span class="n">regexp</span><span class="o">=</span><span class="n">regexp</span><span class="p">)</span>
+        <span class="c1"># Show sub objects and their parameters</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">tlines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatManaged</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">tlines</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;Parameters&quot;</span><span class="p">,</span> <span class="n">_DASHEDLINE</span><span class="p">])</span>
+            <span class="n">linesok</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="n">_pmatch_with_re</span><span class="p">,</span> <span class="n">tlines</span><span class="p">)</span>
+            <span class="n">lastnotblank</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="c1"># squeeze repeated blank lines</span>
+            <span class="k">for</span> <span class="n">lastnotblank</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">linesok</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">g</span> <span class="k">if</span> <span class="n">lastnotblank</span> <span class="k">else</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">])</span>
+            <span class="c1"># remove trailing blank line</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">lastnotblank</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># FIXME - parameter names in equations not particularly informative</span>
+        <span class="c1"># Show constraints</span>
+        <span class="n">cmatch</span> <span class="o">=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">search</span>
+        <span class="n">tlines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatConstraints</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">tlines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;Constraints&quot;</span><span class="p">,</span> <span class="n">_DASHEDLINE</span><span class="p">])</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">cmatch</span><span class="p">,</span> <span class="n">tlines</span><span class="p">))</span>
+
+        <span class="c1"># FIXME - parameter names in equations not particularly informative</span>
+        <span class="c1"># Show restraints</span>
+        <span class="n">tlines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_formatRestraints</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">tlines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;Restraints&quot;</span><span class="p">,</span> <span class="n">_DASHEDLINE</span><span class="p">])</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="n">_pmatch_with_re</span><span class="p">,</span> <span class="n">tlines</span><span class="p">))</span>
+
+        <span class="c1"># Determine effective text width tw.</span>
+        <span class="n">tw</span> <span class="o">=</span> <span class="n">textwidth</span> <span class="k">if</span> <span class="p">(</span><span class="n">textwidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">textwidth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="c1"># Avoid outputting &quot;\n&quot; when there is no output.</span>
+        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s</span><span class="p">[:</span><span class="n">tw</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">))</span>
+        <span class="k">return</span></div>
+</div>
+
+
+
+<span class="c1"># End RecipeOrganizer</span>
+
+
+<div class="viewcode-block" id="equationFromString">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.equationFromString">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">equationFromString</span><span class="p">(</span>
+    <span class="n">eqstr</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{},</span> <span class="n">buildargs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">argclass</span><span class="o">=</span><span class="n">Parameter</span><span class="p">,</span> <span class="n">argkw</span><span class="o">=</span><span class="p">{}</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an equation from a string.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    eqstr</span>
+<span class="sd">        A string representation of the equation. The equation must</span>
+<span class="sd">        consist of numpy operators and &quot;known&quot; Parameters. Parameters</span>
+<span class="sd">        are known if they are in ns, or already defined in the factory.</span>
+<span class="sd">    factory</span>
+<span class="sd">        An EquationFactory instance.</span>
+<span class="sd">    ns</span>
+<span class="sd">        A dictionary of Parameters indexed by name that are used</span>
+<span class="sd">        in the eqstr but not already defined in the factory</span>
+<span class="sd">        (default {}).</span>
+<span class="sd">    buildargs</span>
+<span class="sd">        A flag indicating whether missing Parameters can be created</span>
+<span class="sd">        by the Factory (default False). If False, then the a ValueError</span>
+<span class="sd">        will be raised if there are undefined arguments in the eqstr.</span>
+<span class="sd">    argclass</span>
+<span class="sd">        Class to use when creating new Arguments (default</span>
+<span class="sd">        Parameter). The class constructor must accept the &#39;name&#39; key</span>
+<span class="sd">        word.</span>
+<span class="sd">    argkw</span>
+<span class="sd">        Key word dictionary to pass to the argclass constructor</span>
+<span class="sd">        (default {}).</span>
+
+<span class="sd">    Raises ValueError if ns uses a name that is already defined in the factory.</span>
+<span class="sd">    Raises ValueError if the equation has undefined parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">defined</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">builders</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="c1"># Check if ns overloads any parameters.</span>
+    <span class="k">if</span> <span class="n">defined</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">ns</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ns contains defined names&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Register the ns parameters in the equation factory</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">ns</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">factory</span><span class="o">.</span><span class="n">registerArgument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+
+    <span class="n">eq</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">makeEquation</span><span class="p">(</span><span class="n">eqstr</span><span class="p">,</span> <span class="n">buildargs</span><span class="p">,</span> <span class="n">argclass</span><span class="p">,</span> <span class="n">argkw</span><span class="p">)</span>
+
+    <span class="c1"># Clean the ns parameters</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ns</span><span class="p">:</span>
+        <span class="n">factory</span><span class="o">.</span><span class="n">deRegisterBuilder</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">eq</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_has_clear_constraints</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;clearConstraints&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_has_clear_restraints</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;clearRestraints&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_has_get_restraints</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;_getRestraints&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_has_get_constraints</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s2">&quot;_getConstraints&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_pmatch</span><span class="p">(</span><span class="n">inp_str</span><span class="p">,</span> <span class="n">regexp</span><span class="p">):</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">inp_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">regexp</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.fitbase.parameter &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=cca77546"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.fitbase.parameter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.srfit.fitbase.parameter</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2008 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
+<span class="sd">&quot;&quot;&quot;Parameter classes.</span>
+
+<span class="sd">Parameters encapsulate an adjustable parameter within SrFit.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># IDEA - Add onConstrain, onRestrain, onVary so that adaptors to Parameters</span>
+<span class="c1"># can have more fine control over the construction of FitRecipes.</span>
+<span class="c1"># IDEA - Add tags to parameters so they can be easily retrieved.</span>
+<span class="c1"># IDEA - Consider scaling parameters to avoid precision issues in optimizers.</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s2">&quot;ParameterProxy&quot;</span><span class="p">,</span> <span class="s2">&quot;ParameterAdapter&quot;</span><span class="p">]</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals</span><span class="w"> </span><span class="kn">import</span> <span class="n">Argument</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SrFitError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.validatable</span><span class="w"> </span><span class="kn">import</span> <span class="n">Validatable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">_parameter_interface</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util.argbinders</span><span class="w"> </span><span class="kn">import</span> <span class="n">bind2nd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util.nameutils</span><span class="w"> </span><span class="kn">import</span> <span class="n">validateName</span>
+
+
+<div class="viewcode-block" id="Parameter">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.Parameter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Parameter</span><span class="p">(</span><span class="n">_parameter_interface</span><span class="p">,</span> <span class="n">Argument</span><span class="p">,</span> <span class="n">Validatable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameter class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name</span>
+<span class="sd">        A name for this Parameter.</span>
+<span class="sd">    const</span>
+<span class="sd">        A flag indicating whether this is considered a constant.</span>
+<span class="sd">    _value</span>
+<span class="sd">        The value of the Parameter. Modified with &#39;setValue&#39;.</span>
+<span class="sd">    value</span>
+<span class="sd">        Property for &#39;getValue&#39; and &#39;setValue&#39;.</span>
+<span class="sd">    constrained</span>
+<span class="sd">        A flag indicating if the Parameter is constrained</span>
+<span class="sd">        (default False).</span>
+<span class="sd">    bounds</span>
+<span class="sd">        A 2-list defining the bounds on the Parameter. This can be</span>
+<span class="sd">        used by some optimizers when the Parameter is varied. See</span>
+<span class="sd">        FitRecipe.getBounds and FitRecipe.boundsToRestraints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of this Parameter (must be a valid attribute</span>
+<span class="sd">            identifier)</span>
+<span class="sd">        value</span>
+<span class="sd">            The initial value of this Parameter (default 0).</span>
+<span class="sd">        const</span>
+<span class="sd">            A flag inticating whether the Parameter is a constant (like</span>
+<span class="sd">            pi).</span>
+
+<span class="sd">        Raises ValueError if the name is not a valid attribute identifier</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constrained</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">+</span><span class="n">numpy</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span>
+        <span class="n">validateName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">Argument</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="Parameter.setValue">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.Parameter.setValue">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of the Parameter and the bounds.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        val</span>
+<span class="sd">            The value to assign.</span>
+<span class="sd">        lb</span>
+<span class="sd">            The lower bounds for the bounds list. If this is None</span>
+<span class="sd">            (default), then the lower bound will not be alterered.</span>
+<span class="sd">        ub</span>
+<span class="sd">            The upper bounds for the bounds list. If this is None</span>
+<span class="sd">            (default), then the upper bound will not be alterered.</span>
+
+<span class="sd">        Returns self so that mutators can be chained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Argument</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Parameter.setConst">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.Parameter.setConst">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setConst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Toggle the Parameter as constant.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        const</span>
+<span class="sd">            Flag indicating if the parameter is constant (default</span>
+<span class="sd">            True).</span>
+<span class="sd">        value</span>
+<span class="sd">            An optional value for the parameter (default None). If this</span>
+<span class="sd">            is not None, then the parameter will get a new value,</span>
+<span class="sd">            constant or otherwise.</span>
+
+<span class="sd">        Returns self so that mutators can be chained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">const</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Parameter.boundRange">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.Parameter.boundRange">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">boundRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set lower and upper bound of the Parameter.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lb</span>
+<span class="sd">            The lower bound for the bounds list.</span>
+<span class="sd">        ub</span>
+<span class="sd">            The upper bound for the bounds list.</span>
+
+<span class="sd">        Returns self so that mutators can be chained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">lb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">lb</span>
+        <span class="k">if</span> <span class="n">ub</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ub</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Parameter.boundWindow">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.Parameter.boundWindow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">boundWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ur</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create bounds centered on the current value of the Parameter.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lr</span>
+<span class="sd">            The radius of the lower bound (default 0). The lower bound is</span>
+<span class="sd">            computed as value - lr.</span>
+<span class="sd">        ur</span>
+<span class="sd">            The radius of the upper bound. The upper bound is computed as</span>
+<span class="sd">            value + ur. If this is None (default), then the value of the</span>
+<span class="sd">            lower radius is used.</span>
+
+<span class="sd">        Returns self so that mutators can be chained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="n">val</span> <span class="o">-</span> <span class="n">lr</span>
+        <span class="k">if</span> <span class="n">ur</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ur</span> <span class="o">=</span> <span class="n">lr</span>
+        <span class="n">ub</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="n">ur</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
+
+<span class="sd">        This validates that value is not None.</span>
+
+<span class="sd">        Raises SrFitError if validation fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;value of &#39;</span><span class="si">%s</span><span class="s2">&#39; is None&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+
+<span class="c1"># End class Parameter</span>
+
+
+<div class="viewcode-block" id="ParameterProxy">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.ParameterProxy">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParameterProxy</span><span class="p">(</span><span class="n">Parameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Parameter proxy for another parameter.</span>
+
+<span class="sd">    This allows for the same parameter to have multiple names.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name</span>
+<span class="sd">        A name for this ParameterProxy. Names should be unique within a</span>
+<span class="sd">        RecipeOrganizer and should be valid attribute names.</span>
+<span class="sd">    par</span>
+<span class="sd">        The Parameter this is a proxy for.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of this ParameterProxy.</span>
+<span class="sd">        par</span>
+<span class="sd">            The Parameter this is a proxy for.</span>
+
+<span class="sd">        Raises ValueError if the name is not a valid attribute identifier</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">validateName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="k">return</span>
+
+    <span class="c1"># define properties to use attributes of the proxied Parameter -----------</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">constrained</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A flag indicating if the proxied Parameter is constrained.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">constrained</span>
+
+    <span class="nd">@constrained</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">constrained</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">constrained</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List of lower and upper bounds of the proxied Parameter.</span>
+
+<span class="sd">        This can be used by some optimizers when the Parameter is</span>
+<span class="sd">        varied. See FitRecipe.getBounds and</span>
+<span class="sd">        FitRecipe.boundsToRestraints.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">bounds</span>
+
+    <span class="nd">@bounds</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_observers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">_observers</span>
+
+    <span class="c1"># wrap Parameter methods to use the target object ------------------------</span>
+
+<div class="viewcode-block" id="ParameterProxy.setValue">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.ParameterProxy.setValue">[docs]</a>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">Parameter</span><span class="o">.</span><span class="n">setValue</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">Parameter</span><span class="o">.</span><span class="n">getValue</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ParameterProxy.setConst">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.ParameterProxy.setConst">[docs]</a>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">Parameter</span><span class="o">.</span><span class="n">setConst</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setConst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">setConst</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ParameterProxy.boundRange">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.ParameterProxy.boundRange">[docs]</a>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">Parameter</span><span class="o">.</span><span class="n">boundRange</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">boundRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">boundRange</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="n">ub</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ParameterProxy.boundWindow">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.ParameterProxy.boundWindow">[docs]</a>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">Parameter</span><span class="o">.</span><span class="n">boundWindow</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">boundWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ur</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">boundWindow</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span> <span class="n">ur</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
+
+<span class="sd">        This validates that value and par are not None.</span>
+
+<span class="sd">        Raises SrFitError if validation fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;par is None&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span>
+        <span class="k">return</span></div>
+
+
+
+<span class="c1"># End class ParameterProxy</span>
+
+
+<div class="viewcode-block" id="ParameterAdapter">
+<a class="viewcode-back" href="../../../../extending.html#diffpy.srfit.fitbase.parameter.ParameterAdapter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParameterAdapter</span><span class="p">(</span><span class="n">Parameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An adapter for parameter-like objects.</span>
+
+<span class="sd">    This class wraps an object as a Parameter. The getValue and setValue</span>
+<span class="sd">    methods defer to the data of the wrapped object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">getter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">setter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap an object as a Parameter.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of this Parameter.</span>
+<span class="sd">        obj</span>
+<span class="sd">            The object to be wrapped.</span>
+<span class="sd">        getter</span>
+<span class="sd">            The unbound function that can be used to access the</span>
+<span class="sd">            attribute containing the parameter value. getter(obj)</span>
+<span class="sd">            should return the Parameter value.  If getter is None</span>
+<span class="sd">            (default), it is assumed that an attribute is accessed</span>
+<span class="sd">            via attr. If attr is also specified, then the Parameter</span>
+<span class="sd">            value will be accessed via getter(obj, attr).</span>
+<span class="sd">        setter</span>
+<span class="sd">            The unbound function that can be used to modify the</span>
+<span class="sd">            attribute containing the parameter value.</span>
+<span class="sd">            setter(obj, value) should set the attribute to the</span>
+<span class="sd">            passed value. If setter is None (default), it is assumed</span>
+<span class="sd">            that an attribute is accessed via attr. If attr is also</span>
+<span class="sd">            specified, then the Parameter value will be set via</span>
+<span class="sd">            setter(obj, attr, value).</span>
+<span class="sd">        attr</span>
+<span class="sd">            The name of the attribute that contains the value of the</span>
+<span class="sd">            parameter. If attr is None (default), then both getter and</span>
+<span class="sd">            setter must be specified.</span>
+
+<span class="sd">        Raises ValueError if exactly one of getter or setter is not None, or if</span>
+<span class="sd">        getter, setter and attr are all None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">getter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">setter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specify attribute access&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">[</span><span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specify both getter and setter&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getter</span> <span class="o">=</span> <span class="n">getter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setter</span> <span class="o">=</span> <span class="n">setter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attr</span> <span class="o">=</span> <span class="n">attr</span>
+
+        <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">getter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">getter</span> <span class="o">=</span> <span class="n">bind2nd</span><span class="p">(</span><span class="nb">getattr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">getter</span> <span class="o">=</span> <span class="n">bind2nd</span><span class="p">(</span><span class="n">getter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">setter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setter</span> <span class="o">=</span> <span class="n">bind2nd</span><span class="p">(</span><span class="nb">setattr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setter</span> <span class="o">=</span> <span class="n">bind2nd</span><span class="p">(</span><span class="n">setter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">attr</span><span class="p">)</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+        <span class="n">Parameter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="ParameterAdapter.getValue">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.ParameterAdapter.getValue">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of the Parameter.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ParameterAdapter.setValue">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameter.ParameterAdapter.setValue">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of the Parameter.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
+
+
+
+<span class="c1"># End class ParameterAdapter</span>
+
+<span class="c1"># End of file</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

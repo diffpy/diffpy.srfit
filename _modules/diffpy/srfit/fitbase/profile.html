@@ -1,0 +1,562 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.fitbase.profile &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=cca77546"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.fitbase.profile</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.srfit.fitbase.profile</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2008 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
+<span class="sd">&quot;&quot;&quot;The Profile class containing the physical and calculated data.</span>
+
+<span class="sd">Profile holds the arrays representing an observed profile, a selected</span>
+<span class="sd">subset of the observed profile and a calculated profile. Profiles are</span>
+<span class="sd">used by Calculators to store a calculated signal, and by</span>
+<span class="sd">FitContributions to help calculate a residual equation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s2">&quot;Profile&quot;</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">six</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SrFitError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.validatable</span><span class="w"> </span><span class="kn">import</span> <span class="n">Validatable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util.observable</span><span class="w"> </span><span class="kn">import</span> <span class="n">Observable</span>
+
+<span class="c1"># This is the roundoff tolerance for selecting bounds on arrays.</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-8</span>
+
+
+<div class="viewcode-block" id="Profile">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Profile</span><span class="p">(</span><span class="n">Observable</span><span class="p">,</span> <span class="n">Validatable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Observed and calculated profile container.</span>
+
+<span class="sd">    Profile is an Observable. The xpar, ypar and dypar attributes are observed</span>
+<span class="sd">    by the Profile, which can in turn be observed by some other object.</span>
+
+<span class="sd">    Attributes</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _xobs</span>
+<span class="sd">        A numpy array of the observed independent variable (default</span>
+<span class="sd">        None)</span>
+<span class="sd">    xobs</span>
+<span class="sd">        Read-only property of _xobs.</span>
+<span class="sd">    _yobs</span>
+<span class="sd">        A numpy array of the observed signal (default None)</span>
+<span class="sd">    yobs</span>
+<span class="sd">        Read-only property of _yobs.</span>
+<span class="sd">    _dyobs</span>
+<span class="sd">        A numpy array of the uncertainty of the observed signal</span>
+<span class="sd">        (default None, optional).</span>
+<span class="sd">    dyobs</span>
+<span class="sd">        Read-only property of _dyobs.</span>
+<span class="sd">    x</span>
+<span class="sd">        A numpy array of the calculated independent variable (default</span>
+<span class="sd">        None, property for xpar accessors).</span>
+<span class="sd">    y</span>
+<span class="sd">        The profile over the calculation range (default None, property</span>
+<span class="sd">        for ypar accessors).</span>
+<span class="sd">    dy</span>
+<span class="sd">        The uncertainty in the profile over the calculation range</span>
+<span class="sd">        (default None, property for dypar accessors).</span>
+<span class="sd">    ycalc</span>
+<span class="sd">        A numpy array of the calculated signal (default None).</span>
+<span class="sd">    xpar</span>
+<span class="sd">        A Parameter that stores x (named &quot;x&quot;).</span>
+<span class="sd">    ypar</span>
+<span class="sd">        A Parameter that stores y (named &quot;y&quot;).</span>
+<span class="sd">    dypar</span>
+<span class="sd">        A Parameter that stores dy (named &quot;dy&quot;).</span>
+<span class="sd">    ycpar</span>
+<span class="sd">        A Parameter that stores ycalc (named &quot;ycalc&quot;). This is</span>
+<span class="sd">        not observed by the profile, but it is present so it can be</span>
+<span class="sd">        constrained to.</span>
+<span class="sd">    meta</span>
+<span class="sd">        A dictionary of metadata. This is only set if provided by a</span>
+<span class="sd">        parser.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the attributes.&quot;&quot;&quot;</span>
+        <span class="n">Observable</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_xobs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_yobs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xpar</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ypar</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dypar</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;dy&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ycpar</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s2">&quot;ycalc&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Observable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xpar</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ypar</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dypar</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># We want x, y, ycalc and dy to stay in-sync with xpar, ypar and dypar</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">xpar</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">xpar</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ypar</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ypar</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dypar</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dypar</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">ycalc</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ycpar</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ycpar</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># We want xobs, yobs and dyobs to be read-only</span>
+    <span class="n">xobs</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xobs</span><span class="p">)</span>
+    <span class="n">yobs</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yobs</span><span class="p">)</span>
+    <span class="n">dyobs</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Profile.loadParsedData">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile.loadParsedData">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadParsedData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load parsed data from a ProfileParser.</span>
+
+<span class="sd">        This sets the xobs, yobs, dyobs arrays as well as the metadata.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">junk</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">getData</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meta</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">getMetaData</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setObservedProfile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Profile.setObservedProfile">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile.setObservedProfile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setObservedProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the observed profile.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xobs</span>
+<span class="sd">            Numpy array of the independent variable</span>
+<span class="sd">        yobs</span>
+<span class="sd">            Numpy array of the observed signal.</span>
+<span class="sd">        dyobs</span>
+<span class="sd">            Numpy array of the uncertainty in the observed signal. If</span>
+<span class="sd">            dyobs is None (default), it will be set to 1 at each</span>
+<span class="sd">            observed xobs.</span>
+
+<span class="sd">        Raises ValueError if len(yobs) != len(xobs)</span>
+<span class="sd">        Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">yobs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xobs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xobs and yobs are different lengths&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dyobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">dyobs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xobs</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xobs and dyobs are different lengths&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_xobs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xobs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_yobs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yobs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">dyobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xobs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">dyobs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="c1"># Set the default calculation points</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setCalculationPoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_xobs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setCalculationPoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Profile.setCalculationRange">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile.setCalculationRange">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setCalculationRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set epsilon-inclusive calculation range.</span>
+
+<span class="sd">        Adhere to the observed ``xobs`` points when ``dx`` is the same</span>
+<span class="sd">        as in the data.  ``xmin`` and ``xmax`` are clipped at the bounds</span>
+<span class="sd">        of the observed data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        xmin : float or &quot;obs&quot;, optional</span>
+<span class="sd">            The minimum value of the independent variable.  Keep the</span>
+<span class="sd">            current minimum when not specified.  If specified as &quot;obs&quot;</span>
+<span class="sd">            reset to the minimum observed value.</span>
+<span class="sd">        xmax : float or &quot;obs&quot;, optional</span>
+<span class="sd">            The maximum value of the independent variable.  Keep the</span>
+<span class="sd">            current maximum when not specified.  If specified as &quot;obs&quot;</span>
+<span class="sd">            reset to the maximum observed value.</span>
+<span class="sd">        dx : float or &quot;obs&quot;, optional</span>
+<span class="sd">            The sample spacing in the independent variable.  When different</span>
+<span class="sd">            from the data, resample the ``x`` as anchored at ``xmin``.</span>
+
+<span class="sd">        Note that xmin is always inclusive (unless clipped). xmax is inclusive</span>
+<span class="sd">        if it is within the bounds of the observed data.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        AttributeError</span>
+<span class="sd">            If there is no observed data.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;No observed profile&quot;</span><span class="p">)</span>
+
+        <span class="c1"># local helper function</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_isobs</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="s2">&quot;obs&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Must be either float or &quot;obs&quot;.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># resolve new low and high bounds for x</span>
+        <span class="n">lo</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">xmin</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">_isobs</span><span class="p">(</span><span class="n">xmin</span><span class="p">)</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">xmin</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">lo</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">hi</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">xmax</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">_isobs</span><span class="p">(</span><span class="n">xmax</span><span class="p">)</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">xmax</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">hi</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># determine if we need to clip the original grid</span>
+        <span class="n">clip</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">ncur</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">stepcur</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">ncur</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">ncur</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">nobs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">)</span>
+        <span class="n">stepobs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">1</span> <span class="k">if</span> <span class="n">nobs</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">nobs</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">dx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># check if xobs overlaps with x</span>
+            <span class="n">i0</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xobs</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+            <span class="n">n0</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">)</span> <span class="o">-</span> <span class="n">i0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="n">i0</span> <span class="p">:</span> <span class="n">i0</span> <span class="o">+</span> <span class="n">n0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[:</span><span class="n">n0</span><span class="p">]):</span>
+                <span class="n">clip</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">step</span> <span class="o">=</span> <span class="n">stepcur</span> <span class="k">if</span> <span class="n">ncur</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">stepobs</span>
+        <span class="k">elif</span> <span class="n">_isobs</span><span class="p">(</span><span class="n">dx</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">clip</span> <span class="ow">and</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">stepobs</span><span class="p">,</span> <span class="n">dx</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">clip</span> <span class="ow">and</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">clip</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dx</span><span class="p">)</span>
+        <span class="c1"># verify that we either clip or have the step defined.</span>
+        <span class="k">assert</span> <span class="n">clip</span> <span class="ow">or</span> <span class="n">step</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="c1"># hi, lo, step, clip all resolved here.</span>
+        <span class="c1"># validate arguments</span>
+        <span class="k">if</span> <span class="n">lo</span> <span class="o">&gt;</span> <span class="n">hi</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;xmax must be greater than xmin.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">clip</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">step</span> <span class="o">&gt;</span> <span class="n">hi</span> <span class="o">-</span> <span class="n">lo</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dx must be less than (xmax - xmin).&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dx must be positive.&quot;</span><span class="p">)</span>
+        <span class="c1"># determine epsilon extensions to the lower and upper bounds.</span>
+        <span class="n">epslo</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">lo</span><span class="p">)</span> <span class="o">*</span> <span class="n">epsilon</span> <span class="o">+</span> <span class="n">epsilon</span>
+        <span class="n">epshi</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">hi</span><span class="p">)</span> <span class="o">*</span> <span class="n">epsilon</span> <span class="o">+</span> <span class="n">epsilon</span>
+        <span class="c1"># process the new grid.</span>
+        <span class="k">if</span> <span class="n">clip</span><span class="p">:</span>
+            <span class="n">indices</span> <span class="o">=</span> <span class="p">(</span><span class="n">lo</span> <span class="o">-</span> <span class="n">epslo</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xobs</span> <span class="o">&lt;=</span> <span class="n">hi</span> <span class="o">+</span> <span class="n">epshi</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yobs</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyobs</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">+</span> <span class="n">epshi</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setCalculationPoints</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Profile.setCalculationPoints">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile.setCalculationPoints">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setCalculationPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the calculation points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x</span>
+<span class="sd">            A non-empty numpy array containing the calculation points. If</span>
+<span class="sd">            xobs exists, the bounds of x will be limited to its bounds.</span>
+
+<span class="sd">        This will create y and dy on the specified grid if xobs, yobs and</span>
+<span class="sd">        dyobs exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">epsilon</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">yobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">rebinArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">yobs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dyobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># work around for interpolation issue making some of these non-1</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dyobs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># FIXME - This does not follow error propagation rules and it</span>
+                <span class="c1"># introduces (more) correlation between the data points.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dy</span> <span class="o">=</span> <span class="n">rebinArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dyobs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Profile.loadtxt">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile.loadtxt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Use numpy.loadtxt to load data.</span>
+
+<span class="sd">        Arguments are passed to numpy.loadtxt. unpack = True is</span>
+<span class="sd">        enforced. The first two arrays returned by numpy.loadtxt are</span>
+<span class="sd">        assumed to be x and y. If there is a third array, it is assumed</span>
+<span class="sd">        to by dy. Any other arrays are ignored. These are passed to</span>
+<span class="sd">        setObservedProfile.</span>
+
+<span class="sd">        Raises ValueError if the call to numpy.loadtxt returns fewer</span>
+<span class="sd">        than 2 arrays.</span>
+
+<span class="sd">        Returns the x, y and dy arrays loaded from the file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">args</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s2">&quot;unpack&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Due to using &#39;unpack&#39;, a single column will come out as a single</span>
+        <span class="c1"># array, thus the second check.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;numpy.loadtxt returned fewer than 2 arrays&quot;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">cols</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">setObservedProfile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dy</span></div>
+
+
+<div class="viewcode-block" id="Profile.savetxt">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.profile.Profile.savetxt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">savetxt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call `numpy.savetxt` with x, ycalc, y, dy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fname : filename or file handle</span>
+<span class="sd">            This is passed to `numpy.savetxt`.</span>
+<span class="sd">        **kwargs</span>
+<span class="sd">            The keyword arguments that are passed to `numpy.savetxt`.</span>
+<span class="sd">            We preset file header &quot;x  ycalc  y  dy&quot;.  Use ``header=&#39;&#39;``</span>
+<span class="sd">            to save data without any header.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        SrFitError</span>
+<span class="sd">            When `self.ycalc` has not been set.</span>
+
+<span class="sd">        See also</span>
+<span class="sd">        --------</span>
+<span class="sd">        numpy.savetxt</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">ycalc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ycalc</span>
+        <span class="k">if</span> <span class="n">ycalc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;ycalc is None&quot;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dy</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;x  ycalc  y  dy&quot;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">ycalc</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dy</span><span class="p">])</span>
+        <span class="n">numpy</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Invalidate cached state.</span>
+
+<span class="sd">        This will force any observer to invalidate its state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ycalc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
+
+<span class="sd">        This validates that x, y, dy, xobx, yobs and dyobs are not None.</span>
+<span class="sd">        This validates that x, y, and dy are the same length.</span>
+
+<span class="sd">        Raises SrFitError if validation fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">datanotset</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">v</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">xobs</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">yobs</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dyobs</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">datanotset</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;Missing data&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dy</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;Data are different lengths&quot;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+
+<span class="c1"># End class Profile</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rebinArray</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">xold</span><span class="p">,</span> <span class="n">xnew</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Rebin the an array by interpolating over the new x range.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    A</span>
+<span class="sd">        Array to interpolate</span>
+<span class="sd">    xold</span>
+<span class="sd">        Old sampling array</span>
+<span class="sd">    xnew</span>
+<span class="sd">        New sampling array</span>
+
+<span class="sd">    This uses cubic spline interpolation.</span>
+
+<span class="sd">    Returns: A new array over the new sampling array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">xold</span><span class="p">,</span> <span class="n">xnew</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">A</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xnew</span><span class="p">,</span> <span class="n">xold</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.structure.srrealparset &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=cca77546"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../structure.html">diffpy.srfit.structure</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.structure.srrealparset</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.srfit.structure.srrealparset</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
+<span class="sd">&quot;&quot;&quot;Structure wrapper class for structures compatible with SrReal.&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SrRealParSet&quot;</span><span class="p">]</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.basestructureparset</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseStructureParSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.bvsrestraint</span><span class="w"> </span><span class="kn">import</span> <span class="n">BVSRestraint</span>
+
+
+<div class="viewcode-block" id="SrRealParSet">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.srrealparset.SrRealParSet">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SrRealParSet</span><span class="p">(</span><span class="n">BaseStructureParSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for SrReal-compatible structure adapters.</span>
+
+<span class="sd">    This derives from BaseStructureParSet and provides some extended</span>
+<span class="sd">    functionality provided by SrReal.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    stru</span>
+<span class="sd">        The adapted object</span>
+<span class="sd">    _usesymmetry</span>
+<span class="sd">        A flag indicating if SrReal calculators that operate on</span>
+<span class="sd">        this object should use symmetry. By default this is</span>
+<span class="sd">        True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="n">BaseStructureParSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_usesymmetry</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stru</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="SrRealParSet.restrainBVS">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.srrealparset.SrRealParSet.restrainBVS">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrainBVS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Restrain the bond-valence sum to zero.</span>
+
+<span class="sd">        This adds a penalty to the cost function equal to</span>
+<span class="sd">        bvmsdiff / sig**2</span>
+<span class="sd">        where bvmsdiff is the mean-squared difference between the calculated</span>
+<span class="sd">        and expected bond valence sums for the structure. If scaled is True,</span>
+<span class="sd">        this is also scaled by the current point-averaged chi^2 value so the</span>
+<span class="sd">        restraint is roughly equally weighted in the fit.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sig</span>
+<span class="sd">            The uncertainty on the BVS (default 1).</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled</span>
+<span class="sd">            (multiplied) by the unrestrained point-average chi^2</span>
+<span class="sd">            (chi^2/numpoints) (default False).</span>
+
+<span class="sd">        Returns the BVSRestraint object for use with the &#39;unrestrain&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create the Restraint object</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">BVSRestraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
+        <span class="c1"># Add it to the _restraints set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="c1"># Our configuration changed. Notify observers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_updateConfiguration</span><span class="p">()</span>
+        <span class="c1"># Return the Restraint object</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="SrRealParSet.useSymmetry">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.srrealparset.SrRealParSet.useSymmetry">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">useSymmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set this structure to use symmetry.</span>
+
+<span class="sd">        This determines how the structure is treated by SrReal</span>
+<span class="sd">        calculators.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_usesymmetry</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">use</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="SrRealParSet.usingSymmetry">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.srrealparset.SrRealParSet.usingSymmetry">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">usingSymmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if symmetry is being used.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_usesymmetry</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getSrRealStructure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the structure object for use with SrReal calculators.</span>
+
+<span class="sd">        If this is periodic, then return the structure, otherwise, pass</span>
+<span class="sd">        it inside of a nosymmetry wrapper.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srreal.structureadapter</span><span class="w"> </span><span class="kn">import</span> <span class="n">nosymmetry</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_usesymmetry</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span>
+        <span class="k">return</span> <span class="n">nosymmetry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.structure.diffpyparset &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=cca77546"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../structure.html">diffpy.srfit.structure</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.structure.diffpyparset</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.srfit.structure.diffpyparset</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
+<span class="sd">&quot;&quot;&quot;Adapters for interfacing a diffpy.structure.Structure with SrFit.</span>
+
+<span class="sd">A diffpy.structure.Structure object is meant to be passed to a</span>
+<span class="sd">DiffpyStructureParSet object from this module, which can then be used as a</span>
+<span class="sd">ParameterSet. (It has other methods for interfacing with SrReal calculator</span>
+<span class="sd">adapters.) Any change to the lattice or existing atoms will be registered with</span>
+<span class="sd">the Structure. Changes in the number of atoms will not be recognized.  Thus,</span>
+<span class="sd">the diffpy.structure.Structure object should be fully configured before passing</span>
+<span class="sd">it to DiffpyStructureParSet.</span>
+
+<span class="sd">DiffpyStructureParSet --  Adapter for diffpy.structure.Structure</span>
+<span class="sd">DiffpyLatticeParSet   --  Adapter for diffpy.structure.Lattice</span>
+<span class="sd">DiffpyAtomParSet      --  Adapter for diffpy.structure.Atom</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DiffpyStructureParSet&quot;</span><span class="p">]</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameter</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParameterAdapter</span><span class="p">,</span> <span class="n">ParameterProxy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameterset</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParameterSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.srrealparset</span><span class="w"> </span><span class="kn">import</span> <span class="n">SrRealParSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util.argbinders</span><span class="w"> </span><span class="kn">import</span> <span class="n">bind2nd</span>
+
+
+<span class="c1"># Accessor for xyz of atoms</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_xyzgetter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">atom</span><span class="o">.</span><span class="n">xyz</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">i</span><span class="p">]</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_xyzsetter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">atom</span><span class="o">.</span><span class="n">xyz</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DiffpyAtomParSet</span><span class="p">(</span><span class="n">ParameterSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A wrapper for diffpy.structure.Atom.</span>
+
+<span class="sd">    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See</span>
+<span class="sd">    this class for base attributes.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom</span>
+<span class="sd">        The diffpy.structure.Atom this is adapting</span>
+<span class="sd">    element</span>
+<span class="sd">        The element name (property).</span>
+
+<span class="sd">    Managed Parameters</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    occupancy</span>
+<span class="sd">        Occupancy of the atom on its crystal location</span>
+<span class="sd">        (ParameterAdapter)</span>
+<span class="sd">    occ</span>
+<span class="sd">        Proxy for occupancy (ParameterProxy).</span>
+<span class="sd">        U11, U22, U33, U12, U21, U23, U32, U13, U31</span>
+<span class="sd">        --  Anisotropic displacement factor for atom (ParameterAdapter</span>
+<span class="sd">        or ParameterProxy). Note that the Uij and Uji parameters</span>
+<span class="sd">        are the same.</span>
+<span class="sd">    Uiso</span>
+<span class="sd">        Isotropic ADP (ParameterAdapter).</span>
+<span class="sd">        B11, B22, B33, B12, B21, B23, B32, B13, B31</span>
+<span class="sd">        --  Anisotropic displacement factor for atom (ParameterAdapter</span>
+<span class="sd">        or ParameterProxy). Note that the Bij and Bji parameters</span>
+<span class="sd">        are the same. (Bij = 8*pi**2*Uij)</span>
+<span class="sd">    Biso</span>
+<span class="sd">        Isotropic ADP (ParameterAdapter).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atom</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom</span>
+<span class="sd">            A diffpy.structure.Atom instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParameterSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="n">atom</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">atom</span>
+        <span class="c1"># x, y, z, occupancy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">_xyzgetter</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">_xyzsetter</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">_xyzgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">_xyzsetter</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">_xyzgetter</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">_xyzsetter</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="n">occupancy</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;occupancy&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;occupancy&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">occupancy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;occ&quot;</span><span class="p">,</span> <span class="n">occupancy</span><span class="p">))</span>
+        <span class="c1"># U</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;U11&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;U11&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;U22&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;U22&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;U33&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;U33&quot;</span><span class="p">))</span>
+        <span class="n">U12</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;U12&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;U12&quot;</span><span class="p">)</span>
+        <span class="n">U21</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;U21&quot;</span><span class="p">,</span> <span class="n">U12</span><span class="p">)</span>
+        <span class="n">U13</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;U13&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;U13&quot;</span><span class="p">)</span>
+        <span class="n">U31</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;U31&quot;</span><span class="p">,</span> <span class="n">U13</span><span class="p">)</span>
+        <span class="n">U23</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;U23&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;U23&quot;</span><span class="p">)</span>
+        <span class="n">U32</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;U32&quot;</span><span class="p">,</span> <span class="n">U23</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">U12</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">U21</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">U13</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">U31</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">U23</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">U32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;Uiso&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Uisoequiv&quot;</span><span class="p">))</span>
+        <span class="c1"># B</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B11&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B11&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B22&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B22&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B33&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B33&quot;</span><span class="p">))</span>
+        <span class="n">B12</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B12&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B12&quot;</span><span class="p">)</span>
+        <span class="n">B21</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B21&quot;</span><span class="p">,</span> <span class="n">B12</span><span class="p">)</span>
+        <span class="n">B13</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B13&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B13&quot;</span><span class="p">)</span>
+        <span class="n">B31</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B31&quot;</span><span class="p">,</span> <span class="n">B13</span><span class="p">)</span>
+        <span class="n">B23</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B23&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B23&quot;</span><span class="p">)</span>
+        <span class="n">B32</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B32&quot;</span><span class="p">,</span> <span class="n">B23</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B12</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B21</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B13</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B31</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B23</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;Biso&quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Bisoequiv&quot;</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atom</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getElem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom</span><span class="o">.</span><span class="n">element</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setElem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">el</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom</span><span class="o">.</span><span class="n">element</span> <span class="o">=</span> <span class="n">el</span>
+
+    <span class="n">element</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_getElem</span><span class="p">,</span> <span class="n">_setElem</span><span class="p">,</span> <span class="s2">&quot;type of atom&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># End class DiffpyAtomParSet</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_latgetter</span><span class="p">(</span><span class="n">par</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">bind2nd</span><span class="p">(</span><span class="nb">getattr</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_latsetter</span><span class="p">(</span><span class="n">par</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">bind2nd</span><span class="p">(</span><span class="nb">setattr</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DiffpyLatticeParSet</span><span class="p">(</span><span class="n">ParameterSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A wrapper for diffpy.structure.Lattice.</span>
+
+<span class="sd">    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet.</span>
+<span class="sd">    See this class for base attributes.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    lattice</span>
+<span class="sd">        The diffpy.structure.Lattice this is adapting</span>
+<span class="sd">    name</span>
+<span class="sd">        Always &quot;lattice&quot;</span>
+<span class="sd">    angunits</span>
+<span class="sd">        &quot;deg&quot;, the units of angle</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a</span>
+<span class="sd">        Unit cell parameters (ParameterAdapter).</span>
+<span class="sd">    b</span>
+<span class="sd">        Unit cell parameters (ParameterAdapter).</span>
+<span class="sd">    c</span>
+<span class="sd">        Unit cell parameters (ParameterAdapter).</span>
+<span class="sd">    alpha</span>
+<span class="sd">        Unit cell parameters (ParameterAdapter).</span>
+<span class="sd">    beta</span>
+<span class="sd">        Unit cell parameters (ParameterAdapter).</span>
+<span class="sd">    gamma</span>
+<span class="sd">        Unit cell parameters (ParameterAdapter).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lattice</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        lattice</span>
+<span class="sd">            A diffpy.structure.Lattice instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParameterSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;lattice&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angunits</span> <span class="o">=</span> <span class="s2">&quot;deg&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span> <span class="o">=</span> <span class="n">lattice</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="n">lattice</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">_latgetter</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="n">_latsetter</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">_latgetter</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">),</span> <span class="n">_latsetter</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">_latgetter</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">),</span> <span class="n">_latsetter</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span>
+                <span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">_latgetter</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">),</span> <span class="n">_latsetter</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span>
+                <span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">_latgetter</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">),</span> <span class="n">_latsetter</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span>
+            <span class="n">ParameterAdapter</span><span class="p">(</span>
+                <span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">_latgetter</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">),</span> <span class="n">_latsetter</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lattice</span><span class="p">)</span>
+
+
+<span class="c1"># End class DiffpyLatticeParSet</span>
+
+
+<div class="viewcode-block" id="DiffpyStructureParSet">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiffpyStructureParSet</span><span class="p">(</span><span class="n">SrRealParSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A wrapper for diffpy.structure.Structure.</span>
+
+<span class="sd">    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet. See</span>
+<span class="sd">    this class for base attributes.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atoms</span>
+<span class="sd">        The list of DiffpyAtomParSets, provided for convenience.</span>
+<span class="sd">    stru</span>
+<span class="sd">        The diffpy.structure.Structure this is adapting</span>
+
+<span class="sd">    Managed ParameterSets</span>
+<span class="sd">    ---------------------</span>
+<span class="sd">    lattice</span>
+<span class="sd">        The managed DiffpyLatticeParSet</span>
+<span class="sd">    &lt;el&gt;&lt;idx&gt;</span>
+<span class="sd">        A managed DiffpyAtomParSets. &lt;el&gt; is the atomic element and</span>
+<span class="sd">        &lt;idx&gt; is the index of that element in the structure,</span>
+<span class="sd">        starting from zero. Thus, for nickel in P1 symmetry, the</span>
+<span class="sd">        managed DiffpyAtomParSets will be named &quot;Ni0&quot;, &quot;Ni1&quot;, &quot;Ni2&quot;</span>
+<span class="sd">        and &quot;Ni3&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">stru</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            A name for the structure</span>
+<span class="sd">        stru</span>
+<span class="sd">            A diffpy.structure.Structure instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">SrRealParSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stru</span> <span class="o">=</span> <span class="n">stru</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameterSet</span><span class="p">(</span><span class="n">DiffpyLatticeParSet</span><span class="p">(</span><span class="n">stru</span><span class="o">.</span><span class="n">lattice</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">cdict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">stru</span><span class="p">:</span>
+            <span class="n">el</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+            <span class="c1"># Try to sanitize the name.</span>
+            <span class="n">el</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">)</span>
+            <span class="n">el</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">cdict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">aname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">el</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">cdict</span><span class="p">[</span><span class="n">el</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">DiffpyAtomParSet</span><span class="p">(</span><span class="n">aname</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameterSet</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DiffpyStructureParSet.getLattice">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.getLattice">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getLattice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the ParameterSet containing the lattice Parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattice</span></div>
+
+
+<div class="viewcode-block" id="DiffpyStructureParSet.canAdapt">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.canAdapt">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">canAdapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stru</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the structure can be adapted by this class.&quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Structure</span>
+
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stru</span><span class="p">,</span> <span class="n">Structure</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DiffpyStructureParSet.getScatterers">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.getScatterers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getScatterers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of ParameterSets that represents the scatterers.</span>
+
+<span class="sd">        The site positions must be accessible from the list entries via</span>
+<span class="sd">        the names &quot;x&quot;, &quot;y&quot;, and &quot;z&quot;. The ADPs must be accessible as</span>
+<span class="sd">        well, but the name and nature of the ADPs (U-factors, B-factors,</span>
+<span class="sd">        isotropic, anisotropic) depends on the adapted structure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getSrRealStructure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the structure object for use with SrReal calculators.</span>
+
+<span class="sd">        If this is periodic, then return the structure, otherwise, pass</span>
+<span class="sd">        it inside of a nosymmetry wrapper. This takes the extra step of</span>
+<span class="sd">        wrapping the structure in a nometa wrapper.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srreal.structureadapter</span><span class="w"> </span><span class="kn">import</span> <span class="n">nometa</span>
+
+        <span class="n">stru</span> <span class="o">=</span> <span class="n">SrRealParSet</span><span class="o">.</span><span class="n">_getSrRealStructure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nometa</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># End class DiffpyStructureParSet</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

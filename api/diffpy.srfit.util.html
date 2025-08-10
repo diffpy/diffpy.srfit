@@ -1,214 +1,318 @@
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>diffpy.srfit.util package &#8212; diffpy.srfit 3.0.0 documentation</title>
-    <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../_static/sidebar.js"></script>
-    
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.util package &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=cca77546"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="diffpy.srfit.structure package" href="diffpy.srfit.structure.html" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
-    <meta name="viewport" content="width=device-width,initial-scale=0.8">
-    
-    
+    <link rel="prev" title="diffpy.srfit.structure package" href="diffpy.srfit.structure.html" /> 
+</head>
 
-  </head><body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="responsive-menu"><a href="#sidebar-anchor" title="Navigation">&#9776;</a></li>
-        <li><a href="../index.html">diffpy.srfit 3.0.0 documentation</a> &#187;</li>
-          <li><a href="diffpy.srfit.html" accesskey="U">diffpy.srfit package</a> &#187;</li> 
-      </ul>
-    </div>
-    
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="section" id="diffpy-srfit-util-package">
-<h1>diffpy.srfit.util package<a class="headerlink" href="#diffpy-srfit-util-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-<div class="section" id="module-diffpy.srfit.util.inpututils">
-<span id="diffpy-srfit-util-inpututils-module"></span><h2>diffpy.srfit.util.inpututils module<a class="headerlink" href="#module-diffpy.srfit.util.inpututils" title="Permalink to this headline">¶</a></h2>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extending.html">Extending SrFit</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="diffpy.srfit.html">Package API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.html">diffpy.srfit.equation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.literals.html">diffpy.srfit.equation.literals package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.equation.visitors.html">diffpy.srfit.equation.visitors package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.fitbase.html">diffpy.srfit.fitbase package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.interface.html">diffpy.srfit.interface package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.pdf.html">diffpy.srfit.pdf package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.sas.html">diffpy.srfit.sas package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diffpy.srfit.structure.html">diffpy.srfit.structure package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">diffpy.srfit.util package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="diffpy.srfit.html">diffpy.srfit package</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.util package</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/diffpy/diffpy.srfit/blob/main/docs/source/api/diffpy.srfit.util.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="diffpy-srfit-util-package">
+<h1>diffpy.srfit.util package<a class="headerlink" href="#diffpy-srfit-util-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-diffpy.srfit.util.inpututils">
+<span id="diffpy-srfit-util-inpututils-module"></span><h2>diffpy.srfit.util.inpututils module<a class="headerlink" href="#module-diffpy.srfit.util.inpututils" title="Link to this heading"></a></h2>
 <p>Input utilities.</p>
-<dl class="function">
-<dt id="diffpy.srfit.util.inpututils.inputToString">
-<code class="descclassname">diffpy.srfit.util.inpututils.</code><code class="descname">inputToString</code><span class="sig-paren">(</span><em>inpt</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.inpututils.inputToString" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.util.inpututils.inputToString">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.inpututils.</span></span><span class="sig-name descname"><span class="pre">inputToString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/inpututils.html#inputToString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.inpututils.inputToString" title="Link to this definition"></a></dt>
 <dd><p>Convert input from various modes to a string.</p>
 <p>This is useful when you want a method to accept a string, open file object
 or file name.</p>
-<dl class="docutils">
-<dt>inpt    –  An open file-like object, name of a file</dt>
-<dd>or a string containing the input.</dd>
-</dl>
-<p>Returns the input in a string
-Raises IOError if the input is supected to be a file name, but the file
-cannot be found.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.srfit.util.inpututils.input">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.inpututils.</span></span><span class="sig-name descname"><span class="pre">input</span></span><a class="headerlink" href="#diffpy.srfit.util.inpututils.input" title="Link to this definition"></a></dt>
+<dd><p>An open file-like object, name of a file
+or a string containing the input.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-diffpy.srfit.util.nameutils">
-<span id="diffpy-srfit-util-nameutils-module"></span><h2>diffpy.srfit.util.nameutils module<a class="headerlink" href="#module-diffpy.srfit.util.nameutils" title="Permalink to this headline">¶</a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">in</span> <span class="pre">a</span> <span class="pre">string</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">IOError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">is</span> <span class="pre">supected</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">a</span> <span class="pre">file</span> <span class="pre">name,</span> <span class="pre">but</span> <span class="pre">the</span> <span class="pre">file</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">cannot</span> <span class="pre">be</span> <span class="pre">found.</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-diffpy.srfit.util.nameutils">
+<span id="diffpy-srfit-util-nameutils-module"></span><h2>diffpy.srfit.util.nameutils module<a class="headerlink" href="#module-diffpy.srfit.util.nameutils" title="Link to this heading"></a></h2>
 <p>Name utilities.</p>
-<dl class="function">
-<dt id="diffpy.srfit.util.nameutils.isIdentifier">
-<code class="descclassname">diffpy.srfit.util.nameutils.</code><code class="descname">isIdentifier</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.nameutils.isIdentifier" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.util.nameutils.isIdentifier">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.nameutils.</span></span><span class="sig-name descname"><span class="pre">isIdentifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/nameutils.html#isIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.nameutils.isIdentifier" title="Link to this definition"></a></dt>
 <dd><p>Check to see if a python string is a valid identifier.</p>
 <p>From <a class="reference external" href="http://code.activestate.com/recipes/413487/">http://code.activestate.com/recipes/413487/</a></p>
 </dd></dl>
 
-<dl class="function">
-<dt id="diffpy.srfit.util.nameutils.validateName">
-<code class="descclassname">diffpy.srfit.util.nameutils.</code><code class="descname">validateName</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.nameutils.validateName" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.util.nameutils.validateName">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.nameutils.</span></span><span class="sig-name descname"><span class="pre">validateName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/nameutils.html#validateName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.nameutils.validateName" title="Link to this definition"></a></dt>
 <dd><p>Validate that a name is a valid identifier.</p>
 <p>Raises ValueError if the name is invalid.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-diffpy.srfit.util.observable">
-<span id="diffpy-srfit-util-observable-module"></span><h2>diffpy.srfit.util.observable module<a class="headerlink" href="#module-diffpy.srfit.util.observable" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="diffpy.srfit.util.observable.Observable">
-<em class="property">class </em><code class="descclassname">diffpy.srfit.util.observable.</code><code class="descname">Observable</code><span class="sig-paren">(</span><em>**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.observable.Observable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Provide notification support for classes that maintain dynamic associations with multiple
-clients.</p>
-<p>Observers, i.e. clients of the observable, register event handlers that will be invoked to
-notify them whenever something interesting happens to the observable. The nature of what is
-being observed is defined by Observable descendants and their managers. For example,
-instances of pyre.calc.Node are observable by other nodes whose value depends on them so
-that the dependents can be notified about value changes and forced to recompute their own
-value.</p>
-<p>The event handlers are callables that take the observable instance as their single
-argument.</p>
-<dl class="docutils">
-<dt>interface:</dt>
-<dd>addObserver: registers its callable argument with the list of handlers to invoke
-removeObserver: remove an event handler from the list of handlers to invoke
-notify: invoke the registered handlers in the order in which they were registered</dd>
+</section>
+<section id="module-diffpy.srfit.util.observable">
+<span id="diffpy-srfit-util-observable-module"></span><h2>diffpy.srfit.util.observable module<a class="headerlink" href="#module-diffpy.srfit.util.observable" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.observable.</span></span><span class="sig-name descname"><span class="pre">Observable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Provide notification support for classes that maintain dynamic
+associations with multiple clients.</p>
+<p>Observers, i.e. clients of the observable, register event handlers
+that will be invoked to notify them whenever something interesting
+happens to the observable. The nature of what is being observed is
+defined by Observable descendants and their managers. For example,
+instances of pyre.calc.Node are observable by other nodes whose
+value depends on them so that the dependents can be notified about
+value changes and forced to recompute their own value.</p>
+<p>The event handlers are callables that take the observable instance
+as their single argument.</p>
+<dl class="simple">
+<dt>interface:</dt><dd><p>addObserver: registers its callable argument with the list of
+handlers to invoke removeObserver: remove an event handler from
+the list of handlers to invoke notify: invoke the registered
+handlers in the order in which they were registered</p>
+</dd>
 </dl>
-<dl class="method">
-<dt id="diffpy.srfit.util.observable.Observable.addObserver">
-<code class="descname">addObserver</code><span class="sig-paren">(</span><em>callable</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.addObserver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add callable to the set of observers</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.addObserver">
+<span class="sig-name descname"><span class="pre">addObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.addObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.addObserver" title="Link to this definition"></a></dt>
+<dd><p>Add callable to the set of observers.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.observable.Observable.hasObserver">
-<code class="descname">hasObserver</code><span class="sig-paren">(</span><em>callable</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.hasObserver" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.hasObserver">
+<span class="sig-name descname"><span class="pre">hasObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.hasObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.hasObserver" title="Link to this definition"></a></dt>
 <dd><p>True if <cite>callable</cite> is present in the set of observers.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.observable.Observable.notify">
-<code class="descname">notify</code><span class="sig-paren">(</span><em>other=()</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.notify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Notify all observers</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.notify">
+<span class="sig-name descname"><span class="pre">notify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.notify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.notify" title="Link to this definition"></a></dt>
+<dd><p>Notify all observers.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.observable.Observable.removeObserver">
-<code class="descname">removeObserver</code><span class="sig-paren">(</span><em>callable</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.removeObserver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove callable from the set of observers</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.removeObserver">
+<span class="sig-name descname"><span class="pre">removeObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.removeObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.removeObserver" title="Link to this definition"></a></dt>
+<dd><p>Remove callable from the set of observers.</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-diffpy.srfit.util.tagmanager">
-<span id="diffpy-srfit-util-tagmanager-module"></span><h2>diffpy.srfit.util.tagmanager module<a class="headerlink" href="#module-diffpy.srfit.util.tagmanager" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-diffpy.srfit.util.tagmanager">
+<span id="diffpy-srfit-util-tagmanager-module"></span><h2>diffpy.srfit.util.tagmanager module<a class="headerlink" href="#module-diffpy.srfit.util.tagmanager" title="Link to this heading"></a></h2>
 <p>TagManager class.</p>
-<p>The TagManager class takes hashable objects and assigns tags to them. Objects
-can then be easily referenced via their assigned tags.</p>
-<dl class="class">
-<dt id="diffpy.srfit.util.tagmanager.TagManager">
-<em class="property">class </em><code class="descclassname">diffpy.srfit.util.tagmanager.</code><code class="descname">TagManager</code><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.7/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>The TagManager class takes hashable objects and assigns tags to them.
+Objects can then be easily referenced via their assigned tags.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.tagmanager.</span></span><span class="sig-name descname"><span class="pre">TagManager</span></span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>TagManager class.</p>
 <p>Manage tags on hashable objects. Tags are strings that carry metadata.</p>
-<dl class="docutils">
-<dt>silent          –  Flag indicating whether to silently pass by when a tag</dt>
-<dd>cannot be found (bool, True). If this is False, then a
-KeyError will be thrown when a tag cannot be found.</dd>
-</dl>
-<p>_tagdict        –  A dictionary of tags to sets of tagged objects.</p>
-<dl class="method">
-<dt id="diffpy.srfit.util.tagmanager.TagManager.alltags">
-<code class="descname">alltags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.alltags" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.silent">
+<span class="sig-name descname"><span class="pre">silent</span></span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.silent" title="Link to this definition"></a></dt>
+<dd><p>Flag indicating whether to silently pass by when a tag
+cannot be found (bool, True). If this is False, then a
+KeyError will be thrown when a tag cannot be found.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager._tagdict">
+<span class="sig-name descname"><span class="pre">_tagdict</span></span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager._tagdict" title="Link to this definition"></a></dt>
+<dd><p>A dictionary of tags to sets of tagged objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.alltags">
+<span class="sig-name descname"><span class="pre">alltags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.alltags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.alltags" title="Link to this definition"></a></dt>
 <dd><p>Get all tags managed by the TagManager.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.tagmanager.TagManager.hasTags">
-<code class="descname">hasTags</code><span class="sig-paren">(</span><em>obj</em>, <em>*tags</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.hasTags" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.hasTags">
+<span class="sig-name descname"><span class="pre">hasTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.hasTags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.hasTags" title="Link to this definition"></a></dt>
 <dd><p>Determine if an object has all passed tags.</p>
 <p>Returns bool</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.tagmanager.TagManager.intersection">
-<code class="descname">intersection</code><span class="sig-paren">(</span><em>*tags</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.intersection" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.intersection">
+<span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.intersection" title="Link to this definition"></a></dt>
 <dd><p>Get all objects that have all of the passed tags.</p>
 <p>Returns set</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.tagmanager.TagManager.tag">
-<code class="descname">tag</code><span class="sig-paren">(</span><em>obj</em>, <em>*tags</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.tag" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.tag" title="Link to this definition"></a></dt>
 <dd><p>Tag an object.</p>
 <p>Tags are stored as strings.</p>
-<p>obj     –  Any hashable object to be untagged.
-<a href="#id1"><span class="problematic" id="id2">*</span></a>tags   –  Tags to apply to obj.</p>
-<p>Raises TypeError if obj is not hashable.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.obj">
+<span class="sig-name descname"><span class="pre">obj</span></span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.obj" title="Link to this definition"></a></dt>
+<dd><p>Any hashable object to be untagged.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.tagmanager.TagManager.tags">
-<code class="descname">tags</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.tags" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">\*tags</span></span></dt>
+<dd><p>Tags to apply to obj.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">TypeError</span> <span class="pre">if</span> <span class="pre">obj</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">hashable.</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.tags">
+<span class="sig-name descname"><span class="pre">tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.tags" title="Link to this definition"></a></dt>
 <dd><p>Get all tags on an object.</p>
 <p>Returns list</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.tagmanager.TagManager.union">
-<code class="descname">union</code><span class="sig-paren">(</span><em>*tags</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.union" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.union">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.union" title="Link to this definition"></a></dt>
 <dd><p>Get all objects that have any of the passed tags.</p>
 <p>Returns set</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.tagmanager.TagManager.untag">
-<code class="descname">untag</code><span class="sig-paren">(</span><em>obj</em>, <em>*tags</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.untag" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.untag">
+<span class="sig-name descname"><span class="pre">untag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.untag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.untag" title="Link to this definition"></a></dt>
 <dd><p>Remove tags from an object.</p>
-<p>obj     –  Any hashable object to be untagged.
-<a href="#id3"><span class="problematic" id="id4">*</span></a>tags   –  Tags to remove from obj. If this is empty, then all</p>
-<blockquote>
-<div>tags will be removed from obj.</div></blockquote>
-<p>Raises KeyError if a passed tag does not apply to obj and self.silent
-is False</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">obj</span></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd><p>Any hashable object to be untagged.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="diffpy.srfit.util.tagmanager.TagManager.verifyTags">
-<code class="descname">verifyTags</code><span class="sig-paren">(</span><em>*tags</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.verifyTags" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">\*tags</span></span></dt>
+<dd><p>Tags to remove from obj. If this is empty, then all
+tags will be removed from obj.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">KeyError</span> <span class="pre">if</span> <span class="pre">a</span> <span class="pre">passed</span> <span class="pre">tag</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">apply</span> <span class="pre">to</span> <span class="pre">obj</span> <span class="pre">and</span> <span class="pre">self.silent</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">is</span> <span class="pre">False</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.verifyTags">
+<span class="sig-name descname"><span class="pre">verifyTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.verifyTags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.verifyTags" title="Link to this definition"></a></dt>
 <dd><p>Check that tags are all extant.</p>
 <p>Raises KeyError if a passed tag does not exist. This ignores
 self.silent.</p>
@@ -216,101 +320,63 @@ self.silent.</p>
 
 </dd></dl>
 
-</div>
-<div class="section" id="module-diffpy.srfit.util">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-diffpy.srfit.util" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-diffpy.srfit.util">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-diffpy.srfit.util" title="Link to this heading"></a></h2>
 <p>Utilities and constants used throughout SrFit.</p>
-<dl class="function">
-<dt id="diffpy.srfit.util.sortKeyForNumericString">
-<code class="descclassname">diffpy.srfit.util.</code><code class="descname">sortKeyForNumericString</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.sortKeyForNumericString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute key for sorting strings according to their integer numeric value.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.util.sortKeyForNumericString">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.</span></span><span class="sig-name descname"><span class="pre">sortKeyForNumericString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util.html#sortKeyForNumericString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.sortKeyForNumericString" title="Link to this definition"></a></dt>
+<dd><p>Compute key for sorting strings according to their integer numeric
+value.</p>
 <p>Each string gets split to string and integer segments to create keys
 for comparison.  Signs, decimal points and exponents are ignored.
 This function is intended as the <code class="docutils literal notranslate"><span class="pre">key</span></code> argument for the <code class="docutils literal notranslate"><span class="pre">sorted</span></code>
 or <code class="docutils literal notranslate"><span class="pre">list.sort</span></code> function.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> (<a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – String which may have numeric components, e.g., “a12b”.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Tuple of non-numeric segments intermixed with integer values.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3.7/library/stdtypes.html#tuple" title="(in Python v3.7)">tuple</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>str</em>) – String which may have numeric components, e.g., “a12b”.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of non-numeric segments intermixed with integer values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
-</div>
-</div>
+</section>
+</section>
 
 
+           </div>
           </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="diffpy.srfit.structure.html" class="btn btn-neutral float-left" title="diffpy.srfit.structure package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-    <a id="sidebar-anchor"></a>
-    
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">diffpy.srfit.util package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.util.inpututils">diffpy.srfit.util.inpututils module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.util.nameutils">diffpy.srfit.util.nameutils module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.util.observable">diffpy.srfit.util.observable module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.util.tagmanager">diffpy.srfit.util.tagmanager module</a></li>
-<li><a class="reference internal" href="#module-diffpy.srfit.util">Module contents</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="diffpy.srfit.structure.html"
-                        title="previous chapter">diffpy.srfit.structure package</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/api/diffpy.srfit.util.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="diffpy.srfit.structure.html" title="diffpy.srfit.structure package"
-             accesskey="P">previous</a> |</li>
-      </ul>
-    </div>
-
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-    </div>
-  </body>
+</body>
 </html>

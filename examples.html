@@ -1,253 +1,113 @@
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Examples &#8212; diffpy.srfit 3.0.0 documentation</title>
-    <link rel="stylesheet" href="_static/pydoctheme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/sidebar.js"></script>
-    
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=cca77546"></script>
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="gaussianrecipe.py" href="examples/gaussianrecipe.html" />
-    <link rel="prev" title="diffpy.srfit documentation" href="index.html" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <link rel="shortcut icon" type="image/png" href="_static/favicon.png" />
-    <meta name="viewport" content="width=device-width,initial-scale=0.8">
-    
-    
+    <link rel="prev" title="diffpy.srfit documentation" href="index.html" /> 
+</head>
 
-  </head><body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="responsive-menu"><a href="#sidebar-anchor" title="Navigation">&#9776;</a></li>
-        <li><a href="index.html">diffpy.srfit 3.0.0 documentation</a> &#187;</li> 
-      </ul>
-    </div>
-    
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
-            
-  <div class="section" id="examples">
-<span id="developers-guide-examples"></span><h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="purpose">
-<h2>Purpose<a class="headerlink" href="#purpose" title="Permalink to this headline">¶</a></h2>
-<p>These example scripts are intended to help a developer get acquainted with the
-SrFit programming interface. Although one can write scripts like these to drive
-optimization, these scripts do not represent the SrFit user interface. That
-interface will be made available in a future release.</p>
-<p>A secondary purpose of these tutorials is to generate interest in SrFit.  By
-reading through the examples we hope that you are inspired to think of exciting
-new ways to get the most out of your scientific data. If you think SrFit can
-help you with that, please feel free to contact us through the DiffPy website.</p>
-<p><a class="reference external" href="http://www.diffpy.org">http://www.diffpy.org</a></p>
+          
+          
+          <a href="index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
 </div>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
-<p>Three things are required for optimization: a function that generates a
-quantity to be minimized, variables that can be used to manipulate that
-function and an algorithm that can drive the function output to a smaller value
-by steering the variables.  For scientific purposes, the quantity to be
-minimized is the disagreement between a measured profile and a theoretical
-profile. The scientific understanding of the system under consideration partly
-determines the suitability of the theoretical profile generator and the
-scientific relevance of the variables used to drive it.</p>
-<p>The purpose of SrFit is to give users the means to combine known information
-about a system of interest in order to extract scientifically relevant
-quantities, and thus understanding from it. Various experimental procedures and
-theoretical calculations may be needed to gain the desired understanding of the
-system.  SrFit helps users combine these views of the system in a coherent and
-consistent manner.</p>
-<p>To achieve this purpose, SrFit provides:</p>
-<ol class="arabic simple">
-<li>a function to be optimized (the residual) given one or more measured
-profiles, one or more profile generators and variables to be steered by an
-optimizer.</li>
-<li>constraints and restraints that encapsulate known information about the
-system.</li>
-<li>a clearly defined programming interface that developers can use to add their
-own profile generators, thereby enabling the combination of more views of a
-system.</li>
-<li>an equation building interface that allows users to tweak profile generators
-when scientific understanding of a system is more advanced than the existing
-software.</li>
-</ol>
-<p>The examples described below will go into detail about each of these points.</p>
-</div>
-<div class="section" id="id1">
-<h2>Examples<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>The following examples are contained in the <em>doc/examples/</em> directory of the
-SrFit source distribution.  They can be downloaded from
-<a class="reference external" href="http://dev.danse.us/packages/srfit_examples-alpha9.zip">http://dev.danse.us/packages/srfit_examples-alpha9.zip</a></p>
-<p>For each example, start by running the example by typing in the command line</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">example</span><span class="o">.</span><span class="n">py</span>
-</pre></div>
-</div>
-<p>where <em>example.py</em> represents the example file. The output will show on screen
-and a plot window will display. Once you’ve studied the output and plot, close
-the plot window and open the example file. In the file there will be a
-description of what the script is doing and the purpose of the example. By
-reading through the example, you will be introduced to the SrFit programming
-interface.</p>
-<p>Here is an overview of the examples. It is recommended that you work through
-them in the order listed below.</p>
-<p>Basic:</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/gaussianrecipe.html">gaussianrecipe.py</a></dt>
-<dd>Introductory recipe building and configuration. This introduces the
-fundamental classes in SrFit.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/debyemodel.html">debyemodel.py</a></dt>
-<dd>Introductory recipe building and configuration. This shows how to use a
-function created by someone else in a refinement. This example also
-introduces restraints.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/debyemodelII.html">debyemodelII.py</a></dt>
-<dd>Refine two different values of a variable from two different regions of a
-profile. This example introduces constraints and working with multiple
-contributions to a fit.</dd>
-</dl>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#files">Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/gaussianrecipe.html">gaussianrecipe.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/debyemodel.html">debyemodel.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/debyemodelII.html">debyemodelII.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/gaussiangenerator.html">gaussiangenerator.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/npintensity.html">npintensity.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/npintensityII.html">npintensityII.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/nppdfobjcryst.html">nppdfobjcryst.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/crystalpdf.html">crystalpdf.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/simplepdf.html">simplepdf.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/simplepdftwophase.html">simplepdftwophase.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/crystalpdftwodata.html">crystalpdftwodata.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/crystalpdfall.html">crystalpdfall.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/nppdfcrystal.html">nppdfcrystal.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/coreshellnp.html">coreshellnp.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/ellipsoidsas.html">ellipsoidsas.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/nppdfsas.html">nppdfsas.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/interface.html">interface.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/simplerecipe.html">simplerecipe.py</a></li>
+</ul>
 </li>
 </ul>
-<p>Advanced:</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/gaussiangenerator.html">gaussiangenerator.py</a></dt>
-<dd>Create a custom ProfileGenerator and use it in a refinement. This is an
-instructive extension to <a class="reference external" href="examples/gaussianrecipe.html">gaussianrecipe.py</a>.</dd>
-</dl>
 </li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/npintensity.html">npintensity.py</a></dt>
-<dd>Use diffpy.structure to build a nanoparticle intensity generator, and use
-it to refine a structure to simulated data.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/npintensityII.html">npintensityII.py</a></dt>
-<dd>Use the calculator built in npintensity.py to simultaneously refine a
-structure to two data sets.</dd>
-</dl>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="extending.html">Extending SrFit</a></li>
 </ul>
-</div>
-<div class="section" id="use-cases">
-<h2>Use Cases<a class="headerlink" href="#use-cases" title="Permalink to this headline">¶</a></h2>
-<p>There are several examples that demonstrate various SrFit use cases. These do
-not adopt the tutorial format of the previous examples. Regardless, developers
-should read through these use cases to gain an understanding of PDF and SAS
-refinement with SrFit.</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/crystalpdf.html">crystalpdf.py</a></dt>
-<dd>Refine a diffpy.structure crystal to PDF data using automatic explicit
-space group constraints.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/simplepdf.html">simplepdf.py</a></dt>
-<dd>As <a class="reference external" href="examples/crystalpdf.html">crystalpdf.py</a>, but with a simplified interface.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/crystalpdfobjcryst.html">crystalpdfobjcryst.py</a></dt>
-<dd>Refine a pyobjcryst crystal to PDF data using automatic implicit space
-group constraints.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a></dt>
-<dd>Refine a two-phase structure to PDF data using two profile generators.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/simplepdftwophase.html">simplepdftwophase.py</a></dt>
-<dd><a class="reference external" href="examples/crystalpdftwophase.html">crystalpdftwophase.py</a> using the simplified PDFContribution interface.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/crystalpdftwodata.html">crystalpdftwodata.py</a></dt>
-<dd>Refine a single structure to x-ray and neutron data simultaneously.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/crystalpdfall.html">crystalpdfall.py</a></dt>
-<dd>Refine a two-phase structure using four data sets.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/nppdfobjcryst.html">nppdfobjcryst.py</a></dt>
-<dd>Refine the C60 structure to real data.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/nppdfcrystal.html">nppdfcrystal.py</a></dt>
-<dd>Fit a nanoparticle PDF as a crystal PDF attenuated by a nanoparticle form
-factor.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/coreshellnp.html">coreshellnp.py</a></dt>
-<dd>As above, but fit the PDF from core-shell nanoparticles.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/ellipsoidsas.html">ellipsoidsas.py</a></dt>
-<dd>Refine an ellipsoid SAS model to ideal data.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/nppdfsas.html">nppdfsas.py</a></dt>
-<dd>Refine PDF from nanoparticle of assumed shape using a crystal model and SAS
-data from the same system.</dd>
-</dl>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/diffpy.srfit.html">Package API</a></li>
 </ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/diffpy/diffpy.srfit/blob/main/docs/source/examples.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
 </div>
-<div class="section" id="miscellaneous">
-<h2>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h2>
-<p>These demonstrate other SrFit features. These are in flux and may not be in
-future versions.</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/simplerecipe.html">simplerecipe.py</a></dt>
-<dd>This introduces the SimpleRecipe class that is a FitRecipe with an embedded
-Profile and FitContribution. SimpleRecipe exposes methods from the Profile
-and FitContribution, and adds other methods so it is easy to set up a
-simple fit.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="examples/interface.html">interface.py</a></dt>
-<dd>This example introduces some interface enhancements that allow the SrFit
-recipes to be written with less code. This is not the same as a
-full-featured scripting interface, but rather somewhere in between a
-scripting interface and the API.</dd>
-</dl>
-</li>
-</ul>
-</div>
-<div class="section" id="files">
-<h2>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h2>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<span id="developers-guide-examples"></span><h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
+<section id="files">
+<h2>Files<a class="headerlink" href="#files" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/gaussianrecipe.html">gaussianrecipe.py</a></li>
@@ -272,81 +132,38 @@ scripting interface and the API.</dd>
 <li class="toctree-l1"><a class="reference internal" href="examples/simplerecipe.html">simplerecipe.py</a></li>
 </ul>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
+           </div>
           </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="diffpy.srfit documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples/gaussianrecipe.html" class="btn btn-neutral float-right" title="gaussianrecipe.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-    <a id="sidebar-anchor"></a>
-    
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Examples</a><ul>
-<li><a class="reference internal" href="#purpose">Purpose</a></li>
-<li><a class="reference internal" href="#overview">Overview</a></li>
-<li><a class="reference internal" href="#id1">Examples</a></li>
-<li><a class="reference internal" href="#use-cases">Use Cases</a></li>
-<li><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
-<li><a class="reference internal" href="#files">Files</a></li>
-</ul>
-</li>
-</ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">diffpy.srfit documentation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="examples/gaussianrecipe.html"
-                        title="next chapter">gaussianrecipe.py</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/examples.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="examples/gaussianrecipe.html" title="gaussianrecipe.py"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="diffpy.srfit documentation"
-             accesskey="P">previous</a> |</li>
-      </ul>
-    </div>
-
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2019, Brookhaven National Laboratory.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.
-    </div>
-  </body>
+</body>
 </html>

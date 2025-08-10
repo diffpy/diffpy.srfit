@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.fitbase.simplerecipe &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=cca77546"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.fitbase.simplerecipe</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.srfit.fitbase.simplerecipe</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2008 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
+<span class="sd">&quot;&quot;&quot;Simple FitRecipe class that includes a FitContribution and Profile.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.fitcontribution</span><span class="w"> </span><span class="kn">import</span> <span class="n">FitContribution</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.fitrecipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">FitRecipe</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.fitresults</span><span class="w"> </span><span class="kn">import</span> <span class="n">FitResults</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">Profile</span>
+
+
+<div class="viewcode-block" id="SimpleRecipe">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimpleRecipe</span><span class="p">(</span><span class="n">FitRecipe</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SimpleRecipe class.</span>
+
+<span class="sd">    This is a FitRecipe with a built-in Profile (the &#39;profile&#39; attribute) and</span>
+<span class="sd">    FitContribution (the &#39;contribution&#39; attribute). Unique methods from each of</span>
+<span class="sd">    these are exposed through this class to facilitate the creation of a simple</span>
+<span class="sd">    fit recipe.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    profile</span>
+<span class="sd">        The built-in Profile object.</span>
+<span class="sd">    contribution</span>
+<span class="sd">        The built-in FitContribution object.</span>
+<span class="sd">    results</span>
+<span class="sd">        The built-in FitResults object.</span>
+<span class="sd">    name</span>
+<span class="sd">        A name for this FitRecipe.</span>
+<span class="sd">    fithook</span>
+<span class="sd">        An object to be called whenever within the residual</span>
+<span class="sd">        (default FitHook()) that can pass information out of</span>
+<span class="sd">        the system during a refinement.</span>
+<span class="sd">    _constraints</span>
+<span class="sd">        A dictionary of Constraints, indexed by the constrained</span>
+<span class="sd">        Parameter. Constraints can be added using the</span>
+<span class="sd">        &#39;constrain&#39; method.</span>
+<span class="sd">    _oconstraints</span>
+<span class="sd">        An ordered list of the constraints from this and all</span>
+<span class="sd">        sub-components.</span>
+<span class="sd">    _calculators</span>
+<span class="sd">        A managed dictionary of Calculators.</span>
+<span class="sd">    _contributions</span>
+<span class="sd">        A managed OrderedDict of FitContributions.</span>
+<span class="sd">    _parameters</span>
+<span class="sd">        A managed OrderedDict of parameters (in this case the</span>
+<span class="sd">        parameters are varied).</span>
+<span class="sd">    _parsets</span>
+<span class="sd">        A managed dictionary of ParameterSets.</span>
+<span class="sd">    _eqfactory</span>
+<span class="sd">        A diffpy.srfit.equation.builder.EquationFactory</span>
+<span class="sd">        instance that is used to create constraints and</span>
+<span class="sd">        restraints from string</span>
+<span class="sd">    _fixed</span>
+<span class="sd">        A set of parameters that are not actually varied.</span>
+<span class="sd">    _restraintlist</span>
+<span class="sd">        A list of restraints from this and all sub-components.</span>
+<span class="sd">    _restraints</span>
+<span class="sd">        A set of Restraints. Restraints can be added using the</span>
+<span class="sd">        &#39;restrain&#39; or &#39;confine&#39; methods.</span>
+<span class="sd">    _ready</span>
+<span class="sd">        A flag indicating if all attributes are ready for the</span>
+<span class="sd">        calculation.</span>
+<span class="sd">    _tagdict</span>
+<span class="sd">        A dictionary of tags to variables.</span>
+<span class="sd">    _weights</span>
+<span class="sd">        List of weighing factors for each FitContribution. The</span>
+<span class="sd">        weights are multiplied by the residual of the</span>
+<span class="sd">        FitContribution when determining the overall residual.</span>
+
+<span class="sd">    Properties</span>
+<span class="sd">    ----------</span>
+<span class="sd">    names</span>
+<span class="sd">        Variable names (read only). See getNames.</span>
+<span class="sd">    values</span>
+<span class="sd">        Variable values (read only). See getValues.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fit&quot;</span><span class="p">,</span> <span class="n">conclass</span><span class="o">=</span><span class="n">FitContribution</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization.&quot;&quot;&quot;</span>
+        <span class="n">FitRecipe</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fithooks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">contribution</span> <span class="o">=</span> <span class="n">conclass</span><span class="p">(</span><span class="s2">&quot;contribution&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
+        <span class="n">contribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Adopt all the FitContribution methods</span>
+        <span class="n">public</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">aname</span>
+            <span class="k">for</span> <span class="n">aname</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">aname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">aname</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">mname</span> <span class="ow">in</span> <span class="n">public</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">contribution</span><span class="p">,</span> <span class="n">mname</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mname</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Profile methods</span>
+<div class="viewcode-block" id="SimpleRecipe.loadParsedData">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadParsedData">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadParsedData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parser</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load parsed data from a ProfileParser.</span>
+
+<span class="sd">        This sets the xobs, yobs, dyobs arrays as well as the metadata.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">loadParsedData</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleRecipe.setObservedProfile">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setObservedProfile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setObservedProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the observed profile.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        xobs</span>
+<span class="sd">            Numpy array of the independent variable</span>
+<span class="sd">        yobs</span>
+<span class="sd">            Numpy array of the observed signal.</span>
+<span class="sd">        dyobs</span>
+<span class="sd">            Numpy array of the uncertainty in the observed signal. If</span>
+<span class="sd">            dyobs is None (default), it will be set to 1 at each</span>
+<span class="sd">            observed xobs.</span>
+
+<span class="sd">        Raises ValueError if len(yobs) != len(xobs)</span>
+<span class="sd">        Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setObservedProfile</span><span class="p">(</span><span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleRecipe.setCalculationRange">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationRange">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setCalculationRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set epsilon-inclusive calculation range.</span>
+
+<span class="sd">        Adhere to the observed ``xobs`` points when ``dx`` is the same</span>
+<span class="sd">        as in the data.  ``xmin`` and ``xmax`` are clipped at the bounds</span>
+<span class="sd">        of the observed data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        xmin : float or &quot;obs&quot;, optional</span>
+<span class="sd">            The minimum value of the independent variable.  Keep the</span>
+<span class="sd">            current minimum when not specified.  If specified as &quot;obs&quot;</span>
+<span class="sd">            reset to the minimum observed value.</span>
+<span class="sd">        xmax : float or &quot;obs&quot;, optional</span>
+<span class="sd">            The maximum value of the independent variable.  Keep the</span>
+<span class="sd">            current maximum when not specified.  If specified as &quot;obs&quot;</span>
+<span class="sd">            reset to the maximum observed value.</span>
+<span class="sd">        dx : float or &quot;obs&quot;, optional</span>
+<span class="sd">            The sample spacing in the independent variable.  When different</span>
+<span class="sd">            from the data, resample the ``x`` as anchored at ``xmin``.</span>
+
+<span class="sd">        Note that xmin is always inclusive (unless clipped). xmax is inclusive</span>
+<span class="sd">        if it is within the bounds of the observed data.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        AttributeError</span>
+<span class="sd">            If there is no observed data.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleRecipe.setCalculationPoints">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setCalculationPoints">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setCalculationPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the calculation points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x</span>
+<span class="sd">            A non-empty numpy array containing the calculation points. If</span>
+<span class="sd">            xobs exists, the bounds of x will be limited to its bounds.</span>
+
+<span class="sd">        This will create y and dy on the specified grid if xobs, yobs and</span>
+<span class="sd">        dyobs exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">setCalculationPoints</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleRecipe.loadtxt">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.loadtxt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadtxt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Use numpy.loadtxt to load data.</span>
+
+<span class="sd">        Arguments are passed to numpy.loadtxt. unpack = True is</span>
+<span class="sd">        enforced. The first two arrays returned by numpy.loadtxt are</span>
+<span class="sd">        assumed to be x and y. If there is a third array, it is assumed</span>
+<span class="sd">        to by dy. Any other arrays are ignored. These are passed to</span>
+<span class="sd">        setObservedProfile.</span>
+
+<span class="sd">        Raises ValueError if the call to numpy.loadtxt returns fewer</span>
+<span class="sd">        than 2 arrays.</span>
+
+<span class="sd">        Returns the x, y and dy arrays loaded from the file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
+
+
+    <span class="c1"># FitContribution</span>
+<div class="viewcode-block" id="SimpleRecipe.setEquation">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.setEquation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{}):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the profile equation for the FitContribution.</span>
+
+<span class="sd">        This sets the equation that will be used when generating the residual.</span>
+<span class="sd">        The equation will be usable within setResidualEquation as &quot;eq&quot;, and it</span>
+<span class="sd">        takes no arguments.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eqstr</span>
+<span class="sd">            A string representation of the equation. Variables will be</span>
+<span class="sd">            extracted from this equation and be given an initial value</span>
+<span class="sd">            of 0.</span>
+<span class="sd">        ns</span>
+<span class="sd">            A dictionary of Parameters, indexed by name, that are used</span>
+<span class="sd">            in the eqstr, but not registered (default {}).</span>
+
+<span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
+<span class="sd">        variable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contribution</span><span class="o">.</span><span class="n">setEquation</span><span class="p">(</span><span class="n">eqstr</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{})</span>
+        <span class="c1"># Extract variables</span>
+        <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">contribution</span><span class="p">:</span>
+            <span class="c1"># Skip Profile  Parameters</span>
+            <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;dy&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">par</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the contribution equation.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contribution</span><span class="o">.</span><span class="n">evaluate</span><span class="p">()</span>
+
+    <span class="c1"># FitResults methods</span>
+
+<div class="viewcode-block" id="SimpleRecipe.printResults">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.printResults">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">printResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">footer</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Format and print the results.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        header</span>
+<span class="sd">            A header to add to the output (default &quot;&quot;)</span>
+<span class="sd">        footer</span>
+<span class="sd">            A footer to add to the output (default &quot;&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">printResults</span><span class="p">(</span><span class="n">header</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="SimpleRecipe.saveResults">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.saveResults">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">saveResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">footer</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Format and save the results.</span>
+
+<span class="sd">        filename -  Name of the save file.</span>
+<span class="sd">        ----------------------------------</span>
+<span class="sd">        header</span>
+<span class="sd">            A header to add to the output (default &quot;&quot;)</span>
+<span class="sd">        footer</span>
+<span class="sd">            A footer to add to the output (default &quot;&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">saveResults</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">header</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># End class SimpleRecipe</span>
+
+<span class="c1"># End of file</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.util.observable &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=cca77546"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../util.html">diffpy.srfit.util</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.util.observable</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.srfit.util.observable</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1">#</span>
+<span class="c1">#                             michael a.g. aïvázis</span>
+<span class="c1">#                                  orthologue</span>
+<span class="c1">#                      (c) 1998-2009  all rights reserved</span>
+<span class="c1">#</span>
+<span class="c1"># ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1"># Derived from pyre-1.0/packages/pyre/patterns/Observable.py</span>
+<span class="c1"># See pyre-1.0 for full copyright and license information</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Observable&quot;</span><span class="p">]</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util.weakrefcallable</span><span class="w"> </span><span class="kn">import</span> <span class="n">weak_ref</span>
+
+
+<div class="viewcode-block" id="Observable">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Observable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide notification support for classes that maintain dynamic</span>
+<span class="sd">    associations with multiple clients.</span>
+
+<span class="sd">    Observers, i.e. clients of the observable, register event handlers</span>
+<span class="sd">    that will be invoked to notify them whenever something interesting</span>
+<span class="sd">    happens to the observable. The nature of what is being observed is</span>
+<span class="sd">    defined by Observable descendants and their managers. For example,</span>
+<span class="sd">    instances of pyre.calc.Node are observable by other nodes whose</span>
+<span class="sd">    value depends on them so that the dependents can be notified about</span>
+<span class="sd">    value changes and forced to recompute their own value.</span>
+
+<span class="sd">    The event handlers are callables that take the observable instance</span>
+<span class="sd">    as their single argument.</span>
+
+<span class="sd">    interface:</span>
+<span class="sd">      addObserver: registers its callable argument with the list of</span>
+<span class="sd">      handlers to invoke removeObserver: remove an event handler from</span>
+<span class="sd">      the list of handlers to invoke notify: invoke the registered</span>
+<span class="sd">      handlers in the order in which they were registered</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Observable.notify">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.notify">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Notify all observers.&quot;&quot;&quot;</span>
+        <span class="c1"># build a list before notification, just in case the observer&#39;s</span>
+        <span class="c1"># callback behavior involves removing itself from our callback set</span>
+        <span class="n">semaphores</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="p">,)</span> <span class="o">+</span> <span class="n">other</span>
+        <span class="k">for</span> <span class="nb">callable</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observers</span><span class="p">):</span>
+            <span class="nb">callable</span><span class="p">(</span><span class="n">semaphores</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+    <span class="c1"># callback management</span>
+
+<div class="viewcode-block" id="Observable.addObserver">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.addObserver">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add callable to the set of observers.&quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">weak_ref</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">_fbRemoveObserver</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Observable.removeObserver">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.removeObserver">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">removeObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove callable from the set of observers.&quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">weak_ref</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Observable.hasObserver">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.hasObserver">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;True if `callable` is present in the set of observers.&quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">weak_ref</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observers</span>
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+    <span class="c1"># meta methods</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Observable</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_observers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">return</span></div>
+
+
+
+<span class="c1"># end of class Observable</span>
+
+<span class="c1"># Local helpers --------------------------------------------------------------</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fbRemoveObserver</span><span class="p">(</span><span class="n">fobs</span><span class="p">,</span> <span class="n">semaphores</span><span class="p">):</span>
+    <span class="c1"># Remove WeakBoundMethod `fobs` from the observers of notifying object.</span>
+    <span class="c1"># This is called from Observable.notify when the WeakBoundMethod</span>
+    <span class="c1"># associated object dies.</span>
+    <span class="n">observable</span> <span class="o">=</span> <span class="n">semaphores</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">observable</span><span class="o">.</span><span class="n">removeObserver</span><span class="p">(</span><span class="n">fobs</span><span class="p">)</span>
+    <span class="k">return</span>
+
+
+<span class="c1"># end of file</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 **Added:**
 
-* No news added: Fix docstrings mannually.
+* No news added: Fix docstrings manually.
 
 **Changed:**
 

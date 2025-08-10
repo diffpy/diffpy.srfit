@@ -177,6 +177,7 @@ class FitContribution(ParameterSet):
             A name for the calculator. If name is None (default), then
             the ProfileGenerator's name attribute will be used.
 
+
         Raises ValueError if the ProfileGenerator has no name.
         Raises ValueError if the ProfileGenerator has the same name as some
         other managed object.
@@ -219,6 +220,7 @@ class FitContribution(ParameterSet):
         ns
             A dictionary of Parameters, indexed by name, that are used
             in the eqstr, but not registered (default {}).
+
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -265,6 +267,7 @@ class FitContribution(ParameterSet):
             (default), then the previous residual equation will be
             used, or the chi2 residual will be used if that does not
             exist.
+
 
         Two residuals are preset for convenience, "chiv" and "resv".
         chiv is defined such that dot(chiv, chiv) = chi^2.

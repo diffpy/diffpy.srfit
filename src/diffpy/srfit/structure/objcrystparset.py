@@ -212,6 +212,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         (ParameterAdapter)
         q0, q1, q2, q3  --  Orientational quaternion (ParameterAdapter)
 
+
     Other attributes are inherited from
     diffpy.srfit.fitbase.parameterset.ParameterSet
     """
@@ -418,7 +419,8 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         Returns
         -------
-        The ObjCrystBondLengthRestraint object for use with the
+        res
+            The ObjCrystBondLengthRestraint object for use with the
             'unrestrain' method.
         """
         res = ObjCrystBondLengthRestraint(
@@ -451,8 +453,11 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             by the unrestrained point-average chi^2 (chi^2/numpoints)
             (default False)
 
-        Returns the ObjCrystBondLengthRestraint object for use with the
-        'unrestrain' method.
+        Returns
+        -------
+        ObjCrystBondLengthRestraint object
+            Returns the ObjCrystBondLengthRestraint object for use with the
+            'unrestrain' method.
         """
         return self.restrainBondLength(
             par.atom1, par.atom2, length, sigma, delta, scaled
@@ -486,8 +491,11 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             by the unrestrained point-average chi^2 (chi^2/numpoints)
             (default False).
 
-        Returns the ObjCrystBondAngleRestraint object for use with the
-        'unrestrain' method.
+        Returns
+        -------
+        ObjCrystBondAngleRestraint object
+            Returns the ObjCrystBondAngleRestraint object for use with the
+            'unrestrain' method.
         """
         res = ObjCrystBondAngleRestraint(
             atom1, atom2, atom3, angle, sigma, delta, scaled
@@ -519,8 +527,11 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             by the unrestrained point-average chi^2 (chi^2/numpoints)
             (default False).
 
-        Returns the ObjCrystBondAngleRestraint object for use with the
-        'unrestrain' method.
+        Returns
+        -------
+        ObjCrystBondAngleRestraint object
+            Returns the ObjCrystBondAngleRestraint object for use with the
+            'unrestrain' method.
         """
         return self.restrainBondAngle(
             par.atom1, par.atom2, par.atom3, angle, sigma, delta, scaled
@@ -555,8 +566,11 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             by the unrestrained point-average chi^2 (chi^2/numpoints)
             (default False).
 
-        Returns the ObjCrystDihedralAngleRestraint object for use with the
-        'unrestrain' method.
+        Returns
+        -------
+        ObjCrystDihedralAngleRestraint object
+            Returns the ObjCrystDihedralAngleRestraint object for use with the
+            'unrestrain' method.
         """
         res = ObjCrystDihedralAngleRestraint(
             atom1, atom2, atom3, atom4, angle, sigma, delta, scaled
@@ -589,8 +603,11 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             by the unrestrained point-average chi^2 (chi^2/numpoints)
             (default False).
 
-        Returns the ObjCrystDihedralAngleRestraint object for use with the
-        'unrestrain' method.
+        Returns
+        -------
+        ObjCrystDihedralAngleRestraint object
+            Returns the ObjCrystDihedralAngleRestraint object for use with the
+            'unrestrain' method.
         """
         return self.restrainDihedralAngle(
             par.atom1,
@@ -628,7 +645,10 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             A flag indicating whether the Parameter is constant
             (default False)
 
-        Returns the new ObjCrystBondLengthParameter.
+        Returns
+        -------
+        ObjCrystBondLengthParameter object
+            Returns the new ObjCrystBondLengthParameter.
         """
         par = ObjCrystBondLengthParameter(name, atom1, atom2, value, const)
         self.addParameter(par)
@@ -663,7 +683,10 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             A flag indicating whether the Parameter is constant
             (default False).
 
-        Returns the new ObjCrystBondAngleParameter.
+        Returns
+        -------
+        ObjCrystBondAngleParameter object
+            Returns the new ObjCrystBondAngleParameter.
         """
         par = ObjCrystBondAngleParameter(
             name, atom1, atom2, atom3, value, const
@@ -704,7 +727,10 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             A flag indicating whether the Parameter is constant
             (default False).
 
-        Returns the new ObjCrystDihedralAngleParameter.
+        Returns
+        -------
+        ObjCrystDihedralAngleParameter object
+            Returns the new ObjCrystDihedralAngleParameter.
         """
         par = ObjCrystDihedralAngleParameter(
             name, atom1, atom2, atom3, atom4, value, const

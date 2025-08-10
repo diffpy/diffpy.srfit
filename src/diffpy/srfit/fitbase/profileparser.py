@@ -30,8 +30,6 @@ class ProfileParser(object):
     """Class for parsing data from a or string.
 
     Attributes
-
-    Attributes
     ----------
     _format
         Name of the data format that this parses (string, default
@@ -41,20 +39,20 @@ class ProfileParser(object):
         The data from each bank. Each bank contains a (x, y, dx,
         dy)
         tuple:
-                    x
-        A numpy array containing the independent
-        variable read from the file.
-                    y
-        A numpy array containing the profile
-        from the file.
-                    dx
-        A numpy array containing the uncertainty in x
-        read from the file. This is None if the
-        uncertainty cannot be read.
-                    dy
-        A numpy array containing the uncertainty read
-        from the file. This is None if the uncertainty
-        cannot be read.
+        x
+            A numpy array containing the independent
+            variable read from the file.
+        y
+            A numpy array containing the profile
+            from the file.
+        dx
+            A numpy array containing the uncertainty in x
+            read from the file. This is None if the
+            uncertainty cannot be read.
+        dy
+            A numpy array containing the uncertainty read
+            from the file. This is None if the uncertainty
+            cannot be read.
     _x
         Independent variable from the chosen bank
     _y
@@ -66,10 +64,9 @@ class ProfileParser(object):
     _meta
         A dictionary containing metadata read from the file.
 
-    General Metadata
 
-    Attributes
-    ----------
+    General Metadata
+    ----------------
     filename
         The name of the file from which data was parsed. This key
         will not exist if data was not read from file.

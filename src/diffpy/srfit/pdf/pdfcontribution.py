@@ -201,6 +201,7 @@ class PDFContribution(FitContribution):
             do not support periodicity, in which case this may be
             ignored.
 
+
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)
         """
@@ -244,6 +245,7 @@ class PDFContribution(FitContribution):
             DebyePDFGenerator will be used. Note that some structures
             do not support periodicity, in which case this may be
             ignored.
+
 
         Returns the new phase (ParameterSet appropriate for what was passed in
         stru.)

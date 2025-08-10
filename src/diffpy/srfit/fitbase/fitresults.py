@@ -90,6 +90,7 @@ class FitResults(object):
         The derivatives of the constraint equations with respect to
         the variables. This is used internally.
 
+
     Each of these attributes, except the recipe, are created or updated when
     the update method is called.
     """
@@ -338,7 +339,10 @@ class FitResults(object):
         update
             Flag indicating whether to call update() (default False).
 
-        Returns a string containing the formatted results.
+        Returns
+        -------
+        out
+            a string containing the formatted results.
         """
         if update:
             self.update()
@@ -515,7 +519,7 @@ class FitResults(object):
     def printResults(self, header="", footer="", update=False):
         """Format and print the results.
 
-        Attributes
+        Parameters
         ----------
         header
             A header to add to the output (default "")
@@ -533,8 +537,10 @@ class FitResults(object):
     def saveResults(self, filename, header="", footer="", update=False):
         """Format and save the results.
 
-        filename -  Name of the save file.
+        Parameters
         ----------------------------------
+        filename
+            Name of the save file.
         header
             A header to add to the output (default "")
         footer

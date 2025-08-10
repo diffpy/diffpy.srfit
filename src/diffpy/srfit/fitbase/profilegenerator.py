@@ -20,14 +20,23 @@ be associated with a FitContribution to help calculate a profile.
 
 To define a ProfileGenerator, one must implement the required Parameters
 and ParameterSets as well as overload the __call__ method with the
-calculation. A very simple example is > class
-Gaussian(ProfileGenerator): > >    def __init__(self): >        #
-Initialize and give this a name >        ProfileGenerator.__init__(self,
-"g") >        # Add amplitude, center and width parameters >
-self.newParameter("amp", 0) >        self.newParameter("center", 0) >
-self.newParameter("width", 0) > >    def __call__(self, x): >        a =
-self.amp.getValue() >        x0 = self.center.getValue() >        w =
-self.width.getValue() >        return a * exp(-0.5*((x-x0)/w)**2)
+calculation. A very simple example is
+
+.. code:: python
+
+    class Gaussian(ProfileGenerator):
+        def __init__(self):
+            # Initialize and give this a name
+            ProfileGenerator.__init__(self, "g")
+            # Add amplitude, center and width parameters
+            self.newParameter("amp", 0)
+            self.newParameter("center", 0)
+            self.newParameter("width", 0)
+        def __call__(self, x):
+            a = self.amp.getValue()
+            x0 = self.center.getValue()
+            w = self.width.getValue()
+            return a * exp(-0.5*((x-x0)/w)**2)
 
 More examples can be found in the example directory of the
 documentation.

@@ -250,6 +250,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
             If True (default), a ValueError is raised an object of the
             given name already exists.
 
+
         Raises ValueError if the object has no name.
         Raises ValueError if the object has the same name as some other managed
         object.
@@ -312,6 +313,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         ----------
         obj
             The object to find.
+
 
         Returns a list of objects. The first member of the list is this object,
         and each subsequent member is a sub-object of the previous one.  The
@@ -402,6 +404,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     values
         Variable values (read only). See getValues.
 
+
     Raises ValueError if the name is not a valid attribute identifier
     """
 
@@ -441,6 +444,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         check
             If True (default), a ValueError is raised a Parameter of
             the specified name has already been inserted.
+
 
         Raises ValueError if the Parameter has no name.
         Raises ValueError if the Parameter has the same name as a contained
@@ -527,9 +531,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             If this is None (default), then the argument names will
             be extracted from the function.
 
+
         Note that name and argnames can be extracted from regular python
         functions (of type 'function'), bound class methods and callable
         classes.
+
 
         Raises TypeError if name or argnames cannot be automatically
         extracted.
@@ -628,6 +634,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             used in fstr, but not part of the FitRecipe (default
             {}).
 
+
         Raises ValueError if ns uses a name that is already used for another
         managed object.
         Raises ValueError if the function name is the name of another managed
@@ -660,6 +667,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             A dictionary of Parameters, indexed by name, that are
             used in fstr, but not part of the FitRecipe (default {}).
 
+
         Raises ValueError if ns uses a name that is already used for a
         variable.
         """
@@ -688,6 +696,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ns
             A dictionary of Parameters, indexed by name, that are used
             in the parameter, but not part of this object (default {}).
+
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -800,6 +809,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             Recurse into managed objects and clear all constraints
             found there as well.
 
+
         This removes constraints that are held in this organizer, no matter
         where the constrained parameters are from.
         """
@@ -833,10 +843,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             in the equation string, but not part of the RecipeOrganizer
             (default {}).
 
+
         The penalty is calculated as
         (max(0, lb - val, val - ub)/sig)**2
         and val is the value of the calculated equation.  This is multiplied by
         the average chi^2 if scaled is True.
+
 
         Raises ValueError if ns uses a name that is already used for a
         Parameter.
@@ -1119,6 +1131,7 @@ def equationFromString(
     argkw
         Key word dictionary to pass to the argclass constructor
         (default {}).
+
 
     Raises ValueError if ns uses a name that is already defined in the factory.
     Raises ValueError if the equation has undefined parameters.

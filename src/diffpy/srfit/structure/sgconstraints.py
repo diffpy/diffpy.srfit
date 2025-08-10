@@ -69,6 +69,7 @@ def constrainAsSpaceGroup(
         Symbol for isotropic ADP (default "Uiso"). If None,
         isotropic ADPs will be constrained via the anisotropic ADPs.
 
+
     New Parameters that are used in constraints are created within a
     SpaceGroupParameters object, which is returned from this function.
     Constraints are created in ParameterSet that contains the constrained
@@ -78,29 +79,28 @@ def constrainAsSpaceGroup(
     The lattice constraints are applied as following.
 
     Crystal System
-    --------------
-    Triclinic
-        No constraints.
-    Monoclinic
-        alpha and beta are fixed to 90 unless alpha != beta and
-        alpha == gamma, in which case alpha and gamma are fixed
-        to 90.
-    Orthorhombic
-        alpha, beta and gamma are fixed to 90.
-    Tetragonal
-        b is constrained to a and alpha, beta and gamma are
-        fixed to 90.
-    Trigonal
-        If gamma == 120, then b is constrained to a, alpha
-        and beta are fixed to 90 and gamma is fixed to 120.
-        Otherwise, b and c are constrained to a, beta and gamma
-        are fixed to alpha.
-    Hexagonal
-        b is constrained to a, alpha and beta are fixed to 90
-        and gamma is fixed to 120.
-    Cubic
-        b and c are constrained to a, and alpha, beta and
-        gamma are fixed to 90.
+        Triclinic
+            No constraints.
+        Monoclinic
+            alpha and beta are fixed to 90 unless alpha != beta and
+            alpha == gamma, in which case alpha and gamma are fixed
+            to 90.
+        Orthorhombic
+            alpha, beta and gamma are fixed to 90.
+        Tetragonal
+            b is constrained to a and alpha, beta and gamma are
+            fixed to 90.
+        Trigonal
+            If gamma == 120, then b is constrained to a, alpha
+            and beta are fixed to 90 and gamma is fixed to 120.
+            Otherwise, b and c are constrained to a, beta and gamma
+            are fixed to alpha.
+        Hexagonal
+            b is constrained to a, alpha and beta are fixed to 90
+            and gamma is fixed to 120.
+        Cubic
+            b and c are constrained to a, and alpha, beta and
+            gamma are fixed to 90.
     """
 
     from diffpy.structure.spacegroups import GetSpaceGroup, SpaceGroup
@@ -783,7 +783,10 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     ns
         namespace to draw extra names from (default {})
 
-    Returns the parameter if it is free.
+    Returns
+    -------
+    par
+        Returns the parameter if it is free.
     """
     par = scatterer.get(parname)
 

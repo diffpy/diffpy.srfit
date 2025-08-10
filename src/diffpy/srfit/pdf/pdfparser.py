@@ -44,20 +44,20 @@ class PDFParser(ProfileParser):
     _banks
         The data from each bank. Each bank contains a
         (x, y, dx, dy) tuple:
-                    x
-        A numpy array containing the independent
-        variable read from the file.
-                    y
-        A numpy array containing the profile
-        from the file.
-                    dx
-        A numpy array containing the uncertainty in x
-        read from the file. This is 0 if the
-        uncertainty cannot be read.
-                    dy
-        A numpy array containing the uncertainty read
-        from the file. This is 0 if the uncertainty
-        cannot be read.
+        x
+            A numpy array containing the independent
+            variable read from the file.
+        y
+            A numpy array containing the profile
+            from the file.
+        dx
+            A numpy array containing the uncertainty in x
+            read from the file. This is 0 if the
+            uncertainty cannot be read.
+        dy
+            A numpy array containing the uncertainty read
+            from the file. This is 0 if the uncertainty
+            cannot be read.
     _x
         Independent variable from the chosen bank
     _y
@@ -81,9 +81,7 @@ class PDFParser(ProfileParser):
     bank
         The chosen bank number.
 
-    Metadata - These may appear in the metadata dictionary
-
-    Attributes
+    Metadata
     ----------
     stype
         The scattering type ("X", "N")
@@ -103,6 +101,9 @@ class PDFParser(ProfileParser):
         Temperature (float)
     doping
         Doping (float)
+
+
+    These may appear in the metadata dictionary.
     """
 
     _format = "PDF"

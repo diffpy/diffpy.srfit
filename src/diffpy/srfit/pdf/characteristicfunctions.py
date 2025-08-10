@@ -54,6 +54,7 @@ def sphericalCF(r, psize):
     psize
         The particle diameter
 
+
     From Kodama et al., Acta Cryst. A, 62, 444-453
     (converted from radius to diameter)
     """
@@ -78,6 +79,7 @@ def spheroidalCF(r, erad, prad):
     erad
         equatorial radius
 
+
     erad < prad equates to a prolate spheroid
     erad > prad equates to a oblate spheroid
     erad == prad is a sphere
@@ -100,6 +102,7 @@ def spheroidalCF2(r, psize, axrat):
         The equatorial diameter
     axrat
         The ratio of axis lengths
+
 
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
     """
@@ -211,6 +214,7 @@ def lognormalSphericalCF(r, psize, psig):
     psig
         The log-normal width of the particle diameter
 
+
     Here, r is the independent variable, mu is the mean of the distribution
     (not of the particle size), and s is the width of the distribution. This is
     the characteristic function for the lognormal distribution of particle
@@ -265,6 +269,7 @@ def sheetCF(r, sthick):
     sthick
         Thickness of nanosheet
 
+
     From Kodama et al., Acta Cryst. A, 62, 444-453
     """
     # handle zero or negative sthick.  make it work for scalars and arrays.
@@ -294,6 +299,7 @@ def shellCF(r, radius, thickness):
     thickness
         Thickness of shell
 
+
     outer radius = radius + thickness
 
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
@@ -314,6 +320,7 @@ def shellCF2(r, a, delta):
         Thickness of shell
 
     outer radius = a + thickness/2
+
 
     From Lei et al., Phys. Rev. B, 80, 024118 (2009)
     """
@@ -359,13 +366,12 @@ class SASCF(Calculator):
     ----------
     _model
         BaseModel object this adapts.
-
-    Managed Parameters:
-    These depend on the parameters of the BaseModel object held by _model. They
-    are created from the 'params' attribute of the BaseModel. If a dispersion
-    is set for the BaseModel, the dispersion "width" will be accessible under
-    "<parname>_width", where <parname> is the name a parameter adjusted by
-    dispersion.
+    Managed Parameters
+        These depend on the parameters of the BaseModel object held by _model.
+        They are created from the 'params' attribute of the BaseModel. If a
+        dispersion is set for the BaseModel, the dispersion "width" will be
+        accessible under "<parname>_width", where <parname> is the name a
+        parameter adjusted by dispersion.
     """
 
     def __init__(self, name, model):

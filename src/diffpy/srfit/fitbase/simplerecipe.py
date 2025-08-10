@@ -130,6 +130,7 @@ class SimpleRecipe(FitRecipe):
             dyobs is None (default), it will be set to 1 at each
             observed xobs.
 
+
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
         """
@@ -192,7 +193,7 @@ class SimpleRecipe(FitRecipe):
         to by dy. Any other arrays are ignored. These are passed to
         setObservedProfile.
 
-        Raises ValueError if the call to numpy.loadtxt returns fewer
+         Raises ValueError if the call to numpy.loadtxt returns fewer
         than 2 arrays.
 
         Returns the x, y and dy arrays loaded from the file
@@ -216,6 +217,7 @@ class SimpleRecipe(FitRecipe):
         ns
             A dictionary of Parameters, indexed by name, that are used
             in the eqstr, but not registered (default {}).
+
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
@@ -254,8 +256,10 @@ class SimpleRecipe(FitRecipe):
     def saveResults(self, filename, header="", footer=""):
         """Format and save the results.
 
-        filename -  Name of the save file.
-        ----------------------------------
+        Parameters
+        ----------
+        filename
+            Name of the save file.
         header
             A header to add to the output (default "")
         footer

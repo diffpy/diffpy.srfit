@@ -31,6 +31,7 @@ def inputToString(input):
         An open file-like object, name of a file
         or a string containing the input.
 
+
     Returns the input in a string
     Raises IOError if the input is supected to be a file name, but the file
     cannot be found.

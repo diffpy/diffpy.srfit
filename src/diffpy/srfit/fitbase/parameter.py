@@ -72,6 +72,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
             A flag inticating whether the Parameter is a constant (like
             pi).
 
+
         Raises ValueError if the name is not a valid attribute identifier
         """
         self.constrained = False
@@ -94,7 +95,10 @@ class Parameter(_parameter_interface, Argument, Validatable):
             The upper bounds for the bounds list. If this is None
             (default), then the upper bound will not be alterered.
 
-        Returns self so that mutators can be chained.
+        Returns
+        -------
+        self
+            Returns self so that mutators can be chained.
         """
         Argument.setValue(self, val)
         return self
@@ -112,7 +116,10 @@ class Parameter(_parameter_interface, Argument, Validatable):
             is not None, then the parameter will get a new value,
             constant or otherwise.
 
-        Returns self so that mutators can be chained.
+        Returns
+        -------
+        self
+            Returns self so that mutators can be chained.
         """
         self.const = bool(const)
         if value is not None:
@@ -129,7 +136,10 @@ class Parameter(_parameter_interface, Argument, Validatable):
         ub
             The upper bound for the bounds list.
 
-        Returns self so that mutators can be chained.
+        Returns
+        -------
+        self
+            Returns self so that mutators can be chained.
         """
         if lb is not None:
             self.bounds[0] = lb
@@ -150,7 +160,10 @@ class Parameter(_parameter_interface, Argument, Validatable):
             value + ur. If this is None (default), then the value of the
             lower radius is used.
 
-        Returns self so that mutators can be chained.
+        Returns
+        -------
+        self
+            Returns self so that mutators can be chained.
         """
         val = self.getValue()
         lb = val - lr
@@ -198,6 +211,7 @@ class ParameterProxy(Parameter):
             The name of this ParameterProxy.
         par
             The Parameter this is a proxy for.
+
 
         Raises ValueError if the name is not a valid attribute identifier
         """
@@ -311,6 +325,7 @@ class ParameterAdapter(Parameter):
             The name of the attribute that contains the value of the
             parameter. If attr is None (default), then both getter and
             setter must be specified.
+
 
         Raises ValueError if exactly one of getter or setter is not None, or if
         getter, setter and attr are all None.

@@ -41,20 +41,21 @@ class SASParser(ProfileParser):
     _banks
         The data from each bank. Each bank contains a
         (x, y, dx, dy) tuple:
-                    x
-        A numpy array containing the independent
-        variable read from the file.
-                    y
-        A numpy array containing the profile
-        from the file.
-                    dx
-        A numpy array containing the uncertainty in x
-        read from the file. This is 0 if the
-        uncertainty cannot be read.
-                    dy
-        A numpy array containing the uncertainty read
-        from the file. This is 0 if the uncertainty
-        cannot be read.
+
+        x
+            A numpy array containing the independent
+            variable read from the file.
+        y
+            A numpy array containing the profile
+            from the file.
+        dx
+            A numpy array containing the uncertainty in x
+            read from the file. This is 0 if the
+            uncertainty cannot be read.
+        dy
+            A numpy array containing the uncertainty read
+            from the file. This is 0 if the uncertainty
+            cannot be read.
     _x
         Independent variable from the chosen bank
     _y
@@ -66,10 +67,9 @@ class SASParser(ProfileParser):
     _meta
         A dictionary containing metadata read from the file.
 
-    General Metadata
 
-    Attributes
-    ----------
+    General Metadata
+    ----------------
     filename
         The name of the file from which data was parsed. This key
         will not exist if data was not read from file.
@@ -78,12 +78,14 @@ class SASParser(ProfileParser):
     bank
         The chosen bank number.
 
-    Metadata - These may appear in the metadata dictionary
 
-    Attributes
-    ----------
+    Metadata
+    --------
     datainfo
         The DataInfo object used to do the data parsing.
+
+
+    These may appear in the metadata dictionary
     """
 
     _format = "SAS"

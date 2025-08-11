@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.fitrecipe &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.fitbase.fitrecipe &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -273,6 +273,7 @@
 <span class="sd">        index</span>
 <span class="sd">            Index of FitHook instance to remove (default -1).</span>
 
+
 <span class="sd">        Raises ValueError if fithook is not None, but is not present in the</span>
 <span class="sd">        sequence.</span>
 <span class="sd">        Raises IndexError if the sequence is empty or index is out of range.</span>
@@ -309,6 +310,7 @@
 <span class="sd">        con</span>
 <span class="sd">            The FitContribution to be stored.</span>
 
+
 <span class="sd">        Raises ValueError if the FitContribution has no name</span>
 <span class="sd">        Raises ValueError if the FitContribution has the same name as some</span>
 <span class="sd">        other managed object.</span>
@@ -336,6 +338,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        parset</span>
 <span class="sd">            The ParameterSet to be stored.</span>
+
 
 <span class="sd">        Raises ValueError if the ParameterSet has no name.</span>
 <span class="sd">        Raises ValueError if the ParameterSet has the same name as some other</span>
@@ -619,7 +622,12 @@
 <span class="sd">            A list of tags (default []). Both tag and tags can be</span>
 <span class="sd">            applied.</span>
 
-<span class="sd">        Returns the ParameterProxy (variable) for the passed Parameter.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        vars</span>
+<span class="sd">            ParameterProxy (variable) for the passed Parameter.</span>
+
 
 <span class="sd">        Raises ValueError if the name of the variable is already taken by</span>
 <span class="sd">        another managed object.</span>
@@ -664,6 +672,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        var</span>
 <span class="sd">            A variable of the FitRecipe.</span>
+
 
 <span class="sd">        Raises ValueError if var is not part of the FitRecipe.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -710,6 +719,7 @@
 <span class="sd">        tags</span>
 <span class="sd">            A list of tags (default []). Both tag and tags can be</span>
 <span class="sd">            applied.</span>
+
 
 <span class="sd">        Returns the new variable (Parameter instance).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -931,6 +941,7 @@
 <span class="sd">        ns</span>
 <span class="sd">            A dictionary of Parameters, indexed by name, that are used</span>
 <span class="sd">            in the eqstr, but not part of this object (default {}).</span>
+
 
 <span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
 <span class="sd">        variable.</span>

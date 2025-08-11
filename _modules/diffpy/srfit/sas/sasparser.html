@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.sas.sasparser &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.sas.sasparser &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,20 +122,21 @@
 <span class="sd">    _banks</span>
 <span class="sd">        The data from each bank. Each bank contains a</span>
 <span class="sd">        (x, y, dx, dy) tuple:</span>
-<span class="sd">                    x</span>
-<span class="sd">        A numpy array containing the independent</span>
-<span class="sd">        variable read from the file.</span>
-<span class="sd">                    y</span>
-<span class="sd">        A numpy array containing the profile</span>
-<span class="sd">        from the file.</span>
-<span class="sd">                    dx</span>
-<span class="sd">        A numpy array containing the uncertainty in x</span>
-<span class="sd">        read from the file. This is 0 if the</span>
-<span class="sd">        uncertainty cannot be read.</span>
-<span class="sd">                    dy</span>
-<span class="sd">        A numpy array containing the uncertainty read</span>
-<span class="sd">        from the file. This is 0 if the uncertainty</span>
-<span class="sd">        cannot be read.</span>
+
+<span class="sd">        x</span>
+<span class="sd">            A numpy array containing the independent</span>
+<span class="sd">            variable read from the file.</span>
+<span class="sd">        y</span>
+<span class="sd">            A numpy array containing the profile</span>
+<span class="sd">            from the file.</span>
+<span class="sd">        dx</span>
+<span class="sd">            A numpy array containing the uncertainty in x</span>
+<span class="sd">            read from the file. This is 0 if the</span>
+<span class="sd">            uncertainty cannot be read.</span>
+<span class="sd">        dy</span>
+<span class="sd">            A numpy array containing the uncertainty read</span>
+<span class="sd">            from the file. This is 0 if the uncertainty</span>
+<span class="sd">            cannot be read.</span>
 <span class="sd">    _x</span>
 <span class="sd">        Independent variable from the chosen bank</span>
 <span class="sd">    _y</span>
@@ -147,10 +148,9 @@
 <span class="sd">    _meta</span>
 <span class="sd">        A dictionary containing metadata read from the file.</span>
 
-<span class="sd">    General Metadata</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
+<span class="sd">    General Metadata</span>
+<span class="sd">    ----------------</span>
 <span class="sd">    filename</span>
 <span class="sd">        The name of the file from which data was parsed. This key</span>
 <span class="sd">        will not exist if data was not read from file.</span>
@@ -159,12 +159,14 @@
 <span class="sd">    bank</span>
 <span class="sd">        The chosen bank number.</span>
 
-<span class="sd">    Metadata - These may appear in the metadata dictionary</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
+<span class="sd">    Metadata</span>
+<span class="sd">    --------</span>
 <span class="sd">    datainfo</span>
 <span class="sd">        The DataInfo object used to do the data parsing.</span>
+
+
+<span class="sd">    These may appear in the metadata dictionary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_format</span> <span class="o">=</span> <span class="s2">&quot;SAS&quot;</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.structure package &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.structure package &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -392,16 +392,6 @@ this class for base attributes.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Managed</span> <span class="pre">ParameterSets</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">---------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.lattice">
 <span class="sig-name descname"><span class="pre">lattice</span></span><a class="headerlink" href="#diffpy.srfit.structure.diffpyparset.DiffpyStructureParSet.lattice" title="Link to this definition"></a></dt>
 <dd><p>The managed DiffpyLatticeParSet</p>
@@ -475,32 +465,40 @@ U22, etc.). The names must be given in the same order
 as stdUsymbols.</p></li>
 <li><p><strong>isosymbol</strong> – Symbol for isotropic ADP (default “Uiso”). If None,
 isotropic ADPs will be constrained via the anisotropic ADPs.</p></li>
-<li><p><strong>a</strong> (<em>New Parameters that are used in constraints are created within</em>)</p></li>
-<li><p><strong>object</strong> (<em>SpaceGroupParameters</em>)</p></li>
-<li><p><strong>function.</strong> (<em>which is returned from this</em>)</p></li>
-<li><p><strong>constrained</strong> (<em>Constraints are created in ParameterSet that contains the</em>)</p></li>
-<li><p><strong>the</strong> (<em>Parameter.  This will erase any constraints</em><em> or </em><em>constant flags on</em>)</p></li>
-<li><p><strong>scatterers</strong></p></li>
-<li><p><strong>constrained.</strong> (<em>lattice</em><em> or </em><em>ADPs if they are to be</em>)</p></li>
-<li><p><strong>following.</strong> (<em>The lattice constraints are applied as</em>)</p></li>
-<li><p><strong>System</strong> (<em>Crystal</em>)</p></li>
-<li><p><strong>--------------</strong></p></li>
-<li><p><strong>Triclinic</strong> – No constraints.</p></li>
-<li><p><strong>Monoclinic</strong> – alpha and beta are fixed to 90 unless alpha != beta and
+</ul>
+</dd>
+</dl>
+<p>New Parameters that are used in constraints are created within a
+SpaceGroupParameters object, which is returned from this function.
+Constraints are created in ParameterSet that contains the constrained
+Parameter.  This will erase any constraints or constant flags on the
+scatterers, lattice or ADPs if they are to be constrained.</p>
+<p>The lattice constraints are applied as following.</p>
+<dl class="simple">
+<dt>Crystal System</dt><dd><dl class="simple">
+<dt>Triclinic</dt><dd><p>No constraints.</p>
+</dd>
+<dt>Monoclinic</dt><dd><p>alpha and beta are fixed to 90 unless alpha != beta and
 alpha == gamma, in which case alpha and gamma are fixed
-to 90.</p></li>
-<li><p><strong>Orthorhombic</strong> – alpha, beta and gamma are fixed to 90.</p></li>
-<li><p><strong>Tetragonal</strong> – b is constrained to a and alpha, beta and gamma are
-fixed to 90.</p></li>
-<li><p><strong>Trigonal</strong> – If gamma == 120, then b is constrained to a, alpha
+to 90.</p>
+</dd>
+<dt>Orthorhombic</dt><dd><p>alpha, beta and gamma are fixed to 90.</p>
+</dd>
+<dt>Tetragonal</dt><dd><p>b is constrained to a and alpha, beta and gamma are
+fixed to 90.</p>
+</dd>
+<dt>Trigonal</dt><dd><p>If gamma == 120, then b is constrained to a, alpha
 and beta are fixed to 90 and gamma is fixed to 120.
 Otherwise, b and c are constrained to a, beta and gamma
-are fixed to alpha.</p></li>
-<li><p><strong>Hexagonal</strong> – b is constrained to a, alpha and beta are fixed to 90
-and gamma is fixed to 120.</p></li>
-<li><p><strong>Cubic</strong> – b and c are constrained to a, and alpha, beta and
-gamma are fixed to 90.</p></li>
-</ul>
+are fixed to alpha.</p>
+</dd>
+<dt>Hexagonal</dt><dd><p>b is constrained to a, alpha and beta are fixed to 90
+and gamma is fixed to 120.</p>
+</dd>
+<dt>Cubic</dt><dd><p>b and c are constrained to a, and alpha, beta and
+gamma are fixed to 90.</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>

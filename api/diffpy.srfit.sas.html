@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.sas package &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.sas package &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,16 +122,6 @@ every time the invertor is used.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Managed</span> <span class="pre">Parameters</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.prcalculator.CFCalculator.scale">
 <span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#diffpy.srfit.sas.prcalculator.CFCalculator.scale" title="Link to this definition"></a></dt>
 <dd><p>The scale factor (default 1).</p>
@@ -179,16 +169,6 @@ every time the invertor is used.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Managed</span> <span class="pre">Parameters</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.prcalculator.PrCalculator.scale">
 <span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#diffpy.srfit.sas.prcalculator.PrCalculator.scale" title="Link to this definition"></a></dt>
 <dd><p>The scale factor (default 1).</p>
@@ -234,32 +214,12 @@ ProfileGenerator.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">Managed</span> <span class="pre">Parameters</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">These</span> <span class="pre">depend</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">parameters</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">BaseModel</span> <span class="pre">object</span> <span class="pre">held</span> <span class="pre">by</span> <span class="pre">_model.</span> <span class="pre">They</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">are</span> <span class="pre">created</span> <span class="pre">from</span> <span class="pre">the</span> <span class="pre">'params'</span> <span class="pre">attribute</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">BaseModel.</span> <span class="pre">If</span> <span class="pre">a</span> <span class="pre">dispersion</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">is</span> <span class="pre">set</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">BaseModel,</span> <span class="pre">the</span> <span class="pre">dispersion</span> <span class="pre">&quot;width&quot;</span> <span class="pre">will</span> <span class="pre">be</span> <span class="pre">accessible</span> <span class="pre">under</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">&quot;&lt;parname&gt;_width&quot;,</span> <span class="pre">where</span> <span class="pre">&lt;parname&gt;</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">name</span> <span class="pre">a</span> <span class="pre">parameter</span> <span class="pre">adjusted</span> <span class="pre">by</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">dispersion.</span></span></dt>
-<dd></dd></dl>
+<dd><p>These depend on the parameters of the BaseModel object held by _model.
+They are created from the ‘params’ attribute of the BaseModel. If a
+dispersion is set for the BaseModel, the dispersion “width” will be
+accessible under “&lt;parname&gt;_width”, where &lt;parname&gt; is the name a
+parameter adjusted by dispersion.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -365,28 +325,22 @@ format handled by the parser.</p>
 <span class="sig-name descname"><span class="pre">_banks</span></span><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser._banks" title="Link to this definition"></a></dt>
 <dd><p>The data from each bank. Each bank contains a
 (x, y, dx, dy) tuple:</p>
-<blockquote>
-<div><p>x</p>
-</div></blockquote>
-<p>A numpy array containing the independent
+<dl class="simple">
+<dt>x</dt><dd><p>A numpy array containing the independent
 variable read from the file.</p>
-<blockquote>
-<div><p>y</p>
-</div></blockquote>
-<p>A numpy array containing the profile
+</dd>
+<dt>y</dt><dd><p>A numpy array containing the profile
 from the file.</p>
-<blockquote>
-<div><p>dx</p>
-</div></blockquote>
-<p>A numpy array containing the uncertainty in x
+</dd>
+<dt>dx</dt><dd><p>A numpy array containing the uncertainty in x
 read from the file. This is 0 if the
 uncertainty cannot be read.</p>
-<blockquote>
-<div><p>dy</p>
-</div></blockquote>
-<p>A numpy array containing the uncertainty read
+</dd>
+<dt>dy</dt><dd><p>A numpy array containing the uncertainty read
 from the file. This is 0 if the uncertainty
 cannot be read.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -420,11 +374,6 @@ cannot be read.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">General</span> <span class="pre">Metadata</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.sasparser.SASParser.filename">
 <span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser.filename" title="Link to this definition"></a></dt>
 <dd><p>The name of the file from which data was parsed. This key
@@ -444,16 +393,12 @@ will not exist if data was not read from file.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Metadata</span> <span class="pre">-</span> <span class="pre">These</span> <span class="pre">may</span> <span class="pre">appear</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">metadata</span> <span class="pre">dictionary</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.sasparser.SASParser.datainfo">
 <span class="sig-name descname"><span class="pre">datainfo</span></span><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser.datainfo" title="Link to this definition"></a></dt>
 <dd><p>The DataInfo object used to do the data parsing.</p>
 </dd></dl>
 
+<p>These may appear in the metadata dictionary</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.sasparser.SASParser.parseFile">
 <span class="sig-name descname"><span class="pre">parseFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/sas/sasparser.html#SASParser.parseFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.sas.sasparser.SASParser.parseFile" title="Link to this definition"></a></dt>
@@ -642,16 +587,6 @@ every time the invertor is used.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Managed</span> <span class="pre">Parameters</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.CFCalculator.scale">
 <span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#diffpy.srfit.sas.CFCalculator.scale" title="Link to this definition"></a></dt>
 <dd><p>The scale factor (default 1).</p>
@@ -699,16 +634,6 @@ every time the invertor is used.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Managed</span> <span class="pre">Parameters</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.PrCalculator.scale">
 <span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#diffpy.srfit.sas.PrCalculator.scale" title="Link to this definition"></a></dt>
 <dd><p>The scale factor (default 1).</p>
@@ -748,32 +673,12 @@ every time the invertor is used.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">Managed</span> <span class="pre">Parameters</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">These</span> <span class="pre">depend</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">parameters</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">BaseModel</span> <span class="pre">object</span> <span class="pre">held</span> <span class="pre">by</span> <span class="pre">_model.</span> <span class="pre">They</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">are</span> <span class="pre">created</span> <span class="pre">from</span> <span class="pre">the</span> <span class="pre">'params'</span> <span class="pre">attribute</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">BaseModel.</span> <span class="pre">If</span> <span class="pre">a</span> <span class="pre">dispersion</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">is</span> <span class="pre">set</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">BaseModel,</span> <span class="pre">the</span> <span class="pre">dispersion</span> <span class="pre">&quot;width&quot;</span> <span class="pre">will</span> <span class="pre">be</span> <span class="pre">accessible</span> <span class="pre">under</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">&quot;&lt;parname&gt;_width&quot;,</span> <span class="pre">where</span> <span class="pre">&lt;parname&gt;</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">name</span> <span class="pre">a</span> <span class="pre">parameter</span> <span class="pre">adjusted</span> <span class="pre">by</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">dispersion.</span></span></dt>
-<dd></dd></dl>
+<dd><p>These depend on the parameters of the BaseModel object held by _model.
+They are created from the ‘params’ attribute of the BaseModel. If a
+dispersion is set for the BaseModel, the dispersion “width” will be
+accessible under “&lt;parname&gt;_width”, where &lt;parname&gt; is the name a
+parameter adjusted by dispersion.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -798,28 +703,22 @@ format handled by the parser.</p>
 <span class="sig-name descname"><span class="pre">_banks</span></span><a class="headerlink" href="#diffpy.srfit.sas.SASParser._banks" title="Link to this definition"></a></dt>
 <dd><p>The data from each bank. Each bank contains a
 (x, y, dx, dy) tuple:</p>
-<blockquote>
-<div><p>x</p>
-</div></blockquote>
-<p>A numpy array containing the independent
+<dl class="simple">
+<dt>x</dt><dd><p>A numpy array containing the independent
 variable read from the file.</p>
-<blockquote>
-<div><p>y</p>
-</div></blockquote>
-<p>A numpy array containing the profile
+</dd>
+<dt>y</dt><dd><p>A numpy array containing the profile
 from the file.</p>
-<blockquote>
-<div><p>dx</p>
-</div></blockquote>
-<p>A numpy array containing the uncertainty in x
+</dd>
+<dt>dx</dt><dd><p>A numpy array containing the uncertainty in x
 read from the file. This is 0 if the
 uncertainty cannot be read.</p>
-<blockquote>
-<div><p>dy</p>
-</div></blockquote>
-<p>A numpy array containing the uncertainty read
+</dd>
+<dt>dy</dt><dd><p>A numpy array containing the uncertainty read
 from the file. This is 0 if the uncertainty
 cannot be read.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -853,11 +752,6 @@ cannot be read.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">General</span> <span class="pre">Metadata</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.SASParser.filename">
 <span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#diffpy.srfit.sas.SASParser.filename" title="Link to this definition"></a></dt>
 <dd><p>The name of the file from which data was parsed. This key
@@ -877,16 +771,12 @@ will not exist if data was not read from file.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Metadata</span> <span class="pre">-</span> <span class="pre">These</span> <span class="pre">may</span> <span class="pre">appear</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">metadata</span> <span class="pre">dictionary</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.SASParser.datainfo">
 <span class="sig-name descname"><span class="pre">datainfo</span></span><a class="headerlink" href="#diffpy.srfit.sas.SASParser.datainfo" title="Link to this definition"></a></dt>
 <dd><p>The DataInfo object used to do the data parsing.</p>
 </dd></dl>
 
+<p>These may appear in the metadata dictionary</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.SASParser.parseFile">
 <span class="sig-name descname"><span class="pre">parseFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/sas/sasparser.html#SASParser.parseFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.sas.SASParser.parseFile" title="Link to this definition"></a></dt>

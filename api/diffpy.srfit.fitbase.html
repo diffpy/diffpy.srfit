@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase package &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.fitbase package &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -165,16 +165,6 @@ instance that is used create Equations from string.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Operator</span> <span class="pre">Attributes</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">-------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.calculator.Calculator.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.args" title="Link to this definition"></a></dt>
 <dd><p>List of Literal arguments</p>
@@ -215,16 +205,6 @@ instance that is used create Equations from string.</p>
 <span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.value" title="Link to this definition"></a></dt>
 <dd><p>Property for ‘getValue’.</p>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.calculator.Calculator.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.calculator.Calculator.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.calculator.Calculator.names">
@@ -440,16 +420,6 @@ restraints from string</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.fitcontribution.FitContribution.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.fitcontribution.FitContribution.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.fitcontribution.FitContribution.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -485,21 +455,9 @@ calculator and if there is not a profile equation already.</p>
 the ProfileGenerator’s name attribute will be used.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ProfileGenerator</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">name.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ProfileGenerator</span> <span class="pre">has</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">name</span> <span class="pre">as</span> <span class="pre">some</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">other</span> <span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the ProfileGenerator has no name.
+Raises ValueError if the ProfileGenerator has the same name as some
+other managed object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -563,16 +521,8 @@ FitContribution.</p>
 in the eqstr, but not registered (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">variable.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for a
+variable.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -628,56 +578,16 @@ used, or the chi2 residual will be used if that does not
 exist.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Two</span> <span class="pre">residuals</span> <span class="pre">are</span> <span class="pre">preset</span> <span class="pre">for</span> <span class="pre">convenience,</span> <span class="pre">&quot;chiv&quot;</span> <span class="pre">and</span> <span class="pre">&quot;resv&quot;.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">chiv</span> <span class="pre">is</span> <span class="pre">defined</span> <span class="pre">such</span> <span class="pre">that</span> <span class="pre">dot(chiv,</span> <span class="pre">chiv)</span> <span class="pre">=</span> <span class="pre">chi^2.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">resv</span> <span class="pre">is</span> <span class="pre">defined</span> <span class="pre">such</span> <span class="pre">that</span> <span class="pre">dot(resv,</span> <span class="pre">resv)</span> <span class="pre">=</span> <span class="pre">Rw^2.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">You</span> <span class="pre">can</span> <span class="pre">call</span> <span class="pre">on</span> <span class="pre">these</span> <span class="pre">in</span> <span class="pre">your</span> <span class="pre">residual</span> <span class="pre">equation.</span> <span class="pre">Note</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">quantity</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">that</span> <span class="pre">will</span> <span class="pre">be</span> <span class="pre">optimized</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">summed</span> <span class="pre">square</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">residual</span> <span class="pre">equation.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Keep</span> <span class="pre">that</span> <span class="pre">in</span> <span class="pre">mind</span> <span class="pre">when</span> <span class="pre">defining</span> <span class="pre">a</span> <span class="pre">new</span> <span class="pre">residual</span> <span class="pre">or</span> <span class="pre">using</span> <span class="pre">the</span> <span class="pre">built-in</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">ones.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">SrFitError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">Profile</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">yet</span> <span class="pre">defined.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">eqstr</span> <span class="pre">depends</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">Parameter</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">part</span> <span class="pre">of</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">the</span> <span class="pre">FitContribution.</span></span></dt>
-<dd></dd></dl>
-
+<p>Two residuals are preset for convenience, “chiv” and “resv”.
+chiv is defined such that dot(chiv, chiv) = chi^2.
+resv is defined such that dot(resv, resv) = Rw^2.
+You can call on these in your residual equation. Note that the quantity
+that will be optimized is the summed square of the residual equation.
+Keep that in mind when defining a new residual or using the built-in
+ones.</p>
+<p>Raises SrFitError if the Profile is not yet defined.
+Raises ValueError if eqstr depends on a Parameter that is not part of
+the FitContribution.</p>
 </dd></dl>
 
 </dd></dl>
@@ -872,16 +782,6 @@ use this tag unless you want issues.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.fitrecipe.FitRecipe.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.fitrecipe.FitRecipe.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -927,21 +827,9 @@ use this tag unless you want issues.</p>
 <dd><p>The FitContribution to be stored.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">FitContribution</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">name</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">FitContribution</span> <span class="pre">has</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">name</span> <span class="pre">as</span> <span class="pre">some</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">other</span> <span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the FitContribution has no name
+Raises ValueError if the FitContribution has the same name as some
+other managed object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -954,21 +842,9 @@ use this tag unless you want issues.</p>
 <dd><p>The ParameterSet to be stored.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ParameterSet</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">name.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ParameterSet</span> <span class="pre">has</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">name</span> <span class="pre">as</span> <span class="pre">some</span> <span class="pre">other</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the ParameterSet has no name.
+Raises ValueError if the ParameterSet has the same name as some other
+managed object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1016,31 +892,18 @@ variable is automatically tagged with its name and “all”.</p>
 applied.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">ParameterProxy</span> <span class="pre">(variable)</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">passed</span> <span class="pre">Parameter.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">variable</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">taken</span> <span class="pre">by</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">another</span> <span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">par</span> <span class="pre">is</span> <span class="pre">constant.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">par</span> <span class="pre">is</span> <span class="pre">constrained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ParameterProxy (variable) for the passed Parameter.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>vars</p>
+</dd>
+</dl>
+<p>Raises ValueError if the name of the variable is already taken by
+another managed object.
+Raises ValueError if par is constant.
+Raises ValueError if par is constrained.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -1110,31 +973,11 @@ they are managed by this object.</p>
 in the eqstr, but not part of this object (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">variable.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">eqstr</span> <span class="pre">depends</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">Parameter</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">part</span> <span class="pre">of</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">the</span> <span class="pre">FitRecipe</span> <span class="pre">and</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">ns.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">par</span> <span class="pre">is</span> <span class="pre">marked</span> <span class="pre">as</span> <span class="pre">constant.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for a
+variable.
+Raises ValueError if eqstr depends on a Parameter that is not part of
+the FitRecipe and that is not defined in ns.
+Raises ValueError if par is marked as constant.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1149,11 +992,7 @@ modified.</p>
 <dd><p>A variable of the FitRecipe.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">var</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">part</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">FitRecipe.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if var is not part of the FitRecipe.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1278,11 +1117,7 @@ automatically tagged with its name and “all”.</p>
 applied.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">new</span> <span class="pre">variable</span> <span class="pre">(Parameter</span> <span class="pre">instance).</span></span></dt>
-<dd></dd></dl>
-
+<p>Returns the new variable (Parameter instance).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1302,21 +1137,9 @@ None (default), default to index.</p>
 <dd><p>Index of FitHook instance to remove (default -1).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">fithook</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None,</span> <span class="pre">but</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">present</span> <span class="pre">in</span> <span class="pre">the</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">sequence.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">IndexError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">sequence</span> <span class="pre">is</span> <span class="pre">empty</span> <span class="pre">or</span> <span class="pre">index</span> <span class="pre">is</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">range.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if fithook is not None, but is not present in the
+sequence.
+Raises IndexError if the sequence is empty or index is out of range.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1673,16 +1496,8 @@ derivatives. Default 1e-8.</p>
 the variables. This is used internally.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Each</span> <span class="pre">of</span> <span class="pre">these</span> <span class="pre">attributes,</span> <span class="pre">except</span> <span class="pre">the</span> <span class="pre">recipe,</span> <span class="pre">are</span> <span class="pre">created</span> <span class="pre">or</span> <span class="pre">updated</span> <span class="pre">when</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">the</span> <span class="pre">update</span> <span class="pre">method</span> <span class="pre">is</span> <span class="pre">called.</span></span></dt>
-<dd></dd></dl>
-
+<p>Each of these attributes, except the recipe, are created or updated when
+the update method is called.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.fitresults.FitResults.formatResults">
 <span class="sig-name descname"><span class="pre">formatResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.formatResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.formatResults" title="Link to this definition"></a></dt>
@@ -1707,57 +1522,50 @@ the formatting here will change all three functions.</p>
 <dd><p>Flag indicating whether to call update() (default False).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">a</span> <span class="pre">string</span> <span class="pre">containing</span> <span class="pre">the</span> <span class="pre">formatted</span> <span class="pre">results.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a string containing the formatted results.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>out</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.fitresults.FitResults.printResults">
 <span class="sig-name descname"><span class="pre">printResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.printResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.printResults" title="Link to this definition"></a></dt>
 <dd><p>Format and print the results.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id22">
-<span class="sig-name descname"><span class="pre">header</span></span><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
-<dd><p>A header to add to the output (default “”)</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id23">
-<span class="sig-name descname"><span class="pre">footer</span></span><a class="headerlink" href="#id23" title="Link to this definition"></a></dt>
-<dd><p>A footer to add to the output (default “”)</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id24">
-<span class="sig-name descname"><span class="pre">update</span></span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
-<dd><p>Flag indicating whether to call update() (default False).</p>
-</dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header</strong> – A header to add to the output (default “”)</p></li>
+<li><p><strong>footer</strong> – A footer to add to the output (default “”)</p></li>
+<li><p><strong>update</strong> – Flag indicating whether to call update() (default False).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.fitresults.FitResults.saveResults">
 <span class="sig-name descname"><span class="pre">saveResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.saveResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.fitresults.FitResults.saveResults" title="Link to this definition"></a></dt>
 <dd><p>Format and save the results.</p>
-<section id="filename-name-of-the-save-file">
-<h3>filename -  Name of the save file.<a class="headerlink" href="#filename-name-of-the-save-file" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>header</dt><dd><p>A header to add to the output (default “”)</p>
-</dd>
-<dt>footer</dt><dd><p>A footer to add to the output (default “”)</p>
-</dd>
-<dt>update</dt><dd><p>Flag indicating whether to call update() (default False).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – Name of the save file.</p></li>
+<li><p><strong>header</strong> – A header to add to the output (default “”)</p></li>
+<li><p><strong>footer</strong> – A footer to add to the output (default “”)</p></li>
+<li><p><strong>update</strong> – Flag indicating whether to call update() (default False).</p></li>
+</ul>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id25">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id25" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id22" title="Link to this definition"></a></dt>
 <dd><p>Update the results according to the current state of the recipe.</p>
 </dd></dl>
 
@@ -1850,11 +1658,14 @@ FitRecipe.getBounds and FitRecipe.boundsToRestraints.</p>
 <dd><p>The upper bound for the bounds list.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1876,11 +1687,14 @@ value + ur. If this is None (default), then the value of the
 lower radius is used.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1888,25 +1702,28 @@ lower radius is used.</p>
 <span class="sig-name descname"><span class="pre">setConst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/parameter.html#Parameter.setConst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.Parameter.setConst" title="Link to this definition"></a></dt>
 <dd><p>Toggle the Parameter as constant.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id26">
-<span class="sig-name descname"><span class="pre">const</span></span><a class="headerlink" href="#id26" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">const</span></span><a class="headerlink" href="#id23" title="Link to this definition"></a></dt>
 <dd><p>Flag indicating if the parameter is constant (default
 True).</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id27">
-<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#id27" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#id24" title="Link to this definition"></a></dt>
 <dd><p>An optional value for the parameter (default None). If this
 is not None, then the parameter will get a new value,
 constant or otherwise.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1920,24 +1737,27 @@ constant or otherwise.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id28">
-<span class="sig-name descname"><span class="pre">lb</span></span><a class="headerlink" href="#id28" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">lb</span></span><a class="headerlink" href="#id25" title="Link to this definition"></a></dt>
 <dd><p>The lower bounds for the bounds list. If this is None
 (default), then the lower bound will not be alterered.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id29">
-<span class="sig-name descname"><span class="pre">ub</span></span><a class="headerlink" href="#id29" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">ub</span></span><a class="headerlink" href="#id26" title="Link to this definition"></a></dt>
 <dd><p>The upper bounds for the bounds list. If this is None
 (default), then the upper bound will not be alterered.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1998,11 +1818,14 @@ RecipeOrganizer and should be valid attribute names.</p>
 <dd><p>The upper bound for the bounds list.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2024,11 +1847,14 @@ value + ur. If this is None (default), then the value of the
 lower radius is used.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -2071,11 +1897,14 @@ is not None, then the parameter will get a new value,
 constant or otherwise.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2089,24 +1918,27 @@ constant or otherwise.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id30">
-<span class="sig-name descname"><span class="pre">lb</span></span><a class="headerlink" href="#id30" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">lb</span></span><a class="headerlink" href="#id27" title="Link to this definition"></a></dt>
 <dd><p>The lower bounds for the bounds list. If this is None
 (default), then the lower bound will not be alterered.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id31">
-<span class="sig-name descname"><span class="pre">ub</span></span><a class="headerlink" href="#id31" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">ub</span></span><a class="headerlink" href="#id28" title="Link to this definition"></a></dt>
 <dd><p>The upper bounds for the bounds list. If this is None
 (default), then the upper bound will not be alterered.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -2177,16 +2009,6 @@ restraints from string equations.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.parameterset.ParameterSet.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.parameterset.ParameterSet.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.parameterset.ParameterSet.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -2216,21 +2038,9 @@ restraints from string equations.</p>
 the specified name has already been inserted.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">Parameter</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">name.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">Parameter</span> <span class="pre">has</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">name</span> <span class="pre">as</span> <span class="pre">a</span> <span class="pre">contained</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">RecipeContainer.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the Parameter has no name.
+Raises ValueError if the Parameter has the same name as a contained
+RecipeContainer.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2243,21 +2053,9 @@ the specified name has already been inserted.</p>
 <dd><p>The ParameterSet to be stored.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ParameterSet</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">name.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ParameterSet</span> <span class="pre">has</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">name</span> <span class="pre">as</span> <span class="pre">some</span> <span class="pre">other</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the ParameterSet has no name.
+Raises ValueError if the ParameterSet has the same name as some other
+managed object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2370,11 +2168,14 @@ FitRecipe.getBounds and FitRecipe.boundsToRestraints.</p>
 <dd><p>The upper bound for the bounds list.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2396,11 +2197,14 @@ value + ur. If this is None (default), then the value of the
 lower radius is used.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2408,25 +2212,28 @@ lower radius is used.</p>
 <span class="sig-name descname"><span class="pre">setConst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/parameter.html#Parameter.setConst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.profile.Parameter.setConst" title="Link to this definition"></a></dt>
 <dd><p>Toggle the Parameter as constant.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id32">
-<span class="sig-name descname"><span class="pre">const</span></span><a class="headerlink" href="#id32" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">const</span></span><a class="headerlink" href="#id29" title="Link to this definition"></a></dt>
 <dd><p>Flag indicating if the parameter is constant (default
 True).</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id33">
-<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#id33" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id30">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#id30" title="Link to this definition"></a></dt>
 <dd><p>An optional value for the parameter (default None). If this
 is not None, then the parameter will get a new value,
 constant or otherwise.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2440,24 +2247,27 @@ constant or otherwise.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id34">
-<span class="sig-name descname"><span class="pre">lb</span></span><a class="headerlink" href="#id34" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">lb</span></span><a class="headerlink" href="#id31" title="Link to this definition"></a></dt>
 <dd><p>The lower bounds for the bounds list. If this is None
 (default), then the lower bound will not be alterered.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id35">
-<span class="sig-name descname"><span class="pre">ub</span></span><a class="headerlink" href="#id35" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id32">
+<span class="sig-name descname"><span class="pre">ub</span></span><a class="headerlink" href="#id32" title="Link to this definition"></a></dt>
 <dd><p>The upper bounds for the bounds list. If this is None
 (default), then the upper bound will not be alterered.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">self</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">mutators</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">chained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns self so that mutators can be chained.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>self</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -2569,13 +2379,13 @@ parser.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id36">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dy</span></span><a class="headerlink" href="#id36" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id33">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dy</span></span><a class="headerlink" href="#id33" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id37">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dyobs</span></span><a class="headerlink" href="#id37" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id34">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dyobs</span></span><a class="headerlink" href="#id34" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2596,7 +2406,16 @@ to by dy. Any other arrays are ignored. These are passed to
 setObservedProfile.</p>
 <p>Raises ValueError if the call to numpy.loadtxt returns fewer
 than 2 arrays.</p>
-<p>Returns the x, y and dy arrays loaded from the file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>x</em> – x array loaded from the file.</p></li>
+<li><p><em>y</em> – y array loaded from the file.</p></li>
+<li><p><em>dy</em> – dy array loaded from the file.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2690,28 +2509,28 @@ observed xobs.</p></li>
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="id35">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#id35" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id36">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xobs</span></span><a class="headerlink" href="#id36" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="id37">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#id37" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="id38">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#id38" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ycalc</span></span><a class="headerlink" href="#id38" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="id39">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xobs</span></span><a class="headerlink" href="#id39" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="id40">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#id40" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="id41">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ycalc</span></span><a class="headerlink" href="#id41" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="id42">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">yobs</span></span><a class="headerlink" href="#id42" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">yobs</span></span><a class="headerlink" href="#id39" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2725,14 +2544,22 @@ ParameterSets of a profile calculator.  The ProfileGenerator class can
 be associated with a FitContribution to help calculate a profile.</p>
 <p>To define a ProfileGenerator, one must implement the required Parameters
 and ParameterSets as well as overload the __call__ method with the
-calculation. A very simple example is &gt; class
-Gaussian(ProfileGenerator): &gt; &gt;    def __init__(self): &gt;        #
-Initialize and give this a name &gt;        ProfileGenerator.__init__(self,
-“g”) &gt;        # Add amplitude, center and width parameters &gt;
-self.newParameter(“amp”, 0) &gt;        self.newParameter(“center”, 0) &gt;
-self.newParameter(“width”, 0) &gt; &gt;    def __call__(self, x): &gt;        a =
-self.amp.getValue() &gt;        x0 = self.center.getValue() &gt;        w =
-self.width.getValue() &gt;        return a * exp(-0.5*((x-x0)/w)**2)</p>
+calculation. A very simple example is</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Gaussian</span><span class="p">(</span><span class="n">ProfileGenerator</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Initialize and give this a name</span>
+        <span class="n">ProfileGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">)</span>
+        <span class="c1"># Add amplitude, center and width parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">newParameter</span><span class="p">(</span><span class="s2">&quot;amp&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">newParameter</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">newParameter</span><span class="p">(</span><span class="s2">&quot;width&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amp</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+        <span class="n">x0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">x0</span><span class="p">)</span><span class="o">/</span><span class="n">w</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>More examples can be found in the example directory of the
 documentation.</p>
 <dl class="py class">
@@ -2811,24 +2638,14 @@ instance that is used create Equations from string.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Operator</span> <span class="pre">Attributes</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">-------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.args" title="Link to this definition"></a></dt>
 <dd><p>List of Literal arguments, set with ‘addLiteral’</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id43">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id43" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id40">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id40" title="Link to this definition"></a></dt>
 <dd><p>A name for this operator. e.g. “add” or “sin”</p>
 </dd></dl>
 
@@ -2870,16 +2687,6 @@ this case, operation is an instance method.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -2892,18 +2699,18 @@ this case, operation is an instance method.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id44">
-<span class="sig-name descname"><span class="pre">nin</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id44" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id41">
+<span class="sig-name descname"><span class="pre">nin</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id41" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id45">
-<span class="sig-name descname"><span class="pre">nout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id45" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id42">
+<span class="sig-name descname"><span class="pre">nout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id42" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id46">
-<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/profilegenerator.html#ProfileGenerator.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id46" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id43">
+<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/profilegenerator.html#ProfileGenerator.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id43" title="Link to this definition"></a></dt>
 <dd><p>Evaluate the profile.</p>
 <p>Return the result of __call__(profile.x).</p>
 </dd></dl>
@@ -2922,8 +2729,8 @@ set.</p>
 <span class="sig-name descname"><span class="pre">setProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/profilegenerator.html#ProfileGenerator.setProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.profilegenerator.ProfileGenerator.setProfile" title="Link to this definition"></a></dt>
 <dd><p>Assign the profile.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id47">
-<span class="sig-name descname"><span class="pre">profile</span></span><a class="headerlink" href="#id47" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id44">
+<span class="sig-name descname"><span class="pre">profile</span></span><a class="headerlink" href="#id44" title="Link to this definition"></a></dt>
 <dd><p>A Profile that specifies the calculation points and which
 will store the calculated signal.</p>
 </dd></dl>
@@ -2931,8 +2738,8 @@ will store the calculated signal.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id48">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id48" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id45">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id45" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2951,7 +2758,6 @@ subclass.</p>
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.fitbase.profileparser.</span></span><span class="sig-name descname"><span class="pre">ProfileParser</span></span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/profileparser.html#ProfileParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for parsing data from a or string.</p>
-<p>Attributes</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.profileparser.ProfileParser._format">
 <span class="sig-name descname"><span class="pre">_format</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser._format" title="Link to this definition"></a></dt>
@@ -2965,29 +2771,25 @@ format handled by the parser.</p>
 <span class="sig-name descname"><span class="pre">_banks</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser._banks" title="Link to this definition"></a></dt>
 <dd><p>The data from each bank. Each bank contains a (x, y, dx,
 dy)
-tuple:</p>
+tuple:
+x</p>
 <blockquote>
-<div><p>x</p>
-</div></blockquote>
-<p>A numpy array containing the independent
+<div><p>A numpy array containing the independent
 variable read from the file.</p>
-<blockquote>
-<div><p>y</p>
 </div></blockquote>
-<p>A numpy array containing the profile
+<dl class="simple">
+<dt>y</dt><dd><p>A numpy array containing the profile
 from the file.</p>
-<blockquote>
-<div><p>dx</p>
-</div></blockquote>
-<p>A numpy array containing the uncertainty in x
+</dd>
+<dt>dx</dt><dd><p>A numpy array containing the uncertainty in x
 read from the file. This is None if the
 uncertainty cannot be read.</p>
-<blockquote>
-<div><p>dy</p>
-</div></blockquote>
-<p>A numpy array containing the uncertainty read
+</dd>
+<dt>dy</dt><dd><p>A numpy array containing the uncertainty read
 from the file. This is None if the uncertainty
 cannot be read.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -3019,11 +2821,6 @@ cannot be read.</p>
 <span class="sig-name descname"><span class="pre">_meta</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.profileparser.ProfileParser._meta" title="Link to this definition"></a></dt>
 <dd><p>A dictionary containing metadata read from the file.</p>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">General</span> <span class="pre">Metadata</span></span></dt>
-<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.profileparser.ProfileParser.filename">
@@ -3195,16 +2992,6 @@ configuration changes within this object.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -3250,13 +3037,13 @@ expression (all parameters by default).</p></li>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id49">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#id49" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id46">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#id46" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id50">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">values</span></span><a class="headerlink" href="#id50" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id47">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">values</span></span><a class="headerlink" href="#id47" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3314,16 +3101,6 @@ instance that is used create Equations from string.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -3335,11 +3112,7 @@ instance that is used create Equations from string.</p>
 <dd><p>Variable values (read only). See getValues.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">name</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">a</span> <span class="pre">valid</span> <span class="pre">attribute</span> <span class="pre">identifier</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the name is not a valid attribute identifier</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.addRestraint">
 <span class="sig-name descname"><span class="pre">addRestraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/recipeorganizer.html#RecipeOrganizer.addRestraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.addRestraint" title="Link to this definition"></a></dt>
@@ -3363,16 +3136,8 @@ instance that is used create Equations from string.</p>
 found there as well.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">This</span> <span class="pre">removes</span> <span class="pre">constraints</span> <span class="pre">that</span> <span class="pre">are</span> <span class="pre">held</span> <span class="pre">in</span> <span class="pre">this</span> <span class="pre">organizer,</span> <span class="pre">no</span> <span class="pre">matter</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">where</span> <span class="pre">the</span> <span class="pre">constrained</span> <span class="pre">parameters</span> <span class="pre">are</span> <span class="pre">from.</span></span></dt>
-<dd></dd></dl>
-
+<p>This removes constraints that are held in this organizer, no matter
+where the constrained parameters are from.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3380,8 +3145,8 @@ found there as well.</p>
 <span class="sig-name descname"><span class="pre">clearRestraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/recipeorganizer.html#RecipeOrganizer.clearRestraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clearRestraints" title="Link to this definition"></a></dt>
 <dd><p>Clear all restraints.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id51">
-<span class="sig-name descname"><span class="pre">recurse</span></span><a class="headerlink" href="#id51" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id48">
+<span class="sig-name descname"><span class="pre">recurse</span></span><a class="headerlink" href="#id48" title="Link to this definition"></a></dt>
 <dd><p>Recurse into managed objects and clear all restraints
 found there as well.</p>
 </dd></dl>
@@ -3416,31 +3181,11 @@ they are managed by this object.</p>
 in the parameter, but not part of this object (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">variable.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">par</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">string</span> <span class="pre">but</span> <span class="pre">not</span> <span class="pre">part</span> <span class="pre">of</span> <span class="pre">this</span> <span class="pre">object</span> <span class="pre">or</span> <span class="pre">in</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">ns.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">par</span> <span class="pre">is</span> <span class="pre">marked</span> <span class="pre">as</span> <span class="pre">constant.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for a
+variable.
+Raises ValueError if par is a string but not part of this object or in
+ns.
+Raises ValueError if par is marked as constant.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3455,22 +3200,14 @@ the current value of the registered Parameters.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id52">
-<span class="sig-name descname"><span class="pre">ns</span></span><a class="headerlink" href="#id52" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id49">
+<span class="sig-name descname"><span class="pre">ns</span></span><a class="headerlink" href="#id49" title="Link to this definition"></a></dt>
 <dd><p>A dictionary of Parameters, indexed by name, that are
 used in fstr, but not part of the FitRecipe (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">variable.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for a
+variable.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3478,8 +3215,8 @@ used in fstr, but not part of the FitRecipe (default {}).</p>
 <span class="sig-name descname"><span class="pre">getConstrainedPars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/recipeorganizer.html#RecipeOrganizer.getConstrainedPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.getConstrainedPars" title="Link to this definition"></a></dt>
 <dd><p>Get a list of constrained managed Parameters in this object.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id53">
-<span class="sig-name descname"><span class="pre">recurse</span></span><a class="headerlink" href="#id53" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id50">
+<span class="sig-name descname"><span class="pre">recurse</span></span><a class="headerlink" href="#id50" title="Link to this definition"></a></dt>
 <dd><p>Recurse into managed objects and retrieve their constrained
 Parameters as well (default False).</p>
 </dd></dl>
@@ -3491,8 +3228,8 @@ Parameters as well (default False).</p>
 <span class="sig-name descname"><span class="pre">isConstrained</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/recipeorganizer.html#RecipeOrganizer.isConstrained"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.isConstrained" title="Link to this definition"></a></dt>
 <dd><p>Determine if a Parameter is constrained in this object.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id54">
-<span class="sig-name descname"><span class="pre">par</span></span><a class="headerlink" href="#id54" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id51">
+<span class="sig-name descname"><span class="pre">par</span></span><a class="headerlink" href="#id51" title="Link to this definition"></a></dt>
 <dd><p>The name of a Parameter or a Parameter to check.</p>
 </dd></dl>
 
@@ -3531,68 +3268,36 @@ extracted from the function.</p>
 equations.  The resulting equation does not require the arguments to be
 passed in the equation string, as this will be handled automatically.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id55">
-<span class="sig-name descname"><span class="pre">f</span></span><a class="headerlink" href="#id55" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id52">
+<span class="sig-name descname"><span class="pre">f</span></span><a class="headerlink" href="#id52" title="Link to this definition"></a></dt>
 <dd><p>The callable to register. If this is an Equation
 instance, then all that needs to be provided is a name.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id56">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id56" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id53">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id53" title="Link to this definition"></a></dt>
 <dd><p>The name of the function to be used in equations. If
 this is None (default), the method will try to
 determine the name of the function automatically.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id57">
-<span class="sig-name descname"><span class="pre">argnames</span></span><a class="headerlink" href="#id57" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id54">
+<span class="sig-name descname"><span class="pre">argnames</span></span><a class="headerlink" href="#id54" title="Link to this definition"></a></dt>
 <dd><p>The names of the arguments to f (list or None).
 If this is None (default), then the argument names will
 be extracted from the function.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Note</span> <span class="pre">that</span> <span class="pre">name</span> <span class="pre">and</span> <span class="pre">argnames</span> <span class="pre">can</span> <span class="pre">be</span> <span class="pre">extracted</span> <span class="pre">from</span> <span class="pre">regular</span> <span class="pre">python</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">functions</span> <span class="pre">(of</span> <span class="pre">type</span> <span class="pre">'function'),</span> <span class="pre">bound</span> <span class="pre">class</span> <span class="pre">methods</span> <span class="pre">and</span> <span class="pre">callable</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">classes.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">TypeError</span> <span class="pre">if</span> <span class="pre">name</span> <span class="pre">or</span> <span class="pre">argnames</span> <span class="pre">cannot</span> <span class="pre">be</span> <span class="pre">automatically</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">extracted.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">TypeError</span> <span class="pre">if</span> <span class="pre">an</span> <span class="pre">automatically</span> <span class="pre">extracted</span> <span class="pre">name</span> <span class="pre">is</span> <span class="pre">'&lt;lambda&gt;'.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">f</span> <span class="pre">is</span> <span class="pre">an</span> <span class="pre">Equation</span> <span class="pre">object</span> <span class="pre">and</span> <span class="pre">name</span> <span class="pre">is</span> <span class="pre">None.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">callable</span> <span class="pre">Equation</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Note that name and argnames can be extracted from regular python
+functions (of type ‘function’), bound class methods and callable
+classes.</p>
+<p>Raises TypeError if name or argnames cannot be automatically
+extracted.
+Raises TypeError if an automatically extracted name is ‘&lt;lambda&gt;’.
+Raises ValueError if f is an Equation object and name is None.</p>
+<p>Returns the callable Equation object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3609,44 +3314,24 @@ passed in the function string, as this will be handled automatically.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id58">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id58" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id55">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id55" title="Link to this definition"></a></dt>
 <dd><p>The name of the function to be used in equations.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id59">
-<span class="sig-name descname"><span class="pre">ns</span></span><a class="headerlink" href="#id59" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id56">
+<span class="sig-name descname"><span class="pre">ns</span></span><a class="headerlink" href="#id56" title="Link to this definition"></a></dt>
 <dd><p>A dictionary of Parameters, indexed by name, that are
 used in fstr, but not part of the FitRecipe (default
 {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">another</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">function</span> <span class="pre">name</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">name</span> <span class="pre">of</span> <span class="pre">another</span> <span class="pre">managed</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">callable</span> <span class="pre">Equation</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for another
+managed object.
+Raises ValueError if the function name is the name of another managed
+object.</p>
+<p>Returns the callable Equation object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3654,8 +3339,8 @@ used in fstr, but not part of the FitRecipe (default
 <span class="sig-name descname"><span class="pre">restrain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ub</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/recipeorganizer.html#RecipeOrganizer.restrain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.restrain" title="Link to this definition"></a></dt>
 <dd><p>Restrain an expression to specified bounds.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id60">
-<span class="sig-name descname"><span class="pre">res</span></span><a class="headerlink" href="#id60" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id57">
+<span class="sig-name descname"><span class="pre">res</span></span><a class="headerlink" href="#id57" title="Link to this definition"></a></dt>
 <dd><p>An equation string or Parameter to restrain.</p>
 </dd></dl>
 
@@ -3686,58 +3371,22 @@ by the unrestrained point-average chi^2 (chi^2/numpoints)
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id61">
-<span class="sig-name descname"><span class="pre">ns</span></span><a class="headerlink" href="#id61" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id58">
+<span class="sig-name descname"><span class="pre">ns</span></span><a class="headerlink" href="#id58" title="Link to this definition"></a></dt>
 <dd><p>A dictionary of Parameters, indexed by name, that are used
 in the equation string, but not part of the RecipeOrganizer
 (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">The</span> <span class="pre">penalty</span> <span class="pre">is</span> <span class="pre">calculated</span> <span class="pre">as</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">(max(0,</span> <span class="pre">lb</span> <span class="pre">-</span> <span class="pre">val,</span> <span class="pre">val</span> <span class="pre">-</span> <span class="pre">ub)/sig)**2</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">and</span> <span class="pre">val</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">value</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">calculated</span> <span class="pre">equation.</span>&#160; <span class="pre">This</span> <span class="pre">is</span> <span class="pre">multiplied</span> <span class="pre">by</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">the</span> <span class="pre">average</span> <span class="pre">chi^2</span> <span class="pre">if</span> <span class="pre">scaled</span> <span class="pre">is</span> <span class="pre">True.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Parameter.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">res</span> <span class="pre">depends</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">Parameter</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">part</span> <span class="pre">of</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">the</span> <span class="pre">RecipeOrganizer</span> <span class="pre">and</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">ns.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">Restraint</span> <span class="pre">object</span> <span class="pre">for</span> <span class="pre">use</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">'unrestrain'</span> <span class="pre">method.</span></span></dt>
-<dd></dd></dl>
-
+<p>The penalty is calculated as
+(max(0, lb - val, val - ub)/sig)**2
+and val is the value of the calculated equation.  This is multiplied by
+the average chi^2 if scaled is True.</p>
+<p>Raises ValueError if ns uses a name that is already used for a
+Parameter.
+Raises ValueError if res depends on a Parameter that is not part of
+the RecipeOrganizer and that is not defined in ns.</p>
+<p>Returns the Restraint object for use with the ‘unrestrain’ method.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3835,16 +3484,8 @@ word.</p>
 (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">factory.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">equation</span> <span class="pre">has</span> <span class="pre">undefined</span> <span class="pre">parameters.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already defined in the factory.
+Raises ValueError if the equation has undefined parameters.</p>
 </dd></dl>
 
 </section>
@@ -3893,26 +3534,10 @@ the unrestrained point-average chi^2 (chi^2/numpoints)
 (default False).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">The</span> <span class="pre">penalty</span> <span class="pre">is</span> <span class="pre">calculated</span> <span class="pre">as</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">(max(0,</span> <span class="pre">lb</span> <span class="pre">-</span> <span class="pre">val,</span> <span class="pre">val</span> <span class="pre">-</span> <span class="pre">ub)/sig)**2</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">and</span> <span class="pre">val</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">value</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">calculated</span> <span class="pre">equation.</span>&#160; <span class="pre">This</span> <span class="pre">is</span> <span class="pre">multiplied</span> <span class="pre">by</span> <span class="pre">the</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">average</span> <span class="pre">chi^2</span> <span class="pre">if</span> <span class="pre">scaled</span> <span class="pre">is</span> <span class="pre">True.</span></span></dt>
-<dd></dd></dl>
-
+<p>The penalty is calculated as
+(max(0, lb - val, val - ub)/sig)**2
+and val is the value of the calculated equation.  This is multiplied by the
+average chi^2 if scaled is True.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.restraint.Restraint.penalty">
 <span class="sig-name descname"><span class="pre">penalty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/restraint.html#Restraint.penalty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.restraint.Restraint.penalty" title="Link to this definition"></a></dt>
@@ -3924,11 +3549,14 @@ the unrestrained point-average chi^2 (chi^2/numpoints)
 penalty (default 1.0).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">penalty</span> <span class="pre">as</span> <span class="pre">a</span> <span class="pre">float</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns the penalty as a float</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>penalty</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -4067,16 +3695,6 @@ FitContribution when determining the overall residual.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -4104,8 +3722,10 @@ enforced. The first two arrays returned by numpy.loadtxt are
 assumed to be x and y. If there is a third array, it is assumed
 to by dy. Any other arrays are ignored. These are passed to
 setObservedProfile.</p>
-<p>Raises ValueError if the call to numpy.loadtxt returns fewer
-than 2 arrays.</p>
+<blockquote>
+<div><p>Raises ValueError if the call to numpy.loadtxt returns fewer</p>
+</div></blockquote>
+<p>than 2 arrays.</p>
 <p>Returns the x, y and dy arrays loaded from the file</p>
 </dd></dl>
 
@@ -4131,15 +3751,15 @@ than 2 arrays.</p>
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.saveResults">
 <span class="sig-name descname"><span class="pre">saveResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/simplerecipe.html#SimpleRecipe.saveResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.saveResults" title="Link to this definition"></a></dt>
 <dd><p>Format and save the results.</p>
-<section id="id62">
-<h3>filename -  Name of the save file.<a class="headerlink" href="#id62" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>header</dt><dd><p>A header to add to the output (default “”)</p>
-</dd>
-<dt>footer</dt><dd><p>A footer to add to the output (default “”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – Name of the save file.</p></li>
+<li><p><strong>header</strong> – A header to add to the output (default “”)</p></li>
+<li><p><strong>footer</strong> – A footer to add to the output (default “”)</p></li>
+</ul>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -4212,16 +3832,8 @@ of 0.</p>
 in the eqstr, but not registered (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">variable.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for a
+variable.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -4236,11 +3848,11 @@ in the eqstr, but not registered (default {}).</p>
 <li><p><strong>dyobs</strong> – Numpy array of the uncertainty in the observed signal. If
 dyobs is None (default), it will be set to 1 at each
 observed xobs.</p></li>
-<li><p><strong>len</strong><strong>(</strong><strong>xobs</strong><strong>)</strong> (<em>Raises ValueError if dyobs != None and len</em><em>(</em><em>dyobs</em><em>) </em><em>!=</em>)</p></li>
-<li><p><strong>len</strong><strong>(</strong><strong>xobs</strong><strong>)</strong></p></li>
 </ul>
 </dd>
 </dl>
+<p>Raises ValueError if len(yobs) != len(xobs)
+Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 </dd></dl>
 
 </dd></dl>
@@ -4333,16 +3945,6 @@ instance that is used create Equations from string.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Operator</span> <span class="pre">Attributes</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">-------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.Calculator.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.args" title="Link to this definition"></a></dt>
 <dd><p>List of Literal arguments</p>
@@ -4385,16 +3987,6 @@ instance that is used create Equations from string.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.Calculator.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.Calculator.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.Calculator.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -4407,23 +3999,23 @@ instance that is used create Equations from string.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id63">
-<span class="sig-name descname"><span class="pre">nin</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#id63" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id59">
+<span class="sig-name descname"><span class="pre">nin</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#id59" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id64">
-<span class="sig-name descname"><span class="pre">nout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id64" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id60">
+<span class="sig-name descname"><span class="pre">nout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id60" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id65">
-<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/calculator.html#Calculator.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id65" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id61">
+<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/calculator.html#Calculator.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id61" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id66">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id66" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id62">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id62" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -4527,16 +4119,6 @@ restraints from string</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.FitContribution.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.FitContribution.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -4566,27 +4148,15 @@ calculator and if there is not a profile equation already.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id67">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id67" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id63">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id63" title="Link to this definition"></a></dt>
 <dd><p>A name for the calculator. If name is None (default), then
 the ProfileGenerator’s name attribute will be used.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ProfileGenerator</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">name.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ProfileGenerator</span> <span class="pre">has</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">name</span> <span class="pre">as</span> <span class="pre">some</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">other</span> <span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the ProfileGenerator has no name.
+Raises ValueError if the ProfileGenerator has the same name as some
+other managed object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -4650,16 +4220,8 @@ FitContribution.</p>
 in the eqstr, but not registered (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">variable.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for a
+variable.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -4667,8 +4229,8 @@ in the eqstr, but not registered (default {}).</p>
 <span class="sig-name descname"><span class="pre">setProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitcontribution.html#FitContribution.setProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setProfile" title="Link to this definition"></a></dt>
 <dd><p>Assign the Profile for this FitContribution.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id68">
-<span class="sig-name descname"><span class="pre">profile</span></span><a class="headerlink" href="#id68" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id64">
+<span class="sig-name descname"><span class="pre">profile</span></span><a class="headerlink" href="#id64" title="Link to this definition"></a></dt>
 <dd><p>A Profile that specifies the calculation points and that
 will store the calculated signal.</p>
 </dd></dl>
@@ -4707,64 +4269,24 @@ usable within string equations with the specified name.</p>
 <span class="sig-name descname"><span class="pre">setResidualEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eqstr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitcontribution.html#FitContribution.setResidualEquation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.FitContribution.setResidualEquation" title="Link to this definition"></a></dt>
 <dd><p>Set the residual equation for the FitContribution.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id69">
-<span class="sig-name descname"><span class="pre">eqstr</span></span><a class="headerlink" href="#id69" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id65">
+<span class="sig-name descname"><span class="pre">eqstr</span></span><a class="headerlink" href="#id65" title="Link to this definition"></a></dt>
 <dd><p>A string representation of the residual. If eqstr is None
 (default), then the previous residual equation will be
 used, or the chi2 residual will be used if that does not
 exist.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Two</span> <span class="pre">residuals</span> <span class="pre">are</span> <span class="pre">preset</span> <span class="pre">for</span> <span class="pre">convenience,</span> <span class="pre">&quot;chiv&quot;</span> <span class="pre">and</span> <span class="pre">&quot;resv&quot;.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">chiv</span> <span class="pre">is</span> <span class="pre">defined</span> <span class="pre">such</span> <span class="pre">that</span> <span class="pre">dot(chiv,</span> <span class="pre">chiv)</span> <span class="pre">=</span> <span class="pre">chi^2.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">resv</span> <span class="pre">is</span> <span class="pre">defined</span> <span class="pre">such</span> <span class="pre">that</span> <span class="pre">dot(resv,</span> <span class="pre">resv)</span> <span class="pre">=</span> <span class="pre">Rw^2.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">You</span> <span class="pre">can</span> <span class="pre">call</span> <span class="pre">on</span> <span class="pre">these</span> <span class="pre">in</span> <span class="pre">your</span> <span class="pre">residual</span> <span class="pre">equation.</span> <span class="pre">Note</span> <span class="pre">that</span> <span class="pre">the</span> <span class="pre">quantity</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">that</span> <span class="pre">will</span> <span class="pre">be</span> <span class="pre">optimized</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">summed</span> <span class="pre">square</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">residual</span> <span class="pre">equation.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Keep</span> <span class="pre">that</span> <span class="pre">in</span> <span class="pre">mind</span> <span class="pre">when</span> <span class="pre">defining</span> <span class="pre">a</span> <span class="pre">new</span> <span class="pre">residual</span> <span class="pre">or</span> <span class="pre">using</span> <span class="pre">the</span> <span class="pre">built-in</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">ones.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">SrFitError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">Profile</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">yet</span> <span class="pre">defined.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">eqstr</span> <span class="pre">depends</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">Parameter</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">part</span> <span class="pre">of</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">the</span> <span class="pre">FitContribution.</span></span></dt>
-<dd></dd></dl>
-
+<p>Two residuals are preset for convenience, “chiv” and “resv”.
+chiv is defined such that dot(chiv, chiv) = chi^2.
+resv is defined such that dot(resv, resv) = Rw^2.
+You can call on these in your residual equation. Note that the quantity
+that will be optimized is the summed square of the residual equation.
+Keep that in mind when defining a new residual or using the built-in
+ones.</p>
+<p>Raises SrFitError if the Profile is not yet defined.
+Raises ValueError if eqstr depends on a Parameter that is not part of
+the FitContribution.</p>
 </dd></dl>
 
 </dd></dl>
@@ -4802,8 +4324,8 @@ purpose.</p>
 <span class="sig-name descname"><span class="pre">precall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fithook.html#FitHook.precall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.FitHook.precall" title="Link to this definition"></a></dt>
 <dd><p>This is called within FitRecipe.residual, before the calculation.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id70">
-<span class="sig-name descname"><span class="pre">recipe</span></span><a class="headerlink" href="#id70" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id66">
+<span class="sig-name descname"><span class="pre">recipe</span></span><a class="headerlink" href="#id66" title="Link to this definition"></a></dt>
 <dd><p>The FitRecipe instance</p>
 </dd></dl>
 
@@ -4930,16 +4452,6 @@ use this tag unless you want issues.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.FitRecipe.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.FitRecipe.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.FitRecipe.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -4985,21 +4497,9 @@ use this tag unless you want issues.</p>
 <dd><p>The FitContribution to be stored.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">FitContribution</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">name</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">FitContribution</span> <span class="pre">has</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">name</span> <span class="pre">as</span> <span class="pre">some</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">other</span> <span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the FitContribution has no name
+Raises ValueError if the FitContribution has the same name as some
+other managed object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5012,21 +4512,9 @@ use this tag unless you want issues.</p>
 <dd><p>The ParameterSet to be stored.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ParameterSet</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">name.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">ParameterSet</span> <span class="pre">has</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">name</span> <span class="pre">as</span> <span class="pre">some</span> <span class="pre">other</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if the ParameterSet has no name.
+Raises ValueError if the ParameterSet has the same name as some other
+managed object.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5047,8 +4535,8 @@ use this tag unless you want issues.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id71">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id71" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id67">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id67" title="Link to this definition"></a></dt>
 <dd><p>A name for this variable. If name is None (default), then
 the name of the parameter will be used.</p>
 </dd></dl>
@@ -5074,41 +4562,28 @@ variable is automatically tagged with its name and “all”.</p>
 applied.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">ParameterProxy</span> <span class="pre">(variable)</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">passed</span> <span class="pre">Parameter.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">name</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">variable</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">taken</span> <span class="pre">by</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">another</span> <span class="pre">managed</span> <span class="pre">object.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">par</span> <span class="pre">is</span> <span class="pre">constant.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">par</span> <span class="pre">is</span> <span class="pre">constrained.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ParameterProxy (variable) for the passed Parameter.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>vars</p>
+</dd>
+</dl>
+<p>Raises ValueError if the name of the variable is already taken by
+another managed object.
+Raises ValueError if par is constant.
+Raises ValueError if par is constrained.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id72">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bounds</span></span><a class="headerlink" href="#id72" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id68">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bounds</span></span><a class="headerlink" href="#id68" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id73">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bounds2</span></span><a class="headerlink" href="#id73" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id69">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bounds2</span></span><a class="headerlink" href="#id69" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -5146,14 +4621,14 @@ default 1).</p>
 and its current value is None. A constrained variable will be set as
 fixed.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id74">
-<span class="sig-name descname"><span class="pre">par</span></span><a class="headerlink" href="#id74" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id70">
+<span class="sig-name descname"><span class="pre">par</span></span><a class="headerlink" href="#id70" title="Link to this definition"></a></dt>
 <dd><p>The Parameter to constrain.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id75">
-<span class="sig-name descname"><span class="pre">con</span></span><a class="headerlink" href="#id75" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id71">
+<span class="sig-name descname"><span class="pre">con</span></span><a class="headerlink" href="#id71" title="Link to this definition"></a></dt>
 <dd><p>A string representation of the constraint equation or a
 Parameter to constrain to.  A constraint equation must
 consist of numpy operators and “known” Parameters.
@@ -5168,31 +4643,11 @@ they are managed by this object.</p>
 in the eqstr, but not part of this object (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">variable.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">eqstr</span> <span class="pre">depends</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">Parameter</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">part</span> <span class="pre">of</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">the</span> <span class="pre">FitRecipe</span> <span class="pre">and</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">defined</span> <span class="pre">in</span> <span class="pre">ns.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">par</span> <span class="pre">is</span> <span class="pre">marked</span> <span class="pre">as</span> <span class="pre">constant.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for a
+variable.
+Raises ValueError if eqstr depends on a Parameter that is not part of
+the FitRecipe and that is not defined in ns.
+Raises ValueError if par is marked as constant.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5207,11 +4662,7 @@ modified.</p>
 <dd><p>A variable of the FitRecipe.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">var</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">part</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">FitRecipe.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if var is not part of the FitRecipe.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5227,14 +4678,14 @@ passed, or if a tag is passed in a keyword.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id76">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fixednames</span></span><a class="headerlink" href="#id76" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id72">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fixednames</span></span><a class="headerlink" href="#id72" title="Link to this definition"></a></dt>
 <dd><p>names of the fixed refinable variables</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id77">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fixedvalues</span></span><a class="headerlink" href="#id77" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id73">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fixedvalues</span></span><a class="headerlink" href="#id73" title="Link to this definition"></a></dt>
 <dd><p>values of the fixed refinable variables</p>
 </dd></dl>
 
@@ -5299,15 +4750,15 @@ Parameter.  Orphan variables may cause a fit to fail, depending on the
 optimization routine, and therefore should only be created to be used
 in constraint or restraint equations.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id78">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id78" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id74">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id74" title="Link to this definition"></a></dt>
 <dd><p>The name of the variable. The variable will be able to be
 used by this name in restraint and constraint equations.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id79">
-<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#id79" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id75">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#id75" title="Link to this definition"></a></dt>
 <dd><p>An initial value for the variable. If this is None
 (default), then the variable will be given the value of the
 first non-None-valued Parameter constrained to it. If this
@@ -5315,32 +4766,28 @@ fails, an error will be thrown when ‘residual’ is called.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id80">
-<span class="sig-name descname"><span class="pre">fixed</span></span><a class="headerlink" href="#id80" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id76">
+<span class="sig-name descname"><span class="pre">fixed</span></span><a class="headerlink" href="#id76" title="Link to this definition"></a></dt>
 <dd><p>Fix the variable so that it does not vary (default False).
 The variable will still be managed by the FitRecipe.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id81">
-<span class="sig-name descname"><span class="pre">tag</span></span><a class="headerlink" href="#id81" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id77">
+<span class="sig-name descname"><span class="pre">tag</span></span><a class="headerlink" href="#id77" title="Link to this definition"></a></dt>
 <dd><p>A tag for the variable. This can be used to fix and free
 variables by tag (default None). Note that a variable is
 automatically tagged with its name and “all”.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id82">
-<span class="sig-name descname"><span class="pre">tags</span></span><a class="headerlink" href="#id82" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id78">
+<span class="sig-name descname"><span class="pre">tags</span></span><a class="headerlink" href="#id78" title="Link to this definition"></a></dt>
 <dd><p>A list of tags (default []). Both tag and tags can be
 applied.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">new</span> <span class="pre">variable</span> <span class="pre">(Parameter</span> <span class="pre">instance).</span></span></dt>
-<dd></dd></dl>
-
+<p>Returns the new variable (Parameter instance).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5360,21 +4807,9 @@ None (default), default to index.</p>
 <dd><p>Index of FitHook instance to remove (default -1).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">fithook</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None,</span> <span class="pre">but</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">present</span> <span class="pre">in</span> <span class="pre">the</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">sequence.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">IndexError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">sequence</span> <span class="pre">is</span> <span class="pre">empty</span> <span class="pre">or</span> <span class="pre">index</span> <span class="pre">is</span> <span class="pre">out</span> <span class="pre">of</span> <span class="pre">range.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if fithook is not None, but is not present in the
+sequence.
+Raises IndexError if the sequence is empty or index is out of range.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5386,14 +4821,14 @@ passing information out of the system during a refinement. See the
 diffpy.srfit.fitbase.fithook.FitHook class for the required interface.
 Added FitHooks will be called sequentially during refinement.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id83">
-<span class="sig-name descname"><span class="pre">fithook</span></span><a class="headerlink" href="#id83" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id79">
+<span class="sig-name descname"><span class="pre">fithook</span></span><a class="headerlink" href="#id79" title="Link to this definition"></a></dt>
 <dd><p>FitHook instance to add to the sequence</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id84">
-<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#id84" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id80">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#id80" title="Link to this definition"></a></dt>
 <dd><p>Index for inserting fithook into the list of fit hooks.  If
 this is None (default), the fithook is added to the end.</p>
 </dd></dl>
@@ -5632,16 +5067,8 @@ derivatives. Default 1e-8.</p>
 the variables. This is used internally.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Each</span> <span class="pre">of</span> <span class="pre">these</span> <span class="pre">attributes,</span> <span class="pre">except</span> <span class="pre">the</span> <span class="pre">recipe,</span> <span class="pre">are</span> <span class="pre">created</span> <span class="pre">or</span> <span class="pre">updated</span> <span class="pre">when</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">the</span> <span class="pre">update</span> <span class="pre">method</span> <span class="pre">is</span> <span class="pre">called.</span></span></dt>
-<dd></dd></dl>
-
+<p>Each of these attributes, except the recipe, are created or updated when
+the update method is called.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.FitResults.formatResults">
 <span class="sig-name descname"><span class="pre">formatResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.formatResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.formatResults" title="Link to this definition"></a></dt>
@@ -5666,57 +5093,50 @@ the formatting here will change all three functions.</p>
 <dd><p>Flag indicating whether to call update() (default False).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">a</span> <span class="pre">string</span> <span class="pre">containing</span> <span class="pre">the</span> <span class="pre">formatted</span> <span class="pre">results.</span></span></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a string containing the formatted results.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>out</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.FitResults.printResults">
 <span class="sig-name descname"><span class="pre">printResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.printResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.printResults" title="Link to this definition"></a></dt>
 <dd><p>Format and print the results.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id85">
-<span class="sig-name descname"><span class="pre">header</span></span><a class="headerlink" href="#id85" title="Link to this definition"></a></dt>
-<dd><p>A header to add to the output (default “”)</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id86">
-<span class="sig-name descname"><span class="pre">footer</span></span><a class="headerlink" href="#id86" title="Link to this definition"></a></dt>
-<dd><p>A footer to add to the output (default “”)</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id87">
-<span class="sig-name descname"><span class="pre">update</span></span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id87" title="Link to this definition"></a></dt>
-<dd><p>Flag indicating whether to call update() (default False).</p>
-</dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>header</strong> – A header to add to the output (default “”)</p></li>
+<li><p><strong>footer</strong> – A footer to add to the output (default “”)</p></li>
+<li><p><strong>update</strong> – Flag indicating whether to call update() (default False).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.FitResults.saveResults">
 <span class="sig-name descname"><span class="pre">saveResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.saveResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.FitResults.saveResults" title="Link to this definition"></a></dt>
 <dd><p>Format and save the results.</p>
-<section id="id88">
-<h3>filename -  Name of the save file.<a class="headerlink" href="#id88" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>header</dt><dd><p>A header to add to the output (default “”)</p>
-</dd>
-<dt>footer</dt><dd><p>A footer to add to the output (default “”)</p>
-</dd>
-<dt>update</dt><dd><p>Flag indicating whether to call update() (default False).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – Name of the save file.</p></li>
+<li><p><strong>header</strong> – A header to add to the output (default “”)</p></li>
+<li><p><strong>footer</strong> – A footer to add to the output (default “”)</p></li>
+<li><p><strong>update</strong> – Flag indicating whether to call update() (default False).</p></li>
+</ul>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id89">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id89" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id81">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/fitresults.html#FitResults.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id81" title="Link to this definition"></a></dt>
 <dd><p>Update the results according to the current state of the recipe.</p>
 </dd></dl>
 
@@ -5861,13 +5281,13 @@ parser.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id90">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dy</span></span><a class="headerlink" href="#id90" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id82">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dy</span></span><a class="headerlink" href="#id82" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id91">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dyobs</span></span><a class="headerlink" href="#id91" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id83">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dyobs</span></span><a class="headerlink" href="#id83" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -5888,7 +5308,16 @@ to by dy. Any other arrays are ignored. These are passed to
 setObservedProfile.</p>
 <p>Raises ValueError if the call to numpy.loadtxt returns fewer
 than 2 arrays.</p>
-<p>Returns the x, y and dy arrays loaded from the file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>x</em> – x array loaded from the file.</p></li>
+<li><p><em>y</em> – y array loaded from the file.</p></li>
+<li><p><em>dy</em> – dy array loaded from the file.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -5982,28 +5411,28 @@ observed xobs.</p></li>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id92">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#id92" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id84">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#id84" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id93">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xobs</span></span><a class="headerlink" href="#id93" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id85">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">xobs</span></span><a class="headerlink" href="#id85" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id94">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#id94" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id86">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#id86" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id95">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ycalc</span></span><a class="headerlink" href="#id95" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id87">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ycalc</span></span><a class="headerlink" href="#id87" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id96">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">yobs</span></span><a class="headerlink" href="#id96" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id88">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">yobs</span></span><a class="headerlink" href="#id88" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -6084,24 +5513,14 @@ instance that is used create Equations from string.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Operator</span> <span class="pre">Attributes</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">-------------------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.ProfileGenerator.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.args" title="Link to this definition"></a></dt>
 <dd><p>List of Literal arguments, set with ‘addLiteral’</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id97">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id97" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id89">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id89" title="Link to this definition"></a></dt>
 <dd><p>A name for this operator. e.g. “add” or “sin”</p>
 </dd></dl>
 
@@ -6143,16 +5562,6 @@ this case, operation is an instance method.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.ProfileGenerator.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.ProfileGenerator.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -6165,18 +5574,18 @@ this case, operation is an instance method.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id98">
-<span class="sig-name descname"><span class="pre">nin</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id98" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id90">
+<span class="sig-name descname"><span class="pre">nin</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id90" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id99">
-<span class="sig-name descname"><span class="pre">nout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id99" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id91">
+<span class="sig-name descname"><span class="pre">nout</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#id91" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id100">
-<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/profilegenerator.html#ProfileGenerator.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id100" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id92">
+<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/profilegenerator.html#ProfileGenerator.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id92" title="Link to this definition"></a></dt>
 <dd><p>Evaluate the profile.</p>
 <p>Return the result of __call__(profile.x).</p>
 </dd></dl>
@@ -6195,8 +5604,8 @@ set.</p>
 <span class="sig-name descname"><span class="pre">setProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/profilegenerator.html#ProfileGenerator.setProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.ProfileGenerator.setProfile" title="Link to this definition"></a></dt>
 <dd><p>Assign the profile.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id101">
-<span class="sig-name descname"><span class="pre">profile</span></span><a class="headerlink" href="#id101" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id93">
+<span class="sig-name descname"><span class="pre">profile</span></span><a class="headerlink" href="#id93" title="Link to this definition"></a></dt>
 <dd><p>A Profile that specifies the calculation points and which
 will store the calculated signal.</p>
 </dd></dl>
@@ -6204,8 +5613,8 @@ will store the calculated signal.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id102">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id102" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id94">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id94" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -6340,16 +5749,6 @@ FitContribution when determining the overall residual.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.fitbase.SimpleRecipe.Properties">
-<span class="sig-name descname"><span class="pre">Properties</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.Properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">----------</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.SimpleRecipe.names">
 <span class="sig-name descname"><span class="pre">names</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.names" title="Link to this definition"></a></dt>
 <dd><p>Variable names (read only). See getNames.</p>
@@ -6377,8 +5776,10 @@ enforced. The first two arrays returned by numpy.loadtxt are
 assumed to be x and y. If there is a third array, it is assumed
 to by dy. Any other arrays are ignored. These are passed to
 setObservedProfile.</p>
-<p>Raises ValueError if the call to numpy.loadtxt returns fewer
-than 2 arrays.</p>
+<blockquote>
+<div><p>Raises ValueError if the call to numpy.loadtxt returns fewer</p>
+</div></blockquote>
+<p>than 2 arrays.</p>
 <p>Returns the x, y and dy arrays loaded from the file</p>
 </dd></dl>
 
@@ -6404,15 +5805,15 @@ than 2 arrays.</p>
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.SimpleRecipe.saveResults">
 <span class="sig-name descname"><span class="pre">saveResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">footer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/fitbase/simplerecipe.html#SimpleRecipe.saveResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.SimpleRecipe.saveResults" title="Link to this definition"></a></dt>
 <dd><p>Format and save the results.</p>
-<section id="id103">
-<h3>filename -  Name of the save file.<a class="headerlink" href="#id103" title="Link to this heading"></a></h3>
-<dl class="simple">
-<dt>header</dt><dd><p>A header to add to the output (default “”)</p>
-</dd>
-<dt>footer</dt><dd><p>A footer to add to the output (default “”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – Name of the save file.</p></li>
+<li><p><strong>header</strong> – A header to add to the output (default “”)</p></li>
+<li><p><strong>footer</strong> – A footer to add to the output (default “”)</p></li>
+</ul>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -6485,16 +5886,8 @@ of 0.</p>
 in the eqstr, but not registered (default {}).</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">ValueError</span> <span class="pre">if</span> <span class="pre">ns</span> <span class="pre">uses</span> <span class="pre">a</span> <span class="pre">name</span> <span class="pre">that</span> <span class="pre">is</span> <span class="pre">already</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">a</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">variable.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises ValueError if ns uses a name that is already used for a
+variable.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -6509,11 +5902,11 @@ in the eqstr, but not registered (default {}).</p>
 <li><p><strong>dyobs</strong> – Numpy array of the uncertainty in the observed signal. If
 dyobs is None (default), it will be set to 1 at each
 observed xobs.</p></li>
-<li><p><strong>len</strong><strong>(</strong><strong>xobs</strong><strong>)</strong> (<em>Raises ValueError if dyobs != None and len</em><em>(</em><em>dyobs</em><em>) </em><em>!=</em>)</p></li>
-<li><p><strong>len</strong><strong>(</strong><strong>xobs</strong><strong>)</strong></p></li>
 </ul>
 </dd>
 </dl>
+<p>Raises ValueError if len(yobs) != len(xobs)
+Raises ValueError if dyobs != None and len(dyobs) != len(xobs)</p>
 </dd></dl>
 
 </dd></dl>

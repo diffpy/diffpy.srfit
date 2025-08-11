@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.profilegenerator &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.fitbase.profilegenerator &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -99,14 +99,23 @@
 
 <span class="sd">To define a ProfileGenerator, one must implement the required Parameters</span>
 <span class="sd">and ParameterSets as well as overload the __call__ method with the</span>
-<span class="sd">calculation. A very simple example is &gt; class</span>
-<span class="sd">Gaussian(ProfileGenerator): &gt; &gt;    def __init__(self): &gt;        #</span>
-<span class="sd">Initialize and give this a name &gt;        ProfileGenerator.__init__(self,</span>
-<span class="sd">&quot;g&quot;) &gt;        # Add amplitude, center and width parameters &gt;</span>
-<span class="sd">self.newParameter(&quot;amp&quot;, 0) &gt;        self.newParameter(&quot;center&quot;, 0) &gt;</span>
-<span class="sd">self.newParameter(&quot;width&quot;, 0) &gt; &gt;    def __call__(self, x): &gt;        a =</span>
-<span class="sd">self.amp.getValue() &gt;        x0 = self.center.getValue() &gt;        w =</span>
-<span class="sd">self.width.getValue() &gt;        return a * exp(-0.5*((x-x0)/w)**2)</span>
+<span class="sd">calculation. A very simple example is</span>
+
+<span class="sd">.. code:: python</span>
+
+<span class="sd">    class Gaussian(ProfileGenerator):</span>
+<span class="sd">        def __init__(self):</span>
+<span class="sd">            # Initialize and give this a name</span>
+<span class="sd">            ProfileGenerator.__init__(self, &quot;g&quot;)</span>
+<span class="sd">            # Add amplitude, center and width parameters</span>
+<span class="sd">            self.newParameter(&quot;amp&quot;, 0)</span>
+<span class="sd">            self.newParameter(&quot;center&quot;, 0)</span>
+<span class="sd">            self.newParameter(&quot;width&quot;, 0)</span>
+<span class="sd">        def __call__(self, x):</span>
+<span class="sd">            a = self.amp.getValue()</span>
+<span class="sd">            x0 = self.center.getValue()</span>
+<span class="sd">            w = self.width.getValue()</span>
+<span class="sd">            return a * exp(-0.5*((x-x0)/w)**2)</span>
 
 <span class="sd">More examples can be found in the example directory of the</span>
 <span class="sd">documentation.</span>

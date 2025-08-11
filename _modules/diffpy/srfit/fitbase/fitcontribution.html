@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.fitcontribution &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.fitbase.fitcontribution &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -263,6 +263,7 @@
 <span class="sd">            A name for the calculator. If name is None (default), then</span>
 <span class="sd">            the ProfileGenerator&#39;s name attribute will be used.</span>
 
+
 <span class="sd">        Raises ValueError if the ProfileGenerator has no name.</span>
 <span class="sd">        Raises ValueError if the ProfileGenerator has the same name as some</span>
 <span class="sd">        other managed object.</span>
@@ -308,6 +309,7 @@
 <span class="sd">        ns</span>
 <span class="sd">            A dictionary of Parameters, indexed by name, that are used</span>
 <span class="sd">            in the eqstr, but not registered (default {}).</span>
+
 
 <span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
 <span class="sd">        variable.</span>
@@ -360,6 +362,7 @@
 <span class="sd">            (default), then the previous residual equation will be</span>
 <span class="sd">            used, or the chi2 residual will be used if that does not</span>
 <span class="sd">            exist.</span>
+
 
 <span class="sd">        Two residuals are preset for convenience, &quot;chiv&quot; and &quot;resv&quot;.</span>
 <span class="sd">        chiv is defined such that dot(chiv, chiv) = chi^2.</span>

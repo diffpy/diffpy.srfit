@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.fitresults &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.fitbase.fitresults &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -170,6 +170,7 @@
 <span class="sd">    _dcon</span>
 <span class="sd">        The derivatives of the constraint equations with respect to</span>
 <span class="sd">        the variables. This is used internally.</span>
+
 
 <span class="sd">    Each of these attributes, except the recipe, are created or updated when</span>
 <span class="sd">    the update method is called.</span>
@@ -424,7 +425,10 @@
 <span class="sd">        update</span>
 <span class="sd">            Flag indicating whether to call update() (default False).</span>
 
-<span class="sd">        Returns a string containing the formatted results.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        out</span>
+<span class="sd">            a string containing the formatted results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
@@ -604,7 +608,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">printResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">footer</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Format and print the results.</span>
 
-<span class="sd">        Attributes</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        header</span>
 <span class="sd">            A header to add to the output (default &quot;&quot;)</span>
@@ -625,8 +629,10 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">saveResults</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">footer</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Format and save the results.</span>
 
-<span class="sd">        filename -  Name of the save file.</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------------------------------</span>
+<span class="sd">        filename</span>
+<span class="sd">            Name of the save file.</span>
 <span class="sd">        header</span>
 <span class="sd">            A header to add to the output (default &quot;&quot;)</span>
 <span class="sd">        footer</span>

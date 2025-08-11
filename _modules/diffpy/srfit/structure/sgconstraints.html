@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.structure.sgconstraints &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.structure.sgconstraints &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -151,6 +151,7 @@
 <span class="sd">        Symbol for isotropic ADP (default &quot;Uiso&quot;). If None,</span>
 <span class="sd">        isotropic ADPs will be constrained via the anisotropic ADPs.</span>
 
+
 <span class="sd">    New Parameters that are used in constraints are created within a</span>
 <span class="sd">    SpaceGroupParameters object, which is returned from this function.</span>
 <span class="sd">    Constraints are created in ParameterSet that contains the constrained</span>
@@ -160,29 +161,28 @@
 <span class="sd">    The lattice constraints are applied as following.</span>
 
 <span class="sd">    Crystal System</span>
-<span class="sd">    --------------</span>
-<span class="sd">    Triclinic</span>
-<span class="sd">        No constraints.</span>
-<span class="sd">    Monoclinic</span>
-<span class="sd">        alpha and beta are fixed to 90 unless alpha != beta and</span>
-<span class="sd">        alpha == gamma, in which case alpha and gamma are fixed</span>
-<span class="sd">        to 90.</span>
-<span class="sd">    Orthorhombic</span>
-<span class="sd">        alpha, beta and gamma are fixed to 90.</span>
-<span class="sd">    Tetragonal</span>
-<span class="sd">        b is constrained to a and alpha, beta and gamma are</span>
-<span class="sd">        fixed to 90.</span>
-<span class="sd">    Trigonal</span>
-<span class="sd">        If gamma == 120, then b is constrained to a, alpha</span>
-<span class="sd">        and beta are fixed to 90 and gamma is fixed to 120.</span>
-<span class="sd">        Otherwise, b and c are constrained to a, beta and gamma</span>
-<span class="sd">        are fixed to alpha.</span>
-<span class="sd">    Hexagonal</span>
-<span class="sd">        b is constrained to a, alpha and beta are fixed to 90</span>
-<span class="sd">        and gamma is fixed to 120.</span>
-<span class="sd">    Cubic</span>
-<span class="sd">        b and c are constrained to a, and alpha, beta and</span>
-<span class="sd">        gamma are fixed to 90.</span>
+<span class="sd">        Triclinic</span>
+<span class="sd">            No constraints.</span>
+<span class="sd">        Monoclinic</span>
+<span class="sd">            alpha and beta are fixed to 90 unless alpha != beta and</span>
+<span class="sd">            alpha == gamma, in which case alpha and gamma are fixed</span>
+<span class="sd">            to 90.</span>
+<span class="sd">        Orthorhombic</span>
+<span class="sd">            alpha, beta and gamma are fixed to 90.</span>
+<span class="sd">        Tetragonal</span>
+<span class="sd">            b is constrained to a and alpha, beta and gamma are</span>
+<span class="sd">            fixed to 90.</span>
+<span class="sd">        Trigonal</span>
+<span class="sd">            If gamma == 120, then b is constrained to a, alpha</span>
+<span class="sd">            and beta are fixed to 90 and gamma is fixed to 120.</span>
+<span class="sd">            Otherwise, b and c are constrained to a, beta and gamma</span>
+<span class="sd">            are fixed to alpha.</span>
+<span class="sd">        Hexagonal</span>
+<span class="sd">            b is constrained to a, alpha and beta are fixed to 90</span>
+<span class="sd">            and gamma is fixed to 120.</span>
+<span class="sd">        Cubic</span>
+<span class="sd">            b and c are constrained to a, and alpha, beta and</span>
+<span class="sd">            gamma are fixed to 90.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure.spacegroups</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetSpaceGroup</span><span class="p">,</span> <span class="n">SpaceGroup</span>
@@ -866,7 +866,10 @@
 <span class="sd">    ns</span>
 <span class="sd">        namespace to draw extra names from (default {})</span>
 
-<span class="sd">    Returns the parameter if it is free.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    par</span>
+<span class="sd">        Returns the parameter if it is free.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">par</span> <span class="o">=</span> <span class="n">scatterer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parname</span><span class="p">)</span>
 

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.util package &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.util package &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -111,21 +111,9 @@ or file name.</p>
 or a string containing the input.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">in</span> <span class="pre">a</span> <span class="pre">string</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">IOError</span> <span class="pre">if</span> <span class="pre">the</span> <span class="pre">input</span> <span class="pre">is</span> <span class="pre">supected</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">a</span> <span class="pre">file</span> <span class="pre">name,</span> <span class="pre">but</span> <span class="pre">the</span> <span class="pre">file</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">cannot</span> <span class="pre">be</span> <span class="pre">found.</span></span></dt>
-<dd></dd></dl>
-
+<p>Returns the input in a string
+Raises IOError if the input is supected to be a file name, but the file
+cannot be found.</p>
 </dd></dl>
 
 </section>
@@ -260,11 +248,7 @@ KeyError will be thrown when a tag cannot be found.</p>
 <dd><p>Tags to apply to obj.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">TypeError</span> <span class="pre">if</span> <span class="pre">obj</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">hashable.</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises TypeError if obj is not hashable.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -298,16 +282,8 @@ KeyError will be thrown when a tag cannot be found.</p>
 tags will be removed from obj.</p>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Raises</span> <span class="pre">KeyError</span> <span class="pre">if</span> <span class="pre">a</span> <span class="pre">passed</span> <span class="pre">tag</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">apply</span> <span class="pre">to</span> <span class="pre">obj</span> <span class="pre">and</span> <span class="pre">self.silent</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">is</span> <span class="pre">False</span></span></dt>
-<dd></dd></dl>
-
+<p>Raises KeyError if a passed tag does not apply to obj and self.silent
+is False</p>
 </dd></dl>
 
 <dl class="py method">

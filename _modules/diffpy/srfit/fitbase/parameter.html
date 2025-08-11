@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.parameter &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.fitbase.parameter &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -153,6 +153,7 @@
 <span class="sd">            A flag inticating whether the Parameter is a constant (like</span>
 <span class="sd">            pi).</span>
 
+
 <span class="sd">        Raises ValueError if the name is not a valid attribute identifier</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constrained</span> <span class="o">=</span> <span class="kc">False</span>
@@ -177,7 +178,10 @@
 <span class="sd">            The upper bounds for the bounds list. If this is None</span>
 <span class="sd">            (default), then the upper bound will not be alterered.</span>
 
-<span class="sd">        Returns self so that mutators can be chained.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">            Returns self so that mutators can be chained.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Argument</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -198,7 +202,10 @@
 <span class="sd">            is not None, then the parameter will get a new value,</span>
 <span class="sd">            constant or otherwise.</span>
 
-<span class="sd">        Returns self so that mutators can be chained.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">            Returns self so that mutators can be chained.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">const</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -218,7 +225,10 @@
 <span class="sd">        ub</span>
 <span class="sd">            The upper bound for the bounds list.</span>
 
-<span class="sd">        Returns self so that mutators can be chained.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">            Returns self so that mutators can be chained.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">lb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">lb</span>
@@ -242,7 +252,10 @@
 <span class="sd">            value + ur. If this is None (default), then the value of the</span>
 <span class="sd">            lower radius is used.</span>
 
-<span class="sd">        Returns self so that mutators can be chained.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self</span>
+<span class="sd">            Returns self so that mutators can be chained.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
         <span class="n">lb</span> <span class="o">=</span> <span class="n">val</span> <span class="o">-</span> <span class="n">lr</span>
@@ -294,6 +307,7 @@
 <span class="sd">            The name of this ParameterProxy.</span>
 <span class="sd">        par</span>
 <span class="sd">            The Parameter this is a proxy for.</span>
+
 
 <span class="sd">        Raises ValueError if the name is not a valid attribute identifier</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -422,6 +436,7 @@
 <span class="sd">            The name of the attribute that contains the value of the</span>
 <span class="sd">            parameter. If attr is None (default), then both getter and</span>
 <span class="sd">            setter must be specified.</span>
+
 
 <span class="sd">        Raises ValueError if exactly one of getter or setter is not None, or if</span>
 <span class="sd">        getter, setter and attr are all None.</span>

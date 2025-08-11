@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.pdf.characteristicfunctions &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.pdf.characteristicfunctions &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -135,6 +135,7 @@
 <span class="sd">    psize</span>
 <span class="sd">        The particle diameter</span>
 
+
 <span class="sd">    From Kodama et al., Acta Cryst. A, 62, 444-453</span>
 <span class="sd">    (converted from radius to diameter)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -162,6 +163,7 @@
 <span class="sd">    erad</span>
 <span class="sd">        equatorial radius</span>
 
+
 <span class="sd">    erad &lt; prad equates to a prolate spheroid</span>
 <span class="sd">    erad &gt; prad equates to a oblate spheroid</span>
 <span class="sd">    erad == prad is a sphere</span>
@@ -187,6 +189,7 @@
 <span class="sd">        The equatorial diameter</span>
 <span class="sd">    axrat</span>
 <span class="sd">        The ratio of axis lengths</span>
+
 
 <span class="sd">    From Lei et al., Phys. Rev. B, 80, 024118 (2009)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -301,6 +304,7 @@
 <span class="sd">    psig</span>
 <span class="sd">        The log-normal width of the particle diameter</span>
 
+
 <span class="sd">    Here, r is the independent variable, mu is the mean of the distribution</span>
 <span class="sd">    (not of the particle size), and s is the width of the distribution. This is</span>
 <span class="sd">    the characteristic function for the lognormal distribution of particle</span>
@@ -358,6 +362,7 @@
 <span class="sd">    sthick</span>
 <span class="sd">        Thickness of nanosheet</span>
 
+
 <span class="sd">    From Kodama et al., Acta Cryst. A, 62, 444-453</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># handle zero or negative sthick.  make it work for scalars and arrays.</span>
@@ -390,6 +395,7 @@
 <span class="sd">    thickness</span>
 <span class="sd">        Thickness of shell</span>
 
+
 <span class="sd">    outer radius = radius + thickness</span>
 
 <span class="sd">    From Lei et al., Phys. Rev. B, 80, 024118 (2009)</span>
@@ -413,6 +419,7 @@
 <span class="sd">        Thickness of shell</span>
 
 <span class="sd">    outer radius = a + thickness/2</span>
+
 
 <span class="sd">    From Lei et al., Phys. Rev. B, 80, 024118 (2009)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -461,13 +468,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    _model</span>
 <span class="sd">        BaseModel object this adapts.</span>
-
-<span class="sd">    Managed Parameters:</span>
-<span class="sd">    These depend on the parameters of the BaseModel object held by _model. They</span>
-<span class="sd">    are created from the &#39;params&#39; attribute of the BaseModel. If a dispersion</span>
-<span class="sd">    is set for the BaseModel, the dispersion &quot;width&quot; will be accessible under</span>
-<span class="sd">    &quot;&lt;parname&gt;_width&quot;, where &lt;parname&gt; is the name a parameter adjusted by</span>
-<span class="sd">    dispersion.</span>
+<span class="sd">    Managed Parameters</span>
+<span class="sd">        These depend on the parameters of the BaseModel object held by _model.</span>
+<span class="sd">        They are created from the &#39;params&#39; attribute of the BaseModel. If a</span>
+<span class="sd">        dispersion is set for the BaseModel, the dispersion &quot;width&quot; will be</span>
+<span class="sd">        accessible under &quot;&lt;parname&gt;_width&quot;, where &lt;parname&gt; is the name a</span>
+<span class="sd">        parameter adjusted by dispersion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>

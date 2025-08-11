@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.recipeorganizer &mdash; diffpy.srfit 3.2.0rc1 documentation</title>
+  <title>diffpy.srfit.fitbase.recipeorganizer &mdash; diffpy.srfit 3.2.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=d76bbf69"></script>
+      <script src="../../../../_static/documentation_options.js?v=f7da2582"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -343,6 +343,7 @@
 <span class="sd">            If True (default), a ValueError is raised an object of the</span>
 <span class="sd">            given name already exists.</span>
 
+
 <span class="sd">        Raises ValueError if the object has no name.</span>
 <span class="sd">        Raises ValueError if the object has the same name as some other managed</span>
 <span class="sd">        object.</span>
@@ -405,6 +406,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        obj</span>
 <span class="sd">            The object to find.</span>
+
 
 <span class="sd">        Returns a list of objects. The first member of the list is this object,</span>
 <span class="sd">        and each subsequent member is a sub-object of the previous one.  The</span>
@@ -498,6 +500,7 @@
 <span class="sd">    values</span>
 <span class="sd">        Variable values (read only). See getValues.</span>
 
+
 <span class="sd">    Raises ValueError if the name is not a valid attribute identifier</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -537,6 +540,7 @@
 <span class="sd">        check</span>
 <span class="sd">            If True (default), a ValueError is raised a Parameter of</span>
 <span class="sd">            the specified name has already been inserted.</span>
+
 
 <span class="sd">        Raises ValueError if the Parameter has no name.</span>
 <span class="sd">        Raises ValueError if the Parameter has the same name as a contained</span>
@@ -628,9 +632,11 @@
 <span class="sd">            If this is None (default), then the argument names will</span>
 <span class="sd">            be extracted from the function.</span>
 
+
 <span class="sd">        Note that name and argnames can be extracted from regular python</span>
 <span class="sd">        functions (of type &#39;function&#39;), bound class methods and callable</span>
 <span class="sd">        classes.</span>
+
 
 <span class="sd">        Raises TypeError if name or argnames cannot be automatically</span>
 <span class="sd">        extracted.</span>
@@ -732,6 +738,7 @@
 <span class="sd">            used in fstr, but not part of the FitRecipe (default</span>
 <span class="sd">            {}).</span>
 
+
 <span class="sd">        Raises ValueError if ns uses a name that is already used for another</span>
 <span class="sd">        managed object.</span>
 <span class="sd">        Raises ValueError if the function name is the name of another managed</span>
@@ -767,6 +774,7 @@
 <span class="sd">            A dictionary of Parameters, indexed by name, that are</span>
 <span class="sd">            used in fstr, but not part of the FitRecipe (default {}).</span>
 
+
 <span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
 <span class="sd">        variable.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -798,6 +806,7 @@
 <span class="sd">        ns</span>
 <span class="sd">            A dictionary of Parameters, indexed by name, that are used</span>
 <span class="sd">            in the parameter, but not part of this object (default {}).</span>
+
 
 <span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
 <span class="sd">        variable.</span>
@@ -922,6 +931,7 @@
 <span class="sd">            Recurse into managed objects and clear all constraints</span>
 <span class="sd">            found there as well.</span>
 
+
 <span class="sd">        This removes constraints that are held in this organizer, no matter</span>
 <span class="sd">        where the constrained parameters are from.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -958,10 +968,12 @@
 <span class="sd">            in the equation string, but not part of the RecipeOrganizer</span>
 <span class="sd">            (default {}).</span>
 
+
 <span class="sd">        The penalty is calculated as</span>
 <span class="sd">        (max(0, lb - val, val - ub)/sig)**2</span>
 <span class="sd">        and val is the value of the calculated equation.  This is multiplied by</span>
 <span class="sd">        the average chi^2 if scaled is True.</span>
+
 
 <span class="sd">        Raises ValueError if ns uses a name that is already used for a</span>
 <span class="sd">        Parameter.</span>
@@ -1260,6 +1272,7 @@
 <span class="sd">    argkw</span>
 <span class="sd">        Key word dictionary to pass to the argclass constructor</span>
 <span class="sd">        (default {}).</span>
+
 
 <span class="sd">    Raises ValueError if ns uses a name that is already defined in the factory.</span>
 <span class="sd">    Raises ValueError if the equation has undefined parameters.</span>

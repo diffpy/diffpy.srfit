@@ -221,7 +221,7 @@ def test_setQmax(diffpy_structure_available, diffpy_srreal_available):
     from diffpy.structure import Structure
 
     if not diffpy_srreal_available:
-        pytest.skip("diffpy.structure package not available")
+        pytest.skip("diffpy.srreal package not available")
 
     pc = PDFContribution("pdf")
     pc.setQmax(21)
@@ -240,7 +240,7 @@ def test_getQmax(diffpy_structure_available, diffpy_srreal_available):
     from diffpy.structure import Structure
 
     if not diffpy_srreal_available:
-        pytest.skip("diffpy.structure package not available")
+        pytest.skip("diffpy.srreal package not available")
 
     # cover all code branches in PDFContribution._getMetaValue
     # (1) contribution metadata
@@ -269,7 +269,7 @@ def test_savetxt(
     from diffpy.structure import Structure
 
     if not diffpy_srreal_available:
-        pytest.skip("diffpy.structure package not available")
+        pytest.skip("diffpy.srreal package not available")
 
     pc = PDFContribution("pdf")
     pc.loadData(datafile("si-q27r60-xray.gr"))
@@ -295,7 +295,7 @@ def test_pickling(
     from diffpy.structure import loadStructure
 
     if not diffpy_srreal_available:
-        pytest.skip("diffpy.structure package not available")
+        pytest.skip("diffpy.srreal package not available")
 
     pc = PDFContribution("pdf")
     pc.loadData(datafile("ni-q27r100-neutron.gr"))

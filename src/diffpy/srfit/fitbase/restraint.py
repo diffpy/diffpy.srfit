@@ -47,6 +47,7 @@ class Restraint(Validatable):
         the unrestrained point-average chi^2 (chi^2/numpoints)
         (default False).
 
+
     The penalty is calculated as
     (max(0, lb - val, val - ub)/sig)**2
     and val is the value of the calculated equation.  This is multiplied by the
@@ -90,7 +91,10 @@ class Restraint(Validatable):
             The point-average chi^2 which is optionally used to scale the
             penalty (default 1.0).
 
-        Returns the penalty as a float
+        Returns
+        -------
+        penalty
+            Returns the penalty as a float
         """
         val = self.eq()
         penalty = (max(0, self.lb - val, val - self.ub) / self.sig) ** 2

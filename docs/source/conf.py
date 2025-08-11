@@ -69,6 +69,16 @@ source_suffix = [".rst", ".md"]
 # The master toctree document.
 master_doc = "index"
 
+napoleon_custom_sections = [
+    ("Managed Parameters", "Attributes"),
+    ("Usable Metadata", "Attributes"),
+    ("General Metadata", "Attributes"),
+    ("Metadata", "Attributes"),
+    ("Properties", "Attributes"),
+    ("Operator Attributes", "Attributes"),
+    ("Managed ParameterSets", "Attributes"),
+]
+
 # General information about the project.
 project = "diffpy.srfit"
 copyright = "%Y, The Trustees of Columbia University in the City of New York"

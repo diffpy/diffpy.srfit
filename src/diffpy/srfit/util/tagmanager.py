@@ -60,6 +60,7 @@ class TagManager(object):
         *tags
             Tags to apply to obj.
 
+
         Raises TypeError if obj is not hashable.
         """
         for tag in tags:
@@ -77,6 +78,7 @@ class TagManager(object):
         *tags
             Tags to remove from obj. If this is empty, then all
             tags will be removed from obj.
+
 
         Raises KeyError if a passed tag does not apply to obj and self.silent
         is False

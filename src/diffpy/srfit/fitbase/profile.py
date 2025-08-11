@@ -319,7 +319,14 @@ class Profile(Observable, Validatable):
         Raises ValueError if the call to numpy.loadtxt returns fewer
         than 2 arrays.
 
-        Returns the x, y and dy arrays loaded from the file
+        Returns
+        -------
+        x
+            x array loaded from the file.
+        y
+            y array loaded from the file.
+        dy
+            dy array loaded from the file.
         """
         if len(args) == 8 and not args[-1]:
             args = list(args)
@@ -423,9 +430,13 @@ def rebinArray(A, xold, xnew):
     xnew
         New sampling array
 
+
     This uses cubic spline interpolation.
 
-    Returns: A new array over the new sampling array.
+    Returns
+    -------
+    array
+        A new array over the new sampling array.
     """
     if numpy.array_equal(xold, xnew):
         return A

@@ -187,6 +187,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         index
             Index of FitHook instance to remove (default -1).
 
+
         Raises ValueError if fithook is not None, but is not present in the
         sequence.
         Raises IndexError if the sequence is empty or index is out of range.
@@ -214,6 +215,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         con
             The FitContribution to be stored.
 
+
         Raises ValueError if the FitContribution has no name
         Raises ValueError if the FitContribution has the same name as some
         other managed object.
@@ -235,6 +237,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ----------
         parset
             The ParameterSet to be stored.
+
 
         Raises ValueError if the ParameterSet has no name.
         Raises ValueError if the ParameterSet has the same name as some other
@@ -506,7 +509,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             A list of tags (default []). Both tag and tags can be
             applied.
 
-        Returns the ParameterProxy (variable) for the passed Parameter.
+
+        Returns
+        -------
+        vars
+            ParameterProxy (variable) for the passed Parameter.
+
 
         Raises ValueError if the name of the variable is already taken by
         another managed object.
@@ -548,6 +556,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ----------
         var
             A variable of the FitRecipe.
+
 
         Raises ValueError if var is not part of the FitRecipe.
         """
@@ -591,6 +600,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         tags
             A list of tags (default []). Both tag and tags can be
             applied.
+
 
         Returns the new variable (Parameter instance).
         """
@@ -797,6 +807,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ns
             A dictionary of Parameters, indexed by name, that are used
             in the eqstr, but not part of this object (default {}).
+
 
         Raises ValueError if ns uses a name that is already used for a
         variable.

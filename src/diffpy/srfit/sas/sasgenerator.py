@@ -32,12 +32,12 @@ class SASGenerator(ProfileGenerator):
     _model
         BaseModel object this adapts.
 
-    Managed Parameters:
-    These depend on the parameters of the BaseModel object held by _model. They
-    are created from the 'params' attribute of the BaseModel. If a dispersion
-    is set for the BaseModel, the dispersion "width" will be accessible under
-    "<parname>_width", where <parname> is the name a parameter adjusted by
-    dispersion.
+    Managed Parameters
+        These depend on the parameters of the BaseModel object held by _model.
+        They are created from the 'params' attribute of the BaseModel. If a
+        dispersion is set for the BaseModel, the dispersion "width" will be
+        accessible under "<parname>_width", where <parname> is the name a
+        parameter adjusted by dispersion.
     """
 
     def __init__(self, name, model):

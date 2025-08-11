@@ -57,9 +57,9 @@ class DebyePDFGenerator(BasePDFGenerator):
     qdamp
         Resolution peak dampening term
 
-    Managed ParameterSets:
-    The structure ParameterSet (SrRealStructure instance) used to calculate the
-    profile is named by the user.
+    Managed ParameterSets
+        The structure ParameterSet (SrRealStructure instance) used to calculate
+        the profile is named by the user.
 
     Usable Metadata
     ---------------

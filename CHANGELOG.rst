@@ -4,6 +4,20 @@ Release notes
 
 .. current developments
 
+3.2.0
+=====
+
+**Changed:**
+
+* Temporarily removed support for SAS characteristic functions until we can migrate to the new sasview api.
+* doc/ -> docs/
+* requirements/test.txt -> requirements/tests.txt
+
+**Fixed:**
+
+* Better license designation in `pyproject.toml`
+
+
 3.1.0
 =====
 

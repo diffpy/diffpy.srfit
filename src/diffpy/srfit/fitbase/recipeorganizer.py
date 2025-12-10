@@ -959,7 +959,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     # For printing the configured recipe to screen
 
-    def _formatManaged(self, prefix=""):
+    def _format_managed(self, prefix=""):
         """Format hierarchy of managed parameters for showing.
 
         Parameters
@@ -985,14 +985,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             )
         # Recurse into managed objects.
         for obj in self._iter_managed():
-            if hasattr(obj, "_formatManaged"):
+            if hasattr(obj, "_format_managed"):
                 oprefix = prefix + obj.name + "."
-                tlines = obj._formatManaged(prefix=oprefix)
+                tlines = obj._format_managed(prefix=oprefix)
                 lines.extend([""] if lines and tlines else [])
                 lines.extend(tlines)
         return lines
 
-    def _formatConstraints(self):
+    def _format_constraints(self):
         """Format constraints for showing.
 
         This collects constraints on all levels of the hierarchy and displays
@@ -1061,7 +1061,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         _pmatch_with_re = partial(_pmatch, regexp=regexp)
         # Show sub objects and their parameters
         lines = []
-        tlines = self._formatManaged()
+        tlines = self._format_managed()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
             linesok = filter(_pmatch_with_re, tlines)
@@ -1076,7 +1076,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # FIXME - parameter names in equations not particularly informative
         # Show constraints
         cmatch = regexp.search
-        tlines = self._formatConstraints()
+        tlines = self._format_constraints()
         if tlines:
             if lines:
                 lines.append("")

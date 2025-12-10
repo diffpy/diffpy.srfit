@@ -351,13 +351,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             fithook.reset(self)
 
         # Check Profiles
-        self.__verifyProfiles()
+        self.__verify_profiles()
 
         # Check parameters
-        self.__verifyParameters()
+        self.__verify_parameters()
 
         # Update constraints and restraints.
-        self.__collectConstraintsAndRestraints()
+        self.__collect_constraints_and_restraints()
 
         # We do this here so that the calculations that take place during the
         # validation use the most current values of the parameters. In most
@@ -372,7 +372,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def __verifyProfiles(self):
+    def __verify_profiles(self):
         """Verify that each FitContribution has a Profile."""
         # Check for profile values
         for con in self._contributions.values():
@@ -389,7 +389,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 raise AttributeError(m)
         return
 
-    def __verifyParameters(self):
+    def __verify_parameters(self):
         """Verify that all Parameters have values."""
 
         # Get all parameters with a value of None
@@ -421,7 +421,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def __collectConstraintsAndRestraints(self):
+    def __collect_constraints_and_restraints(self):
         """Collect the Constraints and Restraints from subobjects."""
         from functools import cmp_to_key
         from itertools import chain

@@ -462,7 +462,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         for par in pars:
             # FIXME - the original parameter will still appear as
             # constrained.
-            newpar = self.__addPar(par.name, par)
+            newpar = self.__add_par(par.name, par)
             self._latpars.addParameter(newpar)
 
         return
@@ -494,7 +494,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             name, idx = pname.rsplit("_", 1)
             idx = int(idx)
             par = scatterers[idx].get(name)
-            newpar = self.__addPar(pname, par)
+            newpar = self.__add_par(pname, par)
             self._xyzpars.addParameter(newpar)
 
         # Constrain non-free xyz parameters
@@ -580,13 +580,13 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 par = scatterer.get(isosymbol)
                 if par is not None:
                     parname = "%s_%i" % (isosymbol, idx)
-                    newpar = self.__addPar(parname, par)
+                    newpar = self.__add_par(parname, par)
                     self._adppars.addParameter(newpar)
                     isonames.append(newpar.name)
             else:
                 par = scatterer.get(name)
                 if par is not None:
-                    newpar = self.__addPar(pname, par)
+                    newpar = self.__add_par(pname, par)
                     self._adppars.addParameter(newpar)
 
         # Constrain dependent isotropics
@@ -613,7 +613,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     pname, formula, scatterer, idx, self._parameters
                 )
 
-    def __addPar(self, parname, par):
+    def __add_par(self, parname, par):
         """Constrain a parameter via proxy with a specified name.
 
         Attributes

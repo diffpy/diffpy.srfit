@@ -351,7 +351,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         return
 
     def testGetRestraints(self):
-        """Test the _getRestraints method."""
+        """Test the _get_restraints method."""
         m2 = RecipeOrganizer("m2")
         self.m._organizers = {}
         self.m._manage(self.m._organizers)
@@ -371,7 +371,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         r1 = self.m.restrain("p1 + p2")
         r2 = m2.restrain("2*p3 + p4")
 
-        res = self.m._getRestraints()
+        res = self.m._get_restraints()
         self.assertTrue(r1 in res)
         self.assertTrue(r2 in res)
         self.assertEqual(2, len(res))

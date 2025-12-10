@@ -374,7 +374,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     Restraints, as well as Equations that can be used in Constraint and
     Restraint equations.  These constraints and Restraints can be placed at any
     level and a flattened list of them can be retrieved with the
-    _get_constraints and _getRestraints methods.
+    _get_constraints and _get_restraints methods.
 
     Attributes
     ----------
@@ -932,7 +932,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return constraints
 
-    def _getRestraints(self, recurse=True):
+    def _get_restraints(self, recurse=True):
         """Get the Restraints for this and embedded ParameterSets.
 
         This returns a set of Restraint objects.
@@ -940,7 +940,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         restraints = set(self._restraints)
         if recurse:
             for m in filter(_has_get_restraints, self._iter_managed()):
-                restraints.update(m._getRestraints(recurse))
+                restraints.update(m._get_restraints(recurse))
 
         return restraints
 
@@ -1029,7 +1029,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             List of formatted lines displaying the defined restraints.
             Return empty list when no restraints were defined.
         """
-        rset = self._getRestraints()
+        rset = self._get_restraints()
         rlines = []
         for res in rset:
             line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s" % (
@@ -1165,7 +1165,7 @@ def _has_clear_restraints(msg):
 
 
 def _has_get_restraints(msg):
-    return hasattr(msg, "_getRestraints")
+    return hasattr(msg, "_get_restraints")
 
 
 def _has_get_constraints(msg):

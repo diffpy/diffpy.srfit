@@ -479,7 +479,7 @@ class BaseBuilder(object):
         opbuilder.literal = op
         return opbuilder
 
-    def __evalUnary(self, OperatorClass):
+    def __eval_unary(self, OperatorClass):
         """Evaluate a unary function."""
         op = OperatorClass()
         op.addLiteral(self.literal)
@@ -536,7 +536,7 @@ class BaseBuilder(object):
         return self.__eval_binary(other, literals.RemainderOperator, False)
 
     def __neg__(self):
-        return self.__evalUnary(literals.NegationOperator)
+        return self.__eval_unary(literals.NegationOperator)
 
 
 # These are used by the class.

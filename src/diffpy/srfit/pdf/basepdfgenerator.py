@@ -108,7 +108,7 @@ class BasePDFGenerator(ProfileGenerator):
 
     _parnames = ["delta1", "delta2", "qbroad", "scale", "qdamp"]
 
-    def _setCalculator(self, calc):
+    def _set_calculator(self, calc):
         """Set the SrReal calculator instance.
 
         Setting the calculator creates Parameters from the variable

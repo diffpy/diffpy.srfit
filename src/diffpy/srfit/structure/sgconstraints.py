@@ -718,7 +718,7 @@ def _constrain_trigonal(lattice):
     return
 
 
-def _constrainHexagonal(lattice):
+def _constrain_hexagonal(lattice):
     """Make constraints for Hexagonal systems.
 
     b is constrained to a, alpha and beta are constrained to 90 and
@@ -762,7 +762,7 @@ _constraintMap = {
     "Orthorhombic": _constrain_orthorhombic,
     "Tetragonal": _constrain_tetragonal,
     "Trigonal": _constrain_trigonal,
-    "Hexagonal": _constrainHexagonal,
+    "Hexagonal": _constrain_hexagonal,
     "Cubic": _constrainCubic,
 }
 

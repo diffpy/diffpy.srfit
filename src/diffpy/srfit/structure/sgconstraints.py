@@ -317,7 +317,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             or self._xyzpars is None
             or self._adppars is None
         ):
-            self._makeConstraints()
+            self._make_constraints()
         return RecipeContainer.__iter__(self)
 
     latpars = property(lambda self: self._get_lat_pars())
@@ -352,7 +352,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             self._constrainADPs(positions)
         return self._adppars
 
-    def _makeConstraints(self):
+    def _make_constraints(self):
         """Constrain the structure to the space group.
 
         This works as described by the constrainAsSpaceGroup method.

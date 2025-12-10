@@ -200,7 +200,7 @@ class FitResults(object):
         Jacobian using the singular value decomposition.
         """
         try:
-            J = self._calculateJacobian()
+            J = self._calculate_jacobian()
             u, s, vh = numpy.linalg.svd(J, 0)
             self.cov = numpy.dot(vh.T.conj() / s**2, vh)
         except numpy.linalg.LinAlgError:
@@ -209,7 +209,7 @@ class FitResults(object):
             self.cov = numpy.zeros((lvarvals, lvarvals), dtype=float)
         return
 
-    def _calculateJacobian(self):
+    def _calculate_jacobian(self):
         """Calculate the Jacobian for the fitting.
 
         Adapted from PARK. Returns the derivative wrt the fit variables

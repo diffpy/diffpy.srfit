@@ -359,7 +359,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         """
 
         # Start by clearing the constraints
-        self._clearConstraints()
+        self._clear_constraints()
 
         scatterers = self.scatterers
 
@@ -375,7 +375,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         return
 
-    def _clearConstraints(self):
+    def _clear_constraints(self):
         """Clear old constraints.
 
         This only clears constraints where new ones are going to be

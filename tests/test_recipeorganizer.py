@@ -245,18 +245,18 @@ class TestRecipeOrganizer(unittest.TestCase):
         m._add_parameter(p1)
 
         # Check for bad remove
-        self.assertRaises(ValueError, m._removeParameter, p2)
+        self.assertRaises(ValueError, m._remove_parameter, p2)
 
         # Remove p1
-        m._removeParameter(p1)
+        m._remove_parameter(p1)
         self.assertTrue(p1.name not in m._eqfactory.builders)
 
         # Try to remove it again
-        self.assertRaises(ValueError, m._removeParameter, p1)
+        self.assertRaises(ValueError, m._remove_parameter, p1)
 
         # Try to remove a RecipeContainer
         c = RecipeContainer("test")
-        self.assertRaises(ValueError, m._removeParameter, c)
+        self.assertRaises(ValueError, m._remove_parameter, c)
         return
 
     def testConstrain(self):

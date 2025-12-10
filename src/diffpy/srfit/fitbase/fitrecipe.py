@@ -561,7 +561,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if var is not part of the FitRecipe.
         """
 
-        self._removeParameter(var)
+        self._remove_parameter(var)
         self._tagmanager.untag(var)
         return
 

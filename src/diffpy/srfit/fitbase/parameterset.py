@@ -85,7 +85,7 @@ class ParameterSet(RecipeOrganizer):
     # Alias Parameter accessors.
     addParameter = RecipeOrganizer._add_parameter
     newParameter = RecipeOrganizer._new_parameter
-    removeParameter = RecipeOrganizer._removeParameter
+    removeParameter = RecipeOrganizer._remove_parameter
 
     def addParameterSet(self, parset):
         """Add a ParameterSet to the hierarchy.

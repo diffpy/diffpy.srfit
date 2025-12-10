@@ -210,7 +210,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         general way.
         """
         if name in self._parameters:
-            self._removeParameter(self._parameters[name])
+            self._remove_parameter(self._parameters[name])
             return
 
         m = self.get(name)
@@ -458,7 +458,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._eqfactory.registerArgument(par.name, par)
         return
 
-    def _removeParameter(self, par):
+    def _remove_parameter(self, par):
         """Remove a parameter.
 
         This de-registers the Parameter with the _eqfactory. The

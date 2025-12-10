@@ -112,7 +112,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         self.__managed.append(d)
         return
 
-    def _iterManaged(self):
+    def _iter_managed(self):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
@@ -326,7 +326,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         if obj is self:
             return loc
 
-        for m in self._iterManaged():
+        for m in self._iter_managed():
 
             # Check locally for the object
             if m is obj:
@@ -359,7 +359,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         Raises AttributeError if validation fails.
         """
-        iterable = chain(self.__iter__(), self._iterManaged())
+        iterable = chain(self.__iter__(), self._iter_managed())
         self._validateOthers(iterable)
         return
 
@@ -817,7 +817,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self.unconstrain(*self._constraints)
 
         if recurse:
-            for m in filter(_has_clear_constraints, self._iterManaged()):
+            for m in filter(_has_clear_constraints, self._iter_managed()):
                 m.clearConstraints(recurse)
         return
 
@@ -917,7 +917,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         self.unrestrain(*self._restraints)
         if recurse:
-            for msg in filter(_has_clear_restraints, self._iterManaged()):
+            for msg in filter(_has_clear_restraints, self._iter_managed()):
                 msg.clearRestraints(recurse)
         return
 
@@ -925,7 +925,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Get the constrained Parameters for this and managed sub-objects."""
         constraints = {}
         if recurse:
-            for m in filter(_has_get_constraints, self._iterManaged()):
+            for m in filter(_has_get_constraints, self._iter_managed()):
                 constraints.update(m._getConstraints(recurse))
 
         constraints.update(self._constraints)
@@ -939,7 +939,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         restraints = set(self._restraints)
         if recurse:
-            for m in filter(_has_get_restraints, self._iterManaged()):
+            for m in filter(_has_get_restraints, self._iter_managed()):
                 restraints.update(m._getRestraints(recurse))
 
         return restraints
@@ -984,7 +984,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 for n, p in self._parameters.items()
             )
         # Recurse into managed objects.
-        for obj in self._iterManaged():
+        for obj in self._iter_managed():
             if hasattr(obj, "_formatManaged"):
                 oprefix = prefix + obj.name + "."
                 tlines = obj._formatManaged(prefix=oprefix)

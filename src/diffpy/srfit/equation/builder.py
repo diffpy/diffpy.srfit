@@ -165,7 +165,7 @@ class EquationFactory(object):
 
         Returns a callable Literal representing the equation string.
         """
-        self._prepareBuilders(eqstr, buildargs, argclass, argkw)
+        self._prepare_builders(eqstr, buildargs, argclass, argkw)
         beq = eval(eqstr, {}, self.builders)
         # handle scalar numbers or numpy arrays
         if isinstance(beq, (numbers.Number, numpy.ndarray)):
@@ -301,7 +301,7 @@ class EquationFactory(object):
         eq.setRoot(nan)
         return
 
-    def _prepareBuilders(self, eqstr, buildargs, argclass, argkw):
+    def _prepare_builders(self, eqstr, buildargs, argclass, argkw):
         """Prepare builders so that equation string can be evaluated.
 
         This method checks the equation string for errors and missing

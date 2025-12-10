@@ -105,7 +105,7 @@ def test_ObjCryst_constrain_space_group(pyobjcryst_available):
     return
 
 
-def test_DiffPy_constrainAsSpaceGroup(datafile, pyobjcryst_available):
+def test_DiffPy_constrain_as_space_group(datafile, pyobjcryst_available):
     """Test the constrainAsSpaceGroup function."""
     if not pyobjcryst_available:
         pytest.skip("pyobjcrysta package not available")
@@ -178,7 +178,7 @@ def test_DiffPy_constrainAsSpaceGroup(datafile, pyobjcryst_available):
     return
 
 
-def test_ConstrainAsSpaceGroup_args(pyobjcryst_available, datafile):
+def test_constrain_as_space_group_args(pyobjcryst_available, datafile):
     """Test the arguments processing of constrainAsSpaceGroup function."""
     if not pyobjcryst_available:
         pytest.skip("pyobjcrysta package not available")

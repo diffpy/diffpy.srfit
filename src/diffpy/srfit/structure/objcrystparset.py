@@ -1771,12 +1771,14 @@ class ObjCrystCrystalParSet(SrRealParSet):
         if self._sgpars is not None:
             return self._sgpars
         sg = self._create_space_group(self.stru.GetSpaceGroup())
-        from diffpy.srfit.structure.sgconstraints import _constrainAsSpaceGroup
+        from diffpy.srfit.structure.sgconstraints import (
+            _constrain_as_space_group,
+        )
 
         adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
         isosymbol = "Biso"
         sgoffset = [0, 0, 0]
-        self._sgpars = _constrainAsSpaceGroup(
+        self._sgpars = _constrain_as_space_group(
             self,
             sg,
             self.scatterers,

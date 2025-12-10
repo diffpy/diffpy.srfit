@@ -108,7 +108,7 @@ def constrainAsSpaceGroup(
     sg = spacegroup
     if not isinstance(spacegroup, SpaceGroup):
         sg = GetSpaceGroup(spacegroup)
-    sgp = _constrainAsSpaceGroup(
+    sgp = _constrain_as_space_group(
         phase,
         sg,
         scatterers,
@@ -122,7 +122,7 @@ def constrainAsSpaceGroup(
     return sgp
 
 
-def _constrainAsSpaceGroup(
+def _constrain_as_space_group(
     phase,
     sg,
     scatterers=None,

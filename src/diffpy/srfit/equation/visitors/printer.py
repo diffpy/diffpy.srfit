@@ -87,7 +87,7 @@ class Printer(Visitor):
         """Process an Operator node."""
         # We have to deal with infix operators
         if op.name != op.symbol and op.nin == 2:
-            self._onInfix(op)
+            self._on_infix(op)
             return self.output
 
         self.output += str(op.name) + "("
@@ -111,7 +111,7 @@ class Printer(Visitor):
             eq.root.identify(self)
         return self.output
 
-    def _onInfix(self, op):
+    def _on_infix(self, op):
         """Process infix operators."""
         self.output += "("
         op.args[0].identify(self)

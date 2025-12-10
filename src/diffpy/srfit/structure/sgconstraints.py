@@ -349,7 +349,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             xyz = [scatterer.x, scatterer.y, scatterer.z]
             positions.append([p.value for p in xyz])
         if self._adppars is None:
-            self._constrainADPs(positions)
+            self._constrain_adps(positions)
         return self._adppars
 
     def _make_constraints(self):
@@ -371,7 +371,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         self._constrain_lattice()
         self._constrain_xyzs(positions)
-        self._constrainADPs(positions)
+        self._constrain_adps(positions)
 
         return
 
@@ -482,7 +482,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         sgoffset = self.sgoffset
 
         # We do this without ADPs here so we can skip much complication. See
-        # the _constrainADPs method for details.
+        # the _constrain_adps method for details.
         g = SymmetryConstraints(sg, positions, sgoffset=sgoffset)
 
         scatterers = self.scatterers
@@ -510,7 +510,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         return
 
-    def _constrainADPs(self, positions):
+    def _constrain_adps(self, positions):
         """Constrain the ADPs.
 
         Attributes

@@ -320,9 +320,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             self._makeConstraints()
         return RecipeContainer.__iter__(self)
 
-    latpars = property(lambda self: self._getLatPars())
+    latpars = property(lambda self: self._get_lat_pars())
 
-    def _getLatPars(self):
+    def _get_lat_pars(self):
         """Accessor for _latpars."""
         if self._latpars is None:
             self._constrainLattice()

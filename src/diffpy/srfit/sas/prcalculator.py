@@ -82,10 +82,10 @@ class PrCalculator(Calculator):
 
         self._invertor = Invertor()
 
-        self._newParameter("scale", 1)
-        self._newParameter("q", None)
-        self._newParameter("iq", None)
-        self._newParameter("diq", None)
+        self._new_parameter("scale", 1)
+        self._new_parameter("q", None)
+        self._new_parameter("iq", None)
+        self._new_parameter("diq", None)
         return
 
     def __call__(self, r):

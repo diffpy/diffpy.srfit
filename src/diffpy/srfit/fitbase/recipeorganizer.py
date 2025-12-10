@@ -420,7 +420,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     # Parameter management
 
-    def _newParameter(self, name, value, check=True):
+    def _new_parameter(self, name, value, check=True):
         """Add a new Parameter to the container.
 
         This creates a new Parameter and adds it to the container using
@@ -501,7 +501,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         for pname in argnames:
             if pname not in self._eqfactory.builders:
-                par = self._newParameter(pname, 0)
+                par = self._new_parameter(pname, 0)
             else:
                 par = self.get(pname)
             f.addLiteral(par)
@@ -598,7 +598,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # Make missing Parameters
         for pname in argnames:
             if pname not in self._eqfactory.builders:
-                self._newParameter(pname, 0)
+                self._new_parameter(pname, 0)
 
         # Initialize and register
         from diffpy.srfit.fitbase.calculator import Calculator

@@ -189,10 +189,10 @@ class TestRecipeOrganizer(unittest.TestCase):
         m._addParameter(p1)
 
         # Test duplication of Parameters
-        self.assertRaises(ValueError, m._newParameter, "p1", 0)
+        self.assertRaises(ValueError, m._new_parameter, "p1", 0)
 
         # Add a new Parameter
-        p2 = m._newParameter("p2", 0)
+        p2 = m._new_parameter("p2", 0)
         self.assertTrue(p2 is m.p2)
         return
 
@@ -262,8 +262,8 @@ class TestRecipeOrganizer(unittest.TestCase):
     def testConstrain(self):
         """Test the constrain method."""
 
-        p1 = self.m._newParameter("p1", 1)
-        p2 = self.m._newParameter("p2", 2)
+        p1 = self.m._new_parameter("p1", 1)
+        p2 = self.m._new_parameter("p2", 2)
         p3 = Parameter("p3", 3)
 
         self.assertFalse(p1.constrained)
@@ -483,7 +483,7 @@ class TestRecipeOrganizer(unittest.TestCase):
             self.assertTrue(p in self.m._parameters.values())
 
         # Add a parameter
-        self.m._newParameter("y", 3.0)
+        self.m._new_parameter("y", 3.0)
 
         # Make sure that x and y are in the organizer
         self.assertEqual(0, self.m.x.getValue())
@@ -512,7 +512,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def test_releaseOldEquations(self):
         """Verify EquationFactory does not hold temporary equations."""
-        self.m._newParameter("x", 12)
+        self.m._new_parameter("x", 12)
         self.assertEqual(36, self.m.evaluateEquation("3 * x"))
         self.assertEqual(0, len(self.m._eqfactory.equations))
         return
@@ -530,15 +530,15 @@ def test_show(capturestdout):
         return rv
 
     assert "" == capture_show()
-    organizer._newParameter("x", 1)
-    organizer._newParameter("y", 2)
+    organizer._new_parameter("x", 1)
+    organizer._new_parameter("y", 2)
     out1 = capture_show()
     lines1 = out1.strip().split("\n")
     assert 4 == len(lines1)
     assert "Parameters" in lines1
     assert "Constraints" not in lines1
     assert "Restraints" not in lines1
-    organizer._newParameter("z", 7)
+    organizer._new_parameter("z", 7)
     organizer.constrain("y", "3 * z")
     out2 = capture_show()
     lines2 = out2.strip().split("\n")
@@ -560,7 +560,7 @@ def test_show(capturestdout):
     assert out3 == out5
     # check output with another level of hierarchy
     organizer._addObject(RecipeOrganizer("foo"), organizer._containers)
-    organizer.foo._newParameter("bar", 13)
+    organizer.foo._new_parameter("bar", 13)
     out6 = capture_show()
     assert "foo.bar" in out6
     # filter out foo.bar

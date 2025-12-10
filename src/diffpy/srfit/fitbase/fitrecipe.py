@@ -605,7 +605,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns the new variable (Parameter instance).
         """
         # This will fix the Parameter
-        var = self._newParameter(name, value)
+        var = self._new_parameter(name, value)
 
         # We may explicitly free it
         if not fixed:
@@ -618,12 +618,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return var
 
-    def _newParameter(self, name, value, check=True):
+    def _new_parameter(self, name, value, check=True):
         """Overloaded to tag variables.
 
-        See RecipeOrganizer._newParameter
+        See RecipeOrganizer._new_parameter
         """
-        par = RecipeOrganizer._newParameter(self, name, value, check)
+        par = RecipeOrganizer._new_parameter(self, name, value, check)
         # tag this
         self._tagmanager.tag(par, par.name)
         self._tagmanager.tag(par, "all")

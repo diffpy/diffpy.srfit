@@ -84,7 +84,7 @@ class ParameterSet(RecipeOrganizer):
 
     # Alias Parameter accessors.
     addParameter = RecipeOrganizer._addParameter
-    newParameter = RecipeOrganizer._newParameter
+    newParameter = RecipeOrganizer._new_parameter
     removeParameter = RecipeOrganizer._removeParameter
 
     def addParameterSet(self, parset):

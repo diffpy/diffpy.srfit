@@ -110,7 +110,7 @@ def make_args():
 
 @pytest.fixture(scope="session")
 def noObserversInGlobalBuilders():
-    def _noObserversInGlobalBuilders():
+    def _no_observers_in_global_builders():
         """True if no observer function leaks to global builder objects.
 
         Ensure objects are not immortal due to a reference from static
@@ -125,7 +125,7 @@ def noObserversInGlobalBuilders():
                 break
         return rv
 
-    return _noObserversInGlobalBuilders()
+    return _no_observers_in_global_builders()
 
 
 @pytest.fixture(scope="session")

@@ -337,7 +337,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             xyz = [scatterer.x, scatterer.y, scatterer.z]
             positions.append([p.value for p in xyz])
         if self._xyzpars is None:
-            self._constrainXYZs(positions)
+            self._constrain_xyzs(positions)
         return self._xyzpars
 
     adppars = property(lambda self: self._get_adp_pars())
@@ -370,7 +370,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             positions.append([p.value for p in xyz])
 
         self._constrain_lattice()
-        self._constrainXYZs(positions)
+        self._constrain_xyzs(positions)
         self._constrainADPs(positions)
 
         return
@@ -467,7 +467,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         return
 
-    def _constrainXYZs(self, positions):
+    def _constrain_xyzs(self, positions):
         """Constrain the positions.
 
         Attributes

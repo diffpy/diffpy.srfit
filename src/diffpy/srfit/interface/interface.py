@@ -81,19 +81,19 @@ class RecipeOrganizerInterface(object):
         return self
 
     def __iadd__(self, args):
-        """_new_parameter or _addParameter with +=
+        """_new_parameter or _add_parameter with +=
 
         Think of "+" as addition of a Parameter.
 
         This accepts arguments for a single function call.
         """
 
-        # Want to detect _addParameter or _new_parameter
+        # Want to detect _add_parameter or _new_parameter
         def f(*args):
             if isinstance(args[0], six.string_types):
                 self._new_parameter(*args)
             else:
-                self._addParameter(*args)
+                self._add_parameter(*args)
             return
 
         _applyargs(args, f)

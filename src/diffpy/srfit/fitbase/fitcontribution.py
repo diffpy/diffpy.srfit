@@ -231,7 +231,7 @@ class FitContribution(ParameterSet):
 
         # Register any new Parameters.
         for par in self._eqfactory.newargs:
-            self._addParameter(par)
+            self._add_parameter(par)
 
         # Register eq as an operator
         self._eqfactory.registerOperator("eq", eq)

@@ -83,7 +83,7 @@ class ParameterSet(RecipeOrganizer):
         return
 
     # Alias Parameter accessors.
-    addParameter = RecipeOrganizer._addParameter
+    addParameter = RecipeOrganizer._add_parameter
     newParameter = RecipeOrganizer._new_parameter
     removeParameter = RecipeOrganizer._removeParameter
 

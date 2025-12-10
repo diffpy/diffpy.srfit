@@ -186,7 +186,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         m = self.m
 
         p1 = Parameter("p1", 1)
-        m._addParameter(p1)
+        m._add_parameter(p1)
 
         # Test duplication of Parameters
         self.assertRaises(ValueError, m._new_parameter, "p1", 0)
@@ -205,15 +205,15 @@ class TestRecipeOrganizer(unittest.TestCase):
         p2 = Parameter("p1", 2)
 
         # Check normal insert
-        m._addParameter(p1)
+        m._add_parameter(p1)
         self.assertTrue(m.p1 is p1)
         self.assertTrue(p1.name in m._eqfactory.builders)
 
         # Try to insert another parameter with the same name
-        self.assertRaises(ValueError, m._addParameter, p2)
+        self.assertRaises(ValueError, m._add_parameter, p2)
 
         # Now allow this
-        m._addParameter(p2, check=False)
+        m._add_parameter(p2, check=False)
         self.assertTrue(m.p1 is p2)
         self.assertTrue(p1.name in m._eqfactory.builders)
 
@@ -223,10 +223,10 @@ class TestRecipeOrganizer(unittest.TestCase):
         m._add_object(c, m._containers)
 
         p3 = Parameter("test", 0)
-        self.assertRaises(ValueError, m._addParameter, p3)
+        self.assertRaises(ValueError, m._add_parameter, p3)
 
         p4 = Parameter("xyz", 0)
-        m._addParameter(p4)
+        m._add_parameter(p4)
 
         # Check order
         self.assertEqual(list(m._parameters.keys()), ["p1", "xyz"])
@@ -242,7 +242,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         p1 = Parameter("p1", 1)
         p2 = Parameter("p1", 2)
 
-        m._addParameter(p1)
+        m._add_parameter(p1)
 
         # Check for bad remove
         self.assertRaises(ValueError, m._removeParameter, p2)
@@ -335,11 +335,11 @@ class TestRecipeOrganizer(unittest.TestCase):
         p3 = Parameter("p3", 3)
         p4 = Parameter("p4", 4)
 
-        self.m._addParameter(p1)
-        self.m._addParameter(p2)
+        self.m._add_parameter(p1)
+        self.m._add_parameter(p2)
 
-        m2._addParameter(p3)
-        m2._addParameter(p4)
+        m2._add_parameter(p3)
+        m2._add_parameter(p4)
 
         self.m.constrain(p1, "p2")
         m2.constrain(p3, "p4")
@@ -362,11 +362,11 @@ class TestRecipeOrganizer(unittest.TestCase):
         p3 = Parameter("p3", 3)
         p4 = Parameter("p4", 4)
 
-        self.m._addParameter(p1)
-        self.m._addParameter(p2)
+        self.m._add_parameter(p1)
+        self.m._add_parameter(p2)
 
-        m2._addParameter(p3)
-        m2._addParameter(p4)
+        m2._add_parameter(p3)
+        m2._add_parameter(p4)
 
         r1 = self.m.restrain("p1 + p2")
         r2 = m2.restrain("2*p3 + p4")

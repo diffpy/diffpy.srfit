@@ -424,15 +424,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Add a new Parameter to the container.
 
         This creates a new Parameter and adds it to the container using
-        the _addParameter method.
+        the _add_parameter method.
 
         Returns the Parameter.
         """
         p = Parameter(name, value)
-        self._addParameter(p, check)
+        self._add_parameter(p, check)
         return p
 
-    def _addParameter(self, par, check=True):
+    def _add_parameter(self, par, check=True):
         """Store a Parameter.
 
         Parameters added in this way are registered with the _eqfactory.
@@ -649,7 +649,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # Register any new Parameters.
         for par in self._eqfactory.newargs:
-            self._addParameter(par)
+            self._add_parameter(par)
 
         # Register the equation as a callable function.
         argnames = eq.argdict.keys()

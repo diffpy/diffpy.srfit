@@ -533,7 +533,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if value is not None:
             var.setValue(value)
 
-        self._addParameter(var)
+        self._add_parameter(var)
 
         if fixed:
             self.fix(var)

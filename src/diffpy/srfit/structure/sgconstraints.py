@@ -640,7 +640,7 @@ def _constrain_triclinic(lattice):
     return
 
 
-def _constrainMonoclinic(lattice):
+def _constrain_monoclinic(lattice):
     """Make constraints for Monoclinic systems.
 
     alpha and beta are fixed to 90 unless alpha != beta and alpha ==
@@ -758,7 +758,7 @@ def _constrainCubic(lattice):
 # function.
 _constraintMap = {
     "Triclinic": _constrain_triclinic,
-    "Monoclinic": _constrainMonoclinic,
+    "Monoclinic": _constrain_monoclinic,
     "Orthorhombic": _constrainOrthorhombic,
     "Tetragonal": _constrainTetragonal,
     "Trigonal": _constrainTrigonal,

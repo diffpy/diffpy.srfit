@@ -179,11 +179,11 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
             self.Biso.value = 0.5
         return
 
-    def _getElem(self):
+    def _getelem(self):
         """Getter for the element type."""
         return self.scat.GetScatteringPower().GetSymbol()
 
-    element = property(_getElem)
+    element = property(_getelem)
 
 
 # End class ObjCrystAtomParSet
@@ -809,7 +809,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
 
         return
 
-    def _getElem(self):
+    def _getelem(self):
         """Getter for the element type."""
         sp = self.scat.GetScatteringPower()
         if sp:
@@ -817,7 +817,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
         else:
             return "dummy"
 
-    element = property(_getElem)
+    element = property(_getelem)
 
     def isDummy(self):
         """Indicate whether this atom is a dummy atom."""

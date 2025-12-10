@@ -120,10 +120,10 @@ class CCTBXScattererParSet(ParameterSet):
         self.strups.stru.scatterers()[self.idx].u_iso = value
         return
 
-    def _getElem(self):
+    def _getelem(self):
         return self.stru.element_symbol()
 
-    element = property(_getElem)
+    element = property(_getelem)
 
 
 # End class CCTBXScattererParSet

@@ -151,13 +151,13 @@ class DiffpyAtomParSet(ParameterSet):
     def __repr__(self):
         return repr(self.atom)
 
-    def _getElem(self):
+    def _getelem(self):
         return self.atom.element
 
     def _setElem(self, el):
         self.atom.element = el
 
-    element = property(_getElem, _setElem, "type of atom")
+    element = property(_getelem, _setElem, "type of atom")
 
 
 # End class DiffpyAtomParSet

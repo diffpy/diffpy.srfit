@@ -98,13 +98,13 @@ class TestRecipeContainer(unittest.TestCase):
         """Test accessors."""
         m1 = self.m
         p1 = Parameter("p1", 1)
-        m1._addObject(p1, m1._parameters)
+        m1._add_object(p1, m1._parameters)
 
         m2 = RecipeContainer("m2")
         p2 = Parameter("p2", 2)
-        m2._addObject(p2, m2._parameters)
+        m2._add_object(p2, m2._parameters)
 
-        m1._addObject(m2, m1._containers)
+        m1._add_object(m2, m1._containers)
 
         self.assertTrue(m1.m2 is m2)
         self.assertTrue(m1.p1 is p1)
@@ -128,13 +128,13 @@ class TestRecipeContainer(unittest.TestCase):
         """Test the locateManagedObject method."""
         m1 = self.m
         p1 = Parameter("p1", 1)
-        m1._addObject(p1, m1._parameters)
+        m1._add_object(p1, m1._parameters)
 
         m2 = RecipeContainer("m2")
         p2 = Parameter("p2", 2)
-        m2._addObject(p2, m2._parameters)
+        m2._add_object(p2, m2._parameters)
 
-        m1._addObject(m2, m1._containers)
+        m1._add_object(m2, m1._containers)
 
         p3 = Parameter("p3", 3)
 
@@ -220,7 +220,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         # Try to insert a Parameter when a RecipeContainer with the same name
         # is already inside.
         c = RecipeContainer("test")
-        m._addObject(c, m._containers)
+        m._add_object(c, m._containers)
 
         p3 = Parameter("test", 0)
         self.assertRaises(ValueError, m._addParameter, p3)
@@ -328,7 +328,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         m2 = RecipeOrganizer("m2")
         self.m._organizers = {}
         self.m._manage(self.m._organizers)
-        self.m._addObject(m2, self.m._organizers)
+        self.m._add_object(m2, self.m._organizers)
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
@@ -355,7 +355,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         m2 = RecipeOrganizer("m2")
         self.m._organizers = {}
         self.m._manage(self.m._organizers)
-        self.m._addObject(m2, self.m._organizers)
+        self.m._add_object(m2, self.m._organizers)
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
@@ -559,7 +559,7 @@ def test_show(capturestdout):
     out5 = capture_show(pattern="^")
     assert out3 == out5
     # check output with another level of hierarchy
-    organizer._addObject(RecipeOrganizer("foo"), organizer._containers)
+    organizer._add_object(RecipeOrganizer("foo"), organizer._containers)
     organizer.foo._new_parameter("bar", 13)
     out6 = capture_show()
     assert "foo.bar" in out6

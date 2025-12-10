@@ -201,7 +201,7 @@ class BaseSpaceGroupParameters(RecipeContainer):
         Raises ValueError if the Parameter has no name.
         """
         # Store the Parameter
-        RecipeContainer._addObject(self, par, self._parameters, check)
+        RecipeContainer._add_object(self, par, self._parameters, check)
         return
 
 

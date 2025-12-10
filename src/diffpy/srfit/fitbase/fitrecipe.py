@@ -220,7 +220,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if the FitContribution has the same name as some
         other managed object.
         """
-        self._addObject(con, self._contributions, True)
+        self._add_object(con, self._contributions, True)
         self._weights.append(weight)
         return
 
@@ -243,7 +243,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if the ParameterSet has the same name as some other
         managed object.
         """
-        self._addObject(parset, self._parsets, True)
+        self._add_object(parset, self._parsets, True)
         return
 
     def removeParameterSet(self, parset):

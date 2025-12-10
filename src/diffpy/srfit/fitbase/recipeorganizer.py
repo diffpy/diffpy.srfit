@@ -237,7 +237,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Get the values of managed parameters."""
         return [p.value for p in self._parameters.values()]
 
-    def _addObject(self, obj, d, check=True):
+    def _add_object(self, obj, d, check=True):
         """Add an object to a managed dictionary.
 
         Attributes
@@ -452,7 +452,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
 
         # Store the Parameter
-        RecipeContainer._addObject(self, par, self._parameters, check)
+        RecipeContainer._add_object(self, par, self._parameters, check)
 
         # Register the Parameter
         self._eqfactory.registerArgument(par.name, par)
@@ -492,7 +492,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             extracted from the function.
         """
         self._eqfactory.registerOperator(f.name, f)
-        self._addObject(f, self._calculators)
+        self._add_object(f, self._calculators)
         # Register arguments of the calculator
         if argnames is None:
             fncode = f.__call__.__func__.__code__

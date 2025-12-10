@@ -100,7 +100,7 @@ class ParameterSet(RecipeOrganizer):
         Raises ValueError if the ParameterSet has the same name as some other
         managed object.
         """
-        self._addObject(parset, self._parsets, True)
+        self._add_object(parset, self._parsets, True)
         return
 
     def removeParameterSet(self, parset):

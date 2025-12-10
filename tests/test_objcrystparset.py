@@ -632,7 +632,7 @@ class TestCreateSpaceGroup:
         from pyobjcryst.spacegroup import SpaceGroup
 
         sgobjcryst = SpaceGroup(sg.short_name)
-        sgnew = ObjCrystCrystalParSet._createSpaceGroup(sgobjcryst)
+        sgnew = ObjCrystCrystalParSet._create_space_group(sgobjcryst)
         return sgnew
 
     @staticmethod

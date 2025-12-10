@@ -1770,7 +1770,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
         """Constrain the space group."""
         if self._sgpars is not None:
             return self._sgpars
-        sg = self._createSpaceGroup(self.stru.GetSpaceGroup())
+        sg = self._create_space_group(self.stru.GetSpaceGroup())
         from diffpy.srfit.structure.sgconstraints import _constrainAsSpaceGroup
 
         adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
@@ -1789,7 +1789,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
     sgpars = property(_constrain_space_group)
 
     @staticmethod
-    def _createSpaceGroup(sgobjcryst):
+    def _create_space_group(sgobjcryst):
         """Create a diffpy.structure SpaceGroup object from pyobjcryst.
 
         Attributes

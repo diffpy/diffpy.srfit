@@ -733,7 +733,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._constraints[par] = con
 
         # Our configuration changed
-        self._updateConfiguration()
+        self._update_configuration()
 
         return
 
@@ -780,7 +780,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if update:
             # Our configuration changed
-            self._updateConfiguration()
+            self._update_configuration()
 
         else:
 
@@ -881,7 +881,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
-        self._updateConfiguration()
+        self._update_configuration()
         return
 
     def unrestrain(self, *ress):
@@ -902,7 +902,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if update:
             # Our configuration changed
-            self._updateConfiguration()
+            self._update_configuration()
 
         return
 

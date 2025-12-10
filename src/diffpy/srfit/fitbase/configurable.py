@@ -37,10 +37,10 @@ class Configurable(object):
         self._configobjs = set()
         return
 
-    def _updateConfiguration(self):
+    def _update_configuration(self):
         """Notify Configurables in hierarchy of configuration change."""
         for obj in self._configobjs:
-            obj._updateConfiguration()
+            obj._update_configuration()
         return
 
     def _storeConfigurable(self, obj):

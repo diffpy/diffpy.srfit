@@ -69,7 +69,7 @@ class SrRealParSet(BaseStructureParSet):
         # Add it to the _restraints set
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
-        self._updateConfiguration()
+        self._update_configuration()
         # Return the Restraint object
         return res
 

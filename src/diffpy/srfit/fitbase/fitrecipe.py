@@ -173,7 +173,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             index = len(self.fithooks)
         self.fithooks.insert(index, fithook)
         # Make sure the added FitHook gets its reset method called.
-        self._updateConfiguration()
+        self._update_configuration()
         return
 
     def popFitHook(self, fithook=None, index=-1):
@@ -781,7 +781,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         if update:
             # Our configuration changed
-            self._updateConfiguration()
+            self._update_configuration()
 
         return
 
@@ -902,7 +902,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             var.setValue(pval)
         return
 
-    def _updateConfiguration(self):
+    def _update_configuration(self):
         """Notify RecipeContainers in hierarchy of configuration change."""
         self._ready = False
         return

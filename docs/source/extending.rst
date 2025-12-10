@@ -236,9 +236,9 @@ structures.  The restraint is applied with the ``restrainBVS`` method.
 The purpose of the method is to create the custom ``Restraint`` object,
 configure it and store it. Note that the optional `sig` and `scaled` flag are
 passed as part of this method. Both ``_restraints`` and
-``_updateConfiguration`` come from ``ParameterSet``, from which
+``_update_configuration`` come from ``ParameterSet``, from which
 ``SrRealParSet`` is derived. The ``_restraints`` attribute is a set of
-``Restraints`` on the object. The ``_updateConfiguration`` method makes any
+``Restraints`` on the object. The ``_update_configuration`` method makes any
 object containing the ``SrRealParSet`` aware of the configuration change.  This
 gets propagated to the top-level ``FitRecipe``, if there is one.  The restraint
 object is returned by the method so that it may be later removed.

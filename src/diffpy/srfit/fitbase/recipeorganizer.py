@@ -360,7 +360,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         Raises AttributeError if validation fails.
         """
         iterable = chain(self.__iter__(), self._iter_managed())
-        self._validateOthers(iterable)
+        self._validate_others(iterable)
         return
 
 
@@ -954,7 +954,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         RecipeContainer._validate(self)
         iterable = chain(self._restraints, self._constraints.values())
-        self._validateOthers(iterable)
+        self._validate_others(iterable)
         return
 
     # For printing the configured recipe to screen

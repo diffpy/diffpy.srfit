@@ -173,7 +173,7 @@ class FitResults(object):
             ]
 
             # Get the constraint uncertainties
-            self._calculateConstraintUncertainties()
+            self._calculate_constraint_uncertainties()
 
         # Store the fitting arrays and metrics for each FitContribution.
         self.conresults = OrderedDict()
@@ -303,7 +303,7 @@ class FitResults(object):
         self.cumrw = cumrw
         return
 
-    def _calculateConstraintUncertainties(self):
+    def _calculate_constraint_uncertainties(self):
         """Calculate the uncertainty on the constrained parameters."""
         vu = self.varunc
 

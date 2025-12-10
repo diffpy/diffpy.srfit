@@ -328,9 +328,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             self._constrainLattice()
         return self._latpars
 
-    xyzpars = property(lambda self: self._getXYZPars())
+    xyzpars = property(lambda self: self._get_xyz_pars())
 
-    def _getXYZPars(self):
+    def _get_xyz_pars(self):
         """Accessor for _xyzpars."""
         positions = []
         for scatterer in self.scatterers:

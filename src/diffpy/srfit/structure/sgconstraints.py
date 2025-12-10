@@ -635,7 +635,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 # New York (1969), p.60
 
 
-def _constrainTriclinic(lattice):
+def _constrain_triclinic(lattice):
     """Make constraints for Triclinic systems."""
     return
 
@@ -757,7 +757,7 @@ def _constrainCubic(lattice):
 # This is used to map the correct crystal system to the proper constraint
 # function.
 _constraintMap = {
-    "Triclinic": _constrainTriclinic,
+    "Triclinic": _constrain_triclinic,
     "Monoclinic": _constrainMonoclinic,
     "Orthorhombic": _constrainOrthorhombic,
     "Tetragonal": _constrainTetragonal,

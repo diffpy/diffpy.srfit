@@ -87,7 +87,7 @@ class TagManager(object):
             tags = self.tags(obj)
 
         for tag in tags:
-            oset = self.__getObjectSet(tag)
+            oset = self.__get_object_set(tag)
             if obj not in oset and not self.silent:
                 raise KeyError("Tag '%s' does not apply" % tag)
             oset.discard(obj)
@@ -107,7 +107,7 @@ class TagManager(object):
 
         Returns bool
         """
-        setgen = (self.__getObjectSet(t) for t in tags)
+        setgen = (self.__get_object_set(t) for t in tags)
         result = all(obj in s for s in setgen)
         return result
 
@@ -118,7 +118,7 @@ class TagManager(object):
         """
         if not tags:
             return set()
-        setgen = (self.__getObjectSet(t) for t in tags)
+        setgen = (self.__get_object_set(t) for t in tags)
         objs = functools.reduce(set.union, setgen)
         return objs
 
@@ -129,7 +129,7 @@ class TagManager(object):
         """
         if not tags:
             return set()
-        setgen = (self.__getObjectSet(t) for t in tags)
+        setgen = (self.__get_object_set(t) for t in tags)
         objs = functools.reduce(set.intersection, setgen)
         return objs
 
@@ -145,7 +145,7 @@ class TagManager(object):
                 raise KeyError("Tag '%s' does not exist" % tag)
         return True
 
-    def __getObjectSet(self, tag):
+    def __get_object_set(self, tag):
         """Helper function for getting an object set with given tag.
 
         Raises KeyError if a passed tag does not exist and self.silent

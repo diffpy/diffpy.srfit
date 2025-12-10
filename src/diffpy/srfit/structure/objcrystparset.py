@@ -1766,7 +1766,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
 
         return
 
-    def _constrainSpaceGroup(self):
+    def _constrain_space_group(self):
         """Constrain the space group."""
         if self._sgpars is not None:
             return self._sgpars
@@ -1786,7 +1786,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
         )
         return self._sgpars
 
-    sgpars = property(_constrainSpaceGroup)
+    sgpars = property(_constrain_space_group)
 
     @staticmethod
     def _createSpaceGroup(sgobjcryst):

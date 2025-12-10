@@ -22,7 +22,7 @@ import pytest
 # ----------------------------------------------------------------------------
 
 
-def test_ObjCryst_constrainSpaceGroup(pyobjcryst_available):
+def test_ObjCryst_constrain_space_group(pyobjcryst_available):
     """Make sure that all Parameters are constrained properly.
 
     This tests constrainSpaceGroup from
@@ -39,7 +39,7 @@ def test_ObjCryst_constrainSpaceGroup(pyobjcryst_available):
     occryst = makeLaMnO3()
     stru = ObjCrystCrystalParSet(occryst.GetName(), occryst)
     # Make sure we actually create the constraints
-    stru._constrainSpaceGroup()
+    stru._constrain_space_group()
     # Make the space group parameters individually
     stru.sgpars.latpars
     stru.sgpars.xyzpars

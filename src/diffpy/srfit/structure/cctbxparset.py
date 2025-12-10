@@ -253,10 +253,10 @@ class CCTBXCrystalParSet(BaseStructureParSet):
             self.scatterers.append(scatterer)
 
         # Constrain the lattice
-        from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
+        from diffpy.srfit.structure.sgconstraints import _constrain_space_group
 
         symbol = self.getSpaceGroup()
-        _constrainSpaceGroup(self, symbol)
+        _constrain_space_group(self, symbol)
 
         return
 

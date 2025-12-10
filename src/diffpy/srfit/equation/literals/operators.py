@@ -113,7 +113,7 @@ class Operator(Literal, OperatorABC):
         Raises ValueError if the literal causes a self-reference.
         """
         # Make sure we don't have self-reference
-        self._loopCheck(literal)
+        self._loop_check(literal)
         self.args.append(literal)
         literal.addObserver(self._flush)
         self._flush(other=(self,))
@@ -128,7 +128,7 @@ class Operator(Literal, OperatorABC):
 
     value = property(lambda self: self.getValue())
 
-    def _loopCheck(self, literal):
+    def _loop_check(self, literal):
         """Check if a literal causes self-reference."""
         if literal is self:
             raise ValueError("'%s' causes self-reference" % literal)
@@ -136,7 +136,7 @@ class Operator(Literal, OperatorABC):
         # Check to see if I am a dependency of the literal.
         if hasattr(literal, "args"):
             for lit_arg in literal.args:
-                self._loopCheck(lit_arg)
+                self._loop_check(lit_arg)
         return
 
 

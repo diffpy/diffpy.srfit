@@ -105,7 +105,7 @@ class Swapper(Visitor):
                 # Validate the new literal. If it fails, we need to restore the
                 # old one
                 try:
-                    op._loopCheck(newlit)
+                    op._loop_check(newlit)
                 except ValueError:
                     # Restore the old literal
                     op.args.insert(idx, oldlit)
@@ -135,9 +135,9 @@ class Swapper(Visitor):
             eq.setRoot(self.newlit)
             return
 
-        # Now move into the equation. We have to do a _loopCheck to make sure
+        # Now move into the equation. We have to do a _loop_check to make sure
         # that we won't have any loops in the equation.
-        eq._loopCheck(self.newlit)
+        eq._loop_check(self.newlit)
         eq.root.identify(self)
 
         # Reset the root in case anything changed underneath.

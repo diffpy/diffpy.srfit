@@ -1017,7 +1017,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         clines.sort(key=numstr)
         return clines
 
-    def _formatRestraints(self):
+    def _format_restraints(self):
         """Format restraints for showing.
 
         This collects restraints on all levels of the hierarchy and displays
@@ -1085,7 +1085,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # FIXME - parameter names in equations not particularly informative
         # Show restraints
-        tlines = self._formatRestraints()
+        tlines = self._format_restraints()
         if tlines:
             if lines:
                 lines.append("")

@@ -279,7 +279,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             fithook.precall(self)
 
         # Update the variable parameters.
-        self._applyValues(p)
+        self._apply_values(p)
 
         # Update the constraints. These are ordered such that the list only
         # needs to be cycled once.
@@ -893,7 +893,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             )
         return
 
-    def _applyValues(self, p):
+    def _apply_values(self, p):
         """Apply variable values to the variables."""
         if len(p) == 0:
             return

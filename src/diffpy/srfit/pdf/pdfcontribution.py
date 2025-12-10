@@ -217,7 +217,7 @@ class PDFContribution(FitContribution):
 
         # Set up the generator
         gen.setStructure(stru, "phase", periodic)
-        self._setupGenerator(gen)
+        self._setup_generator(gen)
 
         return gen.phase
 
@@ -262,11 +262,11 @@ class PDFContribution(FitContribution):
 
         # Set up the generator
         gen.setPhase(parset, periodic)
-        self._setupGenerator(gen)
+        self._setup_generator(gen)
 
         return gen.phase
 
-    def _setupGenerator(self, gen):
+    def _setup_generator(self, gen):
         """Setup a generator.
 
         The generator must already have a managed SrRealParSet, added

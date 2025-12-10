@@ -374,7 +374,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     Restraints, as well as Equations that can be used in Constraint and
     Restraint equations.  These constraints and Restraints can be placed at any
     level and a flattened list of them can be retrieved with the
-    _getConstraints and _getRestraints methods.
+    _get_constraints and _getRestraints methods.
 
     Attributes
     ----------
@@ -797,7 +797,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             Recurse into managed objects and retrieve their constrained
             Parameters as well (default False).
         """
-        const = self._getConstraints(recurse)
+        const = self._get_constraints(recurse)
         return const.keys()
 
     def clearConstraints(self, recurse=False):
@@ -921,12 +921,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 msg.clearRestraints(recurse)
         return
 
-    def _getConstraints(self, recurse=True):
+    def _get_constraints(self, recurse=True):
         """Get the constrained Parameters for this and managed sub-objects."""
         constraints = {}
         if recurse:
             for m in filter(_has_get_constraints, self._iter_managed()):
-                constraints.update(m._getConstraints(recurse))
+                constraints.update(m._get_constraints(recurse))
 
         constraints.update(self._constraints)
 
@@ -1004,7 +1004,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             List of formatted lines displaying the defined constraints.
             Return empty list when no constraints were defined.
         """
-        cdict = self._getConstraints()
+        cdict = self._get_constraints()
         # Find each constraint and format the equation
         clines = []
         for par, con in cdict.items():
@@ -1169,7 +1169,7 @@ def _has_get_restraints(msg):
 
 
 def _has_get_constraints(msg):
-    return hasattr(msg, "_getConstraints")
+    return hasattr(msg, "_get_constraints")
 
 
 def _pmatch(inp_str, regexp):

@@ -431,7 +431,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         for org in chain(self._contributions.values(), self._parsets.values()):
             rset.update(org._getRestraints())
-            cdict.update(org._getConstraints())
+            cdict.update(org._get_constraints())
         cdict.update(self._constraints)
 
         # The order of the restraint list does not matter

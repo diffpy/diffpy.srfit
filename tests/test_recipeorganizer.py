@@ -324,7 +324,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         return
 
     def testGetConstraints(self):
-        """Test the _getConstraints method."""
+        """Test the _get_constraints method."""
         m2 = RecipeOrganizer("m2")
         self.m._organizers = {}
         self.m._manage(self.m._organizers)
@@ -344,7 +344,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m.constrain(p1, "p2")
         m2.constrain(p3, "p4")
 
-        cons = self.m._getConstraints()
+        cons = self.m._get_constraints()
         self.assertTrue(p1 in cons)
         self.assertTrue(p3 in cons)
         self.assertEqual(2, len(cons))

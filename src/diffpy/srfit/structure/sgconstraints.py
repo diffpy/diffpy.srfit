@@ -693,7 +693,7 @@ def _constrain_tetragonal(lattice):
     return
 
 
-def _constrainTrigonal(lattice):
+def _constrain_trigonal(lattice):
     """Make constraints for Trigonal systems.
 
     If gamma == 120, then b is constrained to a, alpha and beta are
@@ -761,7 +761,7 @@ _constraintMap = {
     "Monoclinic": _constrain_monoclinic,
     "Orthorhombic": _constrain_orthorhombic,
     "Tetragonal": _constrain_tetragonal,
-    "Trigonal": _constrainTrigonal,
+    "Trigonal": _constrain_trigonal,
     "Hexagonal": _constrainHexagonal,
     "Cubic": _constrainCubic,
 }

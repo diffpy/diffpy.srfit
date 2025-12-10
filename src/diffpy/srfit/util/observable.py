@@ -52,7 +52,7 @@ class Observable(object):
 
     def addObserver(self, callable):
         """Add callable to the set of observers."""
-        f = weak_ref(callable, fallback=_fbRemoveObserver)
+        f = weak_ref(callable, fallback=_fb_remove_observer)
         self._observers.add(f)
         return
 
@@ -81,7 +81,7 @@ class Observable(object):
 # Local helpers --------------------------------------------------------------
 
 
-def _fbRemoveObserver(fobs, semaphores):
+def _fb_remove_observer(fobs, semaphores):
     # Remove WeakBoundMethod `fobs` from the observers of notifying object.
     # This is called from Observable.notify when the WeakBoundMethod
     # associated object dies.

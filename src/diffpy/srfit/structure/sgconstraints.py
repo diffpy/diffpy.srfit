@@ -340,9 +340,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             self._constrainXYZs(positions)
         return self._xyzpars
 
-    adppars = property(lambda self: self._getADPPars())
+    adppars = property(lambda self: self._get_adp_pars())
 
-    def _getADPPars(self):
+    def _get_adp_pars(self):
         """Accessor for _adppars."""
         positions = []
         for scatterer in self.scatterers:

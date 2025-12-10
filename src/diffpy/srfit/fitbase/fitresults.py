@@ -165,7 +165,7 @@ class FitResults(object):
 
         if self.varnames:
             # Calculate the covariance
-            self._calculateCovariance()
+            self._calculate_covariance()
 
             # Get the variable uncertainties
             self.varunc = [
@@ -173,7 +173,7 @@ class FitResults(object):
             ]
 
             # Get the constraint uncertainties
-            self._calculateConstraintUncertainties()
+            self._calculate_constraint_uncertainties()
 
         # Store the fitting arrays and metrics for each FitContribution.
         self.conresults = OrderedDict()
@@ -185,7 +185,7 @@ class FitResults(object):
         # Calculate the metrics
         res = recipe.residual()
         self.residual = numpy.dot(res, res)
-        self._calculateMetrics()
+        self._calculate_metrics()
 
         # Calculate the restraints penalty
         w = self.chi2 / len(res)
@@ -193,14 +193,14 @@ class FitResults(object):
 
         return
 
-    def _calculateCovariance(self):
+    def _calculate_covariance(self):
         """Calculate the covariance matrix. This is called by update.
 
         This code borrowed from PARK. It finds the pseudo-inverse of the
         Jacobian using the singular value decomposition.
         """
         try:
-            J = self._calculateJacobian()
+            J = self._calculate_jacobian()
             u, s, vh = numpy.linalg.svd(J, 0)
             self.cov = numpy.dot(vh.T.conj() / s**2, vh)
         except numpy.linalg.LinAlgError:
@@ -209,7 +209,7 @@ class FitResults(object):
             self.cov = numpy.zeros((lvarvals, lvarvals), dtype=float)
         return
 
-    def _calculateJacobian(self):
+    def _calculate_jacobian(self):
         """Calculate the Jacobian for the fitting.
 
         Adapted from PARK. Returns the derivative wrt the fit variables
@@ -276,7 +276,7 @@ class FitResults(object):
         jac = numpy.vstack(r).T
         return jac
 
-    def _calculateMetrics(self):
+    def _calculate_metrics(self):
         """Calculate chi2, cumchi2, rchi2, rw and cumrw for the recipe."""
         cumchi2 = numpy.array([], dtype=float)
         # total weighed denominator for the ratio in the Rw formula
@@ -303,7 +303,7 @@ class FitResults(object):
         self.cumrw = cumrw
         return
 
-    def _calculateConstraintUncertainties(self):
+    def _calculate_constraint_uncertainties(self):
         """Calculate the uncertainty on the constrained parameters."""
         vu = self.varunc
 
@@ -600,7 +600,7 @@ class ContributionResults(object):
     conlocs
         The location of the constrained parameters in the
         FitContribution (see the
-        RecipeContainer._locateManagedObject method).
+        RecipeContainer._locate_managed_object method).
     convals
         Values of the constrained parameters.
     conunc
@@ -657,12 +657,12 @@ class ContributionResults(object):
         self.ycalc = numpy.array(con.profile.ycalc)
 
         # The other metrics
-        self._calculateMetrics()
+        self._calculate_metrics()
 
         # Find the parameters
         for i, constraint in enumerate(recipe._oconstraints):
             par = constraint.par
-            loc = con._locateManagedObject(par)
+            loc = con._locate_managed_object(par)
             if loc:
                 self.conlocs.append(loc)
                 self.convals.append(fitres.convals[i])
@@ -671,7 +671,7 @@ class ContributionResults(object):
         return
 
     # FIXME: factor rw, chi2, cumrw, cumchi2 to separate functions.
-    def _calculateMetrics(self):
+    def _calculate_metrics(self):
         """Calculate chi2 and Rw of the recipe."""
         # We take absolute values in case the signal is complex
         num = numpy.abs(self.y - self.ycalc)

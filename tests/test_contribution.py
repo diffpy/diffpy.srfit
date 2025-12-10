@@ -223,7 +223,7 @@ def testResidual(noObserversInGlobalBuilders):
 
     # Try to add a parameter
     c = Parameter("c", 2)
-    fc._addParameter(c)
+    fc._add_parameter(c)
     fc.setEquation("c*I")
     assert fc._eq._value is None
     assert fc._reseq._value is None

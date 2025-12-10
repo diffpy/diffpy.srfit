@@ -242,7 +242,7 @@ def test_getQmax(diffpy_structure_available, diffpy_srreal_available):
     if not diffpy_srreal_available:
         pytest.skip("diffpy.srreal package not available")
 
-    # cover all code branches in PDFContribution._getMetaValue
+    # cover all code branches in PDFContribution._get_meta_value
     # (1) contribution metadata
     pc1 = PDFContribution("pdf")
     assert pc1.getQmax() is None

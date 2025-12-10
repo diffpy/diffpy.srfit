@@ -151,13 +151,13 @@ class DiffpyAtomParSet(ParameterSet):
     def __repr__(self):
         return repr(self.atom)
 
-    def _getElem(self):
+    def _getelem(self):
         return self.atom.element
 
-    def _setElem(self, el):
+    def _setelem(self, el):
         self.atom.element = el
 
-    element = property(_getElem, _setElem, "type of atom")
+    element = property(_getelem, _setelem, "type of atom")
 
 
 # End class DiffpyAtomParSet
@@ -326,7 +326,7 @@ class DiffpyStructureParSet(SrRealParSet):
         """
         return self.atoms
 
-    def _getSrRealStructure(self):
+    def _get_srreal_structure(self):
         """Get the structure object for use with SrReal calculators.
 
         If this is periodic, then return the structure, otherwise, pass
@@ -335,7 +335,7 @@ class DiffpyStructureParSet(SrRealParSet):
         """
         from diffpy.srreal.structureadapter import nometa
 
-        stru = SrRealParSet._getSrRealStructure(self)
+        stru = SrRealParSet._get_srreal_structure(self)
         return nometa(stru)
 
 

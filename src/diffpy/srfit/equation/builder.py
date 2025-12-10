@@ -165,7 +165,7 @@ class EquationFactory(object):
 
         Returns a callable Literal representing the equation string.
         """
-        self._prepareBuilders(eqstr, buildargs, argclass, argkw)
+        self._prepare_builders(eqstr, buildargs, argclass, argkw)
         beq = eval(eqstr, {}, self.builders)
         # handle scalar numbers or numpy arrays
         if isinstance(beq, (numbers.Number, numpy.ndarray)):
@@ -301,7 +301,7 @@ class EquationFactory(object):
         eq.setRoot(nan)
         return
 
-    def _prepareBuilders(self, eqstr, buildargs, argclass, argkw):
+    def _prepare_builders(self, eqstr, buildargs, argclass, argkw):
         """Prepare builders so that equation string can be evaluated.
 
         This method checks the equation string for errors and missing
@@ -332,7 +332,7 @@ class EquationFactory(object):
         Returns a dictionary of the name, BaseBuilder pairs.
         """
 
-        eqargs = self._getUndefinedArgs(eqstr)
+        eqargs = self._get_undefined_args(eqstr)
 
         # Raise an error if there are arguments that need to be created, but
         # this is disallowed.
@@ -353,7 +353,7 @@ class EquationFactory(object):
 
         return
 
-    def _getUndefinedArgs(self, eqstr):
+    def _get_undefined_args(self, eqstr):
         """Get the undefined arguments from eqstr.
 
         This tokenizes eqstr and extracts undefined arguments. An
@@ -441,7 +441,7 @@ class BaseBuilder(object):
         eq = Equation(name, self.literal)
         return eq
 
-    def __evalBinary(self, other, OperatorClass, onleft=True):
+    def __eval_binary(self, other, OperatorClass, onleft=True):
         """Evaluate a binary function.
 
         Other can be an BaseBuilder or a constant.
@@ -479,7 +479,7 @@ class BaseBuilder(object):
         opbuilder.literal = op
         return opbuilder
 
-    def __evalUnary(self, OperatorClass):
+    def __eval_unary(self, OperatorClass):
         """Evaluate a unary function."""
         op = OperatorClass()
         op.addLiteral(self.literal)
@@ -488,28 +488,30 @@ class BaseBuilder(object):
         return opbuilder
 
     def __add__(self, other):
-        return self.__evalBinary(other, literals.AdditionOperator)
+        return self.__eval_binary(other, literals.AdditionOperator)
 
     def __radd__(self, other):
-        return self.__evalBinary(other, literals.AdditionOperator, False)
+        return self.__eval_binary(other, literals.AdditionOperator, False)
 
     def __sub__(self, other):
-        return self.__evalBinary(other, literals.SubtractionOperator)
+        return self.__eval_binary(other, literals.SubtractionOperator)
 
     def __rsub__(self, other):
-        return self.__evalBinary(other, literals.SubtractionOperator, False)
+        return self.__eval_binary(other, literals.SubtractionOperator, False)
 
     def __mul__(self, other):
-        return self.__evalBinary(other, literals.MultiplicationOperator)
+        return self.__eval_binary(other, literals.MultiplicationOperator)
 
     def __rmul__(self, other):
-        return self.__evalBinary(other, literals.MultiplicationOperator, False)
+        return self.__eval_binary(
+            other, literals.MultiplicationOperator, False
+        )
 
     def __truediv__(self, other):
-        return self.__evalBinary(other, literals.DivisionOperator)
+        return self.__eval_binary(other, literals.DivisionOperator)
 
     def __rtruediv__(self, other):
-        return self.__evalBinary(other, literals.DivisionOperator, False)
+        return self.__eval_binary(other, literals.DivisionOperator, False)
 
     # Python 2 Compatibility -------------------------------------------------
 
@@ -520,19 +522,21 @@ class BaseBuilder(object):
     # ------------------------------------------------------------------------
 
     def __pow__(self, other):
-        return self.__evalBinary(other, literals.ExponentiationOperator)
+        return self.__eval_binary(other, literals.ExponentiationOperator)
 
     def __rpow__(self, other):
-        return self.__evalBinary(other, literals.ExponentiationOperator, False)
+        return self.__eval_binary(
+            other, literals.ExponentiationOperator, False
+        )
 
     def __mod__(self, other):
-        return self.__evalBinary(other, literals.RemainderOperator)
+        return self.__eval_binary(other, literals.RemainderOperator)
 
     def __rmod__(self, other):
-        return self.__evalBinary(other, literals.RemainderOperator, False)
+        return self.__eval_binary(other, literals.RemainderOperator, False)
 
     def __neg__(self):
-        return self.__evalUnary(literals.NegationOperator)
+        return self.__eval_unary(literals.NegationOperator)
 
 
 # These are used by the class.
@@ -706,7 +710,7 @@ def getBuilder(name):
     return _builders[name]
 
 
-def __wrapNumpyOperators():
+def __wrap_numpy_operators():
     """Export all numpy operators as OperatorBuilder instances in the module
     namespace."""
     for name in dir(numpy):
@@ -716,11 +720,11 @@ def __wrapNumpyOperators():
     return
 
 
-__wrapNumpyOperators()
+__wrap_numpy_operators()
 
 
 # Register other functions as well
-def __wrapSrFitOperators():
+def __wrap_srfit_operators():
     """Export all non-base operators from the
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
     instances in the module namespace."""
@@ -744,6 +748,6 @@ def __wrapSrFitOperators():
     return
 
 
-__wrapSrFitOperators()
+__wrap_srfit_operators()
 
 # End of file

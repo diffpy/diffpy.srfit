@@ -50,7 +50,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
     RecipeContainers are hierarchical organizations of Parameters and other
     RecipeContainers. This class provides attribute-access to these contained
     objects.  Parameters and other RecipeContainers can be found within the
-    hierarchy with the _locateManagedObject method.
+    hierarchy with the _locate_managed_object method.
 
     A RecipeContainer can manage dictionaries for that store various objects.
     These dictionaries can be added to the RecipeContainer using the _manage
@@ -112,7 +112,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         self.__managed.append(d)
         return
 
-    def _iterManaged(self):
+    def _iter_managed(self):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
@@ -210,7 +210,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         general way.
         """
         if name in self._parameters:
-            self._removeParameter(self._parameters[name])
+            self._remove_parameter(self._parameters[name])
             return
 
         m = self.get(name)
@@ -237,7 +237,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Get the values of managed parameters."""
         return [p.value for p in self._parameters.values()]
 
-    def _addObject(self, obj, d, check=True):
+    def _add_object(self, obj, d, check=True):
         """Add an object to a managed dictionary.
 
         Attributes
@@ -289,10 +289,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
         obj.addObserver(self._flush)
 
         # Store this as a configurable object
-        self._storeConfigurable(obj)
+        self._store_configurable(obj)
         return
 
-    def _removeObject(self, obj, d):
+    def _remove_object(self, obj, d):
         """Remove an object from a managed dictionary.
 
         Raises ValueError if obj is not part of the dictionary.
@@ -306,7 +306,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         return
 
-    def _locateManagedObject(self, obj):
+    def _locate_managed_object(self, obj):
         """Find the location a managed object within the hierarchy.
 
         Attributes
@@ -326,7 +326,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         if obj is self:
             return loc
 
-        for m in self._iterManaged():
+        for m in self._iter_managed():
 
             # Check locally for the object
             if m is obj:
@@ -334,9 +334,9 @@ class RecipeContainer(Observable, Configurable, Validatable):
                 return loc
 
             # Check within managed objects
-            if hasattr(m, "_locateManagedObject"):
+            if hasattr(m, "_locate_managed_object"):
 
-                subloc = m._locateManagedObject(obj)
+                subloc = m._locate_managed_object(obj)
                 if subloc:
                     return loc + subloc
 
@@ -359,8 +359,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         Raises AttributeError if validation fails.
         """
-        iterable = chain(self.__iter__(), self._iterManaged())
-        self._validateOthers(iterable)
+        iterable = chain(self.__iter__(), self._iter_managed())
+        self._validate_others(iterable)
         return
 
 
@@ -374,7 +374,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     Restraints, as well as Equations that can be used in Constraint and
     Restraint equations.  These constraints and Restraints can be placed at any
     level and a flattened list of them can be retrieved with the
-    _getConstraints and _getRestraints methods.
+    _get_constraints and _get_restraints methods.
 
     Attributes
     ----------
@@ -420,19 +420,19 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     # Parameter management
 
-    def _newParameter(self, name, value, check=True):
+    def _new_parameter(self, name, value, check=True):
         """Add a new Parameter to the container.
 
         This creates a new Parameter and adds it to the container using
-        the _addParameter method.
+        the _add_parameter method.
 
         Returns the Parameter.
         """
         p = Parameter(name, value)
-        self._addParameter(p, check)
+        self._add_parameter(p, check)
         return p
 
-    def _addParameter(self, par, check=True):
+    def _add_parameter(self, par, check=True):
         """Store a Parameter.
 
         Parameters added in this way are registered with the _eqfactory.
@@ -452,13 +452,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
 
         # Store the Parameter
-        RecipeContainer._addObject(self, par, self._parameters, check)
+        RecipeContainer._add_object(self, par, self._parameters, check)
 
         # Register the Parameter
         self._eqfactory.registerArgument(par.name, par)
         return
 
-    def _removeParameter(self, par):
+    def _remove_parameter(self, par):
         """Remove a parameter.
 
         This de-registers the Parameter with the _eqfactory. The
@@ -469,7 +469,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Raises ValueError if par is not part of the RecipeOrganizer.
         """
-        self._removeObject(par, self._parameters)
+        self._remove_object(par, self._parameters)
         self._eqfactory.deRegisterBuilder(par.name)
         return
 
@@ -492,7 +492,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             extracted from the function.
         """
         self._eqfactory.registerOperator(f.name, f)
-        self._addObject(f, self._calculators)
+        self._add_object(f, self._calculators)
         # Register arguments of the calculator
         if argnames is None:
             fncode = f.__call__.__func__.__code__
@@ -501,7 +501,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         for pname in argnames:
             if pname not in self._eqfactory.builders:
-                par = self._newParameter(pname, 0)
+                par = self._new_parameter(pname, 0)
             else:
                 par = self.get(pname)
             f.addLiteral(par)
@@ -598,7 +598,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # Make missing Parameters
         for pname in argnames:
             if pname not in self._eqfactory.builders:
-                self._newParameter(pname, 0)
+                self._new_parameter(pname, 0)
 
         # Initialize and register
         from diffpy.srfit.fitbase.calculator import Calculator
@@ -649,7 +649,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # Register any new Parameters.
         for par in self._eqfactory.newargs:
-            self._addParameter(par)
+            self._add_parameter(par)
 
         # Register the equation as a callable function.
         argnames = eq.argdict.keys()
@@ -733,7 +733,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._constraints[par] = con
 
         # Our configuration changed
-        self._updateConfiguration()
+        self._update_configuration()
 
         return
 
@@ -780,7 +780,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if update:
             # Our configuration changed
-            self._updateConfiguration()
+            self._update_configuration()
 
         else:
 
@@ -797,7 +797,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             Recurse into managed objects and retrieve their constrained
             Parameters as well (default False).
         """
-        const = self._getConstraints(recurse)
+        const = self._get_constraints(recurse)
         return const.keys()
 
     def clearConstraints(self, recurse=False):
@@ -817,7 +817,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             self.unconstrain(*self._constraints)
 
         if recurse:
-            for m in filter(_has_clear_constraints, self._iterManaged()):
+            for m in filter(_has_clear_constraints, self._iter_managed()):
                 m.clearConstraints(recurse)
         return
 
@@ -881,7 +881,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
-        self._updateConfiguration()
+        self._update_configuration()
         return
 
     def unrestrain(self, *ress):
@@ -902,7 +902,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if update:
             # Our configuration changed
-            self._updateConfiguration()
+            self._update_configuration()
 
         return
 
@@ -917,30 +917,30 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         self.unrestrain(*self._restraints)
         if recurse:
-            for msg in filter(_has_clear_restraints, self._iterManaged()):
+            for msg in filter(_has_clear_restraints, self._iter_managed()):
                 msg.clearRestraints(recurse)
         return
 
-    def _getConstraints(self, recurse=True):
+    def _get_constraints(self, recurse=True):
         """Get the constrained Parameters for this and managed sub-objects."""
         constraints = {}
         if recurse:
-            for m in filter(_has_get_constraints, self._iterManaged()):
-                constraints.update(m._getConstraints(recurse))
+            for m in filter(_has_get_constraints, self._iter_managed()):
+                constraints.update(m._get_constraints(recurse))
 
         constraints.update(self._constraints)
 
         return constraints
 
-    def _getRestraints(self, recurse=True):
+    def _get_restraints(self, recurse=True):
         """Get the Restraints for this and embedded ParameterSets.
 
         This returns a set of Restraint objects.
         """
         restraints = set(self._restraints)
         if recurse:
-            for m in filter(_has_get_restraints, self._iterManaged()):
-                restraints.update(m._getRestraints(recurse))
+            for m in filter(_has_get_restraints, self._iter_managed()):
+                restraints.update(m._get_restraints(recurse))
 
         return restraints
 
@@ -954,12 +954,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         RecipeContainer._validate(self)
         iterable = chain(self._restraints, self._constraints.values())
-        self._validateOthers(iterable)
+        self._validate_others(iterable)
         return
 
     # For printing the configured recipe to screen
 
-    def _formatManaged(self, prefix=""):
+    def _format_managed(self, prefix=""):
         """Format hierarchy of managed parameters for showing.
 
         Parameters
@@ -984,15 +984,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 for n, p in self._parameters.items()
             )
         # Recurse into managed objects.
-        for obj in self._iterManaged():
-            if hasattr(obj, "_formatManaged"):
+        for obj in self._iter_managed():
+            if hasattr(obj, "_format_managed"):
                 oprefix = prefix + obj.name + "."
-                tlines = obj._formatManaged(prefix=oprefix)
+                tlines = obj._format_managed(prefix=oprefix)
                 lines.extend([""] if lines and tlines else [])
                 lines.extend(tlines)
         return lines
 
-    def _formatConstraints(self):
+    def _format_constraints(self):
         """Format constraints for showing.
 
         This collects constraints on all levels of the hierarchy and displays
@@ -1004,11 +1004,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             List of formatted lines displaying the defined constraints.
             Return empty list when no constraints were defined.
         """
-        cdict = self._getConstraints()
+        cdict = self._get_constraints()
         # Find each constraint and format the equation
         clines = []
         for par, con in cdict.items():
-            loc = self._locateManagedObject(par)
+            loc = self._locate_managed_object(par)
             if loc:
                 locstr = ".".join(o.name for o in loc[1:])
                 clines.append("%s <-- %s" % (locstr, con.eqstr))
@@ -1017,7 +1017,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         clines.sort(key=numstr)
         return clines
 
-    def _formatRestraints(self):
+    def _format_restraints(self):
         """Format restraints for showing.
 
         This collects restraints on all levels of the hierarchy and displays
@@ -1029,7 +1029,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             List of formatted lines displaying the defined restraints.
             Return empty list when no restraints were defined.
         """
-        rset = self._getRestraints()
+        rset = self._get_restraints()
         rlines = []
         for res in rset:
             line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s" % (
@@ -1061,7 +1061,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         _pmatch_with_re = partial(_pmatch, regexp=regexp)
         # Show sub objects and their parameters
         lines = []
-        tlines = self._formatManaged()
+        tlines = self._format_managed()
         if tlines:
             lines.extend(["Parameters", _DASHEDLINE])
             linesok = filter(_pmatch_with_re, tlines)
@@ -1076,7 +1076,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # FIXME - parameter names in equations not particularly informative
         # Show constraints
         cmatch = regexp.search
-        tlines = self._formatConstraints()
+        tlines = self._format_constraints()
         if tlines:
             if lines:
                 lines.append("")
@@ -1085,7 +1085,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # FIXME - parameter names in equations not particularly informative
         # Show restraints
-        tlines = self._formatRestraints()
+        tlines = self._format_restraints()
         if tlines:
             if lines:
                 lines.append("")
@@ -1165,11 +1165,11 @@ def _has_clear_restraints(msg):
 
 
 def _has_get_restraints(msg):
-    return hasattr(msg, "_getRestraints")
+    return hasattr(msg, "_get_restraints")
 
 
 def _has_get_constraints(msg):
-    return hasattr(msg, "_getConstraints")
+    return hasattr(msg, "_get_constraints")
 
 
 def _pmatch(inp_str, regexp):

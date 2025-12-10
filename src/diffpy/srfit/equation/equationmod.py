@@ -125,10 +125,10 @@ class Equation(Operator):
         """
         return self.__call__(*args, **kw)
 
-    def _getArgs(self):
+    def _get_args(self):
         return list(self.argdict.values())
 
-    args = property(_getArgs)
+    args = property(_get_args)
 
     def __getattr__(self, name):
         """Gives access to the Arguments as attributes."""

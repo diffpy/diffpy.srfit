@@ -27,7 +27,7 @@ class Validatable(object):
     A Validatable has state that must be validated by a FitRecipe.
     """
 
-    def _validateOthers(self, iterable):
+    def _validate_others(self, iterable):
         """Method to validate configuration of Validatables in iterable.
 
         This is provided as a convenience for derived classes.  No need

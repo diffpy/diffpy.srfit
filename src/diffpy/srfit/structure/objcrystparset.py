@@ -179,11 +179,11 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
             self.Biso.value = 0.5
         return
 
-    def _getElem(self):
+    def _getelem(self):
         """Getter for the element type."""
         return self.scat.GetScatteringPower().GetSymbol()
 
-    element = property(_getElem)
+    element = property(_getelem)
 
 
 # End class ObjCrystAtomParSet
@@ -282,7 +282,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         return False
 
     # Part of SrRealParSet interface
-    def _getSrRealStructure(self):
+    def _get_srreal_structure(self):
         """Get the structure object for use with SrReal calculators.
 
         Molecule objects are never periodic. Return the object and let
@@ -809,7 +809,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
 
         return
 
-    def _getElem(self):
+    def _getelem(self):
         """Getter for the element type."""
         sp = self.scat.GetScatteringPower()
         if sp:
@@ -817,7 +817,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
         else:
             return "dummy"
 
-    element = property(_getElem)
+    element = property(_getelem)
 
     def isDummy(self):
         """Indicate whether this atom is a dummy atom."""
@@ -1766,17 +1766,19 @@ class ObjCrystCrystalParSet(SrRealParSet):
 
         return
 
-    def _constrainSpaceGroup(self):
+    def _constrain_space_group(self):
         """Constrain the space group."""
         if self._sgpars is not None:
             return self._sgpars
-        sg = self._createSpaceGroup(self.stru.GetSpaceGroup())
-        from diffpy.srfit.structure.sgconstraints import _constrainAsSpaceGroup
+        sg = self._create_space_group(self.stru.GetSpaceGroup())
+        from diffpy.srfit.structure.sgconstraints import (
+            _constrain_as_space_group,
+        )
 
         adpsymbols = ["B11", "B22", "B33", "B12", "B13", "B23"]
         isosymbol = "Biso"
         sgoffset = [0, 0, 0]
-        self._sgpars = _constrainAsSpaceGroup(
+        self._sgpars = _constrain_as_space_group(
             self,
             sg,
             self.scatterers,
@@ -1786,10 +1788,10 @@ class ObjCrystCrystalParSet(SrRealParSet):
         )
         return self._sgpars
 
-    sgpars = property(_constrainSpaceGroup)
+    sgpars = property(_constrain_space_group)
 
     @staticmethod
-    def _createSpaceGroup(sgobjcryst):
+    def _create_space_group(sgobjcryst):
         """Create a diffpy.structure SpaceGroup object from pyobjcryst.
 
         Attributes

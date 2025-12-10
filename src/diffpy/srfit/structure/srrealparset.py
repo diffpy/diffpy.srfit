@@ -69,7 +69,7 @@ class SrRealParSet(BaseStructureParSet):
         # Add it to the _restraints set
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
-        self._updateConfiguration()
+        self._update_configuration()
         # Return the Restraint object
         return res
 
@@ -86,7 +86,7 @@ class SrRealParSet(BaseStructureParSet):
         """Check if symmetry is being used."""
         return self._usesymmetry
 
-    def _getSrRealStructure(self):
+    def _get_srreal_structure(self):
         """Get the structure object for use with SrReal calculators.
 
         If this is periodic, then return the structure, otherwise, pass

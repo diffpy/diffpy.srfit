@@ -120,10 +120,10 @@ class CCTBXScattererParSet(ParameterSet):
         self.strups.stru.scatterers()[self.idx].u_iso = value
         return
 
-    def _getElem(self):
+    def _getelem(self):
         return self.stru.element_symbol()
 
-    element = property(_getElem)
+    element = property(_getelem)
 
 
 # End class CCTBXScattererParSet
@@ -253,10 +253,10 @@ class CCTBXCrystalParSet(BaseStructureParSet):
             self.scatterers.append(scatterer)
 
         # Constrain the lattice
-        from diffpy.srfit.structure.sgconstraints import _constrainSpaceGroup
+        from diffpy.srfit.structure.sgconstraints import _constrain_space_group
 
         symbol = self.getSpaceGroup()
-        _constrainSpaceGroup(self, symbol)
+        _constrain_space_group(self, symbol)
 
         return
 

@@ -83,9 +83,9 @@ class ParameterSet(RecipeOrganizer):
         return
 
     # Alias Parameter accessors.
-    addParameter = RecipeOrganizer._addParameter
-    newParameter = RecipeOrganizer._newParameter
-    removeParameter = RecipeOrganizer._removeParameter
+    addParameter = RecipeOrganizer._add_parameter
+    newParameter = RecipeOrganizer._new_parameter
+    removeParameter = RecipeOrganizer._remove_parameter
 
     def addParameterSet(self, parset):
         """Add a ParameterSet to the hierarchy.
@@ -100,7 +100,7 @@ class ParameterSet(RecipeOrganizer):
         Raises ValueError if the ParameterSet has the same name as some other
         managed object.
         """
-        self._addObject(parset, self._parsets, True)
+        self._add_object(parset, self._parsets, True)
         return
 
     def removeParameterSet(self, parset):
@@ -108,7 +108,7 @@ class ParameterSet(RecipeOrganizer):
 
         Raises ValueError if parset is not managed by this object.
         """
-        self._removeObject(parset, self._parsets)
+        self._remove_object(parset, self._parsets)
         return
 
     def setConst(self, const=True):

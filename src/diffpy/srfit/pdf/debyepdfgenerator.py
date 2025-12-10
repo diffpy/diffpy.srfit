@@ -135,7 +135,7 @@ class DebyePDFGenerator(BasePDFGenerator):
         from diffpy.srreal.pdfcalculator import DebyePDFCalculator
 
         BasePDFGenerator.__init__(self, name)
-        self._setCalculator(DebyePDFCalculator())
+        self._set_calculator(DebyePDFCalculator())
         return
 
 

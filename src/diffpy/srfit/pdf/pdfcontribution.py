@@ -217,7 +217,7 @@ class PDFContribution(FitContribution):
 
         # Set up the generator
         gen.setStructure(stru, "phase", periodic)
-        self._setupGenerator(gen)
+        self._setup_generator(gen)
 
         return gen.phase
 
@@ -262,11 +262,11 @@ class PDFContribution(FitContribution):
 
         # Set up the generator
         gen.setPhase(parset, periodic)
-        self._setupGenerator(gen)
+        self._setup_generator(gen)
 
         return gen.phase
 
-    def _setupGenerator(self, gen):
+    def _setup_generator(self, gen):
         """Setup a generator.
 
         The generator must already have a managed SrRealParSet, added
@@ -293,7 +293,7 @@ class PDFContribution(FitContribution):
 
     # Calculation setup methods
 
-    def _getMetaValue(self, kwd):
+    def _get_meta_value(self, kwd):
         """Get metadata according to object hierarchy."""
         # Check self, then generators then profile
         if kwd in self._meta:
@@ -324,7 +324,7 @@ class PDFContribution(FitContribution):
 
         See 'setScatteringType'.
         """
-        return self._getMetaValue("stype")
+        return self._get_meta_value("stype")
 
     def setQmax(self, qmax):
         """Set the qmax value."""
@@ -335,7 +335,7 @@ class PDFContribution(FitContribution):
 
     def getQmax(self):
         """Get the qmax value."""
-        return self._getMetaValue("qmax")
+        return self._get_meta_value("qmax")
 
     def setQmin(self, qmin):
         """Set the qmin value."""
@@ -346,7 +346,7 @@ class PDFContribution(FitContribution):
 
     def getQmin(self):
         """Get the qmin value."""
-        return self._getMetaValue("qmin")
+        return self._get_meta_value("qmin")
 
 
 # End of file

@@ -85,13 +85,13 @@ class GaussianGenerator(ProfileGenerator):
         # This initializes various parts of the generator
         ProfileGenerator.__init__(self, name)
 
-        # Here we create new Parameters using the '_newParameter' method of
+        # Here we create new Parameters using the '_new_parameter' method of
         # ProfileGenerator. The signature is
-        # _newParameter(name, value).
+        # _new_parameter(name, value).
         # See the API for full details.
-        self._newParameter("A", 1.0)
-        self._newParameter("x0", 0.0)
-        self._newParameter("sigma", 1.0)
+        self._new_parameter("A", 1.0)
+        self._new_parameter("x0", 0.0)
+        self._new_parameter("sigma", 1.0)
         return
 
     def __call__(self, x):
@@ -101,7 +101,7 @@ class GaussianGenerator(ProfileGenerator):
         variable, x. We will define it as we did in gaussianrecipe.py.
         """
         # First we must get the values of the Parameters. Since we used
-        # _newParameter to create them, the Parameters are accessible as
+        # _new_parameter to create them, the Parameters are accessible as
         # attributes by name.
         A = self.A.value
         x0 = self.x0.value

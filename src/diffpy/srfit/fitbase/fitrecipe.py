@@ -173,7 +173,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             index = len(self.fithooks)
         self.fithooks.insert(index, fithook)
         # Make sure the added FitHook gets its reset method called.
-        self._updateConfiguration()
+        self._update_configuration()
         return
 
     def popFitHook(self, fithook=None, index=-1):
@@ -220,7 +220,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if the FitContribution has the same name as some
         other managed object.
         """
-        self._addObject(con, self._contributions, True)
+        self._add_object(con, self._contributions, True)
         self._weights.append(weight)
         return
 
@@ -243,7 +243,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if the ParameterSet has the same name as some other
         managed object.
         """
-        self._addObject(parset, self._parsets, True)
+        self._add_object(parset, self._parsets, True)
         return
 
     def removeParameterSet(self, parset):
@@ -251,7 +251,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Raises ValueError if parset is not managed by this object.
         """
-        self._removeObject(parset, self._parsets)
+        self._remove_object(parset, self._parsets)
         return
 
     def residual(self, p=[]):
@@ -279,7 +279,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             fithook.precall(self)
 
         # Update the variable parameters.
-        self._applyValues(p)
+        self._apply_values(p)
 
         # Update the constraints. These are ordered such that the list only
         # needs to be cycled once.
@@ -351,13 +351,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             fithook.reset(self)
 
         # Check Profiles
-        self.__verifyProfiles()
+        self.__verify_profiles()
 
         # Check parameters
-        self.__verifyParameters()
+        self.__verify_parameters()
 
         # Update constraints and restraints.
-        self.__collectConstraintsAndRestraints()
+        self.__collect_constraints_and_restraints()
 
         # We do this here so that the calculations that take place during the
         # validation use the most current values of the parameters. In most
@@ -372,7 +372,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def __verifyProfiles(self):
+    def __verify_profiles(self):
         """Verify that each FitContribution has a Profile."""
         # Check for profile values
         for con in self._contributions.values():
@@ -389,7 +389,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 raise AttributeError(m)
         return
 
-    def __verifyParameters(self):
+    def __verify_parameters(self):
         """Verify that all Parameters have values."""
 
         # Get all parameters with a value of None
@@ -403,7 +403,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         # Get the bad names
         badnames = []
         for par in badpars:
-            objlist = self._locateManagedObject(par)
+            objlist = self._locate_managed_object(par)
             names = [obj.name for obj in objlist]
             badnames.append(".".join(names))
 
@@ -421,7 +421,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def __collectConstraintsAndRestraints(self):
+    def __collect_constraints_and_restraints(self):
         """Collect the Constraints and Restraints from subobjects."""
         from functools import cmp_to_key
         from itertools import chain
@@ -430,8 +430,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         cdict = {}
 
         for org in chain(self._contributions.values(), self._parsets.values()):
-            rset.update(org._getRestraints())
-            cdict.update(org._getConstraints())
+            rset.update(org._get_restraints())
+            cdict.update(org._get_constraints())
         cdict.update(self._constraints)
 
         # The order of the restraint list does not matter
@@ -533,7 +533,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if value is not None:
             var.setValue(value)
 
-        self._addParameter(var)
+        self._add_parameter(var)
 
         if fixed:
             self.fix(var)
@@ -561,7 +561,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if var is not part of the FitRecipe.
         """
 
-        self._removeParameter(var)
+        self._remove_parameter(var)
         self._tagmanager.untag(var)
         return
 
@@ -605,7 +605,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns the new variable (Parameter instance).
         """
         # This will fix the Parameter
-        var = self._newParameter(name, value)
+        var = self._new_parameter(name, value)
 
         # We may explicitly free it
         if not fixed:
@@ -618,19 +618,19 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return var
 
-    def _newParameter(self, name, value, check=True):
+    def _new_parameter(self, name, value, check=True):
         """Overloaded to tag variables.
 
-        See RecipeOrganizer._newParameter
+        See RecipeOrganizer._new_parameter
         """
-        par = RecipeOrganizer._newParameter(self, name, value, check)
+        par = RecipeOrganizer._new_parameter(self, name, value, check)
         # tag this
         self._tagmanager.tag(par, par.name)
         self._tagmanager.tag(par, "all")
         self.fix(par.name)
         return par
 
-    def __getVarAndCheck(self, var):
+    def __get_var_and_check(self, var):
         """Get the actual variable from var.
 
         Attributes
@@ -649,7 +649,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return var
 
-    def __getVarsFromArgs(self, *args, **kw):
+    def __get_vars_from_args(self, *args, **kw):
         """Get a list of variables from passed arguments.
 
         This method accepts string or variable arguments. An argument of
@@ -705,7 +705,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         passed, or if a tag is passed in a keyword.
         """
         # Check the inputs and get the variables from them
-        varargs = self.__getVarsFromArgs(*args, **kw)
+        varargs = self.__get_vars_from_args(*args, **kw)
 
         # Fix all of these
         for var in varargs:
@@ -731,7 +731,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         passed, or if a tag is passed in a keyword.
         """
         # Check the inputs and get the variables from them
-        varargs = self.__getVarsFromArgs(*args, **kw)
+        varargs = self.__get_vars_from_args(*args, **kw)
 
         # Free all of these
         for var in varargs:
@@ -781,7 +781,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         if update:
             # Our configuration changed
-            self._updateConfiguration()
+            self._update_configuration()
 
         return
 
@@ -893,7 +893,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             )
         return
 
-    def _applyValues(self, p):
+    def _apply_values(self, p):
         """Apply variable values to the variables."""
         if len(p) == 0:
             return
@@ -902,7 +902,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             var.setValue(pval)
         return
 
-    def _updateConfiguration(self):
+    def _update_configuration(self):
         """Notify RecipeContainers in hierarchy of configuration change."""
         self._ready = False
         return

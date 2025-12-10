@@ -98,13 +98,13 @@ class TestRecipeContainer(unittest.TestCase):
         """Test accessors."""
         m1 = self.m
         p1 = Parameter("p1", 1)
-        m1._addObject(p1, m1._parameters)
+        m1._add_object(p1, m1._parameters)
 
         m2 = RecipeContainer("m2")
         p2 = Parameter("p2", 2)
-        m2._addObject(p2, m2._parameters)
+        m2._add_object(p2, m2._parameters)
 
-        m1._addObject(m2, m1._containers)
+        m1._add_object(m2, m1._containers)
 
         self.assertTrue(m1.m2 is m2)
         self.assertTrue(m1.p1 is p1)
@@ -128,38 +128,38 @@ class TestRecipeContainer(unittest.TestCase):
         """Test the locateManagedObject method."""
         m1 = self.m
         p1 = Parameter("p1", 1)
-        m1._addObject(p1, m1._parameters)
+        m1._add_object(p1, m1._parameters)
 
         m2 = RecipeContainer("m2")
         p2 = Parameter("p2", 2)
-        m2._addObject(p2, m2._parameters)
+        m2._add_object(p2, m2._parameters)
 
-        m1._addObject(m2, m1._containers)
+        m1._add_object(m2, m1._containers)
 
         p3 = Parameter("p3", 3)
 
         # Locate m2 in m1 (m1.m2)
-        loc = m1._locateManagedObject(m2)
+        loc = m1._locate_managed_object(m2)
         self.assertEqual(loc, [m1, m2])
 
         # Locate p1 (m1.p1)
-        loc = m1._locateManagedObject(p1)
+        loc = m1._locate_managed_object(p1)
         self.assertEqual(loc, [m1, p1])
 
         # Locate p2 in m2 (m2.p2)
-        loc = m2._locateManagedObject(p2)
+        loc = m2._locate_managed_object(p2)
         self.assertEqual(loc, [m2, p2])
 
         # Locate p2 in m1 (m1.m2.p2)
-        loc = m1._locateManagedObject(p2)
+        loc = m1._locate_managed_object(p2)
         self.assertEqual(loc, [m1, m2, p2])
 
         # Locate p3 in m1 (not there)
-        loc = m1._locateManagedObject(p3)
+        loc = m1._locate_managed_object(p3)
         self.assertEqual(loc, [])
 
         # Locate p3 in m2 (not there)
-        loc = m2._locateManagedObject(p3)
+        loc = m2._locate_managed_object(p3)
         self.assertEqual(loc, [])
 
         return
@@ -186,13 +186,13 @@ class TestRecipeOrganizer(unittest.TestCase):
         m = self.m
 
         p1 = Parameter("p1", 1)
-        m._addParameter(p1)
+        m._add_parameter(p1)
 
         # Test duplication of Parameters
-        self.assertRaises(ValueError, m._newParameter, "p1", 0)
+        self.assertRaises(ValueError, m._new_parameter, "p1", 0)
 
         # Add a new Parameter
-        p2 = m._newParameter("p2", 0)
+        p2 = m._new_parameter("p2", 0)
         self.assertTrue(p2 is m.p2)
         return
 
@@ -205,28 +205,28 @@ class TestRecipeOrganizer(unittest.TestCase):
         p2 = Parameter("p1", 2)
 
         # Check normal insert
-        m._addParameter(p1)
+        m._add_parameter(p1)
         self.assertTrue(m.p1 is p1)
         self.assertTrue(p1.name in m._eqfactory.builders)
 
         # Try to insert another parameter with the same name
-        self.assertRaises(ValueError, m._addParameter, p2)
+        self.assertRaises(ValueError, m._add_parameter, p2)
 
         # Now allow this
-        m._addParameter(p2, check=False)
+        m._add_parameter(p2, check=False)
         self.assertTrue(m.p1 is p2)
         self.assertTrue(p1.name in m._eqfactory.builders)
 
         # Try to insert a Parameter when a RecipeContainer with the same name
         # is already inside.
         c = RecipeContainer("test")
-        m._addObject(c, m._containers)
+        m._add_object(c, m._containers)
 
         p3 = Parameter("test", 0)
-        self.assertRaises(ValueError, m._addParameter, p3)
+        self.assertRaises(ValueError, m._add_parameter, p3)
 
         p4 = Parameter("xyz", 0)
-        m._addParameter(p4)
+        m._add_parameter(p4)
 
         # Check order
         self.assertEqual(list(m._parameters.keys()), ["p1", "xyz"])
@@ -242,28 +242,28 @@ class TestRecipeOrganizer(unittest.TestCase):
         p1 = Parameter("p1", 1)
         p2 = Parameter("p1", 2)
 
-        m._addParameter(p1)
+        m._add_parameter(p1)
 
         # Check for bad remove
-        self.assertRaises(ValueError, m._removeParameter, p2)
+        self.assertRaises(ValueError, m._remove_parameter, p2)
 
         # Remove p1
-        m._removeParameter(p1)
+        m._remove_parameter(p1)
         self.assertTrue(p1.name not in m._eqfactory.builders)
 
         # Try to remove it again
-        self.assertRaises(ValueError, m._removeParameter, p1)
+        self.assertRaises(ValueError, m._remove_parameter, p1)
 
         # Try to remove a RecipeContainer
         c = RecipeContainer("test")
-        self.assertRaises(ValueError, m._removeParameter, c)
+        self.assertRaises(ValueError, m._remove_parameter, c)
         return
 
     def testConstrain(self):
         """Test the constrain method."""
 
-        p1 = self.m._newParameter("p1", 1)
-        p2 = self.m._newParameter("p2", 2)
+        p1 = self.m._new_parameter("p1", 1)
+        p2 = self.m._new_parameter("p2", 2)
         p3 = Parameter("p3", 3)
 
         self.assertFalse(p1.constrained)
@@ -324,54 +324,54 @@ class TestRecipeOrganizer(unittest.TestCase):
         return
 
     def testGetConstraints(self):
-        """Test the _getConstraints method."""
+        """Test the _get_constraints method."""
         m2 = RecipeOrganizer("m2")
         self.m._organizers = {}
         self.m._manage(self.m._organizers)
-        self.m._addObject(m2, self.m._organizers)
+        self.m._add_object(m2, self.m._organizers)
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
         p3 = Parameter("p3", 3)
         p4 = Parameter("p4", 4)
 
-        self.m._addParameter(p1)
-        self.m._addParameter(p2)
+        self.m._add_parameter(p1)
+        self.m._add_parameter(p2)
 
-        m2._addParameter(p3)
-        m2._addParameter(p4)
+        m2._add_parameter(p3)
+        m2._add_parameter(p4)
 
         self.m.constrain(p1, "p2")
         m2.constrain(p3, "p4")
 
-        cons = self.m._getConstraints()
+        cons = self.m._get_constraints()
         self.assertTrue(p1 in cons)
         self.assertTrue(p3 in cons)
         self.assertEqual(2, len(cons))
         return
 
     def testGetRestraints(self):
-        """Test the _getRestraints method."""
+        """Test the _get_restraints method."""
         m2 = RecipeOrganizer("m2")
         self.m._organizers = {}
         self.m._manage(self.m._organizers)
-        self.m._addObject(m2, self.m._organizers)
+        self.m._add_object(m2, self.m._organizers)
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
         p3 = Parameter("p3", 3)
         p4 = Parameter("p4", 4)
 
-        self.m._addParameter(p1)
-        self.m._addParameter(p2)
+        self.m._add_parameter(p1)
+        self.m._add_parameter(p2)
 
-        m2._addParameter(p3)
-        m2._addParameter(p4)
+        m2._add_parameter(p3)
+        m2._add_parameter(p4)
 
         r1 = self.m.restrain("p1 + p2")
         r2 = m2.restrain("2*p3 + p4")
 
-        res = self.m._getRestraints()
+        res = self.m._get_restraints()
         self.assertTrue(r1 in res)
         self.assertTrue(r2 in res)
         self.assertEqual(2, len(res))
@@ -483,7 +483,7 @@ class TestRecipeOrganizer(unittest.TestCase):
             self.assertTrue(p in self.m._parameters.values())
 
         # Add a parameter
-        self.m._newParameter("y", 3.0)
+        self.m._new_parameter("y", 3.0)
 
         # Make sure that x and y are in the organizer
         self.assertEqual(0, self.m.x.getValue())
@@ -512,7 +512,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def test_releaseOldEquations(self):
         """Verify EquationFactory does not hold temporary equations."""
-        self.m._newParameter("x", 12)
+        self.m._new_parameter("x", 12)
         self.assertEqual(36, self.m.evaluateEquation("3 * x"))
         self.assertEqual(0, len(self.m._eqfactory.equations))
         return
@@ -530,15 +530,15 @@ def test_show(capturestdout):
         return rv
 
     assert "" == capture_show()
-    organizer._newParameter("x", 1)
-    organizer._newParameter("y", 2)
+    organizer._new_parameter("x", 1)
+    organizer._new_parameter("y", 2)
     out1 = capture_show()
     lines1 = out1.strip().split("\n")
     assert 4 == len(lines1)
     assert "Parameters" in lines1
     assert "Constraints" not in lines1
     assert "Restraints" not in lines1
-    organizer._newParameter("z", 7)
+    organizer._new_parameter("z", 7)
     organizer.constrain("y", "3 * z")
     out2 = capture_show()
     lines2 = out2.strip().split("\n")
@@ -559,8 +559,8 @@ def test_show(capturestdout):
     out5 = capture_show(pattern="^")
     assert out3 == out5
     # check output with another level of hierarchy
-    organizer._addObject(RecipeOrganizer("foo"), organizer._containers)
-    organizer.foo._newParameter("bar", 13)
+    organizer._add_object(RecipeOrganizer("foo"), organizer._containers)
+    organizer.foo._new_parameter("bar", 13)
     out6 = capture_show()
     assert "foo.bar" in out6
     # filter out foo.bar

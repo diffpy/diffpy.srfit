@@ -649,7 +649,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return var
 
-    def __getVarsFromArgs(self, *args, **kw):
+    def __get_vars_from_args(self, *args, **kw):
         """Get a list of variables from passed arguments.
 
         This method accepts string or variable arguments. An argument of
@@ -705,7 +705,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         passed, or if a tag is passed in a keyword.
         """
         # Check the inputs and get the variables from them
-        varargs = self.__getVarsFromArgs(*args, **kw)
+        varargs = self.__get_vars_from_args(*args, **kw)
 
         # Fix all of these
         for var in varargs:
@@ -731,7 +731,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         passed, or if a tag is passed in a keyword.
         """
         # Check the inputs and get the variables from them
-        varargs = self.__getVarsFromArgs(*args, **kw)
+        varargs = self.__get_vars_from_args(*args, **kw)
 
         # Free all of these
         for var in varargs:

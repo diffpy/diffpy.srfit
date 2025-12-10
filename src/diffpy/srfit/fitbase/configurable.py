@@ -43,7 +43,7 @@ class Configurable(object):
             obj._update_configuration()
         return
 
-    def _storeConfigurable(self, obj):
+    def _store_configurable(self, obj):
         """Store a Configurable.
 
         The passed obj is only stored if it is a a Configurable,

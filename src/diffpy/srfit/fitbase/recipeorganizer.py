@@ -289,7 +289,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         obj.addObserver(self._flush)
 
         # Store this as a configurable object
-        self._storeConfigurable(obj)
+        self._store_configurable(obj)
         return
 
     def _removeObject(self, obj, d):

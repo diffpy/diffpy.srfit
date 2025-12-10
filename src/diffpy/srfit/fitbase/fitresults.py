@@ -165,7 +165,7 @@ class FitResults(object):
 
         if self.varnames:
             # Calculate the covariance
-            self._calculateCovariance()
+            self._calculate_covariance()
 
             # Get the variable uncertainties
             self.varunc = [
@@ -193,7 +193,7 @@ class FitResults(object):
 
         return
 
-    def _calculateCovariance(self):
+    def _calculate_covariance(self):
         """Calculate the covariance matrix. This is called by update.
 
         This code borrowed from PARK. It finds the pseudo-inverse of the

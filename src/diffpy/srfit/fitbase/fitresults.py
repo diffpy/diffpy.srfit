@@ -185,7 +185,7 @@ class FitResults(object):
         # Calculate the metrics
         res = recipe.residual()
         self.residual = numpy.dot(res, res)
-        self._calculateMetrics()
+        self._calculate_metrics()
 
         # Calculate the restraints penalty
         w = self.chi2 / len(res)
@@ -276,7 +276,7 @@ class FitResults(object):
         jac = numpy.vstack(r).T
         return jac
 
-    def _calculateMetrics(self):
+    def _calculate_metrics(self):
         """Calculate chi2, cumchi2, rchi2, rw and cumrw for the recipe."""
         cumchi2 = numpy.array([], dtype=float)
         # total weighed denominator for the ratio in the Rw formula
@@ -657,7 +657,7 @@ class ContributionResults(object):
         self.ycalc = numpy.array(con.profile.ycalc)
 
         # The other metrics
-        self._calculateMetrics()
+        self._calculate_metrics()
 
         # Find the parameters
         for i, constraint in enumerate(recipe._oconstraints):
@@ -671,7 +671,7 @@ class ContributionResults(object):
         return
 
     # FIXME: factor rw, chi2, cumrw, cumchi2 to separate functions.
-    def _calculateMetrics(self):
+    def _calculate_metrics(self):
         """Calculate chi2 and Rw of the recipe."""
         # We take absolute values in case the signal is complex
         num = numpy.abs(self.y - self.ycalc)

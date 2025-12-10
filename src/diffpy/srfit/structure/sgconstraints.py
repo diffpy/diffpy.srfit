@@ -325,7 +325,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _get_lat_pars(self):
         """Accessor for _latpars."""
         if self._latpars is None:
-            self._constrainLattice()
+            self._constrain_lattice()
         return self._latpars
 
     xyzpars = property(lambda self: self._get_xyz_pars())
@@ -369,7 +369,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             xyz = [scatterer.x, scatterer.y, scatterer.z]
             positions.append([p.value for p in xyz])
 
-        self._constrainLattice()
+        self._constrain_lattice()
         self._constrainXYZs(positions)
         self._constrainADPs(positions)
 
@@ -430,7 +430,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         return
 
-    def _constrainLattice(self):
+    def _constrain_lattice(self):
         """Constrain the lattice parameters."""
 
         if not self.constrainlat:

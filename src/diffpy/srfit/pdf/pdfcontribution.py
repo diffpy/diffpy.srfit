@@ -293,7 +293,7 @@ class PDFContribution(FitContribution):
 
     # Calculation setup methods
 
-    def _getMetaValue(self, kwd):
+    def _get_meta_value(self, kwd):
         """Get metadata according to object hierarchy."""
         # Check self, then generators then profile
         if kwd in self._meta:
@@ -324,7 +324,7 @@ class PDFContribution(FitContribution):
 
         See 'setScatteringType'.
         """
-        return self._getMetaValue("stype")
+        return self._get_meta_value("stype")
 
     def setQmax(self, qmax):
         """Set the qmax value."""
@@ -335,7 +335,7 @@ class PDFContribution(FitContribution):
 
     def getQmax(self):
         """Get the qmax value."""
-        return self._getMetaValue("qmax")
+        return self._get_meta_value("qmax")
 
     def setQmin(self, qmin):
         """Set the qmin value."""
@@ -346,7 +346,7 @@ class PDFContribution(FitContribution):
 
     def getQmin(self):
         """Get the qmin value."""
-        return self._getMetaValue("qmin")
+        return self._get_meta_value("qmin")
 
 
 # End of file

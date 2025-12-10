@@ -710,7 +710,7 @@ def getBuilder(name):
     return _builders[name]
 
 
-def __wrapNumpyOperators():
+def __wrap_numpy_operators():
     """Export all numpy operators as OperatorBuilder instances in the module
     namespace."""
     for name in dir(numpy):
@@ -720,11 +720,11 @@ def __wrapNumpyOperators():
     return
 
 
-__wrapNumpyOperators()
+__wrap_numpy_operators()
 
 
 # Register other functions as well
-def __wrapSrFitOperators():
+def __wrap_srfit_operators():
     """Export all non-base operators from the
     diffpy.srfit.equation.literals.operators module as OperatorBuilder
     instances in the module namespace."""
@@ -748,6 +748,6 @@ def __wrapSrFitOperators():
     return
 
 
-__wrapSrFitOperators()
+__wrap_srfit_operators()
 
 # End of file

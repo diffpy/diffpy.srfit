@@ -282,7 +282,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         return False
 
     # Part of SrRealParSet interface
-    def _getSrRealStructure(self):
+    def _get_srreal_structure(self):
         """Get the structure object for use with SrReal calculators.
 
         Molecule objects are never periodic. Return the object and let

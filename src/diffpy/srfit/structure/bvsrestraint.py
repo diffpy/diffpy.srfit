@@ -76,7 +76,7 @@ class BVSRestraint(Restraint):
             penalty (float, default 1.0).
         """
         # Get the bvms from the BVSCalculator
-        stru = self._parset._getSrRealStructure()
+        stru = self._parset._get_srreal_structure()
         self._calc.eval(stru)
         penalty = self._calc.bvmsdiff
 

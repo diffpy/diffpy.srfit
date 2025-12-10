@@ -320,7 +320,7 @@ class BasePDFGenerator(ProfileGenerator):
         if not numpy.array_equal(r, self._lastr):
             self._prepare(r)
 
-        rcalc, y = self._calc(self._phase._getSrRealStructure())
+        rcalc, y = self._calc(self._phase._get_srreal_structure())
 
         if numpy.isnan(y).any():
             y = numpy.zeros_like(r)

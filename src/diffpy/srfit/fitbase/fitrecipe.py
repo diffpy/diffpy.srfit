@@ -630,7 +630,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.fix(par.name)
         return par
 
-    def __getVarAndCheck(self, var):
+    def __get_var_and_check(self, var):
         """Get the actual variable from var.
 
         Attributes

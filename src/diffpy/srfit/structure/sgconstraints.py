@@ -676,7 +676,7 @@ def _constrain_orthorhombic(lattice):
     return
 
 
-def _constrainTetragonal(lattice):
+def _constrain_tetragonal(lattice):
     """Make constraints for Tetragonal systems.
 
     b is constrained to a and alpha, beta and gamma are constrained to
@@ -760,7 +760,7 @@ _constraintMap = {
     "Triclinic": _constrain_triclinic,
     "Monoclinic": _constrain_monoclinic,
     "Orthorhombic": _constrain_orthorhombic,
-    "Tetragonal": _constrainTetragonal,
+    "Tetragonal": _constrain_tetragonal,
     "Trigonal": _constrainTrigonal,
     "Hexagonal": _constrainHexagonal,
     "Cubic": _constrainCubic,

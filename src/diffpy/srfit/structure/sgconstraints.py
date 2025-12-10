@@ -801,7 +801,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
         return par
 
     # Check to see if it is a constant
-    fval = _getFloat(formula)
+    fval = _get_float(formula)
     if fval is not None:
         par.setConst()
         return
@@ -813,7 +813,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     return
 
 
-def _getFloat(formula):
+def _get_float(formula):
     """Get a float from a formula string, or None if this is not possible."""
     try:
         return eval(formula)

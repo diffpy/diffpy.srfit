@@ -600,7 +600,7 @@ class ContributionResults(object):
     conlocs
         The location of the constrained parameters in the
         FitContribution (see the
-        RecipeContainer._locateManagedObject method).
+        RecipeContainer._locate_managed_object method).
     convals
         Values of the constrained parameters.
     conunc
@@ -662,7 +662,7 @@ class ContributionResults(object):
         # Find the parameters
         for i, constraint in enumerate(recipe._oconstraints):
             par = constraint.par
-            loc = con._locateManagedObject(par)
+            loc = con._locate_managed_object(par)
             if loc:
                 self.conlocs.append(loc)
                 self.convals.append(fitres.convals[i])

@@ -403,7 +403,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         # Get the bad names
         badnames = []
         for par in badpars:
-            objlist = self._locateManagedObject(par)
+            objlist = self._locate_managed_object(par)
             names = [obj.name for obj in objlist]
             badnames.append(".".join(names))
 

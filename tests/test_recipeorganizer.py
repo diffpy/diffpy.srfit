@@ -139,27 +139,27 @@ class TestRecipeContainer(unittest.TestCase):
         p3 = Parameter("p3", 3)
 
         # Locate m2 in m1 (m1.m2)
-        loc = m1._locateManagedObject(m2)
+        loc = m1._locate_managed_object(m2)
         self.assertEqual(loc, [m1, m2])
 
         # Locate p1 (m1.p1)
-        loc = m1._locateManagedObject(p1)
+        loc = m1._locate_managed_object(p1)
         self.assertEqual(loc, [m1, p1])
 
         # Locate p2 in m2 (m2.p2)
-        loc = m2._locateManagedObject(p2)
+        loc = m2._locate_managed_object(p2)
         self.assertEqual(loc, [m2, p2])
 
         # Locate p2 in m1 (m1.m2.p2)
-        loc = m1._locateManagedObject(p2)
+        loc = m1._locate_managed_object(p2)
         self.assertEqual(loc, [m1, m2, p2])
 
         # Locate p3 in m1 (not there)
-        loc = m1._locateManagedObject(p3)
+        loc = m1._locate_managed_object(p3)
         self.assertEqual(loc, [])
 
         # Locate p3 in m2 (not there)
-        loc = m2._locateManagedObject(p3)
+        loc = m2._locate_managed_object(p3)
         self.assertEqual(loc, [])
 
         return

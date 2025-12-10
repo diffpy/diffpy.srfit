@@ -50,7 +50,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
     RecipeContainers are hierarchical organizations of Parameters and other
     RecipeContainers. This class provides attribute-access to these contained
     objects.  Parameters and other RecipeContainers can be found within the
-    hierarchy with the _locateManagedObject method.
+    hierarchy with the _locate_managed_object method.
 
     A RecipeContainer can manage dictionaries for that store various objects.
     These dictionaries can be added to the RecipeContainer using the _manage
@@ -306,7 +306,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         return
 
-    def _locateManagedObject(self, obj):
+    def _locate_managed_object(self, obj):
         """Find the location a managed object within the hierarchy.
 
         Attributes
@@ -334,9 +334,9 @@ class RecipeContainer(Observable, Configurable, Validatable):
                 return loc
 
             # Check within managed objects
-            if hasattr(m, "_locateManagedObject"):
+            if hasattr(m, "_locate_managed_object"):
 
-                subloc = m._locateManagedObject(obj)
+                subloc = m._locate_managed_object(obj)
                 if subloc:
                     return loc + subloc
 
@@ -1008,7 +1008,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # Find each constraint and format the equation
         clines = []
         for par, con in cdict.items():
-            loc = self._locateManagedObject(par)
+            loc = self._locate_managed_object(par)
             if loc:
                 locstr = ".".join(o.name for o in loc[1:])
                 clines.append("%s <-- %s" % (locstr, con.eqstr))

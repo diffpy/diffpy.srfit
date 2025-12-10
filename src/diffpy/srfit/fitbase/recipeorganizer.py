@@ -292,7 +292,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
         self._store_configurable(obj)
         return
 
-    def _removeObject(self, obj, d):
+    def _remove_object(self, obj, d):
         """Remove an object from a managed dictionary.
 
         Raises ValueError if obj is not part of the dictionary.
@@ -469,7 +469,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Raises ValueError if par is not part of the RecipeOrganizer.
         """
-        self._removeObject(par, self._parameters)
+        self._remove_object(par, self._parameters)
         self._eqfactory.deRegisterBuilder(par.name)
         return
 

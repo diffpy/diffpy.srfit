@@ -251,7 +251,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Raises ValueError if parset is not managed by this object.
         """
-        self._removeObject(parset, self._parsets)
+        self._remove_object(parset, self._parsets)
         return
 
     def residual(self, p=[]):

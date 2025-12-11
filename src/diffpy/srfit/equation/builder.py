@@ -53,12 +53,12 @@ using normal python syntax:
 > # sin is defined in this module as an OperatorBuilder
 > sin = getBuilder("sin")
 > beq = A*sin(a*x)
-> eq = beq.getEquation()
+> eq = beq.get_equation()
 
 The equation builder can also handle scalar constants. Staring with the above
 setup:
 > beq2 = A*sin(a*x) + 3
-> eq2 = beq2.getEquation()
+> eq2 = beq2.get_equation()
 Here, we didn't have to wrap '3' in an ArgumentBuilder. Non scalars, constant
 or otherwise, must be wrapped as ArgumentBuilders in order to be used in this
 way.
@@ -172,7 +172,7 @@ class EquationFactory(object):
             lit = literals.Argument(value=beq, const=True)
             eq = Equation(name="", root=lit)
         else:
-            eq = beq.getEquation()
+            eq = beq.get_equation()
             self.equations.add(eq)
         return eq
 
@@ -430,7 +430,7 @@ class BaseBuilder(object):
         )
         raise TypeError(m)
 
-    def getEquation(self):
+    def get_equation(self):
         """Get the equation built by this object.
 
         The equation will given the name "_eq_<root>" where "<root>" is

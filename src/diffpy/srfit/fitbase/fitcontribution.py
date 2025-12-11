@@ -285,7 +285,15 @@ class FitContribution(ParameterSet):
 
         return
 
+    @deprecated(_dep_msg_fitcontrib("getEquation", "get_equation"))
     def getEquation(self):
+        """Deprecated.
+
+        Use get_equation instead.
+        """
+        return self.get_equation()
+
+    def get_equation(self):
         """Get math expression string for the active profile equation.
 
         Return normalized math expression or an empty string if profile

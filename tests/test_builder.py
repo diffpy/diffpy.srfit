@@ -214,7 +214,7 @@ def testBuildEquation(noObserversInGlobalBuilders):
     x = numpy.arange(0, numpy.pi, 0.1)
 
     beq = A * sin(a * x)
-    eq = beq.getEquation()
+    eq = beq.get_equation()
 
     assert "a" in eq.argdict
     assert "A" in eq.argdict
@@ -235,7 +235,7 @@ def testBuildEquation(noObserversInGlobalBuilders):
     b = builder.ArgumentBuilder(name="b", value=1)
 
     beq = sin(f(a, b))
-    eq = beq.getEquation()
+    eq = beq.get_equation()
     assert eq() == numpy.sin(_f(2, 1))
 
     # complex function
@@ -245,28 +245,28 @@ def testBuildEquation(noObserversInGlobalBuilders):
     x = builder.ArgumentBuilder(name="x", value=_x, const=True)
     sigma = builder.ArgumentBuilder(name="sigma", value=0.1)
     beq = sqrt(e ** (-0.5 * (x / sigma) ** 2))
-    eq = beq.getEquation()
+    eq = beq.get_equation()
     assert numpy.allclose(eq(), numpy.sqrt(numpy.exp(-0.5 * (_x / 0.1) ** 2)))
 
     # Equation with Equation
     A = builder.ArgumentBuilder(name="A", value=2)
     B = builder.ArgumentBuilder(name="B", value=4)
     beq = A + B
-    eq = beq.getEquation()
+    eq = beq.get_equation()
     E = builder.wrapOperator("eq", eq)
-    eq2 = (2 * E).getEquation()
+    eq2 = (2 * E).get_equation()
     # Make sure these evaluate to the same thing
     assert eq.args == [A.literal, B.literal]
     assert 2 * eq() == eq2()
     # Pass new arguments to the equation
     C = builder.ArgumentBuilder(name="C", value=5)
     D = builder.ArgumentBuilder(name="D", value=6)
-    eq3 = (E(C, D) + 1).getEquation()
+    eq3 = (E(C, D) + 1).get_equation()
     assert 12 == eq3()
     # Pass old and new arguments to the equation
     # If things work right, A has been given the value of C in the last
     # evaluation (5)
-    eq4 = (3 * E(A, D) - 1).getEquation()
+    eq4 = (3 * E(A, D) - 1).get_equation()
     assert 32 == eq4()
     # Try to pass the wrong number of arguments
     with pytest.raises(ValueError):

@@ -38,7 +38,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Set up the FitContribution
         self.fitcontribution = FitContribution("cont")
-        self.fitcontribution.setProfile(self.profile)
+        self.fitcontribution.set_profile(self.profile)
         self.fitcontribution.setEquation("A*sin(k*x + c)")
         self.fitcontribution.A.setValue(1)
         self.fitcontribution.k.setValue(1)
@@ -255,7 +255,7 @@ def testPrintFitHook(capturestdout):
 
     # Set up the FitContribution
     fitcontribution = FitContribution("cont")
-    fitcontribution.setProfile(profile)
+    fitcontribution.set_profile(profile)
     fitcontribution.setEquation("A*sin(k*x + c)")
     fitcontribution.A.setValue(1)
     fitcontribution.k.setValue(1)

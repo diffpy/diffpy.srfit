@@ -102,7 +102,7 @@ def makeRecipe():
     # independent variable (the temperature) from the data to calculate the
     # theoretical signal, so give it an informative name ('T') that we can use
     # later.
-    contribution.setProfile(profile, xname="T")
+    contribution.set_profile(profile, xname="T")
 
     # We now need to create the fitting equation.  We tell the FitContribution
     # to use the 'debye' function defined below. The 'registerFunction' method

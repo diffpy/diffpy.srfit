@@ -145,7 +145,7 @@ def makeRecipe():
     # set the fitting equation to "g", which calls the GaussianGenerator.
     contribution = FitContribution("g1")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile)
+    contribution.set_profile(profile)
 
     # The FitRecipe
     # Now we create the FitRecipe and add the FitContribution.

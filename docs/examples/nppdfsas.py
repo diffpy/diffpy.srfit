@@ -52,7 +52,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
-    pdfcontribution.setProfile(pdfprofile, xname="r")
+    pdfcontribution.set_profile(pdfprofile, xname="r")
 
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)
@@ -71,7 +71,7 @@ def makeRecipe(ciffile, grdata, iqdata):
         sasprofile.dy[:] = 1
 
     sascontribution = FitContribution("sas")
-    sascontribution.setProfile(sasprofile)
+    sascontribution.set_profile(sasprofile)
 
     from sas.models.EllipsoidModel import EllipsoidModel
 

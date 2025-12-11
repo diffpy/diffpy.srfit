@@ -29,6 +29,19 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.utils._deprecator import deprecated
+
+removal_version = "4.0.0"
+
+
+def _dep_msg_fitcontrib(old_name, new_name, version=removal_version):
+    msg = (
+        f"'diffpy.srfit.fitbase.fitcontribution.FitContribution.{old_name}' "
+        f"is deprecated and will be removed in version {version}. Please use "
+        f"'diffpy.srfit.fitbase.fitcontribution.FitContribution.{new_name}' "
+        "instead."
+    )
+    return msg
 
 
 class FitContribution(ParameterSet):
@@ -97,7 +110,17 @@ class FitContribution(ParameterSet):
         self._manage(self._generators)
         return
 
+    @deprecated(_dep_msg_fitcontrib("set_profile", "set_profile"))
     def setProfile(self, profile, xname=None, yname=None, dyname=None):
+        """Deprecated.
+
+        Use set_profile instead.
+        """
+        return self.set_profile(
+            profile, xname=xname, yname=yname, dyname=dyname
+        )
+
+    def set_profile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
         Attributes
@@ -149,7 +172,7 @@ class FitContribution(ParameterSet):
 
         # If we have ProfileGenerators, set their Profiles.
         for gen in self._generators.values():
-            gen.setProfile(profile)
+            gen.set_profile(profile)
 
         # If we have _eq, but not _reseq, set the residual
         if self._eq is not None and self._reseq is None:
@@ -192,7 +215,7 @@ class FitContribution(ParameterSet):
 
         # If we have a profile, set the profile of the generator.
         if self.profile is not None:
-            gen.setProfile(self.profile)
+            gen.set_profile(self.profile)
 
         # Make this our equation if we don't have one. This will set the
         # residual equation if necessary.
@@ -212,7 +235,7 @@ class FitContribution(ParameterSet):
         ----------
         eqstr
             A string representation of the equation. Any Parameter
-            registered by addParameter or setProfile, or function
+            registered by addParameter or set_profile, or function
             registered by setCalculator, registerFunction or
             registerStringFunction can be can be used in the equation
             by name. Other names will be turned into Parameters of this

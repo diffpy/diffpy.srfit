@@ -75,7 +75,7 @@ def makeRecipe(ciffile, datname):
     # before.
     contribution = FitContribution("nickel")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname="r")
+    contribution.set_profile(profile, xname="r")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()

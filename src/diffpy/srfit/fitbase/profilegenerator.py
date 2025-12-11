@@ -153,7 +153,7 @@ class ProfileGenerator(Operator, ParameterSet):
         y = self.__call__(self.profile.x)
         return y
 
-    def setProfile(self, profile):
+    def set_profile(self, profile):
         """Assign the profile.
 
         Attributes

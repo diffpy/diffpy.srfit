@@ -143,15 +143,15 @@ class TestContribution(unittest.TestCase):
         self.assertEqual(len(xobs2), len(fc.residual()))
         return
 
-    def test_getResidualEquation(self):
+    def test_get_residual_equation(self):
         """Check getting the current formula for residual equation."""
         fc = self.fitcontribution
-        self.assertEqual("", fc.getResidualEquation())
+        self.assertEqual("", fc.get_residual_equation())
         fc.set_profile(self.profile)
         fc.set_equation("A * x + B")
-        self.assertEqual("((eq - y) / dy)", fc.getResidualEquation())
+        self.assertEqual("((eq - y) / dy)", fc.get_residual_equation())
         fc.set_residual_equation("2 * (eq - y)")
-        self.assertEqual("(2 * (eq - y))", fc.getResidualEquation())
+        self.assertEqual("(2 * (eq - y))", fc.get_residual_equation())
         return
 
     def test_releaseOldEquations(self):

@@ -360,7 +360,17 @@ class FitContribution(ParameterSet):
 
         return
 
+    @deprecated(
+        _dep_msg_fitcontrib("getResidualEquation", "get_residual_equation")
+    )
     def getResidualEquation(self):
+        """Deprecated.
+
+        Use get_residual_equation instead.
+        """
+        return self.get_residual_equation()
+
+    def get_residual_equation(self):
         """Get math expression string for the active residual equation.
 
         Return normalized math formula or an empty string if residual

@@ -1,3 +1,4 @@
 matplotlib-base
 numpy
 scipy
+diffpy.utils

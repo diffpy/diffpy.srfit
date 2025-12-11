@@ -205,8 +205,8 @@ class SimpleRecipe(FitRecipe):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual.
-        The equation will be usable within setResidualEquation as "eq", and it
-        takes no arguments.
+        The equation will be usable within set_residual_equation as "eq",
+        and it takes no arguments.
 
         Attributes
         ----------

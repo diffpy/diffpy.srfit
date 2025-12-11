@@ -176,7 +176,7 @@ class FitContribution(ParameterSet):
 
         # If we have _eq, but not _reseq, set the residual
         if self._eq is not None and self._reseq is None:
-            self.setResidualEquation("chiv")
+            self.set_residual_equation("chiv")
 
         return
 
@@ -247,7 +247,7 @@ class FitContribution(ParameterSet):
 
         This sets the equation that will be used when generating the residual
         for this FitContribution.  The equation will be usable within
-        setResidualEquation as "eq", and it takes no arguments.
+        set_residual_equation as "eq", and it takes no arguments.
 
         Attributes
         ----------
@@ -281,7 +281,7 @@ class FitContribution(ParameterSet):
 
         # Set the residual if we need to
         if self.profile is not None and self._reseq is None:
-            self.setResidualEquation("chiv")
+            self.set_residual_equation("chiv")
 
         return
 
@@ -306,7 +306,17 @@ class FitContribution(ParameterSet):
             rv = getExpression(self._eq)
         return rv
 
+    @deprecated(
+        _dep_msg_fitcontrib("setResidualEquation", "set_residual_equation")
+    )
     def setResidualEquation(self, eqstr):
+        """Deprecated.
+
+        Use set_residual_equation instead.
+        """
+        return self.set_residual_equation(eqstr)
+
+    def set_residual_equation(self, eqstr):
         """Set the residual equation for the FitContribution.
 
         Attributes
@@ -374,7 +384,7 @@ class FitContribution(ParameterSet):
         chiv = (eq() - self.profile.y) / self.profile.dy
         The value that is optimized is dot(chiv, chiv).
 
-        The residual equation can be changed with the setResidualEquation
+        The residual equation can be changed with the set_residual_equation
         method.
         """
         # Assign the calculated profile

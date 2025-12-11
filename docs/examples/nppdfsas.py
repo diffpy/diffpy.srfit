@@ -59,7 +59,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     stru = loadCrystal(ciffile)
     pdfgenerator.setStructure(stru)
     pdfcontribution.add_profile_generator(pdfgenerator)
-    pdfcontribution.setResidualEquation("resv")
+    pdfcontribution.set_residual_equation("resv")
 
     # Create a SAS contribution as well. We assume the nanoparticle is roughly
     # elliptical.
@@ -78,7 +78,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     model = EllipsoidModel()
     sasgenerator = SASGenerator("generator", model)
     sascontribution.add_profile_generator(sasgenerator)
-    sascontribution.setResidualEquation("resv")
+    sascontribution.set_residual_equation("resv")
 
     # Now we set up a characteristic function calculator that depends on the
     # sas model.

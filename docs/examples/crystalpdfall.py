@@ -97,10 +97,10 @@ def makeRecipe(
     xcontribution_sini.set_equation("scale * (xG_sini_ni +  xG_sini_si)")
 
     # As explained in another example, we want to minimize using Rw^2.
-    xcontribution_ni.setResidualEquation("resv")
-    xcontribution_si.setResidualEquation("resv")
-    ncontribution_ni.setResidualEquation("resv")
-    xcontribution_sini.setResidualEquation("resv")
+    xcontribution_ni.set_residual_equation("resv")
+    xcontribution_si.set_residual_equation("resv")
+    ncontribution_ni.set_residual_equation("resv")
+    xcontribution_sini.set_residual_equation("resv")
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()

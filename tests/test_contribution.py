@@ -150,7 +150,7 @@ class TestContribution(unittest.TestCase):
         fc.set_profile(self.profile)
         fc.set_equation("A * x + B")
         self.assertEqual("((eq - y) / dy)", fc.getResidualEquation())
-        fc.setResidualEquation("2 * (eq - y)")
+        fc.set_residual_equation("2 * (eq - y)")
         self.assertEqual("(2 * (eq - y))", fc.getResidualEquation())
         return
 
@@ -163,7 +163,7 @@ class TestContribution(unittest.TestCase):
         self.assertEqual(1, len(fc._eqfactory.equations))
         fc.set_profile(self.profile)
         for i in range(5):
-            fc.setResidualEquation("chiv")
+            fc.set_residual_equation("chiv")
         self.assertEqual(2, len(fc._eqfactory.equations))
         return
 
@@ -246,26 +246,26 @@ def testResidual(noObserversInGlobalBuilders):
 
     # Choose a new residual.
     fc.set_equation("2*I")
-    fc.setResidualEquation("resv")
+    fc.set_residual_equation("resv")
     chiv = fc.residual()
     assert dot(chiv, chiv) == pytest.approx(
         sum((2 * xobs - yobs) ** 2) / sum(yobs**2)
     )
 
     # Make a custom residual.
-    fc.setResidualEquation("abs(eq-y)**0.5")
+    fc.set_residual_equation("abs(eq-y)**0.5")
     chiv = fc.residual()
     assert dot(chiv, chiv) == pytest.approx(sum(abs(2 * xobs - yobs)))
 
     # Test configuration checks
     fc1 = FitContribution("test1")
     with pytest.raises(SrFitError):
-        fc1.setResidualEquation("chiv")
+        fc1.set_residual_equation("chiv")
     fc1.set_profile(profile)
     with pytest.raises(SrFitError):
-        fc1.setResidualEquation("chiv")
+        fc1.set_residual_equation("chiv")
     fc1.set_equation("A * x")
-    fc1.setResidualEquation("chiv")
+    fc1.set_residual_equation("chiv")
     assert noObserversInGlobalBuilders
     return
 

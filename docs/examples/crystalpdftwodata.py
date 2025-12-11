@@ -105,8 +105,8 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # The contribution's residual can be either chi^2, Rw^2, or custom crafted.
     # In this case, we should minimize Rw^2 of each contribution so that each
     # one can contribute roughly equally to the fit.
-    xcontribution.setResidualEquation("resv")
-    ncontribution.setResidualEquation("resv")
+    xcontribution.set_residual_equation("resv")
+    ncontribution.set_residual_equation("resv")
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()

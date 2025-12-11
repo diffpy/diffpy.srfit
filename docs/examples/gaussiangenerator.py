@@ -33,9 +33,10 @@ in gaussianrecipe.py.
 
 Extensions
 
-- Remove the amplitude from GaussianGenerator and instead use the 'setEquation'
-  method of the FitContribution to account for it. Note that the
-  GaussianGenerator will be accessible by its name, "g".
+- Remove the amplitude from GaussianGenerator and instead use the
+  'set_equation' method of the FitContribution to account for it.
+  Note that the GaussianGenerator will be accessible by
+  its name, "g".
 """
 
 from numpy import exp

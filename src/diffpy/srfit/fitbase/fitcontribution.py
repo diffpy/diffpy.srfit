@@ -194,7 +194,7 @@ class FitContribution(ParameterSet):
         """Add a ProfileGenerator to be used by this FitContribution.
 
         The ProfileGenerator is given a name so that it can be used as part of
-        the profile equation (see setEquation). This can be different from the
+        the profile equation (see set_equation). This can be different from the
         name of the ProfileGenerator used for attribute access.
         FitContributions should not share ProfileGenerator instances. Different
         ProfileGenerators can share Parameters and ParameterSets, however.
@@ -230,11 +230,19 @@ class FitContribution(ParameterSet):
         # Make this our equation if we don't have one. This will set the
         # residual equation if necessary.
         if self._eq is None:
-            self.setEquation(name)
+            self.set_equation(name)
 
         return
 
+    @deprecated(_dep_msg_fitcontrib("setEquation", "set_equation"))
     def setEquation(self, eqstr, ns={}):
+        """Deprecated.
+
+        Use set_equation instead.
+        """
+        return self.set_equation(eqstr, ns=ns)
+
+    def set_equation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual

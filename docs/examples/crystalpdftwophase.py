@@ -80,7 +80,7 @@ def makeRecipe(niciffile, siciffile, datname):
     # multiply it by a scaling factor. We also want a certain phase scaling
     # relationship between the PDFs which we will enforce with constraints in
     # the FitRecipe.
-    contribution.setEquation("scale * (G_ni +  G_si)")
+    contribution.set_equation("scale * (G_ni +  G_si)")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()

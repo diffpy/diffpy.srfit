@@ -126,7 +126,7 @@ def makeRecipe():
     # the debye equation to be positive, so we specify the input as abs(thetaD)
     # in the equation below.  Furthermore, we know 'm', the mass of lead, so we
     # can specify that as well.
-    contribution.setEquation("debye(T, 207.2, abs(thetaD)) + offset")
+    contribution.set_equation("debye(T, 207.2, abs(thetaD)) + offset")
 
     # The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can

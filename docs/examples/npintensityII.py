@@ -125,8 +125,8 @@ def makeRecipe(strufile, datname1, datname2):
 
     # Now we can incorporate the scale and bkgd into our calculation. We also
     # convolve the signal with the gaussian to broaden it.
-    contribution1.setEquation("scale * convolve(I, gaussian) + bkgd")
-    contribution2.setEquation("scale * convolve(I, gaussian) + bkgd")
+    contribution1.set_equation("scale * convolve(I, gaussian) + bkgd")
+    contribution2.set_equation("scale * convolve(I, gaussian) + bkgd")
 
     # Make a FitRecipe and associate the FitContributions.
     recipe = FitRecipe()

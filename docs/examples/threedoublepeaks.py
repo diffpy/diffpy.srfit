@@ -77,7 +77,7 @@ def makeRecipe():
     contribution.registerStringFunction(bkgdstr, "bkgd")
 
     # Now define our fitting equation. We will hardcode the peak ratios.
-    contribution.setEquation(
+    contribution.set_equation(
         "A1 * ( convolve( delta(t, mu11), peakshape(t, c, sig11) ) \
          + 0.23*convolve( delta(t, mu12), peakshape(t, c, sig12) ) ) + \
          A2 * ( convolve( delta(t, mu21), peakshape(t, c, sig21) ) \

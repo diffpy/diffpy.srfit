@@ -94,7 +94,7 @@ def makeRecipe(
         "xsini", xgenerator_sini_ni, xprofile_sini
     )
     xcontribution_sini.add_profile_generator(xgenerator_sini_si)
-    xcontribution_sini.setEquation("scale * (xG_sini_ni +  xG_sini_si)")
+    xcontribution_sini.set_equation("scale * (xG_sini_ni +  xG_sini_si)")
 
     # As explained in another example, we want to minimize using Rw^2.
     xcontribution_ni.setResidualEquation("resv")

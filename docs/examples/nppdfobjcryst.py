@@ -52,7 +52,7 @@ def makeRecipe(molecule, datname):
 
     # The FitContribution
     contribution = FitContribution("bucky")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="r")
 
     # Make a FitRecipe.

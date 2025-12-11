@@ -110,7 +110,7 @@ class FitContribution(ParameterSet):
         self._manage(self._generators)
         return
 
-    @deprecated(_dep_msg_fitcontrib("set_profile", "set_profile"))
+    @deprecated(_dep_msg_fitcontrib("setProfile", "set_profile"))
     def setProfile(self, profile, xname=None, yname=None, dyname=None):
         """Deprecated.
 
@@ -180,7 +180,17 @@ class FitContribution(ParameterSet):
 
         return
 
+    @deprecated(
+        _dep_msg_fitcontrib("addProfileGenerator", "add_profile_generator")
+    )
     def addProfileGenerator(self, gen, name=None):
+        """Deprecated.
+
+        Use add_profile_generator instead.
+        """
+        return self.add_profile_generator(gen, name=name)
+
+    def add_profile_generator(self, gen, name=None):
         """Add a ProfileGenerator to be used by this FitContribution.
 
         The ProfileGenerator is given a name so that it can be used as part of
@@ -189,7 +199,7 @@ class FitContribution(ParameterSet):
         FitContributions should not share ProfileGenerator instances. Different
         ProfileGenerators can share Parameters and ParameterSets, however.
 
-        Calling addProfileGenerator sets the profile equation to call the
+        Calling add_profile_generator sets the profile equation to call the
         calculator and if there is not a profile equation already.
 
         Attributes

@@ -58,7 +58,7 @@ class TestContribution(unittest.TestCase):
     def testAddProfileGenerator(self):
         fc = self.fitcontribution
         gen = self.gen
-        fc.addProfileGenerator(gen, "gen")
+        fc.add_profile_generator(gen, "gen")
 
         xobs = arange(0, 10, 0.5)
         self.assertTrue(array_equal(xobs, gen(xobs)))
@@ -75,7 +75,7 @@ class TestContribution(unittest.TestCase):
 
         # Add the calculator and profile
         fc.set_profile(profile)
-        fc.addProfileGenerator(gen, "I")
+        fc.add_profile_generator(gen, "I")
 
         # Check attributes are created
         self.assertTrue(fc.profile is profile)
@@ -120,7 +120,7 @@ class TestContribution(unittest.TestCase):
 
         # Validate equations
         fc.set_profile(profile)
-        fc.addProfileGenerator(gen, "I")
+        fc.add_profile_generator(gen, "I")
         self.assertTrue(array_equal(gen.value, xobs))
         self.assertTrue(array_equal(fc._eq(), xobs))
         self.assertAlmostEqual(0, sum(fc._reseq()))
@@ -196,7 +196,7 @@ def testResidual(noObserversInGlobalBuilders):
     # Add the calculator and profile
     fc.set_profile(profile)
     assert fc.profile is profile
-    fc.addProfileGenerator(gen, "I")
+    fc.add_profile_generator(gen, "I")
     assert fc._eq._value is None
     assert fc._reseq._value is None
     assert 1 == len(fc._generators)

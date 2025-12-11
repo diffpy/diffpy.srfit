@@ -57,7 +57,7 @@ def makeRecipe(datname):
     # Here we associate the Profile and ProfileGenerator, as has been done
     # before.
     contribution = FitContribution("ellipsoid")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="q")
 
     # We want to fit the log of the signal to the log of the data so that the

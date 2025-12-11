@@ -273,7 +273,7 @@ class PDFContribution(FitContribution):
         with setStructure or setPhase.
         """
         # Add the generator to this FitContribution
-        self.addProfileGenerator(gen)
+        self.add_profile_generator(gen)
 
         # Set the proper equation for the fit, depending on the number of
         # phases we have.

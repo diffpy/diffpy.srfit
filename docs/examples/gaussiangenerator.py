@@ -144,7 +144,7 @@ def makeRecipe():
     # attribute of the FitContribution by its name ("g"). Note that this will
     # set the fitting equation to "g", which calls the GaussianGenerator.
     contribution = FitContribution("g1")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile)
 
     # The FitRecipe

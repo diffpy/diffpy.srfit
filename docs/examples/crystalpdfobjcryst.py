@@ -62,7 +62,7 @@ def makeRecipe(ciffile, datname):
 
     # The FitContribution
     contribution = FitContribution("nickel")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="r")
 
     # Make the FitRecipe and add the FitContribution.

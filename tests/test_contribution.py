@@ -34,6 +34,7 @@ class TestContribution(unittest.TestCase):
         self.fitcontribution = FitContribution("test")
         return
 
+    # Duplicate test due to name change of setProfile to set_profile
     def testSetProfile(self):
         fc = self.fitcontribution
         profile = self.profile
@@ -52,6 +53,27 @@ class TestContribution(unittest.TestCase):
         fc2 = FitContribution("test2")
         fc2.set_equation("A * x")
         fc2.setProfile(profile)
+        self.assertFalse(fc2._reseq is None)
+        return
+
+    def test_set_profile(self):
+        fc = self.fitcontribution
+        profile = self.profile
+        fc.set_profile(self.profile)
+        # verify standard profile setup
+        self.assertTrue(fc.profile is profile)
+        self.assertTrue(fc.x.par is profile.xpar)
+        self.assertTrue(fc.y.par is profile.ypar)
+        self.assertTrue(fc.dy.par is profile.dypar)
+        self.assertTrue(fc._eq is None)
+        self.assertTrue(fc._reseq is None)
+        # check type checking
+        fc1 = FitContribution("test1")
+        self.assertRaises(TypeError, fc1.set_profile, "invalid")
+        # check if residual equation is set up when possible
+        fc2 = FitContribution("test2")
+        fc2.set_equation("A * x")
+        fc2.set_profile(profile)
         self.assertFalse(fc2._reseq is None)
         return
 

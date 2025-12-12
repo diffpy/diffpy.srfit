@@ -24,24 +24,15 @@ See the examples in the documentation for how to use a FitContribution.
 
 __all__ = ["FitContribution"]
 
+from diffpy.srfit import _REMOVAL_VERSION
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.utils._deprecator import deprecated
+from diffpy.utils._deprecator import deprecated, deprecation_message
 
-removal_version = "4.0.0"
-
-
-def _dep_msg_fitcontrib(old_name, new_name, version=removal_version):
-    msg = (
-        f"'diffpy.srfit.fitbase.fitcontribution.FitContribution.{old_name}' "
-        f"is deprecated and will be removed in version {version}. Please use "
-        f"'diffpy.srfit.fitbase.fitcontribution.FitContribution.{new_name}' "
-        "instead."
-    )
-    return msg
+_BASE_FITCONTRIBUTION = __name__ + ".FitContribution"
 
 
 class FitContribution(ParameterSet):
@@ -110,7 +101,14 @@ class FitContribution(ParameterSet):
         self._manage(self._generators)
         return
 
-    @deprecated(_dep_msg_fitcontrib("setProfile", "set_profile"))
+    @deprecated(
+        deprecation_message(
+            _BASE_FITCONTRIBUTION,
+            "setProfile",
+            "set_profile",
+            _REMOVAL_VERSION,
+        )
+    )
     def setProfile(self, profile, xname=None, yname=None, dyname=None):
         """Deprecated.
 
@@ -181,7 +179,12 @@ class FitContribution(ParameterSet):
         return
 
     @deprecated(
-        _dep_msg_fitcontrib("addProfileGenerator", "add_profile_generator")
+        deprecation_message(
+            _BASE_FITCONTRIBUTION,
+            "addProfileGenerator",
+            "add_profile_generator",
+            _REMOVAL_VERSION,
+        )
     )
     def addProfileGenerator(self, gen, name=None):
         """Deprecated.
@@ -234,7 +237,14 @@ class FitContribution(ParameterSet):
 
         return
 
-    @deprecated(_dep_msg_fitcontrib("setEquation", "set_equation"))
+    @deprecated(
+        deprecation_message(
+            _BASE_FITCONTRIBUTION,
+            "setEquation",
+            "set_equation",
+            _REMOVAL_VERSION,
+        )
+    )
     def setEquation(self, eqstr, ns={}):
         """Deprecated.
 
@@ -285,7 +295,14 @@ class FitContribution(ParameterSet):
 
         return
 
-    @deprecated(_dep_msg_fitcontrib("getEquation", "get_equation"))
+    @deprecated(
+        deprecation_message(
+            _BASE_FITCONTRIBUTION,
+            "getEquation",
+            "get_equation",
+            _REMOVAL_VERSION,
+        )
+    )
     def getEquation(self):
         """Deprecated.
 
@@ -307,7 +324,12 @@ class FitContribution(ParameterSet):
         return rv
 
     @deprecated(
-        _dep_msg_fitcontrib("setResidualEquation", "set_residual_equation")
+        deprecation_message(
+            _BASE_FITCONTRIBUTION,
+            "setResidualEquation",
+            "set_residual_equation",
+            _REMOVAL_VERSION,
+        )
     )
     def setResidualEquation(self, eqstr):
         """Deprecated.
@@ -361,7 +383,12 @@ class FitContribution(ParameterSet):
         return
 
     @deprecated(
-        _dep_msg_fitcontrib("getResidualEquation", "get_residual_equation")
+        deprecation_message(
+            _BASE_FITCONTRIBUTION,
+            "getResidualEquation",
+            "get_residual_equation",
+            _REMOVAL_VERSION,
+        )
     )
     def getResidualEquation(self):
         """Deprecated.

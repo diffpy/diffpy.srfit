@@ -38,4 +38,7 @@ from diffpy.srfit.version import __version__
 # silence the pyflakes syntax checker
 assert __version__ or True
 
+# the version at which deprecated features will be removed.
+_REMOVAL_VERSION = "4.0.0"
+
 # End of file

@@ -37,7 +37,7 @@ class TestContribution(unittest.TestCase):
     def testSetProfile(self):
         fc = self.fitcontribution
         profile = self.profile
-        fc.set_profile(self.profile)
+        fc.setProfile(self.profile)
         # verify standard profile setup
         self.assertTrue(fc.profile is profile)
         self.assertTrue(fc.x.par is profile.xpar)
@@ -47,11 +47,11 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(fc._reseq is None)
         # check type checking
         fc1 = FitContribution("test1")
-        self.assertRaises(TypeError, fc1.set_profile, "invalid")
+        self.assertRaises(TypeError, fc1.setProfile, "invalid")
         # check if residual equation is set up when possible
         fc2 = FitContribution("test2")
         fc2.set_equation("A * x")
-        fc2.set_profile(profile)
+        fc2.setProfile(profile)
         self.assertFalse(fc2._reseq is None)
         return
 

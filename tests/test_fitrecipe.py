@@ -16,12 +16,18 @@
 
 import unittest
 
+import matplotlib
+import matplotlib.pyplot as plt
+import pytest
 from numpy import array_equal, dot, linspace, pi, sin
+from scipy.optimize import leastsq
 
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.profile import Profile
+
+matplotlib.use("Agg")
 
 
 class TestFitRecipe(unittest.TestCase):
@@ -282,6 +288,206 @@ def testPrintFitHook(capturestdout):
     assert "\nVariables" in out
     assert "c = " in out
     return
+
+
+def build_recipe_one_contribution():
+    "helper to build a simple recipe"
+    profile = Profile()
+    x = linspace(0, pi, 10)
+    y = sin(x)
+    profile.setObservedProfile(x, y)
+    contribution = FitContribution("c1")
+    contribution.setProfile(profile)
+    contribution.setEquation("A*sin(k*x + c)")
+    recipe = FitRecipe()
+    recipe.addContribution(contribution)
+    recipe.addVar(contribution.A, 1)
+    recipe.addVar(contribution.k, 1)
+    recipe.addVar(contribution.c, 1)
+    return recipe
+
+
+def build_recipe_two_contributions():
+    "helper to build a recipe with two contributions"
+    profile1 = Profile()
+    x = linspace(0, pi, 10)
+    y1 = sin(x)
+    profile1.setObservedProfile(x, y1)
+    contribution1 = FitContribution("c1")
+    contribution1.setProfile(profile1)
+    contribution1.setEquation("A*sin(k*x + c)")
+
+    profile2 = Profile()
+    y2 = 0.5 * sin(2 * x)
+    profile2.setObservedProfile(x, y2)
+    contribution2 = FitContribution("c2")
+    contribution2.setProfile(profile2)
+    contribution2.setEquation("B*sin(m*x + d)")
+    recipe = FitRecipe()
+    recipe.addContribution(contribution1)
+    recipe.addContribution(contribution2)
+    recipe.addVar(contribution1.A, 1)
+    recipe.addVar(contribution1.k, 1)
+    recipe.addVar(contribution1.c, 1)
+    recipe.addVar(contribution2.B, 0.5)
+    recipe.addVar(contribution2.m, 2)
+    recipe.addVar(contribution2.d, 0)
+
+    return recipe
+
+
+def optimize_recipe(recipe):
+    recipe.fithooks[0].verbose = 0
+    residuals = recipe.residual
+    values = recipe.values
+    leastsq(residuals, values)
+
+
+def test_plot_recipe_bad_display():
+    recipe = build_recipe_one_contribution()
+    # Case: All plots are disabled
+    # expected: raised ValueError with message
+    plt.close("all")
+    msg = "At least one of show_data, show_fit, or show_diff must be True"
+    with pytest.raises(ValueError, match=msg):
+        recipe.plot_recipe(
+            show_data=False,
+            show_diff=False,
+            show_fit=False,
+        )
+
+
+def test_plot_recipe_no_contribution():
+    recipe = FitRecipe()
+    # Case: No contributions in recipe
+    # expected: raised ValueError with message
+    plt.close("all")
+    msg = (
+        "No contributions found in recipe. "
+        "Add contributions before plotting."
+    )
+    with pytest.raises(ValueError, match=msg):
+        recipe.plot_recipe()
+
+
+def test_plot_recipe_before_refinement(capsys):
+    # Case: User tries to plot recipe before refinement
+    # expected: Data plotted without fit line or difference curve
+    #          and warning message printed
+    recipe = build_recipe_one_contribution()
+    plt.close("all")
+    before = set(plt.get_fignums())
+    recipe.plot_recipe(show=False)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    captured = capsys.readouterr()
+    actual = captured.out.strip()
+    expected = (
+        "Contribution 'c1' has no calculated values (ycalc is None). "
+        "Only observed data will be plotted."
+    )
+    assert len(new_figs) == 1
+    assert actual == expected
+
+
+def test_plot_recipe_after_refinement():
+    # Case: User refines recipe and then plots
+    # expected: Plot generates with no problem
+    recipe = build_recipe_one_contribution()
+    optimize_recipe(recipe)
+    plt.close("all")
+    before = set(plt.get_fignums())
+    recipe.plot_recipe(show=False)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    assert len(new_figs) == 1
+
+
+def test_plot_recipe_two_contributions():
+    # Case: Two contributions in recipe
+    # expected: two figures created
+    recipe = build_recipe_two_contributions()
+    optimize_recipe(recipe)
+    plt.close("all")
+    before = set(plt.get_fignums())
+    recipe.plot_recipe(show=False)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    assert len(new_figs) == 2
+
+
+def test_plot_recipe_on_existing_plot():
+    # Case: User passes axes to plot_recipe to plot on existing figure
+    # expected: User modifications are present in the final figure
+    recipe = build_recipe_one_contribution()
+    optimize_recipe(recipe)
+    plt.close("all")
+    fig, ax = plt.subplots()
+    ax.set_title("User Title")
+    recipe.plot_recipe(ax=ax, show=False)
+    assert ax.get_title() == "User Title"
+
+
+def test_plot_recipe_add_new_data():
+    # Case: User wants to add data to figure generated by plot_recipe
+    # Expected: New data is added to existing figure (check with labels)
+    recipe = build_recipe_one_contribution()
+    optimize_recipe(recipe)
+    plt.close("all")
+    before = set(plt.get_fignums())
+    figure, ax = recipe.plot_recipe(return_fig=True, show=False)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    # add new data to existing plot
+    ax.plot([0, pi], [0, 0], label="New Data")
+    ax.legend()
+    legend = ax.get_legend()
+    # get sorted list of legend labels for comparison
+    actual_labels = sorted([t.get_text() for t in legend.get_texts()])
+    expected_labels = sorted(
+        ["Observed", "Calculated", "Difference", "New Data"]
+    )
+    assert len(new_figs) == 1
+    assert actual_labels == expected_labels
+
+
+def test_plot_recipe_add_new_data_two_figs():
+    # Case: User wants to add data to figure generated by plot_recipe
+    #       with two contributions
+    # Expected: New data is added to existing figure (check with labels)
+    recipe = build_recipe_two_contributions()
+    optimize_recipe(recipe)
+    plt.close("all")
+    before = set(plt.get_fignums())
+    figure, axes = recipe.plot_recipe(return_fig=True, show=False)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    # add new data to existing plots
+    for ax in axes:
+        ax.plot([0, pi], [0, 0], label="New Data")
+        ax.legend()
+        legend = ax.get_legend()
+        # get sorted list of legend labels for comparison
+        actual_labels = sorted([t.get_text() for t in legend.get_texts()])
+        expected_labels = sorted(
+            ["Observed", "Calculated", "Difference", "New Data"]
+        )
+        assert actual_labels == expected_labels
+    assert len(new_figs) == 1
+
+
+def test_plot_recipe_set_title():
+    # Case: User sets title via plot_recipe
+    # Expected: Title is set correctly
+    recipe = build_recipe_one_contribution()
+    optimize_recipe(recipe)
+    plt.close("all")
+    expected_title = "Custom Recipe Title"
+    figure, ax = recipe.plot_recipe(
+        title=expected_title, return_fig=True, show=False
+    )
+    actual_title = ax.get_title()
+    assert actual_title == expected_title
 
 
 if __name__ == "__main__":

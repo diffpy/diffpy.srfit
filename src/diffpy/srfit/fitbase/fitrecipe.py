@@ -36,6 +36,7 @@ __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
 
+import matplotlib.pyplot as plt
 import six
 from numpy import array, concatenate, dot, sqrt
 
@@ -870,6 +871,224 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         lb = array([b[0] for b in bounds])
         ub = array([b[1] for b in bounds])
         return lb, ub
+
+    def plot_recipe(
+        self,
+        show_data=True,
+        show_fit=True,
+        show_diff=True,
+        offset_scale=1.0,
+        figsize=(8, 6),
+        data_style="o",
+        fit_style="-",
+        diff_style="-",
+        data_color=None,
+        fit_color=None,
+        diff_color=None,
+        data_label="Observed",
+        fit_label="Calculated",
+        diff_label="Difference",
+        xlabel=None,
+        ylabel=None,
+        title=None,
+        legend=True,
+        legend_loc="best",
+        grid=False,
+        markersize=None,
+        linewidth=None,
+        alpha=1.0,
+        show=True,
+        ax=None,
+        return_fig=False,
+    ):
+        """Plot the fit recipe data, calculated fit, and difference curve.
+
+        If the recipe has multiple contributions, a separate
+        plot is created for each contribution.
+
+        Parameters
+        ----------
+        show_data : bool, optional
+            If True, plot the observed data points. Default is True.
+        show_fit : bool, optional
+            If True, plot the calculated fit curve. Default is True.
+        show_diff : bool, optional
+            If True, plot the difference curve (observed - calculated).
+            Default is True.
+        offset_scale : float, optional
+            Scaling factor for the difference curve offset. The difference
+            curve is offset below the data by
+            (min_y - 0.1*range) * offset_scale. Default is 1.0.
+        figsize : tuple, optional
+            Figure size as (width, height) in inches. Default is (8, 6).
+        data_style : str, optional
+            Matplotlib line/marker style for data points. Default is "o".
+        fit_style : str, optional
+            Matplotlib line style for calculated fit. Default is "-".
+        diff_style : str, optional
+            Matplotlib line style for difference curve. Default is "-".
+        data_color : str or None, optional
+            Color for data points. If None, uses default matplotlib colors.
+        fit_color : str or None, optional
+            Color for fit curve. If None, uses default matplotlib colors.
+        diff_color : str or None, optional
+            Color for difference curve. If None, uses default matplotlib
+            colors.
+        data_label : str, optional
+            Legend label for observed data. Default is "Observed".
+        fit_label : str, optional
+            Legend label for calculated fit. Default is "Calculated".
+        diff_label : str, optional
+            Legend label for difference curve. Default is "Difference".
+        xlabel : str, optional
+            Label for x-axis.
+        ylabel : str, optional
+            Label for y-axis.
+        title : str or None, optional
+            Plot title. Default is no title.
+        legend : bool, optional
+            If True, show legend. Default is True.
+        legend_loc : str, optional
+            Legend location. Default is "best".
+        grid : bool, optional
+            If True, show grid. Default is False.
+        markersize : float, optional
+            Size of data point markers.
+        linewidth : float, optional
+            Width of fit and difference lines.
+        alpha : float, optional
+            Transparency of all plot elements (0=transparent, 1=opaque).
+            Default is 1.0.
+        show : bool, optional
+            If True, display the plot using plt.show(). Default is True.
+        ax : matplotlib.axes.Axes or None, optional
+            Axes object to plot on. If None, creates new figure.
+            Default is None.
+        return_fig : bool, optional
+            If True, return the figure and axes objects. Default is False.
+
+        Returns
+        -------
+        fig, axes : tuple of (mpl.figure.Figure, list of mpl.axes.Axes)
+            Only returned if return_fig=True. Returns the figure object
+            and a list of axes objects (one per contribution).
+
+        Examples
+        --------
+        Plot everything with default settings:
+
+        >>> recipe.plot_recipe()
+
+        Plot only data and fit (no difference curve):
+
+        >>> recipe.plot_recipe(show_diff=False)
+
+        Plot only data to check before refinement:
+
+        >>> recipe.plot_recipe(show_fit=False, show_diff=False)
+
+        Get figure object for further customization:
+
+        >>> fig, axes = recipe.plot_recipe(show=False, return_fig=True)
+        >>> axes[0].set_yscale('log')
+        >>> plt.savefig('my_fit.png', dpi=300)
+        """
+        if not any([show_data, show_fit, show_diff]):
+            raise ValueError(
+                "At least one of show_data, show_fit, "
+                "or show_diff must be True"
+            )
+
+        if not self._contributions:
+            raise ValueError(
+                "No contributions found in recipe. "
+                "Add contributions before plotting."
+            )
+
+        figures = []
+        axes_list = []
+
+        for name, contrib in self._contributions.items():
+            profile = contrib.profile
+            x = profile.x
+            yobs = profile.y
+            ycalc = profile.ycalc
+            if ycalc is None:
+                if show_fit or show_diff:
+                    print(
+                        f"Contribution '{name}' has no calculated values "
+                        "(ycalc is None). "
+                        "Only observed data will be plotted."
+                    )
+                show_fit = False
+                show_diff = False
+            else:
+                diff = yobs - ycalc
+                y_min = min(yobs.min(), ycalc.min())
+                y_max = max(yobs.max(), ycalc.max())
+                y_range = y_max - y_min
+                base_offset = y_min - 0.1 * y_range
+                offset = base_offset * offset_scale
+
+            if ax is None:
+                fig = plt.figure(figsize=figsize)
+                current_ax = fig.add_subplot(111)
+            else:
+                current_ax = ax
+                fig = current_ax.figure
+            if show_data:
+                current_ax.plot(
+                    x,
+                    yobs,
+                    data_style,
+                    label=data_label,
+                    color=data_color,
+                    markersize=markersize,
+                    alpha=alpha,
+                )
+            if show_fit:
+                current_ax.plot(
+                    x,
+                    ycalc,
+                    fit_style,
+                    label=fit_label,
+                    color=fit_color,
+                    linewidth=linewidth,
+                    alpha=alpha,
+                )
+            if show_diff:
+                current_ax.plot(
+                    x,
+                    diff + offset,
+                    diff_style,
+                    label=diff_label,
+                    color=diff_color,
+                    linewidth=linewidth,
+                    alpha=alpha,
+                )
+                current_ax.axhline(
+                    offset,
+                    color="black",
+                )
+            current_ax.set_xlabel(xlabel)
+            current_ax.set_ylabel(ylabel)
+
+            if title is not None:
+                current_ax.set_title(title)
+            if legend:
+                current_ax.legend(loc=legend_loc, frameon=True)
+            if grid:
+                current_ax.grid(True)
+            fig.tight_layout()
+            figures.append(fig)
+            axes_list.append(current_ax)
+            if show and ax is None:
+                plt.show()
+        if return_fig:
+            if len(figures) == 1:
+                return figures[0], axes_list[0]
+            else:
+                return figures, axes_list
 
     def boundsToRestraints(self, sig=1, scaled=False):
         """Turn all bounded parameters into restraints.

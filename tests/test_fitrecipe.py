@@ -423,10 +423,14 @@ def test_plot_recipe_on_existing_plot():
     optimize_recipe(recipe)
     plt.close("all")
     fig, ax = plt.subplots()
-    expected_title = "User Title"
-    actual_title = ax.set_title(expected_title)
+    ax.set_title("User Title")
+    ax.plot([0, 1], [0, 1], label="New Data")
     recipe.plot_recipe(ax=ax, show=False)
+    actual_title = ax.get_title()
+    expected_title = "User Title"
     assert actual_title == expected_title
+    labels = [label.get_label() for label in ax.get_lines()]
+    assert "New Data" in labels
 
 
 def test_plot_recipe_add_new_data():
@@ -474,7 +478,7 @@ def test_plot_recipe_add_new_data_two_figs():
             ["Observed", "Calculated", "Difference", "New Data"]
         )
         assert actual_labels == expected_labels
-    assert len(new_figs) == 1
+    assert len(new_figs) == 2
 
 
 def test_plot_recipe_set_title():

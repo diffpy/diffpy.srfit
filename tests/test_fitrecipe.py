@@ -348,10 +348,10 @@ def test_plot_recipe_bad_display():
     # Case: All plots are disabled
     # expected: raised ValueError with message
     plt.close("all")
-    msg = "At least one of show_data, show_fit, or show_diff must be True"
+    msg = "At least one of show_observed, show_fit, or show_diff must be True"
     with pytest.raises(ValueError, match=msg):
         recipe.plot_recipe(
-            show_data=False,
+            show_observed=False,
             show_diff=False,
             show_fit=False,
         )

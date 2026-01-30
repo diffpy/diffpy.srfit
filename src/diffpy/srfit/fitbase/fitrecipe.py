@@ -874,7 +874,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def plot_recipe(
         self,
-        show_data=True,
+        show_observed=True,
         show_fit=True,
         show_diff=True,
         offset_scale=1.0,
@@ -908,7 +908,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Parameters
         ----------
-        show_data : bool, optional
+        show_observed : bool, optional
             If True, plot the observed data points. Default is True.
         show_fit : bool, optional
             If True, plot the calculated fit curve. Default is True.
@@ -993,9 +993,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         >>> axes[0].set_yscale('log')
         >>> plt.savefig('my_fit.png', dpi=300)
         """
-        if not any([show_data, show_fit, show_diff]):
+        if not any([show_observed, show_fit, show_diff]):
             raise ValueError(
-                "At least one of show_data, show_fit, "
+                "At least one of show_observed, show_fit, "
                 "or show_diff must be True"
             )
 
@@ -1036,7 +1036,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             else:
                 current_ax = ax
                 fig = current_ax.figure
-            if show_data:
+            if show_observed:
                 current_ax.plot(
                     x,
                     yobs,

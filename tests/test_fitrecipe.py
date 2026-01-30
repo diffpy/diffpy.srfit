@@ -343,6 +343,23 @@ def optimize_recipe(recipe):
     leastsq(residuals, values)
 
 
+def get_labels_and_linecount(ax):
+    """Helper to get line labels and count from a matplotlib Axes."""
+    labels = [
+        line.get_label()
+        for line in ax.get_lines()
+        if not line.get_label().startswith("_")
+    ]
+    line_count = len(
+        [
+            line
+            for line in ax.get_lines()
+            if not line.get_label().startswith("_")
+        ]
+    )
+    return labels, line_count
+
+
 def test_plot_recipe_bad_display():
     recipe = build_recipe_one_contribution()
     # Case: All plots are disabled
@@ -377,7 +394,10 @@ def test_plot_recipe_before_refinement(capsys):
     recipe = build_recipe_one_contribution()
     plt.close("all")
     before = set(plt.get_fignums())
-    recipe.plot_recipe(show=False)
+    # include fit_label="nothing" to make sure fit line is not plotted
+    fig, ax = recipe.plot_recipe(
+        show=False, data_label="my data", fit_label="nothing", return_fig=True
+    )
     after = set(plt.get_fignums())
     new_figs = after - before
     captured = capsys.readouterr()
@@ -386,6 +406,12 @@ def test_plot_recipe_before_refinement(capsys):
         "Contribution 'c1' has no calculated values (ycalc is None). "
         "Only observed data will be plotted."
     )
+    # get labels from the plotted line
+    actual_label, actual_line_count = get_labels_and_linecount(ax)
+    expected_line_count = 1
+    expected_label = ["my data"]
+    assert actual_line_count == expected_line_count
+    assert actual_label == expected_label
     assert len(new_figs) == 1
     assert actual == expected
 
@@ -397,9 +423,14 @@ def test_plot_recipe_after_refinement():
     optimize_recipe(recipe)
     plt.close("all")
     before = set(plt.get_fignums())
-    recipe.plot_recipe(show=False)
+    fig, ax = recipe.plot_recipe(show=False, return_fig=True)
     after = set(plt.get_fignums())
     new_figs = after - before
+    actual_label, actual_line_count = get_labels_and_linecount(ax)
+    expected_label = ["Observed", "Calculated", "Difference"]
+    expected_line_count = 3
+    assert actual_line_count == expected_line_count
+    assert actual_label == expected_label
     assert len(new_figs) == 1
 
 
@@ -410,7 +441,13 @@ def test_plot_recipe_two_contributions():
     optimize_recipe(recipe)
     plt.close("all")
     before = set(plt.get_fignums())
-    recipe.plot_recipe(show=False)
+    figs, axes = recipe.plot_recipe(show=False, return_fig=True)
+    for ax in axes:
+        actual_label, actual_line_count = get_labels_and_linecount(ax)
+        expected_label = ["Observed", "Calculated", "Difference"]
+        expected_line_count = 3
+        assert actual_line_count == expected_line_count
+        assert actual_label == expected_label
     after = set(plt.get_fignums())
     new_figs = after - before
     assert len(new_figs) == 2
@@ -428,9 +465,12 @@ def test_plot_recipe_on_existing_plot():
     recipe.plot_recipe(ax=ax, show=False)
     actual_title = ax.get_title()
     expected_title = "User Title"
+    actual_labels, actual_line_count = get_labels_and_linecount(ax)
+    expected_line_count = 4
+    expected_labels = ["Calculated", "Difference", "New Data", "Observed"]
+    assert actual_line_count == expected_line_count
+    assert sorted(actual_labels) == sorted(expected_labels)
     assert actual_title == expected_title
-    labels = [label.get_label() for label in ax.get_lines()]
-    assert "New Data" in labels
 
 
 def test_plot_recipe_add_new_data():
@@ -440,20 +480,18 @@ def test_plot_recipe_add_new_data():
     optimize_recipe(recipe)
     plt.close("all")
     before = set(plt.get_fignums())
-    figure, ax = recipe.plot_recipe(return_fig=True, show=False)
+    fig, ax = recipe.plot_recipe(return_fig=True, show=False)
     after = set(plt.get_fignums())
     new_figs = after - before
     # add new data to existing plot
     ax.plot([0, pi], [0, 0], label="New Data")
     ax.legend()
-    legend = ax.get_legend()
-    # get sorted list of legend labels for comparison
-    actual_labels = sorted([t.get_text() for t in legend.get_texts()])
-    expected_labels = sorted(
-        ["Observed", "Calculated", "Difference", "New Data"]
-    )
+    actual_labels, actual_line_count = get_labels_and_linecount(ax)
+    expected_labels = ["Observed", "Calculated", "Difference", "New Data"]
+    expected_line_count = 4
     assert len(new_figs) == 1
-    assert actual_labels == expected_labels
+    assert actual_line_count == expected_line_count
+    assert sorted(actual_labels) == sorted(expected_labels)
 
 
 def test_plot_recipe_add_new_data_two_figs():
@@ -471,13 +509,11 @@ def test_plot_recipe_add_new_data_two_figs():
     for ax in axes:
         ax.plot([0, pi], [0, 0], label="New Data")
         ax.legend()
-        legend = ax.get_legend()
-        # get sorted list of legend labels for comparison
-        actual_labels = sorted([t.get_text() for t in legend.get_texts()])
-        expected_labels = sorted(
-            ["Observed", "Calculated", "Difference", "New Data"]
-        )
-        assert actual_labels == expected_labels
+        actual_labels, actual_line_count = get_labels_and_linecount(ax)
+        expected_labels = ["Observed", "Calculated", "Difference", "New Data"]
+        expected_line_count = 4
+        assert actual_line_count == expected_line_count
+        assert sorted(actual_labels) == sorted(expected_labels)
     assert len(new_figs) == 2
 
 

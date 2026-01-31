@@ -904,7 +904,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ax=None,
         return_fig=False,
     ):
-        """Plot the fit recipe data, calculated fit, and difference curve.
+        """The fit recipe data, calculated fit, and difference curve are
+        plotted.
 
         If the recipe has multiple contributions, a separate
         plot is created for each contribution.
@@ -912,85 +913,86 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Parameters
         ----------
         show_observed : bool, optional
-            If True, plot the observed data points. Default is True.
+            The observed data is plotted if True. Default is True.
         show_fit : bool, optional
-            If True, plot the calculated fit curve. Default is True.
+            The fit to the data is plotted if True. Default is True.
         show_diff : bool, optional
-            If True, plot the difference curve (observed - calculated).
+            The difference curve (observed - calculated) is plotted if True.
             Default is True.
         offset_scale : float, optional
-            Scaling factor for the difference curve offset. The difference
+            The scaling factor for the difference curve offset. The difference
             curve is offset below the data by
             (min_y - 0.1*range) * offset_scale. Default is 1.0.
         figsize : tuple, optional
-            Figure size as (width, height) in inches. Default is (8, 6).
+            The figure size as (width, height) in inches. Default is (8, 6).
         data_style : str, optional
-            Matplotlib line/marker style for data points. Default is "o".
+            The matplotlib line/marker style for data points. Default is "o".
         fit_style : str, optional
-            Matplotlib line style for calculated fit. Default is "-".
+            The matplotlib line style for the calculated fit. Default is "-".
         diff_style : str, optional
-            Matplotlib line style for difference curve. Default is "-".
+            The matplotlib line style for the difference curve. Default is "-".
         data_color : str or None, optional
-            Color for data points. If None, uses default matplotlib colors.
+            The color for data points. If None, uses default matplotlib colors.
         fit_color : str or None, optional
-            Color for fit curve. If None, uses default matplotlib colors.
-        diff_color : str or None, optional
-            Color for difference curve. If None, uses default matplotlib
+            The color for the fit curve. If None, uses default matplotlib
             colors.
+        diff_color : str or None, optional
+            The color for the difference curve. If None, uses default
+            matplotlib colors.
         data_label : str, optional
-            Legend label for observed data. Default is "Observed".
+            The legend label for observed data. Default is "Observed".
         fit_label : str, optional
-            Legend label for calculated fit. Default is "Calculated".
+            The legend label for the calculated fit. Default is "Calculated".
         diff_label : str, optional
-            Legend label for difference curve. Default is "Difference".
+            The legend label for the difference curve. Default is "Difference".
         xlabel : str, optional
-            Label for x-axis.
+            The label for the x-axis.
         ylabel : str, optional
-            Label for y-axis.
+            The label for the y-axis.
         title : str or None, optional
-            Plot title. Default is no title.
+            The plot title. Default is no title.
         legend : bool, optional
-            If True, show legend. Default is True.
+            The legend is shown if True. Default is True.
         legend_loc : str, optional
-            Legend location. Default is "best".
+            The legend location. Default is "best".
         grid : bool, optional
-            If True, show grid. Default is False.
+            The grid is shown if True. Default is False.
         markersize : float, optional
-            Size of data point markers.
+            The size of data point markers.
         linewidth : float, optional
-            Width of fit and difference lines.
+            The width of fit and difference lines.
         alpha : float, optional
-            Transparency of all plot elements (0=transparent, 1=opaque).
+            The transparency of all plot elements (0=transparent, 1=opaque).
             Default is 1.0.
         show : bool, optional
-            If True, display the plot using plt.show(). Default is True.
+            The plot is displayed using plt.show() if True. Default is True.
         ax : matplotlib.axes.Axes or None, optional
-            Axes object to plot on. If None, creates new figure.
+            The axes object to plot on. If None, creates a new figure.
             Default is None.
         return_fig : bool, optional
-            If True, return the figure and axes objects. Default is False.
+            The figure and axes objects are returned if True. Default is False.
 
         Returns
         -------
         fig, axes : tuple of (mpl.figure.Figure, list of mpl.axes.Axes)
-            Only returned if return_fig=True. Returns the figure object
-            and a list of axes objects (one per contribution).
+            The figure object and a list of axes objects (one per contribution)
+            are returned if return_fig=True.
 
         Examples
         --------
-        Plot everything with default settings:
+        The plot is created with default settings:
 
         >>> recipe.plot_recipe()
 
-        Plot only data and fit (no difference curve):
+        The data and fit are plotted (no difference curve):
 
         >>> recipe.plot_recipe(show_diff=False)
 
-        Plot only data to check before refinement:
+        The data is plotted to check before refinement:
 
         >>> recipe.plot_recipe(show_fit=False, show_diff=False)
 
-        Get figure object for further customization:
+        The figure object is retrieved for further customization:
 
         >>> fig, axes = recipe.plot_recipe(show=False, return_fig=True)
         >>> axes[0].set_yscale('log')

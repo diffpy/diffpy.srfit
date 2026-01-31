@@ -159,6 +159,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             "show_fit": True,
             "show_diff": True,
             "offset_scale": 1.0,
+            "xmin": None,
+            "xmax": None,
             "figsize": (8, 6),
             "data_style": "o",
             "fit_style": "-",
@@ -922,8 +924,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.plot_options.update(kwargs)
 
     def plot_recipe(self, ax=None, return_fig=False, **kwargs):
-        """The fit recipe data, calculated fit, and difference curve are
-        plotted.
+        """Plot the observed, fit, and difference curves for each contribution
+        of the fit recipe.
 
         If the recipe has multiple contributions, a separate
         plot is created for each contribution.
@@ -937,7 +939,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             The figure and axes objects are returned if True. Default is False.
         **kwargs : dict
             Any plotting option can be passed to override the defaults in
-            recipe.plot_options.
+            recipe.plot_options. See below for options.
 
         Keyword Arguments
         -----------------
@@ -952,21 +954,29 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             The scaling factor for the difference curve offset. The difference
             curve is offset below the data by
             (min_y - 0.1*range) * offset_scale. Default is 1.0.
+        xmin : float or None, optional
+            The minimum x value to plot. If None, uses the minimum x value
+            of the data. Default is None.
+        xmax : float or None, optional
+            The maximum x value to plot. If None, uses the maximum x value
+            of the data. Default is None.
         figsize : tuple, optional
-            The figure size as (width, height) in inches. Default is (8, 6).
+            The figure size as (width, height). Default is (8, 6).
         data_style : str, optional
             The matplotlib line/marker style for data points. Default is "o".
         fit_style : str, optional
-            The matplotlib line style for the calculated fit. Default is "-".
+            The matplotlib line/marker style for the calculated fit.
+            Default is "-".
         diff_style : str, optional
-            The matplotlib line style for the difference curve. Default is "-".
+            The matplotlib line/marker style for the difference curve.
+            Default is "-".
         data_color : str or None, optional
-            The color for data points. If None, uses default matplotlib colors.
+            The color for data plot. If None, uses default matplotlib colors.
         fit_color : str or None, optional
-            The color for the fit curve. If None, uses default matplotlib
+            The color for the fit plot. If None, uses default matplotlib
             colors.
         diff_color : str or None, optional
-            The color for the difference curve. If None, uses default
+            The color for the difference plot. If None, uses default
             matplotlib colors.
         data_label : str, optional
             The legend label for observed data. Default is "Observed".
@@ -994,7 +1004,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             The transparency of all plot elements (0=transparent, 1=opaque).
             Default is 1.0.
         show : bool, optional
-            The plot is displayed using plt.show() if True. Default is True.
+            The plot is displayed using `plt.show()` if True. Default is True.
         ax : matplotlib.axes.Axes or None, optional
             The axes object to plot on. If None, creates a new figure.
             Default is None.
@@ -1032,7 +1042,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Notes
         -----
-        Default values are taken from recipe.plot_options. You can modify
+        The default values are taken from recipe.plot_options. You can modify
         these defaults in three ways:
 
         1. Using set_plot_defaults():
@@ -1137,6 +1147,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 current_ax.legend(loc=plot_params["legend_loc"], frameon=True)
             if plot_params["grid"]:
                 current_ax.grid(True)
+            if (
+                plot_params["xmin"] is not None
+                or plot_params["xmax"] is not None
+            ):
+                current_ax.set_xlim(
+                    left=plot_params["xmin"], right=plot_params["xmax"]
+                )
             fig.tight_layout()
             figures.append(fig)
             axes_list.append(current_ax)

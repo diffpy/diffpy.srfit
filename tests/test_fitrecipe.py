@@ -536,5 +536,93 @@ def test_plot_recipe_set_defaults_bad(capsys, build_recipe_one_contribution):
     assert len(new_figs) == 1
 
 
+def test_plot_recipe_reset_all_defaults(build_recipe_one_contribution):
+    expected_defaults = {
+        "show_observed": True,
+        "show_fit": True,
+        "show_diff": True,
+        "offset_scale": 0.5,
+        "xmin": 1,
+        "xmax": 10,
+        "figsize": (9, 10),
+        "data_style": "-",
+        "fit_style": "o",
+        "diff_style": "o",
+        "data_color": "blue",
+        "fit_color": "purple",
+        "diff_color": "orange",
+        "data_label": "my data",
+        "fit_label": "my fit",
+        "diff_label": "my diff",
+        "xlabel": "my x label",
+        "ylabel": "my y label",
+        "title": "my title",
+        "legend": False,
+        "legend_loc": "upper right",
+        "markersize": 5,
+        "linewidth": 3,
+        "alpha": 0.5,
+        "show": True,
+    }
+
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+
+    recipe.set_plot_defaults(**expected_defaults)
+    fig, ax = recipe.plot_recipe(return_fig=True, show=False)
+
+    actual_title = ax.get_title()
+    actual_xlabel = ax.get_xlabel()
+    actual_ylabel = ax.get_ylabel()
+
+    expected_title = expected_defaults["title"]
+    expected_xlabel = expected_defaults["xlabel"]
+    expected_ylabel = expected_defaults["ylabel"]
+
+    assert actual_title == expected_title
+    assert actual_xlabel == expected_xlabel
+    assert actual_ylabel == expected_ylabel
+
+    actual_labels, actual_line_count = get_labels_and_linecount(ax)
+
+    expected_labels = [
+        expected_defaults["data_label"],
+        expected_defaults["fit_label"],
+        expected_defaults["diff_label"],
+    ]
+    expected_line_count = 3
+
+    assert actual_line_count == expected_line_count
+    assert actual_labels == expected_labels
+
+    lines_by_label = {line.get_label(): line for line in ax.get_lines()}
+
+    data_line = lines_by_label[expected_defaults["data_label"]]
+    fit_line = lines_by_label[expected_defaults["fit_label"]]
+    diff_line = lines_by_label[expected_defaults["diff_label"]]
+
+    assert data_line.get_color() == expected_defaults["data_color"]
+    assert fit_line.get_color() == expected_defaults["fit_color"]
+    assert diff_line.get_color() == expected_defaults["diff_color"]
+
+    assert data_line.get_linestyle() == expected_defaults["data_style"]
+    assert fit_line.get_marker() == expected_defaults["fit_style"]
+    assert diff_line.get_marker() == expected_defaults["diff_style"]
+
+    assert data_line.get_markersize() == expected_defaults["markersize"]
+    assert data_line.get_alpha() == expected_defaults["alpha"]
+
+    actual_xlim = ax.get_xlim()
+    expected_xlim = (expected_defaults["xmin"], expected_defaults["xmax"])
+    assert actual_xlim == expected_xlim
+
+    # no legend
+    actual_legend = ax.get_legend() is not None
+    expected_legend = expected_defaults["legend"]
+
+    assert actual_legend == expected_legend
+
+
 if __name__ == "__main__":
     unittest.main()

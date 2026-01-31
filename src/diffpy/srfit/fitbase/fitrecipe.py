@@ -905,44 +905,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Any keyword argument accepted by plot_recipe() can be set here.
 
-        Examples
-        --------
-        >>> recipe.set_plot_defaults(
-        ...     xlabel='r (Å)',
-        ...     ylabel='G(r) (Å⁻²)',
-        ...     data_color='black',
-        ...     fit_color='red'
-        ... )
-        """
-
-        for key in kwargs:
-            if key not in self.plot_options:
-                print(
-                    f"Warning: '{key}' is not a valid "
-                    "plot_recipe option and will be ignored."
-                )
-        self.plot_options.update(kwargs)
-
-    def plot_recipe(self, ax=None, return_fig=False, **kwargs):
-        """Plot the observed, fit, and difference curves for each contribution
-        of the fit recipe.
-
-        If the recipe has multiple contributions, a separate
-        plot is created for each contribution.
-
         Parameters
         ----------
-        ax : matplotlib.axes.Axes or None, optional
-            The axes object to plot on. If None, creates a new figure.
-            Default is None.
-        return_fig : bool, optional
-            The figure and axes objects are returned if True. Default is False.
-        **kwargs : dict
-            Any plotting option can be passed to override the defaults in
-            recipe.plot_options. See below for options.
-
-        Keyword Arguments
-        -----------------
         show_observed : bool, optional
             The observed data is plotted if True. Default is True.
         show_fit : bool, optional
@@ -1010,6 +974,44 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             Default is None.
         return_fig : bool, optional
             The figure and axes objects are returned if True. Default is False.
+
+        Examples
+        --------
+        >>> recipe.set_plot_defaults(
+                xlabel='r (Å)',
+                ylabel='G(r) (Å⁻²)',
+                data_color='black',
+                fit_color='red'
+            )
+        """
+
+        for key in kwargs:
+            if key not in self.plot_options:
+                print(
+                    f"Warning: '{key}' is not a valid "
+                    "plot_recipe option and will be ignored."
+                )
+        self.plot_options.update(kwargs)
+
+    def plot_recipe(self, ax=None, return_fig=False, **kwargs):
+        """Plot the observed, fit, and difference curves for each contribution
+        of the fit recipe.
+
+        If the recipe has multiple contributions, a separate
+        plot is created for each contribution.
+
+        Parameters
+        ----------
+        ax : matplotlib.axes.Axes or None, optional
+            The axes object to plot on. If None, creates a new figure.
+            Default is None.
+        return_fig : bool, optional
+            The figure and axes objects are returned if True. Default is False.
+        **kwargs : dict
+            Any plotting option can be passed to override the defaults in
+            `FitRecipe().plot_options`. See the
+            `FitRecipe().set_plot_defaults()` method for available
+            keyword arguments.
 
         Returns
         -------

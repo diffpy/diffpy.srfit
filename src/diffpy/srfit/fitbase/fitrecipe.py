@@ -38,6 +38,7 @@ from collections import OrderedDict
 
 import matplotlib.pyplot as plt
 import six
+from bg_mpl_stylesheets.styles import all_styles
 from numpy import array, concatenate, dot, sqrt
 
 from diffpy.srfit.fitbase.fithook import PrintFitHook
@@ -45,6 +46,8 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.tagmanager import TagManager
+
+plt.style.use(all_styles["bg-style"])
 
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):

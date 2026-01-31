@@ -5,8 +5,10 @@ from functools import lru_cache
 
 import pytest
 import six
+from numpy import linspace, pi, sin
 
 import diffpy.srfit.equation.literals as literals
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile
 
 logger = logging.getLogger(__name__)
 
@@ -142,3 +144,51 @@ def capturestdout():
         return fp.getvalue()
 
     return _capturestdout
+
+
+@pytest.fixture(scope="session")
+def build_recipe_one_contribution():
+    "helper to build a simple recipe"
+    profile = Profile()
+    x = linspace(0, pi, 10)
+    y = sin(x)
+    profile.setObservedProfile(x, y)
+    contribution = FitContribution("c1")
+    contribution.setProfile(profile)
+    contribution.setEquation("A*sin(k*x + c)")
+    recipe = FitRecipe()
+    recipe.addContribution(contribution)
+    recipe.addVar(contribution.A, 1)
+    recipe.addVar(contribution.k, 1)
+    recipe.addVar(contribution.c, 1)
+    return recipe
+
+
+@pytest.fixture(scope="session")
+def build_recipe_two_contributions():
+    "helper to build a recipe with two contributions"
+    profile1 = Profile()
+    x = linspace(0, pi, 10)
+    y1 = sin(x)
+    profile1.setObservedProfile(x, y1)
+    contribution1 = FitContribution("c1")
+    contribution1.setProfile(profile1)
+    contribution1.setEquation("A*sin(k*x + c)")
+
+    profile2 = Profile()
+    y2 = 0.5 * sin(2 * x)
+    profile2.setObservedProfile(x, y2)
+    contribution2 = FitContribution("c2")
+    contribution2.setProfile(profile2)
+    contribution2.setEquation("B*sin(m*x + d)")
+    recipe = FitRecipe()
+    recipe.addContribution(contribution1)
+    recipe.addContribution(contribution2)
+    recipe.addVar(contribution1.A, 1)
+    recipe.addVar(contribution1.k, 1)
+    recipe.addVar(contribution1.c, 1)
+    recipe.addVar(contribution2.B, 0.5)
+    recipe.addVar(contribution2.m, 2)
+    recipe.addVar(contribution2.d, 0)
+
+    return recipe

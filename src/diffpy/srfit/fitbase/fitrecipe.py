@@ -993,6 +993,20 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 )
         self.plot_options.update(kwargs)
 
+    def _set_axes_labels_from_metadata(self, meta, plot_params):
+        """Set axes labels based on filename suffix in profile metadata if not
+        already set."""
+        if isinstance(meta, dict):
+            filename = meta.get("filename")
+            if filename:
+                suffix = filename.rsplit(".", 1)[-1].lower()
+                if "gr" in suffix:
+                    if plot_params.get("xlabel") is None:
+                        plot_params["xlabel"] = r"r ($\mathrm{\AA}$)"
+                    if plot_params.get("ylabel") is None:
+                        plot_params["ylabel"] = r"G ($\mathrm{\AA}^{-2}$)"
+        return
+
     def plot_recipe(self, ax=None, return_fig=False, **kwargs):
         """Plot the observed, fit, and difference curves for each contribution
         of the fit recipe.
@@ -1139,6 +1153,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                     offset,
                     color="black",
                 )
+            meta = getattr(profile, "meta", None)
+            if meta:
+                self._set_axes_labels_from_metadata(meta, plot_params)
             if plot_params["xlabel"] is not None:
                 current_ax.set_xlabel(plot_params["xlabel"])
             if plot_params["ylabel"] is not None:

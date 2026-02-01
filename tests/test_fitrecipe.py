@@ -564,6 +564,9 @@ def test_plot_recipe_set_defaults_bad(capsys, build_recipe_one_contribution):
         # case2: .dat file
         # expected: default empty labels
         ("dat_file.dat", ["", ""]),
+        # case3: .cgr file
+        # expected: labels are inferred from file
+        ("cgr_file.cgr", [r"r ($\mathrm{\AA}$)", r"G ($\mathrm{\AA}^{-2}$)"]),
     ],
 )
 def test_plot_recipe_labels_from_gr_file(temp_data_files, input, expected):

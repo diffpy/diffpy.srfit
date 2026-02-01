@@ -207,4 +207,7 @@ def temp_data_files(tmp_path):
 
     dat_file = tmp_path / "dat_file.dat"
     dat_file.write_text("1.0 2.0\n" "1.1 2.1\n" "1.2 2.2\n")
+
+    cgr_file = tmp_path / "cgr_file.cgr"
+    cgr_file.write_text("1.0 2.0\n" "1.1 2.1\n" "1.2 2.2\n")
     yield tmp_path

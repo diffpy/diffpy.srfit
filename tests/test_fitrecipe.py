@@ -16,12 +16,19 @@
 
 import unittest
 
+import matplotlib
+import matplotlib.pyplot as plt
+import pytest
 from numpy import array_equal, dot, linspace, pi, sin
+from scipy.optimize import leastsq
 
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.pdf import PDFParser
+
+matplotlib.use("Agg")
 
 
 class TestFitRecipe(unittest.TestCase):
@@ -282,6 +289,402 @@ def testPrintFitHook(capturestdout):
     assert "\nVariables" in out
     assert "c = " in out
     return
+
+
+def optimize_recipe(recipe):
+    recipe.fithooks[0].verbose = 0
+    residuals = recipe.residual
+    values = recipe.values
+    leastsq(residuals, values)
+
+
+def get_labels_and_linecount(ax):
+    """Helper to get line labels and count from a matplotlib Axes."""
+    labels = [
+        line.get_label()
+        for line in ax.get_lines()
+        if not line.get_label().startswith("_")
+    ]
+    line_count = len(
+        [
+            line
+            for line in ax.get_lines()
+            if not line.get_label().startswith("_")
+        ]
+    )
+    return labels, line_count
+
+
+def build_recipe_from_datafile(datafile):
+    """Helper to build a FitRecipe from a datafile using PDFParser and
+    PDFGenerator."""
+    profile = Profile()
+    parser = PDFParser()
+    parser.parseFile(str(datafile))
+    profile.loadParsedData(parser)
+
+    contribution = FitContribution("c")
+    contribution.setProfile(profile)
+    contribution.setEquation("m*x + b")
+    recipe = FitRecipe()
+    recipe.addContribution(contribution)
+    recipe.addVar(contribution.m, 1)
+    recipe.addVar(contribution.b, 0)
+    return recipe
+
+
+def test_plot_recipe_bad_display(build_recipe_one_contribution):
+    recipe = build_recipe_one_contribution
+    # Case: All plots are disabled
+    # expected: raised ValueError with message
+    plt.close("all")
+    msg = "At least one of show_observed, show_fit, or show_diff must be True"
+    with pytest.raises(ValueError, match=msg):
+        recipe.plot_recipe(
+            show_observed=False,
+            show_diff=False,
+            show_fit=False,
+        )
+
+
+def test_plot_recipe_no_contribution():
+    recipe = FitRecipe()
+    # Case: No contributions in recipe
+    # expected: raised ValueError with message
+    plt.close("all")
+    msg = (
+        "No contributions found in recipe. "
+        "Add contributions before plotting."
+    )
+    with pytest.raises(ValueError, match=msg):
+        recipe.plot_recipe()
+
+
+def test_plot_recipe_before_refinement(capsys, build_recipe_one_contribution):
+    # Case: User tries to plot recipe before refinement
+    # expected: Data plotted without fit line or difference curve
+    #          and warning message printed
+    recipe = build_recipe_one_contribution
+    plt.close("all")
+    before = set(plt.get_fignums())
+    # include fit_label="nothing" to make sure fit line is not plotted
+    fig, ax = recipe.plot_recipe(
+        show=False, data_label="my data", fit_label="nothing", return_fig=True
+    )
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    captured = capsys.readouterr()
+    actual = captured.out.strip()
+    expected = (
+        "Contribution 'c1' has no calculated values (ycalc is None). "
+        "Only observed data will be plotted."
+    )
+    # get labels from the plotted line
+    actual_label, actual_line_count = get_labels_and_linecount(ax)
+    expected_line_count = 1
+    expected_label = ["my data"]
+    assert actual_line_count == expected_line_count
+    assert actual_label == expected_label
+    assert len(new_figs) == 1
+    assert actual == expected
+
+
+def test_plot_recipe_after_refinement(build_recipe_one_contribution):
+    # Case: User refines recipe and then plots
+    # expected: Plot generates with no problem
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+    before = set(plt.get_fignums())
+    fig, ax = recipe.plot_recipe(show=False, return_fig=True)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    actual_label, actual_line_count = get_labels_and_linecount(ax)
+    expected_label = ["Observed", "Calculated", "Difference"]
+    expected_line_count = 3
+    assert actual_line_count == expected_line_count
+    assert actual_label == expected_label
+    assert len(new_figs) == 1
+
+
+def test_plot_recipe_two_contributions(build_recipe_two_contributions):
+    # Case: Two contributions in recipe
+    # expected: two figures created
+    recipe = build_recipe_two_contributions
+    optimize_recipe(recipe)
+    plt.close("all")
+    before = set(plt.get_fignums())
+    figs, axes = recipe.plot_recipe(show=False, return_fig=True)
+    for ax in axes:
+        actual_label, actual_line_count = get_labels_and_linecount(ax)
+        expected_label = ["Observed", "Calculated", "Difference"]
+        expected_line_count = 3
+        assert actual_line_count == expected_line_count
+        assert actual_label == expected_label
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    assert len(new_figs) == 2
+
+
+def test_plot_recipe_on_existing_plot(build_recipe_one_contribution):
+    # Case: User passes axes to plot_recipe to plot on existing figure
+    # expected: User modifications are present in the final figure
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+    fig, ax = plt.subplots()
+    ax.set_title("User Title")
+    ax.plot([0, 1], [0, 1], label="New Data")
+    recipe.plot_recipe(ax=ax, show=False)
+    actual_title = ax.get_title()
+    expected_title = "User Title"
+    actual_labels, actual_line_count = get_labels_and_linecount(ax)
+    expected_line_count = 4
+    expected_labels = ["Calculated", "Difference", "New Data", "Observed"]
+    assert actual_line_count == expected_line_count
+    assert sorted(actual_labels) == sorted(expected_labels)
+    assert actual_title == expected_title
+
+
+def test_plot_recipe_add_new_data(build_recipe_one_contribution):
+    # Case: User wants to add data to figure generated by plot_recipe
+    # Expected: New data is added to existing figure (check with labels)
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+    before = set(plt.get_fignums())
+    fig, ax = recipe.plot_recipe(return_fig=True, show=False)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    # add new data to existing plot
+    ax.plot([0, pi], [0, 0], label="New Data")
+    ax.legend()
+    actual_labels, actual_line_count = get_labels_and_linecount(ax)
+    expected_labels = ["Observed", "Calculated", "Difference", "New Data"]
+    expected_line_count = 4
+    assert len(new_figs) == 1
+    assert actual_line_count == expected_line_count
+    assert sorted(actual_labels) == sorted(expected_labels)
+
+
+def test_plot_recipe_add_new_data_two_figs(build_recipe_two_contributions):
+    # Case: User wants to add data to figure generated by plot_recipe
+    #       with two contributions
+    # Expected: New data is added to existing figure (check with labels)
+    recipe = build_recipe_two_contributions
+    optimize_recipe(recipe)
+    plt.close("all")
+    before = set(plt.get_fignums())
+    figure, axes = recipe.plot_recipe(return_fig=True, show=False)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    # add new data to existing plots
+    for ax in axes:
+        ax.plot([0, pi], [0, 0], label="New Data")
+        ax.legend()
+        actual_labels, actual_line_count = get_labels_and_linecount(ax)
+        expected_labels = ["Observed", "Calculated", "Difference", "New Data"]
+        expected_line_count = 4
+        assert actual_line_count == expected_line_count
+        assert sorted(actual_labels) == sorted(expected_labels)
+    assert len(new_figs) == 2
+
+
+def test_plot_recipe_set_title(build_recipe_one_contribution):
+    # Case: User sets title via plot_recipe
+    # Expected: Title is set correctly
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+    expected_title = "Custom Recipe Title"
+    figure, ax = recipe.plot_recipe(
+        title=expected_title, return_fig=True, show=False
+    )
+    actual_title = ax.get_title()
+    assert actual_title == expected_title
+
+
+def test_plot_recipe_set_defaults(build_recipe_one_contribution):
+    # Case: user sets default plot options with set_plot_defaults
+    # Expected: plot_recipe uses the default options for all calls
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+    # set new defaults
+    recipe.set_plot_defaults(
+        show_observed=False,
+        show_fit=True,
+        show_diff=False,
+        data_label="Data Default",
+        fit_label="Fit Default",
+        diff_label="Diff Default",
+        title="Default Title",
+    )
+    # call plot_recipe without any arguments
+    figure, ax = recipe.plot_recipe(return_fig=True, show=False)
+    actual_title = ax.get_title()
+    actual_labels, actual_line_count = get_labels_and_linecount(ax)
+    expected_title = "Default Title"
+    expected_labels = ["Fit Default"]
+    expected_line_count = 1
+    assert actual_title == expected_title
+    assert actual_line_count == expected_line_count
+    assert actual_labels == expected_labels
+
+
+def test_plot_recipe_set_defaults_bad(capsys, build_recipe_one_contribution):
+    # Case: user tries to set kwargs that are not valid plot_recipe options
+    # Expected: Plot is shown and warning is printed
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+    recipe.set_plot_defaults(
+        invalid_option="blah",
+    )
+    captured = capsys.readouterr()
+    actual_msg = captured.out.strip()
+    expected_msg = (
+        "Warning: 'invalid_option' is not a valid "
+        "plot_recipe option and will be ignored."
+    )
+    assert actual_msg == expected_msg
+    before = set(plt.get_fignums())
+    figure, ax = recipe.plot_recipe(return_fig=True, show=False)
+    after = set(plt.get_fignums())
+    new_figs = after - before
+    assert len(new_figs) == 1
+
+
+@pytest.mark.parametrize(
+    "input,expected",
+    [
+        # case1: .gr file
+        # expected: labels are inferred from file
+        ("gr_file.gr", [r"r ($\mathrm{\AA}$)", r"G ($\mathrm{\AA}^{-2}$)"]),
+        # case2: .dat file
+        # expected: default empty labels
+        ("dat_file.dat", ["", ""]),
+        # case3: .cgr file
+        # expected: labels are inferred from file
+        ("cgr_file.cgr", [r"r ($\mathrm{\AA}$)", r"G ($\mathrm{\AA}^{-2}$)"]),
+    ],
+)
+def test_plot_recipe_labels_from_gr_file(temp_data_files, input, expected):
+    gr_file = temp_data_files / input
+    recipe = build_recipe_from_datafile(gr_file)
+    optimize_recipe(recipe)
+    plt.close("all")
+    fig, ax = recipe.plot_recipe(return_fig=True, show=False)
+    actual_xlabel = ax.get_xlabel()
+    actual_ylabel = ax.get_ylabel()
+    expected_xlabel = expected[0]
+    expected_ylabel = expected[1]
+    assert actual_xlabel == expected_xlabel
+    assert actual_ylabel == expected_ylabel
+
+
+def test_plot_recipe_labels_from_gr_file_overwrite(temp_data_files):
+    gr_file = temp_data_files / "gr_file.gr"
+    recipe = build_recipe_from_datafile(gr_file)
+    optimize_recipe(recipe)
+    plt.close("all")
+    fig, ax = recipe.plot_recipe(
+        return_fig=True, show=False, xlabel="My X", ylabel="My Y"
+    )
+    actual_xlabel = ax.get_xlabel()
+    actual_ylabel = ax.get_ylabel()
+    expected_xlabel = "My X"
+    expected_ylabel = "My Y"
+    assert actual_xlabel == expected_xlabel
+    assert actual_ylabel == expected_ylabel
+
+
+def test_plot_recipe_reset_all_defaults(build_recipe_one_contribution):
+    expected_defaults = {
+        "show_observed": True,
+        "show_fit": True,
+        "show_diff": True,
+        "offset_scale": 0.5,
+        "xmin": 1,
+        "xmax": 10,
+        "figsize": (9, 10),
+        "data_style": "-",
+        "fit_style": "o",
+        "diff_style": "o",
+        "data_color": "blue",
+        "fit_color": "purple",
+        "diff_color": "orange",
+        "data_label": "my data",
+        "fit_label": "my fit",
+        "diff_label": "my diff",
+        "xlabel": "my x label",
+        "ylabel": "my y label",
+        "title": "my title",
+        "legend": False,
+        "legend_loc": "upper right",
+        "markersize": 5,
+        "linewidth": 3,
+        "alpha": 0.5,
+        "show": True,
+    }
+
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+
+    recipe.set_plot_defaults(**expected_defaults)
+    fig, ax = recipe.plot_recipe(return_fig=True, show=False)
+
+    actual_title = ax.get_title()
+    actual_xlabel = ax.get_xlabel()
+    actual_ylabel = ax.get_ylabel()
+
+    expected_title = expected_defaults["title"]
+    expected_xlabel = expected_defaults["xlabel"]
+    expected_ylabel = expected_defaults["ylabel"]
+
+    assert actual_title == expected_title
+    assert actual_xlabel == expected_xlabel
+    assert actual_ylabel == expected_ylabel
+
+    actual_labels, actual_line_count = get_labels_and_linecount(ax)
+
+    expected_labels = [
+        expected_defaults["data_label"],
+        expected_defaults["fit_label"],
+        expected_defaults["diff_label"],
+    ]
+    expected_line_count = 3
+
+    assert actual_line_count == expected_line_count
+    assert actual_labels == expected_labels
+
+    lines_by_label = {line.get_label(): line for line in ax.get_lines()}
+
+    data_line = lines_by_label[expected_defaults["data_label"]]
+    fit_line = lines_by_label[expected_defaults["fit_label"]]
+    diff_line = lines_by_label[expected_defaults["diff_label"]]
+
+    assert data_line.get_color() == expected_defaults["data_color"]
+    assert fit_line.get_color() == expected_defaults["fit_color"]
+    assert diff_line.get_color() == expected_defaults["diff_color"]
+
+    assert data_line.get_linestyle() == expected_defaults["data_style"]
+    assert fit_line.get_marker() == expected_defaults["fit_style"]
+    assert diff_line.get_marker() == expected_defaults["diff_style"]
+
+    assert data_line.get_markersize() == expected_defaults["markersize"]
+    assert data_line.get_alpha() == expected_defaults["alpha"]
+
+    actual_xlim = ax.get_xlim()
+    expected_xlim = (expected_defaults["xmin"], expected_defaults["xmax"])
+    assert actual_xlim == expected_xlim
+
+    # no legend
+    actual_legend = ax.get_legend() is not None
+    expected_legend = expected_defaults["legend"]
+
+    assert actual_legend == expected_legend
 
 
 if __name__ == "__main__":

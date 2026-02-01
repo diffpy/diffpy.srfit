@@ -36,7 +36,8 @@ __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
 
-import six
+import matplotlib.pyplot as plt
+from bg_mpl_stylesheets.styles import all_styles
 from numpy import array, concatenate, dot, sqrt
 
 from diffpy.srfit.fitbase.fithook import PrintFitHook
@@ -44,6 +45,8 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.tagmanager import TagManager
+
+plt.style.use(all_styles["bg-style"])
 
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
@@ -151,6 +154,34 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._contributions = OrderedDict()
         self._manage(self._contributions)
 
+        self.plot_options = {
+            "show_observed": True,
+            "show_fit": True,
+            "show_diff": True,
+            "offset_scale": 1.0,
+            "xmin": None,
+            "xmax": None,
+            "figsize": (8, 6),
+            "data_style": "o",
+            "fit_style": "-",
+            "diff_style": "-",
+            "data_color": None,
+            "fit_color": None,
+            "diff_color": None,
+            "data_label": "Observed",
+            "fit_label": "Calculated",
+            "diff_label": "Difference",
+            "xlabel": None,
+            "ylabel": None,
+            "title": None,
+            "legend": True,
+            "legend_loc": "best",
+            "grid": False,
+            "markersize": None,
+            "linewidth": None,
+            "alpha": 1.0,
+            "show": True,
+        }
         return
 
     def pushFitHook(self, fithook, index=None):
@@ -641,7 +672,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns the variable or None if the variable cannot be found in the
         _parameters list.
         """
-        if isinstance(var, six.string_types):
+        if isinstance(var, str):
             var = self._parameters.get(var)
 
         if var not in self._parameters.values():
@@ -661,9 +692,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         or if a tag is passed in a keyword.
         """
         # Process args. Each variable is tagged with its name, so this is easy.
-        strargs = set(
-            [arg for arg in args if isinstance(arg, six.string_types)]
-        )
+        strargs = set([arg for arg in args if isinstance(arg, str)])
         varargs = set(args) - strargs
         # Check that the tags are valid
         alltags = set(self._tagmanager.alltags())
@@ -764,7 +793,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         update = False
         for par in pars:
-            if isinstance(par, six.string_types):
+            if isinstance(par, str):
                 name = par
                 par = self.get(name)
 
@@ -815,7 +844,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         the FitRecipe and that is not defined in ns.
         Raises ValueError if par is marked as constant.
         """
-        if isinstance(par, six.string_types):
+        if isinstance(par, str):
             name = par
             par = self.get(name)
             if par is None:
@@ -870,6 +899,290 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         lb = array([b[0] for b in bounds])
         ub = array([b[1] for b in bounds])
         return lb, ub
+
+    def set_plot_defaults(self, **kwargs):
+        """Set default plotting options for all future plots.
+
+        Any keyword argument accepted by plot_recipe() can be set here.
+
+        Parameters
+        ----------
+        show_observed : bool, optional
+            The observed data is plotted if True. Default is True.
+        show_fit : bool, optional
+            The fit to the data is plotted if True. Default is True.
+        show_diff : bool, optional
+            The difference curve (observed - calculated) is plotted if True.
+            Default is True.
+        offset_scale : float, optional
+            The scaling factor for the difference curve offset. The difference
+            curve is offset below the data by
+            (min_y - 0.1*range) * offset_scale. Default is 1.0.
+        xmin : float or None, optional
+            The minimum x value to plot. If None, uses the minimum x value
+            of the data. Default is None.
+        xmax : float or None, optional
+            The maximum x value to plot. If None, uses the maximum x value
+            of the data. Default is None.
+        figsize : tuple, optional
+            The figure size as (width, height). Default is (8, 6).
+        data_style : str, optional
+            The matplotlib line/marker style for data points. Default is "o".
+        fit_style : str, optional
+            The matplotlib line/marker style for the calculated fit.
+            Default is "-".
+        diff_style : str, optional
+            The matplotlib line/marker style for the difference curve.
+            Default is "-".
+        data_color : str or None, optional
+            The color for data plot. If None, uses default matplotlib colors.
+        fit_color : str or None, optional
+            The color for the fit plot. If None, uses default matplotlib
+            colors.
+        diff_color : str or None, optional
+            The color for the difference plot. If None, uses default
+            matplotlib colors.
+        data_label : str, optional
+            The legend label for observed data. Default is "Observed".
+        fit_label : str, optional
+            The legend label for the calculated fit. Default is "Calculated".
+        diff_label : str, optional
+            The legend label for the difference curve. Default is "Difference".
+        xlabel : str, optional
+            The label for the x-axis.
+        ylabel : str, optional
+            The label for the y-axis.
+        title : str or None, optional
+            The plot title. Default is no title.
+        legend : bool, optional
+            The legend is shown if True. Default is True.
+        legend_loc : str, optional
+            The legend location. Default is "best".
+        grid : bool, optional
+            The grid is shown if True. Default is False.
+        markersize : float, optional
+            The size of data point markers.
+        linewidth : float, optional
+            The width of fit and difference lines.
+        alpha : float, optional
+            The transparency of all plot elements (0=transparent, 1=opaque).
+            Default is 1.0.
+        show : bool, optional
+            The plot is displayed using `plt.show()` if True. Default is True.
+        ax : matplotlib.axes.Axes or None, optional
+            The axes object to plot on. If None, creates a new figure.
+            Default is None.
+        return_fig : bool, optional
+            The figure and axes objects are returned if True. Default is False.
+
+        Examples
+        --------
+        >>> recipe.set_plot_defaults(
+                xlabel='r (Å)',
+                ylabel='G(r) (Å⁻²)',
+                data_color='black',
+                fit_color='red'
+            )
+        """
+
+        for key in kwargs:
+            if key not in self.plot_options:
+                print(
+                    f"Warning: '{key}' is not a valid "
+                    "plot_recipe option and will be ignored."
+                )
+        self.plot_options.update(kwargs)
+
+    def _set_axes_labels_from_metadata(self, meta, plot_params):
+        """Set axes labels based on filename suffix in profile metadata if not
+        already set."""
+        if isinstance(meta, dict):
+            filename = meta.get("filename")
+            if filename:
+                suffix = filename.rsplit(".", 1)[-1].lower()
+                if "gr" in suffix:
+                    if plot_params.get("xlabel") is None:
+                        plot_params["xlabel"] = r"r ($\mathrm{\AA}$)"
+                    if plot_params.get("ylabel") is None:
+                        plot_params["ylabel"] = r"G ($\mathrm{\AA}^{-2}$)"
+        return
+
+    def plot_recipe(self, ax=None, return_fig=False, **kwargs):
+        """Plot the observed, fit, and difference curves for each contribution
+        of the fit recipe.
+
+        If the recipe has multiple contributions, a separate
+        plot is created for each contribution.
+
+        Parameters
+        ----------
+        ax : matplotlib.axes.Axes or None, optional
+            The axes object to plot on. If None, creates a new figure.
+            Default is None.
+        return_fig : bool, optional
+            The figure and axes objects are returned if True. Default is False.
+        **kwargs : dict
+            Any plotting option can be passed to override the defaults in
+            `FitRecipe().plot_options`. See the
+            `FitRecipe().set_plot_defaults()` method for available
+            keyword arguments.
+
+        Returns
+        -------
+        fig, axes : tuple of (mpl.figure.Figure, list of mpl.axes.Axes)
+            The figure object and a list of axes objects (one per contribution)
+            are returned if return_fig=True.
+
+        Examples
+        --------
+        Plot with default settings:
+
+        >>> recipe.plot_recipe()
+
+        Override defaults for one plot:
+
+        >>> recipe.plot_recipe(show_diff=False, title='My Custom Title')
+
+        Set defaults once, use everywhere:
+
+        >>> recipe.set_plot_defaults(xlabel='r (Å)', ylabel='G(r)')
+        >>> recipe.plot_recipe()  # Uses xlabel and ylabel
+        >>> recipe.plot_recipe()  # Still uses them
+
+        Override a default for one plot:
+
+        >>> recipe.set_plot_defaults(figsize=(10, 7))
+        >>> recipe.plot_recipe()  # Uses (10, 7)
+        >>> recipe.plot_recipe(figsize=(12, 8))  # Temporarily uses (12, 8)
+        >>> recipe.plot_recipe()  # Back to (10, 7)
+
+        Notes
+        -----
+        The default values are taken from recipe.plot_options. You can modify
+        these defaults in three ways:
+
+        1. Using set_plot_defaults():
+        recipe.set_plot_defaults(xlabel='r (Å)')
+
+        2. Direct attribute access:
+        recipe.plot_options['xlabel'] = 'r (Å)'
+
+        3. Using update():
+        recipe.plot_options.update({'xlabel': 'r (Å)', 'ylabel': 'G(r)'})
+        """
+        plot_params = self.plot_options.copy()
+        plot_params.update(kwargs)
+
+        if not any(
+            [
+                plot_params["show_observed"],
+                plot_params["show_fit"],
+                plot_params["show_diff"],
+            ]
+        ):
+            raise ValueError(
+                "At least one of show_observed, show_fit, "
+                "or show_diff must be True"
+            )
+
+        if not self._contributions:
+            raise ValueError(
+                "No contributions found in recipe. "
+                "Add contributions before plotting."
+            )
+        figures = []
+        axes_list = []
+        for name, contrib in self._contributions.items():
+            profile = contrib.profile
+            x = profile.x
+            yobs = profile.y
+            ycalc = profile.ycalc
+            if ycalc is None:
+                if plot_params["show_fit"] or plot_params["show_diff"]:
+                    print(
+                        f"Contribution '{name}' has no calculated values "
+                        "(ycalc is None). "
+                        "Only observed data will be plotted."
+                    )
+                plot_params["show_fit"] = False
+                plot_params["show_diff"] = False
+            else:
+                diff = yobs - ycalc
+                y_min = min(yobs.min(), ycalc.min())
+                y_max = max(yobs.max(), ycalc.max())
+                y_range = y_max - y_min
+                base_offset = y_min - 0.1 * y_range
+                offset = base_offset * plot_params["offset_scale"]
+            if ax is None:
+                fig = plt.figure(figsize=plot_params["figsize"])
+                current_ax = fig.add_subplot(111)
+            else:
+                current_ax = ax
+                fig = current_ax.figure
+            if plot_params["show_observed"]:
+                current_ax.plot(
+                    x,
+                    yobs,
+                    plot_params["data_style"],
+                    label=plot_params["data_label"],
+                    color=plot_params["data_color"],
+                    markersize=plot_params["markersize"],
+                    alpha=plot_params["alpha"],
+                )
+            if plot_params["show_fit"]:
+                current_ax.plot(
+                    x,
+                    ycalc,
+                    plot_params["fit_style"],
+                    label=plot_params["fit_label"],
+                    color=plot_params["fit_color"],
+                    linewidth=plot_params["linewidth"],
+                    alpha=plot_params["alpha"],
+                )
+            if plot_params["show_diff"]:
+                current_ax.plot(
+                    x,
+                    diff + offset,
+                    plot_params["diff_style"],
+                    label=plot_params["diff_label"],
+                    color=plot_params["diff_color"],
+                    linewidth=plot_params["linewidth"],
+                    alpha=plot_params["alpha"],
+                )
+                current_ax.axhline(
+                    offset,
+                    color="black",
+                )
+            meta = getattr(profile, "meta", None)
+            if meta:
+                self._set_axes_labels_from_metadata(meta, plot_params)
+            if plot_params["xlabel"] is not None:
+                current_ax.set_xlabel(plot_params["xlabel"])
+            if plot_params["ylabel"] is not None:
+                current_ax.set_ylabel(plot_params["ylabel"])
+            if plot_params["title"] is not None:
+                current_ax.set_title(plot_params["title"])
+            if plot_params["legend"]:
+                current_ax.legend(loc=plot_params["legend_loc"], frameon=True)
+            if plot_params["grid"]:
+                current_ax.grid(True)
+            if (
+                plot_params["xmin"] is not None
+                or plot_params["xmax"] is not None
+            ):
+                current_ax.set_xlim(
+                    left=plot_params["xmin"], right=plot_params["xmax"]
+                )
+            fig.tight_layout()
+            figures.append(fig)
+            axes_list.append(current_ax)
+            if plot_params["show"] and ax is None:
+                plt.show()
+        if return_fig:
+            if len(figures) == 1:
+                return figures[0], axes_list[0]
+            else:
+                return figures, axes_list
 
     def boundsToRestraints(self, sig=1, scaled=False):
         """Turn all bounded parameters into restraints.

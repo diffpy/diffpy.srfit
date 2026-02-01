@@ -26,6 +26,7 @@ from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.pdf import PDFParser
 
 matplotlib.use("Agg")
 
@@ -314,6 +315,24 @@ def get_labels_and_linecount(ax):
     return labels, line_count
 
 
+def build_recipe_from_datafile(datafile):
+    """Helper to build a FitRecipe from a datafile using PDFParser and
+    PDFGenerator."""
+    profile = Profile()
+    parser = PDFParser()
+    parser.parseFile(str(datafile))
+    profile.loadParsedData(parser)
+
+    contribution = FitContribution("c")
+    contribution.setProfile(profile)
+    contribution.setEquation("m*x + b")
+    recipe = FitRecipe()
+    recipe.addContribution(contribution)
+    recipe.addVar(contribution.m, 1)
+    recipe.addVar(contribution.b, 0)
+    return recipe
+
+
 def test_plot_recipe_bad_display(build_recipe_one_contribution):
     recipe = build_recipe_one_contribution
     # Case: All plots are disabled
@@ -534,6 +553,47 @@ def test_plot_recipe_set_defaults_bad(capsys, build_recipe_one_contribution):
     after = set(plt.get_fignums())
     new_figs = after - before
     assert len(new_figs) == 1
+
+
+@pytest.mark.parametrize(
+    "input,expected",
+    [
+        # case1: .gr file
+        # expected: labels are inferred from file
+        ("gr_file.gr", [r"r ($\mathrm{\AA}$)", r"G ($\mathrm{\AA}^{-2}$)"]),
+        # case2: .dat file
+        # expected: default empty labels
+        ("dat_file.dat", ["", ""]),
+    ],
+)
+def test_plot_recipe_labels_from_gr_file(temp_data_files, input, expected):
+    gr_file = temp_data_files / input
+    recipe = build_recipe_from_datafile(gr_file)
+    optimize_recipe(recipe)
+    plt.close("all")
+    fig, ax = recipe.plot_recipe(return_fig=True, show=False)
+    actual_xlabel = ax.get_xlabel()
+    actual_ylabel = ax.get_ylabel()
+    expected_xlabel = expected[0]
+    expected_ylabel = expected[1]
+    assert actual_xlabel == expected_xlabel
+    assert actual_ylabel == expected_ylabel
+
+
+def test_plot_recipe_labels_from_gr_file_overwrite(temp_data_files):
+    gr_file = temp_data_files / "gr_file.gr"
+    recipe = build_recipe_from_datafile(gr_file)
+    optimize_recipe(recipe)
+    plt.close("all")
+    fig, ax = recipe.plot_recipe(
+        return_fig=True, show=False, xlabel="My X", ylabel="My Y"
+    )
+    actual_xlabel = ax.get_xlabel()
+    actual_ylabel = ax.get_ylabel()
+    expected_xlabel = "My X"
+    expected_ylabel = "My Y"
+    assert actual_xlabel == expected_xlabel
+    assert actual_ylabel == expected_ylabel
 
 
 def test_plot_recipe_reset_all_defaults(build_recipe_one_contribution):

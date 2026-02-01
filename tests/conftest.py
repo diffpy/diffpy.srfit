@@ -192,3 +192,19 @@ def build_recipe_two_contributions():
     recipe.addVar(contribution2.d, 0)
 
     return recipe
+
+
+@pytest.fixture
+def temp_data_files(tmp_path):
+    """
+    Temporary directory containing:
+    - data_with_meta.gr
+    - data_without_meta.dat
+    Each file contains a single line of data.
+    """
+    file_with_meta = tmp_path / "gr_file.gr"
+    file_with_meta.write_text("1.0 2.0\n" "1.1 2.1\n" "1.2 2.2\n")
+
+    dat_file = tmp_path / "dat_file.dat"
+    dat_file.write_text("1.0 2.0\n" "1.1 2.1\n" "1.2 2.2\n")
+    yield tmp_path

@@ -89,10 +89,10 @@ def makeRecipe(strufile, datname1, datname2):
     # Create the FitContributions.
     contribution1 = FitContribution("bucky1")
     contribution1.addProfileGenerator(generator1)
-    contribution1.setProfile(profile1, xname="q")
+    contribution1.set_profile(profile1, xname="q")
     contribution2 = FitContribution("bucky2")
     contribution2.addProfileGenerator(generator2)
-    contribution2.setProfile(profile2, xname="q")
+    contribution2.set_profile(profile2, xname="q")
 
     # Now we're ready to define the fitting equation for each FitContribution.
     # The functions registered below will be independent, even though they take

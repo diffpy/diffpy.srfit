@@ -74,7 +74,7 @@ def makeRecipe(niciffile, siciffile, datname):
     contribution = FitContribution("nisi")
     contribution.addProfileGenerator(generator_ni)
     contribution.addProfileGenerator(generator_si)
-    contribution.setProfile(profile, xname="r")
+    contribution.set_profile(profile, xname="r")
 
     # Write the fitting equation. We want to sum the PDFs from each phase and
     # multiply it by a scaling factor. We also want a certain phase scaling

@@ -114,7 +114,7 @@ def makeRecipe():
     # us access to the data held within the Profile. Here, we can tell it what
     # name we want to use for the independent variable. We tell it to use the
     # name "x".
-    contribution.setProfile(profile, xname="x")
+    contribution.set_profile(profile, xname="x")
 
     # Now we need to create a fitting equation. We do that by writing out the
     # equation as a string. The FitContribution will turn this into a callable

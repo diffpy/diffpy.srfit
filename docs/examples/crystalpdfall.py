@@ -48,7 +48,7 @@ def makeContribution(name, generator, profile):
     """Make a FitContribution and add a generator and profile."""
     contribution = FitContribution(name)
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname="r")
+    contribution.set_profile(profile, xname="r")
     return contribution
 
 

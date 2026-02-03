@@ -30,7 +30,7 @@ class TestProfileGenerator(unittest.TestCase):
         self.profile = Profile()
         x = arange(0, 10, 0.1)
         self.profile.setCalculationPoints(x)
-        self.gen.setProfile(self.profile)
+        self.gen.set_profile(self.profile)
         return
 
     def testOperation(self):
@@ -69,7 +69,7 @@ class TestProfileGenerator(unittest.TestCase):
         x = arange(0, 8, 0.1)
         prof = Profile()
         prof.setCalculationPoints(x)
-        gen.setProfile(prof)
+        gen.set_profile(prof)
         self.assertTrue(gen._value is None)
         self.assertTrue(array_equal(x, gen.value))
         return

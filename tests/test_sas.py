@@ -158,7 +158,7 @@ def testGenerator2(sas_available, datafile):
     datainfo = loader.load(str(data))
     profile = SASProfile(datainfo)
 
-    gen.setProfile(profile)
+    gen.set_profile(profile)
     gen.scale.value = 1.0
     gen.radius_polar.value = 20
     gen.radius_equatorial.value = 400

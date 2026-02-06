@@ -58,7 +58,7 @@ def makeRecipe(datname):
     # before.
     contribution = FitContribution("ellipsoid")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname="q")
+    contribution.set_profile(profile, xname="q")
 
     # We want to fit the log of the signal to the log of the data so that the
     # higher-Q information remains significant. There are no I(Q) uncertainty

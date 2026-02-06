@@ -93,7 +93,7 @@ class SimpleRecipe(FitRecipe):
         self.fithooks[0].verbose = 3
         contribution = conclass("contribution")
         self.profile = Profile()
-        contribution.setProfile(self.profile)
+        contribution.set_profile(self.profile)
         self.addContribution(contribution)
         self.results = FitResults(self, update=False)
 

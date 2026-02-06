@@ -50,7 +50,7 @@ def makeRecipe():
 
     # Create the contribution
     contribution = FitContribution("peaks")
-    contribution.setProfile(profile, xname="t")
+    contribution.set_profile(profile, xname="t")
     pi = numpy.pi
     exp = numpy.exp
 

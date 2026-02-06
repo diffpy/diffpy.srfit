@@ -204,7 +204,7 @@ def makeRecipe(strufile, datname):
     # use it in equations with this name.
     contribution = FitContribution("bucky")
     contribution.addProfileGenerator(generator)
-    contribution.setProfile(profile, xname="q")
+    contribution.set_profile(profile, xname="q")
 
     # Now we're ready to define the fitting equation for the FitContribution.
     # We need to modify the intensity calculation, and we'll do that from

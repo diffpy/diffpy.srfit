@@ -34,10 +34,10 @@ class TestContribution(unittest.TestCase):
         self.fitcontribution = FitContribution("test")
         return
 
-    def testSetProfile(self):
+    def testset_profile(self):
         fc = self.fitcontribution
         profile = self.profile
-        fc.setProfile(self.profile)
+        fc.set_profile(self.profile)
         # verify standard profile setup
         self.assertTrue(fc.profile is profile)
         self.assertTrue(fc.x.par is profile.xpar)
@@ -51,7 +51,7 @@ class TestContribution(unittest.TestCase):
         # check if residual equation is set up when possible
         fc2 = FitContribution("test2")
         fc2.setEquation("A * x")
-        fc2.setProfile(profile)
+        fc2.set_profile(profile)
         self.assertFalse(fc2._reseq is None)
         return
 
@@ -74,7 +74,7 @@ class TestContribution(unittest.TestCase):
         gen = self.gen
 
         # Add the calculator and profile
-        fc.setProfile(profile)
+        fc.set_profile(profile)
         fc.addProfileGenerator(gen, "I")
 
         # Check attributes are created
@@ -119,7 +119,7 @@ class TestContribution(unittest.TestCase):
         gen = self.gen
 
         # Validate equations
-        fc.setProfile(profile)
+        fc.set_profile(profile)
         fc.addProfileGenerator(gen, "I")
         self.assertTrue(array_equal(gen.value, xobs))
         self.assertTrue(array_equal(fc._eq(), xobs))
@@ -129,7 +129,7 @@ class TestContribution(unittest.TestCase):
         reseq = fc._reseq
 
         # Now set a different profile
-        fc.setProfile(profile2)
+        fc.set_profile(profile2)
         self.assertTrue(fc.profile is profile2)
         self.assertTrue(gen.profile is profile2)
         self.assertTrue(fc._eq is eq)
@@ -147,7 +147,7 @@ class TestContribution(unittest.TestCase):
         """Check getting the current formula for residual equation."""
         fc = self.fitcontribution
         self.assertEqual("", fc.getResidualEquation())
-        fc.setProfile(self.profile)
+        fc.set_profile(self.profile)
         fc.setEquation("A * x + B")
         self.assertEqual("((eq - y) / dy)", fc.getResidualEquation())
         fc.setResidualEquation("2 * (eq - y)")
@@ -161,7 +161,7 @@ class TestContribution(unittest.TestCase):
         for i in range(5):
             fc.setEquation("A * x + B")
         self.assertEqual(1, len(fc._eqfactory.equations))
-        fc.setProfile(self.profile)
+        fc.set_profile(self.profile)
         for i in range(5):
             fc.setResidualEquation("chiv")
         self.assertEqual(2, len(fc._eqfactory.equations))
@@ -194,7 +194,7 @@ def testResidual(noObserversInGlobalBuilders):
     fc = FitContribution("test")
 
     # Add the calculator and profile
-    fc.setProfile(profile)
+    fc.set_profile(profile)
     assert fc.profile is profile
     fc.addProfileGenerator(gen, "I")
     assert fc._eq._value is None
@@ -261,7 +261,7 @@ def testResidual(noObserversInGlobalBuilders):
     fc1 = FitContribution("test1")
     with pytest.raises(SrFitError):
         fc1.setResidualEquation("chiv")
-    fc1.setProfile(profile)
+    fc1.set_profile(profile)
     with pytest.raises(SrFitError):
         fc1.setResidualEquation("chiv")
     fc1.setEquation("A * x")

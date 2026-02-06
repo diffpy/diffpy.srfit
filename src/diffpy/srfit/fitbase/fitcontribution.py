@@ -29,6 +29,17 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.srfit.fitbase.FitContribution"
+removal_version = "4.0.0"
+
+setprofile_dep_msg = build_deprecation_message(
+    base,
+    "setProfile",
+    "set_profile",
+    removal_version,
+)
 
 
 class FitContribution(ParameterSet):
@@ -97,7 +108,7 @@ class FitContribution(ParameterSet):
         self._manage(self._generators)
         return
 
-    def setProfile(self, profile, xname=None, yname=None, dyname=None):
+    def set_profile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
         Attributes
@@ -149,13 +160,24 @@ class FitContribution(ParameterSet):
 
         # If we have ProfileGenerators, set their Profiles.
         for gen in self._generators.values():
-            gen.setProfile(profile)
+            gen.set_profile(profile)
 
         # If we have _eq, but not _reseq, set the residual
         if self._eq is not None and self._reseq is None:
             self.setResidualEquation("chiv")
 
         return
+
+    @deprecated(setprofile_dep_msg)
+    def setProfile(self, profile, xname=None, yname=None, dyname=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitContribution.set_profile instead.
+        """
+        return self.set_profile(
+            profile, xname=xname, yname=yname, dyname=dyname
+        )
 
     def addProfileGenerator(self, gen, name=None):
         """Add a ProfileGenerator to be used by this FitContribution.
@@ -192,7 +214,7 @@ class FitContribution(ParameterSet):
 
         # If we have a profile, set the profile of the generator.
         if self.profile is not None:
-            gen.setProfile(self.profile)
+            gen.set_profile(self.profile)
 
         # Make this our equation if we don't have one. This will set the
         # residual equation if necessary.

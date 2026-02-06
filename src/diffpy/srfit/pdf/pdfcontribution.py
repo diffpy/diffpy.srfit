@@ -93,7 +93,7 @@ class PDFContribution(FitContribution):
         self._meta = {}
         # Add the profile
         profile = Profile()
-        self.setProfile(profile, xname="r")
+        self.set_profile(profile, xname="r")
 
         # Need a parameter for the overall scale, in the case that this is a
         # multi-phase fit.

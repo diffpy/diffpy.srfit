@@ -37,7 +37,7 @@ def main():
     # FitContribution operations
     # "<<"  -   Inject a parameter value
     c = FitContribution("g1")
-    c.setProfile(p)
+    c.set_profile(p)
     c.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
     c.A << 0.5
     c.x0 << 5

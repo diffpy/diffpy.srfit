@@ -68,7 +68,7 @@ def makeRecipe(stru1, stru2, datname):
     contribution = FitContribution("cdszns")
     contribution.addProfileGenerator(generator_cds)
     contribution.addProfileGenerator(generator_zns)
-    contribution.setProfile(profile, xname="r")
+    contribution.set_profile(profile, xname="r")
 
     # Set up the characteristic functions. We use a spherical CF for the core
     # and a spherical shell CF for the shell. Since this is set up as two

@@ -48,7 +48,7 @@ def makeRecipe(ciffile, grdata):
     pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
-    pdfcontribution.setProfile(pdfprofile, xname="r")
+    pdfcontribution.set_profile(pdfprofile, xname="r")
 
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)

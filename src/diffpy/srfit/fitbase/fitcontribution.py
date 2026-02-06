@@ -29,12 +29,12 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.recipeorganizer import equationFromString
-from diffpy.utils._deprecator import deprecated, deprecation_message
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 base = "diffpy.srfit.fitbase.FitContribution"
 removal_version = "4.0.0"
 
-setprofile_dep_msg = deprecation_message(
+setprofile_dep_msg = build_deprecation_message(
     base,
     "setProfile",
     "set_profile",

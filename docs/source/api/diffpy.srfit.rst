@@ -1,9 +1,7 @@
 :tocdepth: -1
 
-|title|
-=======
-
-.. |title| replace:: diffpy.srfit package
+diffpy.srfit package
+====================
 
 .. automodule:: diffpy.srfit
     :members:
@@ -14,12 +12,23 @@ Subpackages
 -----------
 
 .. toctree::
-   diffpy.srfit.equation
-   diffpy.srfit.equation.literals
-   diffpy.srfit.equation.visitors
-   diffpy.srfit.fitbase
-   diffpy.srfit.interface
-   diffpy.srfit.pdf
-   diffpy.srfit.sas
-   diffpy.srfit.structure
-   diffpy.srfit.util
+    :titlesonly:
+
+    diffpy.srfit.interface
+    diffpy.srfit.equation
+    diffpy.srfit.util
+    diffpy.srfit.pdf
+    diffpy.srfit.sas
+    diffpy.srfit.fitbase
+    diffpy.srfit.structure
+
+Submodules
+----------
+
+diffpy.srfit.exceptions module
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. automodule:: diffpy.srfit.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:

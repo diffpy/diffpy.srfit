@@ -41,6 +41,13 @@ setprofile_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+setequation_dep_msg = build_deprecation_message(
+    base,
+    "setEquation",
+    "set_equation",
+    removal_version,
+)
+
 
 class FitContribution(ParameterSet):
     """FitContribution class.
@@ -223,7 +230,7 @@ class FitContribution(ParameterSet):
 
         return
 
-    def setEquation(self, eqstr, ns={}):
+    def set_equation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual
@@ -264,6 +271,17 @@ class FitContribution(ParameterSet):
         if self.profile is not None and self._reseq is None:
             self.setResidualEquation("chiv")
 
+        return
+
+    @deprecated(setequation_dep_msg)
+    def setEquation(self, eqstr, ns={}):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitContribution.set_equation
+        instead.
+        """
+        self.set_equation(eqstr, ns=ns)
         return
 
     def getEquation(self):

@@ -280,7 +280,7 @@ class PDFContribution(FitContribution):
         gnames = self._generators.keys()
         eqstr = " + ".join(gnames)
         eqstr = "scale * (%s)" % eqstr
-        self.setEquation(eqstr)
+        self.set_equation(eqstr)
 
         # Update with our metadata
         gen.meta.update(self._meta)

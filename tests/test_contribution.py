@@ -50,7 +50,7 @@ class TestContribution(unittest.TestCase):
         self.assertRaises(TypeError, fc1.setProfile, "invalid")
         # check if residual equation is set up when possible
         fc2 = FitContribution("test2")
-        fc2.setEquation("A * x")
+        fc2.set_equation("A * x")
         fc2.set_profile(profile)
         self.assertFalse(fc2._reseq is None)
         return
@@ -148,7 +148,7 @@ class TestContribution(unittest.TestCase):
         fc = self.fitcontribution
         self.assertEqual("", fc.getResidualEquation())
         fc.set_profile(self.profile)
-        fc.setEquation("A * x + B")
+        fc.set_equation("A * x + B")
         self.assertEqual("((eq - y) / dy)", fc.getResidualEquation())
         fc.setResidualEquation("2 * (eq - y)")
         self.assertEqual("(2 * (eq - y))", fc.getResidualEquation())
@@ -159,7 +159,7 @@ class TestContribution(unittest.TestCase):
         fc = self.fitcontribution
         self.assertEqual(0, len(fc._eqfactory.equations))
         for i in range(5):
-            fc.setEquation("A * x + B")
+            fc.set_equation("A * x + B")
         self.assertEqual(1, len(fc._eqfactory.equations))
         fc.set_profile(self.profile)
         for i in range(5):
@@ -168,15 +168,15 @@ class TestContribution(unittest.TestCase):
         return
 
     def test_registerFunction(self):
-        """Ensure registered function works after second setEquation call."""
+        """Ensure registered function works after second set_equation call."""
         fc = self.fitcontribution
         fc.registerFunction(_fsquare, name="fsquare")
-        fc.setEquation("fsquare")
+        fc.set_equation("fsquare")
         fc.x.setValue(5)
         self.assertEqual(25, fc.evaluate())
         fc.x << 6
         self.assertEqual(36, fc.evaluate())
-        fc.setEquation("fsquare + 5")
+        fc.set_equation("fsquare + 5")
         self.assertEqual(41, fc.evaluate())
         fc.x << -1
         self.assertEqual(6, fc.evaluate())
@@ -215,7 +215,7 @@ def testResidual(noObserversInGlobalBuilders):
     assert dot(chiv, chiv) == pytest.approx(0)
 
     # Now change the equation
-    fc.setEquation("2*I")
+    fc.set_equation("2*I")
     assert fc._eq._value is None
     assert fc._reseq._value is None
     chiv = fc.residual()
@@ -224,7 +224,7 @@ def testResidual(noObserversInGlobalBuilders):
     # Try to add a parameter
     c = Parameter("c", 2)
     fc._add_parameter(c)
-    fc.setEquation("c*I")
+    fc.set_equation("c*I")
     assert fc._eq._value is None
     assert fc._reseq._value is None
     chiv = fc.residual()
@@ -232,7 +232,7 @@ def testResidual(noObserversInGlobalBuilders):
 
     # Try something more complex
     c.setValue(3)
-    fc.setEquation("c**2*sin(I)")
+    fc.set_equation("c**2*sin(I)")
     assert fc._eq._value is None
     assert fc._reseq._value is None
     xobs = arange(0, 10, 0.5)
@@ -245,7 +245,7 @@ def testResidual(noObserversInGlobalBuilders):
     assert dot(chiv, chiv) == pytest.approx(0)
 
     # Choose a new residual.
-    fc.setEquation("2*I")
+    fc.set_equation("2*I")
     fc.setResidualEquation("resv")
     chiv = fc.residual()
     assert dot(chiv, chiv) == pytest.approx(
@@ -264,7 +264,7 @@ def testResidual(noObserversInGlobalBuilders):
     fc1.set_profile(profile)
     with pytest.raises(SrFitError):
         fc1.setResidualEquation("chiv")
-    fc1.setEquation("A * x")
+    fc1.set_equation("A * x")
     fc1.setResidualEquation("chiv")
     assert noObserversInGlobalBuilders
     return
@@ -274,6 +274,20 @@ def test_setEquation(noObserversInGlobalBuilders):
     """Check replacement of removed parameters."""
     fc = FitContribution("test")
     fc.setEquation("x + 5")
+    fc.x.setValue(2)
+    assert 7 == fc.evaluate()
+    fc.removeParameter(fc.x)
+    x = arange(0, 10, 0.5)
+    fc.newParameter("x", x)
+    assert np.array_equal(5 + x, fc.evaluate())
+    assert noObserversInGlobalBuilders
+    return
+
+
+def test_set_equation(noObserversInGlobalBuilders):
+    """Check replacement of removed parameters."""
+    fc = FitContribution("test")
+    fc.set_equation("x + 5")
     fc.x.setValue(2)
     assert 7 == fc.evaluate()
     fc.removeParameter(fc.x)

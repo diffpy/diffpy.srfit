@@ -256,7 +256,7 @@ def makeRecipe(strufile, datname):
     # convolve the signal with the Gaussian to broaden it. Recall that we don't
     # need to supply arguments to the registered functions unless we want to
     # make changes to their input values.
-    contribution.setEquation("scale * convolve(I, gaussian) + bkgd")
+    contribution.set_equation("scale * convolve(I, gaussian) + bkgd")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()

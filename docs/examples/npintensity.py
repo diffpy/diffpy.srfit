@@ -260,7 +260,7 @@ def makeRecipe(strufile, datname):
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Specify which parameters we want to refine.
     recipe.addVar(contribution.b0, 0)

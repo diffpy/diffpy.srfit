@@ -57,7 +57,7 @@ def makeRecipe(molecule, datname):
 
     # Make a FitRecipe.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Specify which parameters we want to refine. We'll be using the
     # MoleculeParSet within the generator, so let's get a handle to it. See the

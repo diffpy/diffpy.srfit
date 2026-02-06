@@ -51,7 +51,7 @@ class TestFitRecipe(unittest.TestCase):
         self.fitcontribution.k.setValue(1)
         self.fitcontribution.c.setValue(0)
 
-        self.recipe.addContribution(self.fitcontribution)
+        self.recipe.add_contribution(self.fitcontribution)
         return
 
     def testFixFree(self):
@@ -291,6 +291,54 @@ def testPrintFitHook(capturestdout):
     return
 
 
+def test_add_contribution(capturestdout):
+    """Duplicated test of PrintFitHooks except addContribution method has
+    changed to the new add_contribution method. This is because addContribution
+    is deprecated.
+
+    Remove this test after addContribution is removed and update
+    testPrintFitHook to use add_contribution instead of addContribution.
+    """
+    recipe = FitRecipe("recipe")
+    recipe.fithooks[0].verbose = 0
+
+    # Set up the Profile
+    profile = Profile()
+    x = linspace(0, pi, 10)
+    y = sin(x)
+    profile.setObservedProfile(x, y)
+
+    # Set up the FitContribution
+    fitcontribution = FitContribution("cont")
+    fitcontribution.set_profile(profile)
+    fitcontribution.setEquation("A*sin(k*x + c)")
+    fitcontribution.A.setValue(1)
+    fitcontribution.k.setValue(1)
+    fitcontribution.c.setValue(0)
+
+    recipe.add_contribution(fitcontribution)
+
+    recipe.addVar(fitcontribution.c)
+    recipe.restrain("c", lb=5)
+    (pfh,) = recipe.getFitHooks()
+    out = capturestdout(recipe.scalarResidual)
+    assert "" == out
+    pfh.verbose = 1
+    out = capturestdout(recipe.scalarResidual)
+    assert out.strip().isdigit()
+    assert "\nRestraints:" not in out
+    pfh.verbose = 2
+    out = capturestdout(recipe.scalarResidual)
+    assert "\nResidual:" in out
+    assert "\nRestraints:" in out
+    assert "\nVariables" not in out
+    pfh.verbose = 3
+    out = capturestdout(recipe.scalarResidual)
+    assert "\nVariables" in out
+    assert "c = " in out
+    return
+
+
 def optimize_recipe(recipe):
     recipe.fithooks[0].verbose = 0
     residuals = recipe.residual
@@ -327,7 +375,7 @@ def build_recipe_from_datafile(datafile):
     contribution.set_profile(profile)
     contribution.setEquation("m*x + b")
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
     recipe.addVar(contribution.m, 1)
     recipe.addVar(contribution.b, 0)
     return recipe

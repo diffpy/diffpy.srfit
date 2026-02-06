@@ -85,7 +85,7 @@ def makeRecipe(stru1, stru2, datname):
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Vary the inner radius and thickness of the shell. Constrain the core
     # diameter to twice the shell radius.

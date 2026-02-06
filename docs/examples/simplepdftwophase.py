@@ -41,7 +41,7 @@ def makeRecipe(niciffile, siciffile, datname):
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.

@@ -130,8 +130,8 @@ def makeRecipe(strufile, datname1, datname2):
 
     # Make a FitRecipe and associate the FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(contribution1)
-    recipe.addContribution(contribution2)
+    recipe.add_contribution(contribution1)
+    recipe.add_contribution(contribution2)
 
     # Specify which Parameters we want to refine. We want to refine the
     # background that we just defined in the FitContributions. We have to do

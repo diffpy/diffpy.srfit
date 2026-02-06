@@ -34,17 +34,18 @@ from diffpy.utils._deprecator import build_deprecation_message, deprecated
 base = "diffpy.srfit.fitbase.FitContribution"
 removal_version = "4.0.0"
 
-setprofile_dep_msg = build_deprecation_message(
-    base,
-    "setProfile",
-    "set_profile",
-    removal_version,
-)
-
 setequation_dep_msg = build_deprecation_message(
     base,
     "setEquation",
     "set_equation",
+    removal_version,
+)
+
+
+setprofile_dep_msg = build_deprecation_message(
+    base,
+    "setProfile",
+    "set_profile",
     removal_version,
 )
 

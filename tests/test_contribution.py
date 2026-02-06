@@ -302,7 +302,7 @@ def test_getEquation(noObserversInGlobalBuilders):
     """Check getting the current profile simulation formula."""
     fc = FitContribution("test")
     assert "" == fc.getEquation()
-    fc.setEquation("A * sin(x + 5)")
+    fc.set_equation("A * sin(x + 5)")
     assert "(A * sin((x + 5)))" == fc.getEquation()
     assert noObserversInGlobalBuilders
     return

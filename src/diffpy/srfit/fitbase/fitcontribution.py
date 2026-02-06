@@ -226,7 +226,7 @@ class FitContribution(ParameterSet):
         # Make this our equation if we don't have one. This will set the
         # residual equation if necessary.
         if self._eq is None:
-            self.setEquation(name)
+            self.set_equation(name)
 
         return
 

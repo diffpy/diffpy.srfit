@@ -54,7 +54,7 @@ def makeRecipe(ciffile, grdata):
     pdfgenerator.setQmax(30.0)
     stru = loadCrystal(ciffile)
     pdfgenerator.setStructure(stru)
-    pdfcontribution.addProfileGenerator(pdfgenerator)
+    pdfcontribution.add_profile_generator(pdfgenerator)
 
     # Register the nanoparticle shape factor.
     from diffpy.srfit.pdf.characteristicfunctions import sphericalCF

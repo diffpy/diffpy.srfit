@@ -84,11 +84,11 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
     xcontribution = FitContribution("xnickel")
-    xcontribution.addProfileGenerator(xgenerator)
+    xcontribution.add_profile_generator(xgenerator)
     xcontribution.set_profile(xprofile, xname="r")
     # and the neutron objects in another.
     ncontribution = FitContribution("nnickel")
-    ncontribution.addProfileGenerator(ngenerator)
+    ncontribution.add_profile_generator(ngenerator)
     ncontribution.set_profile(nprofile, xname="r")
 
     # This example is different than the previous ones in that we are composing

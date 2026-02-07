@@ -203,7 +203,7 @@ def makeRecipe(strufile, datname):
     # the FitContribution to name the x-variable of the profile "q", so we can
     # use it in equations with this name.
     contribution = FitContribution("bucky")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="q")
 
     # Now we're ready to define the fitting equation for the FitContribution.

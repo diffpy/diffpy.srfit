@@ -72,8 +72,8 @@ def makeRecipe(niciffile, siciffile, datname):
     # Add both generators to the FitContribution. Add the Profile. This will
     # send the metadata to the generators.
     contribution = FitContribution("nisi")
-    contribution.addProfileGenerator(generator_ni)
-    contribution.addProfileGenerator(generator_si)
+    contribution.add_profile_generator(generator_ni)
+    contribution.add_profile_generator(generator_si)
     contribution.set_profile(profile, xname="r")
 
     # Write the fitting equation. We want to sum the PDFs from each phase and

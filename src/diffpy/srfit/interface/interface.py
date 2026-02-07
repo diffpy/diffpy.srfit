@@ -115,7 +115,7 @@ class FitRecipeInterface(object):
 
         This accepts a single argument.
         """
-        self.addContribution(args)
+        self.add_contribution(args)
         return self
 
     def __iadd__(self, args):

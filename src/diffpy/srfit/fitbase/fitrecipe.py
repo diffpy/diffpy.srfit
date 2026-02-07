@@ -45,8 +45,15 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.tagmanager import TagManager
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 plt.style.use(all_styles["bg-style"])
+
+base = "diffpy.srfit.fitbase.FitRecipe"
+removal_version = "4.0.0"
+addcontrib_dep_msg = build_deprecation_message(
+    base, "addContribution", "add_contribution", removal_version
+)
 
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
@@ -238,7 +245,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         del self.fithooks[:]
         return
 
-    def addContribution(self, con, weight=1.0):
+    def add_contribution(self, con, weight=1.0):
         """Add a FitContribution to the FitRecipe.
 
         Attributes
@@ -253,6 +260,17 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         self._add_object(con, self._contributions, True)
         self._weights.append(weight)
+        return
+
+    @deprecated(addcontrib_dep_msg)
+    def addContribution(self, con, weight=1.0):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.add_contribution
+        instead.
+        """
+        self.add_contribution(con, weight)
         return
 
     def setWeight(self, con, weight):

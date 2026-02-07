@@ -104,10 +104,10 @@ def makeRecipe(
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(xcontribution_ni)
-    recipe.addContribution(xcontribution_si)
-    recipe.addContribution(ncontribution_ni)
-    recipe.addContribution(xcontribution_sini)
+    recipe.add_contribution(xcontribution_ni)
+    recipe.add_contribution(xcontribution_si)
+    recipe.add_contribution(ncontribution_ni)
+    recipe.add_contribution(xcontribution_sini)
 
     # Now we vary and constrain Parameters as before.
     for par in phase_ni.sgpars:

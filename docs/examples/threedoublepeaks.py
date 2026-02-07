@@ -98,7 +98,7 @@ def makeRecipe():
     # Here we tell the FitRecipe to use our FitContribution. When the FitRecipe
     # calculates its residual function, it will call on the FitContribution to
     # do part of the work.
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Vary the amplitudes for each double peak
     recipe.addVar(contribution.A1, 100)

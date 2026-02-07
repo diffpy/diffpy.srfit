@@ -150,7 +150,7 @@ def makeRecipe():
     # The FitRecipe
     # Now we create the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Specify which Parameters we want to vary in the fit.  This will add
     # Variables to the FitRecipe that directly modify the Parameters of the

@@ -140,7 +140,7 @@ def makeRecipe():
     # Here we tell the FitRecipe to use our FitContribution. When the FitRecipe
     # calculates its residual function, it will call on the FitContribution to
     # do part of the work.
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Specify which Parameters we want to vary in the fit.  This will add
     # Variables to the FitRecipe that directly modify the Parameters of the

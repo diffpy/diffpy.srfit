@@ -134,7 +134,7 @@ def makeRecipe():
     # to fit simultaneously, the contribution from each could be added to the
     # recipe.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Specify which Parameters we want to refine.
 

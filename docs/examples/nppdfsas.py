@@ -93,8 +93,8 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     # Moving on
     recipe = FitRecipe()
-    recipe.addContribution(pdfcontribution)
-    recipe.addContribution(sascontribution)
+    recipe.add_contribution(pdfcontribution)
+    recipe.add_contribution(sascontribution)
 
     # PDF
     phase = pdfgenerator.phase

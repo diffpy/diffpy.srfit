@@ -67,7 +67,7 @@ def makeRecipe(ciffile, grdata):
     # Now make the recipe. Make sure we fit the characteristic function shape
     # parameters, in this case 'psize', which is the diameter of the particle.
     recipe = FitRecipe()
-    recipe.addContribution(pdfcontribution)
+    recipe.add_contribution(pdfcontribution)
 
     phase = pdfgenerator.phase
     for par in phase.sgpars:

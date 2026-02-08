@@ -55,6 +55,10 @@ addcontrib_dep_msg = build_deprecation_message(
     base, "addContribution", "add_contribution", removal_version
 )
 
+pushfithook_dep_msg = build_deprecation_message(
+    base, "pushFitHook", "push_fit_hook", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -191,7 +195,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         }
         return
 
-    def pushFitHook(self, fithook, index=None):
+    def push_fit_hook(self, fithook, index=None):
         """Add a FitHook to be called within the residual method.
 
         The hook is an object for reporting updates, or more fundamentally,
@@ -212,6 +216,16 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.fithooks.insert(index, fithook)
         # Make sure the added FitHook gets its reset method called.
         self._update_configuration()
+        return
+
+    @deprecated(pushfithook_dep_msg)
+    def pushFitHook(self, fithook, index=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.push_fit_hook instead.
+        """
+        self.push_fit_hook(fithook, index)
         return
 
     def popFitHook(self, fithook=None, index=-1):

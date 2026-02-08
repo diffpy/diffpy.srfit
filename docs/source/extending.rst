@@ -263,5 +263,5 @@ overload.
 * .. automethod:: FitHook.postcall
 
 To use a custom ``FitHook``, assign an instance to a ``FitRecipe`` using the
-``pushFitHook`` method. All ``FitHook`` instances held by a ``FitRecipe`` will
+``push_fit_hook`` method. All ``FitHook`` instances held by a ``FitRecipe`` will
 be used in sequence during a call to ``FitRecipe.residual``.

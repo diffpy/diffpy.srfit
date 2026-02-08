@@ -12,7 +12,11 @@
 
 **Deprecated:**
 
-* Deprecate ``setWeight``, ``getFitHooks``, ``clearFitHooks``, ``popFitHook``, and ``pushFitHook`` in ``FitRecipe`` for removal in 4.0.0.
+* Deprecated ``setWeight`` in ``FitRecipe`` for removal in 4.0.0.
+* Deprecated ``getFitHooks`` in ``FitRecipe`` for removal in 4.0.0.
+* Deprecated ``clearFitHooks`` in ``FitRecipe`` for removal in 4.0.0.
+* Deprecated ``popFitHook`` in ``FitRecipe`` for removal in 4.0.0.
+* Deprecated ``pushFitHook`` in ``FitRecipe`` for removal in 4.0.0.
 
 **Removed:**
 

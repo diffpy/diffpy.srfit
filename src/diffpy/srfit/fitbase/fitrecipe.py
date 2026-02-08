@@ -59,6 +59,10 @@ pushfithook_dep_msg = build_deprecation_message(
     base, "pushFitHook", "push_fit_hook", removal_version
 )
 
+popfithook_dep_msg = build_deprecation_message(
+    base, "popFitHook", "pop_fit_hook", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -228,7 +232,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.push_fit_hook(fithook, index)
         return
 
-    def popFitHook(self, fithook=None, index=-1):
+    def pop_fit_hook(self, fithook=None, index=-1):
         """Remove a FitHook by index or reference.
 
         Attributes
@@ -248,6 +252,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             self.fithooks.remove(fithook)
             return
         self.fithook.remove(index)
+        return
+
+    def popFitHook(self, fithook=None, index=-1):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.pop_fit_hook instead.
+        """
+        self.pop_fit_hook(fithook, index)
         return
 
     def getFitHooks(self):

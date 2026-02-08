@@ -63,6 +63,14 @@ popfithook_dep_msg = build_deprecation_message(
     base, "popFitHook", "pop_fit_hook", removal_version
 )
 
+getfithooks_dep_msg = build_deprecation_message(
+    base, "getFitHooks", "get_fit_hooks", removal_version
+)
+
+clearfithooks_dep_msg = build_deprecation_message(
+    base, "clearFitHooks", "clear_fit_hooks", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -264,13 +272,30 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.pop_fit_hook(fithook, index)
         return
 
-    def getFitHooks(self):
+    def get_fit_hooks(self):
         """Get the sequence of FitHook instances."""
         return self.fithooks[:]
 
-    def clearFitHooks(self):
+    @deprecated(getfithooks_dep_msg)
+    def getFitHooks(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.get_fit_hooks instead."""
+        return self.get_fit_hooks()
+
+    def clear_fit_hooks(self):
         """Clear the FitHook sequence."""
         del self.fithooks[:]
+        return
+
+    @deprecated(clearfithooks_dep_msg)
+    def clearFitHooks(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.clear_fit_hooks instead."""
+        self.clear_fit_hooks()
         return
 
     def add_contribution(self, con, weight=1.0):

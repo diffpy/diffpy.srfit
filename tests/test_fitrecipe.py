@@ -311,7 +311,7 @@ def test_add_contribution(capturestdout):
     # Set up the FitContribution
     fitcontribution = FitContribution("cont")
     fitcontribution.set_profile(profile)
-    fitcontribution.setEquation("A*sin(k*x + c)")
+    fitcontribution.set_equation("A*sin(k*x + c)")
     fitcontribution.A.setValue(1)
     fitcontribution.k.setValue(1)
     fitcontribution.c.setValue(0)

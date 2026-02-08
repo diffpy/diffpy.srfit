@@ -94,7 +94,7 @@ class SimpleRecipe(FitRecipe):
         contribution = conclass("contribution")
         self.profile = Profile()
         contribution.set_profile(self.profile)
-        self.addContribution(contribution)
+        self.add_contribution(contribution)
         self.results = FitResults(self, update=False)
 
         # Adopt all the FitContribution methods

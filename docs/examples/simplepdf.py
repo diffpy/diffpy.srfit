@@ -44,7 +44,7 @@ def makeRecipe(ciffile, datname):
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Configure the fit variables
     phase = contribution.nickel.phase

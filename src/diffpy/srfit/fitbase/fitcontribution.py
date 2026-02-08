@@ -49,6 +49,13 @@ setprofile_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+addprofilegenerator_dep_msg = build_deprecation_message(
+    base,
+    "addProfileGenerator",
+    "add_profile_generator",
+    removal_version,
+)
+
 
 class FitContribution(ParameterSet):
     """FitContribution class.
@@ -187,7 +194,7 @@ class FitContribution(ParameterSet):
             profile, xname=xname, yname=yname, dyname=dyname
         )
 
-    def addProfileGenerator(self, gen, name=None):
+    def add_profile_generator(self, gen, name=None):
         """Add a ProfileGenerator to be used by this FitContribution.
 
         The ProfileGenerator is given a name so that it can be used as part of
@@ -229,6 +236,18 @@ class FitContribution(ParameterSet):
         if self._eq is None:
             self.set_equation(name)
 
+        return
+
+    @deprecated(addprofilegenerator_dep_msg)
+    def addProfileGenerator(self, gen, name=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.FitContribution.add_profile_generator
+        instead.
+        """
+        self.add_profile_generator(gen, name=name)
         return
 
     def set_equation(self, eqstr, ns={}):

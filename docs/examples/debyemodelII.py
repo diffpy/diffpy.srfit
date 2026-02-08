@@ -71,8 +71,8 @@ def makeRecipeII():
     # Now create a fresh FitRecipe to work with and add to it the two
     # FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(lowT)
-    recipe.addContribution(highT)
+    recipe.add_contribution(lowT)
+    recipe.add_contribution(highT)
 
     # Change the fit ranges of the Profiles embedded within the
     # FitContributions. We want to fit one of the contributions at low

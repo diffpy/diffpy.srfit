@@ -66,8 +66,8 @@ def makeRecipe(stru1, stru2, datname):
     # The FitContribution
     # Add both generators and the profile to the FitContribution.
     contribution = FitContribution("cdszns")
-    contribution.addProfileGenerator(generator_cds)
-    contribution.addProfileGenerator(generator_zns)
+    contribution.add_profile_generator(generator_cds)
+    contribution.add_profile_generator(generator_zns)
     contribution.set_profile(profile, xname="r")
 
     # Set up the characteristic functions. We use a spherical CF for the core
@@ -85,7 +85,7 @@ def makeRecipe(stru1, stru2, datname):
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Vary the inner radius and thickness of the shell. Constrain the core
     # diameter to twice the shell radius.

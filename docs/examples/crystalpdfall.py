@@ -47,7 +47,7 @@ def makeProfile(datafile):
 def makeContribution(name, generator, profile):
     """Make a FitContribution and add a generator and profile."""
     contribution = FitContribution(name)
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="r")
     return contribution
 
@@ -93,7 +93,7 @@ def makeRecipe(
     xcontribution_sini = makeContribution(
         "xsini", xgenerator_sini_ni, xprofile_sini
     )
-    xcontribution_sini.addProfileGenerator(xgenerator_sini_si)
+    xcontribution_sini.add_profile_generator(xgenerator_sini_si)
     xcontribution_sini.set_equation("scale * (xG_sini_ni +  xG_sini_si)")
 
     # As explained in another example, we want to minimize using Rw^2.
@@ -104,10 +104,10 @@ def makeRecipe(
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(xcontribution_ni)
-    recipe.addContribution(xcontribution_si)
-    recipe.addContribution(ncontribution_ni)
-    recipe.addContribution(xcontribution_sini)
+    recipe.add_contribution(xcontribution_ni)
+    recipe.add_contribution(xcontribution_si)
+    recipe.add_contribution(ncontribution_ni)
+    recipe.add_contribution(xcontribution_sini)
 
     # Now we vary and constrain Parameters as before.
     for par in phase_ni.sgpars:

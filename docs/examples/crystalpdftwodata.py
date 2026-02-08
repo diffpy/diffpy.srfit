@@ -84,11 +84,11 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
     xcontribution = FitContribution("xnickel")
-    xcontribution.addProfileGenerator(xgenerator)
+    xcontribution.add_profile_generator(xgenerator)
     xcontribution.set_profile(xprofile, xname="r")
     # and the neutron objects in another.
     ncontribution = FitContribution("nnickel")
-    ncontribution.addProfileGenerator(ngenerator)
+    ncontribution.add_profile_generator(ngenerator)
     ncontribution.set_profile(nprofile, xname="r")
 
     # This example is different than the previous ones in that we are composing
@@ -110,8 +110,8 @@ def makeRecipe(ciffile, xdatname, ndatname):
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(xcontribution)
-    recipe.addContribution(ncontribution)
+    recipe.add_contribution(xcontribution)
+    recipe.add_contribution(ncontribution)
 
     # Now we vary and constrain Parameters as before.
     recipe.addVar(xgenerator.scale, 1, "xscale")

@@ -71,6 +71,10 @@ clearfithooks_dep_msg = build_deprecation_message(
     base, "clearFitHooks", "clear_fit_hooks", removal_version
 )
 
+setweight_dep_msg = build_deprecation_message(
+    base, "setWeight", "set_weight", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -326,10 +330,19 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.add_contribution(con, weight)
         return
 
-    def setWeight(self, con, weight):
+    def set_weight(self, con, weight):
         """Set the weight of a FitContribution."""
         idx = list(self._contributions.values()).index(con)
         self._weights[idx] = weight
+        return
+
+    @deprecated(setweight_dep_msg)
+    def setWeight(self, con, weight):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.set_weight instead."""
+        self.set_weight(con, weight)
         return
 
     def addParameterSet(self, parset):

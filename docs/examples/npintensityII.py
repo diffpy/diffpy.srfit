@@ -248,17 +248,17 @@ def main():
     # fit.
     recipe.fix("all")
     recipe.free("bcoeffs1")
-    recipe.setWeight(recipe.bucky2, 0)
+    recipe.set_weight(recipe.bucky2, 0)
     scipyOptimize(recipe)
     # Now do the same for the second background
     recipe.fix("all")
     recipe.free("bcoeffs1")
-    recipe.setWeight(recipe.bucky2, 1)
-    recipe.setWeight(recipe.bucky1, 0)
+    recipe.set_weight(recipe.bucky2, 1)
+    recipe.set_weight(recipe.bucky1, 0)
     scipyOptimize(recipe)
     # Now refine everything with the structure parameters included
     recipe.free("all")
-    recipe.setWeight(recipe.bucky1, 1)
+    recipe.set_weight(recipe.bucky1, 1)
     scipyOptimize(recipe)
 
     # Generate and print the FitResults

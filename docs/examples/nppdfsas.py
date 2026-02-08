@@ -122,7 +122,7 @@ def fitRecipe(recipe):
     """We refine in stages to help the refinement converge."""
 
     # Tune SAS.
-    recipe.setWeight(recipe.pdf, 0)
+    recipe.set_weight(recipe.pdf, 0)
     recipe.fix("all")
     recipe.free("radius_a", "radius_b", iqscale=1e8)
     recipe.constrain("radius_b", "radius_a")
@@ -130,15 +130,15 @@ def fitRecipe(recipe):
     recipe.unconstrain("radius_b")
 
     # Tune PDF
-    recipe.setWeight(recipe.pdf, 1)
-    recipe.setWeight(recipe.sas, 0)
+    recipe.set_weight(recipe.pdf, 1)
+    recipe.set_weight(recipe.sas, 0)
     recipe.fix("all")
     recipe.free("a", "Biso_0", "scale", "delta2")
     scipyOptimize(recipe)
 
     # Tune all
-    recipe.setWeight(recipe.pdf, 1)
-    recipe.setWeight(recipe.sas, 1)
+    recipe.set_weight(recipe.pdf, 1)
+    recipe.set_weight(recipe.sas, 1)
     recipe.free("all")
     scipyOptimize(recipe)
 

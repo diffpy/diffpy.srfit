@@ -254,6 +254,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.fithook.remove(index)
         return
 
+    @deprecated(popfithook_dep_msg)
     def popFitHook(self, fithook=None, index=-1):
         """This function has been deprecated and will be removed in version
         4.0.0.

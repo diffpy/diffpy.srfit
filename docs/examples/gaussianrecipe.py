@@ -124,7 +124,7 @@ def makeRecipe():
     # contribution by name.  Since we told the contribution that our
     # independent variable is named "x", this value will be substituted into
     # the fitting equation whenever it is called.
-    contribution.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
+    contribution.set_equation("A * exp(-0.5*(x-x0)**2/sigma**2)")
 
     # To demonstrate how these parameters are used, we will give "A" an initial
     # value. Note that Parameters are not numbers, but are containers for

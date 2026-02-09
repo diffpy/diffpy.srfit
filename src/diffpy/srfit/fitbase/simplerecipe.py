@@ -201,7 +201,7 @@ class SimpleRecipe(FitRecipe):
         return self.profile.loadtxt(*args, **kw)
 
     # FitContribution
-    def setEquation(self, eqstr, ns={}):
+    def set_equation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual.
@@ -222,7 +222,7 @@ class SimpleRecipe(FitRecipe):
         Raises ValueError if ns uses a name that is already used for a
         variable.
         """
-        self.contribution.setEquation(eqstr, ns={})
+        self.contribution.set_equation(eqstr, ns={})
         # Extract variables
         for par in self.contribution:
             # Skip Profile  Parameters

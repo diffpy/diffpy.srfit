@@ -46,7 +46,7 @@ class TestFitRecipe(unittest.TestCase):
         # Set up the FitContribution
         self.fitcontribution = FitContribution("cont")
         self.fitcontribution.set_profile(self.profile)
-        self.fitcontribution.setEquation("A*sin(k*x + c)")
+        self.fitcontribution.set_equation("A*sin(k*x + c)")
         self.fitcontribution.A.setValue(1)
         self.fitcontribution.k.setValue(1)
         self.fitcontribution.c.setValue(0)
@@ -233,12 +233,12 @@ class TestFitRecipe(unittest.TestCase):
 
         # Now try to use the observed profile inside of the equation
         # Set the equation equal to the data
-        self.fitcontribution.setEquation("y")
+        self.fitcontribution.set_equation("y")
         res = self.recipe.residual()
         self.assertAlmostEqual(0, dot(res, res))
 
         # Now add the uncertainty. This should give dy/dy = 1 for the residual
-        self.fitcontribution.setEquation("y+dy")
+        self.fitcontribution.set_equation("y+dy")
         res = self.recipe.residual()
         self.assertAlmostEqual(len(res), dot(res, res))
 
@@ -263,7 +263,7 @@ def testPrintFitHook(capturestdout):
     # Set up the FitContribution
     fitcontribution = FitContribution("cont")
     fitcontribution.set_profile(profile)
-    fitcontribution.setEquation("A*sin(k*x + c)")
+    fitcontribution.set_equation("A*sin(k*x + c)")
     fitcontribution.A.setValue(1)
     fitcontribution.k.setValue(1)
     fitcontribution.c.setValue(0)
@@ -311,7 +311,7 @@ def test_add_contribution(capturestdout):
     # Set up the FitContribution
     fitcontribution = FitContribution("cont")
     fitcontribution.set_profile(profile)
-    fitcontribution.setEquation("A*sin(k*x + c)")
+    fitcontribution.set_equation("A*sin(k*x + c)")
     fitcontribution.A.setValue(1)
     fitcontribution.k.setValue(1)
     fitcontribution.c.setValue(0)
@@ -373,7 +373,7 @@ def build_recipe_from_datafile(datafile):
 
     contribution = FitContribution("c")
     contribution.set_profile(profile)
-    contribution.setEquation("m*x + b")
+    contribution.set_equation("m*x + b")
     recipe = FitRecipe()
     recipe.add_contribution(contribution)
     recipe.addVar(contribution.m, 1)

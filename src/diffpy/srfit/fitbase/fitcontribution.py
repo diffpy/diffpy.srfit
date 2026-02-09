@@ -34,6 +34,14 @@ from diffpy.utils._deprecator import build_deprecation_message, deprecated
 base = "diffpy.srfit.fitbase.FitContribution"
 removal_version = "4.0.0"
 
+setequation_dep_msg = build_deprecation_message(
+    base,
+    "setEquation",
+    "set_equation",
+    removal_version,
+)
+
+
 setprofile_dep_msg = build_deprecation_message(
     base,
     "setProfile",
@@ -226,7 +234,7 @@ class FitContribution(ParameterSet):
         # Make this our equation if we don't have one. This will set the
         # residual equation if necessary.
         if self._eq is None:
-            self.setEquation(name)
+            self.set_equation(name)
 
         return
 
@@ -242,7 +250,7 @@ class FitContribution(ParameterSet):
         self.add_profile_generator(gen, name=name)
         return
 
-    def setEquation(self, eqstr, ns={}):
+    def set_equation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual
@@ -283,6 +291,17 @@ class FitContribution(ParameterSet):
         if self.profile is not None and self._reseq is None:
             self.setResidualEquation("chiv")
 
+        return
+
+    @deprecated(setequation_dep_msg)
+    def setEquation(self, eqstr, ns={}):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitContribution.set_equation
+        instead.
+        """
+        self.set_equation(eqstr, ns=ns)
         return
 
     def getEquation(self):

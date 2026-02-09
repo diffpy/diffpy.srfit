@@ -29,7 +29,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 
     def setUp(self):
         self.f = FitContribution("f")
-        self.f.setEquation("7")
+        self.f.set_equation("7")
         self.w = weak_ref(self.f._eq._flush, fallback=_fallback_example)
         return
 
@@ -112,7 +112,7 @@ class TestWeakBoundMethod(unittest.TestCase):
         """Check if Observable drops dead Observer."""
         f = self.f
         x = f.newParameter("x", 5)
-        f.setEquation("3 * x")
+        f.set_equation("3 * x")
         self.assertEqual(15, f.evaluate())
         self.assertEqual(15, f._eq._value)
         # get one of the observer callables that are associated with f

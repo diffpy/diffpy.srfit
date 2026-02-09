@@ -81,7 +81,7 @@ def makeRecipe(stru1, stru2, datname):
 
     # Write the fitting equation. We want to sum the PDFs from each phase and
     # multiply it by a scaling factor.
-    contribution.setEquation("scale * (f_CdS * G_CdS +  f_ZnS * G_ZnS)")
+    contribution.set_equation("scale * (f_CdS * G_CdS +  f_ZnS * G_ZnS)")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()

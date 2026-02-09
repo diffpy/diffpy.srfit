@@ -62,7 +62,7 @@ def makeRecipe(ciffile, grdata):
     pdfcontribution.registerFunction(sphericalCF, name="f")
 
     # Now we set up the fitting equation.
-    pdfcontribution.setEquation("f * G")
+    pdfcontribution.set_equation("f * G")
 
     # Now make the recipe. Make sure we fit the characteristic function shape
     # parameters, in this case 'psize', which is the diameter of the particle.

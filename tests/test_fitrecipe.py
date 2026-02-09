@@ -320,7 +320,7 @@ def test_add_contribution(capturestdout):
 
     recipe.addVar(fitcontribution.c)
     recipe.restrain("c", lb=5)
-    (pfh,) = recipe.getFitHooks()
+    (pfh,) = recipe.get_fit_hooks()
     out = capturestdout(recipe.scalarResidual)
     assert "" == out
     pfh.verbose = 1

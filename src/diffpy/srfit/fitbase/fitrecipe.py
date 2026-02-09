@@ -55,6 +55,26 @@ addcontrib_dep_msg = build_deprecation_message(
     base, "addContribution", "add_contribution", removal_version
 )
 
+pushfithook_dep_msg = build_deprecation_message(
+    base, "pushFitHook", "push_fit_hook", removal_version
+)
+
+popfithook_dep_msg = build_deprecation_message(
+    base, "popFitHook", "pop_fit_hook", removal_version
+)
+
+getfithooks_dep_msg = build_deprecation_message(
+    base, "getFitHooks", "get_fit_hooks", removal_version
+)
+
+clearfithooks_dep_msg = build_deprecation_message(
+    base, "clearFitHooks", "clear_fit_hooks", removal_version
+)
+
+setweight_dep_msg = build_deprecation_message(
+    base, "setWeight", "set_weight", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -191,7 +211,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         }
         return
 
-    def pushFitHook(self, fithook, index=None):
+    def push_fit_hook(self, fithook, index=None):
         """Add a FitHook to be called within the residual method.
 
         The hook is an object for reporting updates, or more fundamentally,
@@ -214,7 +234,17 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._update_configuration()
         return
 
-    def popFitHook(self, fithook=None, index=-1):
+    @deprecated(pushfithook_dep_msg)
+    def pushFitHook(self, fithook, index=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.push_fit_hook instead.
+        """
+        self.push_fit_hook(fithook, index)
+        return
+
+    def pop_fit_hook(self, fithook=None, index=-1):
         """Remove a FitHook by index or reference.
 
         Attributes
@@ -236,13 +266,40 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.fithook.remove(index)
         return
 
-    def getFitHooks(self):
+    @deprecated(popfithook_dep_msg)
+    def popFitHook(self, fithook=None, index=-1):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.pop_fit_hook instead.
+        """
+        self.pop_fit_hook(fithook, index)
+        return
+
+    def get_fit_hooks(self):
         """Get the sequence of FitHook instances."""
         return self.fithooks[:]
 
-    def clearFitHooks(self):
+    @deprecated(getfithooks_dep_msg)
+    def getFitHooks(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.get_fit_hooks instead."""
+        return self.get_fit_hooks()
+
+    def clear_fit_hooks(self):
         """Clear the FitHook sequence."""
         del self.fithooks[:]
+        return
+
+    @deprecated(clearfithooks_dep_msg)
+    def clearFitHooks(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.clear_fit_hooks instead."""
+        self.clear_fit_hooks()
         return
 
     def add_contribution(self, con, weight=1.0):
@@ -273,10 +330,19 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.add_contribution(con, weight)
         return
 
-    def setWeight(self, con, weight):
+    def set_weight(self, con, weight):
         """Set the weight of a FitContribution."""
         idx = list(self._contributions.values()).index(con)
         self._weights[idx] = weight
+        return
+
+    @deprecated(setweight_dep_msg)
+    def setWeight(self, con, weight):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.set_weight instead."""
+        self.set_weight(con, weight)
         return
 
     def addParameterSet(self, parset):

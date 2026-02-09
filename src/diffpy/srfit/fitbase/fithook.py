@@ -37,10 +37,10 @@ class FitHook(object):
     """Base class for inspecting the progress of a FitRecipe refinement.
 
     Can serve as a fithook for the FitRecipe class (see
-    FitRecipe.pushFitHook method.) The methods in this class are called
-    during the preparation of the FitRecipe for refinement, and during
-    the residual call. See the class methods for a description of their
-    purpose.
+    FitRecipe.push_fit_hook method.) The methods in this class are
+    called during the preparation of the FitRecipe for refinement, and
+    during the residual call. See the class methods for a description of
+    their purpose.
     """
 
     def reset(self, recipe):

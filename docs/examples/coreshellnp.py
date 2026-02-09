@@ -169,7 +169,7 @@ def main():
     recipe = makeRecipe(stru1, stru2, data)
     from diffpy.srfit.fitbase.fithook import PlotFitHook
 
-    recipe.pushFitHook(PlotFitHook())
+    recipe.push_fit_hook(PlotFitHook())
     recipe.fithooks[0].verbose = 3
 
     # Optimize - we do this in steps to help convergence

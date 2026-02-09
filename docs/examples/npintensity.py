@@ -32,9 +32,9 @@ equation.
 
 Extensions
 
-- The IntensityGenerator class uses the 'addParameterSet' method to associate
+- The IntensityGenerator class uses the 'add_parameter_set' method to associate
   the structure adapter (DiffpyStructureParSet) with the generator. Most SrFit
-  classes have an 'addParameterSet' class and can store ParameterSet objects.
+  classes have an 'add_parameter_set' class and can store ParameterSet objects.
   Grab the phase object from the IntensityGenerator and try to add it to other
   objects used in the fit recipe. Create variables from the moved Parameters
   rather than from the 'phase' that lives in the IntensityGenerator and see if
@@ -153,7 +153,7 @@ class IntensityGenerator(ProfileGenerator):
         parset = DiffpyStructureParSet("phase", stru)
 
         # Put this ParameterSet in the ProfileGenerator.
-        self.addParameterSet(parset)
+        self.add_parameter_set(parset)
 
         return
 

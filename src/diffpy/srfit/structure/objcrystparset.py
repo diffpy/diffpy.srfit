@@ -252,7 +252,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
             atom = ObjCrystMolAtomParSet(name, a, self)
             atom.molecule = self
-            self.addParameterSet(atom)
+            self.add_parameter_set(atom)
             self.atoms.append(atom)
             anames.append(name)
 
@@ -1760,7 +1760,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
             else:
                 raise TypeError("Unrecognized scatterer '%s'" % cname)
 
-            self.addParameterSet(parset)
+            self.add_parameter_set(parset)
             self.scatterers.append(parset)
             snames.append(name)
 

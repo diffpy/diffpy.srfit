@@ -25,6 +25,14 @@ __all__ = ["ParameterSet"]
 from collections import OrderedDict
 
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.srfit.fitbase.parameterset.ParameterSet"
+removal_version = "4.0.0"
+
+addparset_dep_msg = build_deprecation_message(
+    base, "addParameterSet", "add_parameter_set", removal_version
+)
 
 
 class ParameterSet(RecipeOrganizer):
@@ -87,7 +95,7 @@ class ParameterSet(RecipeOrganizer):
     newParameter = RecipeOrganizer._new_parameter
     removeParameter = RecipeOrganizer._remove_parameter
 
-    def addParameterSet(self, parset):
+    def add_parameter_set(self, parset):
         """Add a ParameterSet to the hierarchy.
 
         Attributes
@@ -101,6 +109,18 @@ class ParameterSet(RecipeOrganizer):
         managed object.
         """
         self._add_object(parset, self._parsets, True)
+        return
+
+    @deprecated(addparset_dep_msg)
+    def addParameterSet(self, parset):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.add_parameter_set
+        instead.
+        """
+        self.add_parameter_set(parset)
         return
 
     def removeParameterSet(self, parset):

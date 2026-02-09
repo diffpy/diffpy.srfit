@@ -237,7 +237,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         """
         ParameterSet.__init__(self, name)
         self.stru = stru
-        self.addParameterSet(CCTBXUnitCellParSet(self))
+        self.add_parameter_set(CCTBXUnitCellParSet(self))
         self.scatterers = []
 
         self._update = False
@@ -249,7 +249,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
             sname = "%s%i" % (el, i)
             cdict[el] = i + 1
             scatterer = CCTBXScattererParSet(sname, self, i)
-            self.addParameterSet(scatterer)
+            self.add_parameter_set(scatterer)
             self.scatterers.append(scatterer)
 
         # Constrain the lattice

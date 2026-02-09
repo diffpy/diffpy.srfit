@@ -277,7 +277,7 @@ class BasePDFGenerator(ProfileGenerator):
         self.stru = self._phase.stru
 
         # Put this ParameterSet in the ProfileGenerator.
-        self.addParameterSet(parset)
+        self.add_parameter_set(parset)
 
         # Set periodicity
         self._phase.useSymmetry(periodic)

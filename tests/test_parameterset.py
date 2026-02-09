@@ -29,8 +29,8 @@ class TestParameterSet(unittest.TestCase):
     def testAddParameterSet(self):
         """Test the deprecated addParameterSet method.
 
-        Remove this test after the addParameterSet is removed. in
-        version 4.0.0.
+        Remove this test after the addParameterSet is removed in version
+        4.0.0.
         """
         parset2 = ParameterSet("parset2")
         p1 = Parameter("parset2", 1)

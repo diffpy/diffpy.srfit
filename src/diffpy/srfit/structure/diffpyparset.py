@@ -284,7 +284,7 @@ class DiffpyStructureParSet(SrRealParSet):
         """
         SrRealParSet.__init__(self, name)
         self.stru = stru
-        self.addParameterSet(DiffpyLatticeParSet(stru.lattice))
+        self.add_parameter_set(DiffpyLatticeParSet(stru.lattice))
         self.atoms = []
 
         cdict = {}
@@ -297,7 +297,7 @@ class DiffpyStructureParSet(SrRealParSet):
             aname = "%s%i" % (el, i)
             cdict[el] = i + 1
             atom = DiffpyAtomParSet(aname, a)
-            self.addParameterSet(atom)
+            self.add_parameter_set(atom)
             self.atoms.append(atom)
 
         return

@@ -75,6 +75,10 @@ setweight_dep_msg = build_deprecation_message(
     base, "setWeight", "set_weight", removal_version
 )
 
+addparset_dep_msg = build_deprecation_message(
+    base, "addParameterSet", "add_parameter_set", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -345,7 +349,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.set_weight(con, weight)
         return
 
-    def addParameterSet(self, parset):
+    def add_parameter_set(self, parset):
         """Add a ParameterSet to the hierarchy.
 
         Attributes
@@ -359,6 +363,16 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         managed object.
         """
         self._add_object(parset, self._parsets, True)
+        return
+
+    @deprecated(addparset_dep_msg)
+    def addParameterSet(self, parset):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.add_parameter_set instead.
+        """
+        self.add_parameter_set(parset)
         return
 
     def removeParameterSet(self, parset):

@@ -83,7 +83,7 @@ def makeRecipe(strufile, datname1, datname2):
     generator1 = IntensityGenerator("I")
     generator1.setStructure(strufile)
     generator2 = IntensityGenerator("I")
-    generator2.addParameterSet(generator1.phase)
+    generator2.add_parameter_set(generator1.phase)
 
     # The FitContributions
     # Create the FitContributions.
@@ -99,7 +99,8 @@ def makeRecipe(strufile, datname1, datname2):
     # the same form and use the same Parameter names.  By default, Parameters
     # in different contributions are different Parameters even if they have the
     # same names.  FitContributions are isolated namespaces than only share
-    # information if you tell them to by using addParameter or addParameterSet.
+    # information if you tell them to by using addParameter or
+    # add_parameter_set.
     bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
                b7*q**7 +b8*q**8 + b9*q**9"
 

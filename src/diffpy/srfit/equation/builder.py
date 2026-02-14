@@ -53,12 +53,12 @@ using normal python syntax:
 > # sin is defined in this module as an OperatorBuilder
 > sin = getBuilder("sin")
 > beq = A*sin(a*x)
-> eq = beq.getEquation()
+> eq = beq.get_equation()
 
 The equation builder can also handle scalar constants. Staring with the above
 setup:
 > beq2 = A*sin(a*x) + 3
-> eq2 = beq2.getEquation()
+> eq2 = beq2.get_equation()
 Here, we didn't have to wrap '3' in an ArgumentBuilder. Non scalars, constant
 or otherwise, must be wrapped as ArgumentBuilders in order to be used in this
 way.
@@ -86,6 +86,7 @@ import six
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation.equationmod import Equation
 from diffpy.srfit.equation.literals.literal import Literal
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 __all__ = [
     "EquationFactory",
@@ -172,7 +173,7 @@ class EquationFactory(object):
             lit = literals.Argument(value=beq, const=True)
             eq = Equation(name="", root=lit)
         else:
-            eq = beq.getEquation()
+            eq = beq.get_equation()
             self.equations.add(eq)
         return eq
 
@@ -404,6 +405,16 @@ class EquationFactory(object):
 
 # End class EquationFactory
 
+base_basebuilder = "diffpy.srfit.equation.builder.BaseBuilder"
+removal_version = "4.0.0"
+
+getequation_dep_msg = build_deprecation_message(
+    base_basebuilder,
+    "getEquation",
+    "get_equation",
+    removal_version,
+)
+
 
 class BaseBuilder(object):
     """Class for building equations.
@@ -430,7 +441,7 @@ class BaseBuilder(object):
         )
         raise TypeError(m)
 
-    def getEquation(self):
+    def get_equation(self):
         """Get the equation built by this object.
 
         The equation will given the name "_eq_<root>" where "<root>" is
@@ -440,6 +451,16 @@ class BaseBuilder(object):
         name = "_eq_%s" % self.literal.name
         eq = Equation(name, self.literal)
         return eq
+
+    @deprecated(getequation_dep_msg)
+    def getEquation(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.equation.builder.BaseBuilder.get_equation
+        instead.
+        """
+        return self.get_equation()
 
     def __eval_binary(self, other, OperatorClass, onleft=True):
         """Evaluate a binary function.

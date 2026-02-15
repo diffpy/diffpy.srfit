@@ -9,8 +9,8 @@
 
 **Deprecated:**
 
-* Deprecated ``BaseBuilder.get_equation`` method for removal in 4.0.0.
-* Deprecated ``FitContributution.get_equation`` method for removal in 4.0.0.
+* Deprecated ``BaseBuilder.getEquation`` method for removal in 4.0.0.
+* Deprecated ``FitContributution.getEquation`` method for removal in 4.0.0.
 
 **Removed:**
 

@@ -56,6 +56,13 @@ addprofilegenerator_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+getequation_dep_msg = build_deprecation_message(
+    base,
+    "getEquation",
+    "get_equation",
+    removal_version,
+)
+
 
 class FitContribution(ParameterSet):
     """FitContribution class.
@@ -304,7 +311,7 @@ class FitContribution(ParameterSet):
         self.set_equation(eqstr, ns=ns)
         return
 
-    def getEquation(self):
+    def get_equation(self):
         """Get math expression string for the active profile equation.
 
         Return normalized math expression or an empty string if profile
@@ -316,6 +323,16 @@ class FitContribution(ParameterSet):
         if self._eq is not None:
             rv = getExpression(self._eq)
         return rv
+
+    @deprecated(getequation_dep_msg)
+    def getEquation(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitContribution.get_equation
+        instead.
+        """
+        return self.get_equation()
 
     def setResidualEquation(self, eqstr):
         """Set the residual equation for the FitContribution.

@@ -164,7 +164,7 @@ class PDFContribution(FitContribution):
         ValueError
             When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
         """
-        return self.profile.setCalculationRange(xmin, xmax, dx)
+        return self.profile.set_calculation_range(xmin, xmax, dx)
 
     def savetxt(self, fname, **kwargs):
         """Call numpy.savetxt with x, ycalc, y, dy.

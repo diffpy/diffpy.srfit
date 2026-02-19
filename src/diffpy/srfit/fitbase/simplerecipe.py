@@ -44,6 +44,13 @@ setCalculationRange_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+setCalculationPoints_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationPoints",
+    "set_calculation_points",
+    removal_version,
+)
+
 
 class SimpleRecipe(FitRecipe):
     """SimpleRecipe class.
@@ -227,7 +234,7 @@ class SimpleRecipe(FitRecipe):
         """
         return self.set_calculation_range(xmin, xmax, dx)
 
-    def setCalculationPoints(self, x):
+    def set_calculation_points(self, x):
         """Set the calculation points.
 
         Parameters
@@ -239,7 +246,18 @@ class SimpleRecipe(FitRecipe):
         This will create y and dy on the specified grid if xobs, yobs and
         dyobs exist.
         """
-        return self.profile.setCalculationPoints(x)
+        return self.profile.set_calculation_points(x)
+
+    @deprecated(setCalculationPoints_dep_msg)
+    def setCalculationPoints(self, x):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_calculation_points
+        instead.
+        """
+        return self.set_calculation_points(x)
 
     def loadtxt(self, *args, **kw):
         """Use numpy.loadtxt to load data.

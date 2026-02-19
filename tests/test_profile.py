@@ -206,7 +206,6 @@ class TestProfile(unittest.TestCase):
         dy = array(x)
         prof = self.profile
         prof.set_observed_profile(x, y, dy)
-        prof.setCalculationRange()
         # Test normal execution w/o arguments
         self.assertTrue(array_equal(x, prof.x))
         self.assertTrue(array_equal(y, prof.y))
@@ -217,8 +216,30 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(array_equal(dy, prof.dy))
         return
 
+    def test_set_calculation_points(self):
+        """Test the set_calculation_points method."""
+        prof = self.profile
+
+        x = arange(2, 10.5, 0.5)
+        y = array(x)
+        dy = array(x)
+
+        # Test without data
+        xcalc = arange(3, 12.2, 0.2)
+        prof.set_calculation_points(xcalc)
+        self.assertTrue(array_equal(xcalc, prof.x))
+
+        # Add the data. This should change the bounds of the calculation array.
+        prof.set_observed_profile(x, y, dy)
+        self.assertTrue(array_equal(arange(3, 10.1, 0.2), prof.x))
+
+        return
+
     def testSetCalculationPoints(self):
-        """Test the setCalculationPoints method."""
+        """Test the deprecated setCalculationPoints method.
+
+        Remove this test when setCalculationPoints is removed in 4.0.0.
+        """
         prof = self.profile
 
         x = arange(2, 10.5, 0.5)

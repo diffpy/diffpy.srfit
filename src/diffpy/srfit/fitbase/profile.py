@@ -57,6 +57,13 @@ setCalculationRange_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+setCalculationPoints_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationPoints",
+    "set_calculation_points",
+    removal_version,
+)
+
 
 class Profile(Observable, Validatable):
     """Observed and calculated profile container.
@@ -202,9 +209,9 @@ class Profile(Observable, Validatable):
 
         # Set the default calculation points
         if self.x is None:
-            self.setCalculationPoints(self._xobs)
+            self.set_calculation_points(self._xobs)
         else:
-            self.setCalculationPoints(self.x)
+            self.set_calculation_points(self.x)
 
         return
 
@@ -321,7 +328,7 @@ class Profile(Observable, Validatable):
             self.dy = self.dyobs[indices]
         else:
             x1 = numpy.arange(lo, hi + epshi, step)
-            self.setCalculationPoints(x1)
+            self.set_calculation_points(x1)
         return
 
     @deprecated(setCalculationRange_dep_msg)
@@ -336,7 +343,7 @@ class Profile(Observable, Validatable):
         self.set_calculation_range(xmin, xmax, dx)
         return
 
-    def setCalculationPoints(self, x):
+    def set_calculation_points(self, x):
         """Set the calculation points.
 
         Parameters
@@ -364,6 +371,22 @@ class Profile(Observable, Validatable):
                 # introduces (more) correlation between the data points.
                 self.dy = rebinArray(self.dyobs, self.xobs, self.x)
 
+        return
+
+    @deprecated(setCalculationPoints_dep_msg)
+    def setCalculationPoints(self, x):
+        """Set the calculation points.
+
+        Parameters
+        ----------
+        x
+            A non-empty numpy array containing the calculation points. If
+            xobs exists, the bounds of x will be limited to its bounds.
+
+        This will create y and dy on the specified grid if xobs, yobs and
+        dyobs exist.
+        """
+        self.set_calculation_points(x)
         return
 
     def loadtxt(self, *args, **kw):

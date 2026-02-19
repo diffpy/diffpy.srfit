@@ -48,7 +48,7 @@ def makeRecipe(ciffile, datname):
     # structure being refined.
     parser = PDFParser()
     parser.parseFile(datname)
-    profile.loadParsedData(parser)
+    profile.load_parsed_data(parser)
     profile.setCalculationRange(xmax=20)
 
     # The ProfileGenerator

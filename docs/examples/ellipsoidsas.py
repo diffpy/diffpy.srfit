@@ -39,7 +39,7 @@ def makeRecipe(datname):
     # properly and pass the metadata along.
     parser = SASParser()
     parser.parseFile(datname)
-    profile.loadParsedData(parser)
+    profile.load_parsed_data(parser)
 
     # The ProfileGenerator
     # The SASGenerator is for configuring and calculating a SAS profile. We use

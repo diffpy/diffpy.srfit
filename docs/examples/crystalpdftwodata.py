@@ -48,12 +48,12 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # Load data and add it to the proper Profile.
     parser = PDFParser()
     parser.parseFile(xdatname)
-    xprofile.loadParsedData(parser)
+    xprofile.load_parsed_data(parser)
     xprofile.setCalculationRange(xmax=20)
 
     parser = PDFParser()
     parser.parseFile(ndatname)
-    nprofile.loadParsedData(parser)
+    nprofile.load_parsed_data(parser)
     nprofile.setCalculationRange(xmax=20)
 
     # The ProfileGenerators

@@ -109,7 +109,7 @@ class PDFContribution(FitContribution):
         """Load the data in various formats.
 
         This uses the PDFParser to load the data and then passes it to the
-        built-in profile with loadParsedData.
+        built-in profile with load_parsed_data.
 
         Attributes
         ----------
@@ -129,7 +129,7 @@ class PDFContribution(FitContribution):
         parser.parseString(datstr)
 
         # Pass it to the profile
-        self.profile.loadParsedData(parser)
+        self.profile.load_parsed_data(parser)
         return
 
     def setCalculationRange(self, xmin=None, xmax=None, dx=None):

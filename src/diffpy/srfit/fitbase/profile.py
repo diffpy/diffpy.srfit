@@ -29,9 +29,19 @@ from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.util.observable import Observable
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8
+base = "diffpy.srfit.fitbase.profile.Profile"
+removal_version = "4.0.0"
+
+loadParsedData_dep_msg = build_deprecation_message(
+    base,
+    "loadParsedData",
+    "load_parsed_data",
+    removal_version,
+)
 
 
 class Profile(Observable, Validatable):
@@ -125,7 +135,7 @@ class Profile(Observable, Validatable):
     yobs = property(lambda self: self._yobs)
     dyobs = property(lambda self: self._dyobs)
 
-    def loadParsedData(self, parser):
+    def load_parsed_data(self, parser):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
@@ -133,6 +143,17 @@ class Profile(Observable, Validatable):
         x, y, junk, dy = parser.getData()
         self.meta = dict(parser.getMetaData())
         self.setObservedProfile(x, y, dy)
+        return
+
+    @deprecated(loadParsedData_dep_msg)
+    def loadParsedData(self, parser):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.profile.Profile.load_parsed_data
+        instead.
+        """
+        self.load_parsed_data(parser)
         return
 
     def setObservedProfile(self, xobs, yobs, dyobs=None):

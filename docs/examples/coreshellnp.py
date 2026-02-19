@@ -44,7 +44,7 @@ def makeRecipe(stru1, stru2, datname):
     # Load data and add it to the profile
     parser = PDFParser()
     parser.parseFile(datname)
-    profile.loadParsedData(parser)
+    profile.load_parsed_data(parser)
     profile.setCalculationRange(xmin=1.5, xmax=45, dx=0.1)
 
     # The ProfileGenerator

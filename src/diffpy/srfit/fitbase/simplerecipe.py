@@ -18,6 +18,17 @@ from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import FitResults
 from diffpy.srfit.fitbase.profile import Profile
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.srfit.fitbase.simplerecipe.SimpleRecipe"
+removal_version = "4.0.0"
+
+loadParsedData_dep_msg = build_deprecation_message(
+    base,
+    "loadParsedData",
+    "load_parsed_data",
+    removal_version,
+)
 
 
 class SimpleRecipe(FitRecipe):
@@ -109,12 +120,23 @@ class SimpleRecipe(FitRecipe):
         return
 
     # Profile methods
-    def loadParsedData(self, parser):
+    def load_parsed_data(self, parser):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
         """
-        return self.profile.loadParsedData(parser)
+        return self.profile.load_parsed_data(parser)
+
+    @deprecated(loadParsedData_dep_msg)
+    def loadParsedData(self, parser):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.load_parsed_data
+        instead.
+        """
+        return self.load_parsed_data(parser)
 
     def setObservedProfile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.

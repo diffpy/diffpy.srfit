@@ -37,6 +37,13 @@ setObservedProfile_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+setCalculationRange_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationRange",
+    "set_calculation_range",
+    removal_version,
+)
+
 
 class SimpleRecipe(FitRecipe):
     """SimpleRecipe class.
@@ -163,7 +170,7 @@ class SimpleRecipe(FitRecipe):
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
         """
-        return self.profile.setObservedProfile(xobs, yobs, dyobs)
+        return self.profile.set_observed_profile(xobs, yobs, dyobs)
 
     @deprecated(setObservedProfile_dep_msg)
     def setObservedProfile(self, xobs, yobs, dyobs=None):
@@ -176,7 +183,7 @@ class SimpleRecipe(FitRecipe):
         """
         return self.set_observed_profile(xobs, yobs, dyobs)
 
-    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+    def set_calculation_range(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
 
         Adhere to the observed ``xobs`` points when ``dx`` is the same
@@ -208,7 +215,17 @@ class SimpleRecipe(FitRecipe):
         ValueError
             When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
         """
-        return self.profile.setCalculationRange(xmin, xmax, dx)
+        return self.profile.set_calculation_range(xmin, xmax, dx)
+
+    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_calculation_range
+        instead.
+        """
+        return self.set_calculation_range(xmin, xmax, dx)
 
     def setCalculationPoints(self, x):
         """Set the calculation points.

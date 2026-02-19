@@ -45,7 +45,7 @@ def makeRecipe(stru1, stru2, datname):
     parser = PDFParser()
     parser.parseFile(datname)
     profile.load_parsed_data(parser)
-    profile.setCalculationRange(xmin=1.5, xmax=45, dx=0.1)
+    profile.set_calculation_range(xmin=1.5, xmax=45, dx=0.1)
 
     # The ProfileGenerator
     # In order to fit the core and shell phases simultaneously, we must use two

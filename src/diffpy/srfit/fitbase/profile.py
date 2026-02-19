@@ -50,6 +50,13 @@ setObservedProfile_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+setCalculationRange_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationRange",
+    "set_calculation_range",
+    removal_version,
+)
+
 
 class Profile(Observable, Validatable):
     """Observed and calculated profile container.
@@ -213,7 +220,7 @@ class Profile(Observable, Validatable):
         self.set_observed_profile(xobs, yobs, dyobs)
         return
 
-    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+    def set_calculation_range(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
 
         Adhere to the observed ``xobs`` points when ``dx`` is the same
@@ -315,6 +322,18 @@ class Profile(Observable, Validatable):
         else:
             x1 = numpy.arange(lo, hi + epshi, step)
             self.setCalculationPoints(x1)
+        return
+
+    @deprecated(setCalculationRange_dep_msg)
+    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.profile.Profile.set_calculation_range
+        instead.
+        """
+        self.set_calculation_range(xmin, xmax, dx)
         return
 
     def setCalculationPoints(self, x):

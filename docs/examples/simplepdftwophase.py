@@ -31,7 +31,7 @@ def makeRecipe(niciffile, siciffile, datname):
     # Load data and add it to the profile
     contribution = PDFContribution("nisi")
     contribution.loadData(datname)
-    contribution.setCalculationRange(xmax=20)
+    contribution.set_calculation_range(xmax=20)
 
     stru = loadCrystal(niciffile)
     contribution.addStructure("ni", stru)

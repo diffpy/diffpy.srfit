@@ -46,7 +46,7 @@ def makeRecipe(niciffile, siciffile, datname):
     parser = PDFParser()
     parser.parseFile(datname)
     profile.load_parsed_data(parser)
-    profile.setCalculationRange(xmax=20)
+    profile.set_calculation_range(xmax=20)
 
     # The ProfileGenerator
     # In order to fit two phases simultaneously, we must use two PDFGenerators.

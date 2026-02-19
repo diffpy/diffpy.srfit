@@ -49,12 +49,12 @@ def makeRecipe(ciffile, xdatname, ndatname):
     parser = PDFParser()
     parser.parseFile(xdatname)
     xprofile.load_parsed_data(parser)
-    xprofile.setCalculationRange(xmax=20)
+    xprofile.set_calculation_range(xmax=20)
 
     parser = PDFParser()
     parser.parseFile(ndatname)
     nprofile.load_parsed_data(parser)
-    nprofile.setCalculationRange(xmax=20)
+    nprofile.set_calculation_range(xmax=20)
 
     # The ProfileGenerators
     # We need one of these for the x-ray data.

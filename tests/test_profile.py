@@ -112,19 +112,101 @@ class TestProfile(unittest.TestCase):
 
         return
 
-    def testSetCalculationRange(self):
-        """Test the setCalculationRange method."""
+    def test_set_calculation_range(self):
+        """Test the set_calculation_range method."""
         x = arange(2, 9.6, 0.5)
         y = array(x)
         dy = array(x)
         prof = self.profile
         # Check call before data arrays are present
-        self.assertRaises(AttributeError, prof.setCalculationRange)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0, 5)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0, 5, 0.2)
+        self.assertRaises(AttributeError, prof.set_calculation_range)
+        self.assertRaises(AttributeError, prof.set_calculation_range, 0)
+        self.assertRaises(AttributeError, prof.set_calculation_range, 0, 5)
+        self.assertRaises(
+            AttributeError, prof.set_calculation_range, 0, 5, 0.2
+        )
         # assign data
         prof.set_observed_profile(x, y, dy)
+        # Test normal execution w/o arguments
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(dy, prof.dy))
+        prof.set_calculation_range()
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(dy, prof.dy))
+        # Test a lower bound < xmin
+        prof.set_calculation_range(xmin=0)
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(dy, prof.dy))
+        # Test an upper bound > xmax
+        prof.set_calculation_range(xmax=100)
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(dy, prof.dy))
+        # Test xmin > xmax
+        self.assertRaises(
+            ValueError, prof.set_calculation_range, xmin=10, xmax=3
+        )
+        # Test xmax - xmin < dx
+        self.assertRaises(
+            ValueError, prof.set_calculation_range, xmin=3, xmax=3.9, dx=1.0
+        )
+        # Test dx <= 0
+        self.assertRaises(ValueError, prof.set_calculation_range, dx=0)
+        self.assertRaises(ValueError, prof.set_calculation_range, dx=-0.000001)
+        # using string other than 'obs'
+        self.assertRaises(ValueError, prof.set_calculation_range, xmin="oobs")
+        self.assertRaises(ValueError, prof.set_calculation_range, xmax="oobs")
+        self.assertRaises(ValueError, prof.set_calculation_range, dx="oobs")
+        # This should be alright
+        prof.set_calculation_range(3, 5)
+        prof.set_calculation_range(xmin="obs", xmax=7, dx=0.001)
+        self.assertEqual(5001, len(prof.x))
+        self.assertEqual(len(prof.x), len(prof.y))
+        self.assertEqual(len(prof.x), len(prof.dy))
+        # Test an internal bound
+        prof.set_calculation_range(4, 7, dx="obs")
+        self.assertTrue(array_equal(prof.x, arange(4, 7.1, 0.5)))
+        self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
+        self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
+        # test setting only one of the bounds
+        prof.set_calculation_range(xmin=3)
+        self.assertTrue(array_equal(prof.x, arange(3, 7.1, 0.5)))
+        self.assertTrue(array_equal(prof.x, prof.y))
+        self.assertTrue(array_equal(prof.x, prof.dy))
+        prof.set_calculation_range(xmax=5.1)
+        self.assertTrue(array_equal(prof.x, arange(3, 5.1, 0.5)))
+        self.assertTrue(array_equal(prof.x, prof.y))
+        self.assertTrue(array_equal(prof.x, prof.dy))
+        prof.set_calculation_range(dx=1)
+        self.assertTrue(array_equal(prof.x, arange(3, 5.1)))
+        self.assertTrue(array_equal(prof.x, prof.y))
+        self.assertTrue(array_equal(prof.x, prof.dy))
+        # Test a new grid
+        prof.set_calculation_range(4.2, 7, 0.3)
+        self.assertTrue(array_equal(prof.x, arange(4.2, 6.901, 0.3)))
+        self.assertTrue(allclose(prof.x, prof.y))
+        self.assertTrue(allclose(prof.x, prof.dy))
+        prof.set_calculation_range(xmin=4.2, xmax=6.001)
+        self.assertTrue(array_equal(prof.x, arange(4.2, 6.001, 0.3)))
+        # resample on a clipped grid
+        prof.set_calculation_range(dx=0.5)
+        self.assertTrue(array_equal(prof.x, arange(4.5, 6.1, 0.5)))
+        return
+
+    def testSetCalculationRange(self):
+        """Test the deprecated setCalculationRange method.
+
+        Remove this test when setCalculationRange is removed in 4.0.0.
+        """
+        x = arange(2, 9.6, 0.5)
+        y = array(x)
+        dy = array(x)
+        prof = self.profile
+        prof.set_observed_profile(x, y, dy)
+        prof.setCalculationRange()
         # Test normal execution w/o arguments
         self.assertTrue(array_equal(x, prof.x))
         self.assertTrue(array_equal(y, prof.y))
@@ -133,65 +215,6 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(array_equal(x, prof.x))
         self.assertTrue(array_equal(y, prof.y))
         self.assertTrue(array_equal(dy, prof.dy))
-        # Test a lower bound < xmin
-        prof.setCalculationRange(xmin=0)
-        self.assertTrue(array_equal(x, prof.x))
-        self.assertTrue(array_equal(y, prof.y))
-        self.assertTrue(array_equal(dy, prof.dy))
-        # Test an upper bound > xmax
-        prof.setCalculationRange(xmax=100)
-        self.assertTrue(array_equal(x, prof.x))
-        self.assertTrue(array_equal(y, prof.y))
-        self.assertTrue(array_equal(dy, prof.dy))
-        # Test xmin > xmax
-        self.assertRaises(
-            ValueError, prof.setCalculationRange, xmin=10, xmax=3
-        )
-        # Test xmax - xmin < dx
-        self.assertRaises(
-            ValueError, prof.setCalculationRange, xmin=3, xmax=3.9, dx=1.0
-        )
-        # Test dx <= 0
-        self.assertRaises(ValueError, prof.setCalculationRange, dx=0)
-        self.assertRaises(ValueError, prof.setCalculationRange, dx=-0.000001)
-        # using string other than 'obs'
-        self.assertRaises(ValueError, prof.setCalculationRange, xmin="oobs")
-        self.assertRaises(ValueError, prof.setCalculationRange, xmax="oobs")
-        self.assertRaises(ValueError, prof.setCalculationRange, dx="oobs")
-        # This should be alright
-        prof.setCalculationRange(3, 5)
-        prof.setCalculationRange(xmin="obs", xmax=7, dx=0.001)
-        self.assertEqual(5001, len(prof.x))
-        self.assertEqual(len(prof.x), len(prof.y))
-        self.assertEqual(len(prof.x), len(prof.dy))
-        # Test an internal bound
-        prof.setCalculationRange(4, 7, dx="obs")
-        self.assertTrue(array_equal(prof.x, arange(4, 7.1, 0.5)))
-        self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
-        self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
-        # test setting only one of the bounds
-        prof.setCalculationRange(xmin=3)
-        self.assertTrue(array_equal(prof.x, arange(3, 7.1, 0.5)))
-        self.assertTrue(array_equal(prof.x, prof.y))
-        self.assertTrue(array_equal(prof.x, prof.dy))
-        prof.setCalculationRange(xmax=5.1)
-        self.assertTrue(array_equal(prof.x, arange(3, 5.1, 0.5)))
-        self.assertTrue(array_equal(prof.x, prof.y))
-        self.assertTrue(array_equal(prof.x, prof.dy))
-        prof.setCalculationRange(dx=1)
-        self.assertTrue(array_equal(prof.x, arange(3, 5.1)))
-        self.assertTrue(array_equal(prof.x, prof.y))
-        self.assertTrue(array_equal(prof.x, prof.dy))
-        # Test a new grid
-        prof.setCalculationRange(4.2, 7, 0.3)
-        self.assertTrue(array_equal(prof.x, arange(4.2, 6.901, 0.3)))
-        self.assertTrue(allclose(prof.x, prof.y))
-        self.assertTrue(allclose(prof.x, prof.dy))
-        prof.setCalculationRange(xmin=4.2, xmax=6.001)
-        self.assertTrue(array_equal(prof.x, arange(4.2, 6.001, 0.3)))
-        # resample on a clipped grid
-        prof.setCalculationRange(dx=0.5)
-        self.assertTrue(array_equal(prof.x, arange(4.5, 6.1, 0.5)))
         return
 
     def testSetCalculationPoints(self):

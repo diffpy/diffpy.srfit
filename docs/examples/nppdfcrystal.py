@@ -45,7 +45,7 @@ def makeRecipe(ciffile, grdata):
     pdfparser = PDFParser()
     pdfparser.parseFile(grdata)
     pdfprofile.load_parsed_data(pdfparser)
-    pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
+    pdfprofile.set_calculation_range(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
     pdfcontribution.set_profile(pdfprofile, xname="r")

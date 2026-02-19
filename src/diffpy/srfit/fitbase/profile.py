@@ -361,7 +361,7 @@ class Profile(Observable, Validatable):
             x = x[x <= self.xobs[-1] + epsilon]
         self.x = x
         if self.yobs is not None:
-            self.y = rebin_array(self.yobs, self.xobs, self.x)
+            self.y = _rebin_array(self.yobs, self.xobs, self.x)
         if self.dyobs is not None:
             # work around for interpolation issue making some of these non-1
             if (self.dyobs == 1).all():
@@ -369,7 +369,7 @@ class Profile(Observable, Validatable):
             else:
                 # FIXME - This does not follow error propagation rules and it
                 # introduces (more) correlation between the data points.
-                self.dy = rebin_array(self.dyobs, self.xobs, self.x)
+                self.dy = _rebin_array(self.dyobs, self.xobs, self.x)
 
         return
 
@@ -500,7 +500,7 @@ class Profile(Observable, Validatable):
 # End class Profile
 
 
-def rebin_array(A, xold, xnew):
+def _rebin_array(A, xold, xnew):
     """Rebin the an array by interpolating over the new x range.
 
     Parameters

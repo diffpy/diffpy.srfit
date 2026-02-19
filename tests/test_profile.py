@@ -43,8 +43,8 @@ class TestProfile(unittest.TestCase):
         self.assertEqual(profile.meta, {})
         return
 
-    def testSetObservedProfile(self):
-        """Test the setObservedProfile method."""
+    def test_set_observed_profile(self):
+        """Test the set_observed_profile method."""
         # Make a profile with defined dy
 
         x = arange(0, 10, 0.1)
@@ -52,7 +52,43 @@ class TestProfile(unittest.TestCase):
         dy = x
 
         prof = self.profile
-        prof.setObservedProfile(x, y, dy)
+        prof.set_observed_profile(x, y, dy)
+
+        self.assertTrue(array_equal(x, prof.xobs))
+        self.assertTrue(array_equal(y, prof.yobs))
+        self.assertTrue(array_equal(dy, prof.dyobs))
+
+        # Make a profile with undefined dy
+        x = arange(0, 10, 0.1)
+        y = x
+        dy = None
+
+        self.profile.set_observed_profile(x, y, dy)
+
+        self.assertTrue(array_equal(x, prof.xobs))
+        self.assertTrue(array_equal(y, prof.yobs))
+        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dyobs))
+
+        # Get the ranged profile to make sure its the same
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dy))
+
+        return
+
+    def testSetObservedProfile(self):
+        """Test the deprecated setObservedProfile method.
+
+        Remove this test when setObservedProfile is removed in 4.0.0.
+        """
+        # Make a profile with defined dy
+
+        x = arange(0, 10, 0.1)
+        y = x
+        dy = x
+
+        prof = self.profile
+        prof.set_observed_profile(x, y, dy)
 
         self.assertTrue(array_equal(x, prof.xobs))
         self.assertTrue(array_equal(y, prof.yobs))
@@ -88,7 +124,7 @@ class TestProfile(unittest.TestCase):
         self.assertRaises(AttributeError, prof.setCalculationRange, 0, 5)
         self.assertRaises(AttributeError, prof.setCalculationRange, 0, 5, 0.2)
         # assign data
-        prof.setObservedProfile(x, y, dy)
+        prof.set_observed_profile(x, y, dy)
         # Test normal execution w/o arguments
         self.assertTrue(array_equal(x, prof.x))
         self.assertTrue(array_equal(y, prof.y))
@@ -172,7 +208,7 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(array_equal(xcalc, prof.x))
 
         # Add the data. This should change the bounds of the calculation array.
-        prof.setObservedProfile(x, y, dy)
+        prof.set_observed_profile(x, y, dy)
         self.assertTrue(array_equal(arange(3, 10.1, 0.2), prof.x))
 
         return
@@ -183,7 +219,7 @@ class TestProfile(unittest.TestCase):
         self.assertRaises(SrFitError, prof.savetxt, "foo")
         xobs = arange(-2, 3.01, 0.25)
         yobs = xobs**2
-        prof.setObservedProfile(xobs, yobs)
+        prof.set_observed_profile(xobs, yobs)
         prof.ycalc = yobs.copy()
         fp = io.BytesIO()
         prof.savetxt(fp)

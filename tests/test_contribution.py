@@ -101,7 +101,7 @@ class TestContribution(unittest.TestCase):
         # create some data
         xobs = arange(0, 10, 0.5)
         yobs = xobs
-        profile.setObservedProfile(xobs, yobs)
+        profile.set_observed_profile(xobs, yobs)
 
         # Make sure this is where it's supposed to be
         self.assertTrue(gen.profile.xobs is xobs)
@@ -123,11 +123,11 @@ class TestContribution(unittest.TestCase):
         xobs = arange(0, 10, 0.5)
         yobs = xobs
         profile = self.profile
-        profile.setObservedProfile(xobs, yobs)
+        profile.set_observed_profile(xobs, yobs)
         xobs2 = arange(0, 10, 0.8)
         yobs2 = 0.5 * xobs2
         profile2 = Profile()
-        profile2.setObservedProfile(xobs2, yobs2)
+        profile2.set_observed_profile(xobs2, yobs2)
         gen = self.gen
 
         # Validate equations
@@ -217,7 +217,7 @@ def testResidual(noObserversInGlobalBuilders):
     # Let's create some data)
     xobs = arange(0, 10, 0.5)
     yobs = xobs
-    profile.setObservedProfile(xobs, yobs)
+    profile.set_observed_profile(xobs, yobs)
 
     # Check our fitting equation.
     assert np.array_equal(fc._eq(), gen(xobs))
@@ -249,7 +249,7 @@ def testResidual(noObserversInGlobalBuilders):
     assert fc._reseq._value is None
     xobs = arange(0, 10, 0.5)
     yobs = 9 * sin(xobs)
-    profile.setObservedProfile(xobs, yobs)
+    profile.set_observed_profile(xobs, yobs)
     assert fc._eq._value is None
     assert fc._reseq._value is None
 

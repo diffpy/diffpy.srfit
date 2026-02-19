@@ -41,7 +41,7 @@ class TestFitRecipe(unittest.TestCase):
         self.profile = Profile()
         x = linspace(0, pi, 10)
         y = sin(x)
-        self.profile.setObservedProfile(x, y)
+        self.profile.set_observed_profile(x, y)
 
         # Set up the FitContribution
         self.fitcontribution = FitContribution("cont")
@@ -258,7 +258,7 @@ def testPrintFitHook(capturestdout):
     profile = Profile()
     x = linspace(0, pi, 10)
     y = sin(x)
-    profile.setObservedProfile(x, y)
+    profile.set_observed_profile(x, y)
 
     # Set up the FitContribution
     fitcontribution = FitContribution("cont")
@@ -306,7 +306,7 @@ def test_add_contribution(capturestdout):
     profile = Profile()
     x = linspace(0, pi, 10)
     y = sin(x)
-    profile.setObservedProfile(x, y)
+    profile.set_observed_profile(x, y)
 
     # Set up the FitContribution
     fitcontribution = FitContribution("cont")

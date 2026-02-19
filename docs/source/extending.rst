@@ -185,7 +185,7 @@ customized Profile is the ``SASProfile`` class in the
 
 The ``__init__`` method sets the ``xobs``, ``yobs`` and ``dyobs`` attributes of
 the ``SASProfile`` to the associated arrays within the ``_datainfo`` attribute.
-The ``setObservedProfile`` method is overloaded to modify the ``_datainfo``
+The ``set_observed_profile`` method is overloaded to modify the ``_datainfo``
 arrays when their corresponding attributes are modified. This keeps the arrays
 in sync.
 

@@ -30,6 +30,13 @@ loadParsedData_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+setObservedProfile_dep_msg = build_deprecation_message(
+    base,
+    "setObservedProfile",
+    "set_observed_profile",
+    removal_version,
+)
+
 
 class SimpleRecipe(FitRecipe):
     """SimpleRecipe class.
@@ -138,7 +145,7 @@ class SimpleRecipe(FitRecipe):
         """
         return self.load_parsed_data(parser)
 
-    def setObservedProfile(self, xobs, yobs, dyobs=None):
+    def set_observed_profile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         Parameters
@@ -157,6 +164,17 @@ class SimpleRecipe(FitRecipe):
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
         """
         return self.profile.setObservedProfile(xobs, yobs, dyobs)
+
+    @deprecated(setObservedProfile_dep_msg)
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_observed_profile
+        instead.
+        """
+        return self.set_observed_profile(xobs, yobs, dyobs)
 
     def setCalculationRange(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
@@ -213,7 +231,7 @@ class SimpleRecipe(FitRecipe):
         enforced. The first two arrays returned by numpy.loadtxt are
         assumed to be x and y. If there is a third array, it is assumed
         to by dy. Any other arrays are ignored. These are passed to
-        setObservedProfile.
+        set_observed_profile.
 
          Raises ValueError if the call to numpy.loadtxt returns fewer
         than 2 arrays.

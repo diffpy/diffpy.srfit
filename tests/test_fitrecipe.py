@@ -291,6 +291,34 @@ def testPrintFitHook(capturestdout):
     return
 
 
+def test_add_and_remove_ParameterSet():
+    # add a parset
+    recipe = FitRecipe("recipe")
+    parameter_to_add = Parameter("added_param", 1)
+    recipe.addParameterSet(parameter_to_add)
+    # check that the parameter is added
+    assert recipe.added_param == parameter_to_add
+    assert recipe.added_param.value == 1
+    # remove the added parameter
+    recipe.removeParameterSet(parameter_to_add)
+    # check that the parameter is removed
+    assert not hasattr(recipe, "added_param")
+
+
+def test_add_and_remove_parameter_set():
+    recipe = FitRecipe("recipe")
+    parameter_to_add = Parameter("added_param", 1)
+    # add a parset
+    recipe.add_parameter_set(parameter_to_add)
+    # check that the parameter is added
+    assert recipe.added_param == parameter_to_add
+    assert recipe.added_param.value == 1
+    # remove the added parameter
+    recipe.remove_parameter_set(parameter_to_add)
+    # check that the parameter is removed
+    assert not hasattr(recipe, "added_param")
+
+
 def test_add_contribution(capturestdout):
     """Duplicated test of PrintFitHooks except addContribution method has
     changed to the new add_contribution method. This is because addContribution

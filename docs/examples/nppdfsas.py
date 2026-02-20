@@ -48,8 +48,8 @@ def makeRecipe(ciffile, grdata, iqdata):
     pdfprofile = Profile()
     pdfparser = PDFParser()
     pdfparser.parseFile(grdata)
-    pdfprofile.loadParsedData(pdfparser)
-    pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
+    pdfprofile.load_parsed_data(pdfparser)
+    pdfprofile.set_calculation_range(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
     pdfcontribution.set_profile(pdfprofile, xname="r")
@@ -66,7 +66,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     sasprofile = Profile()
     sasparser = SASParser()
     sasparser.parseFile(iqdata)
-    sasprofile.loadParsedData(sasparser)
+    sasprofile.load_parsed_data(sasparser)
     if all(sasprofile.dy == 0):
         sasprofile.dy[:] = 1
 

@@ -18,6 +18,38 @@ from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import FitResults
 from diffpy.srfit.fitbase.profile import Profile
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.srfit.fitbase.simplerecipe.SimpleRecipe"
+removal_version = "4.0.0"
+
+loadParsedData_dep_msg = build_deprecation_message(
+    base,
+    "loadParsedData",
+    "load_parsed_data",
+    removal_version,
+)
+
+setObservedProfile_dep_msg = build_deprecation_message(
+    base,
+    "setObservedProfile",
+    "set_observed_profile",
+    removal_version,
+)
+
+setCalculationRange_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationRange",
+    "set_calculation_range",
+    removal_version,
+)
+
+setCalculationPoints_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationPoints",
+    "set_calculation_points",
+    removal_version,
+)
 
 
 class SimpleRecipe(FitRecipe):
@@ -109,14 +141,25 @@ class SimpleRecipe(FitRecipe):
         return
 
     # Profile methods
-    def loadParsedData(self, parser):
+    def load_parsed_data(self, parser):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
         """
-        return self.profile.loadParsedData(parser)
+        return self.profile.load_parsed_data(parser)
 
-    def setObservedProfile(self, xobs, yobs, dyobs=None):
+    @deprecated(loadParsedData_dep_msg)
+    def loadParsedData(self, parser):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.load_parsed_data
+        instead.
+        """
+        return self.load_parsed_data(parser)
+
+    def set_observed_profile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         Parameters
@@ -134,9 +177,20 @@ class SimpleRecipe(FitRecipe):
         Raises ValueError if len(yobs) != len(xobs)
         Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
         """
-        return self.profile.setObservedProfile(xobs, yobs, dyobs)
+        return self.profile.set_observed_profile(xobs, yobs, dyobs)
 
-    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+    @deprecated(setObservedProfile_dep_msg)
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_observed_profile
+        instead.
+        """
+        return self.set_observed_profile(xobs, yobs, dyobs)
+
+    def set_calculation_range(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
 
         Adhere to the observed ``xobs`` points when ``dx`` is the same
@@ -168,9 +222,19 @@ class SimpleRecipe(FitRecipe):
         ValueError
             When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
         """
-        return self.profile.setCalculationRange(xmin, xmax, dx)
+        return self.profile.set_calculation_range(xmin, xmax, dx)
 
-    def setCalculationPoints(self, x):
+    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_calculation_range
+        instead.
+        """
+        return self.set_calculation_range(xmin, xmax, dx)
+
+    def set_calculation_points(self, x):
         """Set the calculation points.
 
         Parameters
@@ -182,7 +246,18 @@ class SimpleRecipe(FitRecipe):
         This will create y and dy on the specified grid if xobs, yobs and
         dyobs exist.
         """
-        return self.profile.setCalculationPoints(x)
+        return self.profile.set_calculation_points(x)
+
+    @deprecated(setCalculationPoints_dep_msg)
+    def setCalculationPoints(self, x):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_calculation_points
+        instead.
+        """
+        return self.set_calculation_points(x)
 
     def loadtxt(self, *args, **kw):
         """Use numpy.loadtxt to load data.
@@ -191,7 +266,7 @@ class SimpleRecipe(FitRecipe):
         enforced. The first two arrays returned by numpy.loadtxt are
         assumed to be x and y. If there is a third array, it is assumed
         to by dy. Any other arrays are ignored. These are passed to
-        setObservedProfile.
+        set_observed_profile.
 
          Raises ValueError if the call to numpy.loadtxt returns fewer
         than 2 arrays.

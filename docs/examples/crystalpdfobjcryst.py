@@ -48,8 +48,8 @@ def makeRecipe(ciffile, datname):
     # structure being refined.
     parser = PDFParser()
     parser.parseFile(datname)
-    profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax=20)
+    profile.load_parsed_data(parser)
+    profile.set_calculation_range(xmax=20)
 
     # The ProfileGenerator
     # This time we use the CreateCrystalFromCIF method of pyobjcryst.crystal to

@@ -29,9 +29,40 @@ from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.util.observable import Observable
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8
+base = "diffpy.srfit.fitbase.profile.Profile"
+removal_version = "4.0.0"
+
+loadParsedData_dep_msg = build_deprecation_message(
+    base,
+    "loadParsedData",
+    "load_parsed_data",
+    removal_version,
+)
+
+setObservedProfile_dep_msg = build_deprecation_message(
+    base,
+    "setObservedProfile",
+    "set_observed_profile",
+    removal_version,
+)
+
+setCalculationRange_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationRange",
+    "set_calculation_range",
+    removal_version,
+)
+
+setCalculationPoints_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationPoints",
+    "set_calculation_points",
+    removal_version,
+)
 
 
 class Profile(Observable, Validatable):
@@ -125,17 +156,28 @@ class Profile(Observable, Validatable):
     yobs = property(lambda self: self._yobs)
     dyobs = property(lambda self: self._dyobs)
 
-    def loadParsedData(self, parser):
+    def load_parsed_data(self, parser):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
         """
         x, y, junk, dy = parser.getData()
         self.meta = dict(parser.getMetaData())
-        self.setObservedProfile(x, y, dy)
+        self.set_observed_profile(x, y, dy)
         return
 
-    def setObservedProfile(self, xobs, yobs, dyobs=None):
+    @deprecated(loadParsedData_dep_msg)
+    def loadParsedData(self, parser):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.profile.Profile.load_parsed_data
+        instead.
+        """
+        self.load_parsed_data(parser)
+        return
+
+    def set_observed_profile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         Parameters
@@ -167,13 +209,25 @@ class Profile(Observable, Validatable):
 
         # Set the default calculation points
         if self.x is None:
-            self.setCalculationPoints(self._xobs)
+            self.set_calculation_points(self._xobs)
         else:
-            self.setCalculationPoints(self.x)
+            self.set_calculation_points(self.x)
 
         return
 
-    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+    @deprecated(setObservedProfile_dep_msg)
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.profile.Profile.set_observed_profile
+        instead.
+        """
+        self.set_observed_profile(xobs, yobs, dyobs)
+        return
+
+    def set_calculation_range(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
 
         Adhere to the observed ``xobs`` points when ``dx`` is the same
@@ -274,10 +328,22 @@ class Profile(Observable, Validatable):
             self.dy = self.dyobs[indices]
         else:
             x1 = numpy.arange(lo, hi + epshi, step)
-            self.setCalculationPoints(x1)
+            self.set_calculation_points(x1)
         return
 
-    def setCalculationPoints(self, x):
+    @deprecated(setCalculationRange_dep_msg)
+    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.profile.Profile.set_calculation_range
+        instead.
+        """
+        self.set_calculation_range(xmin, xmax, dx)
+        return
+
+    def set_calculation_points(self, x):
         """Set the calculation points.
 
         Parameters
@@ -295,7 +361,7 @@ class Profile(Observable, Validatable):
             x = x[x <= self.xobs[-1] + epsilon]
         self.x = x
         if self.yobs is not None:
-            self.y = rebinArray(self.yobs, self.xobs, self.x)
+            self.y = _rebin_array(self.yobs, self.xobs, self.x)
         if self.dyobs is not None:
             # work around for interpolation issue making some of these non-1
             if (self.dyobs == 1).all():
@@ -303,8 +369,24 @@ class Profile(Observable, Validatable):
             else:
                 # FIXME - This does not follow error propagation rules and it
                 # introduces (more) correlation between the data points.
-                self.dy = rebinArray(self.dyobs, self.xobs, self.x)
+                self.dy = _rebin_array(self.dyobs, self.xobs, self.x)
 
+        return
+
+    @deprecated(setCalculationPoints_dep_msg)
+    def setCalculationPoints(self, x):
+        """Set the calculation points.
+
+        Parameters
+        ----------
+        x
+            A non-empty numpy array containing the calculation points. If
+            xobs exists, the bounds of x will be limited to its bounds.
+
+        This will create y and dy on the specified grid if xobs, yobs and
+        dyobs exist.
+        """
+        self.set_calculation_points(x)
         return
 
     def loadtxt(self, *args, **kw):
@@ -314,7 +396,7 @@ class Profile(Observable, Validatable):
         enforced. The first two arrays returned by numpy.loadtxt are
         assumed to be x and y. If there is a third array, it is assumed
         to by dy. Any other arrays are ignored. These are passed to
-        setObservedProfile.
+        set_observed_profile.
 
         Raises ValueError if the call to numpy.loadtxt returns fewer
         than 2 arrays.
@@ -345,7 +427,7 @@ class Profile(Observable, Validatable):
         if len(cols) > 2:
             dy = cols[2]
 
-        self.setObservedProfile(x, y, dy)
+        self.set_observed_profile(x, y, dy)
         return x, y, dy
 
     def savetxt(self, fname, **kwargs):
@@ -418,7 +500,7 @@ class Profile(Observable, Validatable):
 # End class Profile
 
 
-def rebinArray(A, xold, xnew):
+def _rebin_array(A, xold, xnew):
     """Rebin the an array by interpolating over the new x range.
 
     Parameters

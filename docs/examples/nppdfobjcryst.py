@@ -40,7 +40,7 @@ def makeRecipe(molecule, datname):
 
     # Load data and add it to the profile
     profile.loadtxt(datname)
-    profile.setCalculationRange(xmin=1.2, xmax=8)
+    profile.set_calculation_range(xmin=1.2, xmax=8)
 
     # The ProfileGenerator
     # Create a DebyePDFGenerator named "G".

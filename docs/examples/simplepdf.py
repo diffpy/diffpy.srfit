@@ -35,7 +35,7 @@ def makeRecipe(ciffile, datname):
     # Work directly with a custom PDFContribution to load the data
     contribution = PDFContribution("nickel")
     contribution.loadData(datname)
-    contribution.setCalculationRange(xmin=1, xmax=20, dx=0.1)
+    contribution.set_calculation_range(xmin=1, xmax=20, dx=0.1)
 
     # and the phase
     stru = Structure()

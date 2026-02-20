@@ -41,7 +41,7 @@ class TestFitRecipe(unittest.TestCase):
         self.profile = Profile()
         x = linspace(0, pi, 10)
         y = sin(x)
-        self.profile.setObservedProfile(x, y)
+        self.profile.set_observed_profile(x, y)
 
         # Set up the FitContribution
         self.fitcontribution = FitContribution("cont")
@@ -258,7 +258,7 @@ def testPrintFitHook(capturestdout):
     profile = Profile()
     x = linspace(0, pi, 10)
     y = sin(x)
-    profile.setObservedProfile(x, y)
+    profile.set_observed_profile(x, y)
 
     # Set up the FitContribution
     fitcontribution = FitContribution("cont")
@@ -306,7 +306,7 @@ def test_add_contribution(capturestdout):
     profile = Profile()
     x = linspace(0, pi, 10)
     y = sin(x)
-    profile.setObservedProfile(x, y)
+    profile.set_observed_profile(x, y)
 
     # Set up the FitContribution
     fitcontribution = FitContribution("cont")
@@ -366,6 +366,27 @@ def get_labels_and_linecount(ax):
 def build_recipe_from_datafile(datafile):
     """Helper to build a FitRecipe from a datafile using PDFParser and
     PDFGenerator."""
+    profile = Profile()
+    parser = PDFParser()
+    parser.parseFile(str(datafile))
+    profile.load_parsed_data(parser)
+
+    contribution = FitContribution("c")
+    contribution.set_profile(profile)
+    contribution.set_equation("m*x + b")
+    recipe = FitRecipe()
+    recipe.add_contribution(contribution)
+    recipe.addVar(contribution.m, 1)
+    recipe.addVar(contribution.b, 0)
+    return recipe
+
+
+def build_recipe_from_datafile_deprecated(datafile):
+    """Duplicate of build_recipe_from_datafile to use deprecated loadParsedData
+    method.
+
+    Remove in version 4.0.0.
+    """
     profile = Profile()
     parser = PDFParser()
     parser.parseFile(str(datafile))
@@ -634,6 +655,23 @@ def test_plot_recipe_labels_from_gr_file(temp_data_files, input, expected):
 def test_plot_recipe_labels_from_gr_file_overwrite(temp_data_files):
     gr_file = temp_data_files / "gr_file.gr"
     recipe = build_recipe_from_datafile(gr_file)
+    optimize_recipe(recipe)
+    plt.close("all")
+    fig, ax = recipe.plot_recipe(
+        return_fig=True, show=False, xlabel="My X", ylabel="My Y"
+    )
+    actual_xlabel = ax.get_xlabel()
+    actual_ylabel = ax.get_ylabel()
+    expected_xlabel = "My X"
+    expected_ylabel = "My Y"
+    assert actual_xlabel == expected_xlabel
+    assert actual_ylabel == expected_ylabel
+
+
+def test_plot_recipe_labels_from_gr_file_overwrite_deprecated(temp_data_files):
+    "Remove this test with version 4.0.0."
+    gr_file = temp_data_files / "gr_file.gr"
+    recipe = build_recipe_from_datafile_deprecated(gr_file)
     optimize_recipe(recipe)
     plt.close("all")
     fig, ax = recipe.plot_recipe(

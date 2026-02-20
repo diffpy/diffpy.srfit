@@ -93,7 +93,7 @@ def makeRecipe():
     # data into the profile.
     xydy = numpy.array(data.split(), dtype=float).reshape(-1, 3)
     x, y, dy = xydy.T
-    profile.setObservedProfile(x, y, dy)
+    profile.set_observed_profile(x, y, dy)
 
     # The FitContribution
     # The FitContribution associates the profile with the Debye function.

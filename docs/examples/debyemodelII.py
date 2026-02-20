@@ -77,8 +77,8 @@ def makeRecipeII():
     # Change the fit ranges of the Profiles embedded within the
     # FitContributions. We want to fit one of the contributions at low
     # temperature, and one at high.
-    lowT.profile.setCalculationRange(0, 150)
-    highT.profile.setCalculationRange(400, 500)
+    lowT.profile.set_calculation_range(0, 150)
+    highT.profile.set_calculation_range(400, 500)
 
     # Vary the offset from each FitContribution separately, while keeping the
     # Debye temperatures the same. We give each offset variable a different
@@ -102,8 +102,8 @@ def plotResults(recipe):
 
     # We want to extend the fitting range to its full extent so we can get a
     # nice full plot.
-    recipe.lowT.profile.setCalculationRange(xmin="obs", xmax="obs")
-    recipe.highT.profile.setCalculationRange(xmin="obs", xmax="obs")
+    recipe.lowT.profile.set_calculation_range(xmin="obs", xmax="obs")
+    recipe.highT.profile.set_calculation_range(xmin="obs", xmax="obs")
     T = recipe.lowT.profile.x
     U = recipe.lowT.profile.y
     # We can use a FitContribution's 'evaluateEquation' method to evaluate

@@ -39,8 +39,8 @@ def makeProfile(datafile):
     profile = Profile()
     parser = PDFParser()
     parser.parseFile(datafile)
-    profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax=20)
+    profile.load_parsed_data(parser)
+    profile.set_calculation_range(xmax=20)
     return profile
 
 

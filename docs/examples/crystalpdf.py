@@ -55,8 +55,8 @@ def makeRecipe(ciffile, datname):
     # configuration steps.
     parser = PDFParser()
     parser.parseFile(datname)
-    profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax=20)
+    profile.load_parsed_data(parser)
+    profile.set_calculation_range(xmax=20)
 
     # The ProfileGenerator
     # The PDFGenerator is for configuring and calculating a PDF profile. Here,

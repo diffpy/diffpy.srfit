@@ -64,7 +64,7 @@ def makeRecipe(datname):
     # higher-Q information remains significant. There are no I(Q) uncertainty
     # values with the data, so we do not need to worry about the effect this
     # will have on the estimated parameter uncertainties.
-    contribution.setResidualEquation("log(eq) - log(y)")
+    contribution.set_residual_equation("log(eq) - log(y)")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()

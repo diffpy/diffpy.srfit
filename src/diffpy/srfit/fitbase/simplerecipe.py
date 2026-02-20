@@ -51,6 +51,13 @@ setCalculationPoints_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+setEquation_dep_msg = build_deprecation_message(
+    base,
+    "setEquation",
+    "set_equation",
+    removal_version,
+)
+
 
 class SimpleRecipe(FitRecipe):
     """SimpleRecipe class.
@@ -224,6 +231,7 @@ class SimpleRecipe(FitRecipe):
         """
         return self.profile.set_calculation_range(xmin, xmax, dx)
 
+    @deprecated(setCalculationRange_dep_msg)
     def setCalculationRange(self, xmin=None, xmax=None, dx=None):
         """This function has been deprecated and will be removed in version
         4.0.0.
@@ -280,8 +288,8 @@ class SimpleRecipe(FitRecipe):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual.
-        The equation will be usable within setResidualEquation as "eq", and it
-        takes no arguments.
+        The equation will be usable within set_residual_equation as "eq", and
+        it takes no arguments.
 
         Attributes
         ----------
@@ -307,6 +315,18 @@ class SimpleRecipe(FitRecipe):
                 par.value = 0
             if par.name not in self._parameters:
                 self.addVar(par)
+        return
+
+    @deprecated(setEquation_dep_msg)
+    def setEquation(self, eqstr, ns={}):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_equation
+        instead.
+        """
+        self.set_equation(eqstr, ns)
         return
 
     def __call__(self):

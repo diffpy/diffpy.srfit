@@ -83,6 +83,10 @@ removeParameterSet_dep_msg = build_deprecation_message(
     base, "removeParameterSet", "remove_parameter_set", removal_version
 )
 
+scalarResidual_dep_msg = build_deprecation_message(
+    base, "scalarResidual", "scalar_residual", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -448,7 +452,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return chiv
 
-    def scalarResidual(self, p=[]):
+    def scalar_residual(self, p=[]):
         """Calculate the scalar residual to be optimized.
 
         Parameters
@@ -468,9 +472,19 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         chiv = self.residual(p)
         return dot(chiv, chiv)
 
+    @deprecated(scalarResidual_dep_msg)
+    def scalarResidual(self, p=[]):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.scalar_residual
+        instead.
+        """
+        return self.scalar_residual(p)
+
     def __call__(self, p=[]):
-        """Same as scalarResidual method."""
-        return self.scalarResidual(p)
+        """Same as scalar_residual method."""
+        return self.scalar_residual(p)
 
     def _prepare(self):
         """Prepare for the residual calculation, if necessary.

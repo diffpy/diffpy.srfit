@@ -273,14 +273,14 @@ def testPrintFitHook(capturestdout):
     recipe.addVar(fitcontribution.c)
     recipe.restrain("c", lb=5)
     (pfh,) = recipe.getFitHooks()
-    out = capturestdout(recipe.scalarResidual)
+    out = capturestdout(recipe.scalar_residual)
     assert "" == out
     pfh.verbose = 1
-    out = capturestdout(recipe.scalarResidual)
+    out = capturestdout(recipe.scalar_residual)
     assert out.strip().isdigit()
     assert "\nRestraints:" not in out
     pfh.verbose = 2
-    out = capturestdout(recipe.scalarResidual)
+    out = capturestdout(recipe.scalar_residual)
     assert "\nResidual:" in out
     assert "\nRestraints:" in out
     assert "\nVariables" not in out
@@ -349,19 +349,19 @@ def test_add_contribution(capturestdout):
     recipe.addVar(fitcontribution.c)
     recipe.restrain("c", lb=5)
     (pfh,) = recipe.get_fit_hooks()
-    out = capturestdout(recipe.scalarResidual)
+    out = capturestdout(recipe.scalar_residual)
     assert "" == out
     pfh.verbose = 1
-    out = capturestdout(recipe.scalarResidual)
+    out = capturestdout(recipe.scalar_residual)
     assert out.strip().isdigit()
     assert "\nRestraints:" not in out
     pfh.verbose = 2
-    out = capturestdout(recipe.scalarResidual)
+    out = capturestdout(recipe.scalar_residual)
     assert "\nResidual:" in out
     assert "\nRestraints:" in out
     assert "\nVariables" not in out
     pfh.verbose = 3
-    out = capturestdout(recipe.scalarResidual)
+    out = capturestdout(recipe.scalar_residual)
     assert "\nVariables" in out
     assert "c = " in out
     return

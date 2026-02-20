@@ -120,7 +120,7 @@ class TestFitRecipe(unittest.TestCase):
         recipe.constrain(recipe.B, p)
         values = recipe.getValues()
         self.assertTrue((values == [2, 1, 0]).all())
-        recipe.delVar(recipe.B)
+        recipe.delete_variable(recipe.B)
 
         recipe.fix(recipe.k)
 
@@ -246,7 +246,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Remove the restraint and variable
         self.recipe.unrestrain(r1)
-        self.recipe.delVar(self.recipe.Avar)
+        self.recipe.delete_variable(self.recipe.Avar)
         self.recipe._ready = False
         res = self.recipe.residual()
         chi2 = 0

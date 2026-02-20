@@ -91,6 +91,10 @@ addVar_dep_msg = build_deprecation_message(
     base, "addVar", "add_variable", removal_version
 )
 
+delVar_dep_msg = build_deprecation_message(
+    base, "delVar", "delete_variable", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -712,7 +716,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         return self.add_variable(par, value, name, fixed, tag, tags)
 
-    def delVar(self, var):
+    def delete_variable(self, var):
         """Remove a variable.
 
         Note that constraints and restraints involving the variable are not
@@ -731,9 +735,19 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._tagmanager.untag(var)
         return
 
+    @deprecated(delVar_dep_msg)
+    def delVar(self, var):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.delete_variable instead.
+        """
+        self.delete_variable(var)
+        return
+
     def __delattr__(self, name):
         if name in self._parameters:
-            self.delVar(self._parameters[name])
+            self.delete_variable(self._parameters[name])
             return
         super(FitRecipe, self).__delattr__(name)
         return

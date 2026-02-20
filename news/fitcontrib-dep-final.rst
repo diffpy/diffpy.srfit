@@ -9,7 +9,8 @@
 
 **Deprecated:**
 
-* Deprecated ``getResidualEquation`` method of ``FitContribution``.
+* Deprecated ``getResidualEquation`` method of ``FitContribution`` for removal in 4.0.0.
+* Deprecated ``setResidualEquation`` method of ``FitContribution`` for removal in 4.0.0.
 
 **Removed:**
 

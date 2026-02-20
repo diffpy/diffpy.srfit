@@ -296,7 +296,7 @@ def makeRecipe(strufile, datname):
     # Variable that we call "Uiso" and constrain the atomic Uiso values to
     # this. Note that we don't give Uiso an initial value. The initial value
     # will be inferred from the following constraints.
-    Uiso = recipe.newVar("Uiso")
+    Uiso = recipe.create_new_variable("Uiso")
     for atom in phase.getScatterers():
         recipe.constrain(atom.Uiso, Uiso)
 

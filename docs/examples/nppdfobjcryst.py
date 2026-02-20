@@ -66,7 +66,7 @@ def makeRecipe(molecule, datname):
     c60 = generator.phase
 
     # First, the isotropic thermal displacement factor.
-    Biso = recipe.newVar("Biso")
+    Biso = recipe.create_new_variable("Biso")
     for atom in c60.getScatterers():
 
         # We have defined a 'center' atom that is a dummy, which means that it
@@ -88,7 +88,7 @@ def makeRecipe(molecule, datname):
     # that we don't give it an initial value. Since the variable is being
     # directly constrained to further below, its initial value will be inferred
     # from the constraint.
-    radius = recipe.newVar("radius")
+    radius = recipe.create_new_variable("radius")
     for i, atom in enumerate(c60.getScatterers()):
 
         if atom.isDummy():

@@ -61,7 +61,7 @@ class TestFitRecipe(unittest.TestCase):
         recipe.add_variable(con.A, 2, tag="tagA")
         recipe.add_variable(con.k, 1, tag="tagk")
         recipe.add_variable(con.c, 0)
-        recipe.newVar("B", 0)
+        recipe.create_new_variable("B", 0)
 
         self.assertTrue(recipe.isFree(recipe.A))
         recipe.fix("tagA")
@@ -108,7 +108,7 @@ class TestFitRecipe(unittest.TestCase):
         recipe.add_variable(con.A, 2)
         recipe.add_variable(con.k, 1)
         recipe.add_variable(con.c, 0)
-        recipe.newVar("B", 0)
+        recipe.create_new_variable("B", 0)
 
         names = recipe.getNames()
         self.assertEqual(names, ["A", "k", "c", "B"])
@@ -212,7 +212,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Try some constraints
         # Make c = 2*A, A = Avar
-        var = self.recipe.newVar("Avar")
+        var = self.recipe.create_new_variable("Avar")
         self.recipe.constrain(
             self.fitcontribution.c, "2*A", {"A": self.fitcontribution.A}
         )

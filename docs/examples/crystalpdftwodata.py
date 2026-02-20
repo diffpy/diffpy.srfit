@@ -120,7 +120,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     recipe.add_variable(ngenerator.qdamp, 0.01, "nqdamp")
     # delta2 is a non-structual material property. Thus, we constrain together
     # delta2 Parameter from each PDFGenerator.
-    delta2 = recipe.newVar("delta2", 2)
+    delta2 = recipe.create_new_variable("delta2", 2)
     recipe.constrain(xgenerator.delta2, delta2)
     recipe.constrain(ngenerator.delta2, delta2)
 

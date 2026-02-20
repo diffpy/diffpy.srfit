@@ -96,7 +96,7 @@ def makeRecipe(stru1, stru2, datname):
     # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
-    recipe.newVar("scale_CdS", 0.7)
+    recipe.create_new_variable("scale_CdS", 0.7)
     recipe.constrain(generator_cds.scale, "scale_CdS")
     recipe.constrain(generator_zns.scale, "1 - scale_CdS")
     # We also want the resolution factor to be the same on each.

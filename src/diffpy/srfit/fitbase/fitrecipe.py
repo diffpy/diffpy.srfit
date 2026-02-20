@@ -95,6 +95,10 @@ delVar_dep_msg = build_deprecation_message(
     base, "delVar", "delete_variable", removal_version
 )
 
+newVar_dep_msg = build_deprecation_message(
+    base, "newVar", "create_new_variable", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -752,7 +756,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         super(FitRecipe, self).__delattr__(name)
         return
 
-    def newVar(self, name, value=None, fixed=False, tag=None, tags=[]):
+    def create_new_variable(
+        self, name, value=None, fixed=False, tag=None, tags=[]
+    ):
         """Create a new variable of the fit.
 
         This method lets new variables be created that are not tied to a
@@ -786,17 +792,24 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         # This will fix the Parameter
         var = self._new_parameter(name, value)
-
         # We may explicitly free it
         if not fixed:
             self.free(var)
-
         # Tag with passed tags
         self._tagmanager.tag(var, *tags)
         if tag is not None:
             self._tagmanager.tag(var, tag)
 
         return var
+
+    @deprecated(newVar_dep_msg)
+    def newVar(self, name, value=None, fixed=False, tag=None, tags=[]):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.create_new_variable instead.
+        """
+        return self.create_new_variable(name, value, fixed, tag, tags)
 
     def _new_parameter(self, name, value, check=True):
         """Overloaded to tag variables.

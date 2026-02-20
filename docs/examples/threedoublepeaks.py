@@ -126,8 +126,8 @@ def makeRecipe():
 
     # Vary the width of the peaks. We know the functional form of the peak
     # broadening.
-    recipe.newVar("sig0", 0.001)
-    recipe.newVar("dsig", 4)
+    recipe.create_new_variable("sig0", 0.001)
+    recipe.create_new_variable("dsig", 4)
 
     def sig(sig0, dsig, mu):
         """Calculate the peak broadening with respect to position."""

@@ -112,14 +112,14 @@ def makeRecipe(
     # Now we vary and constrain Parameters as before.
     for par in phase_ni.sgpars:
         recipe.add_variable(par, name=par.name + "_ni")
-    delta2_ni = recipe.newVar("delta2_ni", 2.5)
+    delta2_ni = recipe.create_new_variable("delta2_ni", 2.5)
     recipe.constrain(xgenerator_ni.delta2, delta2_ni)
     recipe.constrain(ngenerator_ni.delta2, delta2_ni)
     recipe.constrain(xgenerator_sini_ni.delta2, delta2_ni)
 
     for par in phase_si.sgpars:
         recipe.add_variable(par, name=par.name + "_si")
-    delta2_si = recipe.newVar("delta2_si", 2.5)
+    delta2_si = recipe.create_new_variable("delta2_si", 2.5)
     recipe.constrain(xgenerator_si.delta2, delta2_si)
     recipe.constrain(xgenerator_sini_si.delta2, delta2_si)
 
@@ -128,7 +128,7 @@ def makeRecipe(
     recipe.add_variable(xgenerator_si.scale, name="xscale_si")
     recipe.add_variable(ngenerator_ni.scale, name="nscale_ni")
     recipe.add_variable(xcontribution_sini.scale, 1.0, "xscale_sini")
-    recipe.newVar("pscale_sini_ni", 0.8)
+    recipe.create_new_variable("pscale_sini_ni", 0.8)
     recipe.constrain(xgenerator_sini_ni.scale, "pscale_sini_ni")
     recipe.constrain(xgenerator_sini_si.scale, "1 - pscale_sini_ni")
 

@@ -34,6 +34,10 @@ addparset_dep_msg = build_deprecation_message(
     base, "addParameterSet", "add_parameter_set", removal_version
 )
 
+removeParameterSet_dep_msg = build_deprecation_message(
+    base, "removeParameterSet", "remove_parameter_set", removal_version
+)
+
 
 class ParameterSet(RecipeOrganizer):
     """Class for organizing Parameters and other ParameterSets.
@@ -123,12 +127,24 @@ class ParameterSet(RecipeOrganizer):
         self.add_parameter_set(parset)
         return
 
-    def removeParameterSet(self, parset):
+    def remove_parameter_set(self, parset):
         """Remove a ParameterSet from the hierarchy.
 
         Raises ValueError if parset is not managed by this object.
         """
         self._remove_object(parset, self._parsets)
+        return
+
+    @deprecated(removeParameterSet_dep_msg)
+    def removeParameterSet(self, parset):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.remove_parameter_set
+        instead.
+        """
+        self.remove_parameter_set(parset)
         return
 
     def setConst(self, const=True):

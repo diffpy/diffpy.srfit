@@ -70,6 +70,13 @@ setresidualequation_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+getresidualequation_dep_msg = build_deprecation_message(
+    base,
+    "getResidualEquation",
+    "get_residual_equation",
+    removal_version,
+)
+
 
 class FitContribution(ParameterSet):
     """FitContribution class.
@@ -397,7 +404,7 @@ class FitContribution(ParameterSet):
         self.set_residual_equation(eqstr)
         return
 
-    def getResidualEquation(self):
+    def get_residual_equation(self):
         """Get math expression string for the active residual equation.
 
         Return normalized math formula or an empty string if residual
@@ -409,6 +416,18 @@ class FitContribution(ParameterSet):
         if self._reseq is not None:
             rv = getExpression(self._reseq, eqskip="eq$")
         return rv
+
+    @deprecated(getresidualequation_dep_msg)
+    def getResidualEquation(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.FitContribution.get_residual_equation
+        instead.
+        """
+
+        return self.get_residual_equation()
 
     def residual(self):
         """Calculate the residual for this fitcontribution.

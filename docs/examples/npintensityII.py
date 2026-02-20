@@ -138,38 +138,38 @@ def makeRecipe(strufile, datname1, datname2):
     # background that we just defined in the FitContributions. We have to do
     # this separately for each FitContribution. We tag the variables so it is
     # easy to retrieve the background variables.
-    recipe.addVar(contribution1.b0, 0, name="b1_0", tag="bcoeffs1")
-    recipe.addVar(contribution1.b1, 0, name="b1_1", tag="bcoeffs1")
-    recipe.addVar(contribution1.b2, 0, name="b1_2", tag="bcoeffs1")
-    recipe.addVar(contribution1.b3, 0, name="b1_3", tag="bcoeffs1")
-    recipe.addVar(contribution1.b4, 0, name="b1_4", tag="bcoeffs1")
-    recipe.addVar(contribution1.b5, 0, name="b1_5", tag="bcoeffs1")
-    recipe.addVar(contribution1.b6, 0, name="b1_6", tag="bcoeffs1")
-    recipe.addVar(contribution1.b7, 0, name="b1_7", tag="bcoeffs1")
-    recipe.addVar(contribution1.b8, 0, name="b1_8", tag="bcoeffs1")
-    recipe.addVar(contribution1.b9, 0, name="b1_9", tag="bcoeffs1")
-    recipe.addVar(contribution2.b0, 0, name="b2_0", tag="bcoeffs2")
-    recipe.addVar(contribution2.b1, 0, name="b2_1", tag="bcoeffs2")
-    recipe.addVar(contribution2.b2, 0, name="b2_2", tag="bcoeffs2")
-    recipe.addVar(contribution2.b3, 0, name="b2_3", tag="bcoeffs2")
-    recipe.addVar(contribution2.b4, 0, name="b2_4", tag="bcoeffs2")
-    recipe.addVar(contribution2.b5, 0, name="b2_5", tag="bcoeffs2")
-    recipe.addVar(contribution2.b6, 0, name="b2_6", tag="bcoeffs2")
-    recipe.addVar(contribution2.b7, 0, name="b2_7", tag="bcoeffs2")
-    recipe.addVar(contribution2.b8, 0, name="b2_8", tag="bcoeffs2")
-    recipe.addVar(contribution2.b9, 0, name="b2_9", tag="bcoeffs2")
+    recipe.add_variable(contribution1.b0, 0, name="b1_0", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b1, 0, name="b1_1", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b2, 0, name="b1_2", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b3, 0, name="b1_3", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b4, 0, name="b1_4", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b5, 0, name="b1_5", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b6, 0, name="b1_6", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b7, 0, name="b1_7", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b8, 0, name="b1_8", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b9, 0, name="b1_9", tag="bcoeffs1")
+    recipe.add_variable(contribution2.b0, 0, name="b2_0", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b1, 0, name="b2_1", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b2, 0, name="b2_2", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b3, 0, name="b2_3", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b4, 0, name="b2_4", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b5, 0, name="b2_5", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b6, 0, name="b2_6", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b7, 0, name="b2_7", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b8, 0, name="b2_8", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b9, 0, name="b2_9", tag="bcoeffs2")
 
     # We also want to adjust the scale and the convolution width
-    recipe.addVar(contribution1.scale, 1, name="scale1")
-    recipe.addVar(contribution1.width, 0.1, name="width1")
-    recipe.addVar(contribution2.scale, 1, name="scale2")
-    recipe.addVar(contribution2.width, 0.1, name="width2")
+    recipe.add_variable(contribution1.scale, 1, name="scale1")
+    recipe.add_variable(contribution1.width, 0.1, name="width1")
+    recipe.add_variable(contribution2.scale, 1, name="scale2")
+    recipe.add_variable(contribution2.width, 0.1, name="width2")
 
     # We can also refine structural parameters. We only have to do this once,
     # since each generator holds the same DiffpyStructureParSet.
     phase = generator1.phase
     lattice = phase.getLattice()
-    a = recipe.addVar(lattice.a)
+    a = recipe.add_variable(lattice.a)
     # We want to allow for isotropic expansion, so we'll make constraints for
     # that.
     recipe.constrain(lattice.b, a)

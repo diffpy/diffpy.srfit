@@ -127,12 +127,12 @@ class FitRecipeInterface(object):
         arguments or argument tuples.
         """
 
-        # Want to detect addVar or newVar
+        # Want to detect add_variable or newVar
         def f(*args):
             if isinstance(args[0], six.string_types):
                 self.newVar(*args)
             else:
-                self.addVar(*args)
+                self.add_variable(*args)
             return
 
         _applymanyargs(args, f)

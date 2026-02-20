@@ -158,9 +158,9 @@ def build_recipe_one_contribution():
     contribution.set_equation("A*sin(k*x + c)")
     recipe = FitRecipe()
     recipe.add_contribution(contribution)
-    recipe.addVar(contribution.A, 1)
-    recipe.addVar(contribution.k, 1)
-    recipe.addVar(contribution.c, 1)
+    recipe.add_variable(contribution.A, 1)
+    recipe.add_variable(contribution.k, 1)
+    recipe.add_variable(contribution.c, 1)
     return recipe
 
 
@@ -184,12 +184,12 @@ def build_recipe_two_contributions():
     recipe = FitRecipe()
     recipe.add_contribution(contribution1)
     recipe.add_contribution(contribution2)
-    recipe.addVar(contribution1.A, 1)
-    recipe.addVar(contribution1.k, 1)
-    recipe.addVar(contribution1.c, 1)
-    recipe.addVar(contribution2.B, 0.5)
-    recipe.addVar(contribution2.m, 2)
-    recipe.addVar(contribution2.d, 0)
+    recipe.add_variable(contribution1.A, 1)
+    recipe.add_variable(contribution1.k, 1)
+    recipe.add_variable(contribution1.c, 1)
+    recipe.add_variable(contribution2.B, 0.5)
+    recipe.add_variable(contribution2.m, 2)
+    recipe.add_variable(contribution2.d, 0)
 
     return recipe
 

@@ -99,15 +99,15 @@ def makeRecipe(ciffile, grdata, iqdata):
     # PDF
     phase = pdfgenerator.phase
     for par in phase.sgpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
 
-    recipe.addVar(pdfgenerator.scale, 1)
-    recipe.addVar(pdfgenerator.delta2, 0)
+    recipe.add_variable(pdfgenerator.scale, 1)
+    recipe.add_variable(pdfgenerator.delta2, 0)
 
     # SAS
-    recipe.addVar(sasgenerator.scale, 1, name="iqscale")
-    recipe.addVar(sasgenerator.radius_a, 10)
-    recipe.addVar(sasgenerator.radius_b, 10)
+    recipe.add_variable(sasgenerator.scale, 1, name="iqscale")
+    recipe.add_variable(sasgenerator.radius_a, 10)
+    recipe.add_variable(sasgenerator.radius_b, 10)
 
     # Even though the cfcalculator and sasgenerator depend on the same sas
     # model, we must still constrain the cfcalculator Parameters so that it is

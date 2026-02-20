@@ -263,20 +263,20 @@ def makeRecipe(strufile, datname):
     recipe.add_contribution(contribution)
 
     # Specify which parameters we want to refine.
-    recipe.addVar(contribution.b0, 0)
-    recipe.addVar(contribution.b1, 0)
-    recipe.addVar(contribution.b2, 0)
-    recipe.addVar(contribution.b3, 0)
-    recipe.addVar(contribution.b4, 0)
-    recipe.addVar(contribution.b5, 0)
-    recipe.addVar(contribution.b6, 0)
-    recipe.addVar(contribution.b7, 0)
-    recipe.addVar(contribution.b8, 0)
-    recipe.addVar(contribution.b9, 0)
+    recipe.add_variable(contribution.b0, 0)
+    recipe.add_variable(contribution.b1, 0)
+    recipe.add_variable(contribution.b2, 0)
+    recipe.add_variable(contribution.b3, 0)
+    recipe.add_variable(contribution.b4, 0)
+    recipe.add_variable(contribution.b5, 0)
+    recipe.add_variable(contribution.b6, 0)
+    recipe.add_variable(contribution.b7, 0)
+    recipe.add_variable(contribution.b8, 0)
+    recipe.add_variable(contribution.b9, 0)
 
     # We also want to adjust the scale and the convolution width
-    recipe.addVar(contribution.scale, 1)
-    recipe.addVar(contribution.width, 0.1)
+    recipe.add_variable(contribution.scale, 1)
+    recipe.add_variable(contribution.width, 0.1)
 
     # We can also refine structural parameters. Here we extract the
     # DiffpyStructureParSet from the intensity generator and use the parameters
@@ -289,7 +289,7 @@ def makeRecipe(strufile, datname):
     # constrained to a Variable by name. This has the same effect.
     lattice = phase.getLattice()
     a = lattice.a
-    recipe.addVar(a)
+    recipe.add_variable(a)
     recipe.constrain(lattice.b, a)
     recipe.constrain(lattice.c, a)
     # We want to refine the thermal parameters as well. We will add a new

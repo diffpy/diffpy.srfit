@@ -78,10 +78,10 @@ def makeRecipe(datname):
     # SASGenerator these are named like "radius_width".
     #
     # We want to fit the scale factor, radii and background factors.
-    recipe.addVar(generator.scale, 1)
-    recipe.addVar(generator.radius_a, 50)
-    recipe.addVar(generator.radius_b, 500)
-    recipe.addVar(generator.background, 0)
+    recipe.add_variable(generator.scale, 1)
+    recipe.add_variable(generator.radius_a, 50)
+    recipe.add_variable(generator.radius_b, 500)
+    recipe.add_variable(generator.background, 0)
 
     # Give the recipe away so it can be used!
     return recipe

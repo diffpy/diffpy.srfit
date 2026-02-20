@@ -46,7 +46,7 @@ def main():
     # FitRecipe operations
     # "|="  -   Union of necessary components.
     # "+="  -   Add Parameter or create a new one. Each tuple is a set of
-    #           arguments for either setVar or addVar.
+    #           arguments for either setVar or add_variable.
     # "*="  -   Constrain a parameter. Think of "*" as a push-pin holding one
     #           parameter's value to that of another.
     # "%="  -   Restrain a parameter or equation. Think of "%" as a rope

@@ -101,8 +101,8 @@ def makeRecipe(molecule, datname):
 
     # Add the correlation term, scale. The scale is too short to effectively
     # determine qdamp.
-    recipe.addVar(generator.delta2, 2)
-    recipe.addVar(generator.scale, 1.3e4)
+    recipe.add_variable(generator.delta2, 2)
+    recipe.add_variable(generator.scale, 1.3e4)
 
     # Give the recipe away so it can be used!
     return recipe

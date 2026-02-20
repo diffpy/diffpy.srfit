@@ -101,14 +101,14 @@ def makeRecipe():
     recipe.add_contribution(contribution)
 
     # Vary the amplitudes for each double peak
-    recipe.addVar(contribution.A1, 100)
-    recipe.addVar(contribution.A2, 100)
-    recipe.addVar(contribution.A3, 100)
+    recipe.add_variable(contribution.A1, 100)
+    recipe.add_variable(contribution.A2, 100)
+    recipe.add_variable(contribution.A3, 100)
 
     # Vary the position of the first of the double peaks
-    recipe.addVar(contribution.mu11, 13.0)
-    recipe.addVar(contribution.mu21, 24.0)
-    recipe.addVar(contribution.mu31, 33.0)
+    recipe.add_variable(contribution.mu11, 13.0)
+    recipe.add_variable(contribution.mu21, 24.0)
+    recipe.add_variable(contribution.mu31, 33.0)
 
     # Constrain the position of the second double peak
     from numpy import arcsin, sin
@@ -158,13 +158,13 @@ def makeRecipe():
     )
 
     # Also the background
-    recipe.addVar(contribution.b0, 0, tag="bkgd")
-    recipe.addVar(contribution.b1, 0, tag="bkgd")
-    recipe.addVar(contribution.b2, 0, tag="bkgd")
-    recipe.addVar(contribution.b3, 0, tag="bkgd")
-    recipe.addVar(contribution.b4, 0, tag="bkgd")
-    recipe.addVar(contribution.b5, 0, tag="bkgd")
-    recipe.addVar(contribution.b6, 0, tag="bkgd")
+    recipe.add_variable(contribution.b0, 0, tag="bkgd")
+    recipe.add_variable(contribution.b1, 0, tag="bkgd")
+    recipe.add_variable(contribution.b2, 0, tag="bkgd")
+    recipe.add_variable(contribution.b3, 0, tag="bkgd")
+    recipe.add_variable(contribution.b4, 0, tag="bkgd")
+    recipe.add_variable(contribution.b5, 0, tag="bkgd")
+    recipe.add_variable(contribution.b6, 0, tag="bkgd")
     return recipe
 
 

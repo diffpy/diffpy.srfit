@@ -87,6 +87,10 @@ scalarResidual_dep_msg = build_deprecation_message(
     base, "scalarResidual", "scalar_residual", removal_version
 )
 
+addVar_dep_msg = build_deprecation_message(
+    base, "addVar", "add_variable", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -641,7 +645,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     # Variable manipulation
 
-    def addVar(
+    def add_variable(
         self, par, value=None, name=None, fixed=False, tag=None, tags=[]
     ):
         """Add a variable to be refined.
@@ -679,22 +683,16 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if par is constrained.
         """
         name = name or par.name
-
         if par.const:
             raise ValueError("The parameter '%s' is constant" % par)
-
         if par.constrained:
             raise ValueError("The parameter '%s' is constrained" % par)
-
         var = ParameterProxy(name, par)
         if value is not None:
             var.setValue(value)
-
         self._add_parameter(var)
-
         if fixed:
             self.fix(var)
-
         # Tag with passed tags and by name
         self._tagmanager.tag(var, var.name)
         self._tagmanager.tag(var, "all")
@@ -702,6 +700,17 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if tag is not None:
             self._tagmanager.tag(var, tag)
         return var
+
+    @deprecated(addVar_dep_msg)
+    def addVar(
+        self, par, value=None, name=None, fixed=False, tag=None, tags=[]
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.add_variable instead.
+        """
+        return self.add_variable(par, value, name, fixed, tag, tags)
 
     def delVar(self, var):
         """Remove a variable.

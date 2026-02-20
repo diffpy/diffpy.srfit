@@ -98,7 +98,7 @@ def makeRecipe(niciffile, siciffile, datname):
     recipe.constrain(generator_si.qdamp, "qdamp")
 
     # Vary the global scale as well.
-    recipe.addVar(contribution.scale, 1)
+    recipe.add_variable(contribution.scale, 1)
 
     # Now we can configure the structural parameters. Since we're using
     # ObjCrystCrystalParSets, the space group constraints are automatically
@@ -107,13 +107,13 @@ def makeRecipe(niciffile, siciffile, datname):
     # First the nickel parameters
     phase_ni = generator_ni.phase
     for par in phase_ni.sgpars:
-        recipe.addVar(par, name=par.name + "_ni")
-    recipe.addVar(generator_ni.delta2, name="delta2_ni")
+        recipe.add_variable(par, name=par.name + "_ni")
+    recipe.add_variable(generator_ni.delta2, name="delta2_ni")
     # Next the silicon parameters
     phase_si = generator_si.phase
     for par in phase_si.sgpars:
-        recipe.addVar(par, name=par.name + "_si")
-    recipe.addVar(generator_si.delta2, name="delta2_si")
+        recipe.add_variable(par, name=par.name + "_si")
+    recipe.add_variable(generator_si.delta2, name="delta2_si")
 
     # We have prior information from the earlier examples so we'll use it here
     # in the form of restraints.

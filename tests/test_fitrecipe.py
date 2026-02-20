@@ -58,9 +58,9 @@ class TestFitRecipe(unittest.TestCase):
         recipe = self.recipe
         con = self.fitcontribution
 
-        recipe.addVar(con.A, 2, tag="tagA")
-        recipe.addVar(con.k, 1, tag="tagk")
-        recipe.addVar(con.c, 0)
+        recipe.add_variable(con.A, 2, tag="tagA")
+        recipe.add_variable(con.k, 1, tag="tagk")
+        recipe.add_variable(con.c, 0)
         recipe.newVar("B", 0)
 
         self.assertTrue(recipe.isFree(recipe.A))
@@ -100,13 +100,61 @@ class TestFitRecipe(unittest.TestCase):
         self.assertRaises(ValueError, recipe.fix, "junk")
         return
 
+    def test_variables(self):
+        """Test to see if variables are added and removed properly."""
+        recipe = self.recipe
+        con = self.fitcontribution
+
+        recipe.add_variable(con.A, 2)
+        recipe.add_variable(con.k, 1)
+        recipe.add_variable(con.c, 0)
+        recipe.newVar("B", 0)
+
+        names = recipe.getNames()
+        self.assertEqual(names, ["A", "k", "c", "B"])
+        values = recipe.getValues()
+        self.assertTrue((values == [2, 1, 0, 0]).all())
+
+        # Constrain a parameter to the B-variable to give it a value
+        p = Parameter("Bpar", -1)
+        recipe.constrain(recipe.B, p)
+        values = recipe.getValues()
+        self.assertTrue((values == [2, 1, 0]).all())
+        recipe.delVar(recipe.B)
+
+        recipe.fix(recipe.k)
+
+        names = recipe.getNames()
+        self.assertEqual(names, ["A", "c"])
+        values = recipe.getValues()
+        self.assertTrue((values == [2, 0]).all())
+
+        recipe.fix("all")
+        names = recipe.getNames()
+        self.assertEqual(names, [])
+        values = recipe.getValues()
+        self.assertTrue((values == []).all())
+
+        recipe.free("all")
+        names = recipe.getNames()
+        self.assertEqual(3, len(names))
+        self.assertTrue("A" in names)
+        self.assertTrue("k" in names)
+        self.assertTrue("c" in names)
+        values = recipe.getValues()
+        self.assertEqual(3, len(values))
+        self.assertTrue(0 in values)
+        self.assertTrue(1 in values)
+        self.assertTrue(2 in values)
+        return
+
     def testVars(self):
         """Test to see if variables are added and removed properly."""
         recipe = self.recipe
         con = self.fitcontribution
 
-        recipe.addVar(con.A, 2)
-        recipe.addVar(con.k, 1)
+        recipe.add_variable(con.A, 2)
+        recipe.add_variable(con.k, 1)
         recipe.addVar(con.c, 0)
         recipe.newVar("B", 0)
 
@@ -270,7 +318,7 @@ def testPrintFitHook(capturestdout):
 
     recipe.addContribution(fitcontribution)
 
-    recipe.addVar(fitcontribution.c)
+    recipe.add_variable(fitcontribution.c)
     recipe.restrain("c", lb=5)
     (pfh,) = recipe.getFitHooks()
     out = capturestdout(recipe.scalar_residual)
@@ -346,7 +394,7 @@ def test_add_contribution(capturestdout):
 
     recipe.add_contribution(fitcontribution)
 
-    recipe.addVar(fitcontribution.c)
+    recipe.add_variable(fitcontribution.c)
     recipe.restrain("c", lb=5)
     (pfh,) = recipe.get_fit_hooks()
     out = capturestdout(recipe.scalar_residual)
@@ -404,8 +452,8 @@ def build_recipe_from_datafile(datafile):
     contribution.set_equation("m*x + b")
     recipe = FitRecipe()
     recipe.add_contribution(contribution)
-    recipe.addVar(contribution.m, 1)
-    recipe.addVar(contribution.b, 0)
+    recipe.add_variable(contribution.m, 1)
+    recipe.add_variable(contribution.b, 0)
     return recipe
 
 
@@ -425,8 +473,8 @@ def build_recipe_from_datafile_deprecated(datafile):
     contribution.set_equation("m*x + b")
     recipe = FitRecipe()
     recipe.add_contribution(contribution)
-    recipe.addVar(contribution.m, 1)
-    recipe.addVar(contribution.b, 0)
+    recipe.add_variable(contribution.m, 1)
+    recipe.add_variable(contribution.b, 0)
     return recipe
 
 

@@ -24,9 +24,9 @@ from diffpy.srfit.fitbase.fitresults import initializeRecipe
 
 def testInitializeFromFileName(datafile):
     recipe = FitRecipe("recipe")
-    recipe.newVar("A", 0)
-    recipe.newVar("sig", 0)
-    recipe.newVar("x0", 0)
+    recipe.create_new_variable("A", 0)
+    recipe.create_new_variable("sig", 0)
+    recipe.create_new_variable("x0", 0)
     filename = datafile("results.res")
     Aval = 5.77619823e-01
     sigval = -9.22758690e-01
@@ -44,9 +44,9 @@ def testInitializeFromFileName(datafile):
 
 def testInitializeFromFileObj(datafile):
     recipe = FitRecipe("recipe")
-    recipe.newVar("A", 0)
-    recipe.newVar("sig", 0)
-    recipe.newVar("x0", 0)
+    recipe.create_new_variable("A", 0)
+    recipe.create_new_variable("sig", 0)
+    recipe.create_new_variable("x0", 0)
     filename = datafile("results.res")
     Aval = 5.77619823e-01
     sigval = -9.22758690e-01
@@ -67,9 +67,9 @@ def testInitializeFromFileObj(datafile):
 
 def testInitializeFromString(datafile):
     recipe = FitRecipe("recipe")
-    recipe.newVar("A", 0)
-    recipe.newVar("sig", 0)
-    recipe.newVar("x0", 0)
+    recipe.create_new_variable("A", 0)
+    recipe.create_new_variable("sig", 0)
+    recipe.create_new_variable("x0", 0)
     filename = datafile("results.res")
     Aval = 5.77619823e-01
     sigval = -9.22758690e-01

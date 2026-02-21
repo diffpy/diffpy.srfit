@@ -114,13 +114,13 @@ def makeRecipe(ciffile, xdatname, ndatname):
     recipe.add_contribution(ncontribution)
 
     # Now we vary and constrain Parameters as before.
-    recipe.addVar(xgenerator.scale, 1, "xscale")
-    recipe.addVar(ngenerator.scale, 1, "nscale")
-    recipe.addVar(xgenerator.qdamp, 0.01, "xqdamp")
-    recipe.addVar(ngenerator.qdamp, 0.01, "nqdamp")
+    recipe.add_variable(xgenerator.scale, 1, "xscale")
+    recipe.add_variable(ngenerator.scale, 1, "nscale")
+    recipe.add_variable(xgenerator.qdamp, 0.01, "xqdamp")
+    recipe.add_variable(ngenerator.qdamp, 0.01, "nqdamp")
     # delta2 is a non-structual material property. Thus, we constrain together
     # delta2 Parameter from each PDFGenerator.
-    delta2 = recipe.newVar("delta2", 2)
+    delta2 = recipe.create_new_variable("delta2", 2)
     recipe.constrain(xgenerator.delta2, delta2)
     recipe.constrain(ngenerator.delta2, delta2)
 
@@ -128,7 +128,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # ObjCrystCrystalParSet for the Crystal.
     phase = xgenerator.phase
     for par in phase.sgpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
     recipe.B11_0 = 0.1
 
     # Give the recipe away so it can be used!

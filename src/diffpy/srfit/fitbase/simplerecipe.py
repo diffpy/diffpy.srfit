@@ -314,7 +314,7 @@ class SimpleRecipe(FitRecipe):
             if par.value is None:
                 par.value = 0
             if par.name not in self._parameters:
-                self.addVar(par)
+                self.add_variable(par)
         return
 
     @deprecated(setEquation_dep_msg)

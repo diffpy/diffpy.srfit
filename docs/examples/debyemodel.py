@@ -139,9 +139,9 @@ def makeRecipe():
     # Specify which Parameters we want to refine.
 
     # Vary the offset
-    recipe.addVar(contribution.offset, 0)
+    recipe.add_variable(contribution.offset, 0)
     # We also vary the Debye temperature.
-    recipe.addVar(contribution.thetaD, 100)
+    recipe.add_variable(contribution.thetaD, 100)
 
     # We would like to 'suggest' that the offset should remain positive. This
     # is somethine that we know about the system that might help the refinement

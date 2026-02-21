@@ -149,13 +149,13 @@ def makeRecipe():
     # Here we create a Variable for the 'A' Parameter from our fit equation.
     # The resulting Variable will be named 'A' as well, but it will be accessed
     # via the FitRecipe.
-    recipe.addVar(contribution.A)
+    recipe.add_variable(contribution.A)
     # Here we create the Variable for 'x0' and give it an initial value of 5.
-    recipe.addVar(contribution.x0, 5)
+    recipe.add_variable(contribution.x0, 5)
     # Here we create a Variable named 'sig', which is tied to the 'sigma'
     # Parameter of our FitContribution. We give it an initial value through the
     # FitRecipe instance.
-    recipe.addVar(contribution.sigma, name="sig")
+    recipe.add_variable(contribution.sigma, name="sig")
     recipe.sig.value = 1
 
     return recipe

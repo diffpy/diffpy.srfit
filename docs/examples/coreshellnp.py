@@ -89,43 +89,47 @@ def makeRecipe(stru1, stru2, datname):
 
     # Vary the inner radius and thickness of the shell. Constrain the core
     # diameter to twice the shell radius.
-    recipe.addVar(contribution.radius, 15)
-    recipe.addVar(contribution.thickness, 11)
+    recipe.add_variable(contribution.radius, 15)
+    recipe.add_variable(contribution.thickness, 11)
     recipe.constrain(contribution.psize, "2 * radius")
 
     # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
-    recipe.newVar("scale_CdS", 0.7)
+    recipe.create_new_variable("scale_CdS", 0.7)
     recipe.constrain(generator_cds.scale, "scale_CdS")
     recipe.constrain(generator_zns.scale, "1 - scale_CdS")
     # We also want the resolution factor to be the same on each.
 
     # Vary the global scale as well.
-    recipe.addVar(contribution.scale, 0.3)
+    recipe.add_variable(contribution.scale, 0.3)
 
     # Now we can configure the structural parameters. We tag the different
     # structural variables so we can easily turn them on and off in the
     # subsequent refinement.
     phase_cds = generator_cds.phase
     for par in phase_cds.sgpars.latpars:
-        recipe.addVar(par, name=par.name + "_cds", tag="lat")
+        recipe.add_variable(par, name=par.name + "_cds", tag="lat")
     for par in phase_cds.sgpars.adppars:
-        recipe.addVar(par, 1, name=par.name + "_cds", tag="adp")
-    recipe.addVar(phase_cds.sgpars.xyzpars.z_1, name="z_1_cds", tag="xyz")
+        recipe.add_variable(par, 1, name=par.name + "_cds", tag="adp")
+    recipe.add_variable(
+        phase_cds.sgpars.xyzpars.z_1, name="z_1_cds", tag="xyz"
+    )
     # Since we know these have stacking disorder, constrain the B33 adps for
     # each atom type.
     recipe.constrain("B33_1_cds", "B33_0_cds")
-    recipe.addVar(generator_cds.delta2, name="delta2_cds", value=5)
+    recipe.add_variable(generator_cds.delta2, name="delta2_cds", value=5)
 
     phase_zns = generator_zns.phase
     for par in phase_zns.sgpars.latpars:
-        recipe.addVar(par, name=par.name + "_zns", tag="lat")
+        recipe.add_variable(par, name=par.name + "_zns", tag="lat")
     for par in phase_zns.sgpars.adppars:
-        recipe.addVar(par, 1, name=par.name + "_zns", tag="adp")
-    recipe.addVar(phase_zns.sgpars.xyzpars.z_1, name="z_1_zns", tag="xyz")
+        recipe.add_variable(par, 1, name=par.name + "_zns", tag="adp")
+    recipe.add_variable(
+        phase_zns.sgpars.xyzpars.z_1, name="z_1_zns", tag="xyz"
+    )
     recipe.constrain("B33_1_zns", "B33_0_zns")
-    recipe.addVar(generator_zns.delta2, name="delta2_zns", value=2.5)
+    recipe.add_variable(generator_zns.delta2, name="delta2_zns", value=2.5)
 
     # Give the recipe away so it can be used!
     return recipe

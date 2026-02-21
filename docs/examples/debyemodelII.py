@@ -83,11 +83,11 @@ def makeRecipeII():
     # Vary the offset from each FitContribution separately, while keeping the
     # Debye temperatures the same. We give each offset variable a different
     # name in the recipe so it retains its identity.
-    recipe.addVar(recipe.lowT.offset, name="lowToffset")
-    recipe.addVar(recipe.highT.offset, name="highToffset")
+    recipe.add_variable(recipe.lowT.offset, name="lowToffset")
+    recipe.add_variable(recipe.highT.offset, name="highToffset")
     # We create a new Variable and use the recipe's "constrain" method to
     # associate the Debye temperature parameters with that variable.
-    recipe.newVar("thetaD", 100)
+    recipe.create_new_variable("thetaD", 100)
     recipe.constrain(recipe.lowT.thetaD, "thetaD")
     recipe.constrain(recipe.highT.thetaD, "thetaD")
     return recipe

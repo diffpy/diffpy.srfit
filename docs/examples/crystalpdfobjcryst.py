@@ -90,18 +90,18 @@ def makeRecipe(ciffile, datname):
     # As before, we have one free lattice parameter ('a'). We can simplify
     # things by iterating through all the sgpars.
     for par in phase.sgpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
     # set the initial thermal factor to a non-zero value
     assert hasattr(recipe, "B11_0")
     recipe.B11_0 = 0.1
 
     # We now select non-structural parameters to refine.
     # This controls the scaling of the PDF.
-    recipe.addVar(generator.scale, 1)
+    recipe.add_variable(generator.scale, 1)
     # This is a peak-damping resolution term.
-    recipe.addVar(generator.qdamp, 0.01)
+    recipe.add_variable(generator.qdamp, 0.01)
     # This is a vibrational correlation term that sharpens peaks at low-r.
-    recipe.addVar(generator.delta2, 5)
+    recipe.add_variable(generator.delta2, 5)
 
     # Give the recipe away so it can be used!
     return recipe

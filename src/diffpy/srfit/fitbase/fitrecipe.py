@@ -79,6 +79,26 @@ addparset_dep_msg = build_deprecation_message(
     base, "addParameterSet", "add_parameter_set", removal_version
 )
 
+removeParameterSet_dep_msg = build_deprecation_message(
+    base, "removeParameterSet", "remove_parameter_set", removal_version
+)
+
+scalarResidual_dep_msg = build_deprecation_message(
+    base, "scalarResidual", "scalar_residual", removal_version
+)
+
+addVar_dep_msg = build_deprecation_message(
+    base, "addVar", "add_variable", removal_version
+)
+
+delVar_dep_msg = build_deprecation_message(
+    base, "delVar", "delete_variable", removal_version
+)
+
+newVar_dep_msg = build_deprecation_message(
+    base, "newVar", "create_new_variable", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -375,12 +395,22 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.add_parameter_set(parset)
         return
 
-    def removeParameterSet(self, parset):
+    def remove_parameter_set(self, parset):
         """Remove a ParameterSet from the hierarchy.
 
         Raises ValueError if parset is not managed by this object.
         """
         self._remove_object(parset, self._parsets)
+        return
+
+    @deprecated(removeParameterSet_dep_msg)
+    def removeParameterSet(self, parset):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.remove_parameter_set instead.
+        """
+        self.remove_parameter_set(parset)
         return
 
     def residual(self, p=[]):
@@ -434,7 +464,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return chiv
 
-    def scalarResidual(self, p=[]):
+    def scalar_residual(self, p=[]):
         """Calculate the scalar residual to be optimized.
 
         Parameters
@@ -454,9 +484,19 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         chiv = self.residual(p)
         return dot(chiv, chiv)
 
+    @deprecated(scalarResidual_dep_msg)
+    def scalarResidual(self, p=[]):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.scalar_residual
+        instead.
+        """
+        return self.scalar_residual(p)
+
     def __call__(self, p=[]):
-        """Same as scalarResidual method."""
-        return self.scalarResidual(p)
+        """Same as scalar_residual method."""
+        return self.scalar_residual(p)
 
     def _prepare(self):
         """Prepare for the residual calculation, if necessary.
@@ -613,7 +653,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     # Variable manipulation
 
-    def addVar(
+    def add_variable(
         self, par, value=None, name=None, fixed=False, tag=None, tags=[]
     ):
         """Add a variable to be refined.
@@ -651,22 +691,16 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Raises ValueError if par is constrained.
         """
         name = name or par.name
-
         if par.const:
             raise ValueError("The parameter '%s' is constant" % par)
-
         if par.constrained:
             raise ValueError("The parameter '%s' is constrained" % par)
-
         var = ParameterProxy(name, par)
         if value is not None:
             var.setValue(value)
-
         self._add_parameter(var)
-
         if fixed:
             self.fix(var)
-
         # Tag with passed tags and by name
         self._tagmanager.tag(var, var.name)
         self._tagmanager.tag(var, "all")
@@ -675,7 +709,18 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             self._tagmanager.tag(var, tag)
         return var
 
-    def delVar(self, var):
+    @deprecated(addVar_dep_msg)
+    def addVar(
+        self, par, value=None, name=None, fixed=False, tag=None, tags=[]
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.add_variable instead.
+        """
+        return self.add_variable(par, value, name, fixed, tag, tags)
+
+    def delete_variable(self, var):
         """Remove a variable.
 
         Note that constraints and restraints involving the variable are not
@@ -694,14 +739,26 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self._tagmanager.untag(var)
         return
 
+    @deprecated(delVar_dep_msg)
+    def delVar(self, var):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.delete_variable instead.
+        """
+        self.delete_variable(var)
+        return
+
     def __delattr__(self, name):
         if name in self._parameters:
-            self.delVar(self._parameters[name])
+            self.delete_variable(self._parameters[name])
             return
         super(FitRecipe, self).__delattr__(name)
         return
 
-    def newVar(self, name, value=None, fixed=False, tag=None, tags=[]):
+    def create_new_variable(
+        self, name, value=None, fixed=False, tag=None, tags=[]
+    ):
         """Create a new variable of the fit.
 
         This method lets new variables be created that are not tied to a
@@ -735,17 +792,24 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         # This will fix the Parameter
         var = self._new_parameter(name, value)
-
         # We may explicitly free it
         if not fixed:
             self.free(var)
-
         # Tag with passed tags
         self._tagmanager.tag(var, *tags)
         if tag is not None:
             self._tagmanager.tag(var, tag)
 
         return var
+
+    @deprecated(newVar_dep_msg)
+    def newVar(self, name, value=None, fixed=False, tag=None, tags=[]):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.create_new_variable instead.
+        """
+        return self.create_new_variable(name, value, fixed, tag, tags)
 
     def _new_parameter(self, name, value, check=True):
         """Overloaded to tag variables.

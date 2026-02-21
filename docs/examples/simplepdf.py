@@ -54,13 +54,13 @@ def makeRecipe(ciffile, datname):
     sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
 
     for par in sgpars.latpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
     for par in sgpars.adppars:
-        recipe.addVar(par, 0.005)
+        recipe.add_variable(par, 0.005)
 
-    recipe.addVar(contribution.scale, 1)
-    recipe.addVar(contribution.qdamp, 0.03, fixed=True)
-    recipe.addVar(contribution.nickel.delta2, 5)
+    recipe.add_variable(contribution.scale, 1)
+    recipe.add_variable(contribution.qdamp, 0.03, fixed=True)
+    recipe.add_variable(contribution.nickel.delta2, 5)
 
     # Give the recipe away so it can be used!
     return recipe

@@ -100,7 +100,7 @@ def test_ObjCryst_constrain_space_group(pyobjcryst_available):
 
     f = FitRecipe()
     with pytest.raises(ValueError):
-        f.addVar(mn.x)
+        f.add_variable(mn.x)
 
     return
 

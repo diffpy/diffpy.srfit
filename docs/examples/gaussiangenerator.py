@@ -161,9 +161,9 @@ def makeRecipe():
     # that the Parameters belong to the GaussianGenerator, not the
     # FitContribution as in gaussianrecipe.py. We initialize parameters as in
     # gaussianrecipe.py so we can expect the same output.
-    recipe.addVar(generator.A, 1)
-    recipe.addVar(generator.x0, 5)
-    recipe.addVar(generator.sigma, name="sig")
+    recipe.add_variable(generator.A, 1)
+    recipe.add_variable(generator.x0, 5)
+    recipe.add_variable(generator.sigma, name="sig")
     recipe.sig.value = 1
 
     # Give the recipe away so it can be used!

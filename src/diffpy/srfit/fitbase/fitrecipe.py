@@ -99,6 +99,10 @@ newVar_dep_msg = build_deprecation_message(
     base, "newVar", "create_new_variable", removal_version
 )
 
+isFree_dep_msg = build_deprecation_message(
+    base, "isFree", "is_free", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -169,7 +173,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         lambda self: [
             v.name
             for v in self._parameters.values()
-            if not (self.isFree(v) or self.isConstrained(v))
+            if not (self.is_free(v) or self.isConstrained(v))
         ],
         doc="names of the fixed refinable variables",
     )
@@ -178,7 +182,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             [
                 v.value
                 for v in self._parameters.values()
-                if not (self.isFree(v) or self.isConstrained(v))
+                if not (self.is_free(v) or self.isConstrained(v))
             ]
         ),
         doc="values of the fixed refinable variables",
@@ -935,9 +939,18 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def isFree(self, var):
+    def is_free(self, var):
         """Check if a variable is fixed."""
         return not self._tagmanager.hasTags(var, self._fixedtag)
+
+    @deprecated(isFree_dep_msg)
+    def isFree(self, var):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.is_free instead.
+        """
+        return self.is_free(var)
 
     def unconstrain(self, *pars):
         """Unconstrain a Parameter.
@@ -1037,12 +1050,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def getValues(self):
         """Get the current values of the variables in a list."""
         return array(
-            [v.value for v in self._parameters.values() if self.isFree(v)]
+            [v.value for v in self._parameters.values() if self.is_free(v)]
         )
 
     def getNames(self):
         """Get the names of the variables in a list."""
-        return [v.name for v in self._parameters.values() if self.isFree(v)]
+        return [v.name for v in self._parameters.values() if self.is_free(v)]
 
     def getBounds(self):
         """Get the bounds on variables in a list.
@@ -1050,7 +1063,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns a list of (lb, ub) pairs, where lb is the lower bound
         and ub is the upper bound.
         """
-        return [v.bounds for v in self._parameters.values() if self.isFree(v)]
+        return [v.bounds for v in self._parameters.values() if self.is_free(v)]
 
     def getBounds2(self):
         """Get the bounds on variables in two lists.
@@ -1372,7 +1385,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Apply variable values to the variables."""
         if len(p) == 0:
             return
-        vargen = (v for v in self._parameters.values() if self.isFree(v))
+        vargen = (v for v in self._parameters.values() if self.is_free(v))
         for var, pval in zip(vargen, p):
             var.setValue(pval)
         return

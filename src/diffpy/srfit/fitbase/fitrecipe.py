@@ -111,6 +111,10 @@ getNames_dep_msg = build_deprecation_message(
     base, "getNames", "get_names", removal_version
 )
 
+getBounds_dep_msg = build_deprecation_message(
+    base, "getBounds", "get_bounds_pairs", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -172,7 +176,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     fixedvalues
         Values of the fixed refinable variables (read only).
     bounds
-        Bounds on parameters (read only). See getBounds.
+        Bounds on parameters (read only). See get_bounds_pairs.
     bounds2
         Bounds on parameters (read only). See getBounds2.
     """
@@ -195,7 +199,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ),
         doc="values of the fixed refinable variables",
     )
-    bounds = property(lambda self: self.getBounds())
+    bounds = property(lambda self: self.get_bounds_pairs())
     bounds2 = property(lambda self: self.getBounds2())
 
     def __init__(self, name="fit"):
@@ -1081,20 +1085,33 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Please use diffpy.srfit.fitbase.FitRecipe.get_names instead."""
         return self.get_names()
 
-    def getBounds(self):
+    def get_bounds_pairs(self):
         """Get the bounds on variables in a list.
 
-        Returns a list of (lb, ub) pairs, where lb is the lower bound
-        and ub is the upper bound.
+        Returns
+        -------
+        bounds_pair_list : list of tuple of float
+            A list of ``(lower, upper)`` bounds on the variables, in the same
+            order as ``get_names`` and ``get_values``.
         """
         return [v.bounds for v in self._parameters.values() if self.is_free(v)]
+
+    @deprecated(getBounds_dep_msg)
+    def getBounds(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.get_bounds_pairs
+        instead.
+        """
+        return self.get_bounds_pairs()
 
     def getBounds2(self):
         """Get the bounds on variables in two lists.
 
         Returns lower- and upper-bound lists of variable bounds.
         """
-        bounds = self.getBounds()
+        bounds = self.get_bounds_pairs()
         lb = array([b[0] for b in bounds])
         ub = array([b[1] for b in bounds])
         return lb, ub

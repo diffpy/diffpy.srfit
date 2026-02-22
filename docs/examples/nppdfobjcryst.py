@@ -143,7 +143,7 @@ def main():
     # Optimize
     from scipy.optimize import leastsq
 
-    leastsq(recipe.residual, recipe.getValues())
+    leastsq(recipe.residual, recipe.get_values())
 
     # Print results
     res = FitResults(recipe)

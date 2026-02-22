@@ -112,13 +112,13 @@ class TestFitRecipe(unittest.TestCase):
 
         names = recipe.getNames()
         self.assertEqual(names, ["A", "k", "c", "B"])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0, 0]).all())
 
         # Constrain a parameter to the B-variable to give it a value
         p = Parameter("Bpar", -1)
         recipe.constrain(recipe.B, p)
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0]).all())
         recipe.delete_variable(recipe.B)
 
@@ -126,13 +126,13 @@ class TestFitRecipe(unittest.TestCase):
 
         names = recipe.getNames()
         self.assertEqual(names, ["A", "c"])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 0]).all())
 
         recipe.fix("all")
         names = recipe.getNames()
         self.assertEqual(names, [])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == []).all())
 
         recipe.free("all")
@@ -141,7 +141,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertTrue("A" in names)
         self.assertTrue("k" in names)
         self.assertTrue("c" in names)
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertEqual(3, len(values))
         self.assertTrue(0 in values)
         self.assertTrue(1 in values)
@@ -160,13 +160,13 @@ class TestFitRecipe(unittest.TestCase):
 
         names = recipe.getNames()
         self.assertEqual(names, ["A", "k", "c", "B"])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0, 0]).all())
 
         # Constrain a parameter to the B-variable to give it a value
         p = Parameter("Bpar", -1)
         recipe.constrain(recipe.B, p)
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0]).all())
         recipe.delVar(recipe.B)
 
@@ -174,13 +174,13 @@ class TestFitRecipe(unittest.TestCase):
 
         names = recipe.getNames()
         self.assertEqual(names, ["A", "c"])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 0]).all())
 
         recipe.fix("all")
         names = recipe.getNames()
         self.assertEqual(names, [])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == []).all())
 
         recipe.free("all")

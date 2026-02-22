@@ -165,7 +165,7 @@ class PrintFitHook(FitHook):
         if self.verbose >= 3:
             print("Variables")
             vnames = recipe.getNames()
-            vals = recipe.getValues()
+            vals = recipe.get_values()
             # byname = _byname()
             items = sorted(zip(vnames, vals), key=_byname)
             for name, val in items:

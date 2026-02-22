@@ -79,7 +79,7 @@ class Calculator(Operator, ParameterSet):
     names
         Variable names (read only). See getNames.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
     # define abstract attributes from the Operator base.

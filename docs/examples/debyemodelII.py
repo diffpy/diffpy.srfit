@@ -98,7 +98,7 @@ def plotResults(recipe):
 
     # The variable values are returned in the order in which the variables were
     # added to the FitRecipe.
-    lowToffset, highToffset, thetaD = recipe.getValues()
+    lowToffset, highToffset, thetaD = recipe.get_values()
 
     # We want to extend the fitting range to its full extent so we can get a
     # nice full plot.

@@ -42,6 +42,17 @@ from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.observable import Observable
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"
+removal_version = "4.0.0"
+
+getValues_deprecation_msg = build_deprecation_message(
+    base,
+    "getValues",
+    "get_values",
+    removal_version,
+)
 
 
 class RecipeContainer(Observable, Configurable, Validatable):
@@ -85,11 +96,11 @@ class RecipeContainer(Observable, Configurable, Validatable):
     names
         Variable names (read only). See getNames.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
     names = property(lambda self: self.getNames())
-    values = property(lambda self: self.getValues())
+    values = property(lambda self: self.get_values())
 
     def __init__(self, name):
         Observable.__init__(self)
@@ -233,9 +244,20 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Get the names of managed parameters."""
         return [p.name for p in self._parameters.values()]
 
-    def getValues(self):
+    def get_values(self):
         """Get the values of managed parameters."""
         return [p.value for p in self._parameters.values()]
+
+    @deprecated(getValues_deprecation_msg)
+    def getValues(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get_values
+        instead.
+        """
+        return self.get_values()
 
     def _add_object(self, obj, d, check=True):
         """Add an object to a managed dictionary.
@@ -402,7 +424,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     names
         Variable names (read only). See getNames.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
 
 
     Raises ValueError if the name is not a valid attribute identifier

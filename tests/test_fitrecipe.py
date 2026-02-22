@@ -297,6 +297,40 @@ class TestFitRecipe(unittest.TestCase):
 
 
 # ----------------------------------------------------------------------------
+def test_boundsToRestraints():
+    recipe = FitRecipe("recipe")
+
+    # create a bounded variable
+    recipe.create_new_variable("var1", 1)
+    recipe.var1.bounds = (-1, 1)
+
+    # apply restraints from bounds
+    recipe.boundsToRestraints(sig=2, scaled=True)
+    restraints = list(recipe._restraints)
+    assert len(restraints) == 1
+    r = restraints[0]
+    assert r.lb == -1
+    assert r.ub == 1
+    assert r.sig == 2
+    assert r.scaled is True
+
+
+def test_convert_bounds_to_restraints():
+    recipe = FitRecipe("recipe")
+    # create a bounded variable
+    recipe.create_new_variable("var1", 1)
+    recipe.var1.bounds = (-1, 1)
+    # apply restraints from bounds
+    recipe.convert_bounds_to_restraints(sig=2, scaled=True)
+    restraints = list(recipe._restraints)
+    assert len(restraints) == 1
+    r = restraints[0]
+    assert r.lb == -1
+    assert r.ub == 1
+    assert r.sig == 2
+    assert r.scaled is True
+
+
 def testPrintFitHook(capturestdout):
     "check output from default PrintFitHook."
     recipe = FitRecipe("recipe")

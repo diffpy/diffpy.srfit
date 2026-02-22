@@ -115,6 +115,10 @@ getBounds_dep_msg = build_deprecation_message(
     base, "getBounds", "get_bounds_pairs", removal_version
 )
 
+getBounds2_dep_msg = build_deprecation_message(
+    base, "getBounds2", "get_bounds_array", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -178,7 +182,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     bounds
         Bounds on parameters (read only). See get_bounds_pairs.
     bounds2
-        Bounds on parameters (read only). See getBounds2.
+        Bounds on parameters (read only). See get_bounds_array.
     """
 
     fixednames = property(
@@ -200,7 +204,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         doc="values of the fixed refinable variables",
     )
     bounds = property(lambda self: self.get_bounds_pairs())
-    bounds2 = property(lambda self: self.getBounds2())
+    bounds2 = property(lambda self: self.get_bounds_array())
 
     def __init__(self, name="fit"):
         """Initialization."""
@@ -1106,15 +1110,31 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         return self.get_bounds_pairs()
 
-    def getBounds2(self):
-        """Get the bounds on variables in two lists.
+    def get_bounds_array(self):
+        """Get the bounds on variables in two numpy arrays.
 
-        Returns lower- and upper-bound lists of variable bounds.
+        Returns
+        -------
+        lower_bounds : numpy.ndarray
+            A numpy array of lower bounds on the variables, in the same order
+            as ``get_names`` and ``get_values``.
+        upper_bounds : numpy.ndarray
+            A numpy array of upper bounds on the variables, in the same order
+            as ``get_names`` and ``get_values``.
         """
         bounds = self.get_bounds_pairs()
-        lb = array([b[0] for b in bounds])
-        ub = array([b[1] for b in bounds])
-        return lb, ub
+        lower_bounds = array([b[0] for b in bounds])
+        upper_bounds = array([b[1] for b in bounds])
+        return lower_bounds, upper_bounds
+
+    @deprecated(getBounds2_dep_msg)
+    def getBounds2(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.get_bounds_array instead.
+        """
+        return self.get_bounds_array()
 
     def set_plot_defaults(self, **kwargs):
         """Set default plotting options for all future plots.

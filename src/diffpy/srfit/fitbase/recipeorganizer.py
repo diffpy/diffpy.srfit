@@ -44,7 +44,7 @@ from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.observable import Observable
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
-base = "diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"
+base = "diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"
 removal_version = "4.0.0"
 
 getValues_deprecation_msg = build_deprecation_message(

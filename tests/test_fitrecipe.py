@@ -302,16 +302,22 @@ def test_boundsToRestraints():
 
     # create a bounded variable
     recipe.create_new_variable("var1", 1)
-    recipe.var1.bounds = (-1, 1)
+    expected_lower_bound = -1
+    expected_upper_bound = 1
+    expected_sigma = 2
+    recipe.var1.bounds = (-expected_lower_bound, expected_upper_bound)
 
     # apply restraints from bounds
-    recipe.boundsToRestraints(sig=2, scaled=True)
+    recipe.boundsToRestraints(sig=expected_sigma, scaled=True)
     restraints = list(recipe._restraints)
     assert len(restraints) == 1
     r = restraints[0]
-    assert r.lb == -1
-    assert r.ub == 1
-    assert r.sig == 2
+    actual_lower_bound = r.lb
+    actual_upper_bound = r.ub
+    actual_sigma = r.sig
+    assert actual_lower_bound == expected_lower_bound
+    assert actual_upper_bound == expected_upper_bound
+    assert actual_sigma == expected_sigma
     assert r.scaled is True
 
 

@@ -119,6 +119,10 @@ getBounds2_dep_msg = build_deprecation_message(
     base, "getBounds2", "get_bounds_array", removal_version
 )
 
+boundsToRestraints_dep_msg = build_deprecation_message(
+    base, "boundsToRestraints", "convert_bounds_to_restraints", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -1420,7 +1424,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             else:
                 return figures, axes_list
 
-    def boundsToRestraints(self, sig=1, scaled=False):
+    def convert_bounds_to_restraints(self, sig=1, scaled=False):
         """Turn all bounded parameters into restraints.
 
         The bounds become limits on the restraint.
@@ -1440,6 +1444,17 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             self.restrain(
                 par, par.bounds[0], par.bounds[1], sig=x, scaled=scaled
             )
+        return
+
+    @deprecated(boundsToRestraints_dep_msg)
+    def boundsToRestraints(self, sig=1, scaled=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.convert_bounds_to_restraints
+        instead.
+        """
+        self.convert_bounds_to_restraints(sig, scaled)
         return
 
     def _apply_values(self, p):

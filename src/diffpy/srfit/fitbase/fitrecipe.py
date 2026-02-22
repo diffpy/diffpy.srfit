@@ -1429,13 +1429,18 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         The bounds become limits on the restraint.
 
-        Attributes
+        Parameters
         ----------
-        sig
-            The uncertainty on the bounds (scalar or iterable,
-            default 1).
-        scaled
-            Scale the restraints, see restrain.
+        sig : float or iterable of float, optional
+            The number of standard deviations associated with each bound.
+            Smaller values produce stronger restraints. If a scalar is given,
+            the same value is applied to all parameters. If an iterable is
+            provided, it must match the number of parameters. Default is 1.
+
+        scaled : bool, optional
+            If True, scale each restraint by the magnitude of the corresponding
+            parameter, consistent with the behavior of :meth:`restrain`.
+            Default is False.
         """
         pars = self._parameters.values()
         if not hasattr(sig, "__iter__"):

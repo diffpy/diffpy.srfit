@@ -125,7 +125,7 @@ class FitContribution(ParameterSet):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
         Variable values (read only). See get_values.
     """

@@ -107,6 +107,10 @@ getValues_dep_msg = build_deprecation_message(
     base, "getValues", "get_values", removal_version
 )
 
+getNames_dep_msg = build_deprecation_message(
+    base, "getNames", "get_names", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -160,7 +164,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
         Variable values (read only). See get_values.
     fixednames
@@ -1065,9 +1069,17 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Please use diffpy.srfit.fitbase.FitRecipe.get_values instead."""
         return self.get_values()
 
-    def getNames(self):
+    def get_names(self):
         """Get the names of the variables in a list."""
         return [v.name for v in self._parameters.values() if self.is_free(v)]
+
+    @deprecated(getNames_dep_msg)
+    def getNames(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.get_names instead."""
+        return self.get_names()
 
     def getBounds(self):
         """Get the bounds on variables in a list.

@@ -110,7 +110,7 @@ class TestFitRecipe(unittest.TestCase):
         recipe.add_variable(con.c, 0)
         recipe.create_new_variable("B", 0)
 
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, ["A", "k", "c", "B"])
         values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0, 0]).all())
@@ -124,19 +124,19 @@ class TestFitRecipe(unittest.TestCase):
 
         recipe.fix(recipe.k)
 
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, ["A", "c"])
         values = recipe.get_values()
         self.assertTrue((values == [2, 0]).all())
 
         recipe.fix("all")
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, [])
         values = recipe.get_values()
         self.assertTrue((values == []).all())
 
         recipe.free("all")
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(3, len(names))
         self.assertTrue("A" in names)
         self.assertTrue("k" in names)
@@ -158,7 +158,7 @@ class TestFitRecipe(unittest.TestCase):
         recipe.addVar(con.c, 0)
         recipe.newVar("B", 0)
 
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, ["A", "k", "c", "B"])
         values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0, 0]).all())
@@ -172,13 +172,13 @@ class TestFitRecipe(unittest.TestCase):
 
         recipe.fix(recipe.k)
 
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, ["A", "c"])
         values = recipe.get_values()
         self.assertTrue((values == [2, 0]).all())
 
         recipe.fix("all")
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, [])
         values = recipe.get_values()
         self.assertTrue((values == []).all())

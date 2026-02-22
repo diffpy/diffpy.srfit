@@ -44,13 +44,20 @@ from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.observable import Observable
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
-base = "diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"
+recipecontainer_base = "diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"
 removal_version = "4.0.0"
 
 getValues_deprecation_msg = build_deprecation_message(
-    base,
+    recipecontainer_base,
     "getValues",
     "get_values",
+    removal_version,
+)
+
+getNames_deprecation_msg = build_deprecation_message(
+    recipecontainer_base,
+    "getNames",
+    "get_names",
     removal_version,
 )
 
@@ -94,12 +101,12 @@ class RecipeContainer(Observable, Configurable, Validatable):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
         Variable values (read only). See get_values.
     """
 
-    names = property(lambda self: self.getNames())
+    names = property(lambda self: self.get_names())
     values = property(lambda self: self.get_values())
 
     def __init__(self, name):
@@ -240,9 +247,20 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         return default
 
-    def getNames(self):
+    def get_names(self):
         """Get the names of managed parameters."""
         return [p.name for p in self._parameters.values()]
+
+    @deprecated(getNames_deprecation_msg)
+    def getNames(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get_names
+        instead.
+        """
+        return self.get_names()
 
     def get_values(self):
         """Get the values of managed parameters."""
@@ -422,7 +440,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
         Variable values (read only). See get_values.
 

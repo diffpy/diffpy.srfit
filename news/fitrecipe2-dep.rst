@@ -3,8 +3,8 @@
 * Added ``convert_bounds_to_restraints`` method to ``FitRecipe``.
 * Added ``get_bounds_pairs`` method to ``FitRecipe``.
 * Added ``get_bounds_array`` method to ``FitRecipe``.
-* Added ``get_names`` method to ``FitRecipe``.
-* Added ``get_values`` method to ``FitRecipe``.
+* Added ``get_names`` method to ``FitRecipe`` and ``RecipeContainer``.
+* Added ``get_values`` method to ``FitRecipe`` and ``RecipeContainer``.
 * Added ``is_free`` method to ``FitRecipe``.
 
 **Changed:**

@@ -152,8 +152,8 @@ class FitResults(object):
         recipe._prepare()
 
         # Store the variable names and values
-        self.varnames = recipe.getNames()
-        self.varvals = recipe.getValues()
+        self.varnames = recipe.get_names()
+        self.varvals = recipe.get_values()
         fixedpars = recipe._tagmanager.union(recipe._fixedtag)
         fixedpars = [p for p in fixedpars if not p.constrained]
         self.fixednames = [p.name for p in fixedpars]

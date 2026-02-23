@@ -54,7 +54,7 @@ class TestFitRecipe(unittest.TestCase):
         self.recipe.add_contribution(self.fitcontribution)
         return
 
-    def testFixFree(self):
+    def test_fix_free(self):
         recipe = self.recipe
         con = self.fitcontribution
 
@@ -63,36 +63,36 @@ class TestFitRecipe(unittest.TestCase):
         recipe.add_variable(con.c, 0)
         recipe.create_new_variable("B", 0)
 
-        self.assertTrue(recipe.isFree(recipe.A))
+        self.assertTrue(recipe.is_free(recipe.A))
         recipe.fix("tagA")
-        self.assertFalse(recipe.isFree(recipe.A))
+        self.assertFalse(recipe.is_free(recipe.A))
         recipe.free("tagA")
-        self.assertTrue(recipe.isFree(recipe.A))
+        self.assertTrue(recipe.is_free(recipe.A))
         recipe.fix("A")
-        self.assertFalse(recipe.isFree(recipe.A))
+        self.assertFalse(recipe.is_free(recipe.A))
         recipe.free("A")
-        self.assertTrue(recipe.isFree(recipe.A))
+        self.assertTrue(recipe.is_free(recipe.A))
         recipe.fix(recipe.A)
-        self.assertFalse(recipe.isFree(recipe.A))
+        self.assertFalse(recipe.is_free(recipe.A))
         recipe.free(recipe.A)
-        self.assertTrue(recipe.isFree(recipe.A))
+        self.assertTrue(recipe.is_free(recipe.A))
         recipe.fix(recipe.A)
-        self.assertFalse(recipe.isFree(recipe.A))
+        self.assertFalse(recipe.is_free(recipe.A))
         recipe.free("all")
-        self.assertTrue(recipe.isFree(recipe.A))
-        self.assertTrue(recipe.isFree(recipe.k))
-        self.assertTrue(recipe.isFree(recipe.c))
-        self.assertTrue(recipe.isFree(recipe.B))
+        self.assertTrue(recipe.is_free(recipe.A))
+        self.assertTrue(recipe.is_free(recipe.k))
+        self.assertTrue(recipe.is_free(recipe.c))
+        self.assertTrue(recipe.is_free(recipe.B))
         recipe.fix(recipe.A, "tagk", c=3)
-        self.assertFalse(recipe.isFree(recipe.A))
-        self.assertFalse(recipe.isFree(recipe.k))
-        self.assertFalse(recipe.isFree(recipe.c))
-        self.assertTrue(recipe.isFree(recipe.B))
+        self.assertFalse(recipe.is_free(recipe.A))
+        self.assertFalse(recipe.is_free(recipe.k))
+        self.assertFalse(recipe.is_free(recipe.c))
+        self.assertTrue(recipe.is_free(recipe.B))
         self.assertEqual(3, recipe.c.value)
         recipe.fix("all")
-        self.assertFalse(recipe.isFree(recipe.A))
-        self.assertFalse(recipe.isFree(recipe.k))
-        self.assertFalse(recipe.isFree(recipe.c))
+        self.assertFalse(recipe.is_free(recipe.A))
+        self.assertFalse(recipe.is_free(recipe.k))
+        self.assertFalse(recipe.is_free(recipe.c))
         self.assertFalse(recipe.isFree(recipe.B))
 
         self.assertRaises(ValueError, recipe.free, "junk")
@@ -110,38 +110,38 @@ class TestFitRecipe(unittest.TestCase):
         recipe.add_variable(con.c, 0)
         recipe.create_new_variable("B", 0)
 
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, ["A", "k", "c", "B"])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0, 0]).all())
 
         # Constrain a parameter to the B-variable to give it a value
         p = Parameter("Bpar", -1)
         recipe.constrain(recipe.B, p)
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0]).all())
         recipe.delete_variable(recipe.B)
 
         recipe.fix(recipe.k)
 
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, ["A", "c"])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 0]).all())
 
         recipe.fix("all")
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, [])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == []).all())
 
         recipe.free("all")
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(3, len(names))
         self.assertTrue("A" in names)
         self.assertTrue("k" in names)
         self.assertTrue("c" in names)
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertEqual(3, len(values))
         self.assertTrue(0 in values)
         self.assertTrue(1 in values)
@@ -158,29 +158,29 @@ class TestFitRecipe(unittest.TestCase):
         recipe.addVar(con.c, 0)
         recipe.newVar("B", 0)
 
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, ["A", "k", "c", "B"])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0, 0]).all())
 
         # Constrain a parameter to the B-variable to give it a value
         p = Parameter("Bpar", -1)
         recipe.constrain(recipe.B, p)
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0]).all())
         recipe.delVar(recipe.B)
 
         recipe.fix(recipe.k)
 
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, ["A", "c"])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == [2, 0]).all())
 
         recipe.fix("all")
-        names = recipe.getNames()
+        names = recipe.get_names()
         self.assertEqual(names, [])
-        values = recipe.getValues()
+        values = recipe.get_values()
         self.assertTrue((values == []).all())
 
         recipe.free("all")
@@ -297,6 +297,46 @@ class TestFitRecipe(unittest.TestCase):
 
 
 # ----------------------------------------------------------------------------
+def test_boundsToRestraints():
+    recipe = FitRecipe("recipe")
+
+    # create a bounded variable
+    recipe.create_new_variable("var1", 1)
+    expected_lower_bound = -1
+    expected_upper_bound = 1
+    expected_sigma = 2
+    recipe.var1.bounds = (expected_lower_bound, expected_upper_bound)
+
+    # apply restraints from bounds
+    recipe.boundsToRestraints(sig=expected_sigma, scaled=True)
+    restraints = list(recipe._restraints)
+    assert len(restraints) == 1
+    r = restraints[0]
+    actual_lower_bound = r.lb
+    actual_upper_bound = r.ub
+    actual_sigma = r.sig
+    assert actual_lower_bound == expected_lower_bound
+    assert actual_upper_bound == expected_upper_bound
+    assert actual_sigma == expected_sigma
+    assert r.scaled is True
+
+
+def test_convert_bounds_to_restraints():
+    recipe = FitRecipe("recipe")
+    # create a bounded variable
+    recipe.create_new_variable("var1", 1)
+    recipe.var1.bounds = (-1, 1)
+    # apply restraints from bounds
+    recipe.convert_bounds_to_restraints(sig=2, scaled=True)
+    restraints = list(recipe._restraints)
+    assert len(restraints) == 1
+    r = restraints[0]
+    assert r.lb == -1
+    assert r.ub == 1
+    assert r.sig == 2
+    assert r.scaled is True
+
+
 def testPrintFitHook(capturestdout):
     "check output from default PrintFitHook."
     recipe = FitRecipe("recipe")

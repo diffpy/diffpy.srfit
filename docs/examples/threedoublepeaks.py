@@ -179,11 +179,11 @@ def scipyOptimize(recipe):
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
     # scipy. We simply have to give it the function to minimize
     # (recipe.residual) and the starting values of the Variables
-    # (recipe.getValues()).
+    # (recipe.get_values()).
     from scipy.optimize.minpack import leastsq
 
     print("Fit using scipy's LM optimizer")
-    leastsq(recipe.residual, recipe.getValues())
+    leastsq(recipe.residual, recipe.get_values())
 
     return
 

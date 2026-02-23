@@ -99,6 +99,30 @@ newVar_dep_msg = build_deprecation_message(
     base, "newVar", "create_new_variable", removal_version
 )
 
+isFree_dep_msg = build_deprecation_message(
+    base, "isFree", "is_free", removal_version
+)
+
+getValues_dep_msg = build_deprecation_message(
+    base, "getValues", "get_values", removal_version
+)
+
+getNames_dep_msg = build_deprecation_message(
+    base, "getNames", "get_names", removal_version
+)
+
+getBounds_dep_msg = build_deprecation_message(
+    base, "getBounds", "get_bounds_pairs", removal_version
+)
+
+getBounds2_dep_msg = build_deprecation_message(
+    base, "getBounds2", "get_bounds_array", removal_version
+)
+
+boundsToRestraints_dep_msg = build_deprecation_message(
+    base, "boundsToRestraints", "convert_bounds_to_restraints", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -152,24 +176,24 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     fixednames
         Names of the fixed refinable variables (read only).
     fixedvalues
         Values of the fixed refinable variables (read only).
     bounds
-        Bounds on parameters (read only). See getBounds.
+        Bounds on parameters (read only). See get_bounds_pairs.
     bounds2
-        Bounds on parameters (read only). See getBounds2.
+        Bounds on parameters (read only). See get_bounds_array.
     """
 
     fixednames = property(
         lambda self: [
             v.name
             for v in self._parameters.values()
-            if not (self.isFree(v) or self.isConstrained(v))
+            if not (self.is_free(v) or self.isConstrained(v))
         ],
         doc="names of the fixed refinable variables",
     )
@@ -178,13 +202,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             [
                 v.value
                 for v in self._parameters.values()
-                if not (self.isFree(v) or self.isConstrained(v))
+                if not (self.is_free(v) or self.isConstrained(v))
             ]
         ),
         doc="values of the fixed refinable variables",
     )
-    bounds = property(lambda self: self.getBounds())
-    bounds2 = property(lambda self: self.getBounds2())
+    bounds = property(lambda self: self.get_bounds_pairs())
+    bounds2 = property(lambda self: self.get_bounds_array())
 
     def __init__(self, name="fit"):
         """Initialization."""
@@ -935,9 +959,18 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def isFree(self, var):
+    def is_free(self, var):
         """Check if a variable is fixed."""
         return not self._tagmanager.hasTags(var, self._fixedtag)
+
+    @deprecated(isFree_dep_msg)
+    def isFree(self, var):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.is_free instead.
+        """
+        return self.is_free(var)
 
     def unconstrain(self, *pars):
         """Unconstrain a Parameter.
@@ -1034,33 +1067,78 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         RecipeOrganizer.constrain(self, par, con, ns)
         return
 
-    def getValues(self):
+    def get_values(self):
         """Get the current values of the variables in a list."""
         return array(
-            [v.value for v in self._parameters.values() if self.isFree(v)]
+            [v.value for v in self._parameters.values() if self.is_free(v)]
         )
 
-    def getNames(self):
-        """Get the names of the variables in a list."""
-        return [v.name for v in self._parameters.values() if self.isFree(v)]
+    @deprecated(getValues_dep_msg)
+    def getValues(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
 
-    def getBounds(self):
+        Please use diffpy.srfit.fitbase.FitRecipe.get_values instead."""
+        return self.get_values()
+
+    def get_names(self):
+        """Get the names of the variables in a list."""
+        return [v.name for v in self._parameters.values() if self.is_free(v)]
+
+    @deprecated(getNames_dep_msg)
+    def getNames(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.get_names instead."""
+        return self.get_names()
+
+    def get_bounds_pairs(self):
         """Get the bounds on variables in a list.
 
-        Returns a list of (lb, ub) pairs, where lb is the lower bound
-        and ub is the upper bound.
+        Returns
+        -------
+        bounds_pair_list : list of tuple of float
+            A list of ``(lower, upper)`` bounds on the variables, in the same
+            order as ``get_names`` and ``get_values``.
         """
-        return [v.bounds for v in self._parameters.values() if self.isFree(v)]
+        return [v.bounds for v in self._parameters.values() if self.is_free(v)]
 
+    @deprecated(getBounds_dep_msg)
+    def getBounds(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.get_bounds_pairs
+        instead.
+        """
+        return self.get_bounds_pairs()
+
+    def get_bounds_array(self):
+        """Get the bounds on variables in two numpy arrays.
+
+        Returns
+        -------
+        lower_bounds : numpy.ndarray
+            A numpy array of lower bounds on the variables, in the same order
+            as ``get_names`` and ``get_values``.
+        upper_bounds : numpy.ndarray
+            A numpy array of upper bounds on the variables, in the same order
+            as ``get_names`` and ``get_values``.
+        """
+        bounds = self.get_bounds_pairs()
+        lower_bounds = array([b[0] for b in bounds])
+        upper_bounds = array([b[1] for b in bounds])
+        return lower_bounds, upper_bounds
+
+    @deprecated(getBounds2_dep_msg)
     def getBounds2(self):
-        """Get the bounds on variables in two lists.
+        """This function has been deprecated and will be removed in version
+        4.0.0.
 
-        Returns lower- and upper-bound lists of variable bounds.
+        Please use diffpy.srfit.fitbase.FitRecipe.get_bounds_array instead.
         """
-        bounds = self.getBounds()
-        lb = array([b[0] for b in bounds])
-        ub = array([b[1] for b in bounds])
-        return lb, ub
+        return self.get_bounds_array()
 
     def set_plot_defaults(self, **kwargs):
         """Set default plotting options for all future plots.
@@ -1346,18 +1424,23 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             else:
                 return figures, axes_list
 
-    def boundsToRestraints(self, sig=1, scaled=False):
+    def convert_bounds_to_restraints(self, sig=1, scaled=False):
         """Turn all bounded parameters into restraints.
 
         The bounds become limits on the restraint.
 
-        Attributes
+        Parameters
         ----------
-        sig
-            The uncertainty on the bounds (scalar or iterable,
-            default 1).
-        scaled
-            Scale the restraints, see restrain.
+        sig : float or iterable of float, optional
+            The number of standard deviations associated with each bound.
+            Smaller values produce stronger restraints. If a scalar is given,
+            the same value is applied to all parameters. If an iterable is
+            provided, it must match the number of parameters. Default is 1.
+
+        scaled : bool, optional
+            If True, scale each restraint by the magnitude of the corresponding
+            parameter, consistent with the behavior of :meth:`restrain`.
+            Default is False.
         """
         pars = self._parameters.values()
         if not hasattr(sig, "__iter__"):
@@ -1368,11 +1451,22 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             )
         return
 
+    @deprecated(boundsToRestraints_dep_msg)
+    def boundsToRestraints(self, sig=1, scaled=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.convert_bounds_to_restraints
+        instead.
+        """
+        self.convert_bounds_to_restraints(sig, scaled)
+        return
+
     def _apply_values(self, p):
         """Apply variable values to the variables."""
         if len(p) == 0:
             return
-        vargen = (v for v in self._parameters.values() if self.isFree(v))
+        vargen = (v for v in self._parameters.values() if self.is_free(v))
         for var, pval in zip(vargen, p):
             var.setValue(pval)
         return

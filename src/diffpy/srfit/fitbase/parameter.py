@@ -55,7 +55,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
     bounds
         A 2-list defining the bounds on the Parameter. This can be
         used by some optimizers when the Parameter is varied. See
-        FitRecipe.getBounds and FitRecipe.boundsToRestraints.
+        FitRecipe.get_bounds_pairs and FitRecipe.convert_bounds_to_restraints.
     """
 
     def __init__(self, name, value=None, const=False):
@@ -238,8 +238,8 @@ class ParameterProxy(Parameter):
         """List of lower and upper bounds of the proxied Parameter.
 
         This can be used by some optimizers when the Parameter is
-        varied. See FitRecipe.getBounds and
-        FitRecipe.boundsToRestraints.
+        varied. See FitRecipe.get_bounds_pairs and
+        FitRecipe.convert_bounds_to_restraints.
         """
         return self.par.bounds
 

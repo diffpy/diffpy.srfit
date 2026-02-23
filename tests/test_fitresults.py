@@ -17,9 +17,26 @@
 import unittest
 
 import pytest
+from scipy.optimize import leastsq
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
-from diffpy.srfit.fitbase.fitresults import initializeRecipe
+from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
+
+
+def optimize_recipe(recipe):
+    recipe.fithooks[0].verbose = 0
+    residuals = recipe.residual
+    values = recipe.values
+    leastsq(residuals, values)
+
+
+def test_compare_old_formatResults_with_new(build_recipe_one_contribution):
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    results = FitResults(recipe)
+    results_dep = results.formatResults()
+    results_new = results.get_results_string()
+    assert results_dep == results_new
 
 
 def testInitializeFromFileName(datafile):

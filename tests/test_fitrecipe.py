@@ -305,7 +305,7 @@ def test_boundsToRestraints():
     expected_lower_bound = -1
     expected_upper_bound = 1
     expected_sigma = 2
-    recipe.var1.bounds = (-expected_lower_bound, expected_upper_bound)
+    recipe.var1.bounds = (expected_lower_bound, expected_upper_bound)
 
     # apply restraints from bounds
     recipe.boundsToRestraints(sig=expected_sigma, scaled=True)

@@ -1510,9 +1510,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Parameters
         ----------
         results : FitResults object, str, or pathlib.Path object
-            A FitResults object from a previous fit. The variable values will
-            be taken from the 'x' attribute of the FitResults object,
-            which is the list of variable values at the best fit.
+            The results from a previous fit. These results should
+            have the same parameters as the current FitRecipe.
         """
         parameters_dict = self._prepare_results_for_initialization(results)
         for name, (value, uncertainty) in parameters_dict.items():

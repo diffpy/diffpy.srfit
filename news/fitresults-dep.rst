@@ -2,7 +2,7 @@
 
 * Added ``save_results`` method to ``FitResults``.
 * Added ``print_results`` method to ``FitResults``.
-* Added ``get_results_string`` method to ``FitResults``.
+* Added ``format_results_string`` method to ``FitResults``.
 
 **Changed:**
 

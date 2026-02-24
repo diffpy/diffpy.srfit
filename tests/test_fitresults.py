@@ -65,11 +65,11 @@ def test_formatResults(build_recipe_one_contribution):
         assert expected_var in actual_results_string.strip()
 
 
-def test_get_results_string(build_recipe_one_contribution):
+def test_format_results_string(build_recipe_one_contribution):
     recipe = build_recipe_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
-    actual_results_string = results.get_results_string(
+    actual_results_string = results.format_results_string(
         header="My Custom header"
     )
     # Because slight variations in refinement, just check

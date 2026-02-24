@@ -22,8 +22,7 @@ import pytest
 from numpy import array_equal, dot, linspace, pi, sin
 from scipy.optimize import leastsq
 
-from diffpy.srfit.fitbase.fitcontribution import FitContribution
-from diffpy.srfit.fitbase.fitrecipe import FitRecipe
+from diffpy.srfit.fitbase import FitContribution, FitRecipe, FitResults
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.pdf import PDFParser
@@ -297,6 +296,8 @@ class TestFitRecipe(unittest.TestCase):
 
 
 # ----------------------------------------------------------------------------
+
+
 def test_boundsToRestraints():
     recipe = FitRecipe("recipe")
 
@@ -460,6 +461,51 @@ def optimize_recipe(recipe):
     residuals = recipe.residual
     values = recipe.values
     leastsq(residuals, values)
+
+
+def test_initialize_recipe_from_results_object(build_recipe_one_contribution):
+    # Case: user optimizes recipe and then initializes a new recipe
+    #       with the FitResults object from that optimization
+    # Expected: new recipe has same variable values as original recipe
+    recipe_reference = build_recipe_one_contribution
+    optimize_recipe(recipe_reference)
+    results1 = FitResults(recipe_reference)
+
+    # build a new recipe and initialize it with the results from the
+    # first recipe
+    recipe_init = build_recipe_one_contribution
+    recipe_init.initialize_recipe_from_results(results1)
+
+    actual_var_names = recipe_init.get_names()
+    expected_var_names = recipe_reference.get_names()
+    actual_recipe_values = recipe_init.values
+    expected_recipe_values = recipe_reference.values
+    assert list(actual_recipe_values) == list(expected_recipe_values)
+    assert actual_var_names == expected_var_names
+
+
+def test_initialize_recipe_from_results_file(
+    build_recipe_one_contribution, tmp_path
+):
+    # Case: user optimizes recipe and saves it at a .res file,
+    #       then initializes a new recipe with that .res file
+    # Expected: new recipe has same variable values as original recipe
+    recipe_reference = build_recipe_one_contribution
+    optimize_recipe(recipe_reference)
+    results_reference = FitResults(recipe_reference)
+    results_reference.save_results(tmp_path / "results_reference.res")
+
+    recipe_init = build_recipe_one_contribution
+    recipe_init.initialize_recipe_from_results(
+        tmp_path / "results_reference.res"
+    )
+
+    actual_var_names = recipe_init.get_names()
+    expected_var_names = recipe_reference.get_names()
+    actual_recipe_values = recipe_init.values
+    expected_recipe_values = recipe_reference.values
+    assert list(actual_recipe_values) == list(expected_recipe_values)
+    assert actual_var_names == expected_var_names
 
 
 def get_labels_and_linecount(ax):

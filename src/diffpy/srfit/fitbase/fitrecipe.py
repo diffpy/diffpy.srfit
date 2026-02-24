@@ -35,6 +35,7 @@ problem using FitRecipe.
 __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 from bg_mpl_stylesheets.styles import all_styles
@@ -1475,6 +1476,48 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """Notify RecipeContainers in hierarchy of configuration change."""
         self._ready = False
         return
+
+    def _load_results_file(self, results_path):
+        """Load a saved FitResults file and return parsed values."""
+        from diffpy.srfit.fitbase import FitResults
+
+        with open(results_path) as f:
+            text = f.read()
+        results_dict = FitResults._parse_results_text(text)
+        return results_dict
+
+    def _prepare_result_for_initialization(self, results):
+        from diffpy.srfit.fitbase import FitResults
+
+        if isinstance(results, FitResults):
+            results_dict = results.get_results_dictionary()
+        elif isinstance(results, (str, Path)):
+            results_path = Path(results)
+            results_dict = self._load_results_file(results_path)
+        else:
+            raise ValueError(
+                "results must be a FitResults object, str, or pathlib.Path"
+            )
+        # Remove metrics like Rw from the dict, leaving only parameter values
+        parameters_dict = {
+            k: v for k, v in results_dict.items() if isinstance(v, tuple)
+        }
+        return parameters_dict
+
+    def initialize_recipe_from_results(self, results):
+        """Initialize the variable values from a previous fit result.
+
+        Parameters
+        ----------
+        results : FitResults object, str, or pathlib.Path object
+            A FitResults object from a previous fit. The variable values will
+            be taken from the 'x' attribute of the FitResults object,
+            which is the list of variable values at the best fit.
+        """
+        parameters_dict = self._prepare_result_for_initialization(results)
+        for name, (value, uncertainty) in parameters_dict.items():
+            if name in self._parameters:
+                self._parameters[name].setValue(value)
 
 
 # End of file

@@ -39,7 +39,7 @@ removal_version = "4.0.0"
 formatResults_dep_msg = build_deprecation_message(
     fitresults_base,
     "formatResults",
-    "get_results_string",
+    "format_results_string",
     removal_version,
 )
 
@@ -57,11 +57,19 @@ saveResults_dep_msg = build_deprecation_message(
     removal_version,
 )
 
-resultsDictionary_dep_msg = build_deprecation_message(
-    "diffpy.srfit.fitbase.fitresults",
-    "resultsDictionary",
-    "FitResults.get_results_dictionary",
-    removal_version,
+resultsDictionary_dep_msg = (
+    "'diffpy.srfit.fitbase.fitresults.resultsDictionary' is deprecated "
+    "and will be removed in version 4.0.0. Please use "
+    "'diffpy.srfit.fitbase.FitResults.get_results_dictionary' "
+    "instead."
+)
+
+
+initializeRecipe_dep_msg = (
+    "'diffpy.srfit.fitbase.initializeRecipe' is deprecated "
+    "and will be removed in version 4.0.0. Please use "
+    "'diffpy.srfit.fitbase.FitRecipe.initialize_recipe_from_results' "
+    "instead."
 )
 
 
@@ -356,7 +364,7 @@ class FitResults(object):
             self.conunc.append(sig2c**0.5)
         return
 
-    def get_results_string(self, header="", footer="", update=False):
+    def format_results_string(self, header="", footer="", update=False):
         """Format the results and return them in a string.
 
         This function is called by print_results and save_results. Overloading
@@ -553,10 +561,10 @@ class FitResults(object):
         """This function has been deprecated and will be removed in version
         4.0.0.
 
-        Please use diffpy.srfit.fitbase.FitResults.get_results_string
+        Please use diffpy.srfit.fitbase.FitResults.format_results_string
         instead.
         """
-        return self.get_results_string(header, footer, update)
+        return self.format_results_string(header, footer, update)
 
     def print_results(self, header="", footer="", update=False):
         """Format and print the results.
@@ -570,7 +578,7 @@ class FitResults(object):
         update
             Flag indicating whether to call update() (default False).
         """
-        print(self.get_results_string(header, footer, update).rstrip())
+        print(self.format_results_string(header, footer, update).rstrip())
         return
 
     @deprecated(printResults_dep_msg)
@@ -585,7 +593,7 @@ class FitResults(object):
         return
 
     def __str__(self):
-        return self.get_results_string()
+        return self.format_results_string()
 
     def save_results(self, filename, header="", footer="", update=False):
         """Format and save the results.
@@ -609,7 +617,7 @@ class FitResults(object):
         myheader += "produced by " + getuser() + "\n"
         header = myheader + header
 
-        res = self.get_results_string(header, footer, update)
+        res = self.format_results_string(header, footer, update)
         f = open(filename, "w")
         f.write(res)
         f.close()
@@ -626,6 +634,48 @@ class FitResults(object):
         self.save_results(filename, header, footer, update)
         return
 
+    @staticmethod
+    def _parse_results_text(
+        text: str,
+    ) -> dict[str, float | tuple[float, float]]:
+        known_metrics = {
+            "Residual",
+            "Contributions",
+            "Restraints",
+            "Chi2",
+            "Reduced",
+            "Rw",
+        }
+        parsed_results_dict = {}
+        for raw_line in text.splitlines():
+            line = raw_line.strip()
+            if not line or set(line) == {"-"}:
+                continue
+            line_items = line.split()
+            if len(line_items) < 2:
+                continue
+            if line_items[0] == "Reduced" and len(line_items) >= 3:
+                try:
+                    parsed_results_dict["Reduced Chi2"] = float(line_items[2])
+                except ValueError:
+                    pass
+                continue
+            if line_items[0] in known_metrics:
+                try:
+                    parsed_results_dict[line_items[0]] = float(line_items[1])
+                except ValueError:
+                    pass
+                continue
+            if len(line_items) >= 4 and line_items[2] == "+/-":
+                try:
+                    parsed_results_dict[line_items[0]] = (
+                        float(line_items[1]),
+                        float(line_items[3]),
+                    )
+                except ValueError:
+                    pass
+        return parsed_results_dict
+
     def get_results_dictionary(self) -> dict[str, float | tuple[float, float]]:
         """Parse all numeric results from the results text.
 
@@ -637,53 +687,13 @@ class FitResults(object):
 
         Returns
         -------
-        parsed_results_dict : dict[str, float | tuple[float, float]]
+        results_dict : dict[str, float | tuple[float, float]]
             Dictionary mapping result names to numeric values. Entries with
             uncertainties are stored as ``(value, uncertainty)`` tuples.
         """
-        known_metrics = {
-            "Residual",
-            "Contributions",
-            "Restraints",
-            "Chi2",
-            "Reduced",
-            "Rw",
-        }
-        parsed_results_dict = {}
-        text = self.get_results_string()
-        for raw_line in text.splitlines():
-            line = raw_line.strip()
-            if not line or set(line) == {"-"}:
-                continue
-            line_items = line.split()
-            if len(line_items) < 2:
-                continue
-            if line_items[0] == "Reduced" and len(line_items) >= 3:
-                try:
-                    parsed_results_dict.update(
-                        {"Reduced Chi2": float(line_items[2])}
-                    )
-                except ValueError:
-                    pass
-                continue
-            if line_items[0] in known_metrics:
-                try:
-                    parsed_results_dict.update(
-                        {line_items[0]: float(line_items[1])}
-                    )
-                except ValueError:
-                    pass
-                continue
-            if len(line_items) >= 4 and line_items[2] == "+/-":
-                try:
-                    name = line_items[0]
-                    value = float(line_items[1])
-                    uncertainty = float(line_items[3])
-                    parsed_results_dict.update({name: (value, uncertainty)})
-                except ValueError:
-                    pass
-
-        return parsed_results_dict
+        text = self.format_results_string()
+        results_dict = self._parse_results_text(text)
+        return results_dict
 
 
 # End class FitResults
@@ -821,7 +831,7 @@ def resultsDictionary(results):
     """This function has been deprecated and will be removed in version 4.0.0.
 
     Please use diffpy.srfit.fitbase.FitResults.get_results_dictionary instead.
-    See ``Examples`` below for usage.
+    See ``Examples of new usage`` below for usage.
 
     Get dictionary of results from file.
 
@@ -834,8 +844,8 @@ def resultsDictionary(results):
         An open file-like object, name of a file that contains
         results from FitResults or a string containing fit results.
 
-    Examples
-    --------
+    Examples of new usage
+    ---------------------
     ::
 
         from diffpy.srfit.fitbase import FitResults, FitRecipe
@@ -859,8 +869,16 @@ def resultsDictionary(results):
     return mpairs
 
 
+@deprecated(initializeRecipe_dep_msg)
 def initializeRecipe(recipe, results):
-    """Initialize the variables of a recipe from a results file.
+    """This function has been deprecated and will be removed in version 4.0.0.
+
+    Please use
+    diffpy.srfit.fitbase.FitRecipe.initialize_recipe_from_results
+    instead.
+    For usage, see the ``Examples of new usage`` section below.
+
+    Initialize the variables of a recipe from a results file.
 
     This reads the results from file and initializes any variables (fixed or
     free) in the recipe to the results values. Note that the recipe has to be
@@ -873,6 +891,59 @@ def initializeRecipe(recipe, results):
     results
         An open file-like object, name of a file that contains
         results from FitResults or a string containing fit results.
+
+    Examples of new usage
+    ----------------------
+    How to use the new initialization method in ``FitRecipe``.
+
+    Initialize a new FitRecipe from a results file
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    ::
+
+        from diffpy.srfit.fitbase import FitRecipe, FitResults
+
+        new_recipe = FitRecipe("my_recipe")
+        new_recipe.create_new_variable("var1", 0)
+        new_recipe.create_new_variable("var2", 0)
+
+        # note: the variables in the new recipe (var1, var2) should match
+        # the variable names in the results file
+        path_to_results_file = "results.res"
+        new_recipe.initialize_recipe_from_results(path_to_results_file)
+
+    Initialize a FitRecipe from a FitResults object
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    ::
+
+        from diffpy.srfit.fitbase import FitRecipe, FitResults
+        from scipy.optimize import leastsq
+
+        def optimize_recipe(recipe):
+            residuals = recipe.residual
+            values = recipe.values
+            leastsq(residuals, values)
+
+
+        profile = Profile()
+        x = linspace(0, pi, 10)
+        y = sin(x)
+        profile.set_observed_profile(x, y)
+        contribution = FitContribution("c1")
+        contribution.set_profile(profile)
+        contribution.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+        recipe = FitRecipe()
+        recipe.add_contribution(contribution)
+        recipe.add_variable(contribution.amplitude, 1)
+        recipe.add_variable(contribution.wave_number, 1)
+        recipe.add_variable(contribution.phase_shift, 1)
+        optimize_recipe(recipe)
+
+        results = FitResults(recipe)
+
+        new_recipe = FitRecipe("my_recipe")
+        new_recipe.initialize_recipe_from_results(results)
     """
     mpairs = resultsDictionary(results)
     if not mpairs:

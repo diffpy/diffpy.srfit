@@ -20,7 +20,11 @@ import pytest
 from scipy.optimize import leastsq
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
-from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
+from diffpy.srfit.fitbase.fitresults import (
+    FitResults,
+    initializeRecipe,
+    resultsDictionary,
+)
 
 # The fit results from the recipe fixture in conftest.py
 expected_fitresults = """\
@@ -167,6 +171,34 @@ def test_get_results_dictionary(build_recipe_one_contribution):
         else:
             # If the expected value is not a tuple, check with approx
             assert actual_value == pytest.approx(expected_value, rel=1e-3)
+
+
+def test_resultsDictionary(build_recipe_one_contribution, tmp_path):
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    results = FitResults(recipe)
+    results.save_results(
+        tmp_path / "fit_results.txt", header="My Custom header"
+    )
+    actual_results_dict = resultsDictionary(str(tmp_path / "fit_results.txt"))
+    expected_results_dict_keys = [
+        "than",  # bad behavior: shouldn't be here
+        "Feb",  # bad behavior: shouldn't be here
+        "Residual",
+        # "Reduced Chi2", # bad behavior: should be here but is not
+        "Contributions",
+        "Restraints",
+        "Chi2",
+        "Rw",
+        "amplitude",
+        "phase_shift",
+        "wave_number",
+    ]
+    # get list of keys from actual_results_dict and check
+    # that all expected keys are in it
+    assert sorted(expected_results_dict_keys) == sorted(
+        list(actual_results_dict.keys())
+    )
 
 
 def testInitializeFromFileName(datafile):

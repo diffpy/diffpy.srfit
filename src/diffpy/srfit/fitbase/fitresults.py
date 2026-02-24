@@ -57,6 +57,13 @@ saveResults_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+resultsDictionary_dep_msg = build_deprecation_message(
+    "diffpy.srfit.fitbase.fitresults",
+    "resultsDictionary",
+    "FitResults.get_results_dictionary",
+    removal_version,
+)
+
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
@@ -619,6 +626,65 @@ class FitResults(object):
         self.save_results(filename, header, footer, update)
         return
 
+    def get_results_dictionary(self) -> dict[str, float | tuple[float, float]]:
+        """Parse all numeric results from the results text.
+
+        The method scans the entire results output and extracts all numeric
+        quantities. Two line formats are supported:
+
+        * ``name value`` → stored as a float
+        * ``name value +/- uncertainty`` → stored as ``(value, uncertainty)``
+
+        Returns
+        -------
+        parsed_results_dict : dict[str, float | tuple[float, float]]
+            Dictionary mapping result names to numeric values. Entries with
+            uncertainties are stored as ``(value, uncertainty)`` tuples.
+        """
+        known_metrics = {
+            "Residual",
+            "Contributions",
+            "Restraints",
+            "Chi2",
+            "Reduced",
+            "Rw",
+        }
+        parsed_results_dict = {}
+        text = self.get_results_string()
+        for raw_line in text.splitlines():
+            line = raw_line.strip()
+            if not line or set(line) == {"-"}:
+                continue
+            line_items = line.split()
+            if len(line_items) < 2:
+                continue
+            if line_items[0] == "Reduced" and len(line_items) >= 3:
+                try:
+                    parsed_results_dict.update(
+                        {"Reduced Chi2": float(line_items[2])}
+                    )
+                except ValueError:
+                    pass
+                continue
+            if line_items[0] in known_metrics:
+                try:
+                    parsed_results_dict.update(
+                        {line_items[0]: float(line_items[1])}
+                    )
+                except ValueError:
+                    pass
+                continue
+            if len(line_items) >= 4 and line_items[2] == "+/-":
+                try:
+                    name = line_items[0]
+                    value = float(line_items[1])
+                    uncertainty = float(line_items[3])
+                    parsed_results_dict.update({name: (value, uncertainty)})
+                except ValueError:
+                    pass
+
+        return parsed_results_dict
+
 
 # End class FitResults
 
@@ -750,8 +816,14 @@ class ContributionResults(object):
 # End class ContributionResults
 
 
+@deprecated(resultsDictionary_dep_msg)
 def resultsDictionary(results):
-    """Get dictionary of results from file.
+    """This function has been deprecated and will be removed in version 4.0.0.
+
+    Please use diffpy.srfit.fitbase.FitResults.get_results_dictionary instead.
+    See ``Examples`` below for usage.
+
+    Get dictionary of results from file.
 
     This reads the results from file and stores them in a dictionary to be
     returned to the caller. The dictionary may contain non-result entries.
@@ -761,6 +833,16 @@ def resultsDictionary(results):
     results
         An open file-like object, name of a file that contains
         results from FitResults or a string containing fit results.
+
+    Examples
+    --------
+    ::
+
+        from diffpy.srfit.fitbase import FitResults, FitRecipe
+
+        recipe = FitRecipe("my_recipe")
+        results = FitResults(recipe)
+        results_dict = results.get_results_dictionary()
     """
     resstr = inputToString(results)
 
@@ -792,7 +874,6 @@ def initializeRecipe(recipe, results):
         An open file-like object, name of a file that contains
         results from FitResults or a string containing fit results.
     """
-
     mpairs = resultsDictionary(results)
     if not mpairs:
         raise AttributeError("Cannot find results")

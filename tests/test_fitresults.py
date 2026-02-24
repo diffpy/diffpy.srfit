@@ -138,6 +138,37 @@ def test_save_results(build_recipe_one_contribution, tmp_path):
         assert expected_var in actual_results.strip()
 
 
+def test_get_results_dictionary(build_recipe_one_contribution):
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    results = FitResults(recipe)
+    results_dict = results.get_results_dictionary()
+    expected_results_dict = {
+        "Residual": 0.0,
+        "Contributions": 0.0,
+        "Restraints": 0.0,
+        "Chi2": 0.0,
+        "Reduced Chi2": 0.0,
+        "Rw": 0.0,
+        "amplitude": (1.0, 4.82804000e-01),
+        "phase_shift": (-1.61291146e-18, 1.00000000e00),
+        "wave_number": (1.00000000e00, 2.17496687e-01),
+    }
+    # iterate through and assert actual_key == expected_key
+    # and actual_value == expected_value (with approximation)
+    for expected_key, expected_value in expected_results_dict.items():
+        assert expected_key in results_dict
+        actual_value = results_dict.get(expected_key)
+        if isinstance(expected_value, tuple):
+            # If the expected value is a tuple, check each element with approx
+            assert len(actual_value) == len(expected_value)
+            for actual_val, expected_val in zip(actual_value, expected_value):
+                assert actual_val == pytest.approx(expected_val, rel=1e-3)
+        else:
+            # If the expected value is not a tuple, check with approx
+            assert actual_value == pytest.approx(expected_value, rel=1e-3)
+
+
 def testInitializeFromFileName(datafile):
     recipe = FitRecipe("recipe")
     recipe.create_new_variable("A", 0)

@@ -1486,7 +1486,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         results_dict = FitResults._parse_results_text(text)
         return results_dict
 
-    def _prepare_result_for_initialization(self, results):
+    def _prepare_results_for_initialization(self, results):
         from diffpy.srfit.fitbase import FitResults
 
         if isinstance(results, FitResults):
@@ -1514,7 +1514,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             be taken from the 'x' attribute of the FitResults object,
             which is the list of variable values at the best fit.
         """
-        parameters_dict = self._prepare_result_for_initialization(results)
+        parameters_dict = self._prepare_results_for_initialization(results)
         for name, (value, uncertainty) in parameters_dict.items():
             if name in self._parameters:
                 self._parameters[name].setValue(value)

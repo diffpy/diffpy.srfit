@@ -22,6 +22,23 @@ from scipy.optimize import leastsq
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
 
+# The fit results from the recipe fixture in conftest.py
+expected_fitresults = """\
+Some quantities invalid due to missing profile uncertainty
+Overall (Chi2 and Reduced Chi2 invalid)
+------------------------------------------------------------------------------
+Residual       0.00000000
+Contributions  0.00000000
+Restraints     0.00000000
+Chi2           0.00000000
+Reduced Chi2   0.00000000
+Rw             0.00000000
+
+Variables (Uncertainties invalid)
+------------------------------------------------------------------------------
+"""
+expected_refined_variables = ["amplitude", "wave_number", "phase_shift"]
+
 
 def optimize_recipe(recipe):
     recipe.fithooks[0].verbose = 0
@@ -30,13 +47,58 @@ def optimize_recipe(recipe):
     leastsq(residuals, values)
 
 
-def test_compare_old_formatResults_with_new(build_recipe_one_contribution):
+def test_formatResults(build_recipe_one_contribution):
     recipe = build_recipe_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
-    results_dep = results.formatResults()
-    results_new = results.get_results_string()
-    assert results_dep == results_new
+    actual_results_string = results.formatResults()
+    # Because slight variations in refinement, just check
+    # that the header of the results are the same.
+    assert expected_fitresults.strip() in actual_results_string.strip()
+    # check if the refined variables are in the results
+    for expected_var in expected_refined_variables:
+        assert expected_var in actual_results_string.strip()
+
+
+def test_get_results_string(build_recipe_one_contribution):
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    results = FitResults(recipe)
+    actual_results_string = results.get_results_string()
+    # Because slight variations in refinement, just check
+    # that the header of the results are the same.
+    assert expected_fitresults.strip() in actual_results_string.strip()
+    # check if the refined variables are in the results
+    for expected_var in expected_refined_variables:
+        assert expected_var in actual_results_string.strip()
+
+
+def test_printResults(build_recipe_one_contribution, capsys):
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    results = FitResults(recipe)
+    results.printResults()
+    actual_results = capsys.readouterr().out
+    # Because slight variations in refinement, just check
+    # that the header of the results are the same.
+    assert expected_fitresults.strip() in actual_results.strip()
+    # check if the refined variables are in the results
+    for expected_var in expected_refined_variables:
+        assert expected_var in actual_results.strip()
+
+
+def test_print_results(build_recipe_one_contribution, capsys):
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    results = FitResults(recipe)
+    results.print_results()
+    actual_results = capsys.readouterr().out
+    # Because slight variations in refinement, just check
+    # that the header of the results are the same.
+    assert expected_fitresults.strip() in actual_results.strip()
+    # check if the refined variables are in the results
+    for expected_var in expected_refined_variables:
+        assert expected_var in actual_results.strip()
 
 
 def testInitializeFromFileName(datafile):

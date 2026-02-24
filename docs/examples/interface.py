@@ -63,7 +63,7 @@ def main():
 
     res = FitResults(r)
     # Print the results.
-    res.printResults()
+    res.print_results()
     # Plot the results.
     from gaussianrecipe import plotResults
 

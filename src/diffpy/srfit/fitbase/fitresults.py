@@ -31,6 +31,31 @@ import numpy
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 from diffpy.srfit.util.inpututils import inputToString
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+fitresults_base = "diffpy.srfit.fitbase.FitResults"
+removal_version = "4.0.0"
+
+formatResults_dep_msg = build_deprecation_message(
+    fitresults_base,
+    "formatResults",
+    "get_results_string",
+    removal_version,
+)
+
+printResults_dep_msg = build_deprecation_message(
+    fitresults_base,
+    "printResults",
+    "print_results",
+    removal_version,
+)
+
+saveResults_dep_msg = build_deprecation_message(
+    fitresults_base,
+    "saveResults",
+    "save_results",
+    removal_version,
+)
 
 
 class FitResults(object):
@@ -324,24 +349,24 @@ class FitResults(object):
             self.conunc.append(sig2c**0.5)
         return
 
-    def formatResults(self, header="", footer="", update=False):
+    def get_results_string(self, header="", footer="", update=False):
         """Format the results and return them in a string.
 
-        This function is called by printResults and saveResults. Overloading
+        This function is called by print_results and save_results. Overloading
         the formatting here will change all three functions.
 
-        Attributes
+        Parameters
         ----------
-        header
-            A header to add to the output (default "")
-        footer
-            A footer to add to the output (default "")
-        update
-            Flag indicating whether to call update() (default False).
+        header : str
+            The header to add to the output (default "")
+        footer : str
+            The footer to add to the output (default "")
+        update : bool
+            The flag indicating whether to call update() (default False).
 
         Returns
         -------
-        out
+        out : str
             a string containing the formatted results.
         """
         if update:
@@ -516,7 +541,17 @@ class FitResults(object):
         out = "\n".join(lines) + "\n"
         return out
 
-    def printResults(self, header="", footer="", update=False):
+    @deprecated(formatResults_dep_msg)
+    def formatResults(self, header="", footer="", update=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitResults.get_results_string
+        instead.
+        """
+        return self.get_results_string(header, footer, update)
+
+    def print_results(self, header="", footer="", update=False):
         """Format and print the results.
 
         Parameters
@@ -528,13 +563,24 @@ class FitResults(object):
         update
             Flag indicating whether to call update() (default False).
         """
-        print(self.formatResults(header, footer, update).rstrip())
+        print(self.get_results_string(header, footer, update).rstrip())
+        return
+
+    @deprecated(printResults_dep_msg)
+    def printResults(self, header="", footer="", update=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitResults.print_results
+        instead.
+        """
+        self.print_results(header, footer, update)
         return
 
     def __str__(self):
-        return self.formatResults()
+        return self.get_results_string()
 
-    def saveResults(self, filename, header="", footer="", update=False):
+    def save_results(self, filename, header="", footer="", update=False):
         """Format and save the results.
 
         Parameters
@@ -556,10 +602,21 @@ class FitResults(object):
         myheader += "produced by " + getuser() + "\n"
         header = myheader + header
 
-        res = self.formatResults(header, footer, update)
+        res = self.get_results_string(header, footer, update)
         f = open(filename, "w")
         f.write(res)
         f.close()
+        return
+
+    @deprecated(saveResults_dep_msg)
+    def saveResults(self, filename, header="", footer="", update=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitResults.save_results
+        instead.
+        """
+        self.save_results(filename, header, footer, update)
         return
 
 

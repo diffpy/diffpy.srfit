@@ -51,7 +51,7 @@ def main():
     leastsq(recipe.residual, recipe.values)
 
     # Print the results
-    recipe.printResults()
+    recipe.print_results()
 
     return
 

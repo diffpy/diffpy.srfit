@@ -326,7 +326,7 @@ def main():
     rescount = recipe.fithooks[0].count
     calcount = recipe.bucky.I.count
     footer = "iofq called %i%% of the time" % int(100.0 * calcount / rescount)
-    res.printResults(footer=footer)
+    res.print_results(footer=footer)
 
     # Plot!
     plotResults(recipe)

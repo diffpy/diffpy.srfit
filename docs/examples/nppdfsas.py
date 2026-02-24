@@ -188,7 +188,7 @@ if __name__ == "__main__":
     fitRecipe(recipe)
 
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     plotResults(recipe)
 

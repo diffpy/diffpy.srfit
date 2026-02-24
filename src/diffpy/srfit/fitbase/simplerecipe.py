@@ -20,7 +20,7 @@ from diffpy.srfit.fitbase.fitresults import FitResults
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
-base = "diffpy.srfit.fitbase.simplerecipe.SimpleRecipe"
+base = "diffpy.srfit.fitbase.SimpleRecipe"
 removal_version = "4.0.0"
 
 loadParsedData_dep_msg = build_deprecation_message(
@@ -55,6 +55,20 @@ setEquation_dep_msg = build_deprecation_message(
     base,
     "setEquation",
     "set_equation",
+    removal_version,
+)
+
+printResults_dep_msg = build_deprecation_message(
+    base,
+    "printResults",
+    "print_results",
+    removal_version,
+)
+
+saveResults_dep_msg = build_deprecation_message(
+    base,
+    "saveResults",
+    "save_results",
     removal_version,
 )
 
@@ -161,7 +175,7 @@ class SimpleRecipe(FitRecipe):
         4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.load_parsed_data
+        diffpy.srfit.fitbase.SimpleRecipe.load_parsed_data
         instead.
         """
         return self.load_parsed_data(parser)
@@ -192,7 +206,7 @@ class SimpleRecipe(FitRecipe):
         4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_observed_profile
+        diffpy.srfit.fitbase.SimpleRecipe.set_observed_profile
         instead.
         """
         return self.set_observed_profile(xobs, yobs, dyobs)
@@ -237,7 +251,7 @@ class SimpleRecipe(FitRecipe):
         4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_calculation_range
+        diffpy.srfit.fitbase.SimpleRecipe.set_calculation_range
         instead.
         """
         return self.set_calculation_range(xmin, xmax, dx)
@@ -262,7 +276,7 @@ class SimpleRecipe(FitRecipe):
         4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_calculation_points
+        diffpy.srfit.fitbase.SimpleRecipe.set_calculation_points
         instead.
         """
         return self.set_calculation_points(x)
@@ -323,7 +337,7 @@ class SimpleRecipe(FitRecipe):
         4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.simplerecipe.SimpleRecipe.set_equation
+        diffpy.srfit.fitbase.SimpleRecipe.set_equation
         instead.
         """
         self.set_equation(eqstr, ns)
@@ -334,8 +348,7 @@ class SimpleRecipe(FitRecipe):
         return self.contribution.evaluate()
 
     # FitResults methods
-
-    def printResults(self, header="", footer=""):
+    def print_results(self, header="", footer=""):
         """Format and print the results.
 
         Attributes
@@ -345,10 +358,22 @@ class SimpleRecipe(FitRecipe):
         footer
             A footer to add to the output (default "")
         """
-        self.results.printResults(header, footer, True)
+        self.results.print_results(header, footer, True)
         return
 
-    def saveResults(self, filename, header="", footer=""):
+    @deprecated(printResults_dep_msg)
+    def printResults(self, header="", footer=""):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.print_results
+        instead.
+        """
+        self.print_results(header, footer)
+        return
+
+    def save_results(self, filename, header="", footer=""):
         """Format and save the results.
 
         Parameters
@@ -360,7 +385,18 @@ class SimpleRecipe(FitRecipe):
         footer
             A footer to add to the output (default "")
         """
-        self.results.saveResults(filename, header, footer, True)
+        self.results.save_results(filename, header, footer, True)
+
+    @deprecated(saveResults_dep_msg)
+    def saveResults(self, filename, header="", footer=""):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.save_results
+        instead.
+        """
+        self.save_results(filename, header, footer)
 
 
 # End class SimpleRecipe

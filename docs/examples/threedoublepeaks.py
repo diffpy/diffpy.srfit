@@ -251,7 +251,7 @@ if __name__ == "__main__":
     res = FitResults(recipe)
 
     # Print the results
-    res.printResults()
+    res.print_results()
 
     # Plot the results
     plotResults(recipe)

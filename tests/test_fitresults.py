@@ -121,6 +121,23 @@ def test_saveResults(build_recipe_one_contribution, tmp_path):
         assert expected_var in actual_results.strip()
 
 
+def test_save_results(build_recipe_one_contribution, tmp_path):
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    results = FitResults(recipe)
+    actual_results_file = tmp_path / "fit_results.txt"
+    results.save_results(actual_results_file, header="My Custom header")
+    assert actual_results_file.exists()
+    with open(actual_results_file, "r") as res_file:
+        actual_results = res_file.read()
+    # Because slight variations in refinement, just check
+    # that the header of the results are the same.
+    assert expected_fitresults.strip() in actual_results.strip()
+    # check if the refined variables are in the results
+    for expected_var in expected_refined_variables:
+        assert expected_var in actual_results.strip()
+
+
 def testInitializeFromFileName(datafile):
     recipe = FitRecipe("recipe")
     recipe.create_new_variable("A", 0)

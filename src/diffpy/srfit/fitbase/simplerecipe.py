@@ -65,6 +65,13 @@ printResults_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+saveResults_dep_msg = build_deprecation_message(
+    base,
+    "saveResults",
+    "save_results",
+    removal_version,
+)
+
 
 class SimpleRecipe(FitRecipe):
     """SimpleRecipe class.
@@ -366,7 +373,7 @@ class SimpleRecipe(FitRecipe):
         self.print_results(header, footer)
         return
 
-    def saveResults(self, filename, header="", footer=""):
+    def save_results(self, filename, header="", footer=""):
         """Format and save the results.
 
         Parameters
@@ -378,7 +385,18 @@ class SimpleRecipe(FitRecipe):
         footer
             A footer to add to the output (default "")
         """
-        self.results.saveResults(filename, header, footer, True)
+        self.results.save_results(filename, header, footer, True)
+
+    @deprecated(saveResults_dep_msg)
+    def saveResults(self, filename, header="", footer=""):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.save_results
+        instead.
+        """
+        self.save_results(filename, header, footer)
 
 
 # End class SimpleRecipe

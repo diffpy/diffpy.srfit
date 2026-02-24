@@ -50,6 +50,13 @@ printResults_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+saveResults_dep_msg = build_deprecation_message(
+    fitresults_base,
+    "saveResults",
+    "save_results",
+    removal_version,
+)
+
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
@@ -345,7 +352,7 @@ class FitResults(object):
     def get_results_string(self, header="", footer="", update=False):
         """Format the results and return them in a string.
 
-        This function is called by print_results and saveResults. Overloading
+        This function is called by print_results and save_results. Overloading
         the formatting here will change all three functions.
 
         Parameters
@@ -573,7 +580,7 @@ class FitResults(object):
     def __str__(self):
         return self.get_results_string()
 
-    def saveResults(self, filename, header="", footer="", update=False):
+    def save_results(self, filename, header="", footer="", update=False):
         """Format and save the results.
 
         Parameters
@@ -599,6 +606,17 @@ class FitResults(object):
         f = open(filename, "w")
         f.write(res)
         f.close()
+        return
+
+    @deprecated(saveResults_dep_msg)
+    def saveResults(self, filename, header="", footer="", update=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitResults.save_results
+        instead.
+        """
+        self.save_results(filename, header, footer, update)
         return
 
 

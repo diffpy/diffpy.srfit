@@ -83,7 +83,7 @@ if __name__ == "__main__":
     # Generate, print and save the FitResults
     res = FitResults(recipe)
     res.print_results()
-    res.saveResults("nickel_example.res")
+    res.save_results("nickel_example.res")
 
     # Plot!
     plotResults(recipe)

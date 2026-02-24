@@ -24,6 +24,7 @@ from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
 
 # The fit results from the recipe fixture in conftest.py
 expected_fitresults = """\
+My Custom header
 Some quantities invalid due to missing profile uncertainty
 Overall (Chi2 and Reduced Chi2 invalid)
 ------------------------------------------------------------------------------
@@ -51,7 +52,7 @@ def test_formatResults(build_recipe_one_contribution):
     recipe = build_recipe_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
-    actual_results_string = results.formatResults()
+    actual_results_string = results.formatResults(header="My Custom header")
     # Because slight variations in refinement, just check
     # that the header of the results are the same.
     assert expected_fitresults.strip() in actual_results_string.strip()
@@ -64,7 +65,9 @@ def test_get_results_string(build_recipe_one_contribution):
     recipe = build_recipe_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
-    actual_results_string = results.get_results_string()
+    actual_results_string = results.get_results_string(
+        header="My Custom header"
+    )
     # Because slight variations in refinement, just check
     # that the header of the results are the same.
     assert expected_fitresults.strip() in actual_results_string.strip()
@@ -77,7 +80,7 @@ def test_printResults(build_recipe_one_contribution, capsys):
     recipe = build_recipe_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
-    results.printResults()
+    results.printResults(header="My Custom header")
     actual_results = capsys.readouterr().out
     # Because slight variations in refinement, just check
     # that the header of the results are the same.
@@ -91,7 +94,7 @@ def test_print_results(build_recipe_one_contribution, capsys):
     recipe = build_recipe_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
-    results.print_results()
+    results.print_results(header="My Custom header")
     actual_results = capsys.readouterr().out
     # Because slight variations in refinement, just check
     # that the header of the results are the same.
@@ -106,7 +109,7 @@ def test_saveResults(build_recipe_one_contribution, tmp_path):
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_file = tmp_path / "fit_results.txt"
-    results.saveResults(actual_results_file)
+    results.saveResults(actual_results_file, header="My Custom header")
     assert actual_results_file.exists()
     with open(actual_results_file, "r") as res_file:
         actual_results = res_file.read()

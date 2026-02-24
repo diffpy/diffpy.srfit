@@ -635,48 +635,6 @@ class FitResults(object):
         self.save_results(filename, header, footer, update)
         return
 
-    @staticmethod
-    def _parse_results_text(
-        text: str,
-    ) -> dict[str, float | tuple[float, float]]:
-        known_metrics = {
-            "Residual",
-            "Contributions",
-            "Restraints",
-            "Chi2",
-            "Reduced",
-            "Rw",
-        }
-        parsed_results_dict = {}
-        for raw_line in text.splitlines():
-            line = raw_line.strip()
-            if not line or set(line) == {"-"}:
-                continue
-            line_items = line.split()
-            if len(line_items) < 2:
-                continue
-            if line_items[0] == "Reduced" and len(line_items) >= 3:
-                try:
-                    parsed_results_dict["Reduced Chi2"] = float(line_items[2])
-                except ValueError:
-                    pass
-                continue
-            if line_items[0] in known_metrics:
-                try:
-                    parsed_results_dict[line_items[0]] = float(line_items[1])
-                except ValueError:
-                    pass
-                continue
-            if len(line_items) >= 4 and line_items[2] == "+/-":
-                try:
-                    parsed_results_dict[line_items[0]] = (
-                        float(line_items[1]),
-                        float(line_items[3]),
-                    )
-                except ValueError:
-                    pass
-        return parsed_results_dict
-
     def get_results_dictionary(self) -> dict[str, float | tuple[float, float]]:
         """Parse all numeric results from the results text.
 
@@ -693,7 +651,7 @@ class FitResults(object):
             uncertainties are stored as ``(value, uncertainty)`` tuples.
         """
         text = self.format_results_string()
-        results_dict = self._parse_results_text(text)
+        results_dict = _parse_results_text(text)
         return results_dict
 
 
@@ -825,6 +783,48 @@ class ContributionResults(object):
 
 
 # End class ContributionResults
+
+
+def _parse_results_text(
+    text: str,
+) -> dict[str, float | tuple[float, float]]:
+    known_metrics = {
+        "Residual",
+        "Contributions",
+        "Restraints",
+        "Chi2",
+        "Reduced",
+        "Rw",
+    }
+    parsed_results_dict = {}
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or set(line) == {"-"}:
+            continue
+        line_items = line.split()
+        if len(line_items) < 2:
+            continue
+        if line_items[0] == "Reduced" and len(line_items) >= 3:
+            try:
+                parsed_results_dict["Reduced Chi2"] = float(line_items[2])
+            except ValueError:
+                pass
+            continue
+        if line_items[0] in known_metrics:
+            try:
+                parsed_results_dict[line_items[0]] = float(line_items[1])
+            except ValueError:
+                pass
+            continue
+        if len(line_items) >= 4 and line_items[2] == "+/-":
+            try:
+                parsed_results_dict[line_items[0]] = (
+                    float(line_items[1]),
+                    float(line_items[3]),
+                )
+            except ValueError:
+                pass
+    return parsed_results_dict
 
 
 @deprecated(resultsDictionary_dep_msg)

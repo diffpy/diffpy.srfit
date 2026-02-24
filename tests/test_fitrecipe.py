@@ -514,7 +514,12 @@ def test_initialize_recipe_bad(build_recipe_one_contribution):
     # Expected: ValueError is raised with message
     recipe = build_recipe_one_contribution
     bad_input = 12345  # not a FitResults object or a file path
-    msg = "results must be a FitResults object, str, or pathlib.Path"
+    msg = (
+        "Expected a FitResults object, str, or pathlib.Path, "
+        "but got <class 'int'>. "
+        "Please specify a valid FitResults object or path to "
+        "a saved results file."
+    )
     with pytest.raises(ValueError, match=msg):
         recipe.initialize_recipe_from_results(bad_input)
 

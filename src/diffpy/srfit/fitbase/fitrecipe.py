@@ -42,6 +42,7 @@ from bg_mpl_stylesheets.styles import all_styles
 from numpy import array, concatenate, dot, sqrt
 
 from diffpy.srfit.fitbase.fithook import PrintFitHook
+from diffpy.srfit.fitbase.fitresults import _parse_results_text
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.srfit.interface import _fitrecipe_interface
@@ -1479,24 +1480,23 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def _load_results_file(self, results_path):
         """Load a saved FitResults file and return parsed values."""
-        from diffpy.srfit.fitbase import FitResults
-
         with open(results_path) as f:
             text = f.read()
-        results_dict = FitResults._parse_results_text(text)
+        results_dict = _parse_results_text(text)
         return results_dict
 
     def _prepare_results_for_initialization(self, results):
-        from diffpy.srfit.fitbase import FitResults
-
-        if isinstance(results, FitResults):
+        if hasattr(results, "get_results_dictionary"):
             results_dict = results.get_results_dictionary()
         elif isinstance(results, (str, Path)):
             results_path = Path(results)
             results_dict = self._load_results_file(results_path)
         else:
             raise ValueError(
-                "results must be a FitResults object, str, or pathlib.Path"
+                "Expected a FitResults object, str, or pathlib.Path, "
+                f"but got {type(results)}. "
+                "Please specify a valid FitResults object or path to "
+                "a saved results file."
             )
         # Remove metrics like Rw from the dict, leaving only parameter values.
         # If a non-refinable quantity is ever stored as a tuple in the

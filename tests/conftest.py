@@ -146,7 +146,7 @@ def capturestdout():
     return _capturestdout
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def build_recipe_one_contribution():
     "helper to build a simple recipe"
     profile = Profile()
@@ -164,7 +164,7 @@ def build_recipe_one_contribution():
     return recipe
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def build_recipe_two_contributions():
     "helper to build a recipe with two contributions"
     profile1 = Profile()

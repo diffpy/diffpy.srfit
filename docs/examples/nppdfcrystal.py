@@ -122,7 +122,7 @@ if __name__ == "__main__":
     scipyOptimize(recipe)
 
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     plotResults(recipe)
 

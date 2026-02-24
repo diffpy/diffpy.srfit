@@ -147,7 +147,7 @@ def main():
 
     # Print results
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     # Plot results
     plotResults(recipe)

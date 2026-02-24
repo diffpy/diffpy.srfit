@@ -508,6 +508,17 @@ def test_initialize_recipe_from_results_file(
     assert actual_var_names == expected_var_names
 
 
+def test_initialize_recipe_bad(build_recipe_one_contribution):
+    # Case: user tries to initialize recipe with something that is not a
+    #       FitResults object or a .res file
+    # Expected: ValueError is raised with message
+    recipe = build_recipe_one_contribution
+    bad_input = 12345  # not a FitResults object or a file path
+    msg = "results must be a FitResults object, str, or pathlib.Path"
+    with pytest.raises(ValueError, match=msg):
+        recipe.initialize_recipe_from_results(bad_input)
+
+
 def get_labels_and_linecount(ax):
     """Helper to get line labels and count from a matplotlib Axes."""
     labels = [

@@ -1498,13 +1498,16 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             raise ValueError(
                 "results must be a FitResults object, str, or pathlib.Path"
             )
-        # Remove metrics like Rw from the dict, leaving only parameter values
+        # Remove metrics like Rw from the dict, leaving only parameter values.
+        # If a non-refinable quantity is ever stored as a tuple in the
+        # results dictionary, it will be incorrectly treated as a parameter
+        # and included here, which could lead to errors.
         parameters_dict = {
             k: v for k, v in results_dict.items() if isinstance(v, tuple)
         }
         return parameters_dict
 
-    def initialize_recipe_from_results(self, results):
+    def initialize_recipe_from_results(self, results, verbose=True):
         """Initialize the variable values from a previous fit result.
 
         Parameters
@@ -1512,11 +1515,21 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         results : FitResults object, str, or pathlib.Path object
             The results from a previous fit. These results should
             have the same parameters as the current FitRecipe.
+        verbose : bool, optional
+            If True, print the initialized parameter values. Default is True.
         """
         parameters_dict = self._prepare_results_for_initialization(results)
+
+        if verbose:
+            print("\nInitializing FitRecipe from results")
+            print("-" * 40)
+        if verbose and parameters_dict:
+            width = max(len(name) for name in parameters_dict)
         for name, (value, uncertainty) in parameters_dict.items():
             if name in self._parameters:
                 self._parameters[name].setValue(value)
+                if verbose:
+                    print(f"{name:<{width}} = {value}")
 
 
 # End of file

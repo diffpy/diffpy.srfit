@@ -918,8 +918,11 @@ def initializeRecipe(recipe, results):
 
     ::
 
-        from diffpy.srfit.fitbase import FitRecipe, FitResults
         from scipy.optimize import leastsq
+        import numpy as np
+        from diffpy.srfit.fitbase import (
+            Profile, FitRecipe, FitResults, FitContribution
+            )
 
         def optimize_recipe(recipe):
             residuals = recipe.residual
@@ -928,8 +931,8 @@ def initializeRecipe(recipe, results):
 
 
         profile = Profile()
-        x = linspace(0, pi, 10)
-        y = sin(x)
+        x = np.linspace(0, np.pi, 10)
+        y = np.sin(x)
         profile.set_observed_profile(x, y)
         contribution = FitContribution("c1")
         contribution.set_profile(profile)
@@ -944,6 +947,10 @@ def initializeRecipe(recipe, results):
         results = FitResults(recipe)
 
         new_recipe = FitRecipe("my_recipe")
+        new_recipe.add_contribution(contribution)
+        new_recipe.add_variable(contribution.amplitude, 0)
+        new_recipe.add_variable(contribution.wave_number, 0)
+        new_recipe.add_variable(contribution.phase_shift, 0)
         new_recipe.initialize_recipe_from_results(results)
     """
     mpairs = resultsDictionary(results)

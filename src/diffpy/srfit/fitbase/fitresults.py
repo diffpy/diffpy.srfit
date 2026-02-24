@@ -57,19 +57,20 @@ saveResults_dep_msg = build_deprecation_message(
     removal_version,
 )
 
-resultsDictionary_dep_msg = (
-    "'diffpy.srfit.fitbase.fitresults.resultsDictionary' is deprecated "
-    "and will be removed in version 4.0.0. Please use "
-    "'diffpy.srfit.fitbase.FitResults.get_results_dictionary' "
-    "instead."
+resultsDictionary_dep_msg = build_deprecation_message(
+    "diffpy.srfit.fitbase",
+    "resultsDictionary",
+    "get_results_dictionary",
+    removal_version,
+    new_base="diffpy.srfit.fitbase.FitResults",
 )
 
-
-initializeRecipe_dep_msg = (
-    "'diffpy.srfit.fitbase.initializeRecipe' is deprecated "
-    "and will be removed in version 4.0.0. Please use "
-    "'diffpy.srfit.fitbase.FitRecipe.initialize_recipe_from_results' "
-    "instead."
+initializeRecipe_dep_msg = build_deprecation_message(
+    "diffpy.srfit.fitbase",
+    "initializeRecipe",
+    "initialize_recipe_from_results",
+    removal_version,
+    new_base="diffpy.srfit.fitbase.FitRecipe",
 )
 
 

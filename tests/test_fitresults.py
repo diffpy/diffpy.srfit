@@ -167,10 +167,10 @@ def test_get_results_dictionary(build_recipe_one_contribution):
             # If the expected value is a tuple, check each element with approx
             assert len(actual_value) == len(expected_value)
             for actual_val, expected_val in zip(actual_value, expected_value):
-                assert actual_val == pytest.approx(expected_val, rel=1e-3)
+                assert round(actual_val, 3) == round(expected_val, 3)
         else:
             # If the expected value is not a tuple, check with approx
-            assert actual_value == pytest.approx(expected_value, rel=1e-3)
+            assert round(actual_value, 3) == round(expected_value, 3)
 
 
 def test_resultsDictionary(build_recipe_one_contribution, tmp_path):

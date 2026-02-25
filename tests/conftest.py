@@ -223,4 +223,32 @@ def temp_data_files(tmp_path):
 
     cgr_file = tmp_path / "cgr_file.cgr"
     cgr_file.write_text("1.0 2.0\n" "1.1 2.1\n" "1.2 2.2\n")
+
+    results_file = tmp_path / "fit_results.res"
+    results_file.write_text(
+        """
+Results written: Wed Feb 25 15:14:58 2026
+produced by cadenmyers
+
+Some quantities invalid due to missing profile uncertainty
+Overall (Chi2 and Reduced Chi2 invalid)
+------------------------------------------------------------------------------
+Residual       0.00000000
+Contributions  0.00000000
+Restraints     0.00000000
+Chi2           0.00000000
+Reduced Chi2   0.00000000
+Rw             0.00000000
+
+Variables (Uncertainties invalid)
+------------------------------------------------------------------------------
+amplitude    1.00000000e+00 +/- 4.82804000e-01
+phase_shift  -1.61291146e-18 +/- 1.00000000e+00
+wave_number  1.00000000e+00 +/- 2.17496687e-01
+
+Variable Correlations greater than 25% (Correlations invalid)
+------------------------------------------------------------------------------
+No correlations greater than 25%
+"""
+    )
     yield tmp_path

@@ -18,10 +18,12 @@ import unittest
 
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 import pytest
 from numpy import array_equal, dot, linspace, pi, sin
 from scipy.optimize import leastsq
 
+from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
@@ -460,6 +462,76 @@ def optimize_recipe(recipe):
     residuals = recipe.residual
     values = recipe.values
     leastsq(residuals, values)
+
+
+def test_initialize_recipe_from_recipe(build_recipe_two_contributions):
+    # Case: User initializes a FitRecipe from a previously optimized fit
+    # expected: recipe is initialized with everything:
+    # contributions, profiles (contained in contributions),
+    # variables, restraints, and constraints
+    recipe1 = build_recipe_two_contributions
+    optimize_recipe(recipe1)
+    expected_parameters_dict = recipe1._parameters
+    expected_constraints_dict = recipe1._constraints
+    expected_restraints_set = recipe1._restraints
+    expected_contributions_dict = recipe1._contributions
+    expected_profiles_list = []
+    for con_name, contribution in expected_contributions_dict.items():
+        expected_profile = contribution.profile
+        expected_profiles_list.append(expected_profile)
+
+    recipe2 = FitRecipe()
+    recipe2.initialize_recipe_with_recipe(recipe1)
+    actual_parameters_dict = recipe2._parameters
+    actual_constraints_dict = recipe2._constraints
+    actual_restraints_set = recipe2._restraints
+    actual_contributions_dict = recipe2._contributions
+    actual_profiles_list = []
+    for con_name, contribution in actual_contributions_dict.items():
+        actual_profile = contribution.profile
+        actual_profiles_list.append(actual_profile)
+
+    assert expected_parameters_dict == actual_parameters_dict
+    assert expected_constraints_dict == actual_constraints_dict
+    assert expected_restraints_set == actual_restraints_set
+    assert expected_contributions_dict == actual_contributions_dict
+    assert expected_profiles_list == actual_profiles_list
+
+    # Check to see if the refined values and variable names are
+    # the same in the results objects for each recipe
+    results1 = FitResults(recipe1)
+    # round to account for small numerical differences
+    expected_values = np.round(results1.varvals, 7)
+    expected_names = results1.varnames
+
+    optimize_recipe(recipe2)
+    results2 = FitResults(recipe2)
+    # round to account for small numerical differences
+    actual_values = np.round(results2.varvals, 7)
+    actual_names = results2.varnames
+
+    assert sorted(expected_names) == sorted(actual_names)
+    assert sorted(list(expected_values)) == sorted(list(actual_values))
+
+
+def test_initialize_recipe_from_recipe_bad(build_recipe_two_contributions):
+    # Case: User tries to initialize a FitRecipe from a non recipe object
+    # expected: raised ValueError with message
+    recipe_bad = 12345  # not a FitRecipe object
+    recipe2 = FitRecipe()
+    msg = (
+        "The input recipe_object must be a FitRecipe, "
+        "but got <class 'int'>."
+    )
+    with pytest.raises(ValueError, match=msg):
+        recipe2.initialize_recipe_with_recipe(recipe_bad)
+
+
+# def test_initialize_recipe_from_results(build_recipe_one_contribution):
+#     # Case: User initializes a FitRecipe from a FitResults object or
+#     #       results file
+#     # expected: recipe is initialized with variables from previous fit
+#     assert False
 
 
 def get_labels_and_linecount(ax):

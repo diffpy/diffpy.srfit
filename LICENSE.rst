@@ -59,17 +59,76 @@ outside your organization, if you meet all of the following conditions:
     (c) Modified copies and works based on the Software must carry prominent
         notices stating that you changed specified portions of the Software.
 
-3. Neither the name of the copyright holder nor the names of its contributors
-   may be used to endorse or promote products derived from this software
-   without specific prior written permission.
+    (d) Neither the name of Brookhaven Science Associates or Brookhaven
+        National Laboratory nor the names of its contributors may be used to
+        endorse or promote products derived from this software without specific
+        written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+(5) Portions of the Software resulted from work developed under a U.S.
+Government contract and are subject to the following license:
+The Government is granted for itself and others acting on its behalf a
+paid-up, nonexclusive, irrevocable worldwide license in this computer software
+to reproduce, prepare derivative works, and perform publicly and display
+publicly.
+
+
+(6) WARRANTY DISCLAIMER. THE SOFTWARE IS SUPPLIED "AS IS" WITHOUT
+WARRANTY OF ANY KIND. THE COPYRIGHT HOLDERS, THEIR THIRD PARTY
+LICENSORS, THE UNITED STATES, THE UNITED STATES DEPARTMENT OF ENERGY, AND
+THEIR EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+BUT NOT LIMITED TO ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE, TITLE OR NON-INFRINGEMENT, (2) DO NOT ASSUME ANY LEGAL
+LIABILITY OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR USEFULNESS OF
+THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF THE SOFTWARE WOULD NOT INFRINGE
+PRIVATELY OWNED RIGHTS, (4) DO NOT WARRANT THAT THE SOFTWARE WILL FUNCTION
+UNINTERRUPTED, THAT IT IS ERROR-FREE OR THAT ANY ERRORS WILL BE CORRECTED.
+
+
+(7) LIMITATION OF LIABILITY. IN NO EVENT WILL THE COPYRIGHT HOLDERS, THEIR
+THIRD PARTY LICENSORS, THE UNITED STATES, THE UNITED STATES DEPARTMENT OF
+ENERGY, OR THEIR EMPLOYEES: BE LIABLE FOR  ANY INDIRECT, INCIDENTAL,
+CONSEQUENTIAL, SPECIAL OR PUNITIVE  DAMAGES OF ANY KIND OR NATURE, INCLUDING
+BUT NOT LIMITED TO LOSS OF PROFITS OR LOSS OF DATA, FOR ANY REASON WHATSOEVER,
+WHETHER SUCH LIABILITY IS ASSERTED ON THE BASIS OF CONTRACT, TORT (INCLUDING
+NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE, EVEN IF ANY OF SAID PARTIES HAS
+BEEN WARNED OF THE POSSIBILITY OF SUCH LOSS OR DAMAGES.
+
+
+Brookhaven National Laboratory Notice
+=====================================
+
+Acknowledgment of sponsorship
+-----------------------------
+
+This software was produced by the Brookhaven National Laboratory, under
+Contract DE-AC02-98CH10886 with the Department of Energy.
+
+
+Government disclaimer of liability
+----------------------------------
+
+Neither the United States nor the United States Department of Energy, nor
+any of their employees, makes any warranty, express or implied, or assumes
+any legal liability or responsibility for the accuracy, completeness, or
+usefulness of any data, apparatus, product, or process disclosed, or
+represents that its use would not infringe privately owned rights.
+
+
+Brookhaven disclaimer of liability
+----------------------------------
+
+Brookhaven National Laboratory makes no representations or warranties,
+express or implied, nor assumes any liability for the use of this software.
+
+
+Maintenance of notice
+---------------------
+
+In the interest of clarity regarding the origin and status of this
+software, Brookhaven National Laboratory requests that any recipient of it
+maintain this notice affixed to any distribution by the recipient that
+contains a copy or derivative of this software.
+
+
+END OF LICENSE

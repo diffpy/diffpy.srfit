@@ -1,7 +1,7 @@
 Authors
 =======
 
-Christopher Farrow, Pavol Juhas, Simon J. L. Billinge, and members of the Billinge Group
+Christopher Farrow, Pavol Juhas, Caden Myers, Simon J. L. Billinge, and members of the Billinge Group
 
 Contributors
 ------------

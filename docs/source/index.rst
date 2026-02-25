@@ -1,13 +1,19 @@
-.. _developers-guide-index:
+#######
+|title|
+#######
 
-####################################################
-diffpy.srfit documentation
-####################################################
+.. |title| replace:: diffpy.srfit documentation
 
-diffpy.srfit - configurable code for solving atomic structures.
+``diffpy.srfit`` - Generalized code base for modeling problems.
 
-| Software version |release|.
+| Software version |release|
 | Last updated |today|.
+
+===============
+Getting started
+===============
+
+Welcome to the ``diffpy.srfit`` documentation!
 
 The diffpy.srfit package provides the framework for building a global optimizer
 on the fly from components such as function calculators (that calculate
@@ -31,9 +37,9 @@ obtain the total cost function. Additionally, diffpy.srfit is designed to be
 extensible, allowing the user to integrate external calculators to perform
 co-refinements with other techniques.
 
-========================================
+=======
 Authors
-========================================
+=======
 
 diffpy.srfit is developed by members of the Billinge Group at
 Columbia University and at Brookhaven National Laboratory including
@@ -41,16 +47,22 @@ Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge.
 
 The source code in *observable.py* was derived from the 1.0 version
 of the Caltech "Pyre" project.
-
-For a detailed list of contributors see
+``diffpy.srfit`` is developed by Christopher Farrow, Pavol Juhas, Caden Myers, Simon J. L. Billinge, and members of the DiffPy community.
+This project is maintained by Caden Myers and Simon J. L. Billinge. For a detailed list of contributors see
 https://github.com/diffpy/diffpy.srfit/graphs/contributors.
 
-======================================
+============
 Installation
-======================================
+============
 
-See the `README <https://github.com/diffpy/diffpy.srfit#requirements>`_
+See the `README <https://github.com/diffpy/diffpy.srfit#installation>`_
 file included with the distribution.
+
+================
+Acknowledgements
+================
+
+``diffpy.srfit`` is built and maintained with `scikit-package <https://scikit-package.github.io/scikit-package/>`_.
 
 ======================================
 Where next?
@@ -62,10 +74,9 @@ Where next?
    examples.rst
    extending.rst
 
-======================================
+=================
 Table of contents
-======================================
-
+=================
 .. toctree::
    :titlesonly:
 
@@ -75,9 +86,9 @@ Table of contents
 
 .. faq.rst
 
-======================================
+=======
 Indices
-======================================
+=======
 
 * :ref:`genindex`
 * :ref:`modindex`

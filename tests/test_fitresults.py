@@ -144,10 +144,11 @@ def test_save_results(build_recipe_one_contribution, tmp_path):
 
 
 def test_get_results_dictionary(build_recipe_one_contribution):
+    # Case: user gets results dictionary after optimization
+    # expected: results dictionary contains expected keys and values
     recipe = build_recipe_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
-    results.print_results()
     actual_results_dict = results.get_results_dictionary()
     expected_results_dict = {
         "amplitude": 1.000000000060171,
@@ -171,6 +172,8 @@ def test_get_results_dictionary(build_recipe_one_contribution):
 
 
 def test_resultsDictionary(temp_data_files):
+    # Case: user gets results dictionary from a results file
+    # expected: results dictionary contains expected keys and values
     actual_results_dict = resultsDictionary(
         temp_data_files / "fit_results.res"
     )

@@ -58,6 +58,14 @@ saveResults_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+resultsDictionary_dep_msg = build_deprecation_message(
+    "diffpy.srfit.fitbase",
+    "resultsDictionary",
+    "get_results_dictionary",
+    removal_version,
+    new_base="diffpy.srfit.fitbase.FitResults",
+)
+
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
@@ -622,6 +630,31 @@ class FitResults(object):
         self.save_results(filename, header, footer, update)
         return
 
+    def get_results_dictionary(self):
+        """Get a dictionary of results, with variable names and values,
+        and overall metrics.
+
+        Returns
+        -------
+        results_dict : dict
+            A dictionary containing the variable names and values, and overall
+            metrics, from the FitResults.
+        """
+        parameter_names = self.varnames
+        parameter_values = self.varvals
+        results_dict = dict(zip(parameter_names, parameter_values))
+        results_dict.update(
+            {
+                "Residual": self.residual,
+                "Contributions": self.residual - self.penalty,
+                "Restraints": self.penalty,
+                "Chi2": self.chi2,
+                "Reduced Chi2": self.rchi2,
+                "Rw": self.rw,
+            }
+        )
+        return results_dict
+
 
 # End class FitResults
 
@@ -753,8 +786,15 @@ class ContributionResults(object):
 # End class ContributionResults
 
 
+@deprecated(resultsDictionary_dep_msg)
 def resultsDictionary(results):
-    """Get dictionary of results from file.
+    """**This function has been deprecated and will be** **removed in version
+    4.0.0.**
+
+    **Please use**
+    **diffpy.srfit.fitbase.FitResults.get_results_dictionary instead.**
+
+    Get dictionary of results from file.
 
     This reads the results from file and stores them in a dictionary to be
     returned to the caller. The dictionary may contain non-result entries.

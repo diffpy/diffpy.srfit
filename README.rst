@@ -39,7 +39,7 @@
 diffpy.srfit
 ============
 
-Configurable code for solving atomic structures.
+Generalized code base for modeling problems.
 
 The diffpy.srfit package provides the framework for building a global optimizer
 on the fly from components such as function calculators (that calculate

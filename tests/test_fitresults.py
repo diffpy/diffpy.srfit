@@ -138,6 +138,25 @@ def test_save_results(build_recipe_one_contribution, tmp_path):
         assert expected_var in actual_results.strip()
 
 
+def test_get_results_dictionary(build_recipe_one_contribution):
+    recipe = build_recipe_one_contribution
+    optimize_recipe(recipe)
+    results = FitResults(recipe)
+    actual_results_dict = results.get_results_dictionary()
+    expected_metrics = [
+        "Residual",
+        "Contributions",
+        "Restraints",
+        "Chi2",
+        "Reduced Chi2",
+        "Rw",
+    ]
+    for expected_metric in expected_metrics:
+        assert expected_metric in actual_results_dict
+    for expected_var in expected_refined_variables:
+        assert expected_var in actual_results_dict
+
+
 def testInitializeFromFileName(datafile):
     recipe = FitRecipe("recipe")
     recipe.create_new_variable("A", 0)

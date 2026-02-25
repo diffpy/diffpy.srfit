@@ -631,8 +631,8 @@ class FitResults(object):
         return
 
     def get_results_dictionary(self):
-        """Get a dictionary of results, with variable names and values,
-        and overall metrics.
+        """Get a dictionary of results, with variable names and values, and
+        overall metrics.
 
         Returns
         -------

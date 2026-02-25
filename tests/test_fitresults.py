@@ -147,19 +147,27 @@ def test_get_results_dictionary(build_recipe_one_contribution):
     recipe = build_recipe_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
+    results.print_results()
     actual_results_dict = results.get_results_dictionary()
-    expected_metrics = [
-        "Residual",
-        "Contributions",
-        "Restraints",
-        "Chi2",
-        "Reduced Chi2",
-        "Rw",
-    ]
-    for expected_metric in expected_metrics:
-        assert expected_metric in actual_results_dict
-    for expected_var in expected_refined_variables:
-        assert expected_var in actual_results_dict
+    expected_results_dict = {
+        "amplitude": 1.000000000060171,
+        "wave_number": 1.00000000012548,
+        "phase_shift": -1.6129114631049646e-18,
+        "Residual": 3.3284672708760557e-19,
+        "Contributions": 3.3284672708760557e-19,
+        "Restraints": 0,
+        "Chi2": 3.3284672708760557e-19,
+        "Reduced Chi2": 4.7549532441086507e-20,
+        "Rw": 2.7196679825449506e-10,
+    }
+    actual_values = np.round(np.array(list(actual_results_dict.values())), 5)
+    actual_keys = set(actual_results_dict.keys())
+    expected_values = np.round(
+        np.array(list(expected_results_dict.values())), 5
+    )
+    expected_keys = set(expected_results_dict.keys())
+    assert expected_keys == actual_keys
+    assert list(expected_values == list(actual_values))
 
 
 def test_resultsDictionary(temp_data_files):

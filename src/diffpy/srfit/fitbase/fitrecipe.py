@@ -1140,6 +1140,50 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         return self.get_bounds_array()
 
+    def initialize_recipe_with_recipe(self, recipe_object):
+        """Initialize a FitRecipe with another FitRecipe.
+
+        This is used to initialize a FitRecipe with the contribution(s),
+        parameters, constraints and restraints of another FitRecipe.
+        If a duplicate contribution, parameter, constraint, or restraint
+        is added to the FitRecipe you are initializing, the value from the
+        added object will be used.
+
+        Parameters
+        ----------
+        recipe_object : FitRecipe
+            The FitRecipe to initialize with.
+
+        Raises
+        ------
+        ValueError
+            If the object passed is not a FitRecipe.
+        """
+        if not isinstance(recipe_object, FitRecipe):
+            raise ValueError(
+                "The input recipe_object must be a FitRecipe, "
+                f"but got {type(recipe_object)}"
+            )
+
+        for contrib_object in recipe_object._contributions.values():
+            if contrib_object not in self._contributions.values():
+                self.add_contribution(contrib_object)
+
+        for param_name, param_object in recipe_object._parameters.items():
+            if param_name not in self._parameters:
+                self._parameters.update({param_name: param_object})
+
+        for (
+            parameter_object,
+            constraint_object,
+        ) in recipe_object._constraints.items():
+            if parameter_object not in self._constraints:
+                self._constraints.update({parameter_object: constraint_object})
+
+        for restraint in recipe_object._restraints:
+            if restraint not in self._restraints:
+                self._restraints.add(restraint)
+
     def set_plot_defaults(self, **kwargs):
         """Set default plotting options for all future plots.
 

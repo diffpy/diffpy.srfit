@@ -57,6 +57,13 @@ saveResults_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+saveResults_dep_msg = build_deprecation_message(
+    fitresults_base,
+    "saveResults",
+    "save_results",
+    removal_version,
+)
+
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.

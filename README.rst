@@ -25,6 +25,7 @@
         :target: https://anaconda.org/conda-forge/diffpy.srfit
 
 .. |PR| image:: https://img.shields.io/badge/PR-Welcome-29ab47ff
+        :target: https://github.com/diffpy/diffpy.srfit/pulls
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/diffpy.srfit
         :target: https://pypi.org/project/diffpy.srfit/
@@ -94,10 +95,6 @@ The following creates and activates a new environment named ``diffpy.srfit_env``
         conda create -n diffpy.srfit_env diffpy.srfit
         conda activate diffpy.srfit_env
 
-To confirm that the installation was successful, type ::
-
-        python -c "import diffpy.srfit; print(diffpy.srfit.__version__)"
-
 The output should print the latest version displayed on the badges above.
 
 This will install the minimal `diffpy.srfit` installation.  It will often be used
@@ -136,6 +133,19 @@ and run the following ::
 
         pip install .
 
+This package also provides command-line utilities. To check the software has been installed correctly, type ::
+
+        diffpy.srfit --version
+
+You can also type the following command to verify the installation. ::
+
+        python -c "import diffpy.srfit; print(diffpy.srfit.__version__)"
+
+
+To view the basic usage and available commands, type ::
+
+        diffpy.srfit -h
+
 Getting Started
 ---------------
 
@@ -167,12 +177,12 @@ trying to commit again.
 
 Improvements and fixes are always appreciated.
 
-Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.srfit/blob/main/CODE_OF_CONDUCT.rst>`_.
+Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.srfit/blob/main/CODE-OF-CONDUCT.rst>`_.
 
 Contact
 -------
 
-For more information on diffpy.srfit please visit the project `web-page <https://diffpy.github.io/>`_ or email Simon Billinge at sb2896@columbia.edu.
+For more information on diffpy.srfit please visit the project `web-page <https://diffpy.github.io/>`_ or email the maintainers ``Caden Myers (cjm2304@columbia.edu) and Simon J. L. Billinge (sbillinge@ucsb.edu)``.
 
 Acknowledgements
 ----------------

@@ -514,6 +514,19 @@ def test_initialize_recipe_from_recipe(build_recipe_two_contributions):
     assert sorted(list(expected_values)) == sorted(list(actual_values))
 
 
+def test_initialize_recipe_from_recipe_bad(build_recipe_two_contributions):
+    # Case: User tries to initialize a FitRecipe from a non recipe object
+    # expected: raised ValueError with message
+    recipe_bad = 12345  # not a FitRecipe object
+    recipe2 = FitRecipe()
+    msg = (
+        "The input recipe_object must be a FitRecipe, "
+        "but got <class 'int'>."
+    )
+    with pytest.raises(ValueError, match=msg):
+        recipe2.initialize_recipe_with_recipe(recipe_bad)
+
+
 # def test_initialize_recipe_from_results(build_recipe_one_contribution):
 #     # Case: User initializes a FitRecipe from a FitResults object or
 #     #       results file

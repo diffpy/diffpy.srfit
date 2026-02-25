@@ -1162,7 +1162,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if not isinstance(recipe_object, FitRecipe):
             raise ValueError(
                 "The input recipe_object must be a FitRecipe, "
-                f"but got {type(recipe_object)}"
+                f"but got {type(recipe_object)}."
             )
 
         for contrib_object in recipe_object._contributions.values():

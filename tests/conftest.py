@@ -166,30 +166,43 @@ def build_recipe_one_contribution():
 
 @pytest.fixture()
 def build_recipe_two_contributions():
-    "helper to build a recipe with two contributions"
+    """Helper to build a recipe with two physically related contributions."""
     profile1 = Profile()
-    x = linspace(0, pi, 10)
-    y1 = sin(x)
+    x = linspace(0, pi, 50)
+    y1 = sin(x)  # amplitude=1, freq=1
     profile1.set_observed_profile(x, y1)
+
     contribution1 = FitContribution("c1")
     contribution1.set_profile(profile1)
     contribution1.set_equation("A*sin(k*x + c)")
 
     profile2 = Profile()
-    y2 = 0.5 * sin(2 * x)
+    y2 = 0.5 * sin(2 * x)  # amplitude=0.5, freq=2
     profile2.set_observed_profile(x, y2)
+
     contribution2 = FitContribution("c2")
     contribution2.set_profile(profile2)
     contribution2.set_equation("B*sin(m*x + d)")
+
     recipe = FitRecipe()
     recipe.add_contribution(contribution1)
     recipe.add_contribution(contribution2)
-    recipe.add_variable(contribution1.A, 1)
-    recipe.add_variable(contribution1.k, 1)
-    recipe.add_variable(contribution1.c, 1)
-    recipe.add_variable(contribution2.B, 0.5)
-    recipe.add_variable(contribution2.m, 2)
-    recipe.add_variable(contribution2.d, 0)
+
+    # Add variables with reasonable initial guesses
+    recipe.add_variable(contribution1.A, 0.8)
+    recipe.add_variable(contribution1.k, 1.0)
+    recipe.add_variable(contribution1.c, 0.1)
+
+    recipe.add_variable(contribution2.B, 0.4)
+    recipe.add_variable(contribution2.m, 2.0)
+    recipe.add_variable(contribution2.d, 0.1)
+
+    # ---- Meaningful constraints ----
+    recipe.constrain(contribution2.m, "2*k")
+    recipe.constrain(contribution2.d, contribution1.c)
+    recipe.constrain(contribution2.B, "0.5*A")
+    recipe.restrain(contribution1.A, 0.5, 1.5)
+    recipe.restrain(contribution1.k, 0.8, 1.2)
 
     return recipe
 

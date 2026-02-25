@@ -6,13 +6,17 @@ build-backend = "setuptools.build_meta"
 name = "diffpy.srfit"
 dynamic=['version', 'dependencies']
 authors = [
-  { name="Simon Billinge", email="sb2896@columbia.edu" },
+  {name='Christopher Farrow', email='farrowch@gmail.com'},
+  {name='Pavol Juhas', email='pavol.juhas@gmail.com'},
+  {name='Caden Myers', email='cjm2304@columbia.edu'},
+  {name='Simon J. L. Billinge', email='sbillinge@ucsb.edu'},
 ]
 maintainers = [
-  { name="Simon Billinge", email="sb2896@columbia.edu" },
+  {name='Caden Myers', email='cjm2304@columbia.edu'},
+  {name='Simon J. L. Billinge', email='sbillinge@ucsb.edu'},
 ]
-description = "Configurable code for solving atomic structures."
-keywords = ['regression', 'modelling', 'fitting', 'diffraction', 'PDF']
+description = "Generalized code base for modeling problems."
+keywords = ['regression', 'modeling', 'fitting', 'diffraction', 'PDF']
 readme = "README.rst"
 requires-python = ">=3.11, <3.14"
 classifiers = [
@@ -48,6 +52,9 @@ include = ["*"]  # package names should match these glob patterns (["*"] by defa
 exclude = []  # exclude packages matching these glob patterns (empty by default)
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
+[project.scripts]
+diffpy-srfit = "diffpy.srfit.app:main"
+
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements/pip.txt"]}
 
@@ -55,6 +62,11 @@ dependencies = {file = ["requirements/pip.txt"]}
 exclude-file = ".codespell/ignore_lines.txt"
 ignore-words = ".codespell/ignore_words.txt"
 skip = "*.cif,*.dat"
+
+[tool.docformatter]
+recursive = true
+wrap-summaries = 72
+wrap-descriptions = 72
 
 [tool.black]
 line-length = 79

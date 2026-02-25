@@ -80,7 +80,8 @@ class TestContribution(unittest.TestCase):
         return
 
     def testInteraction(self):
-        """Test the interaction between the profile and profile generator."""
+        """Test the interaction between the profile and profile
+        generator."""
         fc = self.fitcontribution
         profile = self.profile
         gen = self.gen
@@ -178,7 +179,8 @@ class TestContribution(unittest.TestCase):
         return
 
     def test_releaseOldEquations(self):
-        """Ensure EquationFactory does not hold to obsolete Equations."""
+        """Ensure EquationFactory does not hold to obsolete
+        Equations."""
         fc = self.fitcontribution
         self.assertEqual(0, len(fc._eqfactory.equations))
         for i in range(5):
@@ -191,7 +193,8 @@ class TestContribution(unittest.TestCase):
         return
 
     def test_registerFunction(self):
-        """Ensure registered function works after second set_equation call."""
+        """Ensure registered function works after second set_equation
+        call."""
         fc = self.fitcontribution
         fc.registerFunction(_fsquare, name="fsquare")
         fc.set_equation("fsquare")

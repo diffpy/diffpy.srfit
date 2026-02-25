@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Simple FitRecipe class that includes a FitContribution and Profile."""
+"""Simple FitRecipe class that includes a FitContribution and
+Profile."""
 
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe

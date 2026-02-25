@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of fitting the Debye recipe to experimental Debye-Waller factors.
+"""Example of fitting the Debye recipe to experimental Debye-Waller
+factors.
 
 This is an extension of example in debyemodel.py. The recipe we create will
 simultaneously fit the low and high temperature parts of the experimental data

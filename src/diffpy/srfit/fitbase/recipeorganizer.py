@@ -514,7 +514,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return
 
     def registerCalculator(self, f, argnames=None):
-        """Register a Calculator so it can be used within equation strings.
+        """Register a Calculator so it can be used within equation
+        strings.
 
         A Calculator is an elaborate function that can organize Parameters.
         This creates a function with this class that can be used within string
@@ -551,7 +552,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return eq
 
     def registerFunction(self, f, name=None, argnames=None):
-        """Register a function so it can be used within equation strings.
+        """Register a function so it can be used within equation
+        strings.
 
         This creates a function with this class that can be used within string
         equations.  The resulting equation does not require the arguments to be
@@ -962,7 +964,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return
 
     def _get_constraints(self, recurse=True):
-        """Get the constrained Parameters for this and managed sub-objects."""
+        """Get the constrained Parameters for this and managed sub-
+        objects."""
         constraints = {}
         if recurse:
             for m in filter(_has_get_constraints, self._iter_managed()):

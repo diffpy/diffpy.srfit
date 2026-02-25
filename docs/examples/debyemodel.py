@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of fitting the Debye model to experimental Debye-Waller factors.
+"""Example of fitting the Debye model to experimental Debye-Waller
+factors.
 
 In this example, we build a fit recipe that uses an external function that can
 simulate a atomic displacement parameters using the Debye model. This serves as
@@ -207,7 +208,8 @@ def main():
 
 
 def debye(T, m, thetaD):
-    """A wrapped version of 'adps' that can handle an array of T-values."""
+    """A wrapped version of 'adps' that can handle an array of
+    T-values."""
     y = numpy.array([adps(m, thetaD, x) for x in T])
     return y
 

@@ -38,7 +38,8 @@ from diffpy.srfit.sas import SASGenerator, SASParser
 
 
 def makeRecipe(ciffile, grdata, iqdata):
-    """Make complex-modeling recipe where I(q) and G(r) are fit simultaneously.
+    """Make complex-modeling recipe where I(q) and G(r) are fit
+    simultaneously.
 
     The fit I(q) is fed into the calculation of G(r), which provides
     feedback for the fit parameters of both.

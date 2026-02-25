@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of extracting information from multiple data sets simultaneously.
+"""Example of extracting information from multiple data sets
+simultaneously.
 
 This example builds on npintensitygenerator.py, and uses IntensityGenerator
 from that example to build a recipe that simultaneously refines two data sets

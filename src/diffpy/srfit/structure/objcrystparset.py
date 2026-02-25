@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Wrappers for adapting pyobjcryst.crystal.Crystal to a srfit ParameterSet.
+"""Wrappers for adapting pyobjcryst.crystal.Crystal to a srfit
+ParameterSet.
 
 This will adapt a Crystal or Molecule object from pyobjcryst into the
 ParameterSet interface. The following classes are adapted.
@@ -335,7 +336,8 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         return
 
     def wrapStretchModeParameters(self):
-        """Wrap the stretch modes implicit to the Molecule as Parameters.
+        """Wrap the stretch modes implicit to the Molecule as
+        Parameters.
 
         This will wrap StretchModeBondLengths and StretchModeBondAngles of the
         Molecule as Parameters. Note that this requires that the MolBondAtoms
@@ -1516,7 +1518,8 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
 
 
 class ObjCrystDihedralAngleParameter(StretchModeParameter):
-    """Class for abstracting a dihedral angle in a Molecule to a Parameter.
+    """Class for abstracting a dihedral angle in a Molecule to a
+    Parameter.
 
     This wraps up a pyobjcryst.molecule.StretchModeTorsion object so that the
     angle defined by four MolAtoms ([a1-a2].[a3-a4]) in a Molecule can be used

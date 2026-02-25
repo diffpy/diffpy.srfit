@@ -90,7 +90,8 @@ def pyobjcryst_available():
 
 @pytest.fixture(scope="session")
 def datafile():
-    """Fixture to load a test data file from the testdata package directory."""
+    """Fixture to load a test data file from the testdata package
+    directory."""
 
     def _datafile(filename):
         return importlib.resources.files("tests.testdata").joinpath(filename)
@@ -166,7 +167,8 @@ def build_recipe_one_contribution():
 
 @pytest.fixture()
 def build_recipe_two_contributions():
-    """Helper to build a recipe with two physically related contributions."""
+    """Helper to build a recipe with two physically related
+    contributions."""
     profile1 = Profile()
     x = linspace(0, pi, 50)
     y1 = sin(x)  # amplitude=1, freq=1

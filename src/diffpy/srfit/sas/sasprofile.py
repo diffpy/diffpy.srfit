@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Class for adapting a sas DataInfo objects to the Profile interface."""
+"""Class for adapting a sas DataInfo objects to the Profile
+interface."""
 
 __all__ = ["SASProfile"]
 

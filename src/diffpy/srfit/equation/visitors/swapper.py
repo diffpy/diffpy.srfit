@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Swapper for replacing a Literal in an equation with another Literals."""
+"""Swapper for replacing a Literal in an equation with another
+Literals."""
 
 __all__ = ["Swapper"]
 
@@ -20,7 +21,8 @@ from diffpy.srfit.equation.visitors.visitor import Visitor
 
 
 class Swapper(Visitor):
-    """Swapper for swapping out one literal for another in a literal tree.
+    """Swapper for swapping out one literal for another in a literal
+    tree.
 
     Note that this cannot swap out a root node of a literal tree. This case
     must be tested for explicitly.

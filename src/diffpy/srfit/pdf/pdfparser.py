@@ -109,7 +109,8 @@ class PDFParser(ProfileParser):
     _format = "PDF"
 
     def parseString(self, patstring):
-        """Parse a string and set the _x, _y, _dx, _dy and _meta variables.
+        """Parse a string and set the _x, _y, _dx, _dy and _meta
+        variables.
 
         When _dx or _dy cannot be obtained in the data format it is set to 0.
 

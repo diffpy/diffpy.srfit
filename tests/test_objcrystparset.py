@@ -650,7 +650,8 @@ class TestCreateSpaceGroup:
     # FIXME: only about 50% of the spacegroups pass the assertion
     # test disabled even if cctbx is installed
     def xtestCreateSpaceGroup(self):
-        """Check all sgtbx space groups for proper conversion to SpaceGroup."""
+        """Check all sgtbx space groups for proper conversion to
+        SpaceGroup."""
 
         try:
             from cctbx import sgtbx

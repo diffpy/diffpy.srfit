@@ -91,7 +91,8 @@ class SASParser(ProfileParser):
     _format = "SAS"
 
     def parseFile(self, filename):
-        """Parse a file and set the _x, _y, _dx, _dy and _meta variables.
+        """Parse a file and set the _x, _y, _dx, _dy and _meta
+        variables.
 
         This wipes out the currently loaded data and selected bank number.
 
@@ -131,7 +132,8 @@ class SASParser(ProfileParser):
         return
 
     def parseString(self, patstring):
-        """Parse a string and set the _x, _y, _dx, _dy and _meta variables.
+        """Parse a string and set the _x, _y, _dx, _dy and _meta
+        variables.
 
         When _dx or _dy cannot be obtained in the data format it is set to 0.
 

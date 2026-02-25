@@ -30,7 +30,8 @@ from diffpy.srfit.fitbase import (
 
 
 def makeRecipe():
-    """Make a FitRecipe for fitting three double-gaussian curves to data.
+    """Make a FitRecipe for fitting three double-gaussian curves to
+    data.
 
     The separation and amplitude ratio of the double peaks follows a
     specific relationship.  The peaks are broadend according to their

@@ -6,8 +6,8 @@
 #
 # (c) 2025-present The DiffPy Team.
 #
-# File coded by: Chris Farrow, Caden Myers, Billinge Group members and
-# community contributors.
+# File coded by: Christopher Farrow, Pavol Juhas, Caden Myers,
+# Simon J. L. Billinge, and members of the DiffPy community.
 #
 # See GitHub contributions for a more detailed list of contributors.
 # https://github.com/diffpy/diffpy.srfit/graphs/contributors

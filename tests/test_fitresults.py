@@ -16,11 +16,16 @@
 
 import unittest
 
+import numpy as np
 import pytest
 from scipy.optimize import leastsq
 
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
-from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
+from diffpy.srfit.fitbase.fitresults import (
+    FitResults,
+    initializeRecipe,
+    resultsDictionary,
+)
 
 # The fit results from the recipe fixture in conftest.py
 expected_fitresults = """\
@@ -155,6 +160,39 @@ def test_get_results_dictionary(build_recipe_one_contribution):
         assert expected_metric in actual_results_dict
     for expected_var in expected_refined_variables:
         assert expected_var in actual_results_dict
+
+
+def test_resultsDictionary(temp_data_files):
+    actual_results_dict = resultsDictionary(
+        temp_data_files / "fit_results.res"
+    )
+    # bad behavior: values are stored as strings
+    expected_results_dict = {
+        "than": "25",  # bad behavior: shouldn't be here
+        "wave_number": "1.00000000e+00",
+        "phase_shift": "-1.61291146e-18",
+        "amplitude": "1.00000000e+00",
+        "Rw": "0.00000000",
+        "Chi2": "0.00000000",
+        "Restraints": "0.00000000",
+        "Contributions": "0.00000000",
+        "Residual": "0.00000000",
+        "Feb": "25",  # bad behavior: shouldn't be here
+    }
+    # convert values to float for comparison (with rounding)
+    for key in expected_results_dict:
+        expected_results_dict[key] = float(expected_results_dict[key])
+    for key in actual_results_dict:
+        actual_results_dict[key] = float(actual_results_dict[key])
+
+    actual_keys = set(actual_results_dict.keys())
+    actual_values = np.round(np.array(list(actual_results_dict.values())), 5)
+    expected_keys = set(expected_results_dict.keys())
+    expected_values = np.round(
+        np.array(list(expected_results_dict.values())), 5
+    )
+    assert expected_keys == actual_keys
+    assert list(expected_values == list(actual_values))
 
 
 def testInitializeFromFileName(datafile):

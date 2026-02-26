@@ -134,41 +134,41 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     name : str
         A name for this FitRecipe.
     fithooks : list
-        List of FitHook instances that can pass information out
+        The list of FitHook instances that can pass information out
         of the system during a refinement. By default, this is
         populated by a PrintFitHook instance.
     _constraints : dict
-        A dictionary of Constraints, indexed by the constrained
+        The dictionary of Constraints, indexed by the constrained
         Parameter. Constraints can be added using the
         'constrain' method.
     _oconstraints : list
-        An ordered list of the constraints from this and all
+        The ordered list of the constraints from this and all
         sub-components.
     _calculators : dict
-        A managed dictionary of Calculators.
+        The managed dictionary of Calculators.
     _contributions : OrderedDict
-        A managed OrderedDict of FitContributions.
+        The managed OrderedDict of FitContributions.
     _parameters : OrderedDict
-        A managed OrderedDict of parameters (in this case the
+        The managed OrderedDict of parameters (in this case the
         parameters are varied).
     _parsets : dict
-        A managed dictionary of ParameterSets.
+        The managed dictionary of ParameterSets.
     _eqfactory : diffpy.srfit.equation.builder.EquationFactory
-        A diffpy.srfit.equation.builder.EquationFactory
+        The diffpy.srfit.equation.builder.EquationFactory
         instance that is used to create constraints and
         restraints from strings.
     _restraintlist : list
-        A list of restraints from this and all sub-components.
+        The list of restraints from this and all sub-components.
     _restraints : set
-        A set of Restraints. Restraints can be added using the
+        The set of Restraints. Restraints can be added using the
         'restrain' or 'confine' methods.
     _ready : bool
-        A flag indicating if all attributes are ready for the
+        The flag indicating if all attributes are ready for the
         calculation.
     _tagmanager : TagManager
-        A TagManager instance for managing tags on Parameters.
+        The TagManager instance for managing tags on Parameters.
     _weights : list
-        List of weighing factors for each FitContribution. The
+        The list of weighing factors for each FitContribution. The
         weights are multiplied by the residual of the
         FitContribution when determining the overall residual.
     _fixedtag : str
@@ -178,17 +178,17 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     Properties
     ----------
     names : list
-        Variable names (read only). See get_names.
+        The variable names (read only). See get_names.
     values : numpy.ndarray
-        Variable values (read only). See get_values.
+        The variable values (read only). See get_values.
     fixednames : list
-        Names of the fixed refinable variables (read only).
+        The names of the fixed refinable variables (read only).
     fixedvalues : numpy.ndarray
-        Values of the fixed refinable variables (read only).
+        The values of the fixed refinable variables (read only).
     bounds : list of tuple
-        Bounds on parameters (read only). See get_bounds_pairs.
+        The bounds on parameters (read only). See get_bounds_pairs.
     bounds2 : tuple of numpy.ndarray
-        Bounds on parameters (read only). See get_bounds_array.
+        The bounds on parameters (read only). See get_bounds_array.
     """
 
     fixednames = property(
@@ -272,9 +272,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Parameters
         ----------
         fithook : diffpy.srfit.fitbase.fithook.FitHook
-            FitHook instance to add to the sequence.
+            The FitHook instance to add to the sequence.
         index : int or None, optional
-            Index for inserting fithook into the list of fit hooks. If
+            The index for inserting fithook into the list of fit hooks. If
             this is None (default), the fithook is added to the end.
         """
         if index is None:
@@ -300,10 +300,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Parameters
         ----------
         fithook : diffpy.srfit.fitbase.fithook.FitHook or None, optional
-            FitHook instance to remove from the sequence. If this is
+            The FitHook instance to remove from the sequence. If this is
             None (default), default to index.
         index : int, optional
-            Index of FitHook instance to remove (default -1).
+            The index of FitHook instance to remove (default -1).
 
         Raises
         ------
@@ -720,21 +720,21 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Parameters
         ----------
         par : diffpy.srfit.fitbase.Parameter
-            A Parameter that will be varied during a fit.
+            The Parameter that will be varied during a fit.
         value : float or None, optional
-            An initial value for the variable. If this is None
+            The initial value for the variable. If this is None
             (default), then the current value of par will be used.
         name : str or None, optional
-            A name for this variable. If name is None (default), then
+            The name for this variable. If name is None (default), then
             the name of the parameter will be used.
         fixed : bool, optional
             Fix the variable so that it does not vary (default False).
         tag : str or None, optional
-            A tag for the variable. This can be used to retrieve, fix
+            The tag for the variable. This can be used to retrieve, fix
             or free variables by tag (default None). Note that a
             variable is automatically tagged with its name and "all".
         tags : list of str, optional
-            A list of tags (default []). Both tag and tags can be
+            The list of tags (default []). Both tag and tags can be
             applied.
 
         Returns
@@ -836,7 +836,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             The name of the variable. The variable will be able to be
             used by this name in restraint and constraint equations.
         value : float or None, optional
-            An initial value for the variable. If this is None
+            The initial value for the variable. If this is None
             (default), then the variable will be given the value of the
             first non-None-valued Parameter constrained to it. If this
             fails, an error will be thrown when 'residual' is called.
@@ -844,11 +844,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             Fix the variable so that it does not vary (default False).
             The variable will still be managed by the FitRecipe.
         tag : str or None, optional
-            A tag for the variable. This can be used to fix and free
+            The tag for the variable. This can be used to fix and free
             variables by tag (default None). Note that a variable is
             automatically tagged with its name and "all".
         tags : list of str, optional
-            A list of tags (default []). Both tag and tags can be
+            The list of tags (default []). Both tag and tags can be
             applied.
 
         Returns
@@ -960,14 +960,14 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Parameters
         ----------
-            *args:
-                Positional arguments specifying the parameters to fix. These
-                can be parameter objects, their names as strings, or tags.
-                The special string "all" can be used to select all
+            *args : str or Parameter
+                The positional arguments specifying the parameters to fix.
+                These can be parameter objects, their names as strings, or
+                tags. The special string "all" can be used to select all
                 parameters.
-            **kw:
-                Keyword arguments where the keys are parameter names and the
-                values are the values to assign to the corresponding
+            **kw : dict
+                The keyword arguments where the keys are parameter names and
+                the values are the values to assign to the corresponding
                 fixed parameters.
 
         Raises
@@ -1020,14 +1020,14 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Parameters
         ----------
         *args : str or Parameter
-            Positional arguments specifying the parameters to free.
+            The positional arguments specifying the parameters to free.
             These can be:
             - Parameter objects
             - Names of parameters (as strings)
             - Tags associated with parameters (as strings)
             - The string "all" to select all parameters.
         **kw : dict
-            Keyword arguments specifying parameter names as keys and
+            The keyword arguments specifying parameter names as keys and
             their values to assign after freeing. This is useful
             for setting the value of a parameter while marking it as free.
 
@@ -1146,13 +1146,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         par : Parameter
             The Parameter to constrain.
         con : str or Parameter
-            A string representation of the constraint equation or a
+            The string representation of the constraint equation or a
             Parameter to constrain to. A constraint equation must
             consist of numpy operators and "known" Parameters.
             Parameters are known if they are in the ns argument, or if
             they are managed by this object.
         ns : dict, optional
-            A dictionary of Parameters, indexed by name, that are used
+            The dictionary of Parameters, indexed by name, that are used
             in the eqstr, but not part of this object (default {}).
 
         Raises
@@ -1205,7 +1205,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         -------
 
         values_array : numpy.ndarray
-            An array containing the current values of all free
+            The array containing the current values of all free
             variables in the fit recipe.
         """
         values_array = array(
@@ -1230,7 +1230,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns
         -------
         parameter_names :list of str
-            A list containing the names of free variables.
+            The list containing the names of free variables.
         """
         parameter_names = [
             v.name for v in self._parameters.values() if self.is_free(v)
@@ -1251,7 +1251,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns
         -------
         bounds_pair_list : list of tuple of float
-            A list of ``(lower, upper)`` bounds on the variables, in the same
+            The list of ``(lower, upper)`` bounds on the variables, in the same
             order as ``get_names`` and ``get_values``.
         """
         return [v.bounds for v in self._parameters.values() if self.is_free(v)]
@@ -1272,10 +1272,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns
         -------
         lower_bounds : numpy.ndarray
-            A numpy array of lower bounds on the variables, in the same order
+            The numpy array of lower bounds on the variables, in the same order
             as ``get_names`` and ``get_values``.
         upper_bounds : numpy.ndarray
-            A numpy array of upper bounds on the variables, in the same order
+            The numpy array of upper bounds on the variables, in the same order
             as ``get_names`` and ``get_values``.
         """
         bounds = self.get_bounds_pairs()

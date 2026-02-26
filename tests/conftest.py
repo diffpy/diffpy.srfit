@@ -150,19 +150,23 @@ def capturestdout():
 @pytest.fixture()
 def build_recipe_one_contribution():
     "helper to build a simple recipe"
-    profile = Profile()
-    x = linspace(0, pi, 10)
-    y = sin(x)
-    profile.set_observed_profile(x, y)
-    contribution = FitContribution("c1")
-    contribution.set_profile(profile)
-    contribution.set_equation("amplitude*sin(wave_number*x + phase_shift)")
-    recipe = FitRecipe()
-    recipe.add_contribution(contribution)
-    recipe.add_variable(contribution.amplitude, 1)
-    recipe.add_variable(contribution.wave_number, 1)
-    recipe.add_variable(contribution.phase_shift, 1)
-    return recipe
+
+    def _build_recipe():
+        profile = Profile()
+        x = linspace(0, pi, 10)
+        y = sin(x)
+        profile.set_observed_profile(x, y)
+        contribution = FitContribution("c1")
+        contribution.set_profile(profile)
+        contribution.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+        recipe = FitRecipe()
+        recipe.add_contribution(contribution)
+        recipe.add_variable(contribution.amplitude, 1)
+        recipe.add_variable(contribution.wave_number, 1)
+        recipe.add_variable(contribution.phase_shift, 1)
+        return recipe
+
+    return _build_recipe
 
 
 @pytest.fixture()

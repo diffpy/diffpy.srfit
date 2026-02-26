@@ -80,58 +80,80 @@ class FitResults(object):
 
     Attributes
     ----------
-    recipe
-        The recipe containing the results.
-    cov
-        The covariance matrix from the recipe.
-    conresults
-        An ordered dictionary of ContributionResults for each
-        FitContribution, indexed by the FitContribution name.
-    derivstep
-        The fractional step size for calculating numeric
-        derivatives. Default 1e-8.
-    varnames
-        Names of the variables in the recipe.
-    varvals
-        Values of the variables in the recipe.
-    varunc
-        Uncertainties in the variable values.
-    showfixed
-        Show fixed variables (default True).
-    fixednames
-        Names of the fixed variables of the recipe.
-    fixedvals
-        Values of the fixed variables of the recipe.
-    showcon
-        Show constraint values in the output (default False).
-    connames
-        Names of the constrained parameters.
-    convals
-        Values of the constrained parameters.
-    conunc
-        Uncertainties in the constraint values.
-    residual
-        The scalar residual of the recipe.
-    penalty
-        The penalty to residual from the restraints.
-    chi2
-        The chi2 of the recipe.
-    cumchi2
-        The cumulative chi2 of the recipe.
-    rchi2
-        The reduced chi2 of the recipe.
-    rw
-        The Rw of the recipe.
-    cumrw
-        The cumulative Rw of the recipe.
-    messages
-        A list of messages about the results.
-    precision
-        The precision of numeric output (default 8).
-    _dcon
-        The derivatives of the constraint equations with respect to
-        the variables. This is used internally.
+    recipe : FitRecipe
+        The recipe from which the results were generated.
 
+    cov : numpy.ndarray or None
+        Covariance matrix of the refined variables. None if unavailable.
+
+    conresults : collections.OrderedDict[str, ContributionResults]
+        Ordered mapping of FitContribution name → ContributionResults.
+
+    derivstep : float
+        Fractional step size used for numerical derivatives (default 1e-8).
+
+    varnames : list[str]
+        Names of refined variables in the recipe.
+
+    varvals : numpy.ndarray
+        Optimized values of the refined variables.
+
+    varunc : numpy.ndarray or None
+        Estimated standard uncertainties of the variables. None if invalid.
+
+    showfixed : bool
+        Whether fixed variables are included in formatted output
+        (default True).
+
+    fixednames : list[str]
+        Names of variables held fixed during refinement.
+
+    fixedvals : numpy.ndarray
+        Values of the fixed variables.
+
+    showcon : bool
+        Whether constrained parameters are included in formatted output
+        (default False).
+
+    connames : list[str]
+        Names of constrained parameters.
+
+    convals : numpy.ndarray
+        Values of constrained parameters.
+
+    conunc : numpy.ndarray or None
+        Uncertainties of constrained parameters. None if unavailable.
+
+    residual : float
+        Scalar residual value of the recipe.
+
+    penalty : float
+        Penalty contribution to the residual from restraints.
+
+    chi2 : float
+        Chi-squared value of the fit.
+
+    cumchi2 : numpy.ndarray
+        Cumulative chi-squared as a function of data index.
+
+    rchi2 : float
+        Reduced chi-squared of the fit.
+
+    rw : float
+        Weighted R-factor of the fit.
+
+    cumrw : numpy.ndarray
+        Cumulative weighted R-factor as a function of data index.
+
+    messages : list[str]
+        Informational or warning messages associated with the results.
+
+    precision : int
+        Number of digits used when formatting numeric output (default 8).
+
+    _dcon : numpy.ndarray
+        Jacobian of constraint equations with respect to variables.
+        Used internally for uncertainty propagation.
 
     Each of these attributes, except the recipe, are created or updated when
     the update method is called.
@@ -142,14 +164,13 @@ class FitResults(object):
 
         Attributes
         ----------
-        recipe
-            The recipe containing the results
-        update
-            Flag indicating whether to do an immediate update (default
-            True).
-        showcon
+        recipe : FitRecipe
+            The recipe containing the results.
+        update : bool
+            Flag indicating whether to do an immediate update (default True).
+        showfixed : bool
             Show fixed variables in the output (default True).
-        showcon
+        showcon : bool
             Show constraint values in the output (default False).
         """
         self.recipe = recipe
@@ -674,37 +695,37 @@ class ContributionResults(object):
 
     Attributes
     ----------
-    y
+    y : numpy.ndarray or None
         The FitContribution's profile over the calculation range
         (default None).
-    dy
+    dy : numpy.ndarray or None
         The uncertainty in the FitContribution's profile over the
         calculation range (default None).
-    x
+    x : numpy.ndarray or None
         A numpy array of the calculated independent variable for the
         FitContribution (default None).
-    ycalc
+    ycalc : numpy.ndarray or None
         A numpy array of the calculated signal for the FitContribution
         (default None).
-    residual
+    residual : float
         The scalar residual of the FitContribution.
-    chi2
+    chi2 : float
         The chi2 of the FitContribution.
-    cumchi2
+    cumchi2 : numpy.ndarray
         The cumulative chi2 of the FitContribution.
-    rw
+    rw : float
         The Rw of the FitContribution.
-    cumrw
+    cumrw : numpy.ndarray
         The cumulative Rw of the FitContribution.
-    weight
+    weight : float
         The weight of the FitContribution in the recipe.
-    conlocs
+    conlocs : list
         The location of the constrained parameters in the
         FitContribution (see the
         RecipeContainer._locate_managed_object method).
-    convals
+    convals : list
         Values of the constrained parameters.
-    conunc
+    conunc : list
         Uncertainties in the constraint values.
     """
 

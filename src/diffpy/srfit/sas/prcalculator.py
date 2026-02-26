@@ -116,7 +116,8 @@ class PrCalculator(Calculator):
 
 
 class CFCalculator(PrCalculator):
-    """A class for calculating the characteristic function (CF) from data.
+    """A class for calculating the characteristic function (CF) from
+    data.
 
     This calculator produces
     f(r) = P(r) / 4 pi r**2

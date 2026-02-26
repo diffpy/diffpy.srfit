@@ -814,7 +814,8 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
 
 
 def _get_float(formula):
-    """Get a float from a formula string, or None if this is not possible."""
+    """Get a float from a formula string, or None if this is not
+    possible."""
     try:
         return eval(formula)
     except NameError:

@@ -16,7 +16,8 @@
 
 
 class bind2nd(object):
-    """Freeze second argument of a callable object to a given constant."""
+    """Freeze second argument of a callable object to a given
+    constant."""
 
     def __init__(self, func, arg1):
         """Freeze the second argument of function func to arg1."""

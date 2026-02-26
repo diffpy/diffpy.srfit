@@ -238,7 +238,8 @@ class EquationFactory(object):
         return self.registerBuilder(name, opbuilder)
 
     def registerBuilder(self, name, builder):
-        """Register builder in this module so it can be used in makeEquation.
+        """Register builder in this module so it can be used in
+        makeEquation.
 
         If an extant builder with the given name is already registered,
         this will replace all instances of the old builder's literal in
@@ -282,7 +283,8 @@ class EquationFactory(object):
         return
 
     def wipeout(self, eq):
-        """Invalidate the specified equation and remove it from the factory.
+        """Invalidate the specified equation and remove it from the
+        factory.
 
         This will remove the equation from the purview of the factory
         and also change its formula to return NaN.  This ensures that eq
@@ -576,7 +578,8 @@ class ArgumentBuilder(BaseBuilder):
     """
 
     def __init__(self, value=None, name=None, const=False, arg=None):
-        """Create an ArgumentBuilder instance, containing a new Argument.
+        """Create an ArgumentBuilder instance, containing a new
+        Argument.
 
         Parameters
         ----------
@@ -732,8 +735,8 @@ def getBuilder(name):
 
 
 def __wrap_numpy_operators():
-    """Export all numpy operators as OperatorBuilder instances in the module
-    namespace."""
+    """Export all numpy operators as OperatorBuilder instances in the
+    module namespace."""
     for name in dir(numpy):
         op = getattr(numpy, name)
         if isinstance(op, numpy.ufunc):

@@ -93,7 +93,8 @@ class ProfileParser(object):
         return self._format
 
     def parseString(self, patstring):
-        """Parse a string and set the _x, _y, _dx, _dy and _meta variables.
+        """Parse a string and set the _x, _y, _dx, _dy and _meta
+        variables.
 
         When _dx or _dy cannot be obtained in the data format it is set to
         None.
@@ -110,7 +111,8 @@ class ProfileParser(object):
         raise NotImplementedError()
 
     def parseFile(self, filename):
-        """Parse a file and set the _x, _y, _dx, _dy and _meta variables.
+        """Parse a file and set the _x, _y, _dx, _dy and _meta
+        variables.
 
         This wipes out the currently loaded data and selected bank number.
 

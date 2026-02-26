@@ -410,9 +410,9 @@ def test_add_and_remove_parameter_set():
 
 
 def test_add_contribution(capturestdout):
-    """Duplicated test of PrintFitHooks except addContribution method has
-    changed to the new add_contribution method. This is because addContribution
-    is deprecated.
+    """Duplicated test of PrintFitHooks except addContribution method
+    has changed to the new add_contribution method. This is because
+    addContribution is deprecated.
 
     Remove this test after addContribution is removed and update
     testPrintFitHook to use add_contribution instead of addContribution.
@@ -570,8 +570,8 @@ def build_recipe_from_datafile(datafile):
 
 
 def build_recipe_from_datafile_deprecated(datafile):
-    """Duplicate of build_recipe_from_datafile to use deprecated loadParsedData
-    method.
+    """Duplicate of build_recipe_from_datafile to use deprecated
+    loadParsedData method.
 
     Remove in version 4.0.0.
     """

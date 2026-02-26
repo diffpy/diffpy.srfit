@@ -48,7 +48,8 @@ class TestProfileGenerator(unittest.TestCase):
         return
 
     def testUpdate(self):
-        """Update and change the profile to make sure generator is flushed."""
+        """Update and change the profile to make sure generator is
+        flushed."""
         gen = self.gen
         prof = self.profile
 

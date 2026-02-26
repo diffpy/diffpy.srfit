@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""The FitHook class for inspecting the progress of a FitRecipe refinement.
+"""The FitHook class for inspecting the progress of a FitRecipe
+refinement.
 
 FitHooks are called by a FitRecipe during various times of the residual
 is evaluation. The default FitHook simply counts the number of times the
@@ -54,7 +55,8 @@ class FitHook(object):
         return
 
     def precall(self, recipe):
-        """This is called within FitRecipe.residual, before the calculation.
+        """This is called within FitRecipe.residual, before the
+        calculation.
 
         Attributes
         ----------
@@ -64,7 +66,8 @@ class FitHook(object):
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the calculation.
+        """This is called within FitRecipe.residual, after the
+        calculation.
 
         Attributes
         ----------
@@ -121,7 +124,8 @@ class PrintFitHook(FitHook):
         return
 
     def precall(self, recipe):
-        """This is called within FitRecipe.residual, before the calculation.
+        """This is called within FitRecipe.residual, before the
+        calculation.
 
         Attributes
         ----------
@@ -134,7 +138,8 @@ class PrintFitHook(FitHook):
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the calculation.
+        """This is called within FitRecipe.residual, after the
+        calculation.
 
         Attributes
         ----------
@@ -227,7 +232,8 @@ class PlotFitHook(FitHook):
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the calculation.
+        """This is called within FitRecipe.residual, after the
+        calculation.
 
         Find data and plot it.
 

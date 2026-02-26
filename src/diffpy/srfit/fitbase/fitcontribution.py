@@ -450,7 +450,8 @@ class FitContribution(ParameterSet):
         return self._reseq()
 
     def evaluate(self):
-        """Evaluate the contribution equation and update profile.ycalc."""
+        """Evaluate the contribution equation and update
+        profile.ycalc."""
         yc = self._eq()
         if self.profile is not None:
             self.profile.ycalc = yc

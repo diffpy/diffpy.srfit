@@ -12,9 +12,9 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Modules and classes that adapt structure representations to the ParameterSet
-interface and automatic structure constraint generation from space group
-information."""
+"""Modules and classes that adapt structure representations to the
+ParameterSet interface and automatic structure constraint generation
+from space group information."""
 
 from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
 

@@ -1278,8 +1278,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.plot_options.update(kwargs)
 
     def _set_axes_labels_from_metadata(self, meta, plot_params):
-        """Set axes labels based on filename suffix in profile metadata if not
-        already set."""
+        """Set axes labels based on filename suffix in profile metadata
+        if not already set."""
         if isinstance(meta, dict):
             filename = meta.get("filename")
             if filename:
@@ -1292,8 +1292,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         return
 
     def plot_recipe(self, ax=None, return_fig=False, **kwargs):
-        """Plot the observed, fit, and difference curves for each contribution
-        of the fit recipe.
+        """Plot the observed, fit, and difference curves for each
+        contribution of the fit recipe.
 
         If the recipe has multiple contributions, a separate
         plot is created for each contribution.
@@ -1516,7 +1516,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         return
 
     def _update_configuration(self):
-        """Notify RecipeContainers in hierarchy of configuration change."""
+        """Notify RecipeContainers in hierarchy of configuration
+        change."""
         self._ready = False
         return
 

@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Form factors (characteristic functions) used in PDF nanoshape fitting.
+"""Form factors (characteristic functions) used in PDF nanoshape
+fitting.
 
 These are used to calculate the attenuation of the PDF due to a finite
 size. For a crystal-like nanoparticle, one can calculate the PDF via
@@ -202,8 +203,8 @@ def spheroidalCF2(r, psize, axrat):
 
 
 def lognormalSphericalCF(r, psize, psig):
-    """Spherical nanoparticle characteristic function with lognormal size
-    distribution.
+    """Spherical nanoparticle characteristic function with lognormal
+    size distribution.
 
     Attributes
     ----------
@@ -405,8 +406,8 @@ class SASCF(Calculator):
         return
 
     def __call__(self, r):
-        """Calculate the characteristic function from the transform of the
-        BaseModel."""
+        """Calculate the characteristic function from the transform of
+        the BaseModel."""
 
         # Determine q-values.
         # We want very fine r-spacing so we can properly normalize f(r). This

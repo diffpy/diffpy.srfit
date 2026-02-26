@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""The FitResults and ContributionResults classes for storing results of a fit.
+"""The FitResults and ContributionResults classes for storing results of
+a fit.
 
 The FitResults class is used to display the current state of a
 FitRecipe. It stores the state, and uses it to calculate useful
@@ -172,7 +173,8 @@ class FitResults(object):
         return
 
     def update(self):
-        """Update the results according to the current state of the recipe."""
+        """Update the results according to the current state of the
+        recipe."""
         # Note that the order of these operations are chosen to reduce
         # computation time.
 
@@ -310,7 +312,8 @@ class FitResults(object):
         return jac
 
     def _calculate_metrics(self):
-        """Calculate chi2, cumchi2, rchi2, rw and cumrw for the recipe."""
+        """Calculate chi2, cumchi2, rchi2, rw and cumrw for the
+        recipe."""
         cumchi2 = numpy.array([], dtype=float)
         # total weighed denominator for the ratio in the Rw formula
         yw2tot = 0.0
@@ -628,8 +631,8 @@ class FitResults(object):
         return
 
     def get_results_dictionary(self):
-        """Get a dictionary of results, with variable names and values, and
-        overall metrics.
+        """Get a dictionary of results, with variable names and values,
+        and overall metrics.
 
         Returns
         -------

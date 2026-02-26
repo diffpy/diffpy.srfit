@@ -161,9 +161,9 @@ def build_recipe_one_contribution():
         contribution.set_equation("amplitude*sin(wave_number*x + phase_shift)")
         recipe = FitRecipe()
         recipe.add_contribution(contribution)
-        recipe.add_variable(contribution.amplitude, 1)
-        recipe.add_variable(contribution.wave_number, 1)
-        recipe.add_variable(contribution.phase_shift, 1)
+        recipe.add_variable(contribution.amplitude, 4)
+        recipe.add_variable(contribution.wave_number, 3)
+        recipe.add_variable(contribution.phase_shift, 2)
         return recipe
 
     return _build_recipe

@@ -39,6 +39,9 @@ Restraints     0.00000000
 Chi2           0.00000000
 Reduced Chi2   0.00000000
 Rw             0.00000007
+
+Variables (Uncertainties invalid)
+------------------------------------------------------------------------------
 """
 expected_refined_variables = ["amplitude", "wave_number", "phase_shift"]
 

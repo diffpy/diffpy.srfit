@@ -1230,8 +1230,18 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             If the input results is not a FitResults object or a path to a
             results file.
         """
-        if hasattr(results, "print_results"):
-            params_dict = utils.get_dict_from_results_object(results)
+        if hasattr(results, "get_results_dictionary"):
+            params_dict = results.get_results_dictionary()
+            metrics_in_dict = [
+                "Residual",
+                "Contributions",
+                "Restraints",
+                "Chi2",
+                "Reduced Chi2",
+                "Rw",
+            ]
+            for metric in metrics_in_dict:
+                params_dict.pop(metric, None)
         elif isinstance(results, (str, Path)):
             params_dict = utils.get_dict_from_results_file(results)
         else:

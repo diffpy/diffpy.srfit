@@ -92,25 +92,4 @@ def get_dict_from_results_file(
     return parsed_results_dict
 
 
-def get_dict_from_results_object(results_object) -> dict[str, float]:
-    """Get a dictionary of parameter names and values from a FitResults
-    object.
-
-    Parameters
-    ----------
-    results_object : FitResults
-        The FitResults object containing the parameter names and values.
-
-    Returns
-    -------
-    params_dict : dict
-        The dictionary where keys are parameter names and values are the
-        corresponding parameter values as floats.
-    """
-    param_names = results_object.varnames
-    param_vals = results_object.varvals
-    params_dict = dict(zip(param_names, param_vals))
-    return params_dict
-
-
 # End of file

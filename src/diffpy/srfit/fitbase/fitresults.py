@@ -66,6 +66,14 @@ resultsDictionary_dep_msg = build_deprecation_message(
     new_base="diffpy.srfit.fitbase.FitResults",
 )
 
+initializeRecipe_dep_msg = build_deprecation_message(
+    "diffpy.srfit.fitbase",
+    "initializeRecipe",
+    "FitRecipe.in",
+    removal_version,
+    new_base="diffpy.srfit.fitbase.FitResults",
+)
+
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
@@ -820,6 +828,7 @@ def resultsDictionary(results):
     return mpairs
 
 
+@deprecated(initializeRecipe_dep_msg)
 def initializeRecipe(recipe, results):
     """Initialize the variables of a recipe from a results file.
 

@@ -35,11 +35,13 @@ problem using FitRecipe.
 __all__ = ["FitRecipe"]
 
 from collections import OrderedDict
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 from bg_mpl_stylesheets.styles import all_styles
 from numpy import array, concatenate, dot, sqrt
 
+import diffpy.srfit.util.inpututils as utils
 from diffpy.srfit.fitbase.fithook import PrintFitHook
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
@@ -1183,6 +1185,74 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         for restraint in recipe_object._restraints:
             if restraint not in self._restraints:
                 self._restraints.add(restraint)
+
+    def _pretty_print_results_dict(self, params_dict):
+        """Pretty print a dictionary of parameter names and values."""
+        sorted_params = sorted(params_dict.items())
+        width = max(len(name) for name, _ in sorted_params)
+        for name, value in sorted_params:
+            if isinstance(value, float):
+                value_str = f"{value:.6g}"
+            else:
+                value_str = str(value)
+            print(f"  {name:<{width}} = {value_str}")
+
+    def _set_parameters_from_dict(self, params_dict):
+        """Set the parameters of the FitRecipe from a dictionary of
+        parameter names and values."""
+        for param_name, param_value in params_dict.items():
+            if param_name in self._parameters:
+                self._parameters[param_name].setValue(param_value)
+            else:
+                print(
+                    f"Warning: Parameter '{param_name}' from results "
+                    "not found in FitRecipe and will be ignored."
+                )
+
+    def initialize_recipe_with_results(self, results, verbose=True):
+        """Initialize a FitRecipe with a FitResults object or a results
+        file.
+
+        Note that at least one FitContribution must already exist in
+        the FitRecipe.
+
+        Parameters
+        ----------
+        results : FitResults, pathlib.Path, or str
+            The FitResults object or path to results file to initialize with.
+        verbose : bool, optional
+            If True, print warnings for any parameters in the results that are
+            not in the FitRecipe. Default is True.
+
+        Raises
+        ------
+        ValueError
+            If the input results is not a FitResults object or a path to a
+            results file.
+        """
+        if hasattr(results, "print_results"):
+            params_dict = utils.get_dict_from_results_object(results)
+        elif isinstance(results, (str, Path)):
+            params_dict = utils.get_dict_from_results_file(results)
+        else:
+            raise ValueError(
+                "The input results must be a FitResults object or a path to a "
+                f"results file, but got {type(results)}."
+            )
+        self._set_parameters_from_dict(params_dict)
+        if verbose:
+            print()
+            print("Parameters found in Results:")
+            print("=" * 30)
+            self._pretty_print_results_dict(params_dict)
+            print()
+            print("Parameters set in FitRecipe:")
+            print("=" * 30)
+            set_parameters_dict = {
+                param.name: param.getValue()
+                for param in self._parameters.values()
+            }
+            self._pretty_print_results_dict(set_parameters_dict)
 
     def set_plot_defaults(self, **kwargs):
         """Set default plotting options for all future plots.

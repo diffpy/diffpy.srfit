@@ -69,9 +69,9 @@ resultsDictionary_dep_msg = build_deprecation_message(
 initializeRecipe_dep_msg = build_deprecation_message(
     "diffpy.srfit.fitbase",
     "initializeRecipe",
-    "FitRecipe.in",
+    "initialize_recipe_with_results",
     removal_version,
-    new_base="diffpy.srfit.fitbase.FitResults",
+    new_base="diffpy.srfit.fitbase.FitRecipe",
 )
 
 
@@ -830,7 +830,14 @@ def resultsDictionary(results):
 
 @deprecated(initializeRecipe_dep_msg)
 def initializeRecipe(recipe, results):
-    """Initialize the variables of a recipe from a results file.
+    """**This function has been deprecated and will be** **removed in
+    version 4.0.0.**
+
+    **Please use**
+    **diffpy.srfit.fitbase.FitRecipe.initialize_recipe_with_results**
+    **instead.**
+
+    Initialize the variables of a recipe from a results file.
 
     This reads the results from file and initializes any variables (fixed or
     free) in the recipe to the results values. Note that the recipe has to be

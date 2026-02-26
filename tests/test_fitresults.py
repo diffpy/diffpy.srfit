@@ -38,10 +38,7 @@ Contributions  0.00000000
 Restraints     0.00000000
 Chi2           0.00000000
 Reduced Chi2   0.00000000
-Rw             0.00000000
-
-Variables (Uncertainties invalid)
-------------------------------------------------------------------------------
+Rw             0.00000007
 """
 expected_refined_variables = ["amplitude", "wave_number", "phase_shift"]
 
@@ -54,9 +51,10 @@ def optimize_recipe(recipe):
 
 
 def test_formatResults(build_recipe_one_contribution):
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     results = FitResults(recipe)
+    results.save_results("res.res")
     actual_results_string = results.formatResults(header="My Custom header")
     # Because slight variations in refinement, just check
     # that the header of the results are the same.
@@ -67,7 +65,7 @@ def test_formatResults(build_recipe_one_contribution):
 
 
 def test_get_results_string(build_recipe_one_contribution):
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_string = results.get_results_string(
@@ -82,7 +80,7 @@ def test_get_results_string(build_recipe_one_contribution):
 
 
 def test_printResults(build_recipe_one_contribution, capsys):
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     results = FitResults(recipe)
     results.printResults(header="My Custom header")
@@ -96,7 +94,7 @@ def test_printResults(build_recipe_one_contribution, capsys):
 
 
 def test_print_results(build_recipe_one_contribution, capsys):
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     results = FitResults(recipe)
     results.print_results(header="My Custom header")
@@ -110,7 +108,7 @@ def test_print_results(build_recipe_one_contribution, capsys):
 
 
 def test_saveResults(build_recipe_one_contribution, tmp_path):
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_file = tmp_path / "fit_results.txt"
@@ -127,7 +125,7 @@ def test_saveResults(build_recipe_one_contribution, tmp_path):
 
 
 def test_save_results(build_recipe_one_contribution, tmp_path):
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_file = tmp_path / "fit_results.txt"
@@ -146,7 +144,7 @@ def test_save_results(build_recipe_one_contribution, tmp_path):
 def test_get_results_dictionary(build_recipe_one_contribution):
     # Case: user gets results dictionary after optimization
     # expected: results dictionary contains expected keys and values
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_dict = results.get_results_dictionary()

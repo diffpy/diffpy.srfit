@@ -527,11 +527,115 @@ def test_initialize_recipe_from_recipe_bad(build_recipe_two_contributions):
         recipe2.initialize_recipe_with_recipe(recipe_bad)
 
 
-# def test_initialize_recipe_from_results(build_recipe_one_contribution):
-#     # Case: User initializes a FitRecipe from a FitResults object or
-#     #       results file
-#     # expected: recipe is initialized with variables from previous fit
-#     assert False
+def test_initialize_recipe_from_results_object(build_recipe_one_contribution):
+    # Case: User initializes a FitRecipe from a FitResults object
+    # expected: recipe is initialized with variables from previous fit
+    recipe1 = build_recipe_one_contribution()
+    optimize_recipe(recipe1)
+    results1 = FitResults(recipe1)
+    expected_values = np.round(results1.varvals, 5)
+    expected_names = results1.varnames
+
+    recipe2 = build_recipe_one_contribution()
+    recipe2.create_new_variable(
+        "extra_var", 5
+    )  # should be included in the initialized recipe
+    actual_values_before_init = [val for val in recipe2.get_values()]
+    actual_names_before_init = recipe2.get_names()
+    expected_names_before_init = [
+        "amplitude",
+        "extra_var",
+        "phase_shift",
+        "wave_number",
+    ]
+    expected_values_before_init = [
+        4,
+        3,
+        2,
+        5,
+    ]  # the three variables + the extra_var
+
+    assert actual_values_before_init == expected_values_before_init
+    assert sorted(actual_names_before_init) == sorted(
+        expected_names_before_init
+    )
+
+    recipe2.initialize_recipe_with_results(results1)
+    optimize_recipe(recipe2)
+    results2 = FitResults(recipe2)
+    actual_values = np.round(results2.varvals, 5)
+    actual_names = results2.varnames
+
+    expected_names = expected_names + [
+        "extra_var"
+    ]  # add the new variable name to expected names
+    expected_values = list(expected_values) + [
+        5
+    ]  # add the value of the new variable to expected values
+    assert sorted(expected_names) == sorted(actual_names)
+    assert sorted(expected_values) == sorted(list(actual_values))
+
+
+def test_initialize_recipe_from_results_file(
+    build_recipe_one_contribution, temp_data_files
+):
+    # Case: User initializes a FitRecipe from a FitResults file
+    # expected: recipe is initialized with variables from previous fit
+    results_file = temp_data_files / "fit_results.res"
+    expected_names = ["amplitude", "phase_shift", "wave_number"]
+    expected_values = [1, 1, 0]
+
+    recipe = build_recipe_one_contribution()
+    recipe.initialize_recipe_with_results(results_file)
+    results = FitResults(recipe)
+    actual_values = np.round(results.varvals, 5)
+    actual_names = results.varnames
+
+    assert sorted(expected_names) == sorted(actual_names)
+    assert list(expected_values) == list(actual_values)
+
+
+def test_initialize_recipe_from_results_file_bad(
+    build_recipe_one_contribution,
+):
+    # Case: User tries to initialize a recipe with something that
+    #       isn't a path, str, or FitResults object
+    # Expected: raised ValueError with message
+    recipe = build_recipe_one_contribution()
+    bad_input = 12345  # not a valid input type
+    msg = (
+        "The input results must be a FitResults object or a path to a "
+        "results file, but got <class 'int'>."
+    )
+    with pytest.raises(ValueError, match=msg):
+        recipe.initialize_recipe_with_results(bad_input)
+
+
+def test_initialize_recipe_from_results_file_wrong(
+    build_recipe_two_contributions, temp_data_files, capsys
+):
+    # Case: User tries to initialize a FitRecipe from a results file
+    #       that does not match params in the recipe
+    # expected: Warning message is printed and things proceed as
+    #           usual with the variables in the recipe
+
+    results_file_from_single_contrib = temp_data_files / "fit_results.res"
+    recipe = build_recipe_two_contributions
+    recipe.initialize_recipe_with_results(results_file_from_single_contrib)
+    captured = capsys.readouterr()
+    actual_print_msg = captured.out  # .strip()
+
+    results_file_param_names = ["amplitude", "phase_shift", "wave_number"]
+    expected_print_messages = []
+    for param_name in results_file_param_names:
+        msg = (
+            f"Warning: Parameter '{param_name}' from results not found "
+            "in FitRecipe and will be ignored."
+        )
+        expected_print_messages.append(msg)
+
+    for expected_print_msg in expected_print_messages:
+        assert expected_print_msg in actual_print_msg
 
 
 def get_labels_and_linecount(ax):
@@ -591,7 +695,7 @@ def build_recipe_from_datafile_deprecated(datafile):
 
 
 def test_plot_recipe_bad_display(build_recipe_one_contribution):
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     # Case: All plots are disabled
     # expected: raised ValueError with message
     plt.close("all")
@@ -621,7 +725,7 @@ def test_plot_recipe_before_refinement(capsys, build_recipe_one_contribution):
     # Case: User tries to plot recipe before refinement
     # expected: Data plotted without fit line or difference curve
     #          and warning message printed
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     plt.close("all")
     before = set(plt.get_fignums())
     # include fit_label="nothing" to make sure fit line is not plotted
@@ -649,7 +753,7 @@ def test_plot_recipe_before_refinement(capsys, build_recipe_one_contribution):
 def test_plot_recipe_after_refinement(build_recipe_one_contribution):
     # Case: User refines recipe and then plots
     # expected: Plot generates with no problem
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     plt.close("all")
     before = set(plt.get_fignums())
@@ -686,7 +790,7 @@ def test_plot_recipe_two_contributions(build_recipe_two_contributions):
 def test_plot_recipe_on_existing_plot(build_recipe_one_contribution):
     # Case: User passes axes to plot_recipe to plot on existing figure
     # expected: User modifications are present in the final figure
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     plt.close("all")
     fig, ax = plt.subplots()
@@ -706,7 +810,7 @@ def test_plot_recipe_on_existing_plot(build_recipe_one_contribution):
 def test_plot_recipe_add_new_data(build_recipe_one_contribution):
     # Case: User wants to add data to figure generated by plot_recipe
     # Expected: New data is added to existing figure (check with labels)
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     plt.close("all")
     before = set(plt.get_fignums())
@@ -750,7 +854,7 @@ def test_plot_recipe_add_new_data_two_figs(build_recipe_two_contributions):
 def test_plot_recipe_set_title(build_recipe_one_contribution):
     # Case: User sets title via plot_recipe
     # Expected: Title is set correctly
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     plt.close("all")
     expected_title = "Custom Recipe Title"
@@ -764,7 +868,7 @@ def test_plot_recipe_set_title(build_recipe_one_contribution):
 def test_plot_recipe_set_defaults(build_recipe_one_contribution):
     # Case: user sets default plot options with set_plot_defaults
     # Expected: plot_recipe uses the default options for all calls
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     plt.close("all")
     # set new defaults
@@ -792,7 +896,7 @@ def test_plot_recipe_set_defaults(build_recipe_one_contribution):
 def test_plot_recipe_set_defaults_bad(capsys, build_recipe_one_contribution):
     # Case: user tries to set kwargs that are not valid plot_recipe options
     # Expected: Plot is shown and warning is printed
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     plt.close("all")
     recipe.set_plot_defaults(
@@ -902,7 +1006,7 @@ def test_plot_recipe_reset_all_defaults(build_recipe_one_contribution):
         "show": True,
     }
 
-    recipe = build_recipe_one_contribution
+    recipe = build_recipe_one_contribution()
     optimize_recipe(recipe)
     plt.close("all")
 

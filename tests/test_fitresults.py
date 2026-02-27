@@ -38,7 +38,7 @@ Contributions  0.00000000
 Restraints     0.00000000
 Chi2           0.00000000
 Reduced Chi2   0.00000000
-Rw             0.00000007
+Rw             0.00000010
 
 Variables (Uncertainties invalid)
 ------------------------------------------------------------------------------

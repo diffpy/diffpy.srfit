@@ -153,7 +153,7 @@ def build_recipe_one_contribution():
 
     def _build_recipe():
         profile = Profile()
-        x = linspace(0, pi, 10)
+        x = linspace(0, pi, 11)
         y = sin(x)
         profile.set_observed_profile(x, y)
         contribution = FitContribution("c1")
@@ -174,7 +174,7 @@ def build_recipe_two_contributions():
     """Helper to build a recipe with two physically related
     contributions."""
     profile1 = Profile()
-    x = linspace(0, pi, 50)
+    x = linspace(0, pi, 51)
     y1 = sin(x)  # amplitude=1, freq=1
     profile1.set_observed_profile(x, y1)
 

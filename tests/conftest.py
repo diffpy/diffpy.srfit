@@ -147,29 +147,25 @@ def capturestdout():
     return _capturestdout
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def build_recipe_one_contribution():
-    "helper to build a simple recipe"
-
-    def _build_recipe():
-        profile = Profile()
-        x = linspace(0, pi, 11)
-        y = sin(x)
-        profile.set_observed_profile(x, y)
-        contribution = FitContribution("c1")
-        contribution.set_profile(profile)
-        contribution.set_equation("amplitude*sin(wave_number*x + phase_shift)")
-        recipe = FitRecipe()
-        recipe.add_contribution(contribution)
-        recipe.add_variable(contribution.amplitude, 4)
-        recipe.add_variable(contribution.wave_number, 3)
-        recipe.add_variable(contribution.phase_shift, 2)
-        return recipe
-
-    return _build_recipe
+    """Helper to build a simple recipe."""
+    profile = Profile()
+    x = linspace(0, pi, 11)
+    y = sin(x)
+    profile.set_observed_profile(x, y)
+    contribution = FitContribution("c1")
+    contribution.set_profile(profile)
+    contribution.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+    recipe = FitRecipe()
+    recipe.add_contribution(contribution)
+    recipe.add_variable(contribution.amplitude, 4)
+    recipe.add_variable(contribution.wave_number, 3)
+    recipe.add_variable(contribution.phase_shift, 2)
+    return recipe
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def build_recipe_two_contributions():
     """Helper to build a recipe with two physically related
     contributions."""

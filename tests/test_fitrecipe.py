@@ -487,12 +487,12 @@ def optimize_recipe(recipe):
     leastsq(residuals, values)
 
 
-def test_initialize_recipe_from_recipe(build_recipe_two_contributions):
+def test_initialize_recipe_from_recipe():
     # Case: User initializes a FitRecipe from a previously optimized fit
     # expected: recipe is initialized with everything:
     # contributions, profiles (contained in contributions),
     # variables, restraints, and constraints
-    recipe1 = build_recipe_two_contributions
+    recipe1 = build_recipe_for_init_testing()
     optimize_recipe(recipe1)
     expected_parameters_dict = recipe1._parameters
     expected_constraints_dict = recipe1._constraints
@@ -504,6 +504,7 @@ def test_initialize_recipe_from_recipe(build_recipe_two_contributions):
         expected_profiles_list.append(expected_profile)
 
     recipe2 = FitRecipe()
+    assert recipe1 != recipe2
     recipe2.initialize_recipe_with_recipe(recipe1)
     actual_parameters_dict = recipe2._parameters
     actual_constraints_dict = recipe2._constraints

@@ -148,7 +148,7 @@ def capturestdout():
 
 
 @pytest.fixture(scope="function")
-def build_recipe_one_contribution():
+def build_recipes_one_contribution():
     """Helper to build a simple recipe.
 
     Two identical recipes are returned if needed.

@@ -464,12 +464,12 @@ def optimize_recipe(recipe):
     leastsq(residuals, values)
 
 
-def test_initialize_recipe_from_recipe(build_recipe_one_contribution):
+def test_initialize_recipe_from_recipe(build_recipes_one_contribution):
     # Case: User initializes a FitRecipe from a previously optimized fit
     # expected: recipe is initialized with everything:
     # contributions, profiles (contained in contributions),
     # variables, restraints, and constraints
-    recipe1, _ = build_recipe_one_contribution
+    recipe1, _ = build_recipes_one_contribution
     optimize_recipe(recipe1)
     expected_parameters_dict = recipe1._parameters
     expected_constraints_dict = recipe1._constraints
@@ -528,12 +528,12 @@ def test_initialize_recipe_from_recipe_bad(build_recipe_two_contributions):
         recipe2.initialize_recipe_with_recipe(recipe_bad)
 
 
-def test_initialize_recipe_from_results_object(build_recipe_one_contribution):
+def test_initialize_recipe_from_results_object(build_recipes_one_contribution):
     # Case: User initializes a FitRecipe from a FitResults object
     # expected: recipe is initialized with variables from previous fit
 
     # create unique recipe1
-    recipe1, recipe2 = build_recipe_one_contribution
+    recipe1, recipe2 = build_recipes_one_contribution
     optimize_recipe(recipe1)
     results1 = FitResults(recipe1)
     expected_values = np.round(results1.varvals, 5)
@@ -571,7 +571,7 @@ def test_initialize_recipe_from_results_object(build_recipe_one_contribution):
 
 
 def test_initialize_recipe_from_results_file(
-    build_recipe_one_contribution, temp_data_files
+    build_recipes_one_contribution, temp_data_files
 ):
     # Case: User initializes a FitRecipe from a FitResults file
     # expected: recipe is initialized with variables from previous fit
@@ -579,7 +579,7 @@ def test_initialize_recipe_from_results_file(
     expected_names = ["amplitude", "phase_shift", "wave_number"]
     expected_values = [1, 1, 0]
 
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     recipe.initialize_recipe_with_results(results_file)
     results = FitResults(recipe)
     actual_values = np.round(results.varvals, 5)
@@ -590,12 +590,12 @@ def test_initialize_recipe_from_results_file(
 
 
 def test_initialize_recipe_from_results_file_bad(
-    build_recipe_one_contribution,
+    build_recipes_one_contribution,
 ):
     # Case: User tries to initialize a recipe with something that
     #       isn't a path, str, or FitResults object
     # Expected: raised ValueError with message
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     bad_input = 12345  # not a valid input type
     msg = (
         "The input results must be a FitResults object or a path to a "
@@ -688,8 +688,8 @@ def build_recipe_from_datafile_deprecated(datafile):
     return recipe
 
 
-def test_plot_recipe_bad_display(build_recipe_one_contribution):
-    recipe, _ = build_recipe_one_contribution
+def test_plot_recipe_bad_display(build_recipes_one_contribution):
+    recipe, _ = build_recipes_one_contribution
     # Case: All plots are disabled
     # expected: raised ValueError with message
     plt.close("all")
@@ -715,11 +715,11 @@ def test_plot_recipe_no_contribution():
         recipe.plot_recipe()
 
 
-def test_plot_recipe_before_refinement(capsys, build_recipe_one_contribution):
+def test_plot_recipe_before_refinement(capsys, build_recipes_one_contribution):
     # Case: User tries to plot recipe before refinement
     # expected: Data plotted without fit line or difference curve
     #          and warning message printed
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     plt.close("all")
     before = set(plt.get_fignums())
     # include fit_label="nothing" to make sure fit line is not plotted
@@ -744,10 +744,10 @@ def test_plot_recipe_before_refinement(capsys, build_recipe_one_contribution):
     assert actual == expected
 
 
-def test_plot_recipe_after_refinement(build_recipe_one_contribution):
+def test_plot_recipe_after_refinement(build_recipes_one_contribution):
     # Case: User refines recipe and then plots
     # expected: Plot generates with no problem
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
     before = set(plt.get_fignums())
@@ -781,10 +781,10 @@ def test_plot_recipe_two_contributions(build_recipe_two_contributions):
     assert len(new_figs) == 2
 
 
-def test_plot_recipe_on_existing_plot(build_recipe_one_contribution):
+def test_plot_recipe_on_existing_plot(build_recipes_one_contribution):
     # Case: User passes axes to plot_recipe to plot on existing figure
     # expected: User modifications are present in the final figure
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
     fig, ax = plt.subplots()
@@ -801,10 +801,10 @@ def test_plot_recipe_on_existing_plot(build_recipe_one_contribution):
     assert actual_title == expected_title
 
 
-def test_plot_recipe_add_new_data(build_recipe_one_contribution):
+def test_plot_recipe_add_new_data(build_recipes_one_contribution):
     # Case: User wants to add data to figure generated by plot_recipe
     # Expected: New data is added to existing figure (check with labels)
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
     before = set(plt.get_fignums())
@@ -845,10 +845,10 @@ def test_plot_recipe_add_new_data_two_figs(build_recipe_two_contributions):
     assert len(new_figs) == 2
 
 
-def test_plot_recipe_set_title(build_recipe_one_contribution):
+def test_plot_recipe_set_title(build_recipes_one_contribution):
     # Case: User sets title via plot_recipe
     # Expected: Title is set correctly
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
     expected_title = "Custom Recipe Title"
@@ -859,10 +859,10 @@ def test_plot_recipe_set_title(build_recipe_one_contribution):
     assert actual_title == expected_title
 
 
-def test_plot_recipe_set_defaults(build_recipe_one_contribution):
+def test_plot_recipe_set_defaults(build_recipes_one_contribution):
     # Case: user sets default plot options with set_plot_defaults
     # Expected: plot_recipe uses the default options for all calls
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
     # set new defaults
@@ -887,10 +887,10 @@ def test_plot_recipe_set_defaults(build_recipe_one_contribution):
     assert actual_labels == expected_labels
 
 
-def test_plot_recipe_set_defaults_bad(capsys, build_recipe_one_contribution):
+def test_plot_recipe_set_defaults_bad(capsys, build_recipes_one_contribution):
     # Case: user tries to set kwargs that are not valid plot_recipe options
     # Expected: Plot is shown and warning is printed
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
     recipe.set_plot_defaults(
@@ -971,7 +971,7 @@ def test_plot_recipe_labels_from_gr_file_overwrite_deprecated(temp_data_files):
     assert actual_ylabel == expected_ylabel
 
 
-def test_plot_recipe_reset_all_defaults(build_recipe_one_contribution):
+def test_plot_recipe_reset_all_defaults(build_recipes_one_contribution):
     expected_defaults = {
         "show_observed": True,
         "show_fit": True,
@@ -1000,7 +1000,7 @@ def test_plot_recipe_reset_all_defaults(build_recipe_one_contribution):
         "show": True,
     }
 
-    recipe, _ = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
 

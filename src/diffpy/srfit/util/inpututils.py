@@ -17,6 +17,7 @@
 __all__ = ["inputToString"]
 
 import os.path
+from pathlib import Path
 
 
 def inputToString(input):
@@ -49,6 +50,46 @@ def inputToString(input):
         inptstr = input
 
     return inptstr
+
+
+def get_dict_from_results_file(
+    results_filepath: Path | str,
+) -> dict[str, float]:
+    """Get a dictionary of parameter names and values from a results
+    file.
+
+    The file should have lines in the format:
+    "parameter_name value +/- uncertainty". Lines that do not match this
+    format will be ignored.
+
+    Parameters
+    ----------
+    results_filepath : pathlib.Path or str
+        The path to the results file.
+
+    Returns
+    -------
+    parsed_results_dict : dict
+        The dictionary where keys are parameter names and values are the
+        corresponding parameter values as floats.
+    """
+    with open(results_filepath, "r") as f:
+        results_string = f.read()
+    parsed_results_dict = {}
+    for raw_line in results_string.splitlines():
+        line = raw_line.strip()
+        # skip blank lines and lines that are just dashes
+        if not line or set(line) == {"-"}:
+            continue
+        line_items = line.split()
+        if len(line_items) < 2:
+            continue
+        if len(line_items) >= 4 and line_items[2] == "+/-":
+            try:
+                parsed_results_dict[line_items[0]] = float(line_items[1])
+            except ValueError:
+                pass
+    return parsed_results_dict
 
 
 # End of file

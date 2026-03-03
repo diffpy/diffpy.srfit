@@ -66,64 +66,94 @@ resultsDictionary_dep_msg = build_deprecation_message(
     new_base="diffpy.srfit.fitbase.FitResults",
 )
 
+initializeRecipe_dep_msg = build_deprecation_message(
+    "diffpy.srfit.fitbase",
+    "initializeRecipe",
+    "initialize_recipe_with_results",
+    removal_version,
+    new_base="diffpy.srfit.fitbase.FitRecipe",
+)
+
 
 class FitResults(object):
     """Class for processing, presenting and storing results of a fit.
 
     Attributes
     ----------
-    recipe
-        The recipe containing the results.
-    cov
-        The covariance matrix from the recipe.
-    conresults
-        An ordered dictionary of ContributionResults for each
-        FitContribution, indexed by the FitContribution name.
-    derivstep
-        The fractional step size for calculating numeric
-        derivatives. Default 1e-8.
-    varnames
-        Names of the variables in the recipe.
-    varvals
-        Values of the variables in the recipe.
-    varunc
-        Uncertainties in the variable values.
-    showfixed
-        Show fixed variables (default True).
-    fixednames
-        Names of the fixed variables of the recipe.
-    fixedvals
-        Values of the fixed variables of the recipe.
-    showcon
-        Show constraint values in the output (default False).
-    connames
-        Names of the constrained parameters.
-    convals
-        Values of the constrained parameters.
-    conunc
-        Uncertainties in the constraint values.
-    residual
-        The scalar residual of the recipe.
-    penalty
-        The penalty to residual from the restraints.
-    chi2
-        The chi2 of the recipe.
-    cumchi2
-        The cumulative chi2 of the recipe.
-    rchi2
-        The reduced chi2 of the recipe.
-    rw
-        The Rw of the recipe.
-    cumrw
-        The cumulative Rw of the recipe.
-    messages
-        A list of messages about the results.
-    precision
-        The precision of numeric output (default 8).
-    _dcon
-        The derivatives of the constraint equations with respect to
-        the variables. This is used internally.
+    recipe : FitRecipe
+        The recipe from which the results were generated.
 
+    cov : numpy.ndarray or None
+        The covariance matrix of the refined variables. None if unavailable.
+
+    conresults : collections.OrderedDict[str, ContributionResults]
+        The ordered mapping of FitContribution name → ContributionResults.
+
+    derivstep : float
+        The fractional step size used for numerical derivatives (default 1e-8).
+
+    varnames : list[str]
+        The names of refined variables in the recipe.
+
+    varvals : numpy.ndarray
+        The optimized values of the refined variables.
+
+    varunc : numpy.ndarray or None
+        The estimated standard uncertainties of the variables. None if invalid.
+
+    showfixed : bool
+        Show the fixed variables in the formatted output
+        (default True).
+
+    fixednames : list[str]
+        The names of variables held fixed during refinement.
+
+    fixedvals : numpy.ndarray
+        The values of the fixed variables.
+
+    showcon : bool
+        show the constrained parameters in the formatted output
+        (default False).
+
+    connames : list[str]
+        The names of constrained parameters.
+
+    convals : numpy.ndarray
+        The values of constrained parameters.
+
+    conunc : numpy.ndarray or None
+        The uncertainties of constrained parameters. None if unavailable.
+
+    residual : float
+        The scalar residual value of the recipe.
+
+    penalty : float
+        The penalty contribution to the residual from restraints.
+
+    chi2 : float
+        The chi-squared value of the fit.
+
+    cumchi2 : numpy.ndarray
+        The cumulative chi-squared as a function of data index.
+
+    rchi2 : float
+        The reduced chi-squared of the fit.
+
+    rw : float
+        The weighted R-factor of the fit.
+
+    cumrw : numpy.ndarray
+        The cumulative weighted R-factor as a function of data index.
+
+    messages : list[str]
+        The informational or warning messages associated with the results.
+
+    precision : int
+        The number of digits used when formatting numeric output (default 8).
+
+    _dcon : numpy.ndarray
+        The jacobian of constraint equations with respect to variables.
+        Used internally for uncertainty propagation.
 
     Each of these attributes, except the recipe, are created or updated when
     the update method is called.
@@ -134,14 +164,14 @@ class FitResults(object):
 
         Attributes
         ----------
-        recipe
-            The recipe containing the results
-        update
-            Flag indicating whether to do an immediate update (default
-            True).
-        showcon
+        recipe : FitRecipe
+            The recipe containing the results.
+        update : bool
+            The flag indicating whether to do an immediate update
+            (default True).
+        showfixed : bool
             Show fixed variables in the output (default True).
-        showcon
+        showcon : bool
             Show constraint values in the output (default False).
         """
         self.recipe = recipe
@@ -568,11 +598,11 @@ class FitResults(object):
         Parameters
         ----------
         header
-            A header to add to the output (default "")
+            The header to add to the output (default "")
         footer
-            A footer to add to the output (default "")
+            The footer to add to the output (default "")
         update
-            Flag indicating whether to call update() (default False).
+            The flag indicating whether to call update() (default False).
         """
         print(self.get_results_string(header, footer, update).rstrip())
         return
@@ -597,13 +627,13 @@ class FitResults(object):
         Parameters
         ----------------------------------
         filename
-            Name of the save file.
+            The name of the save file.
         header
-            A header to add to the output (default "")
+            The header to add to the output (default "")
         footer
-            A footer to add to the output (default "")
+            The footer to add to the output (default "")
         update
-            Flag indicating whether to call update() (default False).
+            The flag indicating whether to call update() (default False).
         """
         # Save the time and user
         from getpass import getuser
@@ -637,8 +667,8 @@ class FitResults(object):
         Returns
         -------
         results_dict : dict
-            A dictionary containing the variable names and values, and overall
-            metrics, from the FitResults.
+            The dictionary containing the variable names and values,
+            and overall metrics, from the FitResults.
         """
         parameter_names = self.varnames
         parameter_values = self.varvals
@@ -666,38 +696,38 @@ class ContributionResults(object):
 
     Attributes
     ----------
-    y
+    y : numpy.ndarray or None
         The FitContribution's profile over the calculation range
         (default None).
-    dy
+    dy : numpy.ndarray or None
         The uncertainty in the FitContribution's profile over the
         calculation range (default None).
-    x
-        A numpy array of the calculated independent variable for the
+    x : numpy.ndarray or None
+        The numpy array of the calculated independent variable for the
         FitContribution (default None).
-    ycalc
-        A numpy array of the calculated signal for the FitContribution
+    ycalc : numpy.ndarray or None
+        The numpy array of the calculated signal for the FitContribution
         (default None).
-    residual
+    residual : float
         The scalar residual of the FitContribution.
-    chi2
+    chi2 : float
         The chi2 of the FitContribution.
-    cumchi2
+    cumchi2 : numpy.ndarray
         The cumulative chi2 of the FitContribution.
-    rw
+    rw : float
         The Rw of the FitContribution.
-    cumrw
+    cumrw : numpy.ndarray
         The cumulative Rw of the FitContribution.
-    weight
+    weight : float
         The weight of the FitContribution in the recipe.
-    conlocs
+    conlocs : list
         The location of the constrained parameters in the
         FitContribution (see the
         RecipeContainer._locate_managed_object method).
-    convals
-        Values of the constrained parameters.
-    conunc
-        Uncertainties in the constraint values.
+    convals : list
+        The values of the constrained parameters.
+    conunc : list
+        The uncertainties in the constraint values.
     """
 
     def __init__(self, con, weight, fitres):
@@ -820,8 +850,16 @@ def resultsDictionary(results):
     return mpairs
 
 
+@deprecated(initializeRecipe_dep_msg)
 def initializeRecipe(recipe, results):
-    """Initialize the variables of a recipe from a results file.
+    """**This function has been deprecated and will be** **removed in
+    version 4.0.0.**
+
+    **Please use**
+    **diffpy.srfit.fitbase.FitRecipe.initialize_recipe_with_results**
+    **instead.**
+
+    Initialize the variables of a recipe from a results file.
 
     This reads the results from file and initializes any variables (fixed or
     free) in the recipe to the results values. Note that the recipe has to be

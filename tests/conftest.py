@@ -147,30 +147,45 @@ def capturestdout():
     return _capturestdout
 
 
-@pytest.fixture()
-def build_recipe_one_contribution():
-    "helper to build a simple recipe"
-    profile = Profile()
-    x = linspace(0, pi, 10)
+@pytest.fixture(scope="function")
+def build_recipes_one_contribution():
+    """Helper to build a simple recipe.
+
+    Two identical recipes are returned if needed.
+    """
+    x = linspace(0, pi, 11)
     y = sin(x)
-    profile.set_observed_profile(x, y)
-    contribution = FitContribution("c1")
-    contribution.set_profile(profile)
-    contribution.set_equation("amplitude*sin(wave_number*x + phase_shift)")
-    recipe = FitRecipe()
-    recipe.add_contribution(contribution)
-    recipe.add_variable(contribution.amplitude, 1)
-    recipe.add_variable(contribution.wave_number, 1)
-    recipe.add_variable(contribution.phase_shift, 1)
-    return recipe
+
+    profile1 = Profile()
+    profile1.set_observed_profile(x, y)
+    contribution1 = FitContribution("c1")
+    contribution1.set_profile(profile1)
+    contribution1.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+    recipe1 = FitRecipe()
+    recipe1.add_contribution(contribution1)
+    recipe1.add_variable(contribution1.amplitude, 4)
+    recipe1.add_variable(contribution1.wave_number, 3)
+    recipe1.add_variable(contribution1.phase_shift, 2)
+
+    profile2 = Profile()
+    profile2.set_observed_profile(x, y)
+    contribution2 = FitContribution("c2")
+    contribution2.set_profile(profile2)
+    contribution2.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+    recipe2 = FitRecipe()
+    recipe2.add_contribution(contribution2)
+    recipe2.add_variable(contribution2.amplitude, 4)
+    recipe2.add_variable(contribution2.wave_number, 3)
+    recipe2.add_variable(contribution2.phase_shift, 2)
+    return recipe1, recipe2
 
 
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def build_recipe_two_contributions():
     """Helper to build a recipe with two physically related
     contributions."""
     profile1 = Profile()
-    x = linspace(0, pi, 50)
+    x = linspace(0, pi, 51)
     y1 = sin(x)  # amplitude=1, freq=1
     profile1.set_observed_profile(x, y1)
 

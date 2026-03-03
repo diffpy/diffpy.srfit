@@ -38,7 +38,7 @@ Contributions  0.00000000
 Restraints     0.00000000
 Chi2           0.00000000
 Reduced Chi2   0.00000000
-Rw             0.00000000
+Rw             0.00000010
 
 Variables (Uncertainties invalid)
 ------------------------------------------------------------------------------
@@ -53,8 +53,8 @@ def optimize_recipe(recipe):
     leastsq(residuals, values)
 
 
-def test_formatResults(build_recipe_one_contribution):
-    recipe = build_recipe_one_contribution
+def test_formatResults(build_recipes_one_contribution):
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_string = results.formatResults(header="My Custom header")
@@ -66,8 +66,8 @@ def test_formatResults(build_recipe_one_contribution):
         assert expected_var in actual_results_string.strip()
 
 
-def test_get_results_string(build_recipe_one_contribution):
-    recipe = build_recipe_one_contribution
+def test_get_results_string(build_recipes_one_contribution):
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_string = results.get_results_string(
@@ -81,8 +81,8 @@ def test_get_results_string(build_recipe_one_contribution):
         assert expected_var in actual_results_string.strip()
 
 
-def test_printResults(build_recipe_one_contribution, capsys):
-    recipe = build_recipe_one_contribution
+def test_printResults(build_recipes_one_contribution, capsys):
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
     results.printResults(header="My Custom header")
@@ -95,8 +95,8 @@ def test_printResults(build_recipe_one_contribution, capsys):
         assert expected_var in actual_results.strip()
 
 
-def test_print_results(build_recipe_one_contribution, capsys):
-    recipe = build_recipe_one_contribution
+def test_print_results(build_recipes_one_contribution, capsys):
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
     results.print_results(header="My Custom header")
@@ -109,8 +109,8 @@ def test_print_results(build_recipe_one_contribution, capsys):
         assert expected_var in actual_results.strip()
 
 
-def test_saveResults(build_recipe_one_contribution, tmp_path):
-    recipe = build_recipe_one_contribution
+def test_saveResults(build_recipes_one_contribution, tmp_path):
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_file = tmp_path / "fit_results.txt"
@@ -126,8 +126,8 @@ def test_saveResults(build_recipe_one_contribution, tmp_path):
         assert expected_var in actual_results.strip()
 
 
-def test_save_results(build_recipe_one_contribution, tmp_path):
-    recipe = build_recipe_one_contribution
+def test_save_results(build_recipes_one_contribution, tmp_path):
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_file = tmp_path / "fit_results.txt"
@@ -143,10 +143,10 @@ def test_save_results(build_recipe_one_contribution, tmp_path):
         assert expected_var in actual_results.strip()
 
 
-def test_get_results_dictionary(build_recipe_one_contribution):
+def test_get_results_dictionary(build_recipes_one_contribution):
     # Case: user gets results dictionary after optimization
     # expected: results dictionary contains expected keys and values
-    recipe = build_recipe_one_contribution
+    recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     results = FitResults(recipe)
     actual_results_dict = results.get_results_dictionary()

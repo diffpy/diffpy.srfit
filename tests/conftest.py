@@ -209,6 +209,35 @@ def build_recipe_two_contributions():
     return recipe
 
 
+@pytest.fixture(scope="function")
+def build_two_recipes():
+    x = linspace(0, pi, 11)
+    y = sin(x)
+
+    profile1 = Profile()
+    profile1.set_observed_profile(x, y)
+    contribution1 = FitContribution("c1")
+    contribution1.set_profile(profile1)
+    contribution1.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+    recipe1 = FitRecipe()
+    recipe1.add_contribution(contribution1)
+    recipe1.add_variable(contribution1.amplitude, 4)
+    recipe1.add_variable(contribution1.wave_number, 3)
+    recipe1.add_variable(contribution1.phase_shift, 2)
+
+    profile2 = Profile()
+    profile2.set_observed_profile(x, y)
+    contribution2 = FitContribution("c2")
+    contribution2.set_profile(profile2)
+    contribution2.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+    recipe2 = FitRecipe()
+    recipe2.add_contribution(contribution2)
+    recipe2.add_variable(contribution2.amplitude, 4)
+    recipe2.add_variable(contribution2.wave_number, 3)
+    recipe2.add_variable(contribution2.phase_shift, 2)
+    return recipe1, recipe2
+
+
 @pytest.fixture
 def temp_data_files(tmp_path):
     """

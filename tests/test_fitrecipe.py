@@ -33,29 +33,6 @@ from diffpy.srfit.pdf import PDFParser
 matplotlib.use("Agg")
 
 
-def build_recipe_for_init_testing():
-    """A helper to build a FitRecipe with one contribution and three
-    variables.
-
-    This is identical to the build_recipe_one_contribution fixture, but
-    is a function instead of a fixture so we can call it to get unique
-    recipe objects in a singular test.
-    """
-    profile = Profile()
-    x = linspace(0, pi, 11)
-    y = sin(x)
-    profile.set_observed_profile(x, y)
-    contribution = FitContribution("c1")
-    contribution.set_profile(profile)
-    contribution.set_equation("amplitude*sin(wave_number*x + phase_shift)")
-    recipe = FitRecipe()
-    recipe.add_contribution(contribution)
-    recipe.add_variable(contribution.amplitude, 4)
-    recipe.add_variable(contribution.wave_number, 3)
-    recipe.add_variable(contribution.phase_shift, 2)
-    return recipe
-
-
 class TestFitRecipe(unittest.TestCase):
 
     def setUp(self):
@@ -487,12 +464,12 @@ def optimize_recipe(recipe):
     leastsq(residuals, values)
 
 
-def test_initialize_recipe_from_recipe():
+def test_initialize_recipe_from_recipe(build_recipe_one_contribution):
     # Case: User initializes a FitRecipe from a previously optimized fit
     # expected: recipe is initialized with everything:
     # contributions, profiles (contained in contributions),
     # variables, restraints, and constraints
-    recipe1 = build_recipe_for_init_testing()
+    recipe1 = build_recipe_one_contribution
     optimize_recipe(recipe1)
     expected_parameters_dict = recipe1._parameters
     expected_constraints_dict = recipe1._constraints
@@ -551,20 +528,17 @@ def test_initialize_recipe_from_recipe_bad(build_recipe_two_contributions):
         recipe2.initialize_recipe_with_recipe(recipe_bad)
 
 
-def test_initialize_recipe_from_results_object(build_recipe_one_contribution):
+def test_initialize_recipe_from_results_object(build_two_recipes):
     # Case: User initializes a FitRecipe from a FitResults object
     # expected: recipe is initialized with variables from previous fit
 
     # create unique recipe1
-    recipe1 = build_recipe_for_init_testing()
+    recipe1, recipe2 = build_two_recipes
     optimize_recipe(recipe1)
     results1 = FitResults(recipe1)
     expected_values = np.round(results1.varvals, 5)
     expected_names = results1.varnames
 
-    # create unique recipe2 with same contributions
-    # and variables as recipe1 but not optimized yet
-    recipe2 = build_recipe_for_init_testing()
     assert recipe1 != recipe2
     # create a new var that should be include in the initialized recipe
     recipe2.create_new_variable("extra_var", 5)

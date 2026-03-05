@@ -52,7 +52,7 @@ class ArgumentABC(LiteralABC):
     """
 
     @abstractmethod
-    def setValue(self, value):
+    def set_value(self, value):
         """Set the value of the argument."""
         pass
 

@@ -40,20 +40,20 @@ class TestRestraint(unittest.TestCase):
         r = Restraint(eq, 1, 5)
 
         # This should have no penalty
-        p1.setValue(1)
-        p2.setValue(1)
+        p1.set_value(1)
+        p2.set_value(1)
         self.assertEqual(0, r.penalty())
 
         # Make p1 + p2 = 0
         # This should have a penalty of 1*(1 - 0)**2 = 1
-        p1.setValue(-1)
-        p2.setValue(1)
+        p1.set_value(-1)
+        p2.set_value(1)
         self.assertEqual(1, r.penalty())
 
         # Make p1 + p2 = 8
         # This should have a penalty of 1*(8 - 5)**2 = 9
-        p1.setValue(4)
-        p2.setValue(4)
+        p1.set_value(4)
+        p2.set_value(4)
         self.assertEqual(9, r.penalty())
 
         # Set the chi^2 to get a dynamic penalty
@@ -64,7 +64,7 @@ class TestRestraint(unittest.TestCase):
         import numpy
 
         r.ub = numpy.inf
-        p1.setValue(1e100)
+        p1.set_value(1e100)
         self.assertEqual(0, r.penalty())
 
         return

@@ -25,8 +25,8 @@ AdditionOperator() > a = Argument(name="a") # Don't forget to name
 these! > b = Argument(name="b") > add.addLiteral(a) > add.addLiteral(b)
 > # make an Equation instance and pass the root > eq = Equation(root =
 add) > eq(a=3, b=4) # returns 7 > eq(a=2) # remembers b=4, returns 6 >
-eq.a.setValue(-3) > eq.b.setValue(3) > eq() # uses last assignment of a
-and b, returns 0
+eq.a.set_value(-3) > eq.b.set_value(3) > eq() # uses last assignment of
+a and b, returns 0
 
 See the class documentation for more information.
 """
@@ -193,14 +193,14 @@ class Equation(Operator):
             if idx >= len(self.argdict):
                 raise ValueError("Too many arguments")
             arg = self.args[idx]
-            arg.setValue(val)
+            arg.set_value(val)
 
         # Process kw
         for name, val in kw.items():
             arg = self.argdict.get(name)
             if arg is None:
                 raise ValueError("No argument named '%s' here" % name)
-            arg.setValue(val)
+            arg.set_value(val)
 
         self._value = self.root.getValue()
         return self._value

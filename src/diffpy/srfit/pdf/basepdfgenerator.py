@@ -174,7 +174,7 @@ class BasePDFGenerator(ProfileGenerator):
             val = self.meta.get(name)
             if val is not None:
                 par = self.get(name)
-                par.setValue(val)
+                par.set_value(val)
 
         return
 

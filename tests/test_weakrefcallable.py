@@ -119,7 +119,7 @@ class TestWeakBoundMethod(unittest.TestCase):
         xof = next(iter(x._observers))
         self.assertTrue(isinstance(xof, WeakBoundMethod))
         # changing value of x should reset f._eq
-        x.setValue(x.value + 1)
+        x.set_value(x.value + 1)
         self.assertTrue(None is f._eq._value)
         self.assertEqual(18, f.evaluate())
         # deallocate f now
@@ -127,7 +127,7 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertTrue(xof in x._observers)
         # since f does not exist anymore, the next notification call
         # should drop the associated observer.
-        x.setValue(x.value + 1)
+        x.set_value(x.value + 1)
         self.assertEqual(0, len(x._observers))
         return
 

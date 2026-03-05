@@ -117,10 +117,10 @@ class TestArgFinder:
 
         # Set the values of the variables.
         # The equation should evaluate to (1+3)*(4-2) = 8
-        v1.setValue(1)
-        v2.setValue(2)
-        v3.setValue(3)
-        v4.setValue(4)
+        v1.set_value(1)
+        v2.set_value(2)
+        v3.set_value(3)
+        v4.set_value(4)
 
         # now get the args
         args = visitors.getArgs(mult)
@@ -170,11 +170,11 @@ class TestSwapper:
 
         # Set the values of the variables.
         # The equation should evaluate to (1+3)*(4-2) = 8
-        v1.setValue(1)
-        v2.setValue(2)
-        v3.setValue(3)
-        v4.setValue(4)
-        v5.setValue(5)
+        v1.set_value(1)
+        v2.set_value(2)
+        v3.set_value(3)
+        v4.set_value(4)
+        v5.set_value(5)
 
         # Evaluate
         assert 8 == mult.value

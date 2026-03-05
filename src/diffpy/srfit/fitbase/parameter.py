@@ -34,6 +34,13 @@ from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _parameter_interface
 from diffpy.srfit.util.argbinders import bind2nd
 from diffpy.srfit.util.nameutils import validateName
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+parameter_base = "diffpy.srfit.fitbase.Parameter"
+removal_version = "4.0.0"
+setValue_dep_msg = build_deprecation_message(
+    parameter_base, "setValue", "set_value", removal_version
+)
 
 
 class Parameter(_parameter_interface, Argument, Validatable):
@@ -46,9 +53,9 @@ class Parameter(_parameter_interface, Argument, Validatable):
     const
         A flag indicating whether this is considered a constant.
     _value
-        The value of the Parameter. Modified with 'setValue'.
+        The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'setValue'.
+        Property for 'getValue' and 'set_value'.
     constrained
         A flag indicating if the Parameter is constrained
         (default False).
@@ -81,7 +88,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         Argument.__init__(self, name, value, const)
         return
 
-    def setValue(self, val):
+    def set_value(self, val):
         """Set the value of the Parameter and the bounds.
 
         Attributes
@@ -100,8 +107,17 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self
             Returns self so that mutators can be chained.
         """
-        Argument.setValue(self, val)
+        Argument.set_value(self, val)
         return self
+
+    @deprecated(setValue_dep_msg)
+    def setValue(self, val):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.set_value instead.
+        """
+        return self.set_value(val)
 
     def setConst(self, const=True, value=None):
         """Toggle the Parameter as constant.
@@ -123,7 +139,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         """
         self.const = bool(const)
         if value is not None:
-            self.setValue(value)
+            self.set_value(value)
         return self
 
     def boundRange(self, lb=None, ub=None):
@@ -254,9 +270,9 @@ class ParameterProxy(Parameter):
 
     # wrap Parameter methods to use the target object ------------------------
 
-    @wraps(Parameter.setValue)
-    def setValue(self, val):
-        return self.par.setValue(val)
+    @wraps(Parameter.set_value)
+    def set_value(self, val):
+        return self.par.set_value(val)
 
     @wraps(Parameter.getValue)
     def getValue(self):
@@ -293,8 +309,8 @@ class ParameterProxy(Parameter):
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.
 
-    This class wraps an object as a Parameter. The getValue and setValue
-    methods defer to the data of the wrapped object.
+    This class wraps an object as a Parameter. The getValue and
+    set_value methods defer to the data of the wrapped object.
     """
 
     def __init__(self, name, obj, getter=None, setter=None, attr=None):
@@ -359,7 +375,7 @@ class ParameterAdapter(Parameter):
         """Get the value of the Parameter."""
         return self.getter(self.obj)
 
-    def setValue(self, value):
+    def set_value(self, value):
         """Set the value of the Parameter."""
         if value != self.getValue():
             self.setter(self.obj, value)

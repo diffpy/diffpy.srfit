@@ -46,11 +46,11 @@ def testSimpleFunction(make_args, noObserversInGlobalBuilders):
 
     # Set the values of the variables.
     # The equation should evaluate to 2.5*(1+3)*(4-2) = 20
-    v1.setValue(1)
-    v2.setValue(2)
-    v3.setValue(3)
-    v4.setValue(4)
-    c.setValue(2.5)
+    v1.set_value(1)
+    v2.set_value(2)
+    v3.set_value(3)
+    v4.set_value(4)
+    c.set_value(2.5)
 
     # Make an equation and test
     eq = Equation("eq", mult2)
@@ -135,11 +135,11 @@ def testEmbeddedEquation(make_args, noObserversInGlobalBuilders):
 
     # Set the values of the variables.
     # The equation should evaluate to 2.5*(1+3)*(4-2) = 20
-    v1.setValue(1)
-    v2.setValue(2)
-    v3.setValue(3)
-    v4.setValue(4)
-    c.setValue(2.5)
+    v1.set_value(1)
+    v2.set_value(2)
+    v3.set_value(3)
+    v4.set_value(4)
+    c.set_value(2.5)
 
     # Make an equation and test
     root = Equation("root", mult2)

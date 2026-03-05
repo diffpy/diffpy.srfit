@@ -36,7 +36,7 @@ class ParameterInterface(object):
     """Mix-in class for enhancing the Parameter interface."""
 
     def __lshift__(self, v):
-        """SetValue with <<
+        """set_value with <<
 
         Think of '<<' as injecting a value
 

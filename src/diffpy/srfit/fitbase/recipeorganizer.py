@@ -613,7 +613,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         calculator : Calculator object
             The Calculator to register.
         argnames :  list or None, optional
-            The names of the arguments to calculator (list or None).
+            The names of the arguments to `calculator` (list or None).
             If this is None, then the argument names will be
             extracted from the function.
         """
@@ -665,13 +665,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             this is None (default), the method will try to
             determine the name of the function automatically.
         argnames : list or None, optional
-            The names of the arguments to 'function' (list or None).
+            The names of the arguments to `function` (list or None).
             If this is None (default), then the argument names will
             be extracted from the function.
 
         Note
         ----
-        name and argnames can be extracted from regular Python
+        The `name` and `argnames` args can be extracted from regular Python
         functions (of type <function>), bound class methods, and callable
         classes.
 

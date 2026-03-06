@@ -306,6 +306,26 @@ class TestRecipeOrganizer(unittest.TestCase):
         p2.setValue(7)
         self.m._constraints[p1].update()
         self.assertEqual(7, p1.getValue())
+
+        self.m.clear_all_constraints()
+        actual_constrained_params = self.m.get_constrained_parmeters()
+        actual_constrained_params = [p.name for p in actual_constrained_params]
+        expected_constrained_params = []
+        assert actual_constrained_params == expected_constrained_params
+
+        # add constraint back and test the old function name `clearConstraints`
+        self.m.constrain(p1, p2)
+        actual_constrained_params = self.m.get_constrained_parmeters()
+        actual_constrained_params = [p.name for p in actual_constrained_params]
+        expected_constrained_params = [p1.name]
+        assert actual_constrained_params == expected_constrained_params
+
+        self.m.clearConstraints()
+        actual_constrained_params = self.m.get_constrained_parmeters()
+        actual_constrained_params = [p.name for p in actual_constrained_params]
+        expected_constrained_params = []
+        assert actual_constrained_params == expected_constrained_params
+
         return
 
     def testRestrain(self):

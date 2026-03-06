@@ -111,6 +111,13 @@ getConstrainedPars_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+clearConstraints_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "clearConstraints",
+    "clear_all_constraints",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -1034,26 +1041,37 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.get_constrained_parmeters(recurse=recurse)
 
-    def clearConstraints(self, recurse=False):
+    def clear_all_constraints(self, recurse=False):
         """Clear all constraints managed by this organizer.
-
-        Attributes
-        ----------
-        recurse
-            Recurse into managed objects and clear all constraints
-            found there as well.
-
 
         This removes constraints that are held in this organizer, no matter
         where the constrained parameters are from.
+
+        Parameters
+        ----------
+        recurse : bool, optional
+            If False (default), only constraints in this object
+            are cleared. If True, constraints in managed
+            sub-objects are also cleared.
         """
         if self._constraints:
             self.unconstrain(*self._constraints)
 
         if recurse:
             for m in filter(_has_clear_constraints, self._iter_managed()):
-                m.clearConstraints(recurse)
+                m.clear_all_constraints(recurse)
         return
+
+    @deprecated(clearConstraints_deprecation_msg)
+    def clearConstraints(self, recurse=False):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clear_all_constraints
+        instead.
+        """
+        return self.clear_all_constraints(recurse=recurse)
 
     def restrain(self, res, lb=-inf, ub=inf, sig=1, scaled=False, ns={}):
         """Restrain an expression to specified bounds.
@@ -1392,7 +1410,7 @@ def equationFromString(
 
 
 def _has_clear_constraints(msg):
-    return hasattr(msg, "clearConstraints")
+    return hasattr(msg, "clear_all_constraints")
 
 
 def _has_clear_restraints(msg):

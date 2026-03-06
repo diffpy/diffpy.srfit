@@ -195,7 +195,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         lambda self: [
             v.name
             for v in self._parameters.values()
-            if not (self.is_free(v) or self.isConstrained(v))
+            if not (self.is_free(v) or self.is_constrained(v))
         ],
         doc="names of the fixed refinable variables",
     )
@@ -204,7 +204,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             [
                 v.value
                 for v in self._parameters.values()
-                if not (self.is_free(v) or self.isConstrained(v))
+                if not (self.is_free(v) or self.is_constrained(v))
             ]
         ),
         doc="values of the fixed refinable variables",

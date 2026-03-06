@@ -390,7 +390,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         for scatterer in scatterers:
 
             for par in [scatterer.x, scatterer.y, scatterer.z]:
-                if scatterer.isConstrained(par):
+                if scatterer.is_constrained(par):
                     scatterer.unconstrain(par)
                 par.setConst(False)
 
@@ -407,7 +407,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 lattice.gamma,
             ]
             for par in latpars:
-                if lattice.isConstrained(par):
+                if lattice.is_constrained(par):
                     lattice.unconstrain(par)
                 par.setConst(False)
 
@@ -417,14 +417,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 if isosymbol:
                     par = scatterer.get(isosymbol)
                     if par is not None:
-                        if scatterer.isConstrained(par):
+                        if scatterer.is_constrained(par):
                             scatterer.unconstrain(par)
                         par.setConst(False)
 
                 for pname in adpsymbols:
                     par = scatterer.get(pname)
                     if par is not None:
-                        if scatterer.isConstrained(par):
+                        if scatterer.is_constrained(par):
                             scatterer.unconstrain(par)
                         par.setConst(False)
 

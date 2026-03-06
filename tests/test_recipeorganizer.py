@@ -259,7 +259,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertRaises(ValueError, m._remove_parameter, c)
         return
 
-    def testConstrain(self):
+    def test_constrain(self):
         """Test the constrain method."""
 
         p1 = self.m._new_parameter("p1", 1)
@@ -273,7 +273,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertTrue(p1.constrained)
         self.assertTrue(p1 in self.m._constraints)
         self.assertEqual(1, len(self.m._constraints))
-        self.assertTrue(self.m.isConstrained(p1))
+        self.assertTrue(self.m.is_constrained(p1))
 
         p2.setValue(10)
         self.m._constraints[p1].update()

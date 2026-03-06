@@ -27,7 +27,6 @@ from collections import OrderedDict
 from functools import partial
 from itertools import chain, groupby
 
-import six
 from numpy import inf
 
 from diffpy.srfit.equation import Equation
@@ -95,6 +94,13 @@ evaluateEquation_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "evaluateEquation",
     "evaluate_equation",
+    removal_version,
+)
+
+isConstrained_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "isConstrained",
+    "is_constrained",
     removal_version,
 )
 
@@ -851,20 +857,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     @deprecated(evaluateEquation_deprecation_msg)
     def evaluateEquation(self, eqstr, ns={}):
-        """Evaluate a string equation.
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
 
-        Attributes
-        ----------
-        eqstr
-            A string equation to evaluate. The equation is evaluated at
-            the current value of the registered Parameters.
-        ns
-            A dictionary of Parameters, indexed by name, that are
-            used in fstr, but not part of the FitRecipe (default {}).
-
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.evaluate_equation
+        instead.
         """
         return self.evaluate_equation(eqstr, func_params=ns)
 
@@ -894,7 +892,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ns.
         Raises ValueError if par is marked as constant.
         """
-        if isinstance(par, six.string_types):
+        if isinstance(par, str):
             name = par
             par = self.get(name)
             if par is None:
@@ -906,7 +904,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if par.const:
             raise ValueError("The parameter '%s' is constant" % par)
 
-        if isinstance(con, six.string_types):
+        if isinstance(con, str):
             eqstr = con
             eq = equationFromString(con, self._eqfactory, ns)
         else:
@@ -927,19 +925,36 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
-    def isConstrained(self, par):
+    def is_constrained(self, parameter):
         """Determine if a Parameter is constrained in this object.
 
-        Attributes
+        Parameters
         ----------
-        par
+        parameter : str or Parameter
             The name of a Parameter or a Parameter to check.
-        """
-        if isinstance(par, six.string_types):
-            name = par
-            par = self.get(name)
 
-        return par in self._constraints
+        Returns
+        -------
+        bool
+            True if the Parameter is constrained in this object, False
+            otherwise.
+        """
+        if isinstance(parameter, str):
+            name = parameter
+            parameter = self.get(name)
+
+        return parameter in self._constraints
+
+    @deprecated(isConstrained_deprecation_msg)
+    def isConstrained(self, par):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.is_constrained
+        instead.
+        """
+        return self.is_constrained(par)
 
     def unconstrain(self, *pars):
         """Unconstrain a Parameter.
@@ -956,7 +971,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         update = False
         for par in pars:
-            if isinstance(par, six.string_types):
+            if isinstance(par, str):
                 name = par
                 par = self.get(name)
 
@@ -1048,7 +1063,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns the Restraint object for use with the 'unrestrain' method.
         """
 
-        if isinstance(res, six.string_types):
+        if isinstance(res, str):
             eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
         else:

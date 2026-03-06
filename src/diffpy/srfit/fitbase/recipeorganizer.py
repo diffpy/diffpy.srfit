@@ -203,9 +203,9 @@ class RecipeContainer(Observable, Configurable, Validatable):
                 print(f"{param.name}={param.value}")
         """
         regexp = re.compile(pattern)
-        for par in list(self._parameters.values()):
-            if regexp.search(par.name):
-                yield par
+        for parameter in list(self._parameters.values()):
+            if regexp.search(parameter.name):
+                yield parameter
         if not recurse:
             return
         # Iterate over objects within the managed dictionaries.
@@ -214,8 +214,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
         for m in managed:
             for obj in m.values():
                 if hasattr(obj, "iterate_over_parameters"):
-                    for par in obj.iterate_over_parameters(pattern=pattern):
-                        yield par
+                    for parameter in obj.iterate_over_parameters(
+                        pattern=pattern
+                    ):
+                        yield parameter
         return
 
     @deprecated(iterPars_deprecation_msg)
@@ -274,11 +276,11 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def __setattr__(self, name, value):
         """Parameter access and object checking."""
         if name in self._parameters:
-            par = self._parameters[name]
+            parameter = self._parameters[name]
             if isinstance(value, Parameter):
-                par.value = value.value
+                parameter.value = value.value
             else:
-                par.value = value
+                parameter.value = value
             return
 
         m = self.get(name)
@@ -540,14 +542,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._add_parameter(p, check)
         return p
 
-    def _add_parameter(self, par, check=True):
+    def _add_parameter(self, parameter, check=True):
         """Store a Parameter.
 
         Parameters added in this way are registered with the _eqfactory.
 
         Attributes
         ----------
-        par
+        parameter
             The Parameter to be stored.
         check
             If True (default), a ValueError is raised a Parameter of
@@ -560,13 +562,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
 
         # Store the Parameter
-        RecipeContainer._add_object(self, par, self._parameters, check)
+        RecipeContainer._add_object(self, parameter, self._parameters, check)
 
         # Register the Parameter
-        self._eqfactory.registerArgument(par.name, par)
+        self._eqfactory.registerArgument(parameter.name, parameter)
         return
 
-    def _remove_parameter(self, par):
+    def _remove_parameter(self, parameter):
         """Remove a parameter.
 
         This de-registers the Parameter with the _eqfactory. The
@@ -575,10 +577,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Note that constraints and restraints involving the Parameter are
         not modified.
 
-        Raises ValueError if par is not part of the RecipeOrganizer.
+        Raises ValueError if parameter is not part of the
+        RecipeOrganizer.
         """
-        self._remove_object(par, self._parameters)
-        self._eqfactory.deRegisterBuilder(par.name)
+        self._remove_object(parameter, self._parameters)
+        self._eqfactory.deRegisterBuilder(parameter.name)
         return
 
     def register_calculator(self, calculator, argnames=None):
@@ -610,10 +613,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         for pname in argnames:
             if pname not in self._eqfactory.builders:
-                par = self._new_parameter(pname, 0)
+                parameter = self._new_parameter(pname, 0)
             else:
-                par = self.get(pname)
-            calculator.addLiteral(par)
+                parameter = self.get(pname)
+            calculator.addLiteral(parameter)
 
         # Now return an equation object
         eq = self._eqfactory.makeEquation(calculator.name)
@@ -738,8 +741,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if isinstance(function, Calculator):
             for pname in argnames:
-                par = self.get(pname)
-                function.addLiteral(par)
+                parameter = self.get(pname)
+                function.addLiteral(parameter)
             self._eqfactory.registerOperator(name, function)
         else:
             self._eqfactory.register_function(name, function, argnames)
@@ -798,8 +801,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         eq.name = name
 
         # Register any new Parameters.
-        for par in self._eqfactory.newargs:
-            self._add_parameter(par)
+        for parameter in self._eqfactory.newargs:
+            self._add_parameter(parameter)
 
         # Register the equation as a callable function.
         argnames = eq.argdict.keys()
@@ -866,14 +869,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.evaluate_equation(eqstr, func_params=ns)
 
-    def constrain(self, par, con, ns={}):
+    def constrain(self, parameter, con, ns={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
 
         Attributes
         ----------
-        par
+        parameter
             The name of a Parameter or a Parameter to constrain.
         con
             A string representation of the constraint equation or a
@@ -888,21 +891,21 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Raises ValueError if ns uses a name that is already used for a
         variable.
-        Raises ValueError if par is a string but not part of this object or in
-        ns.
-        Raises ValueError if par is marked as constant.
+        Raises ValueError if parameter is a string but not part of this
+        object or in ns.
+        Raises ValueError if parameter is marked as constant.
         """
-        if isinstance(par, str):
-            name = par
-            par = self.get(name)
-            if par is None:
-                par = ns.get(name)
+        if isinstance(parameter, str):
+            name = parameter
+            parameter = self.get(name)
+            if parameter is None:
+                parameter = ns.get(name)
 
-        if par is None:
+        if parameter is None:
             raise ValueError("The parameter cannot be found")
 
-        if par.const:
-            raise ValueError("The parameter '%s' is constant" % par)
+        if parameter.const:
+            raise ValueError("The parameter '%s' is constant" % parameter)
 
         if isinstance(con, str):
             eqstr = con
@@ -911,14 +914,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             eq = Equation(root=con)
             eqstr = con.name
 
-        eq.name = "_constraint_%s" % par.name
+        eq.name = "_constraint_%s" % parameter.name
 
         # Make and store the constraint
         con = Constraint()
-        con.constrain(par, eq)
+        con.constrain(parameter, eq)
         # Store the equation string so it can be shown later.
         con.eqstr = eqstr
-        self._constraints[par] = con
+        self._constraints[parameter] = con
 
         # Our configuration changed
         self._update_configuration()
@@ -946,7 +949,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return parameter in self._constraints
 
     @deprecated(isConstrained_deprecation_msg)
-    def isConstrained(self, par):
+    def isConstrained(self, parameter):
         """This function has been deprecated and will be removed in
         version 4.0.0.
 
@@ -954,7 +957,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.is_constrained
         instead.
         """
-        return self.is_constrained(par)
+        return self.is_constrained(parameter)
 
     def unconstrain(self, *pars):
         """Unconstrain a Parameter.
@@ -970,17 +973,17 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises ValueError if the Parameter is not constrained.
         """
         update = False
-        for par in pars:
-            if isinstance(par, str):
-                name = par
-                par = self.get(name)
+        for parameter in pars:
+            if isinstance(parameter, str):
+                name = parameter
+                parameter = self.get(name)
 
-            if par is None:
+            if parameter is None:
                 raise ValueError("The parameter cannot be found")
 
-            if par in self._constraints:
-                self._constraints[par].unconstrain()
-                del self._constraints[par]
+            if parameter in self._constraints:
+                self._constraints[parameter].unconstrain()
+                del self._constraints[parameter]
                 update = True
 
         if update:
@@ -1213,13 +1216,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         cdict = self._get_constraints()
         # Find each constraint and format the equation
         clines = []
-        for par, con in cdict.items():
-            loc = self._locate_managed_object(par)
+        for parameter, con in cdict.items():
+            loc = self._locate_managed_object(parameter)
             if loc:
                 locstr = ".".join(o.name for o in loc[1:])
                 clines.append("%s <-- %s" % (locstr, con.eqstr))
             else:
-                clines.append("%s <-- %s" % (par.name, con.eqstr))
+                clines.append("%s <-- %s" % (parameter.name, con.eqstr))
         clines.sort(key=numstr)
         return clines
 

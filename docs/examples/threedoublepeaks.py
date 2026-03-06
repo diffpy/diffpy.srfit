@@ -75,7 +75,7 @@ def makeRecipe():
     # Here is another one
     bkgdstr = "b0 + b1*t + b2*t**2 + b3*t**3 + b4*t**4 + b5*t**5 + b6*t**6"
 
-    contribution.registerStringFunction(bkgdstr, "bkgd")
+    contribution.register_string_function(bkgdstr, "bkgd")
 
     # Now define our fitting equation. We will hardcode the peak ratios.
     contribution.set_equation(

@@ -84,6 +84,13 @@ registerFunction_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+registerStringFunction_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "registerStringFunction",
+    "register_string_function",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -740,35 +747,41 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.register_function(f, name=name, argnames=argnames)
 
-    def registerStringFunction(self, fstr, name, ns={}):
+    def register_string_function(self, function_str, name, func_params={}):
         """Register a string function.
 
         This creates a function with this class that can be used within string
-        equations.  The resulting equation does not require the arguments to be
+        equations. The resulting equation does not require the arguments to be
         passed in the function string, as this will be handled automatically.
 
-        Attributes
+        Parameters
         ----------
-        fstr
+        function_str : str
             A string equation to register.
-        name
+        name : str
             The name of the function to be used in equations.
-        ns
+        func_params : dict, optional
             A dictionary of Parameters, indexed by name, that are
-            used in fstr, but not part of the FitRecipe (default
-            {}).
+            used in function_str, but not part of the FitRecipe (default {}).
 
+        Raises
+        ------
+        ValueError
+            If func_params uses a name that is already used for another
+            managed object.
+        ValueError
+            If the function name is the name of another managed object.
 
-        Raises ValueError if ns uses a name that is already used for another
-        managed object.
-        Raises ValueError if the function name is the name of another managed
-        object.
-
-        Returns the callable Equation object.
+        Returns
+        -------
+        equation_object : Equation
+            The callable Equation object.
         """
 
         # Build the equation instance.
-        eq = equationFromString(fstr, self._eqfactory, ns=ns, buildargs=True)
+        eq = equationFromString(
+            function_str, self._eqfactory, ns=func_params, buildargs=True
+        )
         eq.name = name
 
         # Register any new Parameters.
@@ -777,7 +790,21 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # Register the equation as a callable function.
         argnames = eq.argdict.keys()
-        return self.register_function(eq, name, argnames)
+        equation_object = self.register_function(
+            eq, name=name, argnames=argnames
+        )
+        return equation_object
+
+    @deprecated(registerStringFunction_deprecation_msg)
+    def registerStringFunction(self, fstr, name, ns={}):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.register_string_function
+        instead.
+        """
+        return self.register_string_function(fstr, name, func_params=ns)
 
     def evaluateEquation(self, eqstr, ns={}):
         """Evaluate a string equation.

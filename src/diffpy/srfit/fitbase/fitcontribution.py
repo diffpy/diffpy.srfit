@@ -284,7 +284,7 @@ class FitContribution(ParameterSet):
             A string representation of the equation. Any Parameter
             registered by addParameter or setProfile, or function
             registered by setCalculator, register_function or
-            registerStringFunction can be can be used in the equation
+            register_string_function can be can be used in the equation
             by name. Other names will be turned into Parameters of this
             FitContribution.
         ns

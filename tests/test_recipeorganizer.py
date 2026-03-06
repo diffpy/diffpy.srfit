@@ -417,7 +417,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Use this in another equation
 
-        eq = self.m.registerStringFunction("g/x - 1", "pdf")
+        eq = self.m.register_string_function("g/x - 1", "pdf")
         self.assertTrue(numpy.array_equal(g(x) / x - 1, eq()))
 
         return
@@ -462,7 +462,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Use this in another equation
 
-        eq = self.m.registerStringFunction("g/x - 1", "pdf")
+        eq = self.m.register_string_function("g/x - 1", "pdf")
         self.assertTrue(numpy.array_equal(g(x) / x - 1, eq()))
 
         return
@@ -492,7 +492,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         )
 
         # Use this in another equation
-        eq2 = self.m.registerStringFunction("g/x - 1", "pdf")
+        eq2 = self.m.register_string_function("g/x - 1", "pdf")
         self.assertTrue(numpy.array_equal(eq() / x - 1, eq2()))
 
         # Make sure we can swap out "g".
@@ -517,11 +517,11 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         return
 
-    def testRegisterStringFunction(self):
+    def test_register_string_function(self):
         """Test registering string functions in various ways."""
 
         # Make an equation.
-        eq1 = self.m.registerStringFunction("x**2 + 3", "eq1")
+        eq1 = self.m.register_string_function("x**2 + 3", "eq1")
         eq1.x.setValue(0)
 
         for p in eq1.args:
@@ -537,9 +537,9 @@ class TestRecipeOrganizer(unittest.TestCase):
         # Use eq1 in some equations
 
         # x**2 (x**2 + 3 - 3)
-        eq2 = self.m.registerStringFunction("eq1 - 3", "eq2")
+        eq2 = self.m.register_string_function("eq1 - 3", "eq2")
         # y**2
-        eq3 = self.m.registerStringFunction("eq1(y) - 3", "eq3")
+        eq3 = self.m.register_string_function("eq1(y) - 3", "eq3")
 
         # Test these equations.
         self.assertEqual(0, eq2())

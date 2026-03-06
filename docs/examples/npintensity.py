@@ -231,7 +231,7 @@ def makeRecipe(strufile, datname):
 
     # This creates a callable equation named "bkgd" within the FitContribution,
     # and turns the polynomial coefficients into Parameters.
-    contribution.registerStringFunction(bkgdstr, "bkgd")
+    contribution.register_string_function(bkgdstr, "bkgd")
 
     # We will create the broadening function that we need by creating a python
     # function and registering it with the FitContribution.

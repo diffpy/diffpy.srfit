@@ -105,8 +105,8 @@ def makeRecipe(strufile, datname1, datname2):
     bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
                b7*q**7 +b8*q**8 + b9*q**9"
 
-    contribution1.registerStringFunction(bkgdstr, "bkgd")
-    contribution2.registerStringFunction(bkgdstr, "bkgd")
+    contribution1.register_string_function(bkgdstr, "bkgd")
+    contribution2.register_string_function(bkgdstr, "bkgd")
 
     # We will create the broadening function by registering a python function.
     pi = numpy.pi

@@ -342,7 +342,7 @@ def plotResults(recipe):
 
     Imeas = recipe.bucky.profile.y
     Icalc = recipe.bucky.profile.ycalc
-    bkgd = recipe.bucky.evaluateEquation("bkgd")
+    bkgd = recipe.bucky.evaluate_equation("bkgd")
     diff = Imeas - Icalc
 
     import pylab

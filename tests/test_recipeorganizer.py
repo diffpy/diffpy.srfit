@@ -555,6 +555,13 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         return
 
+    def test_release_old_equations(self):
+        """Verify EquationFactory does not hold temporary equations."""
+        self.m._new_parameter("x", 12)
+        self.assertEqual(36, self.m.evaluate_equation("3 * x"))
+        self.assertEqual(0, len(self.m._eqfactory.equations))
+        return
+
     def test_releaseOldEquations(self):
         """Verify EquationFactory does not hold temporary equations."""
         self.m._new_parameter("x", 12)

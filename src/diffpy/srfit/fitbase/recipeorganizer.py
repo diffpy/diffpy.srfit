@@ -91,6 +91,13 @@ registerStringFunction_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+evaluateEquation_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "evaluateEquation",
+    "evaluate_equation",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -762,12 +769,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             The name of the function to be used in equations.
         func_params : dict, optional
             A dictionary of Parameters, indexed by name, that are
-            used in function_str, but not part of the FitRecipe (default {}).
+            used in `function_str`, but not part of the FitRecipe (default {}).
 
         Raises
         ------
         ValueError
-            If func_params uses a name that is already used for another
+            If `func_params` uses a name that is already used for another
             managed object.
         ValueError
             If the function name is the name of another managed object.
@@ -806,6 +813,43 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.register_string_function(fstr, name, func_params=ns)
 
+    def evaluate_equation(self, equation_str, func_params={}):
+        """Evaluate a string equation.
+
+        This method takes a string representation of a mathematical equation
+        and evaluates it using the current values of the registered Parameters
+        in the FitRecipe. Additional parameters not part of the FitRecipe can
+        also be provided via the `func_params` dictionary.
+
+        Parameters
+        ----------
+        equation_str
+            The string equation to evaluate. The equation is evaluated at
+            the current value of the registered Parameters.
+        func_params : dict, optional
+            The dictionary of Parameters, indexed by name, that are
+            used in `equation_str`, but not part of the FitRecipe
+            (default `{}`).
+
+        Returns
+        -------
+        returned_value : float
+            The value of the evaluated equation.
+
+        Raises
+        ------
+        ValueError
+            If `func_params` uses a name that is already used for a
+            variable.
+        """
+        eq = equationFromString(equation_str, self._eqfactory, func_params)
+        try:
+            returned_value = eq()
+        finally:
+            self._eqfactory.wipeout(eq)
+        return returned_value
+
+    @deprecated(evaluateEquation_deprecation_msg)
     def evaluateEquation(self, eqstr, ns={}):
         """Evaluate a string equation.
 
@@ -822,12 +866,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises ValueError if ns uses a name that is already used for a
         variable.
         """
-        eq = equationFromString(eqstr, self._eqfactory, ns)
-        try:
-            rv = eq()
-        finally:
-            self._eqfactory.wipeout(eq)
-        return rv
+        return self.evaluate_equation(eqstr, func_params=ns)
 
     def constrain(self, par, con, ns={}):
         """Constrain a parameter to an equation.

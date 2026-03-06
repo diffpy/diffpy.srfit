@@ -156,10 +156,10 @@ def plotResults(recipe):
     diffzero = -0.8 * max(g) * numpy.ones_like(g)
     diff = g - gcalc + diffzero
 
-    gcryst = recipe.pdf.evaluateEquation("G")
+    gcryst = recipe.pdf.evaluate_equation("G")
     gcryst /= recipe.scale.value
 
-    fr = recipe.pdf.evaluateEquation("f")
+    fr = recipe.pdf.evaluate_equation("f")
     fr *= max(g) / fr[0]
 
     import pylab

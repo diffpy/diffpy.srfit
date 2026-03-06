@@ -196,11 +196,11 @@ def plotResults(recipe):
     # Plot this for fun.
     I1 = recipe.bucky1.profile.y
     Icalc1 = recipe.bucky1.profile.ycalc
-    bkgd1 = recipe.bucky1.evaluateEquation("bkgd")
+    bkgd1 = recipe.bucky1.evaluate_equation("bkgd")
     diff1 = I1 - Icalc1
     I2 = recipe.bucky2.profile.y
     Icalc2 = recipe.bucky2.profile.ycalc
-    bkgd2 = recipe.bucky2.evaluateEquation("bkgd")
+    bkgd2 = recipe.bucky2.evaluate_equation("bkgd")
     diff2 = I2 - Icalc2
     offset = 1.2 * max(I2) * numpy.ones_like(I2)
     I1 += offset

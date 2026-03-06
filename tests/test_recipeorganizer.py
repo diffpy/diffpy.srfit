@@ -476,7 +476,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         def g2(A):
             return A + 1
 
-        eq = self.m.registerFunction(g1, "g")
+        eq = self.m.register_function(g1, "g")
 
         for p in eq.args:
             self.assertTrue(p in self.m._parameters.values())
@@ -496,7 +496,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertTrue(numpy.array_equal(eq() / x - 1, eq2()))
 
         # Make sure we can swap out "g".
-        self.m.registerFunction(g2, "g")
+        self.m.register_function(g2, "g")
         self.assertAlmostEqual(2.0, eq())
 
         # Try a bound method
@@ -508,7 +508,7 @@ class TestRecipeOrganizer(unittest.TestCase):
                 return 4.56
 
         t = temp()
-        eq = self.m.registerFunction(t.eval, "eval")
+        eq = self.m.register_function(t.eval, "eval")
         self.assertAlmostEqual(1.23, eq())
 
         # Now the callable

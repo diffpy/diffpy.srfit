@@ -119,8 +119,8 @@ def makeRecipe(strufile, datname1, datname2):
             * exp(-0.5 * ((q - q0) / width) ** 2)
         )
 
-    contribution1.registerFunction(gaussian)
-    contribution2.registerFunction(gaussian)
+    contribution1.register_function(gaussian)
+    contribution2.register_function(gaussian)
     # Center the gaussian
     contribution1.q0.value = x[len(x) // 2]
     contribution2.q0.value = x[len(x) // 2]

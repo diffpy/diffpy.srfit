@@ -106,14 +106,14 @@ def makeRecipe():
     contribution.set_profile(profile, xname="T")
 
     # We now need to create the fitting equation.  We tell the FitContribution
-    # to use the 'debye' function defined below. The 'registerFunction' method
+    # to use the 'debye' function defined below. The 'register_function' method
     # will let us do this. Since we haven't told it otherwise,
-    # 'registerFunction' will extract the name of the function ('debye') and
+    # 'register_function' will extract the name of the function ('debye') and
     # the names of the arguments ('T', 'm', 'thetaD'). These arguments will
     # become Parameters of the FitContribution. Since we named the x-variable
     # 'T' above, the 'T' in the 'debye' equation will refer to this x-variable
     # whenever it is used.
-    contribution.registerFunction(debye)
+    contribution.register_function(debye)
 
     # Now we can create the fitting equation. We want to extend the 'debye'
     # equation by adding a vertical offset. We could wrap 'debye' in a new

@@ -106,6 +106,16 @@ __all__ = [
 
 _builders = {}
 
+EquationFactory_base = "diffpy.srfit.equation.builder.EquationFactory"
+removal_version = "4.0.0"
+
+registerFunction_dep_msg = build_deprecation_message(
+    EquationFactory_base,
+    "registerFunction",
+    "register_function",
+    removal_version,
+)
+
 
 class EquationFactory(object):
     """A Factory for equations.
@@ -208,23 +218,26 @@ class EquationFactory(object):
         opbuilder = wrapOperator(name, op)
         return self.registerBuilder(name, opbuilder)
 
-    def registerFunction(self, name, func, argnames):
+    def register_function(self, name, func, argnames):
         """Register a named function with the factory.
 
         This will register a builder for the function.
 
-        Attributes
+        Parameters
         ----------
-        name
+        name : str
             The name of the function
-        func
-            A callable python object
-        argnames
+        func : callable
+            The callable python object
+        argnames : list of str
             The argument names for func. If these names do not
             correspond to builders, then new constants with value 0
             will be created for each name.
 
-        Returns the registered builder.
+        Returns
+        -------
+        registered_builder : OperatorBuilder
+            The registered builder.
         """
         for n in argnames:
             if n not in self.builders:
@@ -234,8 +247,19 @@ class EquationFactory(object):
             builder = self.builders[argname]
             argliteral = builder.literal
             opbuilder.literal.addLiteral(argliteral)
+        registered_builder = self.registerBuilder(name, opbuilder)
+        return registered_builder
 
-        return self.registerBuilder(name, opbuilder)
+    @deprecated(registerFunction_dep_msg)
+    def registerFunction(self, name, func, argnames):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.equation.builder.EquationFactory.register_function
+        instead.
+        """
+        return self.register_function(name, func, argnames)
 
     def registerBuilder(self, name, builder):
         """Register builder in this module so it can be used in

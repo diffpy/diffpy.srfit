@@ -247,7 +247,7 @@ def makeRecipe(strufile, datname):
 
     # This registers the python function and extracts the name and creates
     # Parameters from the arguments.
-    contribution.registerFunction(gaussian)
+    contribution.register_function(gaussian)
 
     # Center the Gaussian so it is not truncated.
     contribution.q0.value = x[len(x) // 2]

@@ -59,7 +59,7 @@ def makeRecipe():
     def gaussian(t, mu, sig):
         return 1 / (2 * pi * sig**2) ** 0.5 * exp(-0.5 * ((t - mu) / sig) ** 2)
 
-    contribution.registerFunction(gaussian, name="peakshape")
+    contribution.register_function(gaussian, name="peakshape")
 
     def delta(t, mu):
         """Calculate a delta-function.
@@ -70,7 +70,7 @@ def makeRecipe():
         sig = t[1] - t[0]
         return gaussian(t, mu, sig)
 
-    contribution.registerFunction(delta)
+    contribution.register_function(delta)
 
     # Here is another one
     bkgdstr = "b0 + b1*t + b2*t**2 + b3*t**3 + b4*t**4 + b5*t**5 + b6*t**6"
@@ -120,7 +120,7 @@ def makeRecipe():
         l2 = 1.0
         return 180 / pi * arcsin(pi / 180 * l2 * sin(mu) / l1)
 
-    recipe.registerFunction(peakloc)
+    recipe.register_function(peakloc)
     recipe.constrain(contribution.mu12, "peakloc(mu11)")
     recipe.constrain(contribution.mu22, "peakloc(mu21)")
     recipe.constrain(contribution.mu32, "peakloc(mu31)")
@@ -134,7 +134,7 @@ def makeRecipe():
         """Calculate the peak broadening with respect to position."""
         return sig0 * (1 - dsig * mu**2)
 
-    recipe.registerFunction(sig)
+    recipe.register_function(sig)
     recipe.fix("mu")
     # Now constrain the peak widths to this
     recipe.sig0.value = 0.001

@@ -77,6 +77,13 @@ registerCalculator_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+registerFunction_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "registerFunction",
+    "register_function",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -603,52 +610,62 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.register_calculator(f, argnames=argnames)
 
-    def registerFunction(self, f, name=None, argnames=None):
+    def register_function(self, function, name=None, argnames=None):
         """Register a function so it can be used within equation
         strings.
 
         This creates a function with this class that can be used within string
-        equations.  The resulting equation does not require the arguments to be
+        equations. The resulting equation does not require the arguments to be
         passed in the equation string, as this will be handled automatically.
 
-        Attributes
+        Parameters
         ----------
-        f
+        function : callable
             The callable to register. If this is an Equation
             instance, then all that needs to be provided is a name.
-        name
+        name : str or None, optional
             The name of the function to be used in equations. If
             this is None (default), the method will try to
             determine the name of the function automatically.
-        argnames
-            The names of the arguments to f (list or None).
+        argnames : list or None, optional
+            The names of the arguments to 'function' (list or None).
             If this is None (default), then the argument names will
             be extracted from the function.
 
-
-        Note that name and argnames can be extracted from regular python
-        functions (of type 'function'), bound class methods and callable
+        Note
+        ----
+        name and argnames can be extracted from regular Python
+        functions (of type <function>), bound class methods, and callable
         classes.
 
+        Raises
+        ------
+        TypeError
+            If name or argnames cannot be automatically extracted.
+        TypeError
+            If an automatically extracted name is '<lambda>'.
+        ValueError
+            If function is an Equation object and name is None.
 
-        Raises TypeError if name or argnames cannot be automatically
-        extracted.
-        Raises TypeError if an automatically extracted name is '<lambda>'.
-        Raises ValueError if f is an Equation object and name is None.
-
-        Returns the callable Equation object.
+        Returns
+        -------
+        equation_object : Equation
+            The callable Equation object.
         """
 
         # If the function is an equation, we treat it specially. This is
         # required so that the objects observed by the root get observed if the
         # Equation is used within another equation. It is assumed that a plain
         # function is not observable.
-        if isinstance(f, Equation):
+        if isinstance(function, Equation):
             if name is None:
-                m = "Equation must be given a name"
+                m = (
+                    "The equation must be given a name. "
+                    "Specify a name with the 'name' argument."
+                )
                 raise ValueError(m)
-            self._eqfactory.registerOperator(name, f)
-            return f
+            self._eqfactory.registerOperator(name, function)
+            return function
 
         # Introspection code
         if name is None or argnames is None:
@@ -661,15 +678,17 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             offset = 0
 
             # check regular functions
-            if inspect.isfunction(f):
-                fncode = f.__code__
+            if inspect.isfunction(function):
+                fncode = function.__code__
             # check class method
-            elif inspect.ismethod(f):
-                fncode = f.__func__.__code__
+            elif inspect.ismethod(function):
+                fncode = function.__func__.__code__
                 offset = 1
             # check functor
-            elif hasattr(f, "__call__") and hasattr(f.__call__, "__func__"):
-                fncode = f.__call__.__func__.__code__
+            elif hasattr(function, "__call__") and hasattr(
+                function.__call__, "__func__"
+            ):
+                fncode = function.__call__.__func__.__code__
                 offset = 1
             else:
                 m = "Cannot extract name or argnames"
@@ -697,18 +716,29 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # Initialize and register
         from diffpy.srfit.fitbase.calculator import Calculator
 
-        if isinstance(f, Calculator):
+        if isinstance(function, Calculator):
             for pname in argnames:
                 par = self.get(pname)
-                f.addLiteral(par)
-            self._eqfactory.registerOperator(name, f)
+                function.addLiteral(par)
+            self._eqfactory.registerOperator(name, function)
         else:
-            self._eqfactory.registerFunction(name, f, argnames)
+            self._eqfactory.register_function(name, function, argnames)
 
         # Now we can create the Equation and return it to the user.
-        eq = self._eqfactory.makeEquation(name)
+        equation_object = self._eqfactory.makeEquation(name)
 
-        return eq
+        return equation_object
+
+    @deprecated(registerFunction_deprecation_msg)
+    def registerFunction(self, f, name=None, argnames=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.register_function
+        instead.
+        """
+        return self.register_function(f, name=name, argnames=argnames)
 
     def registerStringFunction(self, fstr, name, ns={}):
         """Register a string function.
@@ -747,7 +777,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # Register the equation as a callable function.
         argnames = eq.argdict.keys()
-        return self.registerFunction(eq, name, argnames)
+        return self.register_function(eq, name, argnames)
 
     def evaluateEquation(self, eqstr, ns={}):
         """Evaluate a string equation.

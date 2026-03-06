@@ -76,8 +76,8 @@ def makeRecipe(stru1, stru2, datname):
     # very little to the PDF.
     from diffpy.srfit.pdf.characteristicfunctions import shellCF, sphericalCF
 
-    contribution.registerFunction(sphericalCF, name="f_CdS")
-    contribution.registerFunction(shellCF, name="f_ZnS")
+    contribution.register_function(sphericalCF, name="f_CdS")
+    contribution.register_function(shellCF, name="f_ZnS")
 
     # Write the fitting equation. We want to sum the PDFs from each phase and
     # multiply it by a scaling factor.

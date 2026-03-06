@@ -108,7 +108,7 @@ can be adapted as::
             setter = SimpleAtom.set, attr = "x")
 
 Thus, when ``xpar.getValue()`` is called, it in turn calls
-``SimpleAtom.get(atom, "x")``. ``xpar.setValue(value)`` calls
+``SimpleAtom.get(atom, "x")``. ``xpar.set_value(value)`` calls
 ``SimpleAtom.set(atom, "x", value)``.
 
 If the attributes of an object cannot be accessed in one of these three ways,

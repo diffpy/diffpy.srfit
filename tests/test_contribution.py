@@ -198,7 +198,7 @@ class TestContribution(unittest.TestCase):
         fc = self.fitcontribution
         fc.register_function(_fsquare, name="fsquare")
         fc.set_equation("fsquare")
-        fc.x.setValue(5)
+        fc.x.set_value(5)
         self.assertEqual(25, fc.evaluate())
         fc.x << 6
         self.assertEqual(36, fc.evaluate())
@@ -257,7 +257,7 @@ def testResidual(noObserversInGlobalBuilders):
     assert dot(chiv, chiv) == pytest.approx(dot(yobs, yobs))
 
     # Try something more complex
-    c.setValue(3)
+    c.set_value(3)
     fc.set_equation("c**2*sin(I)")
     assert fc._eq._value is None
     assert fc._reseq._value is None
@@ -300,7 +300,7 @@ def test_setEquation(noObserversInGlobalBuilders):
     """Check replacement of removed parameters."""
     fc = FitContribution("test")
     fc.setEquation("x + 5")
-    fc.x.setValue(2)
+    fc.x.set_value(2)
     assert 7 == fc.evaluate()
     fc.removeParameter(fc.x)
     x = arange(0, 10, 0.5)
@@ -314,7 +314,7 @@ def test_set_equation(noObserversInGlobalBuilders):
     """Check replacement of removed parameters."""
     fc = FitContribution("test")
     fc.set_equation("x + 5")
-    fc.x.setValue(2)
+    fc.x.set_value(2)
     assert 7 == fc.evaluate()
     fc.removeParameter(fc.x)
     x = arange(0, 10, 0.5)

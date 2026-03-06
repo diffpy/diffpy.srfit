@@ -287,7 +287,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEqual(1, len(self.m._constraints))
         self.assertTrue(self.m.is_constrained(p1))
 
-        p2.setValue(10)
+        p2.set_value(10)
         self.m._constraints[p1].update()
         self.assertEqual(20, p1.getValue())
 
@@ -303,7 +303,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Try an straight constraint
         self.m.constrain(p1, p2)
-        p2.setValue(7)
+        p2.set_value(7)
         self.m._constraints[p1].update()
         self.assertEqual(7, p1.getValue())
 
@@ -340,14 +340,14 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEqual(0, len(self.m._restraints))
         r = self.m.restrain("p1+p2", ub=10)
         self.assertEqual(1, len(self.m._restraints))
-        p2.setValue(10)
+        p2.set_value(10)
         self.assertEqual(1, r.penalty())
         self.m.unrestrain(r)
         self.assertEqual(0, len(self.m._restraints))
 
         r = self.m.restrain(p1, ub=10)
         self.assertEqual(1, len(self.m._restraints))
-        p1.setValue(11)
+        p1.set_value(11)
         self.assertEqual(1, r.penalty())
 
         # Check errors on unregistered parameters
@@ -435,15 +435,15 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m.register_calculator(g)
 
         x = numpy.arange(0.5, 10, 0.5)
-        self.m.x.setValue(x)
+        self.m.x.set_value(x)
 
-        self.m.g.center.setValue(3.0)
+        self.m.g.center.set_value(3.0)
 
         self.assertTrue(
             numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), g(x))
         )
 
-        self.m.g.center.setValue(5.0)
+        self.m.g.center.set_value(5.0)
 
         self.assertTrue(
             numpy.array_equal(numpy.exp(-0.5 * ((x - 5.0) / 0.1) ** 2), g(x))
@@ -480,15 +480,15 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m.registerCalculator(g)
 
         x = numpy.arange(0.5, 10, 0.5)
-        self.m.x.setValue(x)
+        self.m.x.set_value(x)
 
-        self.m.g.center.setValue(3.0)
+        self.m.g.center.set_value(3.0)
 
         self.assertTrue(
             numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), g(x))
         )
 
-        self.m.g.center.setValue(5.0)
+        self.m.g.center.set_value(5.0)
 
         self.assertTrue(
             numpy.array_equal(numpy.exp(-0.5 * ((x - 5.0) / 0.1) ** 2), g(x))
@@ -516,10 +516,10 @@ class TestRecipeOrganizer(unittest.TestCase):
             self.assertTrue(p in self.m._parameters.values())
 
         x = numpy.arange(0.5, 10, 0.5)
-        self.m.x.setValue(x)
-        self.m.A.setValue(1.0)
-        self.m.c.setValue(3.0)
-        self.m.w.setValue(0.1)
+        self.m.x.set_value(x)
+        self.m.A.set_value(1.0)
+        self.m.c.set_value(3.0)
+        self.m.w.set_value(0.1)
 
         self.assertTrue(
             numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), eq())
@@ -556,7 +556,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Make an equation.
         eq1 = self.m.register_string_function("x**2 + 3", "eq1")
-        eq1.x.setValue(0)
+        eq1.x.set_value(0)
 
         for p in eq1.args:
             self.assertTrue(p in self.m._parameters.values())

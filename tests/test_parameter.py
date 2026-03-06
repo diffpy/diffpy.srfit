@@ -29,7 +29,7 @@ class TestParameter(unittest.TestCase):
         """Test initialization."""
         par_l = Parameter("l")
 
-        par_l.setValue(3.14)
+        par_l.set_value(3.14)
         self.assertAlmostEqual(3.14, par_l.getValue())
 
         # Try array
@@ -47,7 +47,7 @@ class TestParameter(unittest.TestCase):
         self.assertTrue(par_l.value is y)
 
         # Back to scalar
-        par_l.setValue(1.01)
+        par_l.set_value(1.01)
         self.assertAlmostEqual(1.01, par_l.getValue())
         self.assertAlmostEqual(1.01, par_l.value)
         return
@@ -89,18 +89,18 @@ class TestParameterAdapter(unittest.TestCase):
 
         # Try Accessor adaptation
         la = ParameterAdapter(
-            "l", par_l, getter=Parameter.getValue, setter=Parameter.setValue
+            "l", par_l, getter=Parameter.getValue, setter=Parameter.set_value
         )
 
         self.assertEqual(par_l.name, la.name)
         self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the parameter
-        par_l.setValue(2.3)
+        par_l.set_value(2.3)
         self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the adapter
-        la.setValue(3.2)
+        la.set_value(3.2)
         self.assertEqual(par_l.getValue(), la.getValue())
 
         # Try Attribute adaptation
@@ -111,11 +111,11 @@ class TestParameterAdapter(unittest.TestCase):
         self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the parameter
-        par_l.setValue(2.3)
+        par_l.set_value(2.3)
         self.assertEqual(par_l.getValue(), la.getValue())
 
         # Change the adapter
-        la.setValue(3.2)
+        la.set_value(3.2)
         self.assertEqual(par_l.getValue(), la.getValue())
 
         return

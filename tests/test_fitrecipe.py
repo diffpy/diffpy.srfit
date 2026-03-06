@@ -49,9 +49,9 @@ class TestFitRecipe(unittest.TestCase):
         self.fitcontribution = FitContribution("cont")
         self.fitcontribution.set_profile(self.profile)
         self.fitcontribution.set_equation("A*sin(k*x + c)")
-        self.fitcontribution.A.setValue(1)
-        self.fitcontribution.k.setValue(1)
-        self.fitcontribution.c.setValue(0)
+        self.fitcontribution.A.set_value(1)
+        self.fitcontribution.k.set_value(1)
+        self.fitcontribution.c.set_value(0)
 
         self.recipe.add_contribution(self.fitcontribution)
         return
@@ -208,7 +208,7 @@ class TestFitRecipe(unittest.TestCase):
         # Change the c value to 1 so that the equation evaluates as sin(x+1)
         x = self.profile.x
         y = sin(x + 1)
-        self.recipe.cont.c.setValue(1)
+        self.recipe.cont.c.set_value(1)
         res = self.recipe.residual()
         self.assertTrue(array_equal(y - self.profile.y, res))
 
@@ -241,7 +241,7 @@ class TestFitRecipe(unittest.TestCase):
         # Clear the constraint and restore the value of c to 0. This should
         # give us chi2 = 0 again.
         self.recipe.unconstrain(self.fitcontribution.c)
-        self.fitcontribution.c.setValue(0)
+        self.fitcontribution.c.set_value(0)
         res = self.recipe.residual([self.recipe.cont.A.getValue()])
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res))
@@ -276,7 +276,7 @@ class TestFitRecipe(unittest.TestCase):
         self.fitcontribution.unrestrain(r1)
         self.recipe._ready = False
         self.fitcontribution.unconstrain(self.fitcontribution.c)
-        self.fitcontribution.c.setValue(0)
+        self.fitcontribution.c.set_value(0)
         res = self.recipe.residual()
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res))
@@ -354,9 +354,9 @@ def testPrintFitHook(capturestdout):
     fitcontribution = FitContribution("cont")
     fitcontribution.set_profile(profile)
     fitcontribution.set_equation("A*sin(k*x + c)")
-    fitcontribution.A.setValue(1)
-    fitcontribution.k.setValue(1)
-    fitcontribution.c.setValue(0)
+    fitcontribution.A.set_value(1)
+    fitcontribution.k.set_value(1)
+    fitcontribution.c.set_value(0)
 
     recipe.addContribution(fitcontribution)
 
@@ -430,9 +430,9 @@ def test_add_contribution(capturestdout):
     fitcontribution = FitContribution("cont")
     fitcontribution.set_profile(profile)
     fitcontribution.set_equation("A*sin(k*x + c)")
-    fitcontribution.A.setValue(1)
-    fitcontribution.k.setValue(1)
-    fitcontribution.c.setValue(0)
+    fitcontribution.A.set_value(1)
+    fitcontribution.k.set_value(1)
+    fitcontribution.c.set_value(0)
 
     recipe.add_contribution(fitcontribution)
 

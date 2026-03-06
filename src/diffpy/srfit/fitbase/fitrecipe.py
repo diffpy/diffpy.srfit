@@ -759,7 +759,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             raise ValueError("The parameter '%s' is constrained" % par)
         var = ParameterProxy(name, par)
         if value is not None:
-            var.setValue(value)
+            var.set_value(value)
         self._add_parameter(var)
         if fixed:
             self.fix(var)
@@ -1185,7 +1185,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             val = con.getValue()
             if val is None:
                 val = par.getValue()
-                con.setValue(val)
+                con.set_value(val)
 
         if par in self._parameters.values():
             self.fix(par)
@@ -1352,7 +1352,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         parameter names and values."""
         for param_name, param_value in params_dict.items():
             if param_name in self._parameters:
-                self._parameters[param_name].setValue(param_value)
+                self._parameters[param_name].set_value(param_value)
             else:
                 print(
                     f"Warning: Parameter '{param_name}' from results "
@@ -1742,7 +1742,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             return
         vargen = (v for v in self._parameters.values() if self.is_free(v))
         for var, pval in zip(vargen, p):
-            var.setValue(pval)
+            var.set_value(pval)
         return
 
     def _update_configuration(self):

@@ -352,7 +352,9 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         # Check errors on unregistered parameters
         self.assertRaises(ValueError, self.m.restrain, "2*p3")
-        self.assertRaises(ValueError, self.m.restrain, "2*p2", ns={"p2": p3})
+        self.assertRaises(
+            ValueError, self.m.restrain, "2*p2", params={"p2": p3}
+        )
         return
 
     def testGetConstraints(self):

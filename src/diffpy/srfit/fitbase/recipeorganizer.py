@@ -883,37 +883,41 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.evaluate_equation(eqstr, func_params=ns)
 
-    def constrain(self, parameter, con, ns={}):
+    def constrain(self, parameter, constraint_eq, params={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
 
-        Attributes
+        Parameters
         ----------
-        parameter
+        parameter : str or Parameter
             The name of a Parameter or a Parameter to constrain.
-        con
+        constraint_eq : str or Equation
             A string representation of the constraint equation or a
-            Parameter to constrain to.  A constraint equation must
+            Parameter to constrain to. A constraint equation must
             consist of numpy operators and "known" Parameters.
-            Parameters are known if they are in the ns argument, or if
-            they are managed by this object.
-        ns
+            Parameters are known if they are in the `params`
+            argument, or if they are managed by this object.
+        params : dict, optional
             A dictionary of Parameters, indexed by name, that are used
-            in the parameter, but not part of this object (default {}).
+            in `parameter`, but not part of this object (default {}).
 
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
-        Raises ValueError if parameter is a string but not part of this
-        object or in ns.
-        Raises ValueError if parameter is marked as constant.
+        Raises
+        ------
+        ValueError
+            If `params` uses a name that is already used for a
+            variable.
+        ValueError
+            If `parameter` is a string but not part of this object or
+            in `params`.
+        ValueError
+            If `parameter` is marked as constant.
         """
         if isinstance(parameter, str):
             name = parameter
             parameter = self.get(name)
             if parameter is None:
-                parameter = ns.get(name)
+                parameter = params.get(name)
 
         if parameter is None:
             raise ValueError("The parameter cannot be found")
@@ -921,21 +925,21 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if parameter.const:
             raise ValueError("The parameter '%s' is constant" % parameter)
 
-        if isinstance(con, str):
-            eqstr = con
-            eq = equationFromString(con, self._eqfactory, ns)
+        if isinstance(constraint_eq, str):
+            eqstr = constraint_eq
+            eq = equationFromString(constraint_eq, self._eqfactory, params)
         else:
-            eq = Equation(root=con)
-            eqstr = con.name
+            eq = Equation(root=constraint_eq)
+            eqstr = constraint_eq.name
 
         eq.name = "_constraint_%s" % parameter.name
 
         # Make and store the constraint
-        con = Constraint()
-        con.constrain(parameter, eq)
+        constraint_eq = Constraint()
+        constraint_eq.constrain(parameter, eq)
         # Store the equation string so it can be shown later.
-        con.eqstr = eqstr
-        self._constraints[parameter] = con
+        constraint_eq.eqstr = eqstr
+        self._constraints[parameter] = constraint_eq
 
         # Our configuration changed
         self._update_configuration()
@@ -1073,55 +1077,67 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.clear_all_constraints(recurse=recurse)
 
-    def restrain(self, res, lb=-inf, ub=inf, sig=1, scaled=False, ns={}):
+    def restrain(
+        self, param_or_eq, lb=-inf, ub=inf, sig=1, scaled=False, params={}
+    ):
         """Restrain an expression to specified bounds.
 
-        Attributes
+        Parameters
         ----------
-        res
-            An equation string or Parameter to restrain.
-        lb
-            The lower bound on the restraint evaluation (default -inf).
-        ub
-            The lower bound on the restraint evaluation (default inf).
-        sig
-            The uncertainty on the bounds (default 1).
-        scaled
-            A flag indicating if the restraint is scaled (multiplied)
-            by the unrestrained point-average chi^2 (chi^2/numpoints)
-            (default False).
-        ns
-            A dictionary of Parameters, indexed by name, that are used
-            in the equation string, but not part of the RecipeOrganizer
-            (default {}).
+        param_or_eq : str or Parameter
+            The equation string or a Parameter object to restrain.
+        lb : float, optional
+            The lower bound for the restraint evaluation (default is -inf).
+        ub : float, optional
+            The upper bound for the restraint evaluation (default is inf).
+        sig : float, optional
+            The uncertainty associated with the bounds (default is 1).
+        scaled : bool, optional
+            If True, the restraint penalty is scaled by the unrestrained
+            point-average chi^2 (chi^2/numpoints) (default is False).
+        params : dict, optional
+            The dictionary of Parameters, indexed by name, that are used in the
+            equation string but are not part of the RecipeOrganizer
+            (default is {}).
 
+        Returns
+        -------
+        Restraint
+            The created Restraint object, which can be used with the
+            'unrestrain' method.
 
-        The penalty is calculated as
-        (max(0, lb - val, val - ub)/sig)**2
-        and val is the value of the calculated equation.  This is multiplied by
-        the average chi^2 if scaled is True.
+        Notes
+        -----
+        The penalty is calculated as:
 
+        ..
+            (max(0, lb - val, val - ub) / sig) ** 2
 
-        Raises ValueError if ns uses a name that is already used for a
-        Parameter.
-        Raises ValueError if res depends on a Parameter that is not part of
-        the RecipeOrganizer and that is not defined in ns.
+        where `val` is the value of the evaluated equation.
+        If `scaled` is True, this penalty is multiplied by
+        the average chi^2.
 
-        Returns the Restraint object for use with the 'unrestrain' method.
+        Raises
+        ------
+        ValueError
+            If `func_params` contains a name that is already used
+            for a Parameter.
+        ValueError
+            If `param_or_eq` depends on a Parameter that is not part of the
+            RecipeOrganizer and is not defined in `func_params`.
         """
-
-        if isinstance(res, str):
-            eqstr = res
-            eq = equationFromString(res, self._eqfactory, ns)
+        if isinstance(param_or_eq, str):
+            eqstr = param_or_eq
+            eq = equationFromString(param_or_eq, self._eqfactory, params)
         else:
-            eq = Equation(root=res)
-            eqstr = res.name
+            eq = Equation(root=param_or_eq)
+            eqstr = param_or_eq.name
 
         # Make and store the restraint
-        res = Restraint(eq, lb, ub, sig, scaled)
-        res.eqstr = eqstr
-        self.addRestraint(res)
-        return res
+        param_or_eq = Restraint(eq, lb, ub, sig, scaled)
+        param_or_eq.eqstr = eqstr
+        self.addRestraint(param_or_eq)
+        return param_or_eq
 
     def addRestraint(self, res):
         """Add a Restraint instance to the RecipeOrganizer.

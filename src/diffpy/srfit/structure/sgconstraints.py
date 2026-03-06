@@ -596,7 +596,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     continue
                 isoidx.append(j)
                 scatterer = scatterers[j]
-                scatterer.constrain(isosymbol, isoname, ns=self._parameters)
+                scatterer.constrain(
+                    isosymbol, isoname, params=self._parameters
+                )
 
         fadp = g.UFormulas(adpnames)
 
@@ -809,7 +811,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     # If we got here, then we have a constraint equation
     # Fix any division issues
     formula = formula.replace("/", "*1.0/")
-    scatterer.constrain(par, formula, ns=ns)
+    scatterer.constrain(par, formula, params=ns)
     return
 
 

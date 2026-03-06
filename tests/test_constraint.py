@@ -50,11 +50,11 @@ class TestConstraint(unittest.TestCase):
         eq3 = equationFromString("p1", factory)
         self.assertRaises(ValueError, c2.constrain, p2, eq3)
 
-        p2.setValue(2.5)
+        p2.set_value(2.5)
         c.update()
         self.assertEqual(5.0, p1.getValue())
 
-        p2.setValue(8.1)
+        p2.set_value(8.1)
         self.assertEqual(5.0, p1.getValue())
         c.update()
         self.assertEqual(16.2, p1.getValue())

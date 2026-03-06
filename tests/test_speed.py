@@ -17,14 +17,23 @@
 import random
 
 import numpy
+import pytest
 
 import diffpy.srfit.equation.literals as literals
 import diffpy.srfit.equation.visitors as visitors
 
+pytestmark = pytest.mark.skip(
+    reason=(
+        "This is a performance benchmark test, "
+        "not a unit test. Comment out this line "
+        "to run performance testing."
+    )
+)
+
 x = numpy.arange(0, 20, 0.05)
 
 
-def makeLazyEquation(make_args):
+def make_lazy_equation(make_args):
     """Make a lazy equation and see how fast it is."""
 
     # Make some variables
@@ -52,19 +61,19 @@ def makeLazyEquation(make_args):
     mult2.addLiteral(pow)
     mult2.addLiteral(exp)
 
-    v2.setValue(x)
-    v3.setValue(50 * x)
-    v5.setValue(2.11)
-    v6.setValue(numpy.e)
+    v2.set_value(x)
+    v3.set_value(50 * x)
+    v5.set_value(2.11)
+    v6.set_value(numpy.e)
 
     evaluator = visitors.Evaluator()
 
     def _f(a, b, c, d, e):
-        v1.setValue(a)
-        v4.setValue(b)
-        v5.setValue(c)
-        v6.setValue(d)
-        v7.setValue(e)
+        v1.set_value(a)
+        v4.set_value(b)
+        v5.set_value(c)
+        v6.set_value(d)
+        v7.set_value(e)
         mult2.identify(evaluator)
         evaluator.clicker.click()
         return evaluator.value
@@ -72,7 +81,7 @@ def makeLazyEquation(make_args):
     return _f
 
 
-def makeEquation1():
+def make_equation1():
     """Make the same equation as the lazy one."""
 
     y = 50 * x
@@ -83,7 +92,7 @@ def makeEquation1():
     return _f
 
 
-def timeFunction(f, *args, **kw):
+def time_function(f, *args, **kw):
     """Time a function in ms."""
     import time
 
@@ -93,9 +102,9 @@ def timeFunction(f, *args, **kw):
     return (t2 - t1) * 1000
 
 
-def speedTest1():
-    f1 = makeLazyEquation()
-    f2 = makeEquation1()
+def test_speed1():
+    f1 = make_lazy_equation()
+    f2 = make_equation1()
 
     args = [3.1, 8.19973123410, 2.1, numpy.e, numpy.pi]
 
@@ -104,8 +113,8 @@ def speedTest1():
     for i in range(len(args)):
         args[i] = 10 * random.random()
         print("Changing argument %i" % (i + 1))
-        t1 = timeFunction(f1, *args)
-        t2 = timeFunction(f2, *args)
+        t1 = time_function(f1, *args)
+        t2 = time_function(f2, *args)
         total1 += t1
         total2 += t2
         print("lazy", t1)
@@ -117,7 +126,7 @@ def speedTest1():
     print("Ratio (lazy/regular)", total1 / total2)
 
 
-def speedTest2(mutate=2):
+def test_speed2(mutate=2):
 
     from diffpy.srfit.equation.builder import EquationFactory
 
@@ -133,18 +142,18 @@ def speedTest2(mutate=2):
     """
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
-    eq.qsig.setValue(qsig)
-    eq.sigma1.setValue(sigma)
-    eq.sigma2.setValue(sigma)
-    eq.A0.setValue(1.0)
-    eq.b1.setValue(0)
-    eq.b2.setValue(1)
-    eq.b3.setValue(2.0)
-    eq.b4.setValue(2.0)
-    eq.b5.setValue(2.0)
-    eq.b6.setValue(2.0)
-    eq.b7.setValue(2.0)
-    eq.b8.setValue(2.0)
+    eq.qsig.set_value(qsig)
+    eq.sigma1.set_value(sigma)
+    eq.sigma2.set_value(sigma)
+    eq.A0.set_value(1.0)
+    eq.b1.set_value(0)
+    eq.b2.set_value(1)
+    eq.b3.set_value(2.0)
+    eq.b4.set_value(2.0)
+    eq.b5.set_value(2.0)
+    eq.b6.set_value(2.0)
+    eq.b7.set_value(2.0)
+    eq.b8.set_value(2.0)
 
     from numpy import exp, polyval
 
@@ -176,8 +185,8 @@ def speedTest2(mutate=2):
             args[idx] = random.random()
 
         # Time the different functions with these arguments
-        tnpy += timeFunction(f, *args)
-        teq += timeFunction(eq, *args)
+        tnpy += time_function(f, *args)
+        teq += time_function(eq, *args)
 
     print(
         "Average call time (%i calls, %i mutations/call):" % (numcalls, mutate)
@@ -189,7 +198,7 @@ def speedTest2(mutate=2):
     return
 
 
-def speedTest3(mutate=2):
+def test_speed3(mutate=2):
     """Test wrt sympy.
 
     Results - sympy is 10 to 24 times faster without using arrays (ouch!).
@@ -211,18 +220,18 @@ def speedTest3(mutate=2):
     """
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
-    eq.qsig.setValue(qsig)
-    eq.sigma1.setValue(sigma)
-    eq.sigma2.setValue(sigma)
-    eq.A0.setValue(1.0)
-    eq.b1.setValue(0)
-    eq.b2.setValue(1)
-    eq.b3.setValue(2.0)
-    eq.b4.setValue(2.0)
-    eq.b5.setValue(2.0)
-    eq.b6.setValue(2.0)
-    eq.b7.setValue(2.0)
-    eq.b8.setValue(2.0)
+    eq.qsig.set_value(qsig)
+    eq.sigma1.set_value(sigma)
+    eq.sigma2.set_value(sigma)
+    eq.A0.set_value(1.0)
+    eq.b1.set_value(0)
+    eq.b2.set_value(1)
+    eq.b3.set_value(2.0)
+    eq.b4.set_value(2.0)
+    eq.b5.set_value(2.0)
+    eq.b6.set_value(2.0)
+    eq.b7.set_value(2.0)
+    eq.b8.set_value(2.0)
 
     from numpy import polyval
     from sympy import exp, lambdify, var
@@ -265,8 +274,8 @@ def speedTest3(mutate=2):
             args[idx] = random.random()
 
         # Time the different functions with these arguments
-        teq += timeFunction(eq, *(args[:-1]))
-        tnpy += timeFunction(f, *args)
+        teq += time_function(eq, *(args[:-1]))
+        tnpy += time_function(f, *args)
 
     print(
         "Average call time (%i calls, %i mutations/call):" % (numcalls, mutate)
@@ -278,7 +287,7 @@ def speedTest3(mutate=2):
     return
 
 
-def speedTest4(mutate=2):
+def test_speed4(mutate=2):
     """Test wrt sympy.
 
     Results - sympy is 10 to 24 times faster without using arrays (ouch!).
@@ -310,7 +319,7 @@ def speedTest4(mutate=2):
     teq = 0
     # Randomly change variables
     numargs = len(eq.args)
-    choices = range(numargs)
+    choices = list(range(numargs))
     args = [1.0] * (len(eq.args))
     args.append(x)
 
@@ -329,8 +338,8 @@ def speedTest4(mutate=2):
             args[idx] = random.random()
 
         # Time the different functions with these arguments
-        teq += timeFunction(eq, *(args[:-1]))
-        tnpy += timeFunction(f, *args)
+        teq += time_function(eq, *(args[:-1]))
+        tnpy += time_function(f, *args)
 
     print(
         "Average call time (%i calls, %i mutations/call):" % (numcalls, mutate)
@@ -342,7 +351,7 @@ def speedTest4(mutate=2):
     return
 
 
-def weightedTest(mutate=2):
+def test_weighted(mutate=2):
     """Show the benefits of a properly balanced equation tree."""
 
     from diffpy.srfit.equation.builder import EquationFactory
@@ -357,14 +366,14 @@ def weightedTest(mutate=2):
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
 
-    eq.b1.setValue(0)
-    eq.b2.setValue(1)
-    eq.b3.setValue(2.0)
-    eq.b4.setValue(2.0)
-    eq.b5.setValue(2.0)
-    eq.b6.setValue(2.0)
-    eq.b7.setValue(2.0)
-    eq.b8.setValue(2.0)
+    eq.b1.set_value(0)
+    eq.b2.set_value(1)
+    eq.b3.set_value(2.0)
+    eq.b4.set_value(2.0)
+    eq.b5.set_value(2.0)
+    eq.b6.set_value(2.0)
+    eq.b7.set_value(2.0)
+    eq.b8.set_value(2.0)
 
     # scale = visitors.NodeWeigher()
     # eq.root.identify(scale)
@@ -379,7 +388,7 @@ def weightedTest(mutate=2):
     teq = 0
     # Randomly change variables
     numargs = len(eq.args)
-    choices = range(numargs)
+    choices = list(range(numargs))
     args = [0.1] * numargs
 
     # The call-loop
@@ -399,8 +408,8 @@ def weightedTest(mutate=2):
         # print(args)
 
         # Time the different functions with these arguments
-        teq += timeFunction(eq, *args)
-        tnpy += timeFunction(f, *args)
+        teq += time_function(eq, *args)
+        tnpy += time_function(f, *args)
 
     print(
         "Average call time (%i calls, %i mutations/call):" % (numcalls, mutate)
@@ -412,9 +421,9 @@ def weightedTest(mutate=2):
     return
 
 
-def profileTest():
+def test_profile():
 
-    from diffpy.srfit.builder import EquationFactory
+    from diffpy.srfit.equation.builder import EquationFactory
 
     factory = EquationFactory()
 
@@ -426,18 +435,18 @@ def profileTest():
     factory.registerConstant("x", x)
     eq = factory.makeEquation(eqstr)
 
-    eq.b1.setValue(0)
-    eq.b2.setValue(1)
-    eq.b3.setValue(2.0)
-    eq.b4.setValue(2.0)
-    eq.b5.setValue(2.0)
-    eq.b6.setValue(2.0)
-    eq.b7.setValue(2.0)
-    eq.b8.setValue(2.0)
+    eq.b1.set_value(0)
+    eq.b2.set_value(1)
+    eq.b3.set_value(2.0)
+    eq.b4.set_value(2.0)
+    eq.b5.set_value(2.0)
+    eq.b6.set_value(2.0)
+    eq.b7.set_value(2.0)
+    eq.b8.set_value(2.0)
 
     mutate = 8
     numargs = len(eq.args)
-    choices = range(numargs)
+    choices = list(range(numargs))
     args = [0.1] * numargs
 
     # The call-loop

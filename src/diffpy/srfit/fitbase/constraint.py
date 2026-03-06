@@ -82,7 +82,7 @@ class Constraint(Validatable):
         val = self.eq()
         # This will only change the Parameter if val is different from the
         # currently stored value.
-        self.par.setValue(val)
+        self.par.set_value(val)
         return
 
     def _validate(self):
@@ -107,7 +107,7 @@ class Constraint(Validatable):
         # Try to get the value of eq.
         try:
             val = self.eq()
-            self.par.setValue(val)
+            self.par.set_value(val)
         except TypeError:
             raise SrFitError("eq cannot be evaluated")
         finally:

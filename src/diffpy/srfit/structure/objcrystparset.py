@@ -1153,7 +1153,7 @@ class StretchModeParameter(Parameter):
         Parameter.__init__(self, name, value, const)
         self.keepcenter = True
 
-    def setValue(self, val):
+    def set_value(self, val):
         """Change the value of the Parameter."""
         curval = self.getValue()
         val = float(val)
@@ -1166,7 +1166,7 @@ class StretchModeParameter(Parameter):
         self.mode.Stretch(delta, self.keepcenter)
 
         # Let Parameter take care of the general details
-        Parameter.setValue(self, val)
+        Parameter.set_value(self, val)
 
         return self
 
@@ -1268,9 +1268,9 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
     const
         A flag indicating whether this is considered a constant.
     _value
-        The value of the Parameter. Modified with 'setValue'.
+        The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'setValue'.
+        Property for 'getValue' and 'set_value'.
     constraint
         A callable that calculates the value of this Parameter. If
         this is None (None), the the Parameter is responsible for its
@@ -1363,7 +1363,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         """
         if self._value is None:
             val = GetBondLength(self.atom1.scat, self.atom2.scat)
-            Parameter.setValue(self, val)
+            Parameter.set_value(self, val)
 
         return self._value
 
@@ -1406,9 +1406,9 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
     const
         A flag indicating whether this is considered a constant.
     _value
-        The value of the Parameter. Modified with 'setValue'.
+        The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'setValue'.
+        Property for 'getValue' and 'set_value'.
     constraint
         A callable that calculates the value of this Parameter. If
         this is None (None), the the Parameter is responsible for its
@@ -1509,7 +1509,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
             val = GetBondAngle(
                 self.atom1.scat, self.atom2.scat, self.atom3.scat
             )
-            Parameter.setValue(self, val)
+            Parameter.set_value(self, val)
 
         return self._value
 
@@ -1557,9 +1557,9 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
     const
         A flag indicating whether this is considered a constant.
     _value
-        The value of the Parameter. Modified with 'setValue'.
+        The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'setValue'.
+        Property for 'getValue' and 'set_value'.
     constraint
         A callable that calculates the value of this Parameter. If
         this is None (None), the the Parameter is responsible for its
@@ -1676,7 +1676,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
                 self.atom3.scat,
                 self.atom4.scat,
             )
-            Parameter.setValue(self, val)
+            Parameter.set_value(self, val)
 
         return self._value
 

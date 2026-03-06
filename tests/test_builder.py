@@ -153,10 +153,10 @@ def testParseEquation(noObserversInGlobalBuilders):
     x = numpy.pi
     B = 4.0
     C = 2.0
-    eq.A.setValue(A)
-    eq.x.setValue(x)
-    eq.B.setValue(B)
-    eq.C.setValue(C)
+    eq.A.set_value(A)
+    eq.x.set_value(x)
+    eq.B.set_value(B)
+    eq.C.set_value(C)
     assert numpy.array_equal(eq(), f_equation(A, x, B, C))
 
     # Make sure that the arguments of eq are listed in the order in which
@@ -167,8 +167,8 @@ def testParseEquation(noObserversInGlobalBuilders):
     eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
     x = numpy.arange(0, 1, 0.05)
     sigma = 0.1
-    eq.x.setValue(x)
-    eq.sigma.setValue(sigma)
+    eq.x.set_value(x)
+    eq.sigma.set_value(sigma)
     assert numpy.allclose(eq(), gaussian_test(x, sigma))
     assert eq.args == [eq.x, eq.sigma]
 

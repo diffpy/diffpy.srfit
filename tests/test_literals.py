@@ -49,10 +49,10 @@ class TestArgument(unittest.TestCase):
         self.assertEqual(None, a.getValue())
 
         # Test setting value
-        a.setValue(3.14)
+        a.set_value(3.14)
         self.assertAlmostEqual(3.14, a._value)
 
-        a.setValue(3.14)
+        a.set_value(3.14)
         self.assertAlmostEqual(3.14, a.value)
         self.assertAlmostEqual(3.14, a.getValue())
         return
@@ -100,7 +100,7 @@ class TestCustomOperator(unittest.TestCase):
         self.assertAlmostEqual(0, op.value)
 
         # Test update from the nodes
-        a.setValue(4)
+        a.set_value(4)
         self.assertTrue(op._value is None)
         self.assertAlmostEqual(4, op.value)
         self.assertAlmostEqual(4, op.getValue())
@@ -129,11 +129,11 @@ class TestCustomOperator(unittest.TestCase):
         op.addLiteral(b)
         self.assertAlmostEqual(0, op.value)
 
-        a.setValue(1)
-        b.setValue(2)
+        a.set_value(1)
+        b.set_value(2)
         self.assertAlmostEqual(3, op.value)
 
-        a.setValue(None)
+        a.set_value(None)
         # Test for self-references
 
         # Try to add self

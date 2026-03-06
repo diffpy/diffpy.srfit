@@ -1015,11 +1015,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Return
         ------
-        constrained_params : list
+        constrained_params : list of Parameter
             A list of constrained managed Parameters in this object.
         """
         const = self._get_constraints(recurse)
-        constrained_params = list(const.keys())
+        constrained_params = const.keys()
         return constrained_params
 
     @deprecated(getConstrainedPars_deprecation_msg)

@@ -68,6 +68,15 @@ iterPars_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+recipeorganizer_base = "diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"
+
+registerCalculator_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "registerCalculator",
+    "register_calculator",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -545,7 +554,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._eqfactory.deRegisterBuilder(par.name)
         return
 
-    def registerCalculator(self, f, argnames=None):
+    def register_calculator(self, calculator, argnames=None):
         """Register a Calculator so it can be used within equation
         strings.
 
@@ -557,18 +566,18 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Attributes
         ----------
-        f
+        calculator : Calculator object
             The Calculator to register.
-        argnames
-            The names of the arguments to f (list or None).
+        argnames :  list or None, optional
+            The names of the arguments to calculator (list or None).
             If this is None, then the argument names will be
             extracted from the function.
         """
-        self._eqfactory.registerOperator(f.name, f)
-        self._add_object(f, self._calculators)
+        self._eqfactory.registerOperator(calculator.name, calculator)
+        self._add_object(calculator, self._calculators)
         # Register arguments of the calculator
         if argnames is None:
-            fncode = f.__call__.__func__.__code__
+            fncode = calculator.__call__.__func__.__code__
             argnames = list(fncode.co_varnames)
             argnames = argnames[1 : fncode.co_argcount]
 
@@ -577,11 +586,22 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 par = self._new_parameter(pname, 0)
             else:
                 par = self.get(pname)
-            f.addLiteral(par)
+            calculator.addLiteral(par)
 
         # Now return an equation object
-        eq = self._eqfactory.makeEquation(f.name)
+        eq = self._eqfactory.makeEquation(calculator.name)
         return eq
+
+    @deprecated(registerCalculator_deprecation_msg)
+    def registerCalculator(self, f, argnames=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.register_calculator
+        instead.
+        """
+        return self.register_calculator(f, argnames=argnames)
 
     def registerFunction(self, f, name=None, argnames=None):
         """Register a function so it can be used within equation

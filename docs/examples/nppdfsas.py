@@ -87,7 +87,7 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     # Register the calculator with the pdf contribution and define the fitting
     # equation.
-    pdfcontribution.registerCalculator(cfcalculator)
+    pdfcontribution.register_calculator(cfcalculator)
     # The PDF for a nanoscale crystalline is approximated by
     # Gnano = f * Gcryst
     pdfcontribution.set_equation("f * G")

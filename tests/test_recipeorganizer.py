@@ -377,6 +377,51 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEqual(2, len(res))
         return
 
+    def test_register_calculator(self):
+
+        class GCalc(Calculator):
+
+            def __init__(self, name):
+                Calculator.__init__(self, name)
+                self.newParameter("A", 1.0)
+                self.newParameter("center", 0.0)
+                self.newParameter("width", 0.1)
+                return
+
+            def __call__(self, x):
+                A = self.A.getValue()
+                c = self.center.getValue()
+                w = self.width.getValue()
+                return A * numpy.exp(-0.5 * ((x - c) / w) ** 2)
+
+        # End class GCalc
+
+        g = GCalc("g")
+
+        self.m.register_calculator(g)
+
+        x = numpy.arange(0.5, 10, 0.5)
+        self.m.x.setValue(x)
+
+        self.m.g.center.setValue(3.0)
+
+        self.assertTrue(
+            numpy.array_equal(numpy.exp(-0.5 * ((x - 3.0) / 0.1) ** 2), g(x))
+        )
+
+        self.m.g.center.setValue(5.0)
+
+        self.assertTrue(
+            numpy.array_equal(numpy.exp(-0.5 * ((x - 5.0) / 0.1) ** 2), g(x))
+        )
+
+        # Use this in another equation
+
+        eq = self.m.registerStringFunction("g/x - 1", "pdf")
+        self.assertTrue(numpy.array_equal(g(x) / x - 1, eq()))
+
+        return
+
     def testRegisterCalculator(self):
 
         class GCalc(Calculator):

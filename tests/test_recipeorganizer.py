@@ -270,6 +270,18 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEqual(0, len(self.m._constraints))
         self.m.constrain(p1, "2*p2")
 
+        actual_constrained_params = self.m.getConstrainedPars()
+        actual_constrained_params = [p.name for p in actual_constrained_params]
+        expected_constrained_params = [p1.name]
+
+        assert actual_constrained_params == expected_constrained_params
+
+        actual_constrained_params = self.m.get_constrained_parmeters()
+        actual_constrained_params = [p.name for p in actual_constrained_params]
+        expected_constrained_params = [p1.name]
+
+        assert actual_constrained_params == expected_constrained_params
+
         self.assertTrue(p1.constrained)
         self.assertTrue(p1 in self.m._constraints)
         self.assertEqual(1, len(self.m._constraints))

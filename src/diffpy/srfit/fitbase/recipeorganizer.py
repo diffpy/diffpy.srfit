@@ -104,6 +104,13 @@ isConstrained_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+getConstrainedPars_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "getConstrainedPars",
+    "get_constrained_parmeters",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -996,6 +1003,26 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
+    def get_constrained_parmeters(self, recurse=False):
+        """Get a list of constrained managed Parameters in this object.
+
+        Parameters
+        ----------
+        recurse : bool, optional
+            If False (default), only constrained Parameters in
+            this object are returned. If True, constrained
+            Parameters in managed sub-objects are also included.
+
+        Return
+        ------
+        constrained_params : list
+            A list of constrained managed Parameters in this object.
+        """
+        const = self._get_constraints(recurse)
+        constrained_params = list(const.keys())
+        return constrained_params
+
+    @deprecated(getConstrainedPars_deprecation_msg)
     def getConstrainedPars(self, recurse=False):
         """Get a list of constrained managed Parameters in this object.
 
@@ -1005,8 +1032,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             Recurse into managed objects and retrieve their constrained
             Parameters as well (default False).
         """
-        const = self._get_constraints(recurse)
-        return const.keys()
+        return self.get_constrained_parmeters(recurse=recurse)
 
     def clearConstraints(self, recurse=False):
         """Clear all constraints managed by this organizer.

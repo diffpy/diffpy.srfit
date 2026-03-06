@@ -61,6 +61,13 @@ getNames_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+iterPars_deprecation_msg = build_deprecation_message(
+    recipecontainer_base,
+    "iterPars",
+    "iterate_over_parameters",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -134,16 +141,30 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
-    def iterPars(self, pattern="", recurse=True):
+    def iterate_over_parameters(self, pattern="", recurse=True):
         """Iterate over the Parameters contained in this object.
 
         Parameters
         ----------
-        pattern : str
-            Iterate over parameters with names matching this regular
-            expression (all parameters by default).
-        recurse : bool
-            Recurse into managed objects when True (default).
+        pattern : str, optional
+            The regular expression pattern to match parameter
+            names against. Only parameters with names matching
+            this pattern will be returned. Default is an empty
+            string, which matches all parameter names.
+        recurse : bool, optional
+            The flag indicating whether to recurse into managed
+            objects when iterating over parameters. If True
+            (default), the method will also iterate over
+            parameters in managed sub-objects. If False, only
+            top-level parameters will be iterated over.
+
+        Example
+        -------
+
+        ..
+            for param in recipe.iterate_over_parameters(pattern="scale_"):
+                # print the name and value of parameters containing "scale_"
+                print(f"{param.name}={param.value}")
         """
         regexp = re.compile(pattern)
         for par in list(self._parameters.values()):
@@ -156,10 +177,21 @@ class RecipeContainer(Observable, Configurable, Validatable):
         managed.remove(self._parameters)
         for m in managed:
             for obj in m.values():
-                if hasattr(obj, "iterPars"):
-                    for par in obj.iterPars(pattern=pattern):
+                if hasattr(obj, "iterate_over_parameters"):
+                    for par in obj.iterate_over_parameters(pattern=pattern):
                         yield par
         return
+
+    @deprecated(iterPars_deprecation_msg)
+    def iterPars(self, pattern="", recurse=True):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterate_over_parameters
+        instead.
+        """
+        return self.iterate_over_parameters(pattern=pattern, recurse=recurse)
 
     def __iter__(self):
         """Iterate over top-level parameters."""

@@ -308,7 +308,9 @@ def test_pickling(
     pc2 = pickle.loads(pickle.dumps(pc))
     res0 = pc.residual()
     assert numpy.array_equal(res0, pc2.residual())
-    for p in chain(pc.iterPars("Uiso"), pc2.iterPars("Uiso")):
+    for p in chain(
+        pc.iterate_over_parameters("Uiso"), pc2.iterate_over_parameters("Uiso")
+    ):
         p.value = 0.004
     res1 = pc.residual()
     assert not numpy.allclose(res0, res1)

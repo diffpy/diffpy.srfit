@@ -622,7 +622,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         # Get all parameters with a value of None
         badpars = []
-        for par in self.iterPars():
+        for par in self.iterate_over_parameters():
             try:
                 par.getValue()
             except ValueError:

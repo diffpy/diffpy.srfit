@@ -107,14 +107,14 @@ def plotResults(recipe):
     recipe.highT.profile.set_calculation_range(xmin="obs", xmax="obs")
     T = recipe.lowT.profile.x
     U = recipe.lowT.profile.y
-    # We can use a FitContribution's 'evaluateEquation' method to evaluate
+    # We can use a FitContribution's 'evaluate_equation' method to evaluate
     # expressions involving the Parameters and other aspects of the
     # FitContribution. Here we evaluate the fitting equation, which is always
     # accessed using the name "eq". We access it this way (rather than through
     # the Profile's ycalc attribute) because we changed the calculation range
     # above, and we therefore need to recalculate the profile.
-    lowU = recipe.lowT.evaluateEquation("eq")
-    highU = recipe.highT.evaluateEquation("eq")
+    lowU = recipe.lowT.evaluate_equation("eq")
+    highU = recipe.highT.evaluate_equation("eq")
 
     # Now we can plot this.
     import pylab

@@ -390,7 +390,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         for scatterer in scatterers:
 
             for par in [scatterer.x, scatterer.y, scatterer.z]:
-                if scatterer.isConstrained(par):
+                if scatterer.is_constrained(par):
                     scatterer.unconstrain(par)
                 par.setConst(False)
 
@@ -407,7 +407,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 lattice.gamma,
             ]
             for par in latpars:
-                if lattice.isConstrained(par):
+                if lattice.is_constrained(par):
                     lattice.unconstrain(par)
                 par.setConst(False)
 
@@ -417,14 +417,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 if isosymbol:
                     par = scatterer.get(isosymbol)
                     if par is not None:
-                        if scatterer.isConstrained(par):
+                        if scatterer.is_constrained(par):
                             scatterer.unconstrain(par)
                         par.setConst(False)
 
                 for pname in adpsymbols:
                     par = scatterer.get(pname)
                     if par is not None:
-                        if scatterer.isConstrained(par):
+                        if scatterer.is_constrained(par):
                             scatterer.unconstrain(par)
                         par.setConst(False)
 
@@ -596,7 +596,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     continue
                 isoidx.append(j)
                 scatterer = scatterers[j]
-                scatterer.constrain(isosymbol, isoname, ns=self._parameters)
+                scatterer.constrain(
+                    isosymbol, isoname, params=self._parameters
+                )
 
         fadp = g.UFormulas(adpnames)
 
@@ -809,7 +811,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     # If we got here, then we have a constraint equation
     # Fix any division issues
     formula = formula.replace("/", "*1.0/")
-    scatterer.constrain(par, formula, ns=ns)
+    scatterer.constrain(par, formula, params=ns)
     return
 
 

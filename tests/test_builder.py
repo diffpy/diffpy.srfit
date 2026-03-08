@@ -97,7 +97,7 @@ def testSwapping(make_args, noObserversInGlobalBuilders):
     factory.registerArgument("v2", v2)
     factory.registerArgument("v3", v3)
     factory.registerArgument("v4", v4)
-    b = factory.registerFunction("g", g1, ["v1", "v2", "v3", "v4"])
+    b = factory.register_function("g", g1, ["v1", "v2", "v3", "v4"])
 
     # Now associate args with the wrapped function
     op = b.literal
@@ -121,7 +121,7 @@ def testSwapping(make_args, noObserversInGlobalBuilders):
     assert round(abs(24 - eq1()), 7) == 0
 
     # Now swap out the function
-    b = factory.registerFunction("g", g2, ["v1"])
+    b = factory.register_function("g", g2, ["v1"])
     op = b.literal
     assert op.operation == g2
     assert v1 in op.args
@@ -181,7 +181,7 @@ def testParseEquation(noObserversInGlobalBuilders):
     assert eq.args == [eq.sigma]
 
     # Equation with user-defined functions
-    factory.registerFunction("myfunc", eq, ["sigma"])
+    factory.register_function("myfunc", eq, ["sigma"])
     eq2 = factory.makeEquation("c*myfunc(sigma)")
     assert numpy.allclose(eq2(c=2, sigma=sigma), 2 * gaussian_test(x, sigma))
     assert "sigma" in eq2.argdict

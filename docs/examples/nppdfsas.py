@@ -87,7 +87,7 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     # Register the calculator with the pdf contribution and define the fitting
     # equation.
-    pdfcontribution.registerCalculator(cfcalculator)
+    pdfcontribution.register_calculator(cfcalculator)
     # The PDF for a nanoscale crystalline is approximated by
     # Gnano = f * Gcryst
     pdfcontribution.set_equation("f * G")
@@ -156,10 +156,10 @@ def plotResults(recipe):
     diffzero = -0.8 * max(g) * numpy.ones_like(g)
     diff = g - gcalc + diffzero
 
-    gcryst = recipe.pdf.evaluateEquation("G")
+    gcryst = recipe.pdf.evaluate_equation("G")
     gcryst /= recipe.scale.value
 
-    fr = recipe.pdf.evaluateEquation("f")
+    fr = recipe.pdf.evaluate_equation("f")
     fr *= max(g) / fr[0]
 
     import pylab

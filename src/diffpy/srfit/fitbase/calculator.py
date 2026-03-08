@@ -20,7 +20,7 @@ Constraints and Restraints. Also, the __call__ function can be
 overloaded to accept external arguments. Calculators are used to wrap
 registered functions so that the function's Parameters are contained in
 an object specific to the function.  A custom Calculator can be added to
-another RecipeOrganizer with the 'registerCalculator' method.
+another RecipeOrganizer with the 'register_calculator' method.
 """
 
 __all__ = ["Calculator"]

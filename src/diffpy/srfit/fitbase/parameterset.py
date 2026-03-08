@@ -156,7 +156,7 @@ class ParameterSet(RecipeOrganizer):
             Flag indicating if the parameter is constant (default
             True).
         """
-        for par in self.iterPars():
+        for par in self.iterate_over_parameters():
             par.setConst(const)
 
         return

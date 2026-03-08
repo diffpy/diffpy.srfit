@@ -105,8 +105,8 @@ def makeRecipe(strufile, datname1, datname2):
     bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
                b7*q**7 +b8*q**8 + b9*q**9"
 
-    contribution1.registerStringFunction(bkgdstr, "bkgd")
-    contribution2.registerStringFunction(bkgdstr, "bkgd")
+    contribution1.register_string_function(bkgdstr, "bkgd")
+    contribution2.register_string_function(bkgdstr, "bkgd")
 
     # We will create the broadening function by registering a python function.
     pi = numpy.pi
@@ -119,8 +119,8 @@ def makeRecipe(strufile, datname1, datname2):
             * exp(-0.5 * ((q - q0) / width) ** 2)
         )
 
-    contribution1.registerFunction(gaussian)
-    contribution2.registerFunction(gaussian)
+    contribution1.register_function(gaussian)
+    contribution2.register_function(gaussian)
     # Center the gaussian
     contribution1.q0.value = x[len(x) // 2]
     contribution2.q0.value = x[len(x) // 2]
@@ -196,11 +196,11 @@ def plotResults(recipe):
     # Plot this for fun.
     I1 = recipe.bucky1.profile.y
     Icalc1 = recipe.bucky1.profile.ycalc
-    bkgd1 = recipe.bucky1.evaluateEquation("bkgd")
+    bkgd1 = recipe.bucky1.evaluate_equation("bkgd")
     diff1 = I1 - Icalc1
     I2 = recipe.bucky2.profile.y
     Icalc2 = recipe.bucky2.profile.ycalc
-    bkgd2 = recipe.bucky2.evaluateEquation("bkgd")
+    bkgd2 = recipe.bucky2.evaluate_equation("bkgd")
     diff2 = I2 - Icalc2
     offset = 1.2 * max(I2) * numpy.ones_like(I2)
     I1 += offset

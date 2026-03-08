@@ -192,11 +192,11 @@ class TestContribution(unittest.TestCase):
         self.assertEqual(2, len(fc._eqfactory.equations))
         return
 
-    def test_registerFunction(self):
+    def test_register_function(self):
         """Ensure registered function works after second set_equation
         call."""
         fc = self.fitcontribution
-        fc.registerFunction(_fsquare, name="fsquare")
+        fc.register_function(_fsquare, name="fsquare")
         fc.set_equation("fsquare")
         fc.x.set_value(5)
         self.assertEqual(25, fc.evaluate())

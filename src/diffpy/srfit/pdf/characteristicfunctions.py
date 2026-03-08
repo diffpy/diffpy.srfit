@@ -21,7 +21,7 @@ Gnano(r) = f(r) Gcryst(r), where f(r) is the nanoparticle characteristic
 function and Gcryst(f) is the crystal PDF.
 
 These functions are meant to be imported and added to a FitContribution
-using the 'registerFunction' method of that class.
+using the 'register_function' method of that class.
 """
 
 __all__ = [

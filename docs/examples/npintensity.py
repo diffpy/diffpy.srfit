@@ -231,7 +231,7 @@ def makeRecipe(strufile, datname):
 
     # This creates a callable equation named "bkgd" within the FitContribution,
     # and turns the polynomial coefficients into Parameters.
-    contribution.registerStringFunction(bkgdstr, "bkgd")
+    contribution.register_string_function(bkgdstr, "bkgd")
 
     # We will create the broadening function that we need by creating a python
     # function and registering it with the FitContribution.
@@ -247,7 +247,7 @@ def makeRecipe(strufile, datname):
 
     # This registers the python function and extracts the name and creates
     # Parameters from the arguments.
-    contribution.registerFunction(gaussian)
+    contribution.register_function(gaussian)
 
     # Center the Gaussian so it is not truncated.
     contribution.q0.value = x[len(x) // 2]
@@ -342,7 +342,7 @@ def plotResults(recipe):
 
     Imeas = recipe.bucky.profile.y
     Icalc = recipe.bucky.profile.ycalc
-    bkgd = recipe.bucky.evaluateEquation("bkgd")
+    bkgd = recipe.bucky.evaluate_equation("bkgd")
     diff = Imeas - Icalc
 
     import pylab

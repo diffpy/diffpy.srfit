@@ -283,8 +283,8 @@ class FitContribution(ParameterSet):
         eqstr
             A string representation of the equation. Any Parameter
             registered by addParameter or setProfile, or function
-            registered by setCalculator, registerFunction or
-            registerStringFunction can be can be used in the equation
+            registered by setCalculator, register_function or
+            register_string_function can be can be used in the equation
             by name. Other names will be turned into Parameters of this
             FitContribution.
         ns

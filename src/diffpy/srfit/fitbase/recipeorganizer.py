@@ -153,6 +153,13 @@ unrestrain_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+clearRestraints_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "clearRestraints",
+    "clear_all_restraints",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -1243,7 +1250,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Attributes
         ----------
-        *ress :
+        *ress : Restraint
             The Restraints returned from the 'add_restraint' method or added
             with the 'register_restraint' method.
         """
@@ -1272,7 +1279,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self.remove_restraint(*ress)
         return
 
-    def clearRestraints(self, recurse=False):
+    def clear_all_restraints(self, recurse=False):
         """Clear all restraints.
 
         Attributes
@@ -1284,7 +1291,19 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self.remove_restraint(*self._restraints)
         if recurse:
             for msg in filter(_has_clear_restraints, self._iter_managed()):
-                msg.clearRestraints(recurse)
+                msg.clear_all_restraints(recurse)
+        return
+
+    @deprecated(clearRestraints_deprecation_msg)
+    def clearRestraints(self, recurse=False):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clear_all_restraints
+        instead.
+        """
+        self.clear_all_restraints(recurse=recurse)
         return
 
     def _get_constraints(self, recurse=True):
@@ -1528,7 +1547,7 @@ def _has_clear_constraints(msg):
 
 
 def _has_clear_restraints(msg):
-    return hasattr(msg, "clearRestraints")
+    return hasattr(msg, "clear_all_restraints")
 
 
 def _has_get_restraints(msg):

@@ -146,6 +146,13 @@ restrain_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+unrestrain_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "unrestrain",
+    "remove_restraint",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -1231,13 +1238,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self.register_restraint(res)
         return
 
-    def unrestrain(self, *ress):
+    def remove_restraint(self, *ress):
         """Remove a Restraint from the RecipeOrganizer.
 
         Attributes
         ----------
-        *ress
-            Restraints returned from the 'restrain' method or added
+        *ress :
+            The Restraints returned from the 'add_restraint' method or added
             with the 'register_restraint' method.
         """
         update = False
@@ -1253,6 +1260,18 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
+    @deprecated(unrestrain_deprecation_msg)
+    def unrestrain(self, *ress):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.remove_restraint
+        instead.
+        """
+        self.remove_restraint(*ress)
+        return
+
     def clearRestraints(self, recurse=False):
         """Clear all restraints.
 
@@ -1262,7 +1281,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             Recurse into managed objects and clear all restraints
             found there as well.
         """
-        self.unrestrain(*self._restraints)
+        self.remove_restraint(*self._restraints)
         if recurse:
             for msg in filter(_has_clear_restraints, self._iter_managed()):
                 msg.clearRestraints(recurse)

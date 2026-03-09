@@ -121,9 +121,9 @@ def makeRecipe():
         return 180 / pi * arcsin(pi / 180 * l2 * sin(mu) / l1)
 
     recipe.register_function(peakloc)
-    recipe.constrain(contribution.mu12, "peakloc(mu11)")
-    recipe.constrain(contribution.mu22, "peakloc(mu21)")
-    recipe.constrain(contribution.mu32, "peakloc(mu31)")
+    recipe.constrain_parameter(contribution.mu12, "peakloc(mu11)")
+    recipe.constrain_parameter(contribution.mu22, "peakloc(mu21)")
+    recipe.constrain_parameter(contribution.mu32, "peakloc(mu31)")
 
     # Vary the width of the peaks. We know the functional form of the peak
     # broadening.
@@ -139,20 +139,20 @@ def makeRecipe():
     # Now constrain the peak widths to this
     recipe.sig0.value = 0.001
     recipe.dsig.value = 4.0
-    recipe.constrain(contribution.sig11, "sig(sig0, dsig, mu11)")
-    recipe.constrain(
+    recipe.constrain_parameter(contribution.sig11, "sig(sig0, dsig, mu11)")
+    recipe.constrain_parameter(
         contribution.sig12,
         "sig(sig0, dsig, mu12)",
         ns={"mu12": contribution.mu12},
     )
-    recipe.constrain(contribution.sig21, "sig(sig0, dsig, mu21)")
-    recipe.constrain(
+    recipe.constrain_parameter(contribution.sig21, "sig(sig0, dsig, mu21)")
+    recipe.constrain_parameter(
         contribution.sig22,
         "sig(sig0, dsig, mu22)",
         ns={"mu22": contribution.mu22},
     )
-    recipe.constrain(contribution.sig31, "sig(sig0, dsig, mu31)")
-    recipe.constrain(
+    recipe.constrain_parameter(contribution.sig31, "sig(sig0, dsig, mu31)")
+    recipe.constrain_parameter(
         contribution.sig32,
         "sig(sig0, dsig, mu32)",
         ns={"mu32": contribution.mu32},

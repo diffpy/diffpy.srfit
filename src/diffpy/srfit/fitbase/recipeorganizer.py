@@ -118,6 +118,27 @@ clearConstraints_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+addRestraint_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "addRestraint",
+    "add_restraint",
+    removal_version,
+)
+
+constrain_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "constrain",
+    "constrain_parameter",
+    removal_version,
+)
+
+unconstrain_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "unconstrain",
+    "unconstrain_parameter",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -883,7 +904,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.evaluate_equation(eqstr, func_params=ns)
 
-    def constrain(self, parameter, constraint_eq, params={}):
+    def constrain_parameter(self, parameter, constraint_eq, params={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
@@ -936,7 +957,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # Make and store the constraint
         constraint_eq = Constraint()
-        constraint_eq.constrain(parameter, eq)
+        constraint_eq.constrain_parameter(parameter, eq)
         # Store the equation string so it can be shown later.
         constraint_eq.eqstr = eqstr
         self._constraints[parameter] = constraint_eq
@@ -944,6 +965,18 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # Our configuration changed
         self._update_configuration()
 
+        return
+
+    @deprecated(constrain_deprecation_msg)
+    def constrain(self, parameter, constraint_eq, params={}):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.constrain_parameter
+        instead.
+        """
+        self.constrain_parameter(parameter, constraint_eq, params=params)
         return
 
     def is_constrained(self, parameter):
@@ -977,14 +1010,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.is_constrained(parameter)
 
-    def unconstrain(self, *pars):
+    def unconstrain_parameter(self, *pars):
         """Unconstrain a Parameter.
 
         This removes any constraints on a Parameter.
 
         Attributes
         ----------
-        *pars
+        *pars : str or Parameter
             The names of Parameters or Parameters to unconstrain.
 
 
@@ -1000,7 +1033,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 raise ValueError("The parameter cannot be found")
 
             if parameter in self._constraints:
-                self._constraints[parameter].unconstrain()
+                self._constraints[parameter].unconstrain_parameter()
                 del self._constraints[parameter]
                 update = True
 
@@ -1012,6 +1045,18 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
             raise ValueError("The parameter is not constrained")
 
+        return
+
+    @deprecated(unconstrain_deprecation_msg)
+    def unconstrain(self, *pars):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unconstrain_parameter
+        instead.
+        """
+        self.unconstrain_parameter(*pars)
         return
 
     def get_constrained_parmeters(self, recurse=False):
@@ -1059,7 +1104,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             sub-objects are also cleared.
         """
         if self._constraints:
-            self.unconstrain(*self._constraints)
+            self.unconstrain_parameter(*self._constraints)
 
         if recurse:
             for m in filter(_has_clear_constraints, self._iter_managed()):
@@ -1136,20 +1181,32 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # Make and store the restraint
         param_or_eq = Restraint(eq, lb, ub, sig, scaled)
         param_or_eq.eqstr = eqstr
-        self.addRestraint(param_or_eq)
+        self.add_restraint(param_or_eq)
         return param_or_eq
 
-    def addRestraint(self, res):
+    def add_restraint(self, res):
         """Add a Restraint instance to the RecipeOrganizer.
 
-        Attributes
+        Parameters
         ----------
-        res
+        res : Restraint
             A Restraint instance.
         """
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
         self._update_configuration()
+        return
+
+    @deprecated(addRestraint_deprecation_msg)
+    def addRestraint(self, res):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_restraint
+        instead.
+        """
+        self.add_restraint(res)
         return
 
     def unrestrain(self, *ress):
@@ -1159,7 +1216,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ----------
         *ress
             Restraints returned from the 'restrain' method or added
-            with the 'addRestraint' method.
+            with the 'add_restraint' method.
         """
         update = False
         restuple = tuple(self._restraints)

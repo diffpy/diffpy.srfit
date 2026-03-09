@@ -121,8 +121,8 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # delta2 is a non-structual material property. Thus, we constrain together
     # delta2 Parameter from each PDFGenerator.
     delta2 = recipe.create_new_variable("delta2", 2)
-    recipe.constrain(xgenerator.delta2, delta2)
-    recipe.constrain(ngenerator.delta2, delta2)
+    recipe.constrain_parameter(xgenerator.delta2, delta2)
+    recipe.constrain_parameter(ngenerator.delta2, delta2)
 
     # We only need to constrain phase properties once since there is a single
     # ObjCrystCrystalParSet for the Crystal.

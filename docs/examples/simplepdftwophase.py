@@ -47,8 +47,8 @@ def makeRecipe(niciffile, siciffile, datname):
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
     recipe.create_new_variable("scale_ni", 0.1)
-    recipe.constrain(contribution.ni.scale, "scale_ni")
-    recipe.constrain(contribution.si.scale, "1 - scale_ni")
+    recipe.constrain_parameter(contribution.ni.scale, "scale_ni")
+    recipe.constrain_parameter(contribution.si.scale, "1 - scale_ni")
     # We also want the resolution factor to be the same on each. This is done
     # for free by the PDFContribution. We simply need to add it to the recipe.
     recipe.add_variable(contribution.qdamp, 0.03)

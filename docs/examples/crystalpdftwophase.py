@@ -90,12 +90,12 @@ def makeRecipe(niciffile, siciffile, datname):
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
     recipe.create_new_variable("scale_ni", 0.1)
-    recipe.constrain(generator_ni.scale, "scale_ni")
-    recipe.constrain(generator_si.scale, "1 - scale_ni")
+    recipe.constrain_parameter(generator_ni.scale, "scale_ni")
+    recipe.constrain_parameter(generator_si.scale, "1 - scale_ni")
     # We also want the resolution factor to be the same on each.
     recipe.create_new_variable("qdamp", 0.03)
-    recipe.constrain(generator_ni.qdamp, "qdamp")
-    recipe.constrain(generator_si.qdamp, "qdamp")
+    recipe.constrain_parameter(generator_ni.qdamp, "qdamp")
+    recipe.constrain_parameter(generator_si.qdamp, "qdamp")
 
     # Vary the global scale as well.
     recipe.add_variable(contribution.scale, 1)

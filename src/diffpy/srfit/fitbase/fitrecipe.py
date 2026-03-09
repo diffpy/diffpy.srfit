@@ -125,6 +125,14 @@ boundsToRestraints_dep_msg = build_deprecation_message(
     base, "boundsToRestraints", "convert_bounds_to_restraints", removal_version
 )
 
+constrain_dep_msg = build_deprecation_message(
+    base, "constrain", "constrain_parameter", removal_version
+)
+
+unconstrain_dep_msg = build_deprecation_message(
+    base, "unconstrain", "unconstrain_parameter", removal_version
+)
+
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     """FitRecipe class.
@@ -472,6 +480,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def residual(self, p=[]):
         """Calculate the vector residual to be optimized.
 
+        The residual is by default the weighted concatenation of each
+        FitContribution's residual, plus the value of each restraint. The array
+        returned, denoted chiv, is such that
+        dot(chiv, chiv) = chi^2 + restraints.
+
         Parameters
         ----------
         p : list or numpy.ndarray
@@ -481,10 +494,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             updated in some other way, and the explicit update within this
             function is skipped.
 
-        The residual is by default the weighted concatenation of each
-        FitContribution's residual, plus the value of each restraint. The array
-        returned, denoted chiv, is such that
-        dot(chiv, chiv) = chi^2 + restraints.
+        Return
+        ------
+        chiv : numpy.ndarray
+            The array of residuals to be optimized. The array is such that
+            dot(chiv, chiv) = chi^2 + restraints.
         """
 
         # Prepare, if necessary
@@ -1093,7 +1107,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         return self.is_free(var)
 
-    def unconstrain(self, *pars):
+    def unconstrain_parameter(self, *pars):
         """Unconstrain a Parameter.
 
         This removes any constraints on a Parameter. If the Parameter is also a
@@ -1119,7 +1133,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 raise ValueError("The parameter cannot be found")
 
             if par in self._constraints:
-                self._constraints[par].unconstrain()
+                self._constraints[par].unconstrain_parameter()
                 del self._constraints[par]
                 update = True
 
@@ -1132,7 +1146,18 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         return
 
-    def constrain(self, par, con, ns={}):
+    @deprecated(unconstrain_dep_msg)
+    def unconstrain(self, *pars):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.unconstrain_parameter
+        instead.
+        """
+        self.unconstrain_parameter(*pars)
+        return
+
+    def constrain_parameter(self, par, con, ns={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
@@ -1190,7 +1215,18 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if par in self._parameters.values():
             self.fix(par)
 
-        RecipeOrganizer.constrain(self, par, con, ns)
+        RecipeOrganizer.constrain_parameter(self, par, con, ns)
+        return
+
+    @deprecated(constrain_dep_msg)
+    def constrain(self, par, con, ns={}):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitRecipe.constrain_parameter
+        instead.
+        """
+        self.constrain_parameter(par, con, ns)
         return
 
     def get_values(self):

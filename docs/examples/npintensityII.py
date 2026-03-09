@@ -173,15 +173,15 @@ def makeRecipe(strufile, datname1, datname2):
     a = recipe.add_variable(lattice.a)
     # We want to allow for isotropic expansion, so we'll make constraints for
     # that.
-    recipe.constrain(lattice.b, a)
-    recipe.constrain(lattice.c, a)
+    recipe.constrain_parameter(lattice.b, a)
+    recipe.constrain_parameter(lattice.c, a)
     # We want to refine the thermal parameters as well. We will add a new
     # variable that we call "Uiso" and constrain the atomic Uiso values to
     # this. Note that we don't give Uiso an initial value. The initial value
     # will be inferred from the subsequent constraints.
     Uiso = recipe.create_new_variable("Uiso")
     for atom in phase.getScatterers():
-        recipe.constrain(atom.Uiso, Uiso)
+        recipe.constrain_parameter(atom.Uiso, Uiso)
 
     # Give the recipe away so it can be used!
     return recipe

@@ -287,8 +287,8 @@ class PDFContribution(FitContribution):
         gen.processMetaData()
 
         # Constrain the shared parameters
-        self.constrain(gen.qdamp, self.qdamp)
-        self.constrain(gen.qbroad, self.qbroad)
+        self.constrain_parameter(gen.qdamp, self.qdamp)
+        self.constrain_parameter(gen.qbroad, self.qbroad)
         return
 
     # Calculation setup methods

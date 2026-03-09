@@ -215,9 +215,9 @@ def build_recipe_two_contributions():
     recipe.add_variable(contribution2.d, 0.1)
 
     # ---- Meaningful constraints ----
-    recipe.constrain(contribution2.m, "2*k")
-    recipe.constrain(contribution2.d, contribution1.c)
-    recipe.constrain(contribution2.B, "0.5*A")
+    recipe.constrain_parameter(contribution2.m, "2*k")
+    recipe.constrain_parameter(contribution2.d, contribution1.c)
+    recipe.constrain_parameter(contribution2.B, "0.5*A")
     recipe.restrain(contribution1.A, 0.5, 1.5)
     recipe.restrain(contribution1.k, 0.8, 1.2)
 

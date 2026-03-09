@@ -259,7 +259,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertRaises(ValueError, m._remove_parameter, c)
         return
 
-    def test_constrain(self):
+    def test_constrain_parameter(self):
         """Test the constrain method."""
 
         p1 = self.m._new_parameter("p1", 1)
@@ -268,7 +268,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         self.assertFalse(p1.constrained)
         self.assertEqual(0, len(self.m._constraints))
-        self.m.constrain(p1, "2*p2")
+        self.m.constrain_parameter(p1, "2*p2")
 
         actual_constrained_params = self.m.getConstrainedPars()
         actual_constrained_params = [p.name for p in actual_constrained_params]
@@ -296,13 +296,13 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertRaises(ValueError, self.m.constrain, p1, "2*p2", {"p2": p3})
 
         # Remove the constraint
-        self.m.unconstrain(p1)
+        self.m.unconstrain_parameter(p1)
         self.assertFalse(p1.constrained)
         self.assertEqual(0, len(self.m._constraints))
         self.assertFalse(self.m.isConstrained(p1))
 
         # Try an straight constraint
-        self.m.constrain(p1, p2)
+        self.m.constrain_parameter(p1, p2)
         p2.set_value(7)
         self.m._constraints[p1].update()
         self.assertEqual(7, p1.getValue())
@@ -314,7 +314,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         assert actual_constrained_params == expected_constrained_params
 
         # add constraint back and test the old function name `clearConstraints`
-        self.m.constrain(p1, p2)
+        self.m.constrain_parameter(p1, p2)
         actual_constrained_params = self.m.get_constrained_parmeters()
         actual_constrained_params = [p.name for p in actual_constrained_params]
         expected_constrained_params = [p1.name]
@@ -375,8 +375,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         m2._add_parameter(p3)
         m2._add_parameter(p4)
 
-        self.m.constrain(p1, "p2")
-        m2.constrain(p3, "p4")
+        self.m.constrain_parameter(p1, "p2")
+        m2.constrain_parameter(p3, "p4")
 
         cons = self.m._get_constraints()
         self.assertTrue(p1 in cons)
@@ -625,7 +625,7 @@ def test_show(capturestdout):
     assert "Constraints" not in lines1
     assert "Restraints" not in lines1
     organizer._new_parameter("z", 7)
-    organizer.constrain("y", "3 * z")
+    organizer.constrain_parameter("y", "3 * z")
     out2 = capture_show()
     lines2 = out2.strip().split("\n")
     assert 9 == len(lines2)

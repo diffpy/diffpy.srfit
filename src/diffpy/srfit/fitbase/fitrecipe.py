@@ -1756,7 +1756,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if not hasattr(sig, "__iter__"):
             sig = [sig] * len(pars)
         for par, x in zip(pars, sig):
-            self.restrain(
+            self.add_restraint(
                 par, par.bounds[0], par.bounds[1], sig=x, scaled=scaled
             )
         return

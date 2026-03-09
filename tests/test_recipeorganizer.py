@@ -328,7 +328,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         return
 
-    def testRestrain(self):
+    def test_add_restraint(self):
         """Test the restrain method."""
 
         p1 = Parameter("p1", 1)
@@ -338,7 +338,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m._eqfactory.registerArgument("p2", p2)
 
         self.assertEqual(0, len(self.m._restraints))
-        r = self.m.restrain("p1+p2", ub=10)
+        r = self.m.add_restraint("p1+p2", ub=10)
         self.assertEqual(1, len(self.m._restraints))
         p2.set_value(10)
         self.assertEqual(1, r.penalty())
@@ -402,8 +402,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         m2._add_parameter(p3)
         m2._add_parameter(p4)
 
-        r1 = self.m.restrain("p1 + p2")
-        r2 = m2.restrain("2*p3 + p4")
+        r1 = self.m.add_restraint("p1 + p2")
+        r2 = m2.add_restraint("2*p3 + p4")
 
         res = self.m._get_restraints()
         self.assertTrue(r1 in res)
@@ -632,7 +632,7 @@ def test_show(capturestdout):
     assert "Parameters" in lines2
     assert "Constraints" in lines2
     assert "Restraints" not in lines2
-    organizer.restrain("z", lb=2, ub=3, sig=0.001)
+    organizer.add_restraint("z", lb=2, ub=3, sig=0.001)
     out3 = capture_show()
     lines3 = out3.strip().split("\n")
     assert 13 == len(lines3)

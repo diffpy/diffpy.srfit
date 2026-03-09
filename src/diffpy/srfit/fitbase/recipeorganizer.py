@@ -139,6 +139,13 @@ unconstrain_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+restrain_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "restrain",
+    "add_restraint",
+    removal_version,
+)
+
 
 class RecipeContainer(Observable, Configurable, Validatable):
     """Base class for organizing pieces of a FitRecipe.
@@ -1122,7 +1129,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.clear_all_constraints(recurse=recurse)
 
-    def restrain(
+    def add_restraint(
         self, param_or_eq, lb=-inf, ub=inf, sig=1, scaled=False, params={}
     ):
         """Restrain an expression to specified bounds.
@@ -1183,6 +1190,21 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         param_or_eq.eqstr = eqstr
         self.register_restraint(param_or_eq)
         return param_or_eq
+
+    @deprecated(restrain_deprecation_msg)
+    def restrain(
+        self, param_or_eq, lb=-inf, ub=inf, sig=1, scaled=False, params={}
+    ):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_restraint
+        instead.
+        """
+        return self.add_restraint(
+            param_or_eq, lb=lb, ub=ub, sig=sig, scaled=scaled, params=params
+        )
 
     def register_restraint(self, res):
         """Add a Restraint instance to the RecipeOrganizer.

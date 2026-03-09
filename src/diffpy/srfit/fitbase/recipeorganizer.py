@@ -17,10 +17,10 @@
 RecipeContainer is the base class for organizing Parameters, and other
 RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that
 incorporates equation building, constraints and Restraints.
-equationFromString creates an Equation instance from a string.
+get_equation_from_string creates an Equation instance from a string.
 """
 
-__all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
+__all__ = ["RecipeContainer", "RecipeOrganizer", "get_equation_from_string"]
 
 import re
 from collections import OrderedDict
@@ -157,6 +157,13 @@ clearRestraints_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "clearRestraints",
     "clear_all_restraints",
+    removal_version,
+)
+
+equationFromString_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "equationFromString",
+    "get_equation_from_string",
     removal_version,
 )
 
@@ -851,7 +858,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
 
         # Build the equation instance.
-        eq = equationFromString(
+        eq = get_equation_from_string(
             function_str, self._eqfactory, ns=func_params, buildargs=True
         )
         eq.name = name
@@ -907,7 +914,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             If `func_params` uses a name that is already used for a
             variable.
         """
-        eq = equationFromString(equation_str, self._eqfactory, func_params)
+        eq = get_equation_from_string(
+            equation_str, self._eqfactory, func_params
+        )
         try:
             returned_value = eq()
         finally:
@@ -969,7 +978,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         if isinstance(constraint_eq, str):
             eqstr = constraint_eq
-            eq = equationFromString(constraint_eq, self._eqfactory, params)
+            eq = get_equation_from_string(
+                constraint_eq, self._eqfactory, params
+            )
         else:
             eq = Equation(root=constraint_eq)
             eqstr = constraint_eq.name
@@ -1194,7 +1205,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         if isinstance(param_or_eq, str):
             eqstr = param_or_eq
-            eq = equationFromString(param_or_eq, self._eqfactory, params)
+            eq = get_equation_from_string(param_or_eq, self._eqfactory, params)
         else:
             eq = Equation(root=param_or_eq)
             eqstr = param_or_eq.name
@@ -1489,38 +1500,45 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 # End RecipeOrganizer
 
 
-def equationFromString(
+def get_equation_from_string(
     eqstr, factory, ns={}, buildargs=False, argclass=Parameter, argkw={}
 ):
-    """Make an equation from a string.
+    """Make an Equation object from a string.
 
     Attributes
     ----------
-    eqstr
+    eqstr : str
         A string representation of the equation. The equation must
         consist of numpy operators and "known" Parameters. Parameters
         are known if they are in ns, or already defined in the factory.
-    factory
+    factory : EquationFactory
         An EquationFactory instance.
-    ns
-        A dictionary of Parameters indexed by name that are used
+    ns : dict, optional
+        The dictionary of Parameters indexed by name that are used
         in the eqstr but not already defined in the factory
         (default {}).
-    buildargs
+    buildargs : bool, optional
         A flag indicating whether missing Parameters can be created
         by the Factory (default False). If False, then the a ValueError
         will be raised if there are undefined arguments in the eqstr.
-    argclass
+    argclass : Parameter class, optional
         Class to use when creating new Arguments (default
         Parameter). The class constructor must accept the 'name' key
         word.
-    argkw
+    argkw : dict, optional
         Key word dictionary to pass to the argclass constructor
         (default {}).
 
+    Returns
+    -------
+    eq : Equation
+        An Equation instance representing the equation in eqstr.
 
-    Raises ValueError if ns uses a name that is already defined in the factory.
-    Raises ValueError if the equation has undefined parameters.
+    Raises
+    ------
+    ValueError
+        If buildargs is False and there are undefined parameters in eqstr
+        or if ns uses a name that is already defined in the factory.
     """
 
     defined = set(factory.builders.keys())
@@ -1540,6 +1558,27 @@ def equationFromString(
         factory.deRegisterBuilder(name)
 
     return eq
+
+
+@deprecated(equationFromString_deprecation_msg)
+def equationFromString(
+    eqstr, factory, ns={}, buildargs=False, argclass=Parameter, argkw={}
+):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use
+    diffpy.srfit.fitbase.recipeorganizer.get_equation_from_string
+    instead.
+    """
+    return get_equation_from_string(
+        eqstr,
+        factory,
+        ns=ns,
+        buildargs=buildargs,
+        argclass=argclass,
+        argkw=argkw,
+    )
 
 
 def _has_clear_constraints(msg):

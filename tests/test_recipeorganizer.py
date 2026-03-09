@@ -25,6 +25,7 @@ from diffpy.srfit.fitbase.recipeorganizer import (
     RecipeContainer,
     RecipeOrganizer,
     equationFromString,
+    get_equation_from_string,
 )
 
 # ----------------------------------------------------------------------------
@@ -32,8 +33,8 @@ from diffpy.srfit.fitbase.recipeorganizer import (
 
 class TestEquationFromString(unittest.TestCase):
 
-    def testEquationFromString(self):
-        """Test the equationFromString method."""
+    def test_get_equation_from_string(self):
+        """Test the get_equation_from_string method."""
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
@@ -46,7 +47,7 @@ class TestEquationFromString(unittest.TestCase):
         factory.registerArgument("p2", p2)
 
         # Check usage where all parameters are registered with the factory
-        eq = equationFromString("p1+p2", factory)
+        eq = get_equation_from_string("p1+p2", factory)
 
         self.assertEqual(2, len(eq.args))
         self.assertTrue(p1 in eq.args)
@@ -54,7 +55,9 @@ class TestEquationFromString(unittest.TestCase):
         self.assertEqual(3, eq())
 
         # Try to use a parameter that is not registered
-        self.assertRaises(ValueError, equationFromString, "p1+p2+p3", factory)
+        self.assertRaises(
+            ValueError, get_equation_from_string, "p1+p2+p3", factory
+        )
 
         # Pass that argument in the ns dictionary
         eq = equationFromString("p1+p2+p3", factory, {"p3": p3})
@@ -69,12 +72,16 @@ class TestEquationFromString(unittest.TestCase):
 
         # Pass and use an unregistered parameter
         self.assertRaises(
-            ValueError, equationFromString, "p1+p2+p3+p4", factory, {"p3": p3}
+            ValueError,
+            get_equation_from_string,
+            "p1+p2+p3+p4",
+            factory,
+            {"p3": p3},
         )
 
         # Try to overload a registered parameter
         self.assertRaises(
-            ValueError, equationFromString, "p1+p2", factory, {"p2": p4}
+            ValueError, get_equation_from_string, "p1+p2", factory, {"p2": p4}
         )
 
         return

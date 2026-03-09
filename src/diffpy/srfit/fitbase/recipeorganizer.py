@@ -121,7 +121,7 @@ clearConstraints_deprecation_msg = build_deprecation_message(
 addRestraint_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "addRestraint",
-    "add_restraint",
+    "register_restraint",
     removal_version,
 )
 
@@ -1181,10 +1181,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # Make and store the restraint
         param_or_eq = Restraint(eq, lb, ub, sig, scaled)
         param_or_eq.eqstr = eqstr
-        self.add_restraint(param_or_eq)
+        self.register_restraint(param_or_eq)
         return param_or_eq
 
-    def add_restraint(self, res):
+    def register_restraint(self, res):
         """Add a Restraint instance to the RecipeOrganizer.
 
         Parameters
@@ -1203,10 +1203,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_restraint
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.register_restraint
         instead.
         """
-        self.add_restraint(res)
+        self.register_restraint(res)
         return
 
     def unrestrain(self, *ress):
@@ -1216,7 +1216,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ----------
         *ress
             Restraints returned from the 'restrain' method or added
-            with the 'add_restraint' method.
+            with the 'register_restraint' method.
         """
         update = False
         restuple = tuple(self._restraints)

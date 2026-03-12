@@ -391,7 +391,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
             for par in [scatterer.x, scatterer.y, scatterer.z]:
                 if scatterer.is_constrained(par):
-                    scatterer.unconstrain_parameter(par)
+                    scatterer.remove_constraint(par)
                 par.setConst(False)
 
         # Clear the lattice
@@ -408,7 +408,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             ]
             for par in latpars:
                 if lattice.is_constrained(par):
-                    lattice.unconstrain_parameter(par)
+                    lattice.remove_constraint(par)
                 par.setConst(False)
 
         # Clear ADPs
@@ -418,14 +418,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     par = scatterer.get(isosymbol)
                     if par is not None:
                         if scatterer.is_constrained(par):
-                            scatterer.unconstrain_parameter(par)
+                            scatterer.remove_constraint(par)
                         par.setConst(False)
 
                 for pname in adpsymbols:
                     par = scatterer.get(pname)
                     if par is not None:
                         if scatterer.is_constrained(par):
-                            scatterer.unconstrain_parameter(par)
+                            scatterer.remove_constraint(par)
                         par.setConst(False)
 
         return

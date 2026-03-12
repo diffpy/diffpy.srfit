@@ -39,7 +39,7 @@ constrain_deprecation_msg = build_deprecation_message(
 unconstrain_deprecation_msg = build_deprecation_message(
     base,
     "unconstrain",
-    "unconstrain_parameter",
+    "remove_constraint",
     removal_version,
 )
 
@@ -109,7 +109,7 @@ class Constraint(Validatable):
         self.add_constraint(par, eq)
         return
 
-    def unconstrain_parameter(self):
+    def remove_constraint(self):
         """Clear the constraint from a Parameter."""
         self.par.constrained = False
         self.par = None
@@ -122,10 +122,10 @@ class Constraint(Validatable):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.constraint.Constraint.unconstrain_parameter
+        diffpy.srfit.fitbase.constraint.Constraint.remove_constraint
         instead.
         """
-        self.unconstrain_parameter()
+        self.remove_constraint()
         return
 
     def update(self):

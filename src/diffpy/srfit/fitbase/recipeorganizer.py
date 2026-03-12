@@ -135,7 +135,7 @@ constrain_deprecation_msg = build_deprecation_message(
 unconstrain_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "unconstrain",
-    "unconstrain_parameter",
+    "remove_constraint",
     removal_version,
 )
 
@@ -1042,7 +1042,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.is_constrained(parameter)
 
-    def unconstrain_parameter(self, *pars):
+    def remove_constraint(self, *pars):
         """Unconstrain a Parameter.
 
         This removes any constraints on a Parameter.
@@ -1065,7 +1065,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 raise ValueError("The parameter cannot be found")
 
             if parameter in self._constraints:
-                self._constraints[parameter].unconstrain_parameter()
+                self._constraints[parameter].remove_constraint()
                 del self._constraints[parameter]
                 update = True
 
@@ -1085,10 +1085,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.unconstrain_parameter
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.remove_constraint
         instead.
         """
-        self.unconstrain_parameter(*pars)
+        self.remove_constraint(*pars)
         return
 
     def get_constrained_parmeters(self, recurse=False):
@@ -1136,7 +1136,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             sub-objects are also cleared.
         """
         if self._constraints:
-            self.unconstrain_parameter(*self._constraints)
+            self.remove_constraint(*self._constraints)
 
         if recurse:
             for m in filter(_has_clear_constraints, self._iter_managed()):

@@ -1,7 +1,7 @@
 **Added:**
 
 * Added ``add_constraint`` method to ``RecipeOrganizer``.
-* Added ``unconstrain_parameter`` method to ``RecipeOrganizer``.
+* Added ``remove_constraint`` method to ``RecipeOrganizer``.
 * Added ``add_restraint`` method to ``RecipeOrganizer``.
 * Added ``remove_restraint`` method to ``RecipeOrganizer``.
 * Added ``register_restraint`` method to ``RecipeOrganizer``.
@@ -15,7 +15,7 @@
 **Deprecated:**
 
 * Deprecated ``constrain`` method of ``RecipeOrganizer``. Use ``add_constraint`` instead.
-* Deprecated ``unconstrain`` method of ``RecipeOrganizer``. Use ``unconstrain_parameter`` instead.
+* Deprecated ``unconstrain`` method of ``RecipeOrganizer``. Use ``remove_constraint`` instead.
 * Deprecated ``restrain`` method of ``RecipeOrganizer``. Use ``add_restraint`` instead.
 * Deprecated ``unrestrain`` methods of ``RecipeOrganizer``. Use ``remove_restraint`` instead.
 * Deprecated ``addRestraint`` method of ``RecipeOrganizer``. Use ``register_restraint`` instead.

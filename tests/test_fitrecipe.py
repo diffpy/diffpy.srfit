@@ -240,7 +240,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Clear the constraint and restore the value of c to 0. This should
         # give us chi2 = 0 again.
-        self.recipe.unconstrain_parameter(self.fitcontribution.c)
+        self.recipe.remove_constraint(self.fitcontribution.c)
         self.fitcontribution.c.set_value(0)
         res = self.recipe.residual([self.recipe.cont.A.getValue()])
         chi2 = 0

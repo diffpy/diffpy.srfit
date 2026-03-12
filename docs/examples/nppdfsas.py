@@ -128,7 +128,7 @@ def fitRecipe(recipe):
     recipe.free("radius_a", "radius_b", iqscale=1e8)
     recipe.add_constraint("radius_b", "radius_a")
     scipyOptimize(recipe)
-    recipe.unconstrain_parameter("radius_b")
+    recipe.remove_constraint("radius_b")
 
     # Tune PDF
     recipe.set_weight(recipe.pdf, 1)

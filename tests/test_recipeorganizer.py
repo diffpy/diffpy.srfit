@@ -303,7 +303,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertRaises(ValueError, self.m.constrain, p1, "2*p2", {"p2": p3})
 
         # Remove the constraint
-        self.m.unconstrain_parameter(p1)
+        self.m.remove_constraint(p1)
         self.assertFalse(p1.constrained)
         self.assertEqual(0, len(self.m._constraints))
         self.assertFalse(self.m.isConstrained(p1))

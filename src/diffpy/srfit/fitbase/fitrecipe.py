@@ -130,7 +130,7 @@ constrain_dep_msg = build_deprecation_message(
 )
 
 unconstrain_dep_msg = build_deprecation_message(
-    base, "unconstrain", "unconstrain_parameter", removal_version
+    base, "unconstrain", "remove_constraint", removal_version
 )
 
 
@@ -1107,7 +1107,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         return self.is_free(var)
 
-    def unconstrain_parameter(self, *pars):
+    def remove_constraint(self, *pars):
         """Unconstrain a Parameter.
 
         This removes any constraints on a Parameter. If the Parameter is also a
@@ -1133,7 +1133,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 raise ValueError("The parameter cannot be found")
 
             if par in self._constraints:
-                self._constraints[par].unconstrain_parameter()
+                self._constraints[par].remove_constraint()
                 del self._constraints[par]
                 update = True
 
@@ -1151,10 +1151,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """This function has been deprecated and will be removed in
         version 4.0.0.
 
-        Please use diffpy.srfit.fitbase.FitRecipe.unconstrain_parameter
+        Please use diffpy.srfit.fitbase.FitRecipe.remove_constraint
         instead.
         """
-        self.unconstrain_parameter(*pars)
+        self.remove_constraint(*pars)
         return
 
     def add_constraint(self, par, con, ns={}):

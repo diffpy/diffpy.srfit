@@ -91,14 +91,14 @@ def makeRecipe(stru1, stru2, datname):
     # diameter to twice the shell radius.
     recipe.add_variable(contribution.radius, 15)
     recipe.add_variable(contribution.thickness, 11)
-    recipe.constrain_parameter(contribution.psize, "2 * radius")
+    recipe.add_constraint(contribution.psize, "2 * radius")
 
     # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
     recipe.create_new_variable("scale_CdS", 0.7)
-    recipe.constrain_parameter(generator_cds.scale, "scale_CdS")
-    recipe.constrain_parameter(generator_zns.scale, "1 - scale_CdS")
+    recipe.add_constraint(generator_cds.scale, "scale_CdS")
+    recipe.add_constraint(generator_zns.scale, "1 - scale_CdS")
     # We also want the resolution factor to be the same on each.
 
     # Vary the global scale as well.
@@ -117,7 +117,7 @@ def makeRecipe(stru1, stru2, datname):
     )
     # Since we know these have stacking disorder, constrain the B33 adps for
     # each atom type.
-    recipe.constrain_parameter("B33_1_cds", "B33_0_cds")
+    recipe.add_constraint("B33_1_cds", "B33_0_cds")
     recipe.add_variable(generator_cds.delta2, name="delta2_cds", value=5)
 
     phase_zns = generator_zns.phase
@@ -128,7 +128,7 @@ def makeRecipe(stru1, stru2, datname):
     recipe.add_variable(
         phase_zns.sgpars.xyzpars.z_1, name="z_1_zns", tag="xyz"
     )
-    recipe.constrain_parameter("B33_1_zns", "B33_0_zns")
+    recipe.add_constraint("B33_1_zns", "B33_0_zns")
     recipe.add_variable(generator_zns.delta2, name="delta2_zns", value=2.5)
 
     # Give the recipe away so it can be used!

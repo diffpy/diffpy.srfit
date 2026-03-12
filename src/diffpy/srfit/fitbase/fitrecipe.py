@@ -126,7 +126,7 @@ boundsToRestraints_dep_msg = build_deprecation_message(
 )
 
 constrain_dep_msg = build_deprecation_message(
-    base, "constrain", "constrain_parameter", removal_version
+    base, "constrain", "add_constraint", removal_version
 )
 
 unconstrain_dep_msg = build_deprecation_message(
@@ -1157,7 +1157,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         self.unconstrain_parameter(*pars)
         return
 
-    def constrain_parameter(self, par, con, ns={}):
+    def add_constraint(self, par, con, ns={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
@@ -1215,7 +1215,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         if par in self._parameters.values():
             self.fix(par)
 
-        RecipeOrganizer.constrain_parameter(self, par, con, ns)
+        RecipeOrganizer.add_constraint(self, par, con, ns)
         return
 
     @deprecated(constrain_dep_msg)
@@ -1223,10 +1223,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """This function has been deprecated and will be removed in
         version 4.0.0.
 
-        Please use diffpy.srfit.fitbase.FitRecipe.constrain_parameter
+        Please use diffpy.srfit.fitbase.FitRecipe.add_constraint
         instead.
         """
-        self.constrain_parameter(par, con, ns)
+        self.add_constraint(par, con, ns)
         return
 
     def get_values(self):

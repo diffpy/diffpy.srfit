@@ -73,7 +73,7 @@ def makeRecipe(molecule, datname):
         # has no scattering power. It is only used as a reference point for
         # our bond length. We don't want to constrain it.
         if not atom.isDummy():
-            recipe.constrain_parameter(atom.Biso, Biso)
+            recipe.add_constraint(atom.Biso, Biso)
 
     # We need to let the molecule expand. If we were modeling it as a crystal,
     # we could let the unit cell expand. For instruction purposes, we use a
@@ -97,7 +97,7 @@ def makeRecipe(molecule, datname):
         # This creates a Parameter that moves the second atom according to the
         # bond length. Note that each Parameter needs a unique name.
         par = c60.addBondLengthParameter("rad%i" % i, center, atom)
-        recipe.constrain_parameter(par, radius)
+        recipe.add_constraint(par, radius)
 
     # Add the correlation term, scale. The scale is too short to effectively
     # determine qdamp.

@@ -119,7 +119,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Constrain a parameter to the B-variable to give it a value
         p = Parameter("Bpar", -1)
-        recipe.constrain_parameter(recipe.B, p)
+        recipe.add_constraint(recipe.B, p)
         values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0]).all())
         recipe.delete_variable(recipe.B)
@@ -215,11 +215,11 @@ class TestFitRecipe(unittest.TestCase):
         # Try some constraints
         # Make c = 2*A, A = Avar
         var = self.recipe.create_new_variable("Avar")
-        self.recipe.constrain_parameter(
+        self.recipe.add_constraint(
             self.fitcontribution.c, "2*A", {"A": self.fitcontribution.A}
         )
         self.assertEqual(2, self.fitcontribution.c.value)
-        self.recipe.constrain_parameter(self.fitcontribution.A, var)
+        self.recipe.add_constraint(self.fitcontribution.A, var)
         self.assertEqual(1, var.getValue())
         self.assertEqual(self.recipe.cont.A.getValue(), var.getValue())
         # c is constrained to a constrained parameter.
@@ -255,7 +255,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertAlmostEqual(chi2, dot(res, res))
 
         # Add constraints at the fitcontribution level.
-        self.fitcontribution.constrain_parameter(self.fitcontribution.c, "2*A")
+        self.fitcontribution.add_constraint(self.fitcontribution.c, "2*A")
         # This should evaluate to sin(x+2)
         x = self.profile.x
         y = sin(x + 2)

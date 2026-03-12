@@ -128,7 +128,7 @@ addRestraint_deprecation_msg = build_deprecation_message(
 constrain_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "constrain",
-    "constrain_parameter",
+    "add_constraint",
     removal_version,
 )
 
@@ -934,7 +934,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.evaluate_equation(eqstr, func_params=ns)
 
-    def constrain_parameter(self, parameter, constraint_eq, params={}):
+    def add_constraint(self, parameter, constraint_eq, params={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
@@ -989,7 +989,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         # Make and store the constraint
         constraint_eq = Constraint()
-        constraint_eq.constrain_parameter(parameter, eq)
+        constraint_eq.add_constraint(parameter, eq)
         # Store the equation string so it can be shown later.
         constraint_eq.eqstr = eqstr
         self._constraints[parameter] = constraint_eq
@@ -1005,10 +1005,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.constrain_parameter
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_constraint
         instead.
         """
-        self.constrain_parameter(parameter, constraint_eq, params=params)
+        self.add_constraint(parameter, constraint_eq, params=params)
         return
 
     def is_constrained(self, parameter):

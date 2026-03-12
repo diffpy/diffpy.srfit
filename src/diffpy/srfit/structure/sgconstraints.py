@@ -596,7 +596,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     continue
                 isoidx.append(j)
                 scatterer = scatterers[j]
-                scatterer.constrain_parameter(
+                scatterer.add_constraint(
                     isosymbol, isoname, params=self._parameters
                 )
 
@@ -691,7 +691,7 @@ def _constrain_tetragonal(lattice):
     lattice.alpha.setConst(True, ang90)
     lattice.beta.setConst(True, ang90)
     lattice.gamma.setConst(True, ang90)
-    lattice.constrain_parameter(lattice.b, lattice.a)
+    lattice.add_constraint(lattice.b, lattice.a)
     return
 
 
@@ -708,15 +708,15 @@ def _constrain_trigonal(lattice):
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
     if lattice.gamma.getValue() == ang120:
-        lattice.constrain_parameter(lattice.b, lattice.a)
+        lattice.add_constraint(lattice.b, lattice.a)
         lattice.alpha.setConst(True, ang90)
         lattice.beta.setConst(True, ang90)
         lattice.gamma.setConst(True, ang120)
     else:
-        lattice.constrain_parameter(lattice.b, lattice.a)
-        lattice.constrain_parameter(lattice.c, lattice.a)
-        lattice.constrain_parameter(lattice.beta, lattice.alpha)
-        lattice.constrain_parameter(lattice.gamma, lattice.alpha)
+        lattice.add_constraint(lattice.b, lattice.a)
+        lattice.add_constraint(lattice.c, lattice.a)
+        lattice.add_constraint(lattice.beta, lattice.alpha)
+        lattice.add_constraint(lattice.gamma, lattice.alpha)
     return
 
 
@@ -731,7 +731,7 @@ def _constrain_hexagonal(lattice):
         afactor = deg2rad
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
-    lattice.constrain_parameter(lattice.b, lattice.a)
+    lattice.add_constraint(lattice.b, lattice.a)
     lattice.alpha.setConst(True, ang90)
     lattice.beta.setConst(True, ang90)
     lattice.gamma.setConst(True, ang120)
@@ -748,8 +748,8 @@ def _constrain_cubic(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.constrain_parameter(lattice.b, lattice.a)
-    lattice.constrain_parameter(lattice.c, lattice.a)
+    lattice.add_constraint(lattice.b, lattice.a)
+    lattice.add_constraint(lattice.c, lattice.a)
     lattice.alpha.setConst(True, ang90)
     lattice.beta.setConst(True, ang90)
     lattice.gamma.setConst(True, ang90)
@@ -811,7 +811,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     # If we got here, then we have a constraint equation
     # Fix any division issues
     formula = formula.replace("/", "*1.0/")
-    scatterer.constrain_parameter(par, formula, params=ns)
+    scatterer.add_constraint(par, formula, params=ns)
     return
 
 

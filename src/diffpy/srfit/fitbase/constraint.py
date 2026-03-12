@@ -32,7 +32,7 @@ removal_version = "4.0.0"
 constrain_deprecation_msg = build_deprecation_message(
     base,
     "constrain",
-    "constrain_parameter",
+    "add_constraint",
     removal_version,
 )
 
@@ -65,7 +65,7 @@ class Constraint(Validatable):
         self.eq = None
         return
 
-    def constrain_parameter(self, par, eq):
+    def add_constraint(self, par, eq):
         """Constrain a Parameter according to an Equation.
 
         The parameter will be set constant once it is constrained. This
@@ -103,10 +103,10 @@ class Constraint(Validatable):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.constraint.Constraint.constrain_parameter
+        diffpy.srfit.fitbase.constraint.Constraint.add_constraint
         instead.
         """
-        self.constrain_parameter(par, eq)
+        self.add_constraint(par, eq)
         return
 
     def unconstrain_parameter(self):

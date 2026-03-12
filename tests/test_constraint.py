@@ -38,7 +38,7 @@ class TestConstraint(unittest.TestCase):
         c = Constraint()
         # Constrain p1 = 2*p2
         eq = get_equation_from_string("2*p2", factory)
-        c.constrain_parameter(p1, eq)
+        c.add_constraint(p1, eq)
 
         self.assertTrue(p1.constrained)
         self.assertFalse(p2.constrained)

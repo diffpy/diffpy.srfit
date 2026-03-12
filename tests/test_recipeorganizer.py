@@ -349,7 +349,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertEqual(1, len(self.m._restraints))
         p2.set_value(10)
         self.assertEqual(1, r.penalty())
-        self.m.remove_restraint(r)
+        self.m.remove_penalty(r)
         self.assertEqual(0, len(self.m._restraints))
 
         r = self.m.restrain(p1, ub=10)

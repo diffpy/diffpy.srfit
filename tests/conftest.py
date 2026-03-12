@@ -218,8 +218,8 @@ def build_recipe_two_contributions():
     recipe.add_constraint(contribution2.m, "2*k")
     recipe.add_constraint(contribution2.d, contribution1.c)
     recipe.add_constraint(contribution2.B, "0.5*A")
-    recipe.add_restraint(contribution1.A, 0.5, 1.5)
-    recipe.add_restraint(contribution1.k, 0.8, 1.2)
+    recipe.add_penalty(contribution1.A, 0.5, 1.5)
+    recipe.add_penalty(contribution1.k, 0.8, 1.2)
 
     return recipe
 

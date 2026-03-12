@@ -232,7 +232,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Now try some restraints. We want c to be exactly zero. It should give
         # a penalty of (c-0)**2, which is 4 in this case
-        r1 = self.recipe.add_restraint(self.fitcontribution.c, 0, 0, 1)
+        r1 = self.recipe.add_penalty(self.fitcontribution.c, 0, 0, 1)
         self.recipe._ready = False
         res = self.recipe.residual()
         chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
@@ -263,9 +263,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertTrue(array_equal(y - self.profile.y, res))
 
         # Add a restraint at the fitcontribution level.
-        r1 = self.fitcontribution.add_restraint(
-            self.fitcontribution.c, 0, 0, 1
-        )
+        r1 = self.fitcontribution.add_penalty(self.fitcontribution.c, 0, 0, 1)
         self.recipe._ready = False
         # The chi2 is the same as above, plus 4
         res = self.recipe.residual()
@@ -363,7 +361,7 @@ def testPrintFitHook(capturestdout):
     recipe.addContribution(fitcontribution)
 
     recipe.add_variable(fitcontribution.c)
-    recipe.add_restraint("c", lb=5)
+    recipe.add_penalty("c", lb=5)
     (pfh,) = recipe.getFitHooks()
     out = capturestdout(recipe.scalar_residual)
     assert "" == out
@@ -439,7 +437,7 @@ def test_add_contribution(capturestdout):
     recipe.add_contribution(fitcontribution)
 
     recipe.add_variable(fitcontribution.c)
-    recipe.add_restraint("c", lb=5)
+    recipe.add_penalty("c", lb=5)
     (pfh,) = recipe.get_fit_hooks()
     out = capturestdout(recipe.scalar_residual)
     assert "" == out

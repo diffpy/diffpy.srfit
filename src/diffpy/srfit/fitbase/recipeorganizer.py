@@ -142,7 +142,7 @@ unconstrain_deprecation_msg = build_deprecation_message(
 restrain_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "restrain",
-    "add_restraint",
+    "add_penalty",
     removal_version,
 )
 
@@ -1154,7 +1154,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.clear_all_constraints(recurse=recurse)
 
-    def add_restraint(
+    def add_penalty(
         self, param_or_eq, lb=-inf, ub=inf, sig=1, scaled=False, params={}
     ):
         """Restrain an expression to specified bounds.
@@ -1224,10 +1224,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_restraint
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_penalty
         instead.
         """
-        return self.add_restraint(
+        return self.add_penalty(
             param_or_eq, lb=lb, ub=ub, sig=sig, scaled=scaled, params=params
         )
 
@@ -1262,7 +1262,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Attributes
         ----------
         *ress : Restraint
-            The Restraints returned from the 'add_restraint' method or added
+            The Restraints returned from the 'add_penalty' method or added
             with the 'register_restraint' method.
         """
         update = False

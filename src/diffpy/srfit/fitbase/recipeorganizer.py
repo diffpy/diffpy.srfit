@@ -1167,21 +1167,22 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Parameters
         ----------
-        param_or_eq : str or Parameter
-            The equation string or a Parameter object to restrain.
+        param_or_eq : str
+            The equation or parameter to restrain.
         lower_bound : float, optional
             The lower bound for the restraint evaluation (default is -inf).
         upper_bound : float, optional
             The upper bound for the restraint evaluation (default is inf).
         sig : float, optional
             The uncertainty associated with the bounds (default is 1).
+            Please see Notes for how this is used in the penalty calculation.
         scaled : bool, optional
             If True, the restraint penalty is scaled by the unrestrained
             point-average chi^2 (chi^2/numpoints) (default is False).
         params : dict, optional
-            The dictionary of Parameters, indexed by name, that are used in the
-            equation string but are not part of the RecipeOrganizer
-            (default is {}).
+            The dictionary of Parameters, indexed by name, that are used in
+            `param_or_eq` (if an equation string is used) but are not part
+            of the RecipeOrganizer (default is {}).
 
         Returns
         -------
@@ -1196,18 +1197,33 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ..
             (max(0, lower_bound - val, val - upper_bound) / sig) ** 2
 
-        where `val` is the value of the evaluated equation.
+        where `val` is the value of the evaluated `param_or_eq`.
         If `scaled` is True, this penalty is multiplied by
         the average chi^2.
+
+        Examples
+        --------
+        Restraining the lattice parameters of an Ni lattice to be
+        approximately 7.4Å (2x the original lattice param)
+        can be done with the following code:
+        ..
+            recipe.add_soft_bounds(
+                "a_ni + b_ni",
+                lower_bound=7.0,
+                upper_bound=7.5,
+                sig=0.1,
+                scaled=True,
+                params={"b_ni": Parameter("b_ni", 3.473)}
+            )
 
         Raises
         ------
         ValueError
-            If `func_params` contains a name that is already used
+            If `params` contains a name that is already used
             for a Parameter.
         ValueError
             If `param_or_eq` depends on a Parameter that is not part of the
-            RecipeOrganizer and is not defined in `func_params`.
+            RecipeOrganizer and is not defined in `params`.
         """
         if isinstance(param_or_eq, str):
             eqstr = param_or_eq

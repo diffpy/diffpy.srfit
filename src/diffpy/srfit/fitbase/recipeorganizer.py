@@ -1165,6 +1165,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     ):
         """Restrain an expression to specified bounds.
 
+        See Notes for how the penalty is calculated.
+
         Parameters
         ----------
         param_or_eq : str

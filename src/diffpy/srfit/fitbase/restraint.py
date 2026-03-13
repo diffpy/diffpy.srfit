@@ -38,7 +38,7 @@ class Restraint(Validatable):
         bounds.
     lower_bound : float
         The lower bound on the restraint evaluation (default -inf).
-    ub : float
+    upper_bound : float
         The lower bound on the restraint evaluation (default inf).
     sig : float
         The uncertainty on the bounds (default 1).
@@ -49,12 +49,14 @@ class Restraint(Validatable):
 
 
     The penalty is calculated as
-    (max(0, lower_bound - val, val - ub)/sig)**2
+    (max(0, lower_bound - val, val - upper_bound)/sig)**2
     and val is the value of the calculated equation.  This is multiplied by the
     average chi^2 if scaled is True.
     """
 
-    def __init__(self, eq, lower_bound=-inf, ub=inf, sig=1, scaled=False):
+    def __init__(
+        self, eq, lower_bound=-inf, upper_bound=inf, sig=1, scaled=False
+    ):
         """Restrain an equation to specified bounds.
 
         Attributes
@@ -65,7 +67,7 @@ class Restraint(Validatable):
         lower_bound
             The lower bound on the restraint evaluation (float, default
             -inf).
-        ub
+        upper_bound
             The lower bound on the restraint evaluation (float, default
             inf).
         sig
@@ -77,7 +79,7 @@ class Restraint(Validatable):
         """
         self.eq = eq
         self.lower_bound = float(lower_bound)
-        self.ub = float(ub)
+        self.upper_bound = float(upper_bound)
         self.sig = float(sig)
         self.scaled = bool(scaled)
         return
@@ -98,7 +100,7 @@ class Restraint(Validatable):
         """
         val = self.eq()
         penalty = (
-            max(0, self.lower_bound - val, val - self.ub) / self.sig
+            max(0, self.lower_bound - val, val - self.upper_bound) / self.sig
         ) ** 2
 
         if self.scaled:

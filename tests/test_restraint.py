@@ -63,7 +63,7 @@ class TestRestraint(unittest.TestCase):
         # Make a really large number to check the upper bound
         import numpy
 
-        r.ub = numpy.inf
+        r.upper_bound = numpy.inf
         p1.set_value(1e100)
         self.assertEqual(0, r.penalty())
 

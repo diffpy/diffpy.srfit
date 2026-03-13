@@ -315,7 +315,7 @@ def test_boundsToRestraints():
     assert len(restraints) == 1
     r = restraints[0]
     actual_lower_bound = r.lower_bound
-    actual_upper_bound = r.ub
+    actual_upper_bound = r.upper_bound
     actual_sigma = r.sig
     assert actual_lower_bound == expected_lower_bound
     assert actual_upper_bound == expected_upper_bound
@@ -334,7 +334,7 @@ def test_convert_bounds_to_restraints():
     assert len(restraints) == 1
     r = restraints[0]
     assert r.lower_bound == -1
-    assert r.ub == 1
+    assert r.upper_bound == 1
     assert r.sig == 2
     assert r.scaled is True
 

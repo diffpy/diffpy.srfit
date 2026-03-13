@@ -1158,7 +1158,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self,
         param_or_eq,
         lower_bound=-inf,
-        ub=inf,
+        upper_bound=inf,
         sig=1,
         scaled=False,
         params={},
@@ -1171,7 +1171,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             The equation string or a Parameter object to restrain.
         lower_bound : float, optional
             The lower bound for the restraint evaluation (default is -inf).
-        ub : float, optional
+        upper_bound : float, optional
             The upper bound for the restraint evaluation (default is inf).
         sig : float, optional
             The uncertainty associated with the bounds (default is 1).
@@ -1194,7 +1194,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         The penalty is calculated as:
 
         ..
-            (max(0, lower_bound - val, val - ub) / sig) ** 2
+            (max(0, lower_bound - val, val - upper_bound) / sig) ** 2
 
         where `val` is the value of the evaluated equation.
         If `scaled` is True, this penalty is multiplied by
@@ -1217,7 +1217,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             eqstr = param_or_eq.name
 
         # Make and store the restraint
-        param_or_eq = Restraint(eq, lower_bound, ub, sig, scaled)
+        param_or_eq = Restraint(eq, lower_bound, upper_bound, sig, scaled)
         param_or_eq.eqstr = eqstr
         self.register_penalty(param_or_eq)
         return param_or_eq
@@ -1227,7 +1227,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self,
         param_or_eq,
         lower_bound=-inf,
-        ub=inf,
+        upper_bound=inf,
         sig=1,
         scaled=False,
         params={},
@@ -1242,7 +1242,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return self.add_penalty(
             param_or_eq,
             lower_bound=lower_bound,
-            ub=ub,
+            upper_bound=upper_bound,
             sig=sig,
             scaled=scaled,
             params=params,
@@ -1446,12 +1446,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         rset = self._get_restraints()
         rlines = []
         for res in rset:
-            line = "%s: lower_bound = %f, ub = %f, sig = %f, scaled = %s" % (
-                res.eqstr,
-                res.lower_bound,
-                res.ub,
-                res.sig,
-                res.scaled,
+            line = (
+                "%s: lower_bound = %f, upper_bound = %f, sig = %f, scaled = %s"
+                % (
+                    res.eqstr,
+                    res.lower_bound,
+                    res.upper_bound,
+                    res.sig,
+                    res.scaled,
+                )
             )
             rlines.append(line)
         rlines.sort(key=numstr)

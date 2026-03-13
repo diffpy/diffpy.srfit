@@ -25,6 +25,7 @@ from diffpy.srfit.fitbase.recipeorganizer import (
     RecipeContainer,
     RecipeOrganizer,
     equationFromString,
+    get_equation_from_string,
 )
 
 # ----------------------------------------------------------------------------
@@ -32,8 +33,8 @@ from diffpy.srfit.fitbase.recipeorganizer import (
 
 class TestEquationFromString(unittest.TestCase):
 
-    def testEquationFromString(self):
-        """Test the equationFromString method."""
+    def test_get_equation_from_string(self):
+        """Test the get_equation_from_string method."""
 
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
@@ -46,7 +47,7 @@ class TestEquationFromString(unittest.TestCase):
         factory.registerArgument("p2", p2)
 
         # Check usage where all parameters are registered with the factory
-        eq = equationFromString("p1+p2", factory)
+        eq = get_equation_from_string("p1+p2", factory)
 
         self.assertEqual(2, len(eq.args))
         self.assertTrue(p1 in eq.args)
@@ -54,7 +55,9 @@ class TestEquationFromString(unittest.TestCase):
         self.assertEqual(3, eq())
 
         # Try to use a parameter that is not registered
-        self.assertRaises(ValueError, equationFromString, "p1+p2+p3", factory)
+        self.assertRaises(
+            ValueError, get_equation_from_string, "p1+p2+p3", factory
+        )
 
         # Pass that argument in the ns dictionary
         eq = equationFromString("p1+p2+p3", factory, {"p3": p3})
@@ -69,12 +72,16 @@ class TestEquationFromString(unittest.TestCase):
 
         # Pass and use an unregistered parameter
         self.assertRaises(
-            ValueError, equationFromString, "p1+p2+p3+p4", factory, {"p3": p3}
+            ValueError,
+            get_equation_from_string,
+            "p1+p2+p3+p4",
+            factory,
+            {"p3": p3},
         )
 
         # Try to overload a registered parameter
         self.assertRaises(
-            ValueError, equationFromString, "p1+p2", factory, {"p2": p4}
+            ValueError, get_equation_from_string, "p1+p2", factory, {"p2": p4}
         )
 
         return
@@ -259,7 +266,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertRaises(ValueError, m._remove_parameter, c)
         return
 
-    def test_constrain(self):
+    def test_constrain_parameter(self):
         """Test the constrain method."""
 
         p1 = self.m._new_parameter("p1", 1)
@@ -268,7 +275,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         self.assertFalse(p1.constrained)
         self.assertEqual(0, len(self.m._constraints))
-        self.m.constrain(p1, "2*p2")
+        self.m.add_constraint(p1, "2*p2")
 
         actual_constrained_params = self.m.getConstrainedPars()
         actual_constrained_params = [p.name for p in actual_constrained_params]
@@ -296,13 +303,13 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.assertRaises(ValueError, self.m.constrain, p1, "2*p2", {"p2": p3})
 
         # Remove the constraint
-        self.m.unconstrain(p1)
+        self.m.remove_constraint(p1)
         self.assertFalse(p1.constrained)
         self.assertEqual(0, len(self.m._constraints))
         self.assertFalse(self.m.isConstrained(p1))
 
         # Try an straight constraint
-        self.m.constrain(p1, p2)
+        self.m.add_constraint(p1, p2)
         p2.set_value(7)
         self.m._constraints[p1].update()
         self.assertEqual(7, p1.getValue())
@@ -314,7 +321,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         assert actual_constrained_params == expected_constrained_params
 
         # add constraint back and test the old function name `clearConstraints`
-        self.m.constrain(p1, p2)
+        self.m.add_constraint(p1, p2)
         actual_constrained_params = self.m.get_constrained_parmeters()
         actual_constrained_params = [p.name for p in actual_constrained_params]
         expected_constrained_params = [p1.name]
@@ -328,7 +335,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         return
 
-    def testRestrain(self):
+    def test_add_restraint(self):
         """Test the restrain method."""
 
         p1 = Parameter("p1", 1)
@@ -338,14 +345,14 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m._eqfactory.registerArgument("p2", p2)
 
         self.assertEqual(0, len(self.m._restraints))
-        r = self.m.restrain("p1+p2", ub=10)
+        r = self.m.add_soft_bounds("p1+p2", upper_bound=10)
         self.assertEqual(1, len(self.m._restraints))
         p2.set_value(10)
         self.assertEqual(1, r.penalty())
-        self.m.unrestrain(r)
+        self.m.remove_soft_bounds(r)
         self.assertEqual(0, len(self.m._restraints))
 
-        r = self.m.restrain(p1, ub=10)
+        r = self.m.restrain(p1, upper_bound=10)
         self.assertEqual(1, len(self.m._restraints))
         p1.set_value(11)
         self.assertEqual(1, r.penalty())
@@ -375,8 +382,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         m2._add_parameter(p3)
         m2._add_parameter(p4)
 
-        self.m.constrain(p1, "p2")
-        m2.constrain(p3, "p4")
+        self.m.add_constraint(p1, "p2")
+        m2.add_constraint(p3, "p4")
 
         cons = self.m._get_constraints()
         self.assertTrue(p1 in cons)
@@ -402,8 +409,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         m2._add_parameter(p3)
         m2._add_parameter(p4)
 
-        r1 = self.m.restrain("p1 + p2")
-        r2 = m2.restrain("2*p3 + p4")
+        r1 = self.m.add_soft_bounds("p1 + p2")
+        r2 = m2.add_soft_bounds("2*p3 + p4")
 
         res = self.m._get_restraints()
         self.assertTrue(r1 in res)
@@ -625,14 +632,14 @@ def test_show(capturestdout):
     assert "Constraints" not in lines1
     assert "Restraints" not in lines1
     organizer._new_parameter("z", 7)
-    organizer.constrain("y", "3 * z")
+    organizer.add_constraint("y", "3 * z")
     out2 = capture_show()
     lines2 = out2.strip().split("\n")
     assert 9 == len(lines2)
     assert "Parameters" in lines2
     assert "Constraints" in lines2
     assert "Restraints" not in lines2
-    organizer.restrain("z", lb=2, ub=3, sig=0.001)
+    organizer.add_soft_bounds("z", lower_bound=2, upper_bound=3, sig=0.001)
     out3 = capture_show()
     lines3 = out3.strip().split("\n")
     assert 13 == len(lines3)

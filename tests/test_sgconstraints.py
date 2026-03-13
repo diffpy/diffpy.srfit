@@ -87,13 +87,13 @@ def test_ObjCryst_constrain_space_group(pyobjcryst_available):
 
     # Make sure we can't constrain these
     with pytest.raises(ValueError):
-        mn.constrain(mn.x, "y")
+        mn.add_constraint(mn.x, "y")
 
     with pytest.raises(ValueError):
-        mn.constrain(mn.y, "z")
+        mn.add_constraint(mn.y, "z")
 
     with pytest.raises(ValueError):
-        mn.constrain(mn.z, "x")
+        mn.add_constraint(mn.z, "x")
 
     # Nor can we make them into variables
     from diffpy.srfit.fitbase.fitrecipe import FitRecipe

@@ -18,7 +18,7 @@ import unittest
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.recipeorganizer import get_equation_from_string
 from diffpy.srfit.fitbase.restraint import Restraint
 
 
@@ -36,7 +36,7 @@ class TestRestraint(unittest.TestCase):
         factory.registerArgument("p2", p2)
 
         # Restrain 1 <  p1 + p2 < 5
-        eq = equationFromString("p1 + p2", factory)
+        eq = get_equation_from_string("p1 + p2", factory)
         r = Restraint(eq, 1, 5)
 
         # This should have no penalty
@@ -63,7 +63,7 @@ class TestRestraint(unittest.TestCase):
         # Make a really large number to check the upper bound
         import numpy
 
-        r.ub = numpy.inf
+        r.upper_bound = numpy.inf
         p1.set_value(1e100)
         self.assertEqual(0, r.penalty())
 

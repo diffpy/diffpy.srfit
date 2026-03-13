@@ -391,7 +391,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
             for par in [scatterer.x, scatterer.y, scatterer.z]:
                 if scatterer.is_constrained(par):
-                    scatterer.unconstrain(par)
+                    scatterer.remove_constraint(par)
                 par.setConst(False)
 
         # Clear the lattice
@@ -408,7 +408,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             ]
             for par in latpars:
                 if lattice.is_constrained(par):
-                    lattice.unconstrain(par)
+                    lattice.remove_constraint(par)
                 par.setConst(False)
 
         # Clear ADPs
@@ -418,14 +418,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     par = scatterer.get(isosymbol)
                     if par is not None:
                         if scatterer.is_constrained(par):
-                            scatterer.unconstrain(par)
+                            scatterer.remove_constraint(par)
                         par.setConst(False)
 
                 for pname in adpsymbols:
                     par = scatterer.get(pname)
                     if par is not None:
                         if scatterer.is_constrained(par):
-                            scatterer.unconstrain(par)
+                            scatterer.remove_constraint(par)
                         par.setConst(False)
 
         return
@@ -596,7 +596,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     continue
                 isoidx.append(j)
                 scatterer = scatterers[j]
-                scatterer.constrain(
+                scatterer.add_constraint(
                     isosymbol, isoname, params=self._parameters
                 )
 
@@ -691,7 +691,7 @@ def _constrain_tetragonal(lattice):
     lattice.alpha.setConst(True, ang90)
     lattice.beta.setConst(True, ang90)
     lattice.gamma.setConst(True, ang90)
-    lattice.constrain(lattice.b, lattice.a)
+    lattice.add_constraint(lattice.b, lattice.a)
     return
 
 
@@ -708,15 +708,15 @@ def _constrain_trigonal(lattice):
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
     if lattice.gamma.getValue() == ang120:
-        lattice.constrain(lattice.b, lattice.a)
+        lattice.add_constraint(lattice.b, lattice.a)
         lattice.alpha.setConst(True, ang90)
         lattice.beta.setConst(True, ang90)
         lattice.gamma.setConst(True, ang120)
     else:
-        lattice.constrain(lattice.b, lattice.a)
-        lattice.constrain(lattice.c, lattice.a)
-        lattice.constrain(lattice.beta, lattice.alpha)
-        lattice.constrain(lattice.gamma, lattice.alpha)
+        lattice.add_constraint(lattice.b, lattice.a)
+        lattice.add_constraint(lattice.c, lattice.a)
+        lattice.add_constraint(lattice.beta, lattice.alpha)
+        lattice.add_constraint(lattice.gamma, lattice.alpha)
     return
 
 
@@ -731,7 +731,7 @@ def _constrain_hexagonal(lattice):
         afactor = deg2rad
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
-    lattice.constrain(lattice.b, lattice.a)
+    lattice.add_constraint(lattice.b, lattice.a)
     lattice.alpha.setConst(True, ang90)
     lattice.beta.setConst(True, ang90)
     lattice.gamma.setConst(True, ang120)
@@ -748,8 +748,8 @@ def _constrain_cubic(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.constrain(lattice.b, lattice.a)
-    lattice.constrain(lattice.c, lattice.a)
+    lattice.add_constraint(lattice.b, lattice.a)
+    lattice.add_constraint(lattice.c, lattice.a)
     lattice.alpha.setConst(True, ang90)
     lattice.beta.setConst(True, ang90)
     lattice.gamma.setConst(True, ang90)
@@ -811,7 +811,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     # If we got here, then we have a constraint equation
     # Fix any division issues
     formula = formula.replace("/", "*1.0/")
-    scatterer.constrain(par, formula, params=ns)
+    scatterer.add_constraint(par, formula, params=ns)
     return
 
 

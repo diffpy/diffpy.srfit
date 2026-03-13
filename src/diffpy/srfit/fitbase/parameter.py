@@ -95,10 +95,10 @@ class Parameter(_parameter_interface, Argument, Validatable):
         ----------
         val
             The value to assign.
-        lb
+        lower_bound : float
             The lower bounds for the bounds list. If this is None
             (default), then the lower bound will not be alterered.
-        ub
+        upper_bound : float
             The upper bounds for the bounds list. If this is None
             (default), then the upper bound will not be alterered.
 
@@ -142,14 +142,14 @@ class Parameter(_parameter_interface, Argument, Validatable):
             self.set_value(value)
         return self
 
-    def boundRange(self, lb=None, ub=None):
+    def boundRange(self, lower_bound=None, upper_bound=None):
         """Set lower and upper bound of the Parameter.
 
         Attributes
         ----------
-        lb
+        lower_bound : float
             The lower bound for the bounds list.
-        ub
+        upper_bound : float
             The upper bound for the bounds list.
 
         Returns
@@ -157,10 +157,10 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self
             Returns self so that mutators can be chained.
         """
-        if lb is not None:
-            self.bounds[0] = lb
-        if ub is not None:
-            self.bounds[1] = ub
+        if lower_bound is not None:
+            self.bounds[0] = lower_bound
+        if upper_bound is not None:
+            self.bounds[1] = upper_bound
         return self
 
     def boundWindow(self, lr=0, ur=None):
@@ -182,11 +182,11 @@ class Parameter(_parameter_interface, Argument, Validatable):
             Returns self so that mutators can be chained.
         """
         val = self.getValue()
-        lb = val - lr
+        lower_bound = val - lr
         if ur is None:
             ur = lr
-        ub = val + ur
-        self.bounds = [lb, ub]
+        upper_bound = val + ur
+        self.bounds = [lower_bound, upper_bound]
         return self
 
     def _validate(self):
@@ -283,8 +283,8 @@ class ParameterProxy(Parameter):
         return self.par.setConst(const, value)
 
     @wraps(Parameter.boundRange)
-    def boundRange(self, lb=None, ub=None):
-        return self.par.boundRange(lb, ub)
+    def boundRange(self, lower_bound=None, upper_bound=None):
+        return self.par.boundRange(lower_bound, upper_bound)
 
     @wraps(Parameter.boundWindow)
     def boundWindow(self, lr=0, ur=None):

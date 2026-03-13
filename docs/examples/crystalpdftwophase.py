@@ -90,12 +90,12 @@ def makeRecipe(niciffile, siciffile, datname):
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
     recipe.create_new_variable("scale_ni", 0.1)
-    recipe.constrain(generator_ni.scale, "scale_ni")
-    recipe.constrain(generator_si.scale, "1 - scale_ni")
+    recipe.add_constraint(generator_ni.scale, "scale_ni")
+    recipe.add_constraint(generator_si.scale, "1 - scale_ni")
     # We also want the resolution factor to be the same on each.
     recipe.create_new_variable("qdamp", 0.03)
-    recipe.constrain(generator_ni.qdamp, "qdamp")
-    recipe.constrain(generator_si.qdamp, "qdamp")
+    recipe.add_constraint(generator_ni.qdamp, "qdamp")
+    recipe.add_constraint(generator_si.qdamp, "qdamp")
 
     # Vary the global scale as well.
     recipe.add_variable(contribution.scale, 1)
@@ -123,18 +123,30 @@ def makeRecipe(niciffile, siciffile, datname):
     # derived has no uncertainty. Thus, we will tell the recipe to scale the
     # residual, which means that it will be weighted as much as the average
     # data point during the fit.
-    recipe.restrain("a_ni", lb=3.527, ub=3.527, scaled=True)
+    recipe.add_soft_bounds(
+        "a_ni", lower_bound=3.527, upper_bound=3.527, scaled=True
+    )
     # Now we do the same with the delta2 and Biso parameters (remember that
     # Biso = 8*pi**2*Uiso)
-    recipe.restrain("delta2_ni", lb=2.22, ub=2.22, scaled=True)
-    recipe.restrain("Biso_0_ni", lb=0.454, ub=0.454, scaled=True)
+    recipe.add_soft_bounds(
+        "delta2_ni", lower_bound=2.22, upper_bound=2.22, scaled=True
+    )
+    recipe.add_soft_bounds(
+        "Biso_0_ni", lower_bound=0.454, upper_bound=0.454, scaled=True
+    )
     #
     # We can do the same with the silicon values. We haven't done a thorough
     # job of measuring the uncertainties in the results, so we'll scale these
     # as well.
-    recipe.restrain("a_si", lb=5.430, ub=5.430, scaled=True)
-    recipe.restrain("delta2_si", lb=3.54, ub=3.54, scaled=True)
-    recipe.restrain("Biso_0_si", lb=0.645, ub=0.645, scaled=True)
+    recipe.add_soft_bounds(
+        "a_si", lower_bound=5.430, upper_bound=5.430, scaled=True
+    )
+    recipe.add_soft_bounds(
+        "delta2_si", lower_bound=3.54, upper_bound=3.54, scaled=True
+    )
+    recipe.add_soft_bounds(
+        "Biso_0_si", lower_bound=0.645, upper_bound=0.645, scaled=True
+    )
 
     # Give the recipe away so it can be used!
     return recipe

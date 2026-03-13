@@ -113,8 +113,8 @@ def makeRecipe(ciffile, grdata, iqdata):
     # Even though the cfcalculator and sasgenerator depend on the same sas
     # model, we must still constrain the cfcalculator Parameters so that it is
     # informed of changes in the refined parameters.
-    recipe.constrain(cfcalculator.radius_a, "radius_a")
-    recipe.constrain(cfcalculator.radius_b, "radius_b")
+    recipe.add_constraint(cfcalculator.radius_a, "radius_a")
+    recipe.add_constraint(cfcalculator.radius_b, "radius_b")
 
     return recipe
 
@@ -126,9 +126,9 @@ def fitRecipe(recipe):
     recipe.set_weight(recipe.pdf, 0)
     recipe.fix("all")
     recipe.free("radius_a", "radius_b", iqscale=1e8)
-    recipe.constrain("radius_b", "radius_a")
+    recipe.add_constraint("radius_b", "radius_a")
     scipyOptimize(recipe)
-    recipe.unconstrain("radius_b")
+    recipe.remove_constraint("radius_b")
 
     # Tune PDF
     recipe.set_weight(recipe.pdf, 1)

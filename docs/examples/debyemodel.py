@@ -152,7 +152,7 @@ def makeRecipe():
     # breaking the restraint by the point-average chi^2 value so that the
     # restraint is roughly as significant as any other data point throughout
     # the fit.
-    recipe.restrain(recipe.offset, lb=0, scaled=True)
+    recipe.add_soft_bounds(recipe.offset, lower_bound=0, scaled=True)
 
     # We're done setting up the recipe. We can now do other things with it.
     return recipe

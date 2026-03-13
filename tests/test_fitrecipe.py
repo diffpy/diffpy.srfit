@@ -119,7 +119,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Constrain a parameter to the B-variable to give it a value
         p = Parameter("Bpar", -1)
-        recipe.constrain(recipe.B, p)
+        recipe.add_constraint(recipe.B, p)
         values = recipe.get_values()
         self.assertTrue((values == [2, 1, 0]).all())
         recipe.delete_variable(recipe.B)
@@ -215,11 +215,11 @@ class TestFitRecipe(unittest.TestCase):
         # Try some constraints
         # Make c = 2*A, A = Avar
         var = self.recipe.create_new_variable("Avar")
-        self.recipe.constrain(
+        self.recipe.add_constraint(
             self.fitcontribution.c, "2*A", {"A": self.fitcontribution.A}
         )
         self.assertEqual(2, self.fitcontribution.c.value)
-        self.recipe.constrain(self.fitcontribution.A, var)
+        self.recipe.add_constraint(self.fitcontribution.A, var)
         self.assertEqual(1, var.getValue())
         self.assertEqual(self.recipe.cont.A.getValue(), var.getValue())
         # c is constrained to a constrained parameter.
@@ -232,7 +232,7 @@ class TestFitRecipe(unittest.TestCase):
 
         # Now try some restraints. We want c to be exactly zero. It should give
         # a penalty of (c-0)**2, which is 4 in this case
-        r1 = self.recipe.restrain(self.fitcontribution.c, 0, 0, 1)
+        r1 = self.recipe.add_soft_bounds(self.fitcontribution.c, 0, 0, 1)
         self.recipe._ready = False
         res = self.recipe.residual()
         chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
@@ -240,14 +240,14 @@ class TestFitRecipe(unittest.TestCase):
 
         # Clear the constraint and restore the value of c to 0. This should
         # give us chi2 = 0 again.
-        self.recipe.unconstrain(self.fitcontribution.c)
+        self.recipe.remove_constraint(self.fitcontribution.c)
         self.fitcontribution.c.set_value(0)
         res = self.recipe.residual([self.recipe.cont.A.getValue()])
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res))
 
         # Remove the restraint and variable
-        self.recipe.unrestrain(r1)
+        self.recipe.remove_soft_bounds(r1)
         self.recipe.delete_variable(self.recipe.Avar)
         self.recipe._ready = False
         res = self.recipe.residual()
@@ -255,7 +255,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertAlmostEqual(chi2, dot(res, res))
 
         # Add constraints at the fitcontribution level.
-        self.fitcontribution.constrain(self.fitcontribution.c, "2*A")
+        self.fitcontribution.add_constraint(self.fitcontribution.c, "2*A")
         # This should evaluate to sin(x+2)
         x = self.profile.x
         y = sin(x + 2)
@@ -263,7 +263,9 @@ class TestFitRecipe(unittest.TestCase):
         self.assertTrue(array_equal(y - self.profile.y, res))
 
         # Add a restraint at the fitcontribution level.
-        r1 = self.fitcontribution.restrain(self.fitcontribution.c, 0, 0, 1)
+        r1 = self.fitcontribution.add_soft_bounds(
+            self.fitcontribution.c, 0, 0, 1
+        )
         self.recipe._ready = False
         # The chi2 is the same as above, plus 4
         res = self.recipe.residual()
@@ -273,7 +275,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertAlmostEqual(chi2, dot(res, res))
 
         # Remove those
-        self.fitcontribution.unrestrain(r1)
+        self.fitcontribution.remove_soft_bounds(r1)
         self.recipe._ready = False
         self.fitcontribution.unconstrain(self.fitcontribution.c)
         self.fitcontribution.c.set_value(0)
@@ -314,8 +316,8 @@ def test_boundsToRestraints():
     restraints = list(recipe._restraints)
     assert len(restraints) == 1
     r = restraints[0]
-    actual_lower_bound = r.lb
-    actual_upper_bound = r.ub
+    actual_lower_bound = r.lower_bound
+    actual_upper_bound = r.upper_bound
     actual_sigma = r.sig
     assert actual_lower_bound == expected_lower_bound
     assert actual_upper_bound == expected_upper_bound
@@ -333,8 +335,8 @@ def test_convert_bounds_to_restraints():
     restraints = list(recipe._restraints)
     assert len(restraints) == 1
     r = restraints[0]
-    assert r.lb == -1
-    assert r.ub == 1
+    assert r.lower_bound == -1
+    assert r.upper_bound == 1
     assert r.sig == 2
     assert r.scaled is True
 
@@ -361,7 +363,7 @@ def testPrintFitHook(capturestdout):
     recipe.addContribution(fitcontribution)
 
     recipe.add_variable(fitcontribution.c)
-    recipe.restrain("c", lb=5)
+    recipe.add_soft_bounds("c", lower_bound=5)
     (pfh,) = recipe.getFitHooks()
     out = capturestdout(recipe.scalar_residual)
     assert "" == out
@@ -437,7 +439,7 @@ def test_add_contribution(capturestdout):
     recipe.add_contribution(fitcontribution)
 
     recipe.add_variable(fitcontribution.c)
-    recipe.restrain("c", lb=5)
+    recipe.add_soft_bounds("c", lower_bound=5)
     (pfh,) = recipe.get_fit_hooks()
     out = capturestdout(recipe.scalar_residual)
     assert "" == out

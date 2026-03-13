@@ -28,7 +28,7 @@ from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.recipeorganizer import get_equation_from_string
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 base = "diffpy.srfit.fitbase.FitContribution"
@@ -296,7 +296,9 @@ class FitContribution(ParameterSet):
         variable.
         """
         # Build the equation instance.
-        eq = equationFromString(eqstr, self._eqfactory, buildargs=True, ns=ns)
+        eq = get_equation_from_string(
+            eqstr, self._eqfactory, buildargs=True, ns=ns
+        )
         eq.name = "eq"
 
         # Register any new Parameters.
@@ -386,7 +388,7 @@ class FitContribution(ParameterSet):
         elif eqstr == "resv":
             eqstr = resvstr
 
-        reseq = equationFromString(eqstr, self._eqfactory)
+        reseq = get_equation_from_string(eqstr, self._eqfactory)
         self._eqfactory.wipeout(self._reseq)
         self._reseq = reseq
 

@@ -149,7 +149,7 @@ restrain_deprecation_msg = build_deprecation_message(
 unrestrain_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "unrestrain",
-    "remove_penalty",
+    "remove_soft_bounds",
     removal_version,
 )
 
@@ -1273,7 +1273,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self.register_penalty(res)
         return
 
-    def remove_penalty(self, *ress):
+    def remove_soft_bounds(self, *ress):
         """Remove a Restraint from the RecipeOrganizer.
 
         Attributes
@@ -1301,10 +1301,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.remove_penalty
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.remove_soft_bounds
         instead.
         """
-        self.remove_penalty(*ress)
+        self.remove_soft_bounds(*ress)
         return
 
     def clear_all_penalties(self, recurse=False):
@@ -1316,7 +1316,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             Recurse into managed objects and clear all restraints
             found there as well.
         """
-        self.remove_penalty(*self._restraints)
+        self.remove_soft_bounds(*self._restraints)
         if recurse:
             for msg in filter(_has_clear_restraints, self._iter_managed()):
                 msg.clear_all_penalties(recurse)

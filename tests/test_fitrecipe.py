@@ -247,7 +247,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertAlmostEqual(chi2, dot(res, res))
 
         # Remove the restraint and variable
-        self.recipe.remove_penalty(r1)
+        self.recipe.remove_soft_bounds(r1)
         self.recipe.delete_variable(self.recipe.Avar)
         self.recipe._ready = False
         res = self.recipe.residual()
@@ -275,7 +275,7 @@ class TestFitRecipe(unittest.TestCase):
         self.assertAlmostEqual(chi2, dot(res, res))
 
         # Remove those
-        self.fitcontribution.remove_penalty(r1)
+        self.fitcontribution.remove_soft_bounds(r1)
         self.recipe._ready = False
         self.fitcontribution.unconstrain(self.fitcontribution.c)
         self.fitcontribution.c.set_value(0)

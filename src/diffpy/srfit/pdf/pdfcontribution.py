@@ -284,7 +284,7 @@ class PDFContribution(FitContribution):
 
         # Update with our metadata
         gen.meta.update(self._meta)
-        gen.processMetaData()
+        gen._process_metadata()
 
         # Constrain the shared parameters
         self.add_constraint(gen.qdamp, self.qdamp)

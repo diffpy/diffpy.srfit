@@ -117,7 +117,7 @@ class BasePDFGenerator(ProfileGenerator):
         self._calc = calc
         for pname in self.__class__._parnames:
             self.addParameter(ParameterAdapter(pname, self._calc, attr=pname))
-        self.processMetaData()
+        self._process_metadata()
         return
 
     def parallel(self, ncpu, mapfunc=None):
@@ -154,9 +154,9 @@ class BasePDFGenerator(ProfileGenerator):
         self._calc = createParallelCalculator(calc_serial, ncpu, mapfunc)
         return
 
-    def processMetaData(self):
+    def _process_metadata(self):
         """Process the metadata once it gets set."""
-        ProfileGenerator.processMetaData(self)
+        ProfileGenerator._process_metadata(self)
 
         stype = self.meta.get("stype")
         if stype is not None:

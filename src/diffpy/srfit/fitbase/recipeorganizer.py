@@ -142,7 +142,7 @@ unconstrain_deprecation_msg = build_deprecation_message(
 restrain_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "restrain",
-    "add_penalty",
+    "add_soft_bounds",
     removal_version,
 )
 
@@ -1154,7 +1154,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
         return self.clear_all_constraints(recurse=recurse)
 
-    def add_penalty(
+    def add_soft_bounds(
         self,
         param_or_eq,
         lower_bound=-inf,
@@ -1236,10 +1236,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_penalty
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_soft_bounds
         instead.
         """
-        return self.add_penalty(
+        return self.add_soft_bounds(
             param_or_eq,
             lower_bound=lower_bound,
             upper_bound=upper_bound,
@@ -1279,7 +1279,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Attributes
         ----------
         *ress : Restraint
-            The Restraints returned from the 'add_penalty' method or added
+            The Restraints returned from the 'add_soft_bounds' method or added
             with the 'register_penalty' method.
         """
         update = False

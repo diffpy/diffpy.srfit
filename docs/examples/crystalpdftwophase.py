@@ -123,28 +123,28 @@ def makeRecipe(niciffile, siciffile, datname):
     # derived has no uncertainty. Thus, we will tell the recipe to scale the
     # residual, which means that it will be weighted as much as the average
     # data point during the fit.
-    recipe.add_penalty(
+    recipe.add_soft_bounds(
         "a_ni", lower_bound=3.527, upper_bound=3.527, scaled=True
     )
     # Now we do the same with the delta2 and Biso parameters (remember that
     # Biso = 8*pi**2*Uiso)
-    recipe.add_penalty(
+    recipe.add_soft_bounds(
         "delta2_ni", lower_bound=2.22, upper_bound=2.22, scaled=True
     )
-    recipe.add_penalty(
+    recipe.add_soft_bounds(
         "Biso_0_ni", lower_bound=0.454, upper_bound=0.454, scaled=True
     )
     #
     # We can do the same with the silicon values. We haven't done a thorough
     # job of measuring the uncertainties in the results, so we'll scale these
     # as well.
-    recipe.add_penalty(
+    recipe.add_soft_bounds(
         "a_si", lower_bound=5.430, upper_bound=5.430, scaled=True
     )
-    recipe.add_penalty(
+    recipe.add_soft_bounds(
         "delta2_si", lower_bound=3.54, upper_bound=3.54, scaled=True
     )
-    recipe.add_penalty(
+    recipe.add_soft_bounds(
         "Biso_0_si", lower_bound=0.645, upper_bound=0.645, scaled=True
     )
 

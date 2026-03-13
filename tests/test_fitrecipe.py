@@ -314,7 +314,7 @@ def test_boundsToRestraints():
     restraints = list(recipe._restraints)
     assert len(restraints) == 1
     r = restraints[0]
-    actual_lower_bound = r.lb
+    actual_lower_bound = r.lower_bound
     actual_upper_bound = r.ub
     actual_sigma = r.sig
     assert actual_lower_bound == expected_lower_bound
@@ -333,7 +333,7 @@ def test_convert_bounds_to_restraints():
     restraints = list(recipe._restraints)
     assert len(restraints) == 1
     r = restraints[0]
-    assert r.lb == -1
+    assert r.lower_bound == -1
     assert r.ub == 1
     assert r.sig == 2
     assert r.scaled is True
@@ -361,7 +361,7 @@ def testPrintFitHook(capturestdout):
     recipe.addContribution(fitcontribution)
 
     recipe.add_variable(fitcontribution.c)
-    recipe.add_penalty("c", lb=5)
+    recipe.add_penalty("c", lower_bound=5)
     (pfh,) = recipe.getFitHooks()
     out = capturestdout(recipe.scalar_residual)
     assert "" == out
@@ -437,7 +437,7 @@ def test_add_contribution(capturestdout):
     recipe.add_contribution(fitcontribution)
 
     recipe.add_variable(fitcontribution.c)
-    recipe.add_penalty("c", lb=5)
+    recipe.add_penalty("c", lower_bound=5)
     (pfh,) = recipe.get_fit_hooks()
     out = capturestdout(recipe.scalar_residual)
     assert "" == out

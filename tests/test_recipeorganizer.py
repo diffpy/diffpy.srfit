@@ -639,7 +639,7 @@ def test_show(capturestdout):
     assert "Parameters" in lines2
     assert "Constraints" in lines2
     assert "Restraints" not in lines2
-    organizer.add_penalty("z", lb=2, ub=3, sig=0.001)
+    organizer.add_penalty("z", lower_bound=2, ub=3, sig=0.001)
     out3 = capture_show()
     lines3 = out3.strip().split("\n")
     assert 13 == len(lines3)

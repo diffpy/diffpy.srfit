@@ -1155,7 +1155,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return self.clear_all_constraints(recurse=recurse)
 
     def add_penalty(
-        self, param_or_eq, lb=-inf, ub=inf, sig=1, scaled=False, params={}
+        self,
+        param_or_eq,
+        lower_bound=-inf,
+        ub=inf,
+        sig=1,
+        scaled=False,
+        params={},
     ):
         """Restrain an expression to specified bounds.
 
@@ -1163,7 +1169,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ----------
         param_or_eq : str or Parameter
             The equation string or a Parameter object to restrain.
-        lb : float, optional
+        lower_bound : float, optional
             The lower bound for the restraint evaluation (default is -inf).
         ub : float, optional
             The upper bound for the restraint evaluation (default is inf).
@@ -1188,7 +1194,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         The penalty is calculated as:
 
         ..
-            (max(0, lb - val, val - ub) / sig) ** 2
+            (max(0, lower_bound - val, val - ub) / sig) ** 2
 
         where `val` is the value of the evaluated equation.
         If `scaled` is True, this penalty is multiplied by
@@ -1211,14 +1217,20 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             eqstr = param_or_eq.name
 
         # Make and store the restraint
-        param_or_eq = Restraint(eq, lb, ub, sig, scaled)
+        param_or_eq = Restraint(eq, lower_bound, ub, sig, scaled)
         param_or_eq.eqstr = eqstr
         self.register_penalty(param_or_eq)
         return param_or_eq
 
     @deprecated(restrain_deprecation_msg)
     def restrain(
-        self, param_or_eq, lb=-inf, ub=inf, sig=1, scaled=False, params={}
+        self,
+        param_or_eq,
+        lower_bound=-inf,
+        ub=inf,
+        sig=1,
+        scaled=False,
+        params={},
     ):
         """This function has been deprecated and will be removed in
         version 4.0.0.
@@ -1228,7 +1240,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         instead.
         """
         return self.add_penalty(
-            param_or_eq, lb=lb, ub=ub, sig=sig, scaled=scaled, params=params
+            param_or_eq,
+            lower_bound=lower_bound,
+            ub=ub,
+            sig=sig,
+            scaled=scaled,
+            params=params,
         )
 
     def register_penalty(self, res):
@@ -1429,9 +1446,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         rset = self._get_restraints()
         rlines = []
         for res in rset:
-            line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s" % (
+            line = "%s: lower_bound = %f, ub = %f, sig = %f, scaled = %s" % (
                 res.eqstr,
-                res.lb,
+                res.lower_bound,
                 res.ub,
                 res.sig,
                 res.scaled,

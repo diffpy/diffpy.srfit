@@ -34,8 +34,6 @@ class PDFParser(ProfileParser):
     """Class for holding a diffraction pattern.
 
     Attributes
-
-    Attributes
     ----------
     _format
         Name of the data format that this parses (string, default

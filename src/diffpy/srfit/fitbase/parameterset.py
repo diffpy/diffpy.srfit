@@ -87,7 +87,7 @@ class ParameterSet(RecipeOrganizer):
     def __init__(self, name):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this ParameterSet.
@@ -106,7 +106,7 @@ class ParameterSet(RecipeOrganizer):
     def add_parameter_set(self, parset):
         """Add a ParameterSet to the hierarchy.
 
-        Attributes
+        Parameters
         ----------
         parset
             The ParameterSet to be stored.
@@ -154,7 +154,7 @@ class ParameterSet(RecipeOrganizer):
     def set_constant(self, is_constant=True):
         """Set every parameter within the set to a constant.
 
-        Attributes
+        Parameters
         ----------
         is_constant : bool, optional
             The flag indicating if the parameter is constant (default

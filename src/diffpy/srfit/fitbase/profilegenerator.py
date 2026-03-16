@@ -156,7 +156,7 @@ class ProfileGenerator(Operator, ParameterSet):
     def set_profile(self, profile):
         """Assign the profile.
 
-        Attributes
+        Parameters
         ----------
         profile
             A Profile that specifies the calculation points and which

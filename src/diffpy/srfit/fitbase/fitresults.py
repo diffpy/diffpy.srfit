@@ -162,7 +162,7 @@ class FitResults(object):
     def __init__(self, recipe, update=True, showfixed=True, showcon=False):
         """Initialize the attributes.
 
-        Attributes
+        Parameters
         ----------
         recipe : FitRecipe
             The recipe containing the results.
@@ -733,7 +733,7 @@ class ContributionResults(object):
     def __init__(self, con, weight, fitres):
         """Initialize the attributes.
 
-        Attributes
+        Parameters
         ----------
         con
             The FitContribution
@@ -829,7 +829,7 @@ def resultsDictionary(results):
     This reads the results from file and stores them in a dictionary to be
     returned to the caller. The dictionary may contain non-result entries.
 
-    Attributes
+    Parameters
     ----------
     results
         An open file-like object, name of a file that contains
@@ -865,7 +865,7 @@ def initializeRecipe(recipe, results):
     free) in the recipe to the results values. Note that the recipe has to be
     configured, with variables. This does not reconstruct a FitRecipe.
 
-    Attributes
+    Parameters
     ----------
     recipe
         A configured recipe with variables

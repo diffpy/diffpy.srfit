@@ -190,7 +190,7 @@ class BaseSpaceGroupParameters(RecipeContainer):
     def addParameter(self, par, check=True):
         """Store a Parameter.
 
-        Attributes
+        Parameters
         ----------
         par
             The Parameter to be stored.
@@ -470,7 +470,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _constrain_xyzs(self, positions):
         """Constrain the positions.
 
-        Attributes
+        Parameters
         ----------
         positions
             The coordinates of the scatterers.
@@ -513,7 +513,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _constrain_adps(self, positions):
         """Constrain the ADPs.
 
-        Attributes
+        Parameters
         ----------
         positions
             The coordinates of the scatterers.
@@ -618,7 +618,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def __add_par(self, parname, par):
         """Constrain a parameter via proxy with a specified name.
 
-        Attributes
+        Parameters
         ----------
         par
             Parameter to constrain
@@ -772,7 +772,7 @@ _constraintMap = {
 def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     """Constrain a parameter according to a formula.
 
-    Attributes
+    Parameters
     ----------
     parname
         Name of parameter

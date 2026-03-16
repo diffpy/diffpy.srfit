@@ -413,7 +413,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _add_object(self, obj, d, check=True):
         """Add an object to a managed dictionary.
 
-        Attributes
+        Parameters
         ----------
         obj
             The object to be stored.
@@ -482,7 +482,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _locate_managed_object(self, obj):
         """Find the location a managed object within the hierarchy.
 
-        Attributes
+        Parameters
         ----------
         obj
             The object to find.
@@ -610,7 +610,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Parameters added in this way are registered with the _eqfactory.
 
-        Attributes
+        Parameters
         ----------
         parameter
             The Parameter to be stored.
@@ -657,7 +657,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         arguments like a function or without, in which case the values of the
         Parameters created from argnames will be be used to compute the value.
 
-        Attributes
+        Parameters
         ----------
         calculator : Calculator object
             The Calculator to register.
@@ -1047,7 +1047,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         This removes any constraints on a Parameter.
 
-        Attributes
+        Parameters
         ----------
         *pars : str or Parameter
             The names of Parameters or Parameters to unconstrain.
@@ -1114,7 +1114,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def getConstrainedPars(self, recurse=False):
         """Get a list of constrained managed Parameters in this object.
 
-        Attributes
+        Parameters
         ----------
         recurse
             Recurse into managed objects and retrieve their constrained
@@ -1294,7 +1294,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def remove_soft_bounds(self, *ress):
         """Remove a Restraint from the RecipeOrganizer.
 
-        Attributes
+        Parameters
         ----------
         *ress : Restraint
             The Restraints returned from the 'add_soft_bounds' method or added
@@ -1328,7 +1328,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def clear_all_soft_bounds(self, recurse=False):
         """Clear all restraints.
 
-        Attributes
+        Parameters
         ----------
         recurse
             Recurse into managed objects and clear all restraints
@@ -1543,7 +1543,7 @@ def get_equation_from_string(
 ):
     """Make an Equation object from a string.
 
-    Attributes
+    Parameters
     ----------
     eqstr : str
         A string representation of the equation. The equation must

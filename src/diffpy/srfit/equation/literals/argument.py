@@ -62,7 +62,7 @@ class Argument(Literal, ArgumentABC):
     def set_value(self, val):
         """Set the value of the Literal.
 
-        Attributes
+        Parameters
         ----------
         val
             The value to assign

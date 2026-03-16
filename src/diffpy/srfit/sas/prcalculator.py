@@ -66,7 +66,7 @@ class PrCalculator(Calculator):
     def __init__(self, name):
         """Initialize the generator.
 
-        Attributes
+        Parameters
         ----------
         name
             A name for the PrCalculator

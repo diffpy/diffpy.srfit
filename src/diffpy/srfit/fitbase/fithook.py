@@ -58,7 +58,7 @@ class FitHook(object):
         """This is called within FitRecipe.residual, before the
         calculation.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance
@@ -69,7 +69,7 @@ class FitHook(object):
         """This is called within FitRecipe.residual, after the
         calculation.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance
@@ -87,8 +87,6 @@ class PrintFitHook(FitHook):
 
     This FitHook prints out a running count of the number of times the residual
     has been called, or other information, based on the verbosity.
-
-    Attributes
 
     Attributes
     ----------
@@ -127,7 +125,7 @@ class PrintFitHook(FitHook):
         """This is called within FitRecipe.residual, before the
         calculation.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance
@@ -141,7 +139,7 @@ class PrintFitHook(FitHook):
         """This is called within FitRecipe.residual, after the
         calculation.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance
@@ -237,7 +235,7 @@ class PlotFitHook(FitHook):
 
         Find data and plot it.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance

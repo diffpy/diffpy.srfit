@@ -72,7 +72,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def __init__(self, name, value=None, const=False):
         """Initialization.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this Parameter (must be a valid attribute
@@ -95,7 +95,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def set_value(self, val):
         """Set the value of the Parameter and the bounds.
 
-        Attributes
+        Parameters
         ----------
         val
             The value to assign.
@@ -159,7 +159,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def boundRange(self, lower_bound=None, upper_bound=None):
         """Set lower and upper bound of the Parameter.
 
-        Attributes
+        Parameters
         ----------
         lower_bound : float
             The lower bound for the bounds list.
@@ -180,7 +180,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def boundWindow(self, lr=0, ur=None):
         """Create bounds centered on the current value of the Parameter.
 
-        Attributes
+        Parameters
         ----------
         lr
             The radius of the lower bound (default 0). The lower bound is
@@ -235,7 +235,7 @@ class ParameterProxy(Parameter):
     def __init__(self, name, par):
         """Initialization.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this ParameterProxy.
@@ -330,7 +330,7 @@ class ParameterAdapter(Parameter):
     def __init__(self, name, obj, getter=None, setter=None, attr=None):
         """Wrap an object as a Parameter.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this Parameter.

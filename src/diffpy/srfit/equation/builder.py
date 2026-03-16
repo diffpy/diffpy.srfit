@@ -493,7 +493,7 @@ class BaseBuilder(object):
 
         Other can be an BaseBuilder or a constant.
 
-        Attributes
+        Parameters
         ----------
         onleft
             Indicates that the operator was passed on the left side
@@ -666,7 +666,7 @@ class OperatorBuilder(BaseBuilder):
 
         This creates a new builder that encapsulates the operation.
 
-        Attributes
+        Parameters
         ----------
         args
             Arguments of the operation.
@@ -730,7 +730,7 @@ def wrapOperator(name, op):
 def wrapFunction(name, func, nin=2, nout=1):
     """Wrap a function in an OperatorBuilder instance.
 
-    Attributes
+    Parameters
     ----------
     name
         The name of the function

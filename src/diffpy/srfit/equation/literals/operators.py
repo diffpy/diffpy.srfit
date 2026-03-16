@@ -347,7 +347,7 @@ class UFuncOperator(Operator):
 
         Arguments
 
-        Attributes
+        Parameters
         ----------
         op
             A numpy ufunc

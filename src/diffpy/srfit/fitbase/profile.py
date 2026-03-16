@@ -72,8 +72,6 @@ class Profile(Observable, Validatable):
     by the Profile, which can in turn be observed by some other object.
 
     Attributes
-
-    Attributes
     ----------
     _xobs
         A numpy array of the observed independent variable (default

@@ -114,7 +114,7 @@ class ObjCrystScattererParSet(ParameterSet):
     def __init__(self, name, scat, parent):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the scatterer
@@ -176,7 +176,7 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
     def __init__(self, name, atom, parent):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the scatterer
@@ -252,7 +252,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
     def __init__(self, name, molecule, parent=None):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the scatterer
@@ -433,7 +433,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates an instance of ObjCrystBondLengthRestraint and adds it to
         the ObjCrystMoleculeParSet.
 
-        Attributes
+        Parameters
         ----------
         atom1
             First atom (ObjCrystMolAtomParSet) in the bond
@@ -471,7 +471,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates an instance of ObjCrystBondLengthRestraint and adds it to
         the ObjCrystMoleculeParSet.
 
-        Attributes
+        Parameters
         ----------
         par
             A ObjCrystBondLengthParameter (see addBondLengthParameter)
@@ -504,7 +504,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates an instance of ObjCrystBondAngleRestraint and adds it to
         the ObjCrystMoleculeParSet.
 
-        Attributes
+        Parameters
         ----------
         atom1
             First atom (ObjCrystMolAtomParSet) in the bond angle
@@ -545,7 +545,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates an instance of ObjCrystBondAngleRestraint and adds it to
         the ObjCrystMoleculeParSet.
 
-        Attributes
+        Parameters
         ----------
         par
             A ObjCrystBondAngleParameter (see addBondAngleParameter)
@@ -578,7 +578,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates an instance of ObjCrystDihedralAngleRestraint and adds it
         to the ObjCrystMoleculeParSet.
 
-        Attributes
+        Parameters
         ----------
         atom1
             First atom (ObjCrystMolAtomParSet) in the angle
@@ -620,7 +620,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates an instance of ObjCrystDihedralAngleRestraint and adds it
         to the ObjCrystMoleculeParSet.
 
-        Attributes
+        Parameters
         ----------
         par
             A ObjCrystDihedralAngleParameter (see
@@ -661,7 +661,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates a ObjCrystBondLengthParameter to the
         ObjCrystMoleculeParSet that can be adjusted during the fit.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the ObjCrystBondLengthParameter
@@ -696,7 +696,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates a ObjCrystBondAngleParameter to the ObjCrystMoleculeParSet
         that can be adjusted during the fit.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the ObjCrystBondAngleParameter
@@ -736,7 +736,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         This creates a ObjCrystDihedralAngleParameter to the
         ObjCrystMoleculeParSet that can be adjusted during the fit.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the ObjCrystDihedralAngleParameter.
@@ -809,7 +809,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
     def __init__(self, name, scat, parent):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the scatterer
@@ -881,7 +881,7 @@ class ObjCrystMoleculeRestraint(object):
     def __init__(self, res, scaled=False):
         """Create a Restraint-like from a pyobjcryst Molecule restraint.
 
-        Attributes
+        Parameters
         ----------
         res
             The pyobjcryst Molecule restraint.
@@ -897,7 +897,7 @@ class ObjCrystMoleculeRestraint(object):
     def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
-        Attributes
+        Parameters
         ----------
         w
             The point-average chi^2 which is optionally used to scale the
@@ -938,7 +938,7 @@ class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
     def __init__(self, atom1, atom2, length, sigma, delta, scaled=False):
         """Create a bond length restraint.
 
-        Attributes
+        Parameters
         ----------
         atom1
             First atom (ObjCrystMolAtomParSet) in the bond
@@ -1010,7 +1010,7 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
     def __init__(self, atom1, atom2, atom3, angle, sigma, delta, scaled=False):
         """Create a bond angle restraint.
 
-        Attributes
+        Parameters
         ----------
         atom1
             First atom (ObjCrystMolAtomParSet) in the bond angle
@@ -1092,7 +1092,7 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
     ):
         """Create a dihedral angle restraint.
 
-        Attributes
+        Parameters
         ----------
         atom1
             First atom (ObjCrystMolAtomParSet) in the angle
@@ -1168,7 +1168,7 @@ class StretchModeParameter(Parameter):
     def __init__(self, name, value=None, const=False):
         """Initialization.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this Parameter (must be a valid attribute
@@ -1314,7 +1314,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
     def __init__(self, name, atom1, atom2, value=None, const=False, mode=None):
         """Create a ObjCrystBondLengthParameter.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the ObjCrystBondLengthParameter
@@ -1368,7 +1368,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         This sets the underlying ObjCrystMolAtomParSet positions
         constant as well.
 
-        Attributes
+        Parameters
         ----------
         is_constant
             Flag indicating if the Parameter is constant (default
@@ -1472,7 +1472,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
     ):
         """Create a ObjCrystBondAngleParameter.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the ObjCrystBondAngleParameter.
@@ -1531,7 +1531,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         This sets the underlying ObjCrystMolAtomParSet positions
         constant as well.
 
-        Attributes
+        Parameters
         ----------
         is_constant
             Flag indicating if the Parameter is constant (default
@@ -1649,7 +1649,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
     ):
         """Create a ObjCrystDihedralAngleParameter.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the ObjCrystDihedralAngleParameter
@@ -1712,7 +1712,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
 
         This sets the underlying ObjCrystMolAtomParSet positions const as well.
 
-        Attributes
+        Parameters
         ----------
         is_constant
             Flag indicating if the Parameter is constant (default
@@ -1806,7 +1806,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
     def __init__(self, name, cryst):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             A name for this ParameterSet
@@ -1881,7 +1881,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
     def _create_space_group(sgobjcryst):
         """Create a diffpy.structure SpaceGroup object from pyobjcryst.
 
-        Attributes
+        Parameters
         ----------
         sgobjcryst
             A pyobjcryst.spacegroup.SpaceGroup instance.

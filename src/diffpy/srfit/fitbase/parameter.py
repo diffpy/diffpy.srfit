@@ -42,6 +42,10 @@ setValue_dep_msg = build_deprecation_message(
     parameter_base, "setValue", "set_value", removal_version
 )
 
+setConst_dep_msg = build_deprecation_message(
+    parameter_base, "setConst", "set_constant", removal_version
+)
+
 
 class Parameter(_parameter_interface, Argument, Validatable):
     """Parameter class.
@@ -119,17 +123,17 @@ class Parameter(_parameter_interface, Argument, Validatable):
         """
         return self.set_value(val)
 
-    def setConst(self, const=True, value=None):
+    def set_constant(self, is_constant=True, value=None):
         """Toggle the Parameter as constant.
 
-        Attributes
+        Parameters
         ----------
-        const
-            Flag indicating if the parameter is constant (default
+        is_constant : bool, optional
+            The flag indicating if the parameter is constant (default
             True).
-        value
-            An optional value for the parameter (default None). If this
-            is not None, then the parameter will get a new value,
+        value : float, optional
+            The value value for the parameter to be set to (default None).
+            If this is not None, then the parameter will get a new value,
             constant or otherwise.
 
         Returns
@@ -137,9 +141,19 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self
             Returns self so that mutators can be chained.
         """
-        self.const = bool(const)
+        self.const = bool(is_constant)
         if value is not None:
             self.set_value(value)
+        return self
+
+    @deprecated(setConst_dep_msg)
+    def setConst(self, const=True, value=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.set_constant instead.
+        """
+        self.set_constant(const, value)
         return self
 
     def boundRange(self, lower_bound=None, upper_bound=None):
@@ -278,9 +292,9 @@ class ParameterProxy(Parameter):
     def getValue(self):
         return self.par.getValue()
 
-    @wraps(Parameter.setConst)
-    def setConst(self, const=True, value=None):
-        return self.par.setConst(const, value)
+    @wraps(Parameter.set_constant)
+    def set_constant(self, const=True, value=None):
+        return self.par.set_constant(const, value)
 
     @wraps(Parameter.boundRange)
     def boundRange(self, lower_bound=None, upper_bound=None):

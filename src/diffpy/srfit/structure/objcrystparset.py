@@ -56,6 +56,37 @@ from diffpy.srfit.fitbase.parameter import (
 )
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+removal_version = "4.0.0"
+bl_base = "diffpy.srfit.structure.objcrystparset.ObjCrystBondLengthParameter"
+
+bl_setConst_dep_msg = build_deprecation_message(
+    bl_base,
+    "setConst",
+    "set_constant",
+    removal_version,
+)
+
+ba_base = "diffpy.srfit.structure.objcrystparset.ObjCrystBondAngleParameter"
+
+ba_setConst_dep_msg = build_deprecation_message(
+    ba_base,
+    "setConst",
+    "set_constant",
+    removal_version,
+)
+
+da_base = (
+    "diffpy.srfit.structure.objcrystparset.ObjCrystDihedralAngleParameter"
+)
+
+da_setConst_dep_msg = build_deprecation_message(
+    da_base,
+    "setConst",
+    "set_constant",
+    removal_version,
+)
 
 
 class ObjCrystScattererParSet(ParameterSet):
@@ -1327,31 +1358,49 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         if value is None:
             value = GetBondLength(atom1.scat, atom2.scat)
         StretchModeParameter.__init__(self, name, value, const)
-        self.setConst(const)
+        self.set_constant(const)
 
         return
 
-    def setConst(self, const=True, value=None):
+    def set_constant(self, is_constant=True, value=None):
         """Toggle the Parameter as constant.
 
-        This sets the underlying ObjCrystMolAtomParSet positions const as well.
+        This sets the underlying ObjCrystMolAtomParSet positions
+        constant as well.
 
         Attributes
         ----------
-        const
+        is_constant
             Flag indicating if the Parameter is constant (default
             True).
         value
             An optional value for the Parameter (default None). If this
             is not None, then the Parameter will get a new value,
             constant or otherwise.
+
+        Return
+        ------
+        self
+            Returns self so that mutators can be chained.
         """
-        StretchModeParameter.setConst(self, const, value)
+        StretchModeParameter.set_constant(self, is_constant, value)
 
         for a in [self.atom1, self.atom2]:
-            a.x.setConst(const)
-            a.y.setConst(const)
-            a.z.setConst(const)
+            a.x.set_constant(is_constant)
+            a.y.set_constant(is_constant)
+            a.z.set_constant(is_constant)
+        return self
+
+    @deprecated(bl_setConst_dep_msg)
+    def setConst(self, const=True, value=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.structure.objcryst.ObjCrystBondLengthParameter.set_constant
+        instead.
+        """
+        self.set_constant(const, value)
         return self
 
     def getValue(self):
@@ -1472,30 +1521,48 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         if value is None:
             value = GetBondAngle(atom1.scat, atom2.scat, atom3.scat)
         StretchModeParameter.__init__(self, name, value, const)
-        self.setConst(const)
+        self.set_constant(const)
 
         return
 
-    def setConst(self, const=True, value=None):
+    def set_constant(self, is_constant=True, value=None):
         """Toggle the Parameter as constant.
 
-        This sets the underlying ObjCrystMolAtomParSet positions const as well.
+        This sets the underlying ObjCrystMolAtomParSet positions
+        constant as well.
 
         Attributes
         ----------
-        const
+        is_constant
             Flag indicating if the Parameter is constant (default
             True).
         value
             An optional value for the Parameter (default None). If this
             is not None, then the Parameter will get a new value,
             constant or otherwise.
+
+        Return
+        ------
+        self
+            Returns self so that mutators can be chained.
         """
-        StretchModeParameter.setConst(self, const, value)
+        StretchModeParameter.set_constant(self, is_constant, value)
         for a in [self.atom1, self.atom2, self.atom3]:
-            a.x.setConst(const)
-            a.y.setConst(const)
-            a.z.setConst(const)
+            a.x.set_constant(is_constant)
+            a.y.set_constant(is_constant)
+            a.z.set_constant(is_constant)
+        return self
+
+    @deprecated(ba_setConst_dep_msg)
+    def setConst(self, const=True, value=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.structure.objcryst.ObjCrystBondAngleParameter.set_constant
+        instead.
+        """
+        self.set_constant(const, value)
         return self
 
     def getValue(self):
@@ -1636,30 +1703,47 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
                 atom1.scat, atom2.scat, atom3.scat, atom4.scat
             )
         StretchModeParameter.__init__(self, name, value, const)
-        self.setConst(const)
+        self.set_constant(const)
 
         return
 
-    def setConst(self, const=True, value=None):
+    def set_constant(self, is_constant=True, value=None):
         """Toggle the Parameter as constant.
 
         This sets the underlying ObjCrystMolAtomParSet positions const as well.
 
         Attributes
         ----------
-        const
+        is_constant
             Flag indicating if the Parameter is constant (default
             True).
         value
             An optional value for the Parameter (default None). If this
             is not None, then the Parameter will get a new value,
             constant or otherwise.
+
+        Return
+        ------
+        self
+            Returns self so that mutators can be chained.
         """
-        StretchModeParameter.setConst(self, const, value)
+        StretchModeParameter.set_constant(self, is_constant, value)
         for a in [self.atom1, self.atom2, self.atom3, self.atom4]:
-            a.x.setConst(const)
-            a.y.setConst(const)
-            a.z.setConst(const)
+            a.x.set_constant(is_constant)
+            a.y.set_constant(is_constant)
+            a.z.set_constant(is_constant)
+        return self
+
+    @deprecated(da_setConst_dep_msg)
+    def setConst(self, const=True, value=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.structure.objcryst.ObjCrystDihedralAngleParameter.set_constant
+        instead.
+        """
+        self.set_constant(const, value)
         return self
 
     def getValue(self):

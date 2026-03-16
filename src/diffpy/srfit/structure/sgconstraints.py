@@ -392,7 +392,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             for par in [scatterer.x, scatterer.y, scatterer.z]:
                 if scatterer.is_constrained(par):
                     scatterer.remove_constraint(par)
-                par.setConst(False)
+                par.set_constant(False)
 
         # Clear the lattice
         if self.constrainlat:
@@ -409,7 +409,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             for par in latpars:
                 if lattice.is_constrained(par):
                     lattice.remove_constraint(par)
-                par.setConst(False)
+                par.set_constant(False)
 
         # Clear ADPs
         if self.constrainadps:
@@ -419,14 +419,14 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     if par is not None:
                         if scatterer.is_constrained(par):
                             scatterer.remove_constraint(par)
-                        par.setConst(False)
+                        par.set_constant(False)
 
                 for pname in adpsymbols:
                     par = scatterer.get(pname)
                     if par is not None:
                         if scatterer.is_constrained(par):
                             scatterer.remove_constraint(par)
-                        par.setConst(False)
+                        par.set_constant(False)
 
         return
 
@@ -652,14 +652,14 @@ def _constrain_monoclinic(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.alpha.setConst(True, ang90)
+    lattice.alpha.set_constant(True, ang90)
     beta = lattice.beta.getValue()
     gamma = lattice.gamma.getValue()
 
     if ang90 != beta and ang90 == gamma:
-        lattice.gamma.setConst(True, ang90)
+        lattice.gamma.set_constant(True, ang90)
     else:
-        lattice.beta.setConst(True, ang90)
+        lattice.beta.set_constant(True, ang90)
     return
 
 
@@ -672,9 +672,9 @@ def _constrain_orthorhombic(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.alpha.setConst(True, ang90)
-    lattice.beta.setConst(True, ang90)
-    lattice.gamma.setConst(True, ang90)
+    lattice.alpha.set_constant(True, ang90)
+    lattice.beta.set_constant(True, ang90)
+    lattice.gamma.set_constant(True, ang90)
     return
 
 
@@ -688,9 +688,9 @@ def _constrain_tetragonal(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.alpha.setConst(True, ang90)
-    lattice.beta.setConst(True, ang90)
-    lattice.gamma.setConst(True, ang90)
+    lattice.alpha.set_constant(True, ang90)
+    lattice.beta.set_constant(True, ang90)
+    lattice.gamma.set_constant(True, ang90)
     lattice.add_constraint(lattice.b, lattice.a)
     return
 
@@ -709,9 +709,9 @@ def _constrain_trigonal(lattice):
     ang120 = 120.0 * afactor
     if lattice.gamma.getValue() == ang120:
         lattice.add_constraint(lattice.b, lattice.a)
-        lattice.alpha.setConst(True, ang90)
-        lattice.beta.setConst(True, ang90)
-        lattice.gamma.setConst(True, ang120)
+        lattice.alpha.set_constant(True, ang90)
+        lattice.beta.set_constant(True, ang90)
+        lattice.gamma.set_constant(True, ang120)
     else:
         lattice.add_constraint(lattice.b, lattice.a)
         lattice.add_constraint(lattice.c, lattice.a)
@@ -732,9 +732,9 @@ def _constrain_hexagonal(lattice):
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
     lattice.add_constraint(lattice.b, lattice.a)
-    lattice.alpha.setConst(True, ang90)
-    lattice.beta.setConst(True, ang90)
-    lattice.gamma.setConst(True, ang120)
+    lattice.alpha.set_constant(True, ang90)
+    lattice.beta.set_constant(True, ang90)
+    lattice.gamma.set_constant(True, ang120)
     return
 
 
@@ -750,9 +750,9 @@ def _constrain_cubic(lattice):
     ang90 = 90.0 * afactor
     lattice.add_constraint(lattice.b, lattice.a)
     lattice.add_constraint(lattice.c, lattice.a)
-    lattice.alpha.setConst(True, ang90)
-    lattice.beta.setConst(True, ang90)
-    lattice.gamma.setConst(True, ang90)
+    lattice.alpha.set_constant(True, ang90)
+    lattice.beta.set_constant(True, ang90)
+    lattice.gamma.set_constant(True, ang90)
     return
 
 
@@ -805,7 +805,7 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     # Check to see if it is a constant
     fval = _get_float(formula)
     if fval is not None:
-        par.setConst()
+        par.set_constant()
         return
 
     # If we got here, then we have a constraint equation

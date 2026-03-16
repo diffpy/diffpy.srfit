@@ -91,7 +91,7 @@ class Equation(Operator):
     def __init__(self, name=None, root=None):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             A name for this Equation.

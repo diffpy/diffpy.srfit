@@ -147,7 +147,7 @@ class FitContribution(ParameterSet):
     def set_profile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
-        Attributes
+        Parameters
         ----------
         profile
             A Profile that specifies the calculation points and that
@@ -227,7 +227,7 @@ class FitContribution(ParameterSet):
         Calling addProfileGenerator sets the profile equation to call the
         calculator and if there is not a profile equation already.
 
-        Attributes
+        Parameters
         ----------
         gen
             A ProfileGenerator instance
@@ -278,7 +278,7 @@ class FitContribution(ParameterSet):
         for this FitContribution.  The equation will be usable within
         set_residual_equation as "eq", and it takes no arguments.
 
-        Attributes
+        Parameters
         ----------
         eqstr
             A string representation of the equation. Any Parameter
@@ -353,7 +353,7 @@ class FitContribution(ParameterSet):
     def set_residual_equation(self, eqstr):
         """Set the residual equation for the FitContribution.
 
-        Attributes
+        Parameters
         ----------
         eqstr
             A string representation of the residual. If eqstr is None

@@ -38,6 +38,10 @@ removeParameterSet_dep_msg = build_deprecation_message(
     base, "removeParameterSet", "remove_parameter_set", removal_version
 )
 
+setConst_dep_msg = build_deprecation_message(
+    base, "setConst", "set_constant", removal_version
+)
+
 
 class ParameterSet(RecipeOrganizer):
     """Class for organizing Parameters and other ParameterSets.
@@ -83,7 +87,7 @@ class ParameterSet(RecipeOrganizer):
     def __init__(self, name):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this ParameterSet.
@@ -102,7 +106,7 @@ class ParameterSet(RecipeOrganizer):
     def add_parameter_set(self, parset):
         """Add a ParameterSet to the hierarchy.
 
-        Attributes
+        Parameters
         ----------
         parset
             The ParameterSet to be stored.
@@ -147,18 +151,29 @@ class ParameterSet(RecipeOrganizer):
         self.remove_parameter_set(parset)
         return
 
-    def setConst(self, const=True):
+    def set_constant(self, is_constant=True):
         """Set every parameter within the set to a constant.
 
-        Attributes
+        Parameters
         ----------
-        const
-            Flag indicating if the parameter is constant (default
+        is_constant : bool, optional
+            The flag indicating if the parameter is constant (default
             True).
         """
         for par in self.iterate_over_parameters():
-            par.setConst(const)
+            par.set_constant(is_constant)
+        return
 
+    @deprecated(setConst_dep_msg)
+    def setConst(self, const=True):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.set_constant
+        instead.
+        """
+        self.set_constant(const)
         return
 
 

@@ -117,13 +117,13 @@ class BasePDFGenerator(ProfileGenerator):
         self._calc = calc
         for pname in self.__class__._parnames:
             self.addParameter(ParameterAdapter(pname, self._calc, attr=pname))
-        self.processMetaData()
+        self._process_metadata()
         return
 
     def parallel(self, ncpu, mapfunc=None):
         """Run calculation in parallel.
 
-        Attributes
+        Parameters
         ----------
         ncpu
             Number of parallel processes.  Revert to serial mode when 1.
@@ -154,9 +154,9 @@ class BasePDFGenerator(ProfileGenerator):
         self._calc = createParallelCalculator(calc_serial, ncpu, mapfunc)
         return
 
-    def processMetaData(self):
+    def _process_metadata(self):
         """Process the metadata once it gets set."""
-        ProfileGenerator.processMetaData(self)
+        ProfileGenerator._process_metadata(self)
 
         stype = self.meta.get("stype")
         if stype is not None:
@@ -181,7 +181,7 @@ class BasePDFGenerator(ProfileGenerator):
     def setScatteringType(self, stype="X"):
         """Set the scattering type.
 
-        Attributes
+        Parameters
         ----------
         stype
             "X" for x-ray, "N" for neutron, "E" for electrons,
@@ -230,7 +230,7 @@ class BasePDFGenerator(ProfileGenerator):
         See those classes (located in diffpy.srfit.structure) for how they are
         used. The resulting ParameterSet will be managed by this generator.
 
-        Attributes
+        Parameters
         ----------
         stru
             diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
@@ -260,7 +260,7 @@ class BasePDFGenerator(ProfileGenerator):
         object (from diffpy or pyobjcryst).  The passed ParameterSet will be
         managed by this generator.
 
-        Attributes
+        Parameters
         ----------
         parset
             A SrRealParSet that holds the structural information.

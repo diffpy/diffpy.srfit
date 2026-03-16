@@ -46,7 +46,7 @@ class TestConstraint(unittest.TestCase):
         eq2 = get_equation_from_string("2*p2+1", factory)
         c2 = Constraint()
         self.assertRaises(ValueError, c2.constrain, p1, eq2)
-        p2.setConst()
+        p2.set_constant()
         eq3 = get_equation_from_string("p1", factory)
         self.assertRaises(ValueError, c2.constrain, p2, eq3)
 

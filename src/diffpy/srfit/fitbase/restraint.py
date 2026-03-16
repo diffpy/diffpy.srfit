@@ -59,7 +59,7 @@ class Restraint(Validatable):
     ):
         """Restrain an equation to specified bounds.
 
-        Attributes
+        Parameters
         ----------
         eq
             An equation whose evaluation is compared against the
@@ -87,7 +87,7 @@ class Restraint(Validatable):
     def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
-        Attributes
+        Parameters
         ----------
         w
             The point-average chi^2 which is optionally used to scale the

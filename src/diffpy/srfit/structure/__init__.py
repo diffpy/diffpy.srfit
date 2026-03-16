@@ -25,7 +25,7 @@ def struToParameterSet(name, stru):
     This returns a ParameterSet adapted for the structure depending on its
     type.
 
-    Attributes
+    Parameters
     ----------
     stru
         a structure object known by this module

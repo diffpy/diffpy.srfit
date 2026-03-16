@@ -35,7 +35,7 @@ from diffpy.srfit.equation.visitors.validator import Validator
 def getArgs(literal, getconsts=True):
     """Get the Arguments of a Literal tree.
 
-    Attributes
+    Parameters
     ----------
     getconsts
         If True (default), then Arguments designated as constant
@@ -50,7 +50,7 @@ def getArgs(literal, getconsts=True):
 def getExpression(literal, eqskip=None):
     """Get math expression string from the Literal tree object.
 
-    Attributes
+    Parameters
     ----------
     eqskip
         regular expression pattern for Equation objects that should

@@ -56,7 +56,7 @@ class CCTBXScattererParSet(ParameterSet):
     def __init__(self, name, strups, idx):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this scatterer.
@@ -153,7 +153,7 @@ class CCTBXUnitCellParSet(ParameterSet):
     def __init__(self, strups):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         strups
             The CCTBXCrystalParSet that contains the cctbx structure
@@ -228,7 +228,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     def __init__(self, name, stru):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             A name for this

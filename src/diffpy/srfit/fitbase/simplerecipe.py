@@ -306,7 +306,7 @@ class SimpleRecipe(FitRecipe):
         The equation will be usable within set_residual_equation as "eq", and
         it takes no arguments.
 
-        Attributes
+        Parameters
         ----------
         eqstr
             A string representation of the equation. Variables will be
@@ -352,7 +352,7 @@ class SimpleRecipe(FitRecipe):
     def print_results(self, header="", footer=""):
         """Format and print the results.
 
-        Attributes
+        Parameters
         ----------
         header
             A header to add to the output (default "")

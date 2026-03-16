@@ -31,8 +31,6 @@ class SASParser(ProfileParser):
     is held in the metadata under the name "datainfo".
 
     Attributes
-
-    Attributes
     ----------
     _format
         Name of the data format that this parses (string, default

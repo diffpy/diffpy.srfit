@@ -52,7 +52,7 @@ class SASParameter(Parameter):
     def __init__(self, name, model, parname=None):
         """Create the Parameter.
 
-        Attributes
+        Parameters
         ----------
         name
             Name of the Parameter

@@ -42,6 +42,18 @@ setValue_dep_msg = build_deprecation_message(
     parameter_base, "setValue", "set_value", removal_version
 )
 
+setConst_dep_msg = build_deprecation_message(
+    parameter_base, "setConst", "set_constant", removal_version
+)
+
+boundRange_dep_msg = build_deprecation_message(
+    parameter_base, "boundRange", "bound_range", removal_version
+)
+
+boundWindow_dep_msg = build_deprecation_message(
+    parameter_base, "boundWindow", "bound_window", removal_version
+)
+
 
 class Parameter(_parameter_interface, Argument, Validatable):
     """Parameter class.
@@ -68,7 +80,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def __init__(self, name, value=None, const=False):
         """Initialization.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this Parameter (must be a valid attribute
@@ -91,7 +103,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
     def set_value(self, val):
         """Set the value of the Parameter and the bounds.
 
-        Attributes
+        Parameters
         ----------
         val
             The value to assign.
@@ -119,17 +131,17 @@ class Parameter(_parameter_interface, Argument, Validatable):
         """
         return self.set_value(val)
 
-    def setConst(self, const=True, value=None):
+    def set_constant(self, is_constant=True, value=None):
         """Toggle the Parameter as constant.
 
-        Attributes
+        Parameters
         ----------
-        const
-            Flag indicating if the parameter is constant (default
+        is_constant : bool, optional
+            The flag indicating if the parameter is constant (default
             True).
-        value
-            An optional value for the parameter (default None). If this
-            is not None, then the parameter will get a new value,
+        value : float, optional
+            The value value for the parameter to be set to (default None).
+            If this is not None, then the parameter will get a new value,
             constant or otherwise.
 
         Returns
@@ -137,15 +149,25 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self
             Returns self so that mutators can be chained.
         """
-        self.const = bool(const)
+        self.const = bool(is_constant)
         if value is not None:
             self.set_value(value)
         return self
 
-    def boundRange(self, lower_bound=None, upper_bound=None):
+    @deprecated(setConst_dep_msg)
+    def setConst(self, const=True, value=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.set_constant instead.
+        """
+        self.set_constant(const, value)
+        return self
+
+    def bound_range(self, lower_bound=None, upper_bound=None):
         """Set lower and upper bound of the Parameter.
 
-        Attributes
+        Parameters
         ----------
         lower_bound : float
             The lower bound for the bounds list.
@@ -163,18 +185,28 @@ class Parameter(_parameter_interface, Argument, Validatable):
             self.bounds[1] = upper_bound
         return self
 
-    def boundWindow(self, lr=0, ur=None):
+    @deprecated(boundRange_dep_msg)
+    def boundRange(self, lower_bound=None, upper_bound=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.bound_range instead.
+        """
+        self.bound_range(lower_bound, upper_bound)
+        return self
+
+    def bound_window(self, lower_radius=0, upper_radius=None):
         """Create bounds centered on the current value of the Parameter.
 
-        Attributes
+        Parameters
         ----------
-        lr
+        lower_radius : float, optional
             The radius of the lower bound (default 0). The lower bound is
-            computed as value - lr.
-        ur
+            computed as value - lower_radius.
+        upper_radius : float, optional
             The radius of the upper bound. The upper bound is computed as
-            value + ur. If this is None (default), then the value of the
-            lower radius is used.
+            value + upper_radius. If this is None (default), then the value
+            of the lower radius is used.
 
         Returns
         -------
@@ -182,11 +214,21 @@ class Parameter(_parameter_interface, Argument, Validatable):
             Returns self so that mutators can be chained.
         """
         val = self.getValue()
-        lower_bound = val - lr
-        if ur is None:
-            ur = lr
-        upper_bound = val + ur
+        lower_bound = val - lower_radius
+        if upper_radius is None:
+            upper_radius = lower_radius
+        upper_bound = val + upper_radius
         self.bounds = [lower_bound, upper_bound]
+        return self
+
+    @deprecated(boundWindow_dep_msg)
+    def boundWindow(self, lr=0, ur=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.bound_window instead.
+        """
+        self.bound_window(lr, ur)
         return self
 
     def _validate(self):
@@ -221,7 +263,7 @@ class ParameterProxy(Parameter):
     def __init__(self, name, par):
         """Initialization.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this ParameterProxy.
@@ -278,17 +320,17 @@ class ParameterProxy(Parameter):
     def getValue(self):
         return self.par.getValue()
 
-    @wraps(Parameter.setConst)
-    def setConst(self, const=True, value=None):
-        return self.par.setConst(const, value)
+    @wraps(Parameter.set_constant)
+    def set_constant(self, const=True, value=None):
+        return self.par.set_constant(const, value)
 
-    @wraps(Parameter.boundRange)
-    def boundRange(self, lower_bound=None, upper_bound=None):
-        return self.par.boundRange(lower_bound, upper_bound)
+    @wraps(Parameter.bound_range)
+    def bound_range(self, lower_bound=None, upper_bound=None):
+        return self.par.bound_range(lower_bound, upper_bound)
 
-    @wraps(Parameter.boundWindow)
-    def boundWindow(self, lr=0, ur=None):
-        return self.par.boundWindow(lr, ur)
+    @wraps(Parameter.bound_window)
+    def bound_window(self, lr=0, ur=None):
+        return self.par.bound_window(lr, ur)
 
     def _validate(self):
         """Validate my state.
@@ -316,7 +358,7 @@ class ParameterAdapter(Parameter):
     def __init__(self, name, obj, getter=None, setter=None, attr=None):
         """Wrap an object as a Parameter.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this Parameter.

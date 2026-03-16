@@ -156,7 +156,7 @@ class ProfileGenerator(Operator, ParameterSet):
     def set_profile(self, profile):
         """Assign the profile.
 
-        Attributes
+        Parameters
         ----------
         profile
             A Profile that specifies the calculation points and which
@@ -171,10 +171,10 @@ class ProfileGenerator(Operator, ParameterSet):
 
         # Merge the profiles metadata with our own
         self.meta.update(self.profile.meta)
-        self.processMetaData()
+        self._process_metadata()
         return
 
-    def processMetaData(self):
+    def _process_metadata(self):
         """Process the metadata.
 
         This can be used to configure a ProfileGenerator upon a change

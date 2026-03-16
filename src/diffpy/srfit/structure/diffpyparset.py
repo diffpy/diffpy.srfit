@@ -91,7 +91,7 @@ class DiffpyAtomParSet(ParameterSet):
     def __init__(self, name, atom):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         atom
             A diffpy.structure.Atom instance
@@ -205,7 +205,7 @@ class DiffpyLatticeParSet(ParameterSet):
     def __init__(self, lattice):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         lattice
             A diffpy.structure.Lattice instance
@@ -275,7 +275,7 @@ class DiffpyStructureParSet(SrRealParSet):
     def __init__(self, name, stru):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             A name for the structure

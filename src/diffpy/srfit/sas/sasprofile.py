@@ -31,8 +31,6 @@ class SASProfile(Profile):
     object.
 
     Attributes
-
-    Attributes
     ----------
     _xobs
         A numpy array of the observed independent variable (default
@@ -78,7 +76,7 @@ class SASProfile(Profile):
     def __init__(self, datainfo):
         """Initialize the attributes.
 
-        Attributes
+        Parameters
         ----------
         datainfo
             The DataInfo object this wraps.

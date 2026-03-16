@@ -29,8 +29,6 @@ from diffpy.srfit.equation.visitors.visitor import Visitor
 class Printer(Visitor):
     """Printer for printing a Literal tree.
 
-    Attributes:
-
     Attributes
     ----------
     eqskip

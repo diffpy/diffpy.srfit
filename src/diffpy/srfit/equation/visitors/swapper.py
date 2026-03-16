@@ -38,7 +38,7 @@ class Swapper(Visitor):
     def __init__(self, oldlit, newlit):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         oldlit
             The literal to be replaced.

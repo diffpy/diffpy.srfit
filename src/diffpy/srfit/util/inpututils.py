@@ -26,7 +26,7 @@ def inputToString(input):
     This is useful when you want a method to accept a string, open file object
     or file name.
 
-    Attributes
+    Parameters
     ----------
     input
         An open file-like object, name of a file

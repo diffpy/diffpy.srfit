@@ -84,7 +84,7 @@ class PDFContribution(FitContribution):
     def __init__(self, name):
         """Create the PDFContribution.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the contribution.
@@ -111,7 +111,7 @@ class PDFContribution(FitContribution):
         This uses the PDFParser to load the data and then passes it to the
         built-in profile with load_parsed_data.
 
-        Attributes
+        Parameters
         ----------
         data
             An open file-like object, name of a file that contains data
@@ -180,7 +180,7 @@ class PDFContribution(FitContribution):
     def addStructure(self, name, stru, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
-        Attributes
+        Parameters
         ----------
         name
             A name to give the generator that will manage the PDF
@@ -224,7 +224,7 @@ class PDFContribution(FitContribution):
     def addPhase(self, name, parset, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
-        Attributes
+        Parameters
         ----------
         name
             A name to give the generator that will manage the PDF
@@ -284,7 +284,7 @@ class PDFContribution(FitContribution):
 
         # Update with our metadata
         gen.meta.update(self._meta)
-        gen.processMetaData()
+        gen._process_metadata()
 
         # Constrain the shared parameters
         self.add_constraint(gen.qdamp, self.qdamp)
@@ -307,7 +307,7 @@ class PDFContribution(FitContribution):
     def setScatteringType(self, type="X"):
         """Set the scattering type.
 
-        Attributes
+        Parameters
         ----------
         type
             "X" for x-ray or "N" for neutron

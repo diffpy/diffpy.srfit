@@ -46,6 +46,10 @@ setConst_dep_msg = build_deprecation_message(
     parameter_base, "setConst", "set_constant", removal_version
 )
 
+boundRange_dep_msg = build_deprecation_message(
+    parameter_base, "boundRange", "bound_range", removal_version
+)
+
 
 class Parameter(_parameter_interface, Argument, Validatable):
     """Parameter class.
@@ -156,7 +160,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self.set_constant(const, value)
         return self
 
-    def boundRange(self, lower_bound=None, upper_bound=None):
+    def bound_range(self, lower_bound=None, upper_bound=None):
         """Set lower and upper bound of the Parameter.
 
         Parameters
@@ -175,6 +179,16 @@ class Parameter(_parameter_interface, Argument, Validatable):
             self.bounds[0] = lower_bound
         if upper_bound is not None:
             self.bounds[1] = upper_bound
+        return self
+
+    @deprecated(boundRange_dep_msg)
+    def boundRange(self, lower_bound=None, upper_bound=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.bound_range instead.
+        """
+        self.bound_range(lower_bound, upper_bound)
         return self
 
     def boundWindow(self, lr=0, ur=None):
@@ -296,9 +310,9 @@ class ParameterProxy(Parameter):
     def set_constant(self, const=True, value=None):
         return self.par.set_constant(const, value)
 
-    @wraps(Parameter.boundRange)
-    def boundRange(self, lower_bound=None, upper_bound=None):
-        return self.par.boundRange(lower_bound, upper_bound)
+    @wraps(Parameter.bound_range)
+    def bound_range(self, lower_bound=None, upper_bound=None):
+        return self.par.bound_range(lower_bound, upper_bound)
 
     @wraps(Parameter.boundWindow)
     def boundWindow(self, lr=0, ur=None):

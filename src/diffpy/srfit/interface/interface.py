@@ -40,7 +40,7 @@ class ParameterInterface(object):
 
         Think of '<<' as injecting a value
 
-        Parameters
+        Attributes
         ----------
         v
             value or Argument derivative

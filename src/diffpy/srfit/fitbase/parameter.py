@@ -50,6 +50,10 @@ boundRange_dep_msg = build_deprecation_message(
     parameter_base, "boundRange", "bound_range", removal_version
 )
 
+boundWindow_dep_msg = build_deprecation_message(
+    parameter_base, "boundWindow", "bound_window", removal_version
+)
+
 
 class Parameter(_parameter_interface, Argument, Validatable):
     """Parameter class.
@@ -191,18 +195,18 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self.bound_range(lower_bound, upper_bound)
         return self
 
-    def boundWindow(self, lr=0, ur=None):
+    def bound_window(self, lower_radius=0, upper_radius=None):
         """Create bounds centered on the current value of the Parameter.
 
         Parameters
         ----------
-        lr
+        lower_radius : float, optional
             The radius of the lower bound (default 0). The lower bound is
-            computed as value - lr.
-        ur
+            computed as value - lower_radius.
+        upper_radius : float, optional
             The radius of the upper bound. The upper bound is computed as
-            value + ur. If this is None (default), then the value of the
-            lower radius is used.
+            value + upper_radius. If this is None (default), then the value
+            of the lower radius is used.
 
         Returns
         -------
@@ -210,11 +214,21 @@ class Parameter(_parameter_interface, Argument, Validatable):
             Returns self so that mutators can be chained.
         """
         val = self.getValue()
-        lower_bound = val - lr
-        if ur is None:
-            ur = lr
-        upper_bound = val + ur
+        lower_bound = val - lower_radius
+        if upper_radius is None:
+            upper_radius = lower_radius
+        upper_bound = val + upper_radius
         self.bounds = [lower_bound, upper_bound]
+        return self
+
+    @deprecated(boundWindow_dep_msg)
+    def boundWindow(self, lr=0, ur=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.bound_window instead.
+        """
+        self.bound_window(lr, ur)
         return self
 
     def _validate(self):
@@ -314,9 +328,9 @@ class ParameterProxy(Parameter):
     def bound_range(self, lower_bound=None, upper_bound=None):
         return self.par.bound_range(lower_bound, upper_bound)
 
-    @wraps(Parameter.boundWindow)
-    def boundWindow(self, lr=0, ur=None):
-        return self.par.boundWindow(lr, ur)
+    @wraps(Parameter.bound_window)
+    def bound_window(self, lr=0, ur=None):
+        return self.par.bound_window(lr, ur)
 
     def _validate(self):
         """Validate my state.

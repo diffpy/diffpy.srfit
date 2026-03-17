@@ -14,7 +14,6 @@
 ##############################################################################
 """Unit tests for the weakrefcallable module."""
 
-
 import pickle
 import unittest
 

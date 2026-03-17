@@ -22,7 +22,6 @@ subclass.
 See the class documentation for more information.
 """
 
-
 from pathlib import Path
 
 import numpy as np

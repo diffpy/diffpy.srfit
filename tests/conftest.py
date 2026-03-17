@@ -242,8 +242,7 @@ def temp_data_files(tmp_path):
     cgr_file.write_text("1.0 2.0\n" "1.1 2.1\n" "1.2 2.2\n")
 
     results_file = tmp_path / "fit_results.res"
-    results_file.write_text(
-        """
+    results_file.write_text("""
 Results written: Wed Feb 25 15:14:58 2026
 produced by cadenmyers
 
@@ -266,8 +265,7 @@ wave_number  1.00000000e+00 +/- 2.17496687e-01
 Variable Correlations greater than 25% (Correlations invalid)
 ------------------------------------------------------------------------------
 No correlations greater than 25%
-"""
-    )
+""")
     yield tmp_path
 
 
@@ -314,8 +312,7 @@ backgroundfilefull = /my/data/dir/backgroundfile.iq
 
     # Three-column (x, y, dy)
     (tmp_path / "three_col.dat").write_text(
-        METADATA_HEADER
-        + r"""#L r($\AA$)  G($\AA^{-2}$) dG($\AA^{-2}$)
+        METADATA_HEADER + r"""#L r($\AA$)  G($\AA^{-2}$) dG($\AA^{-2}$)
 1.0 2.0 0.2
 1.1 2.1 0.4
 1.2 2.2 0.6"""
@@ -323,8 +320,7 @@ backgroundfilefull = /my/data/dir/backgroundfile.iq
 
     # Two-column (x, y)
     (tmp_path / "two_col.txt").write_text(
-        METADATA_HEADER
-        + r"""#L r($\AA$)  G($\AA^{-2}$)
+        METADATA_HEADER + r"""#L r($\AA$)  G($\AA^{-2}$)
 1.0 2.0
 1.1 2.1
 1.2 2.2"""
@@ -349,13 +345,10 @@ backgroundfilefull = /my/data/dir/backgroundfile.iq
     )
 
     # One-column
-    (tmp_path / "one_col.gr").write_text(
-        METADATA_HEADER
-        + r"""#L r($\AA$)
+    (tmp_path / "one_col.gr").write_text(METADATA_HEADER + r"""#L r($\AA$)
 1.0
 1.1
-1.2"""
-    )
+1.2""")
 
     # Five-column (extra column)
     (tmp_path / "five_col.gr").write_text(

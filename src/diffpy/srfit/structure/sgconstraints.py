@@ -14,7 +14,6 @@
 ##############################################################################
 """Code to set space group constraints for a crystal structure."""
 
-
 import re
 
 import numpy

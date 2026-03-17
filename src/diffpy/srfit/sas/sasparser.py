@@ -126,7 +126,7 @@ class SASParser(ProfileParser):
         # FIXME: Revisit when we refactor the SAS characteristic functions.
         # Why is a list imported but only the first element is taken?
         # Is this desired behavior?
-        self.selectBank(0)
+        self.select_bank(0)
         return
 
     def parseString(self, patstring):

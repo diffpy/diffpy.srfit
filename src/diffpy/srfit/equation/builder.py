@@ -75,6 +75,7 @@ example.
 > beq = c*f(a,b)
 > eq = beq.makeEquation()
 """
+
 import inspect
 import numbers
 import token

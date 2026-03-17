@@ -9,7 +9,9 @@ sourcedir=C:\Program Files\PDFgetX2\
 logfile=.pdfgetx2.log
 quiet=0    debug=0    autosave_isa=1    savefilenamebase=si325_mesh_300k_nor_4-8
 iqfilesurfix=.iq    sqfilesurfix=.sq    fqfilesurfix=.fq    grfilesurfix=.gr
-
+stype = X
+qmax = 27
+temperature = 300
 ##### DataFileFormat
 datatype=1    (0:SPEC, 1:CHI, 2:nxm column, 3:unknown)
 num_skiplines=3    comment_id=#    delimiter=

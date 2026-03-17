@@ -13,6 +13,7 @@
 #
 ##############################################################################
 """Tests for refinableobj module."""
+
 import unittest
 
 import numpy as np

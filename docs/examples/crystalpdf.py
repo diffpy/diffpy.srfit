@@ -32,8 +32,9 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
+    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.pdf import PDFGenerator
 from diffpy.structure import Structure
 
 ######
@@ -48,12 +49,12 @@ def makeRecipe(ciffile, datname):
     profile = Profile()
 
     # Load data and add it to the Profile. Unlike in other examples, we use a
-    # class (PDFParser) to help us load the data. This class will read the data
-    # and relevant metadata from a two- to four-column data file generated
+    # class (ProfileParser) to help us load the data. This class will read the
+    # data and relevant metadata from a two- to four-column data file generated
     # with PDFGetX2 or PDFGetN. The metadata will be passed to the PDFGenerator
     # when they are associated in the FitContribution, which saves some
     # configuration steps.
-    parser = PDFParser()
+    parser = ProfileParser()
     parser.parseFile(datname)
     profile.load_parsed_data(parser)
     profile.set_calculation_range(xmax=20)
@@ -62,7 +63,8 @@ def makeRecipe(ciffile, datname):
     # The PDFGenerator is for configuring and calculating a PDF profile. Here,
     # we want to refine a Structure object from diffpy.structure. We tell the
     # PDFGenerator that with the 'setStructure' method. All other configuration
-    # options will be inferred from the metadata that is read by the PDFParser.
+    # options will be inferred from the metadata that is read by the
+    # ProfileParser.
     # In particular, this will set the scattering type (x-ray or neutron), the
     # Qmax value, as well as initial values for the non-structural Parameters.
     generator = PDFGenerator("G")

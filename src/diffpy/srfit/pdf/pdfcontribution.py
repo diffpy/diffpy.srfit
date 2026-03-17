@@ -20,7 +20,7 @@ fits.
 
 __all__ = ["PDFContribution"]
 
-from diffpy.srfit.fitbase import FitContribution, Profile
+from diffpy.srfit.fitbase import FitContribution, Profile, ProfileParser
 
 
 class PDFContribution(FitContribution):
@@ -105,28 +105,16 @@ class PDFContribution(FitContribution):
 
     # Data methods
 
-    def loadData(self, data):
-        """Load the data in various formats.
-
-        This uses the PDFParser to load the data and then passes it to the
-        built-in profile with load_parsed_data.
+    def loadData(self, datafile):
+        """Load the data from a datafile.
 
         Parameters
         ----------
-        data
-            An open file-like object, name of a file that contains data
-            or a string containing the data.
+        data : str or Path
+            The path to the data file.
         """
-        # Get the data into a string
-        from diffpy.srfit.util.inpututils import inputToString
-
-        datstr = inputToString(data)
-
-        # Load data with a PDFParser
-        from diffpy.srfit.pdf.pdfparser import PDFParser
-
-        parser = PDFParser()
-        parser.parseString(datstr)
+        parser = ProfileParser()
+        parser.parse_file(datafile)
 
         # Pass it to the profile
         self.profile.load_parsed_data(parser)

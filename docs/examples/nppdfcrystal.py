@@ -32,8 +32,9 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
+    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.pdf import PDFGenerator
 
 
 def makeRecipe(ciffile, grdata):
@@ -42,7 +43,7 @@ def makeRecipe(ciffile, grdata):
     # Set up a PDF fit as has been done in other examples.
     pdfprofile = Profile()
 
-    pdfparser = PDFParser()
+    pdfparser = ProfileParser()
     pdfparser.parseFile(grdata)
     pdfprofile.load_parsed_data(pdfparser)
     pdfprofile.set_calculation_range(xmin=0.1, xmax=20)

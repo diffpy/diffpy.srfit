@@ -1,5 +1,5 @@
 default_language_version:
-  python: python3
+  python: python3.13
 ci:
   autofix_commit_msg: |
     [pre-commit.ci] auto fixes from pre-commit hooks

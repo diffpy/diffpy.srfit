@@ -31,7 +31,7 @@ def testParser(sas_available, datafile):
     data = datafile("sas_ascii_test_1.txt")
     parser = SASParser()
     parser.parseFile(data)
-    x, y, dx, dy = parser.getData()
+    x, y, dx, dy = parser.get_data()
     testx = numpy.array(
         [
             0.002618,

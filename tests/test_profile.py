@@ -22,6 +22,7 @@ import pytest
 from numpy import allclose, arange, array, array_equal, ones_like
 
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase import ProfileParser
 from diffpy.srfit.fitbase.profile import Profile
 
 
@@ -305,6 +306,21 @@ def testLoadtxt(datafile):
     with pytest.raises(ValueError):
         prof.loadtxt(data, usecols=(0,))
     return
+
+
+def test_load_parsed_data(parser_datafiles):
+    """Test the load_parsed_data method."""
+    prof = Profile()
+    parser = ProfileParser()
+    datafile = parser_datafiles / "four_col.gr"
+    parser.parse_file(datafile)
+    prof.load_parsed_data(parser)
+    expected_xobs = [1.0, 1.1, 1.2]
+    expected_yobs = [2.0, 2.1, 2.2]
+    expected_dyobs = [0.2, 0.4, 0.6]
+    assert prof.xobs.tolist() == expected_xobs
+    assert prof.yobs.tolist() == expected_yobs
+    assert prof.dyobs.tolist() == expected_dyobs
 
 
 if __name__ == "__main__":

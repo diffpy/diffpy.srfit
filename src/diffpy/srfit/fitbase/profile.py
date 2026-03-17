@@ -159,7 +159,7 @@ class Profile(Observable, Validatable):
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
         """
-        x, y, junk, dy = parser.get_data()
+        x, y, dx, dy = parser.get_data()
         self.meta = dict(parser.get_metadata())
         self.set_observed_profile(x, y, dy)
         return

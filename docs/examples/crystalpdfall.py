@@ -27,8 +27,9 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
+    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.pdf import PDFGenerator
 
 ######
 #  Example Code
@@ -37,7 +38,7 @@ from diffpy.srfit.pdf import PDFGenerator, PDFParser
 def makeProfile(datafile):
     """Make an place data within a Profile."""
     profile = Profile()
-    parser = PDFParser()
+    parser = ProfileParser()
     parser.parseFile(datafile)
     profile.load_parsed_data(parser)
     profile.set_calculation_range(xmax=20)

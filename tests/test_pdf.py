@@ -23,6 +23,7 @@ import numpy
 import pytest
 
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase import ProfileParser
 from diffpy.srfit.pdf import PDFContribution, PDFGenerator, PDFParser
 
 # ----------------------------------------------------------------------------
@@ -46,7 +47,7 @@ def testParser1(datafile):
     assert meta.get("scale") is None
     assert meta.get("doping") is None
 
-    x, y, dx, dy = parser.getData()
+    x, y, dx, dy = parser.get_data()
     assert dx is None
     assert dy is None
 
@@ -78,12 +79,12 @@ def testParser1(datafile):
 
 def testParser2(datafile):
     data = datafile("si-q27r60-xray.gr")
-    parser = PDFParser()
-    parser.parseFile(data)
+    parser = ProfileParser()
+    parser.parse_file(data)
 
     meta = parser._meta
 
-    assert data == meta["filename"]
+    assert str(data) == meta["filename"]
     assert 1 == meta["nbanks"]
     assert "X" == meta["stype"]
     assert 27 == meta["qmax"]
@@ -94,7 +95,7 @@ def testParser2(datafile):
     assert meta.get("scale") is None
     assert meta.get("doping") is None
 
-    x, y, dx, dy = parser.getData()
+    x, y, dx, dy = parser.get_data()
     testx = numpy.linspace(0.01, 60, 5999, endpoint=False)
     diff = testx - x
     res = numpy.dot(diff, diff)
@@ -136,7 +137,7 @@ def testParser2(datafile):
     res = numpy.dot(diff, diff)
     assert 0 == pytest.approx(res)
 
-    assert dx is None
+    assert dx.tolist() == [0] * len(dx)
     return
 
 

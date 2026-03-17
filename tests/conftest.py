@@ -272,7 +272,7 @@ No correlations greater than 25%
 
 
 @pytest.fixture
-def parser_datafile(tmp_path):
+def parser_datafiles(tmp_path):
     """Create temporary data files with different column layouts and
     yield the directory."""
 

@@ -189,8 +189,8 @@ class ProfileParser(object):
         return
 
     def parse_file(self, filename, column_format=None):
-        """Parse a data file and extract data and metadata with
-        automatic uncertainty detection.
+        """Parse a data file to extract data and metadata, with
+        automatic handling of uncertainties.
 
         - For files with 2 columns: assumes (x, y) and sets dx, dy to 0.
         - For files with 3 columns: assumes (x, y, dy) and sets dx to 0.
@@ -245,8 +245,6 @@ class ProfileParser(object):
         self._banks = [(x, y, dx, dy)]
         self._meta["nbanks"] = 1
         self.select_bank(0)
-
-    # --- Private helpers --- #
 
     def _load_file(self, filename):
         """Load metadata and numeric data from a file."""

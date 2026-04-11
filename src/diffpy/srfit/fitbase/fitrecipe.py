@@ -292,15 +292,17 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ----------
         p
             The list of current variable values, provided in the same order
-            as the '_parameters' list. If p is an empty iterable (default),
-            then it is assumed that the parameters have already been
-            updated in some other way, and the explicit update within this
-            function is skipped.
+            as the ``_parameters`` list. If ``p`` is an empty iterable
+            (default), then it is assumed that the parameters have already
+            been updated in some other way, and the explicit update within
+            this function is skipped.
 
+        Notes
+        -----
         The residual is by default the weighted concatenation of each
-        FitContribution's residual, plus the value of each restraint. The array
-        returned, denoted chiv, is such that
-        dot(chiv, chiv) = chi^2 + restraints.
+        :class:`FitContribution` residual, plus the value of each restraint.
+        The returned array ``chiv`` satisfies
+        ``dot(chiv, chiv) = chi^2 + restraints``.
         """
 
         # Prepare, if necessary
@@ -343,15 +345,17 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ----------
         p
             The list of current variable values, provided in the same order
-            as the '_parameters' list. If p is an empty iterable (default),
-            then it is assumed that the parameters have already been
-            updated in some other way, and the explicit update within this
-            function is skipped.
+            as the ``_parameters`` list. If ``p`` is an empty iterable
+            (default), then it is assumed that the parameters have already
+            been updated in some other way, and the explicit update within
+            this function is skipped.
 
+        Notes
+        -----
         The residual is by default the weighted concatenation of each
-        FitContribution's residual, plus the value of each restraint. The array
-        returned, denoted chiv, is such that
-        dot(chiv, chiv) = chi^2 + restraints.
+        :class:`FitContribution` residual, plus the value of each restraint.
+        The returned array, denoted ``chiv``, is such that
+        ``dot(chiv, chiv) = chi^2 + restraints``.
         """
         chiv = self.residual(p)
         return dot(chiv, chiv)

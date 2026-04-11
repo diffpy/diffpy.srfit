@@ -101,16 +101,20 @@ class SASProfile(Profile):
         Parameters
         ----------
         xobs
-            Numpy array of the independent variable
+            Numpy array of the independent variable.
         yobs
             Numpy array of the observed signal.
         dyobs
             Numpy array of the uncertainty in the observed signal. If
-            dyobs is None (default), it will be set to 1 at each
-            observed xobs.
+            ``dyobs`` is ``None`` (default), it will be set to 1 at each
+            observed ``xobs``.
 
-        Raises ValueError if len(yobs) != len(xobs)
-        Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
+        Raises
+        ------
+        ValueError
+            If ``len(yobs) != len(xobs)``.
+        ValueError
+            If ``dyobs is not None`` and ``len(dyobs) != len(xobs)``.
         """
         Profile.setObservedProfile(self, xobs, yobs, dyobs)
         # Copy the arrays to the _datainfo attribute.

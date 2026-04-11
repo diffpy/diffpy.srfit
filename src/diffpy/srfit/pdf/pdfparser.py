@@ -120,7 +120,10 @@ class PDFParser(ProfileParser):
         patstring
             A string containing the pattern
 
-        Raises ParseError if the string cannot be parsed
+        Raises
+        ----------
+        ParseError
+            if the string cannot be parsed
         """
         # useful regex patterns:
         rx = {"f": r"[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE][-+]?\d+)?"}

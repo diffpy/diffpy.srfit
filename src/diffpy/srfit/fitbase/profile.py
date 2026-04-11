@@ -146,11 +146,16 @@ class Profile(Observable, Validatable):
             Numpy array of the observed signal.
         dyobs
             Numpy array of the uncertainty in the observed signal. If
-            dyobs is None (default), it will be set to 1 at each
-            observed xobs.
+            `dyobs` is None (default), it will be set to 1 at each
+            observed `xobs`.
 
-        Raises ValueError if len(yobs) != len(xobs)
-        Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
+
+        Raises
+        -----------
+        ValueError
+            if len(yobs) != len(xobs)
+        ValueError
+            if dyobs != None and len(dyobs) != len(xobs)
         """
         if len(yobs) != len(xobs):
             raise ValueError("xobs and yobs are different lengths")
@@ -195,8 +200,8 @@ class Profile(Observable, Validatable):
             The sample spacing in the independent variable.  When different
             from the data, resample the ``x`` as anchored at ``xmin``.
 
-        Note that xmin is always inclusive (unless clipped). xmax is inclusive
-        if it is within the bounds of the observed data.
+        Note that ``xmin`` is always inclusive (unless clipped).
+        ``xmax`` is inclusive if it is within the bounds of the observed data.
 
         Raises
         ------

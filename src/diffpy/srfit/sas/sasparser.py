@@ -100,8 +100,12 @@ class SASParser(ProfileParser):
         filename
             The name of the file to parse
 
-        Raises IOError if the file cannot be read
-        Raises ParseError if the file cannot be parsed
+        Raises
+        ----------
+        IOError
+            if the file cannot be read
+        ParseError
+            if the file cannot be parsed
         """
         import sasdata.dataloader.loader as sas_dataloader
 
@@ -142,7 +146,10 @@ class SASParser(ProfileParser):
         patstring
             A string containing the pattern
 
-        Raises ParseError if the string cannot be parsed
+        Raises
+        ----------
+        ParseError
+            if the string cannot be parsed
         """
         # This calls on parseFile, as that is how the sas data loader works.
         import tempfile

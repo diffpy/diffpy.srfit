@@ -77,7 +77,7 @@ master_doc = "index"
 napoleon_custom_sections = [
     ("Managed Parameters", "Attributes"),
     ("Usable Metadata", "Attributes"),
-    ("General Metadata", "Attributes"),
+    ("General Metadata", "params_style"),
     ("Metadata", "Attributes"),
     ("Properties", "Attributes"),
     ("Operator Attributes", "Attributes"),
@@ -336,4 +336,7 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-# intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+}

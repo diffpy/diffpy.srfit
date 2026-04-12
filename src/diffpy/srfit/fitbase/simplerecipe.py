@@ -130,9 +130,12 @@ class SimpleRecipe(FitRecipe):
             dyobs is None (default), it will be set to 1 at each
             observed xobs.
 
-
-        Raises ValueError if len(yobs) != len(xobs)
-        Raises ValueError if dyobs != None and len(dyobs) != len(xobs)
+        Raises
+        ----------
+        ValueError
+            if len(yobs) != len(xobs)
+        ValueError
+            if dyobs != None and len(dyobs) != len(xobs)
         """
         return self.profile.setObservedProfile(xobs, yobs, dyobs)
 
@@ -146,20 +149,20 @@ class SimpleRecipe(FitRecipe):
         Parameters
         ----------
 
-        xmin : float or "obs", optional
+        xmin : float or `obs`, optional
             The minimum value of the independent variable.  Keep the
             current minimum when not specified.  If specified as "obs"
             reset to the minimum observed value.
-        xmax : float or "obs", optional
+        xmax : float or `obs`, optional
             The maximum value of the independent variable.  Keep the
             current maximum when not specified.  If specified as "obs"
             reset to the maximum observed value.
-        dx : float or "obs", optional
+        dx : float or `obs`, optional
             The sample spacing in the independent variable.  When different
             from the data, resample the ``x`` as anchored at ``xmin``.
 
-        Note that xmin is always inclusive (unless clipped). xmax is inclusive
-        if it is within the bounds of the observed data.
+        Note that ``xmin`` is always inclusive (unless clipped).
+        ``xmax`` is inclusive if it is within the bounds of the observed data.
 
         Raises
         ------

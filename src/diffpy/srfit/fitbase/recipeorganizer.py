@@ -116,32 +116,70 @@ class RecipeContainer(Observable, Configurable, Validatable):
         """Get iterator over managed objects."""
         return chain(*(d.values() for d in self.__managed))
 
-    def iterPars(self, pattern="", recurse=True):
+    def iterPars(self, pattern="", recurse=True, fullnames=False):
         """Iterate over the Parameters contained in this object.
 
         Parameters
         ----------
         pattern : str
-            Iterate over parameters with names matching this regular
-            expression (all parameters by default).
+            Iterate over parameters with names matching this regular expression
+            (all parameters by default).
+
+            When `fullnames` is True, the regular expression is matched against
+            dotted parameter names relative to this object, e.g. ``Ni0.Biso``.
         recurse : bool
             Recurse into managed objects when True (default).
+        fullnames : bool
+            Match against hierarchical dotted names relative to this object
+            when True. Match only leaf parameter names when False (default).
         """
         regexp = re.compile(pattern)
+        if not fullnames:
+            for par in list(self._parameters.values()):
+                if regexp.search(par.name):
+                    yield par
+            if not recurse:
+                return
+            managed = self.__managed[:]
+            managed.remove(self._parameters)
+            for m in managed:
+                for obj in m.values():
+                    if hasattr(obj, "iterPars"):
+                        for par in obj.iterPars(pattern=pattern, recurse=True):
+                            yield par
+            return
+        for par in self._iterpars_fullnames(
+            regexp, recurse=recurse, prefix=""
+        ):
+            yield par
+
+    def _iterpars_fullnames(self, regexp, recurse=True, prefix=""):
+        """Internal helper for iterPars(fullnames=True)."""
         for par in list(self._parameters.values()):
-            if regexp.search(par.name):
+            name = f"{prefix}{par.name}"
+            if regexp.search(name):
                 yield par
+
         if not recurse:
             return
-        # Iterate over objects within the managed dictionaries.
+
         managed = self.__managed[:]
         managed.remove(self._parameters)
         for m in managed:
             for obj in m.values():
-                if hasattr(obj, "iterPars"):
-                    for par in obj.iterPars(pattern=pattern):
+                if hasattr(obj, "_iterpars_fullnames"):
+                    childprefix = f"{prefix}{obj.name}."
+                    for par in obj._iterpars_fullnames(
+                        regexp,
+                        recurse=True,
+                        prefix=childprefix,
+                    ):
                         yield par
-        return
+                elif hasattr(obj, "iterPars"):
+                    for par in obj.iterPars(
+                        pattern=regexp.pattern, recurse=True
+                    ):
+                        yield par
 
     def __iter__(self):
         """Iterate over top-level parameters."""

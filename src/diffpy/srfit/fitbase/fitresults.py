@@ -28,11 +28,11 @@ import re
 from collections import OrderedDict
 
 import numpy
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 from diffpy.srfit.util.inpututils import inputToString
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 fitresults_base = "diffpy.srfit.fitbase.FitResults"
 removal_version = "4.0.0"

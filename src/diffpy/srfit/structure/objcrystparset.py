@@ -40,7 +40,6 @@ ObjCrystDihedralAngleParameter
 __all__ = ["ObjCrystMoleculeParSet", "ObjCrystCrystalParSet"]
 
 import numpy
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 from pyobjcryst.molecule import (
     GetBondAngle,
     GetBondLength,
@@ -57,6 +56,7 @@ from diffpy.srfit.fitbase.parameter import (
 )
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 removal_version = "4.0.0"
 bl_base = "diffpy.srfit.structure.objcrystparset.ObjCrystBondLengthParameter"

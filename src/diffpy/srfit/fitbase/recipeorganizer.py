@@ -27,7 +27,6 @@ from collections import OrderedDict
 from functools import partial
 from itertools import chain, groupby
 
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 from numpy import inf
 
 from diffpy.srfit.equation import Equation
@@ -42,6 +41,7 @@ from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.observable import Observable
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 recipecontainer_base = "diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"
 removal_version = "4.0.0"

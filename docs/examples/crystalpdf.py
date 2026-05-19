@@ -25,7 +25,6 @@ demonstrates only the basic configuration.
 """
 
 import numpy
-from diffpy.structure import Structure
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import (
@@ -36,6 +35,7 @@ from diffpy.srfit.fitbase import (
     ProfileParser,
 )
 from diffpy.srfit.pdf import PDFGenerator
+from diffpy.structure import Structure
 
 ######
 #  Example Code

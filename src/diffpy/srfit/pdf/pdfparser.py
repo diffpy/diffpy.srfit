@@ -25,10 +25,10 @@ __all__ = ["PDFParser"]
 import re
 
 import numpy
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 removal_verison = "4.0.0"
 base = "diffpy.srfit.pdf.pdfparser.PDFParser"

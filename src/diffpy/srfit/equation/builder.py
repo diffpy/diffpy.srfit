@@ -83,11 +83,11 @@ import tokenize
 
 import numpy
 import six
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation.equationmod import Equation
 from diffpy.srfit.equation.literals.literal import Literal
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 __all__ = [
     "EquationFactory",

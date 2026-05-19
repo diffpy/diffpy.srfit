@@ -15,12 +15,11 @@
 """Simple FitRecipe class that includes a FitContribution and
 Profile."""
 
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
-
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import FitResults
 from diffpy.srfit.fitbase.profile import Profile
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 base = "diffpy.srfit.fitbase.SimpleRecipe"
 removal_version = "4.0.0"

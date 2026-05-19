@@ -25,10 +25,10 @@ See the class documentation for more information.
 from pathlib import Path
 
 import numpy as np
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
-from diffpy.utils.parsers import load_data
 
 from diffpy.srfit.exceptions import ParseError
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+from diffpy.utils.parsers import load_data
 
 removal_verison = "4.0.0"
 pdfparser_base = "diffpy.srfit.pdf.pdfparser.PDFParser"

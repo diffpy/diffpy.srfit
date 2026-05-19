@@ -184,10 +184,9 @@ def test_constrain_as_space_group_args(pyobjcryst_available, datafile):
     if not pyobjcryst_available:
         pytest.skip("pyobjcrysta package not available")
 
-    from diffpy.structure.spacegroups import GetSpaceGroup
-
     from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
     from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
+    from diffpy.structure.spacegroups import GetSpaceGroup
 
     stru = makeLaMnO3_P1(datafile)
     parset = DiffpyStructureParSet("LaMnO3", stru)

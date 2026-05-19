@@ -108,7 +108,7 @@ can be adapted as::
             setter = SimpleAtom.set, attr = "x")
 
 Thus, when ``xpar.getValue()`` is called, it in turn calls
-``SimpleAtom.get(atom, "x")``. ``xpar.setValue(value)`` calls
+``SimpleAtom.get(atom, "x")``. ``xpar.set_value(value)`` calls
 ``SimpleAtom.set(atom, "x", value)``.
 
 If the attributes of an object cannot be accessed in one of these three ways,
@@ -185,7 +185,7 @@ customized Profile is the ``SASProfile`` class in the
 
 The ``__init__`` method sets the ``xobs``, ``yobs`` and ``dyobs`` attributes of
 the ``SASProfile`` to the associated arrays within the ``_datainfo`` attribute.
-The ``setObservedProfile`` method is overloaded to modify the ``_datainfo``
+The ``set_observed_profile`` method is overloaded to modify the ``_datainfo``
 arrays when their corresponding attributes are modified. This keeps the arrays
 in sync.
 
@@ -263,5 +263,5 @@ overload.
 * .. automethod:: FitHook.postcall
 
 To use a custom ``FitHook``, assign an instance to a ``FitRecipe`` using the
-``pushFitHook`` method. All ``FitHook`` instances held by a ``FitRecipe`` will
+``push_fit_hook`` method. All ``FitHook`` instances held by a ``FitRecipe`` will
 be used in sequence during a call to ``FitRecipe.residual``.

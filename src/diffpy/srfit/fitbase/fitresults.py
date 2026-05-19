@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""The FitResults and ContributionResults classes for storing results of a fit.
+"""The FitResults and ContributionResults classes for storing results of
+a fit.
 
 The FitResults class is used to display the current state of a
 FitRecipe. It stores the state, and uses it to calculate useful
@@ -31,6 +32,47 @@ import numpy
 from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 from diffpy.srfit.util.inpututils import inputToString
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+fitresults_base = "diffpy.srfit.fitbase.FitResults"
+removal_version = "4.0.0"
+
+formatResults_dep_msg = build_deprecation_message(
+    fitresults_base,
+    "formatResults",
+    "get_results_string",
+    removal_version,
+)
+
+printResults_dep_msg = build_deprecation_message(
+    fitresults_base,
+    "printResults",
+    "print_results",
+    removal_version,
+)
+
+saveResults_dep_msg = build_deprecation_message(
+    fitresults_base,
+    "saveResults",
+    "save_results",
+    removal_version,
+)
+
+resultsDictionary_dep_msg = build_deprecation_message(
+    "diffpy.srfit.fitbase",
+    "resultsDictionary",
+    "get_results_dictionary",
+    removal_version,
+    new_base="diffpy.srfit.fitbase.FitResults",
+)
+
+initializeRecipe_dep_msg = build_deprecation_message(
+    "diffpy.srfit.fitbase",
+    "initializeRecipe",
+    "initialize_recipe_with_results",
+    removal_version,
+    new_base="diffpy.srfit.fitbase.FitRecipe",
+)
 
 
 class FitResults(object):
@@ -38,58 +80,80 @@ class FitResults(object):
 
     Attributes
     ----------
-    recipe
-        The recipe containing the results.
-    cov
-        The covariance matrix from the recipe.
-    conresults
-        An ordered dictionary of ContributionResults for each
-        FitContribution, indexed by the FitContribution name.
-    derivstep
-        The fractional step size for calculating numeric
-        derivatives. Default 1e-8.
-    varnames
-        Names of the variables in the recipe.
-    varvals
-        Values of the variables in the recipe.
-    varunc
-        Uncertainties in the variable values.
-    showfixed
-        Show fixed variables (default True).
-    fixednames
-        Names of the fixed variables of the recipe.
-    fixedvals
-        Values of the fixed variables of the recipe.
-    showcon
-        Show constraint values in the output (default False).
-    connames
-        Names of the constrained parameters.
-    convals
-        Values of the constrained parameters.
-    conunc
-        Uncertainties in the constraint values.
-    residual
-        The scalar residual of the recipe.
-    penalty
-        The penalty to residual from the restraints.
-    chi2
-        The chi2 of the recipe.
-    cumchi2
-        The cumulative chi2 of the recipe.
-    rchi2
-        The reduced chi2 of the recipe.
-    rw
-        The Rw of the recipe.
-    cumrw
-        The cumulative Rw of the recipe.
-    messages
-        A list of messages about the results.
-    precision
-        The precision of numeric output (default 8).
-    _dcon
-        The derivatives of the constraint equations with respect to
-        the variables. This is used internally.
+    recipe : FitRecipe
+        The recipe from which the results were generated.
 
+    cov : numpy.ndarray or None
+        The covariance matrix of the refined variables. None if unavailable.
+
+    conresults : collections.OrderedDict[str, ContributionResults]
+        The ordered mapping of FitContribution name → ContributionResults.
+
+    derivstep : float
+        The fractional step size used for numerical derivatives (default 1e-8).
+
+    varnames : list[str]
+        The names of refined variables in the recipe.
+
+    varvals : numpy.ndarray
+        The optimized values of the refined variables.
+
+    varunc : numpy.ndarray or None
+        The estimated standard uncertainties of the variables. None if invalid.
+
+    showfixed : bool
+        Show the fixed variables in the formatted output
+        (default True).
+
+    fixednames : list[str]
+        The names of variables held fixed during refinement.
+
+    fixedvals : numpy.ndarray
+        The values of the fixed variables.
+
+    showcon : bool
+        show the constrained parameters in the formatted output
+        (default False).
+
+    connames : list[str]
+        The names of constrained parameters.
+
+    convals : numpy.ndarray
+        The values of constrained parameters.
+
+    conunc : numpy.ndarray or None
+        The uncertainties of constrained parameters. None if unavailable.
+
+    residual : float
+        The scalar residual value of the recipe.
+
+    penalty : float
+        The penalty contribution to the residual from restraints.
+
+    chi2 : float
+        The chi-squared value of the fit.
+
+    cumchi2 : numpy.ndarray
+        The cumulative chi-squared as a function of data index.
+
+    rchi2 : float
+        The reduced chi-squared of the fit.
+
+    rw : float
+        The weighted R-factor of the fit.
+
+    cumrw : numpy.ndarray
+        The cumulative weighted R-factor as a function of data index.
+
+    messages : list[str]
+        The informational or warning messages associated with the results.
+
+    precision : int
+        The number of digits used when formatting numeric output (default 8).
+
+    _dcon : numpy.ndarray
+        The jacobian of constraint equations with respect to variables.
+        Used internally for uncertainty propagation.
 
     Each of these attributes, except the recipe, are created or updated when
     the update method is called.
@@ -98,16 +162,16 @@ class FitResults(object):
     def __init__(self, recipe, update=True, showfixed=True, showcon=False):
         """Initialize the attributes.
 
-        Attributes
+        Parameters
         ----------
-        recipe
-            The recipe containing the results
-        update
-            Flag indicating whether to do an immediate update (default
-            True).
-        showcon
+        recipe : FitRecipe
+            The recipe containing the results.
+        update : bool
+            The flag indicating whether to do an immediate update
+            (default True).
+        showfixed : bool
             Show fixed variables in the output (default True).
-        showcon
+        showcon : bool
             Show constraint values in the output (default False).
         """
         self.recipe = recipe
@@ -139,7 +203,8 @@ class FitResults(object):
         return
 
     def update(self):
-        """Update the results according to the current state of the recipe."""
+        """Update the results according to the current state of the
+        recipe."""
         # Note that the order of these operations are chosen to reduce
         # computation time.
 
@@ -152,8 +217,8 @@ class FitResults(object):
         recipe._prepare()
 
         # Store the variable names and values
-        self.varnames = recipe.getNames()
-        self.varvals = recipe.getValues()
+        self.varnames = recipe.get_names()
+        self.varvals = recipe.get_values()
         fixedpars = recipe._tagmanager.union(recipe._fixedtag)
         fixedpars = [p for p in fixedpars if not p.constrained]
         self.fixednames = [p.name for p in fixedpars]
@@ -277,7 +342,8 @@ class FitResults(object):
         return jac
 
     def _calculate_metrics(self):
-        """Calculate chi2, cumchi2, rchi2, rw and cumrw for the recipe."""
+        """Calculate chi2, cumchi2, rchi2, rw and cumrw for the
+        recipe."""
         cumchi2 = numpy.array([], dtype=float)
         # total weighed denominator for the ratio in the Rw formula
         yw2tot = 0.0
@@ -324,24 +390,24 @@ class FitResults(object):
             self.conunc.append(sig2c**0.5)
         return
 
-    def formatResults(self, header="", footer="", update=False):
+    def get_results_string(self, header="", footer="", update=False):
         """Format the results and return them in a string.
 
-        This function is called by printResults and saveResults. Overloading
+        This function is called by print_results and save_results. Overloading
         the formatting here will change all three functions.
 
-        Attributes
+        Parameters
         ----------
-        header
-            A header to add to the output (default "")
-        footer
-            A footer to add to the output (default "")
-        update
-            Flag indicating whether to call update() (default False).
+        header : str
+            The header to add to the output (default "")
+        footer : str
+            The footer to add to the output (default "")
+        update : bool
+            The flag indicating whether to call update() (default False).
 
         Returns
         -------
-        out
+        out : str
             a string containing the formatted results.
         """
         if update:
@@ -516,37 +582,58 @@ class FitResults(object):
         out = "\n".join(lines) + "\n"
         return out
 
-    def printResults(self, header="", footer="", update=False):
+    @deprecated(formatResults_dep_msg)
+    def formatResults(self, header="", footer="", update=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitResults.get_results_string
+        instead.
+        """
+        return self.get_results_string(header, footer, update)
+
+    def print_results(self, header="", footer="", update=False):
         """Format and print the results.
 
         Parameters
         ----------
         header
-            A header to add to the output (default "")
+            The header to add to the output (default "")
         footer
-            A footer to add to the output (default "")
+            The footer to add to the output (default "")
         update
-            Flag indicating whether to call update() (default False).
+            The flag indicating whether to call update() (default False).
         """
-        print(self.formatResults(header, footer, update).rstrip())
+        print(self.get_results_string(header, footer, update).rstrip())
+        return
+
+    @deprecated(printResults_dep_msg)
+    def printResults(self, header="", footer="", update=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitResults.print_results
+        instead.
+        """
+        self.print_results(header, footer, update)
         return
 
     def __str__(self):
-        return self.formatResults()
+        return self.get_results_string()
 
-    def saveResults(self, filename, header="", footer="", update=False):
+    def save_results(self, filename, header="", footer="", update=False):
         """Format and save the results.
 
         Parameters
         ----------------------------------
         filename
-            Name of the save file.
+            The name of the save file.
         header
-            A header to add to the output (default "")
+            The header to add to the output (default "")
         footer
-            A footer to add to the output (default "")
+            The footer to add to the output (default "")
         update
-            Flag indicating whether to call update() (default False).
+            The flag indicating whether to call update() (default False).
         """
         # Save the time and user
         from getpass import getuser
@@ -556,11 +643,47 @@ class FitResults(object):
         myheader += "produced by " + getuser() + "\n"
         header = myheader + header
 
-        res = self.formatResults(header, footer, update)
+        res = self.get_results_string(header, footer, update)
         f = open(filename, "w")
         f.write(res)
         f.close()
         return
+
+    @deprecated(saveResults_dep_msg)
+    def saveResults(self, filename, header="", footer="", update=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitResults.save_results
+        instead.
+        """
+        self.save_results(filename, header, footer, update)
+        return
+
+    def get_results_dictionary(self):
+        """Get a dictionary of results, with variable names and values,
+        and overall metrics.
+
+        Returns
+        -------
+        results_dict : dict
+            The dictionary containing the variable names and values,
+            and overall metrics, from the FitResults.
+        """
+        parameter_names = self.varnames
+        parameter_values = self.varvals
+        results_dict = dict(zip(parameter_names, parameter_values))
+        results_dict.update(
+            {
+                "Residual": self.residual,
+                "Contributions": self.residual - self.penalty,
+                "Restraints": self.penalty,
+                "Chi2": self.chi2,
+                "Reduced Chi2": self.rchi2,
+                "Rw": self.rw,
+            }
+        )
+        return results_dict
 
 
 # End class FitResults
@@ -573,44 +696,44 @@ class ContributionResults(object):
 
     Attributes
     ----------
-    y
+    y : numpy.ndarray or None
         The FitContribution's profile over the calculation range
         (default None).
-    dy
+    dy : numpy.ndarray or None
         The uncertainty in the FitContribution's profile over the
         calculation range (default None).
-    x
-        A numpy array of the calculated independent variable for the
+    x : numpy.ndarray or None
+        The numpy array of the calculated independent variable for the
         FitContribution (default None).
-    ycalc
-        A numpy array of the calculated signal for the FitContribution
+    ycalc : numpy.ndarray or None
+        The numpy array of the calculated signal for the FitContribution
         (default None).
-    residual
+    residual : float
         The scalar residual of the FitContribution.
-    chi2
+    chi2 : float
         The chi2 of the FitContribution.
-    cumchi2
+    cumchi2 : numpy.ndarray
         The cumulative chi2 of the FitContribution.
-    rw
+    rw : float
         The Rw of the FitContribution.
-    cumrw
+    cumrw : numpy.ndarray
         The cumulative Rw of the FitContribution.
-    weight
+    weight : float
         The weight of the FitContribution in the recipe.
-    conlocs
+    conlocs : list
         The location of the constrained parameters in the
         FitContribution (see the
         RecipeContainer._locate_managed_object method).
-    convals
-        Values of the constrained parameters.
-    conunc
-        Uncertainties in the constraint values.
+    convals : list
+        The values of the constrained parameters.
+    conunc : list
+        The uncertainties in the constraint values.
     """
 
     def __init__(self, con, weight, fitres):
         """Initialize the attributes.
 
-        Attributes
+        Parameters
         ----------
         con
             The FitContribution
@@ -693,13 +816,20 @@ class ContributionResults(object):
 # End class ContributionResults
 
 
+@deprecated(resultsDictionary_dep_msg)
 def resultsDictionary(results):
-    """Get dictionary of results from file.
+    """**This function has been deprecated and will be** **removed in version
+    4.0.0.**
+
+    **Please use**
+    **diffpy.srfit.fitbase.FitResults.get_results_dictionary instead.**
+
+    Get dictionary of results from file.
 
     This reads the results from file and stores them in a dictionary to be
     returned to the caller. The dictionary may contain non-result entries.
 
-    Attributes
+    Parameters
     ----------
     results
         An open file-like object, name of a file that contains
@@ -720,14 +850,22 @@ def resultsDictionary(results):
     return mpairs
 
 
+@deprecated(initializeRecipe_dep_msg)
 def initializeRecipe(recipe, results):
-    """Initialize the variables of a recipe from a results file.
+    """**This function has been deprecated and will be** **removed in
+    version 4.0.0.**
+
+    **Please use**
+    **diffpy.srfit.fitbase.FitRecipe.initialize_recipe_with_results**
+    **instead.**
+
+    Initialize the variables of a recipe from a results file.
 
     This reads the results from file and initializes any variables (fixed or
     free) in the recipe to the results values. Note that the recipe has to be
     configured, with variables. This does not reconstruct a FitRecipe.
 
-    Attributes
+    Parameters
     ----------
     recipe
         A configured recipe with variables

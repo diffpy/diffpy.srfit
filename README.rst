@@ -25,6 +25,7 @@
         :target: https://anaconda.org/conda-forge/diffpy.srfit
 
 .. |PR| image:: https://img.shields.io/badge/PR-Welcome-29ab47ff
+        :target: https://github.com/diffpy/diffpy.srfit/pulls
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/diffpy.srfit
         :target: https://pypi.org/project/diffpy.srfit/
@@ -38,7 +39,7 @@
 diffpy.srfit
 ============
 
-Configurable code for solving atomic structures.
+Generalized code base for modeling problems.
 
 The diffpy.srfit package provides the framework for building a global optimizer
 on the fly from components such as function calculators (that calculate
@@ -61,6 +62,23 @@ can have its own cost function which will be properly weighted and combined to
 obtain the total cost function. Additionally, diffpy.srfit is designed to be
 extensible, allowing the user to integrate external calculators to perform
 co-refinements with other techniques.
+
+
+SrFit has tools for coherently combining known information about a
+material to derive other properties, in particular material structure.
+SrFit allows the customization and creation of structure
+representations, profile calculators, constraints, restraints and file
+input parsers. The customized pieces can be glued together within SrFit
+to optimize a structure, or other physically relevant information from
+one or more experimental profiles. Other known information about the
+system of interest can be included with arbitrarily complex constraints
+and restraints. In this way, the end user creates a customized fitting
+application that suits the problem to the available information.
+
+The subpackages herein define various pieces of the SrFit framework.
+Developers are encouraged to work through the examples described in the
+documentation to learn how to use and customize the various parts of
+SrFit.
 
 For more information about the diffpy.srfit library, please consult our `online documentation <https://diffpy.github.io/diffpy.srfit>`_.
 
@@ -93,10 +111,6 @@ The following creates and activates a new environment named ``diffpy.srfit_env``
 
         conda create -n diffpy.srfit_env diffpy.srfit
         conda activate diffpy.srfit_env
-
-To confirm that the installation was successful, type ::
-
-        python -c "import diffpy.srfit; print(diffpy.srfit.__version__)"
 
 The output should print the latest version displayed on the badges above.
 
@@ -136,6 +150,19 @@ and run the following ::
 
         pip install .
 
+This package also provides command-line utilities. To check the software has been installed correctly, type ::
+
+        diffpy.srfit --version
+
+You can also type the following command to verify the installation. ::
+
+        python -c "import diffpy.srfit; print(diffpy.srfit.__version__)"
+
+
+To view the basic usage and available commands, type ::
+
+        diffpy.srfit -h
+
 Getting Started
 ---------------
 
@@ -167,12 +194,12 @@ trying to commit again.
 
 Improvements and fixes are always appreciated.
 
-Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.srfit/blob/main/CODE_OF_CONDUCT.rst>`_.
+Before contributing, please read our `Code of Conduct <https://github.com/diffpy/diffpy.srfit/blob/main/CODE-OF-CONDUCT.rst>`_.
 
 Contact
 -------
 
-For more information on diffpy.srfit please visit the project `web-page <https://diffpy.github.io/>`_ or email Simon Billinge at sb2896@columbia.edu.
+For more information on diffpy.srfit please visit the project `web-page <https://diffpy.github.io/>`_ or email the maintainers ``Caden Myers (cjm2304@columbia.edu) and Simon J. L. Billinge (sbillinge@ucsb.edu)``.
 
 Acknowledgements
 ----------------

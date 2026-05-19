@@ -38,7 +38,7 @@ def main():
     # "<<"  -   Inject a parameter value
     c = FitContribution("g1")
     c.set_profile(p)
-    c.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
+    c.set_equation("A * exp(-0.5*(x-x0)**2/sigma**2)")
     c.A << 0.5
     c.x0 << 5
     c.sigma << 1
@@ -46,7 +46,7 @@ def main():
     # FitRecipe operations
     # "|="  -   Union of necessary components.
     # "+="  -   Add Parameter or create a new one. Each tuple is a set of
-    #           arguments for either setVar or addVar.
+    #           arguments for either setVar or add_variable.
     # "*="  -   Constrain a parameter. Think of "*" as a push-pin holding one
     #           parameter's value to that of another.
     # "%="  -   Restrain a parameter or equation. Think of "%" as a rope
@@ -63,7 +63,7 @@ def main():
 
     res = FitResults(r)
     # Print the results.
-    res.printResults()
+    res.print_results()
     # Plot the results.
     from gaussianrecipe import plotResults
 

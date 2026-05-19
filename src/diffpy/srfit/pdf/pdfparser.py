@@ -28,12 +28,23 @@ import numpy
 
 from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+removal_verison = "4.0.0"
+base = "diffpy.srfit.pdf.pdfparser.PDFParser"
+new_base = "diffpy.srfit.fitbase.ProfileParser"
+
+parseFile_dep_msg = build_deprecation_message(
+    base,
+    "parseFile",
+    "parse_file",
+    removal_version=removal_verison,
+    new_base=new_base,
+)
 
 
 class PDFParser(ProfileParser):
     """Class for holding a diffraction pattern.
-
-    Attributes
 
     Attributes
     ----------
@@ -108,8 +119,14 @@ class PDFParser(ProfileParser):
 
     _format = "PDF"
 
+    # Marking this function as deprecated because PDFParser.parseFile calls it
+    # so when people use PDFParser.parseFile, they will get a
+    # warning that it is deprecated and they should use
+    # ProfileParser.parse_file instead.
+    @deprecated(parseFile_dep_msg)
     def parseString(self, patstring):
-        """Parse a string and set the _x, _y, _dx, _dy and _meta variables.
+        """Parse a string and set the _x, _y, _dx, _dy and _meta
+        variables.
 
         When _dx or _dy cannot be obtained in the data format it is set to 0.
 
@@ -125,6 +142,7 @@ class PDFParser(ProfileParser):
         ParseError
             if the string cannot be parsed
         """
+
         # useful regex patterns:
         rx = {"f": r"[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE][-+]?\d+)?"}
         # find where does the data start

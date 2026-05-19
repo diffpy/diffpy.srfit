@@ -87,12 +87,12 @@ def testDiffpyStructureParSet():
     _testLattice()
 
     # Now change values from the srfit DiffpyStructureParSet
-    s.Cu0.x.setValue(0.456)
-    s.Cu0.U22.setValue(0.441)
-    s.Cu0.B13.setValue(0.550)
+    s.Cu0.x.set_value(0.456)
+    s.Cu0.U22.set_value(0.441)
+    s.Cu0.B13.set_value(0.550)
     d = dsstru.lattice.dist(a1.xyz, a2.xyz)
-    s.lattice.b.setValue(4.6)
-    s.lattice.alpha.setValue(91.3)
+    s.lattice.b.set_value(4.6)
+    s.lattice.alpha.set_value(91.3)
     _testAtoms()
     _testLattice()
     # Make sure the distance changed

@@ -14,7 +14,6 @@
 ##############################################################################
 """Code to set space group constraints for a crystal structure."""
 
-
 import re
 
 import numpy
@@ -190,7 +189,7 @@ class BaseSpaceGroupParameters(RecipeContainer):
     def addParameter(self, par, check=True):
         """Store a Parameter.
 
-        Attributes
+        Parameters
         ----------
         par
             The Parameter to be stored.
@@ -390,9 +389,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         for scatterer in scatterers:
 
             for par in [scatterer.x, scatterer.y, scatterer.z]:
-                if scatterer.isConstrained(par):
-                    scatterer.unconstrain(par)
-                par.setConst(False)
+                if scatterer.is_constrained(par):
+                    scatterer.remove_constraint(par)
+                par.set_constant(False)
 
         # Clear the lattice
         if self.constrainlat:
@@ -407,9 +406,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 lattice.gamma,
             ]
             for par in latpars:
-                if lattice.isConstrained(par):
-                    lattice.unconstrain(par)
-                par.setConst(False)
+                if lattice.is_constrained(par):
+                    lattice.remove_constraint(par)
+                par.set_constant(False)
 
         # Clear ADPs
         if self.constrainadps:
@@ -417,16 +416,16 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 if isosymbol:
                     par = scatterer.get(isosymbol)
                     if par is not None:
-                        if scatterer.isConstrained(par):
-                            scatterer.unconstrain(par)
-                        par.setConst(False)
+                        if scatterer.is_constrained(par):
+                            scatterer.remove_constraint(par)
+                        par.set_constant(False)
 
                 for pname in adpsymbols:
                     par = scatterer.get(pname)
                     if par is not None:
-                        if scatterer.isConstrained(par):
-                            scatterer.unconstrain(par)
-                        par.setConst(False)
+                        if scatterer.is_constrained(par):
+                            scatterer.remove_constraint(par)
+                        par.set_constant(False)
 
         return
 
@@ -470,7 +469,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _constrain_xyzs(self, positions):
         """Constrain the positions.
 
-        Attributes
+        Parameters
         ----------
         positions
             The coordinates of the scatterers.
@@ -513,7 +512,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _constrain_adps(self, positions):
         """Constrain the ADPs.
 
-        Attributes
+        Parameters
         ----------
         positions
             The coordinates of the scatterers.
@@ -596,7 +595,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     continue
                 isoidx.append(j)
                 scatterer = scatterers[j]
-                scatterer.constrain(isosymbol, isoname, ns=self._parameters)
+                scatterer.add_constraint(
+                    isosymbol, isoname, params=self._parameters
+                )
 
         fadp = g.UFormulas(adpnames)
 
@@ -616,7 +617,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def __add_par(self, parname, par):
         """Constrain a parameter via proxy with a specified name.
 
-        Attributes
+        Parameters
         ----------
         par
             Parameter to constrain
@@ -650,14 +651,14 @@ def _constrain_monoclinic(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.alpha.setConst(True, ang90)
+    lattice.alpha.set_constant(True, ang90)
     beta = lattice.beta.getValue()
     gamma = lattice.gamma.getValue()
 
     if ang90 != beta and ang90 == gamma:
-        lattice.gamma.setConst(True, ang90)
+        lattice.gamma.set_constant(True, ang90)
     else:
-        lattice.beta.setConst(True, ang90)
+        lattice.beta.set_constant(True, ang90)
     return
 
 
@@ -670,9 +671,9 @@ def _constrain_orthorhombic(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.alpha.setConst(True, ang90)
-    lattice.beta.setConst(True, ang90)
-    lattice.gamma.setConst(True, ang90)
+    lattice.alpha.set_constant(True, ang90)
+    lattice.beta.set_constant(True, ang90)
+    lattice.gamma.set_constant(True, ang90)
     return
 
 
@@ -686,10 +687,10 @@ def _constrain_tetragonal(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.alpha.setConst(True, ang90)
-    lattice.beta.setConst(True, ang90)
-    lattice.gamma.setConst(True, ang90)
-    lattice.constrain(lattice.b, lattice.a)
+    lattice.alpha.set_constant(True, ang90)
+    lattice.beta.set_constant(True, ang90)
+    lattice.gamma.set_constant(True, ang90)
+    lattice.add_constraint(lattice.b, lattice.a)
     return
 
 
@@ -706,15 +707,15 @@ def _constrain_trigonal(lattice):
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
     if lattice.gamma.getValue() == ang120:
-        lattice.constrain(lattice.b, lattice.a)
-        lattice.alpha.setConst(True, ang90)
-        lattice.beta.setConst(True, ang90)
-        lattice.gamma.setConst(True, ang120)
+        lattice.add_constraint(lattice.b, lattice.a)
+        lattice.alpha.set_constant(True, ang90)
+        lattice.beta.set_constant(True, ang90)
+        lattice.gamma.set_constant(True, ang120)
     else:
-        lattice.constrain(lattice.b, lattice.a)
-        lattice.constrain(lattice.c, lattice.a)
-        lattice.constrain(lattice.beta, lattice.alpha)
-        lattice.constrain(lattice.gamma, lattice.alpha)
+        lattice.add_constraint(lattice.b, lattice.a)
+        lattice.add_constraint(lattice.c, lattice.a)
+        lattice.add_constraint(lattice.beta, lattice.alpha)
+        lattice.add_constraint(lattice.gamma, lattice.alpha)
     return
 
 
@@ -729,10 +730,10 @@ def _constrain_hexagonal(lattice):
         afactor = deg2rad
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
-    lattice.constrain(lattice.b, lattice.a)
-    lattice.alpha.setConst(True, ang90)
-    lattice.beta.setConst(True, ang90)
-    lattice.gamma.setConst(True, ang120)
+    lattice.add_constraint(lattice.b, lattice.a)
+    lattice.alpha.set_constant(True, ang90)
+    lattice.beta.set_constant(True, ang90)
+    lattice.gamma.set_constant(True, ang120)
     return
 
 
@@ -746,11 +747,11 @@ def _constrain_cubic(lattice):
     if lattice.angunits == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
-    lattice.constrain(lattice.b, lattice.a)
-    lattice.constrain(lattice.c, lattice.a)
-    lattice.alpha.setConst(True, ang90)
-    lattice.beta.setConst(True, ang90)
-    lattice.gamma.setConst(True, ang90)
+    lattice.add_constraint(lattice.b, lattice.a)
+    lattice.add_constraint(lattice.c, lattice.a)
+    lattice.alpha.set_constant(True, ang90)
+    lattice.beta.set_constant(True, ang90)
+    lattice.gamma.set_constant(True, ang90)
     return
 
 
@@ -770,7 +771,7 @@ _constraintMap = {
 def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     """Constrain a parameter according to a formula.
 
-    Attributes
+    Parameters
     ----------
     parname
         Name of parameter
@@ -803,18 +804,19 @@ def _makeconstraint(parname, formula, scatterer, idx, ns={}):
     # Check to see if it is a constant
     fval = _get_float(formula)
     if fval is not None:
-        par.setConst()
+        par.set_constant()
         return
 
     # If we got here, then we have a constraint equation
     # Fix any division issues
     formula = formula.replace("/", "*1.0/")
-    scatterer.constrain(par, formula, ns=ns)
+    scatterer.add_constraint(par, formula, params=ns)
     return
 
 
 def _get_float(formula):
-    """Get a float from a formula string, or None if this is not possible."""
+    """Get a float from a formula string, or None if this is not
+    possible."""
     try:
         return eval(formula)
     except NameError:

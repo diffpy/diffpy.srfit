@@ -32,8 +32,9 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
+    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.pdf import PDFGenerator
 
 
 def makeRecipe(ciffile, grdata):
@@ -42,10 +43,10 @@ def makeRecipe(ciffile, grdata):
     # Set up a PDF fit as has been done in other examples.
     pdfprofile = Profile()
 
-    pdfparser = PDFParser()
+    pdfparser = ProfileParser()
     pdfparser.parseFile(grdata)
-    pdfprofile.loadParsedData(pdfparser)
-    pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
+    pdfprofile.load_parsed_data(pdfparser)
+    pdfprofile.set_calculation_range(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
     pdfcontribution.set_profile(pdfprofile, xname="r")
@@ -54,28 +55,28 @@ def makeRecipe(ciffile, grdata):
     pdfgenerator.setQmax(30.0)
     stru = loadCrystal(ciffile)
     pdfgenerator.setStructure(stru)
-    pdfcontribution.addProfileGenerator(pdfgenerator)
+    pdfcontribution.add_profile_generator(pdfgenerator)
 
     # Register the nanoparticle shape factor.
     from diffpy.srfit.pdf.characteristicfunctions import sphericalCF
 
-    pdfcontribution.registerFunction(sphericalCF, name="f")
+    pdfcontribution.register_function(sphericalCF, name="f")
 
     # Now we set up the fitting equation.
-    pdfcontribution.setEquation("f * G")
+    pdfcontribution.set_equation("f * G")
 
     # Now make the recipe. Make sure we fit the characteristic function shape
     # parameters, in this case 'psize', which is the diameter of the particle.
     recipe = FitRecipe()
-    recipe.addContribution(pdfcontribution)
+    recipe.add_contribution(pdfcontribution)
 
     phase = pdfgenerator.phase
     for par in phase.sgpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
 
-    recipe.addVar(pdfcontribution.psize, 20)
-    recipe.addVar(pdfgenerator.scale, 1)
-    recipe.addVar(pdfgenerator.delta2, 0)
+    recipe.add_variable(pdfcontribution.psize, 20)
+    recipe.add_variable(pdfgenerator.scale, 1)
+    recipe.add_variable(pdfgenerator.delta2, 0)
     recipe.B11_0 = 0.1
 
     return recipe
@@ -91,10 +92,10 @@ def plotResults(recipe):
     diffzero = -0.8 * max(g) * numpy.ones_like(g)
     diff = g - gcalc + diffzero
 
-    gcryst = recipe.pdf.evaluateEquation("G")
+    gcryst = recipe.pdf.evaluate_equation("G")
     gcryst /= recipe.scale.value
 
-    fr = recipe.pdf.evaluateEquation("f")
+    fr = recipe.pdf.evaluate_equation("f")
     fr *= max(g) / fr[0]
 
     import pylab
@@ -122,7 +123,7 @@ if __name__ == "__main__":
     scipyOptimize(recipe)
 
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     plotResults(recipe)
 

@@ -141,7 +141,8 @@ class Operator(Literal, OperatorABC):
 
 
 class UnaryOperator(Operator):
-    """Abstract class for an unary operator with one input and one result.
+    """Abstract class for an unary operator with one input and one
+    result.
 
     This base class defines the `nin` and `nout` attributes.  The derived
     concrete operator must provide the remaining abstract attributes
@@ -154,7 +155,8 @@ class UnaryOperator(Operator):
 
 
 class BinaryOperator(Operator):
-    """Abstract class for a binary operator with two inputs and one result.
+    """Abstract class for a binary operator with two inputs and one
+    result.
 
     This base class defines the `nin` and `nout` attributes.  The derived
     concrete operator must define the remaining abstract attributes
@@ -345,7 +347,7 @@ class UFuncOperator(Operator):
 
         Arguments
 
-        Attributes
+        Parameters
         ----------
         op
             A numpy ufunc
@@ -359,7 +361,8 @@ class UFuncOperator(Operator):
 
 
 class ArrayOperator(Operator):
-    """Operator that will take parameters and turn them into an array."""
+    """Operator that will take parameters and turn them into an
+    array."""
 
     name = "array"
     symbol = "array"

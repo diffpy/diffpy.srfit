@@ -19,7 +19,6 @@ mix with base SrFit objects and provide them with interface enhancements
 for scripting.
 """
 
-
 from diffpy.srfit.interface.interface import (
     FitRecipeInterface,
     ParameterInterface,

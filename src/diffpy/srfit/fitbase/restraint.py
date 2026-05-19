@@ -33,39 +33,41 @@ class Restraint(Validatable):
 
     Attributes
     ----------
-    eq
+    eq : Equation
         An equation whose evaluation is compared against the restraint
         bounds.
-    lb
+    lower_bound : float
         The lower bound on the restraint evaluation (default -inf).
-    ub
+    upper_bound : float
         The lower bound on the restraint evaluation (default inf).
-    sig
+    sig : float
         The uncertainty on the bounds (default 1).
-    scaled
+    scaled : bool
         A flag indicating if the restraint is scaled (multiplied) by
         the unrestrained point-average chi^2 (chi^2/numpoints)
         (default False).
 
 
     The penalty is calculated as
-    (max(0, lb - val, val - ub)/sig)**2
+    (max(0, lower_bound - val, val - upper_bound)/sig)**2
     and val is the value of the calculated equation.  This is multiplied by the
     average chi^2 if scaled is True.
     """
 
-    def __init__(self, eq, lb=-inf, ub=inf, sig=1, scaled=False):
+    def __init__(
+        self, eq, lower_bound=-inf, upper_bound=inf, sig=1, scaled=False
+    ):
         """Restrain an equation to specified bounds.
 
-        Attributes
+        Parameters
         ----------
         eq
             An equation whose evaluation is compared against the
             restraint bounds.
-        lb
+        lower_bound
             The lower bound on the restraint evaluation (float, default
             -inf).
-        ub
+        upper_bound
             The lower bound on the restraint evaluation (float, default
             inf).
         sig
@@ -76,8 +78,8 @@ class Restraint(Validatable):
             (bool, default False).
         """
         self.eq = eq
-        self.lb = float(lb)
-        self.ub = float(ub)
+        self.lower_bound = float(lower_bound)
+        self.upper_bound = float(upper_bound)
         self.sig = float(sig)
         self.scaled = bool(scaled)
         return
@@ -85,7 +87,7 @@ class Restraint(Validatable):
     def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
-        Attributes
+        Parameters
         ----------
         w
             The point-average chi^2 which is optionally used to scale the
@@ -97,7 +99,9 @@ class Restraint(Validatable):
             Returns the penalty as a float
         """
         val = self.eq()
-        penalty = (max(0, self.lb - val, val - self.ub) / self.sig) ** 2
+        penalty = (
+            max(0, self.lower_bound - val, val - self.upper_bound) / self.sig
+        ) ** 2
 
         if self.scaled:
             penalty *= w

@@ -31,14 +31,16 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
+    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.pdf import PDFGenerator
 from diffpy.srfit.pdf.characteristicfunctions import SASCF
 from diffpy.srfit.sas import SASGenerator, SASParser
 
 
 def makeRecipe(ciffile, grdata, iqdata):
-    """Make complex-modeling recipe where I(q) and G(r) are fit simultaneously.
+    """Make complex-modeling recipe where I(q) and G(r) are fit
+    simultaneously.
 
     The fit I(q) is fed into the calculation of G(r), which provides
     feedback for the fit parameters of both.
@@ -46,10 +48,10 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     # Create a PDF contribution as before
     pdfprofile = Profile()
-    pdfparser = PDFParser()
+    pdfparser = ProfileParser()
     pdfparser.parseFile(grdata)
-    pdfprofile.loadParsedData(pdfparser)
-    pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
+    pdfprofile.load_parsed_data(pdfparser)
+    pdfprofile.set_calculation_range(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
     pdfcontribution.set_profile(pdfprofile, xname="r")
@@ -58,15 +60,15 @@ def makeRecipe(ciffile, grdata, iqdata):
     pdfgenerator.setQmax(30.0)
     stru = loadCrystal(ciffile)
     pdfgenerator.setStructure(stru)
-    pdfcontribution.addProfileGenerator(pdfgenerator)
-    pdfcontribution.setResidualEquation("resv")
+    pdfcontribution.add_profile_generator(pdfgenerator)
+    pdfcontribution.set_residual_equation("resv")
 
     # Create a SAS contribution as well. We assume the nanoparticle is roughly
     # elliptical.
     sasprofile = Profile()
     sasparser = SASParser()
     sasparser.parseFile(iqdata)
-    sasprofile.loadParsedData(sasparser)
+    sasprofile.load_parsed_data(sasparser)
     if all(sasprofile.dy == 0):
         sasprofile.dy[:] = 1
 
@@ -77,8 +79,8 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     model = EllipsoidModel()
     sasgenerator = SASGenerator("generator", model)
-    sascontribution.addProfileGenerator(sasgenerator)
-    sascontribution.setResidualEquation("resv")
+    sascontribution.add_profile_generator(sasgenerator)
+    sascontribution.set_residual_equation("resv")
 
     # Now we set up a characteristic function calculator that depends on the
     # sas model.
@@ -86,34 +88,34 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     # Register the calculator with the pdf contribution and define the fitting
     # equation.
-    pdfcontribution.registerCalculator(cfcalculator)
+    pdfcontribution.register_calculator(cfcalculator)
     # The PDF for a nanoscale crystalline is approximated by
     # Gnano = f * Gcryst
-    pdfcontribution.setEquation("f * G")
+    pdfcontribution.set_equation("f * G")
 
     # Moving on
     recipe = FitRecipe()
-    recipe.addContribution(pdfcontribution)
-    recipe.addContribution(sascontribution)
+    recipe.add_contribution(pdfcontribution)
+    recipe.add_contribution(sascontribution)
 
     # PDF
     phase = pdfgenerator.phase
     for par in phase.sgpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
 
-    recipe.addVar(pdfgenerator.scale, 1)
-    recipe.addVar(pdfgenerator.delta2, 0)
+    recipe.add_variable(pdfgenerator.scale, 1)
+    recipe.add_variable(pdfgenerator.delta2, 0)
 
     # SAS
-    recipe.addVar(sasgenerator.scale, 1, name="iqscale")
-    recipe.addVar(sasgenerator.radius_a, 10)
-    recipe.addVar(sasgenerator.radius_b, 10)
+    recipe.add_variable(sasgenerator.scale, 1, name="iqscale")
+    recipe.add_variable(sasgenerator.radius_a, 10)
+    recipe.add_variable(sasgenerator.radius_b, 10)
 
     # Even though the cfcalculator and sasgenerator depend on the same sas
     # model, we must still constrain the cfcalculator Parameters so that it is
     # informed of changes in the refined parameters.
-    recipe.constrain(cfcalculator.radius_a, "radius_a")
-    recipe.constrain(cfcalculator.radius_b, "radius_b")
+    recipe.add_constraint(cfcalculator.radius_a, "radius_a")
+    recipe.add_constraint(cfcalculator.radius_b, "radius_b")
 
     return recipe
 
@@ -122,23 +124,23 @@ def fitRecipe(recipe):
     """We refine in stages to help the refinement converge."""
 
     # Tune SAS.
-    recipe.setWeight(recipe.pdf, 0)
+    recipe.set_weight(recipe.pdf, 0)
     recipe.fix("all")
     recipe.free("radius_a", "radius_b", iqscale=1e8)
-    recipe.constrain("radius_b", "radius_a")
+    recipe.add_constraint("radius_b", "radius_a")
     scipyOptimize(recipe)
-    recipe.unconstrain("radius_b")
+    recipe.remove_constraint("radius_b")
 
     # Tune PDF
-    recipe.setWeight(recipe.pdf, 1)
-    recipe.setWeight(recipe.sas, 0)
+    recipe.set_weight(recipe.pdf, 1)
+    recipe.set_weight(recipe.sas, 0)
     recipe.fix("all")
     recipe.free("a", "Biso_0", "scale", "delta2")
     scipyOptimize(recipe)
 
     # Tune all
-    recipe.setWeight(recipe.pdf, 1)
-    recipe.setWeight(recipe.sas, 1)
+    recipe.set_weight(recipe.pdf, 1)
+    recipe.set_weight(recipe.sas, 1)
     recipe.free("all")
     scipyOptimize(recipe)
 
@@ -155,10 +157,10 @@ def plotResults(recipe):
     diffzero = -0.8 * max(g) * numpy.ones_like(g)
     diff = g - gcalc + diffzero
 
-    gcryst = recipe.pdf.evaluateEquation("G")
+    gcryst = recipe.pdf.evaluate_equation("G")
     gcryst /= recipe.scale.value
 
-    fr = recipe.pdf.evaluateEquation("f")
+    fr = recipe.pdf.evaluate_equation("f")
     fr *= max(g) / fr[0]
 
     import pylab
@@ -188,7 +190,7 @@ if __name__ == "__main__":
     fitRecipe(recipe)
 
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     plotResults(recipe)
 

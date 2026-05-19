@@ -36,7 +36,7 @@ class ParameterInterface(object):
     """Mix-in class for enhancing the Parameter interface."""
 
     def __lshift__(self, v):
-        """SetValue with <<
+        """set_value with <<
 
         Think of '<<' as injecting a value
 
@@ -115,11 +115,11 @@ class FitRecipeInterface(object):
 
         This accepts a single argument.
         """
-        self.addContribution(args)
+        self.add_contribution(args)
         return self
 
     def __iadd__(self, args):
-        """AddVar or newVar with +=
+        """add_variable or create_new_variable with +=
 
         Think of "+" as addition of a variable.
 
@@ -127,12 +127,12 @@ class FitRecipeInterface(object):
         arguments or argument tuples.
         """
 
-        # Want to detect addVar or newVar
+        # Want to detect add_variable or create_new_variable
         def f(*args):
             if isinstance(args[0], six.string_types):
-                self.newVar(*args)
+                self.create_new_variable(*args)
             else:
-                self.addVar(*args)
+                self.add_variable(*args)
             return
 
         _applymanyargs(args, f)

@@ -39,7 +39,7 @@ def makeRecipe(datname):
     # properly and pass the metadata along.
     parser = SASParser()
     parser.parseFile(datname)
-    profile.loadParsedData(parser)
+    profile.load_parsed_data(parser)
 
     # The ProfileGenerator
     # The SASGenerator is for configuring and calculating a SAS profile. We use
@@ -57,18 +57,18 @@ def makeRecipe(datname):
     # Here we associate the Profile and ProfileGenerator, as has been done
     # before.
     contribution = FitContribution("ellipsoid")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="q")
 
     # We want to fit the log of the signal to the log of the data so that the
     # higher-Q information remains significant. There are no I(Q) uncertainty
     # values with the data, so we do not need to worry about the effect this
     # will have on the estimated parameter uncertainties.
-    contribution.setResidualEquation("log(eq) - log(y)")
+    contribution.set_residual_equation("log(eq) - log(y)")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Configure the fit variables
     # The SASGenerator uses the parameters from the params and dispersion
@@ -78,10 +78,10 @@ def makeRecipe(datname):
     # SASGenerator these are named like "radius_width".
     #
     # We want to fit the scale factor, radii and background factors.
-    recipe.addVar(generator.scale, 1)
-    recipe.addVar(generator.radius_a, 50)
-    recipe.addVar(generator.radius_b, 500)
-    recipe.addVar(generator.background, 0)
+    recipe.add_variable(generator.scale, 1)
+    recipe.add_variable(generator.radius_a, 50)
+    recipe.add_variable(generator.radius_b, 500)
+    recipe.add_variable(generator.background, 0)
 
     # Give the recipe away so it can be used!
     return recipe
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     # Generate and print the FitResults
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     # Plot!
     plotResults(recipe)

@@ -52,7 +52,7 @@ class SrRealParSet(BaseStructureParSet):
         this is also scaled by the current point-averaged chi^2 value so the
         restraint is roughly equally weighted in the fit.
 
-        Attributes
+        Parameters
         ----------
         sig
             The uncertainty on the BVS (default 1).

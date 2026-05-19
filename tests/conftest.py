@@ -85,7 +85,8 @@ def pyobjcryst_available():
 
 @pytest.fixture(scope="session")
 def datafile():
-    """Fixture to load a test data file from the testdata package directory."""
+    """Fixture to load a test data file from the testdata package
+    directory."""
 
     def _datafile(filename):
         return importlib.resources.files("tests.testdata").joinpath(filename)
@@ -141,50 +142,79 @@ def capturestdout():
     return _capturestdout
 
 
-@pytest.fixture(scope="session")
-def build_recipe_one_contribution():
-    "helper to build a simple recipe"
-    profile = Profile()
-    x = linspace(0, pi, 10)
+@pytest.fixture(scope="function")
+def build_recipes_one_contribution():
+    """Helper to build a simple recipe.
+
+    Two identical recipes are returned if needed.
+    """
+    x = linspace(0, pi, 11)
     y = sin(x)
-    profile.setObservedProfile(x, y)
-    contribution = FitContribution("c1")
-    contribution.set_profile(profile)
-    contribution.setEquation("A*sin(k*x + c)")
-    recipe = FitRecipe()
-    recipe.addContribution(contribution)
-    recipe.addVar(contribution.A, 1)
-    recipe.addVar(contribution.k, 1)
-    recipe.addVar(contribution.c, 1)
-    return recipe
 
-
-@pytest.fixture(scope="session")
-def build_recipe_two_contributions():
-    "helper to build a recipe with two contributions"
     profile1 = Profile()
-    x = linspace(0, pi, 10)
-    y1 = sin(x)
-    profile1.setObservedProfile(x, y1)
+    profile1.set_observed_profile(x, y)
     contribution1 = FitContribution("c1")
     contribution1.set_profile(profile1)
-    contribution1.setEquation("A*sin(k*x + c)")
+    contribution1.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+    recipe1 = FitRecipe()
+    recipe1.add_contribution(contribution1)
+    recipe1.add_variable(contribution1.amplitude, 4)
+    recipe1.add_variable(contribution1.wave_number, 3)
+    recipe1.add_variable(contribution1.phase_shift, 2)
 
     profile2 = Profile()
-    y2 = 0.5 * sin(2 * x)
-    profile2.setObservedProfile(x, y2)
+    profile2.set_observed_profile(x, y)
     contribution2 = FitContribution("c2")
     contribution2.set_profile(profile2)
-    contribution2.setEquation("B*sin(m*x + d)")
+    contribution2.set_equation("amplitude*sin(wave_number*x + phase_shift)")
+    recipe2 = FitRecipe()
+    recipe2.add_contribution(contribution2)
+    recipe2.add_variable(contribution2.amplitude, 4)
+    recipe2.add_variable(contribution2.wave_number, 3)
+    recipe2.add_variable(contribution2.phase_shift, 2)
+    return recipe1, recipe2
+
+
+@pytest.fixture(scope="function")
+def build_recipe_two_contributions():
+    """Helper to build a recipe with two physically related
+    contributions."""
+    profile1 = Profile()
+    x = linspace(0, pi, 51)
+    y1 = sin(x)  # amplitude=1, freq=1
+    profile1.set_observed_profile(x, y1)
+
+    contribution1 = FitContribution("c1")
+    contribution1.set_profile(profile1)
+    contribution1.set_equation("A*sin(k*x + c)")
+
+    profile2 = Profile()
+    y2 = 0.5 * sin(2 * x)  # amplitude=0.5, freq=2
+    profile2.set_observed_profile(x, y2)
+
+    contribution2 = FitContribution("c2")
+    contribution2.set_profile(profile2)
+    contribution2.set_equation("B*sin(m*x + d)")
+
     recipe = FitRecipe()
-    recipe.addContribution(contribution1)
-    recipe.addContribution(contribution2)
-    recipe.addVar(contribution1.A, 1)
-    recipe.addVar(contribution1.k, 1)
-    recipe.addVar(contribution1.c, 1)
-    recipe.addVar(contribution2.B, 0.5)
-    recipe.addVar(contribution2.m, 2)
-    recipe.addVar(contribution2.d, 0)
+    recipe.add_contribution(contribution1)
+    recipe.add_contribution(contribution2)
+
+    # Add variables with reasonable initial guesses
+    recipe.add_variable(contribution1.A, 0.8)
+    recipe.add_variable(contribution1.k, 1.0)
+    recipe.add_variable(contribution1.c, 0.1)
+
+    recipe.add_variable(contribution2.B, 0.4)
+    recipe.add_variable(contribution2.m, 2.0)
+    recipe.add_variable(contribution2.d, 0.1)
+
+    # ---- Meaningful constraints ----
+    recipe.add_constraint(contribution2.m, "2*k")
+    recipe.add_constraint(contribution2.d, contribution1.c)
+    recipe.add_constraint(contribution2.B, "0.5*A")
+    recipe.add_soft_bounds(contribution1.A, 0.5, 1.5)
+    recipe.add_soft_bounds(contribution1.k, 0.8, 1.2)
 
     return recipe
 
@@ -205,4 +235,124 @@ def temp_data_files(tmp_path):
 
     cgr_file = tmp_path / "cgr_file.cgr"
     cgr_file.write_text("1.0 2.0\n" "1.1 2.1\n" "1.2 2.2\n")
+
+    results_file = tmp_path / "fit_results.res"
+    results_file.write_text("""
+Results written: Wed Feb 25 15:14:58 2026
+produced by cadenmyers
+
+Some quantities invalid due to missing profile uncertainty
+Overall (Chi2 and Reduced Chi2 invalid)
+------------------------------------------------------------------------------
+Residual       0.00000000
+Contributions  0.00000000
+Restraints     0.00000000
+Chi2           0.00000000
+Reduced Chi2   0.00000000
+Rw             0.00000000
+
+Variables (Uncertainties invalid)
+------------------------------------------------------------------------------
+amplitude    1.00000000e+00 +/- 4.82804000e-01
+phase_shift  -1.61291146e-18 +/- 1.00000000e+00
+wave_number  1.00000000e+00 +/- 2.17496687e-01
+
+Variable Correlations greater than 25% (Correlations invalid)
+------------------------------------------------------------------------------
+No correlations greater than 25%
+""")
+    yield tmp_path
+
+
+@pytest.fixture
+def parser_datafiles(tmp_path):
+    """Create temporary data files with different column layouts and
+    yield the directory."""
+
+    METADATA_HEADER = r"""# xPDFsuite Configuration #
+[PDF]
+wavelength = 0.1
+dataformat = QA
+inputfile = input.iq
+backgroundfile = backgroundfile.iq
+mode = xray
+bgscale = 1.0
+composition = TiSe2
+outputtype = gr
+qmaxinst = 25.0
+qmin = 0.1
+qmax = 25.0
+rmax = 140.0
+rmin = 0.0
+rstep = 0.01
+rpoly = 0.7
+
+[Misc]
+inputdir = /my/data/dir
+savedir = /my/save/dir
+backgroundfilefull = /my/data/dir/backgroundfile.iq
+
+#### start data
+#S 1
+"""
+
+    # Four-column standard
+    (tmp_path / "four_col.gr").write_text(
+        METADATA_HEADER
+        + r"""#L r($\AA$)  G($\AA^{-2}$) dr($\AA$) dG($\AA^{-2}$)
+1.0 2.0 0.1 0.2
+1.1 2.1 0.3 0.4
+1.2 2.2 0.5 0.6"""
+    )
+
+    # Three-column (x, y, dy)
+    (tmp_path / "three_col.dat").write_text(
+        METADATA_HEADER + r"""#L r($\AA$)  G($\AA^{-2}$) dG($\AA^{-2}$)
+1.0 2.0 0.2
+1.1 2.1 0.4
+1.2 2.2 0.6"""
+    )
+
+    # Two-column (x, y)
+    (tmp_path / "two_col.txt").write_text(
+        METADATA_HEADER + r"""#L r($\AA$)  G($\AA^{-2}$)
+1.0 2.0
+1.1 2.1
+1.2 2.2"""
+    )
+
+    # Four-column reordered (x, dx, y, dy)
+    (tmp_path / "four_col_reordered.txt").write_text(
+        METADATA_HEADER
+        + r"""#L r($\AA$) dr($\AA$) G($\AA^{-2}$) dG($\AA^{-2}$)
+1.0 0.1 2.0 0.2
+1.1 0.3 2.1 0.4
+1.2 0.5 2.2 0.6"""
+    )
+
+    # Four-column with NaN/Inf
+    (tmp_path / "four_col_nan_inf.gr").write_text(
+        METADATA_HEADER
+        + r"""#L r($\AA$)  G($\AA^{-2}$) dr($\AA$) dG($\AA^{-2}$)
+1.0 2.0 nan inf
+1.1 2.1 inf 1
+1.2 2.2 nan nan"""
+    )
+
+    # One-column
+    (tmp_path / "one_col.gr").write_text(METADATA_HEADER + r"""#L r($\AA$)
+1.0
+1.1
+1.2""")
+
+    # Five-column (extra column)
+    (tmp_path / "five_col.gr").write_text(
+        METADATA_HEADER
+        + r"""#L r($\AA$)  G($\AA^{-2}$) dr($\AA$) dG($\AA^{-2}$) extra
+1.0 2.0 0.1 0.2 9.9
+1.1 2.1 0.3 0.4 9.8
+1.2 2.2 0.5 0.6 9.7"""
+    )
+
+    # Yield the directory
     yield tmp_path

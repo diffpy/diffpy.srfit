@@ -48,7 +48,7 @@ def testParser1(datafile):
     assert meta.get("scale") is None
     assert meta.get("doping") is None
 
-    x, y, dx, dy = parser.getData()
+    x, y, dx, dy = parser.get_data()
     assert dx is None
     assert dy is None
 
@@ -80,12 +80,12 @@ def testParser1(datafile):
 
 def testParser2(datafile):
     data = datafile("si-q27r60-xray.gr")
-    parser = PDFParser()
-    parser.parseFile(data)
+    parser = ProfileParser()
+    parser.parse_file(data)
 
     meta = parser._meta
 
-    assert data == meta["filename"]
+    assert str(data) == meta["filename"]
     assert 1 == meta["nbanks"]
     assert "X" == meta["stype"]
     assert 27 == meta["qmax"]
@@ -96,7 +96,7 @@ def testParser2(datafile):
     assert meta.get("scale") is None
     assert meta.get("doping") is None
 
-    x, y, dx, dy = parser.getData()
+    x, y, dx, dy = parser.get_data()
     testx = numpy.linspace(0.01, 60, 5999, endpoint=False)
     diff = testx - x
     res = numpy.dot(diff, diff)
@@ -138,7 +138,7 @@ def testParser2(datafile):
     res = numpy.dot(diff, diff)
     assert 0 == pytest.approx(res)
 
-    assert dx is None
+    assert dx.tolist() == [0] * len(dx)
     return
 
 
@@ -171,9 +171,9 @@ def testGenerator(diffpy_srreal_available, datafile):
         defval = calc._getDoubleAttr(pname)
         assert defval == par.getValue()
         # Test setting values
-        par.setValue(1.0)
+        par.set_value(1.0)
         assert 1.0 == par.getValue()
-        par.setValue(defval)
+        par.set_value(defval)
         assert defval == par.getValue()
 
     r = numpy.arange(0, 10, 0.1)
@@ -294,7 +294,9 @@ def test_pickling(diffpy_srreal_available, datafile):
     pc2 = pickle.loads(pickle.dumps(pc))
     res0 = pc.residual()
     assert numpy.array_equal(res0, pc2.residual())
-    for p in chain(pc.iterPars("Uiso"), pc2.iterPars("Uiso")):
+    for p in chain(
+        pc.iterate_over_parameters("Uiso"), pc2.iterate_over_parameters("Uiso")
+    ):
         p.value = 0.004
     res1 = pc.residual()
     assert not numpy.allclose(res0, res1)

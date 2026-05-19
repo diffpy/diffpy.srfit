@@ -18,7 +18,7 @@
 def sasimport(modname):
     """Import specified module from the SasView sas package.
 
-    Attributes
+    Parameters
     ----------
     modname
         absolute module name contained in the sas package.

@@ -97,7 +97,7 @@ def testSwapping(make_args, noObserversInGlobalBuilders):
     factory.registerArgument("v2", v2)
     factory.registerArgument("v3", v3)
     factory.registerArgument("v4", v4)
-    b = factory.registerFunction("g", g1, ["v1", "v2", "v3", "v4"])
+    b = factory.register_function("g", g1, ["v1", "v2", "v3", "v4"])
 
     # Now associate args with the wrapped function
     op = b.literal
@@ -121,7 +121,7 @@ def testSwapping(make_args, noObserversInGlobalBuilders):
     assert round(abs(24 - eq1()), 7) == 0
 
     # Now swap out the function
-    b = factory.registerFunction("g", g2, ["v1"])
+    b = factory.register_function("g", g2, ["v1"])
     op = b.literal
     assert op.operation == g2
     assert v1 in op.args
@@ -153,10 +153,10 @@ def testParseEquation(noObserversInGlobalBuilders):
     x = numpy.pi
     B = 4.0
     C = 2.0
-    eq.A.setValue(A)
-    eq.x.setValue(x)
-    eq.B.setValue(B)
-    eq.C.setValue(C)
+    eq.A.set_value(A)
+    eq.x.set_value(x)
+    eq.B.set_value(B)
+    eq.C.set_value(C)
     assert numpy.array_equal(eq(), f_equation(A, x, B, C))
 
     # Make sure that the arguments of eq are listed in the order in which
@@ -167,8 +167,8 @@ def testParseEquation(noObserversInGlobalBuilders):
     eq = factory.makeEquation("sqrt(e**(-0.5*(x/sigma)**2))")
     x = numpy.arange(0, 1, 0.05)
     sigma = 0.1
-    eq.x.setValue(x)
-    eq.sigma.setValue(sigma)
+    eq.x.set_value(x)
+    eq.sigma.set_value(sigma)
     assert numpy.allclose(eq(), gaussian_test(x, sigma))
     assert eq.args == [eq.x, eq.sigma]
 
@@ -181,7 +181,7 @@ def testParseEquation(noObserversInGlobalBuilders):
     assert eq.args == [eq.sigma]
 
     # Equation with user-defined functions
-    factory.registerFunction("myfunc", eq, ["sigma"])
+    factory.register_function("myfunc", eq, ["sigma"])
     eq2 = factory.makeEquation("c*myfunc(sigma)")
     assert numpy.allclose(eq2(c=2, sigma=sigma), 2 * gaussian_test(x, sigma))
     assert "sigma" in eq2.argdict
@@ -214,7 +214,7 @@ def testBuildEquation(noObserversInGlobalBuilders):
     x = numpy.arange(0, numpy.pi, 0.1)
 
     beq = A * sin(a * x)
-    eq = beq.getEquation()
+    eq = beq.get_equation()
 
     assert "a" in eq.argdict
     assert "A" in eq.argdict
@@ -235,7 +235,7 @@ def testBuildEquation(noObserversInGlobalBuilders):
     b = builder.ArgumentBuilder(name="b", value=1)
 
     beq = sin(f(a, b))
-    eq = beq.getEquation()
+    eq = beq.get_equation()
     assert eq() == numpy.sin(_f(2, 1))
 
     # complex function
@@ -245,23 +245,23 @@ def testBuildEquation(noObserversInGlobalBuilders):
     x = builder.ArgumentBuilder(name="x", value=_x, const=True)
     sigma = builder.ArgumentBuilder(name="sigma", value=0.1)
     beq = sqrt(e ** (-0.5 * (x / sigma) ** 2))
-    eq = beq.getEquation()
+    eq = beq.get_equation()
     assert numpy.allclose(eq(), numpy.sqrt(numpy.exp(-0.5 * (_x / 0.1) ** 2)))
 
     # Equation with Equation
     A = builder.ArgumentBuilder(name="A", value=2)
     B = builder.ArgumentBuilder(name="B", value=4)
     beq = A + B
-    eq = beq.getEquation()
+    eq = beq.get_equation()
     E = builder.wrapOperator("eq", eq)
-    eq2 = (2 * E).getEquation()
+    eq2 = (2 * E).get_equation()
     # Make sure these evaluate to the same thing
     assert eq.args == [A.literal, B.literal]
     assert 2 * eq() == eq2()
     # Pass new arguments to the equation
     C = builder.ArgumentBuilder(name="C", value=5)
     D = builder.ArgumentBuilder(name="D", value=6)
-    eq3 = (E(C, D) + 1).getEquation()
+    eq3 = (E(C, D) + 1).get_equation()
     assert 12 == eq3()
     # Pass old and new arguments to the equation
     # If things work right, A has been given the value of C in the last

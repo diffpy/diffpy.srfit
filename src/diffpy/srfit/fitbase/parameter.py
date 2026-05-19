@@ -34,6 +34,25 @@ from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _parameter_interface
 from diffpy.srfit.util.argbinders import bind2nd
 from diffpy.srfit.util.nameutils import validateName
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+parameter_base = "diffpy.srfit.fitbase.Parameter"
+removal_version = "4.0.0"
+setValue_dep_msg = build_deprecation_message(
+    parameter_base, "setValue", "set_value", removal_version
+)
+
+setConst_dep_msg = build_deprecation_message(
+    parameter_base, "setConst", "set_constant", removal_version
+)
+
+boundRange_dep_msg = build_deprecation_message(
+    parameter_base, "boundRange", "bound_range", removal_version
+)
+
+boundWindow_dep_msg = build_deprecation_message(
+    parameter_base, "boundWindow", "bound_window", removal_version
+)
 
 
 class Parameter(_parameter_interface, Argument, Validatable):
@@ -46,22 +65,22 @@ class Parameter(_parameter_interface, Argument, Validatable):
     const
         A flag indicating whether this is considered a constant.
     _value
-        The value of the Parameter. Modified with 'setValue'.
+        The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'setValue'.
+        Property for 'getValue' and 'set_value'.
     constrained
         A flag indicating if the Parameter is constrained
         (default False).
     bounds
         A 2-list defining the bounds on the Parameter. This can be
         used by some optimizers when the Parameter is varied. See
-        FitRecipe.getBounds and FitRecipe.boundsToRestraints.
+        FitRecipe.get_bounds_pairs and FitRecipe.convert_bounds_to_restraints.
     """
 
     def __init__(self, name, value=None, const=False):
         """Initialization.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this Parameter (must be a valid attribute
@@ -81,17 +100,17 @@ class Parameter(_parameter_interface, Argument, Validatable):
         Argument.__init__(self, name, value, const)
         return
 
-    def setValue(self, val):
+    def set_value(self, val):
         """Set the value of the Parameter and the bounds.
 
-        Attributes
+        Parameters
         ----------
         val
             The value to assign.
-        lb
+        lower_bound : float
             The lower bounds for the bounds list. If this is None
             (default), then the lower bound will not be alterered.
-        ub
+        upper_bound : float
             The upper bounds for the bounds list. If this is None
             (default), then the upper bound will not be alterered.
 
@@ -100,20 +119,29 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self
             Returns self so that mutators can be chained.
         """
-        Argument.setValue(self, val)
+        Argument.set_value(self, val)
         return self
 
-    def setConst(self, const=True, value=None):
+    @deprecated(setValue_dep_msg)
+    def setValue(self, val):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.set_value instead.
+        """
+        return self.set_value(val)
+
+    def set_constant(self, is_constant=True, value=None):
         """Toggle the Parameter as constant.
 
-        Attributes
+        Parameters
         ----------
-        const
-            Flag indicating if the parameter is constant (default
+        is_constant : bool, optional
+            The flag indicating if the parameter is constant (default
             True).
-        value
-            An optional value for the parameter (default None). If this
-            is not None, then the parameter will get a new value,
+        value : float, optional
+            The value value for the parameter to be set to (default None).
+            If this is not None, then the parameter will get a new value,
             constant or otherwise.
 
         Returns
@@ -121,19 +149,29 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self
             Returns self so that mutators can be chained.
         """
-        self.const = bool(const)
+        self.const = bool(is_constant)
         if value is not None:
-            self.setValue(value)
+            self.set_value(value)
         return self
 
-    def boundRange(self, lb=None, ub=None):
+    @deprecated(setConst_dep_msg)
+    def setConst(self, const=True, value=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.set_constant instead.
+        """
+        self.set_constant(const, value)
+        return self
+
+    def bound_range(self, lower_bound=None, upper_bound=None):
         """Set lower and upper bound of the Parameter.
 
-        Attributes
+        Parameters
         ----------
-        lb
+        lower_bound : float
             The lower bound for the bounds list.
-        ub
+        upper_bound : float
             The upper bound for the bounds list.
 
         Returns
@@ -141,24 +179,34 @@ class Parameter(_parameter_interface, Argument, Validatable):
         self
             Returns self so that mutators can be chained.
         """
-        if lb is not None:
-            self.bounds[0] = lb
-        if ub is not None:
-            self.bounds[1] = ub
+        if lower_bound is not None:
+            self.bounds[0] = lower_bound
+        if upper_bound is not None:
+            self.bounds[1] = upper_bound
         return self
 
-    def boundWindow(self, lr=0, ur=None):
+    @deprecated(boundRange_dep_msg)
+    def boundRange(self, lower_bound=None, upper_bound=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.bound_range instead.
+        """
+        self.bound_range(lower_bound, upper_bound)
+        return self
+
+    def bound_window(self, lower_radius=0, upper_radius=None):
         """Create bounds centered on the current value of the Parameter.
 
-        Attributes
+        Parameters
         ----------
-        lr
+        lower_radius : float, optional
             The radius of the lower bound (default 0). The lower bound is
-            computed as value - lr.
-        ur
+            computed as value - lower_radius.
+        upper_radius : float, optional
             The radius of the upper bound. The upper bound is computed as
-            value + ur. If this is None (default), then the value of the
-            lower radius is used.
+            value + upper_radius. If this is None (default), then the value
+            of the lower radius is used.
 
         Returns
         -------
@@ -166,11 +214,21 @@ class Parameter(_parameter_interface, Argument, Validatable):
             Returns self so that mutators can be chained.
         """
         val = self.getValue()
-        lb = val - lr
-        if ur is None:
-            ur = lr
-        ub = val + ur
-        self.bounds = [lb, ub]
+        lower_bound = val - lower_radius
+        if upper_radius is None:
+            upper_radius = lower_radius
+        upper_bound = val + upper_radius
+        self.bounds = [lower_bound, upper_bound]
+        return self
+
+    @deprecated(boundWindow_dep_msg)
+    def boundWindow(self, lr=0, ur=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.bound_window instead.
+        """
+        self.bound_window(lr, ur)
         return self
 
     def _validate(self):
@@ -205,7 +263,7 @@ class ParameterProxy(Parameter):
     def __init__(self, name, par):
         """Initialization.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this ParameterProxy.
@@ -238,8 +296,8 @@ class ParameterProxy(Parameter):
         """List of lower and upper bounds of the proxied Parameter.
 
         This can be used by some optimizers when the Parameter is
-        varied. See FitRecipe.getBounds and
-        FitRecipe.boundsToRestraints.
+        varied. See FitRecipe.get_bounds_pairs and
+        FitRecipe.convert_bounds_to_restraints.
         """
         return self.par.bounds
 
@@ -254,25 +312,25 @@ class ParameterProxy(Parameter):
 
     # wrap Parameter methods to use the target object ------------------------
 
-    @wraps(Parameter.setValue)
-    def setValue(self, val):
-        return self.par.setValue(val)
+    @wraps(Parameter.set_value)
+    def set_value(self, val):
+        return self.par.set_value(val)
 
     @wraps(Parameter.getValue)
     def getValue(self):
         return self.par.getValue()
 
-    @wraps(Parameter.setConst)
-    def setConst(self, const=True, value=None):
-        return self.par.setConst(const, value)
+    @wraps(Parameter.set_constant)
+    def set_constant(self, const=True, value=None):
+        return self.par.set_constant(const, value)
 
-    @wraps(Parameter.boundRange)
-    def boundRange(self, lb=None, ub=None):
-        return self.par.boundRange(lb, ub)
+    @wraps(Parameter.bound_range)
+    def bound_range(self, lower_bound=None, upper_bound=None):
+        return self.par.bound_range(lower_bound, upper_bound)
 
-    @wraps(Parameter.boundWindow)
-    def boundWindow(self, lr=0, ur=None):
-        return self.par.boundWindow(lr, ur)
+    @wraps(Parameter.bound_window)
+    def bound_window(self, lr=0, ur=None):
+        return self.par.bound_window(lr, ur)
 
     def _validate(self):
         """Validate my state.
@@ -293,14 +351,14 @@ class ParameterProxy(Parameter):
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.
 
-    This class wraps an object as a Parameter. The getValue and setValue
-    methods defer to the data of the wrapped object.
+    This class wraps an object as a Parameter. The getValue and
+    set_value methods defer to the data of the wrapped object.
     """
 
     def __init__(self, name, obj, getter=None, setter=None, attr=None):
         """Wrap an object as a Parameter.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this Parameter.
@@ -359,7 +417,7 @@ class ParameterAdapter(Parameter):
         """Get the value of the Parameter."""
         return self.getter(self.obj)
 
-    def setValue(self, value):
+    def set_value(self, value):
         """Set the value of the Parameter."""
         if value != self.getValue():
             self.setter(self.obj, value)

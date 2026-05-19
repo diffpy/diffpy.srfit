@@ -14,7 +14,6 @@
 ##############################################################################
 """Picklable storage of callable objects using weak references."""
 
-
 import types
 import weakref
 
@@ -69,7 +68,8 @@ class WeakBoundMethod(object):
         return
 
     def __call__(self, *args, **kwargs):
-        """Call the wrapped method if the weak-referenced object is alive.
+        """Call the wrapped method if the weak-referenced object is
+        alive.
 
         If that object does not exist and the fallback function is defined,
         call the fallback function instead.
@@ -122,8 +122,9 @@ class WeakBoundMethod(object):
         return state
 
     def __setstate__(self, state):
-        """Restore the weak reference in this wrapper upon unpickling."""
-        (self._class, nm, self.fallback, mobj) = state
+        """Restore the weak reference in this wrapper upon
+        unpickling."""
+        self._class, nm, self.fallback, mobj = state
         self.function = getattr(self._class, nm)
         if mobj is None:
             # use a fake weak reference that mimics deallocated object.

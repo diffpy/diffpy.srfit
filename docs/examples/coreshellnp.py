@@ -29,8 +29,9 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
+    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.pdf import PDFGenerator
 
 # Example Code
 
@@ -42,10 +43,10 @@ def makeRecipe(stru1, stru2, datname):
     profile = Profile()
 
     # Load data and add it to the profile
-    parser = PDFParser()
+    parser = ProfileParser()
     parser.parseFile(datname)
-    profile.loadParsedData(parser)
-    profile.setCalculationRange(xmin=1.5, xmax=45, dx=0.1)
+    profile.load_parsed_data(parser)
+    profile.set_calculation_range(xmin=1.5, xmax=45, dx=0.1)
 
     # The ProfileGenerator
     # In order to fit the core and shell phases simultaneously, we must use two
@@ -66,8 +67,8 @@ def makeRecipe(stru1, stru2, datname):
     # The FitContribution
     # Add both generators and the profile to the FitContribution.
     contribution = FitContribution("cdszns")
-    contribution.addProfileGenerator(generator_cds)
-    contribution.addProfileGenerator(generator_zns)
+    contribution.add_profile_generator(generator_cds)
+    contribution.add_profile_generator(generator_zns)
     contribution.set_profile(profile, xname="r")
 
     # Set up the characteristic functions. We use a spherical CF for the core
@@ -76,56 +77,60 @@ def makeRecipe(stru1, stru2, datname):
     # very little to the PDF.
     from diffpy.srfit.pdf.characteristicfunctions import shellCF, sphericalCF
 
-    contribution.registerFunction(sphericalCF, name="f_CdS")
-    contribution.registerFunction(shellCF, name="f_ZnS")
+    contribution.register_function(sphericalCF, name="f_CdS")
+    contribution.register_function(shellCF, name="f_ZnS")
 
     # Write the fitting equation. We want to sum the PDFs from each phase and
     # multiply it by a scaling factor.
-    contribution.setEquation("scale * (f_CdS * G_CdS +  f_ZnS * G_ZnS)")
+    contribution.set_equation("scale * (f_CdS * G_CdS +  f_ZnS * G_ZnS)")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Vary the inner radius and thickness of the shell. Constrain the core
     # diameter to twice the shell radius.
-    recipe.addVar(contribution.radius, 15)
-    recipe.addVar(contribution.thickness, 11)
-    recipe.constrain(contribution.psize, "2 * radius")
+    recipe.add_variable(contribution.radius, 15)
+    recipe.add_variable(contribution.thickness, 11)
+    recipe.add_constraint(contribution.psize, "2 * radius")
 
     # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
     # We want the sum of the phase scale factors to be 1.
-    recipe.newVar("scale_CdS", 0.7)
-    recipe.constrain(generator_cds.scale, "scale_CdS")
-    recipe.constrain(generator_zns.scale, "1 - scale_CdS")
+    recipe.create_new_variable("scale_CdS", 0.7)
+    recipe.add_constraint(generator_cds.scale, "scale_CdS")
+    recipe.add_constraint(generator_zns.scale, "1 - scale_CdS")
     # We also want the resolution factor to be the same on each.
 
     # Vary the global scale as well.
-    recipe.addVar(contribution.scale, 0.3)
+    recipe.add_variable(contribution.scale, 0.3)
 
     # Now we can configure the structural parameters. We tag the different
     # structural variables so we can easily turn them on and off in the
     # subsequent refinement.
     phase_cds = generator_cds.phase
     for par in phase_cds.sgpars.latpars:
-        recipe.addVar(par, name=par.name + "_cds", tag="lat")
+        recipe.add_variable(par, name=par.name + "_cds", tag="lat")
     for par in phase_cds.sgpars.adppars:
-        recipe.addVar(par, 1, name=par.name + "_cds", tag="adp")
-    recipe.addVar(phase_cds.sgpars.xyzpars.z_1, name="z_1_cds", tag="xyz")
+        recipe.add_variable(par, 1, name=par.name + "_cds", tag="adp")
+    recipe.add_variable(
+        phase_cds.sgpars.xyzpars.z_1, name="z_1_cds", tag="xyz"
+    )
     # Since we know these have stacking disorder, constrain the B33 adps for
     # each atom type.
-    recipe.constrain("B33_1_cds", "B33_0_cds")
-    recipe.addVar(generator_cds.delta2, name="delta2_cds", value=5)
+    recipe.add_constraint("B33_1_cds", "B33_0_cds")
+    recipe.add_variable(generator_cds.delta2, name="delta2_cds", value=5)
 
     phase_zns = generator_zns.phase
     for par in phase_zns.sgpars.latpars:
-        recipe.addVar(par, name=par.name + "_zns", tag="lat")
+        recipe.add_variable(par, name=par.name + "_zns", tag="lat")
     for par in phase_zns.sgpars.adppars:
-        recipe.addVar(par, 1, name=par.name + "_zns", tag="adp")
-    recipe.addVar(phase_zns.sgpars.xyzpars.z_1, name="z_1_zns", tag="xyz")
-    recipe.constrain("B33_1_zns", "B33_0_zns")
-    recipe.addVar(generator_zns.delta2, name="delta2_zns", value=2.5)
+        recipe.add_variable(par, 1, name=par.name + "_zns", tag="adp")
+    recipe.add_variable(
+        phase_zns.sgpars.xyzpars.z_1, name="z_1_zns", tag="xyz"
+    )
+    recipe.add_constraint("B33_1_zns", "B33_0_zns")
+    recipe.add_variable(generator_zns.delta2, name="delta2_zns", value=2.5)
 
     # Give the recipe away so it can be used!
     return recipe
@@ -169,7 +174,7 @@ def main():
     recipe = makeRecipe(stru1, stru2, data)
     from diffpy.srfit.fitbase.fithook import PlotFitHook
 
-    recipe.pushFitHook(PlotFitHook())
+    recipe.push_fit_hook(PlotFitHook())
     recipe.fithooks[0].verbose = 3
 
     # Optimize - we do this in steps to help convergence
@@ -202,7 +207,7 @@ def main():
 
     # Generate and print the FitResults
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     # Plot!
     plotResults(recipe)

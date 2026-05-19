@@ -87,20 +87,20 @@ def test_ObjCryst_constrain_space_group(pyobjcryst_available):
 
     # Make sure we can't constrain these
     with pytest.raises(ValueError):
-        mn.constrain(mn.x, "y")
+        mn.add_constraint(mn.x, "y")
 
     with pytest.raises(ValueError):
-        mn.constrain(mn.y, "z")
+        mn.add_constraint(mn.y, "z")
 
     with pytest.raises(ValueError):
-        mn.constrain(mn.z, "x")
+        mn.add_constraint(mn.z, "x")
 
     # Nor can we make them into variables
     from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 
     f = FitRecipe()
     with pytest.raises(ValueError):
-        f.addVar(mn.x)
+        f.add_variable(mn.x)
 
     return
 
@@ -179,7 +179,8 @@ def test_DiffPy_constrain_as_space_group(datafile, pyobjcryst_available):
 
 
 def test_constrain_as_space_group_args(pyobjcryst_available, datafile):
-    """Test the arguments processing of constrainAsSpaceGroup function."""
+    """Test the arguments processing of constrainAsSpaceGroup
+    function."""
     if not pyobjcryst_available:
         pytest.skip("pyobjcrysta package not available")
 

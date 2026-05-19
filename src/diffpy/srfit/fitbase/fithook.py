@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""The FitHook class for inspecting the progress of a FitRecipe refinement.
+"""The FitHook class for inspecting the progress of a FitRecipe
+refinement.
 
 FitHooks are called by a FitRecipe during various times of the residual
 is evaluation. The default FitHook simply counts the number of times the
@@ -37,10 +38,10 @@ class FitHook(object):
     """Base class for inspecting the progress of a FitRecipe refinement.
 
     Can serve as a fithook for the FitRecipe class (see
-    FitRecipe.pushFitHook method.) The methods in this class are called
-    during the preparation of the FitRecipe for refinement, and during
-    the residual call. See the class methods for a description of their
-    purpose.
+    FitRecipe.push_fit_hook method.) The methods in this class are
+    called during the preparation of the FitRecipe for refinement, and
+    during the residual call. See the class methods for a description of
+    their purpose.
     """
 
     def reset(self, recipe):
@@ -54,9 +55,10 @@ class FitHook(object):
         return
 
     def precall(self, recipe):
-        """This is called within FitRecipe.residual, before the calculation.
+        """This is called within FitRecipe.residual, before the
+        calculation.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance
@@ -64,9 +66,10 @@ class FitHook(object):
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the calculation.
+        """This is called within FitRecipe.residual, after the
+        calculation.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance
@@ -84,8 +87,6 @@ class PrintFitHook(FitHook):
 
     This FitHook prints out a running count of the number of times the residual
     has been called, or other information, based on the verbosity.
-
-    Attributes
 
     Attributes
     ----------
@@ -121,9 +122,10 @@ class PrintFitHook(FitHook):
         return
 
     def precall(self, recipe):
-        """This is called within FitRecipe.residual, before the calculation.
+        """This is called within FitRecipe.residual, before the
+        calculation.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance
@@ -134,9 +136,10 @@ class PrintFitHook(FitHook):
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the calculation.
+        """This is called within FitRecipe.residual, after the
+        calculation.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance
@@ -164,8 +167,8 @@ class PrintFitHook(FitHook):
 
         if self.verbose >= 3:
             print("Variables")
-            vnames = recipe.getNames()
-            vals = recipe.getValues()
+            vnames = recipe.get_names()
+            vals = recipe.get_values()
             # byname = _byname()
             items = sorted(zip(vnames, vals), key=_byname)
             for name, val in items:
@@ -227,11 +230,12 @@ class PlotFitHook(FitHook):
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the calculation.
+        """This is called within FitRecipe.residual, after the
+        calculation.
 
         Find data and plot it.
 
-        Attributes
+        Parameters
         ----------
         recipe
             The FitRecipe instance

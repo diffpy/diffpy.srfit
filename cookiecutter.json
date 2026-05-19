@@ -1,0 +1,20 @@
+{
+  "author_names": "Christopher Farrow, Pavol Juhas, Caden Myers, Simon J. L. Billinge",
+  "author_emails": "farrowch@gmail.com, pavol.juhas@gmail.com, cjm2304@columbia.edu, sbillinge@ucsb.edu",
+  "maintainer_names": "Caden Myers, Simon J. L. Billinge",
+  "maintainer_emails": "cjm2304@columbia.edu, sbillinge@ucsb.edu",
+  "maintainer_github_usernames": "cadenmyers13, sbillinge",
+  "contributors": "Christopher Farrow, Pavol Juhas, Caden Myers, Simon J. L. Billinge, and members of the DiffPy community.",
+  "license_holders": "The DiffPy Team",
+  "project_name": "diffpy.srfit",
+  "github_username_or_orgname": "diffpy",
+  "github_repo_name": "diffpy.srfit",
+  "conda_pypi_package_dist_name": "diffpy.srfit",
+  "package_dir_name": "diffpy.srfit",
+  "project_short_description": "Generalized code base for modeling problems.",
+  "project_keywords": "regression, modeling, fitting, diffraction, PDF",
+  "minimum_supported_python_version": "3.11",
+  "maximum_supported_python_version": "3.13",
+  "project_needs_c_code_compiled": "No",
+  "project_has_gui_tests": "No"
+}

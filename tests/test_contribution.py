@@ -13,6 +13,7 @@
 #
 ##############################################################################
 """Tests for refinableobj module."""
+
 import unittest
 
 import numpy as np
@@ -50,7 +51,7 @@ class TestContribution(unittest.TestCase):
         self.assertRaises(TypeError, fc1.setProfile, "invalid")
         # check if residual equation is set up when possible
         fc2 = FitContribution("test2")
-        fc2.setEquation("A * x")
+        fc2.set_equation("A * x")
         fc2.set_profile(profile)
         self.assertFalse(fc2._reseq is None)
         return
@@ -67,15 +68,28 @@ class TestContribution(unittest.TestCase):
         self.assertTrue(fc._eq is not None)
         return
 
+    def test_add_profile_generator(self):
+        fc = self.fitcontribution
+        gen = self.gen
+        fc.add_profile_generator(gen, "gen")
+
+        xobs = arange(0, 10, 0.5)
+        self.assertTrue(array_equal(xobs, gen(xobs)))
+
+        self.assertTrue(gen.profile is None)
+        self.assertTrue(fc._eq is not None)
+        return
+
     def testInteraction(self):
-        """Test the interaction between the profile and profile generator."""
+        """Test the interaction between the profile and profile
+        generator."""
         fc = self.fitcontribution
         profile = self.profile
         gen = self.gen
 
         # Add the calculator and profile
         fc.set_profile(profile)
-        fc.addProfileGenerator(gen, "I")
+        fc.add_profile_generator(gen, "I")
 
         # Check attributes are created
         self.assertTrue(fc.profile is profile)
@@ -89,7 +103,7 @@ class TestContribution(unittest.TestCase):
         # create some data
         xobs = arange(0, 10, 0.5)
         yobs = xobs
-        profile.setObservedProfile(xobs, yobs)
+        profile.set_observed_profile(xobs, yobs)
 
         # Make sure this is where it's supposed to be
         self.assertTrue(gen.profile.xobs is xobs)
@@ -111,16 +125,16 @@ class TestContribution(unittest.TestCase):
         xobs = arange(0, 10, 0.5)
         yobs = xobs
         profile = self.profile
-        profile.setObservedProfile(xobs, yobs)
+        profile.set_observed_profile(xobs, yobs)
         xobs2 = arange(0, 10, 0.8)
         yobs2 = 0.5 * xobs2
         profile2 = Profile()
-        profile2.setObservedProfile(xobs2, yobs2)
+        profile2.set_observed_profile(xobs2, yobs2)
         gen = self.gen
 
         # Validate equations
         fc.set_profile(profile)
-        fc.addProfileGenerator(gen, "I")
+        fc.add_profile_generator(gen, "I")
         self.assertTrue(array_equal(gen.value, xobs))
         self.assertTrue(array_equal(fc._eq(), xobs))
         self.assertAlmostEqual(0, sum(fc._reseq()))
@@ -143,40 +157,53 @@ class TestContribution(unittest.TestCase):
         self.assertEqual(len(xobs2), len(fc.residual()))
         return
 
+    def test_get_residual_equation(self):
+        """Check getting the current formula for residual equation."""
+        fc = self.fitcontribution
+        self.assertEqual("", fc.get_residual_equation())
+        fc.set_profile(self.profile)
+        fc.set_equation("A * x + B")
+        self.assertEqual("((eq - y) / dy)", fc.get_residual_equation())
+        fc.set_residual_equation("2 * (eq - y)")
+        self.assertEqual("(2 * (eq - y))", fc.get_residual_equation())
+        return
+
     def test_getResidualEquation(self):
         """Check getting the current formula for residual equation."""
         fc = self.fitcontribution
-        self.assertEqual("", fc.getResidualEquation())
+        self.assertEqual("", fc.get_residual_equation())
         fc.set_profile(self.profile)
-        fc.setEquation("A * x + B")
+        fc.set_equation("A * x + B")
         self.assertEqual("((eq - y) / dy)", fc.getResidualEquation())
         fc.setResidualEquation("2 * (eq - y)")
-        self.assertEqual("(2 * (eq - y))", fc.getResidualEquation())
+        self.assertEqual("(2 * (eq - y))", fc.get_residual_equation())
         return
 
     def test_releaseOldEquations(self):
-        """Ensure EquationFactory does not hold to obsolete Equations."""
+        """Ensure EquationFactory does not hold to obsolete
+        Equations."""
         fc = self.fitcontribution
         self.assertEqual(0, len(fc._eqfactory.equations))
         for i in range(5):
-            fc.setEquation("A * x + B")
+            fc.set_equation("A * x + B")
         self.assertEqual(1, len(fc._eqfactory.equations))
         fc.set_profile(self.profile)
         for i in range(5):
-            fc.setResidualEquation("chiv")
+            fc.set_residual_equation("chiv")
         self.assertEqual(2, len(fc._eqfactory.equations))
         return
 
-    def test_registerFunction(self):
-        """Ensure registered function works after second setEquation call."""
+    def test_register_function(self):
+        """Ensure registered function works after second set_equation
+        call."""
         fc = self.fitcontribution
-        fc.registerFunction(_fsquare, name="fsquare")
-        fc.setEquation("fsquare")
-        fc.x.setValue(5)
+        fc.register_function(_fsquare, name="fsquare")
+        fc.set_equation("fsquare")
+        fc.x.set_value(5)
         self.assertEqual(25, fc.evaluate())
         fc.x << 6
         self.assertEqual(36, fc.evaluate())
-        fc.setEquation("fsquare + 5")
+        fc.set_equation("fsquare + 5")
         self.assertEqual(41, fc.evaluate())
         fc.x << -1
         self.assertEqual(6, fc.evaluate())
@@ -196,7 +223,7 @@ def testResidual(noObserversInGlobalBuilders):
     # Add the calculator and profile
     fc.set_profile(profile)
     assert fc.profile is profile
-    fc.addProfileGenerator(gen, "I")
+    fc.add_profile_generator(gen, "I")
     assert fc._eq._value is None
     assert fc._reseq._value is None
     assert 1 == len(fc._generators)
@@ -205,7 +232,7 @@ def testResidual(noObserversInGlobalBuilders):
     # Let's create some data)
     xobs = arange(0, 10, 0.5)
     yobs = xobs
-    profile.setObservedProfile(xobs, yobs)
+    profile.set_observed_profile(xobs, yobs)
 
     # Check our fitting equation.
     assert np.array_equal(fc._eq(), gen(xobs))
@@ -215,7 +242,7 @@ def testResidual(noObserversInGlobalBuilders):
     assert dot(chiv, chiv) == pytest.approx(0)
 
     # Now change the equation
-    fc.setEquation("2*I")
+    fc.set_equation("2*I")
     assert fc._eq._value is None
     assert fc._reseq._value is None
     chiv = fc.residual()
@@ -224,20 +251,20 @@ def testResidual(noObserversInGlobalBuilders):
     # Try to add a parameter
     c = Parameter("c", 2)
     fc._add_parameter(c)
-    fc.setEquation("c*I")
+    fc.set_equation("c*I")
     assert fc._eq._value is None
     assert fc._reseq._value is None
     chiv = fc.residual()
     assert dot(chiv, chiv) == pytest.approx(dot(yobs, yobs))
 
     # Try something more complex
-    c.setValue(3)
-    fc.setEquation("c**2*sin(I)")
+    c.set_value(3)
+    fc.set_equation("c**2*sin(I)")
     assert fc._eq._value is None
     assert fc._reseq._value is None
     xobs = arange(0, 10, 0.5)
     yobs = 9 * sin(xobs)
-    profile.setObservedProfile(xobs, yobs)
+    profile.set_observed_profile(xobs, yobs)
     assert fc._eq._value is None
     assert fc._reseq._value is None
 
@@ -245,27 +272,27 @@ def testResidual(noObserversInGlobalBuilders):
     assert dot(chiv, chiv) == pytest.approx(0)
 
     # Choose a new residual.
-    fc.setEquation("2*I")
-    fc.setResidualEquation("resv")
+    fc.set_equation("2*I")
+    fc.set_residual_equation("resv")
     chiv = fc.residual()
     assert dot(chiv, chiv) == pytest.approx(
         sum((2 * xobs - yobs) ** 2) / sum(yobs**2)
     )
 
     # Make a custom residual.
-    fc.setResidualEquation("abs(eq-y)**0.5")
+    fc.set_residual_equation("abs(eq-y)**0.5")
     chiv = fc.residual()
     assert dot(chiv, chiv) == pytest.approx(sum(abs(2 * xobs - yobs)))
 
     # Test configuration checks
     fc1 = FitContribution("test1")
     with pytest.raises(SrFitError):
-        fc1.setResidualEquation("chiv")
+        fc1.set_residual_equation("chiv")
     fc1.set_profile(profile)
     with pytest.raises(SrFitError):
-        fc1.setResidualEquation("chiv")
-    fc1.setEquation("A * x")
-    fc1.setResidualEquation("chiv")
+        fc1.set_residual_equation("chiv")
+    fc1.set_equation("A * x")
+    fc1.set_residual_equation("chiv")
     assert noObserversInGlobalBuilders
     return
 
@@ -274,7 +301,21 @@ def test_setEquation(noObserversInGlobalBuilders):
     """Check replacement of removed parameters."""
     fc = FitContribution("test")
     fc.setEquation("x + 5")
-    fc.x.setValue(2)
+    fc.x.set_value(2)
+    assert 7 == fc.evaluate()
+    fc.removeParameter(fc.x)
+    x = arange(0, 10, 0.5)
+    fc.newParameter("x", x)
+    assert np.array_equal(5 + x, fc.evaluate())
+    assert noObserversInGlobalBuilders
+    return
+
+
+def test_set_equation(noObserversInGlobalBuilders):
+    """Check replacement of removed parameters."""
+    fc = FitContribution("test")
+    fc.set_equation("x + 5")
+    fc.x.set_value(2)
     assert 7 == fc.evaluate()
     fc.removeParameter(fc.x)
     x = arange(0, 10, 0.5)
@@ -287,9 +328,19 @@ def test_setEquation(noObserversInGlobalBuilders):
 def test_getEquation(noObserversInGlobalBuilders):
     """Check getting the current profile simulation formula."""
     fc = FitContribution("test")
-    assert "" == fc.getEquation()
-    fc.setEquation("A * sin(x + 5)")
+    assert "" == fc.get_equation()
+    fc.set_equation("A * sin(x + 5)")
     assert "(A * sin((x + 5)))" == fc.getEquation()
+    assert noObserversInGlobalBuilders
+    return
+
+
+def test_get_equation(noObserversInGlobalBuilders):
+    """Check getting the current profile simulation formula."""
+    fc = FitContribution("test")
+    assert "" == fc.get_equation()
+    fc.set_equation("A * sin(x + 5)")
+    assert "(A * sin((x + 5)))" == fc.get_equation()
     assert noObserversInGlobalBuilders
     return
 

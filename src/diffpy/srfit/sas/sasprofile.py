@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Class for adapting a sas DataInfo objects to the Profile interface."""
+"""Class for adapting a sas DataInfo objects to the Profile
+interface."""
 
 __all__ = ["SASProfile"]
 
@@ -28,8 +29,6 @@ class SASProfile(Profile):
     want to use and manipulate a DataProfile before using it with SrFit.
     Otherwise, use the SASParser class and load the data into a base Profile
     object.
-
-    Attributes
 
     Attributes
     ----------
@@ -77,7 +76,7 @@ class SASProfile(Profile):
     def __init__(self, datainfo):
         """Initialize the attributes.
 
-        Attributes
+        Parameters
         ----------
         datainfo
             The DataInfo object this wraps.

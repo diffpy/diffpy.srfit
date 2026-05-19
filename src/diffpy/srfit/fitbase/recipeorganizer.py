@@ -17,17 +17,16 @@
 RecipeContainer is the base class for organizing Parameters, and other
 RecipeContainers.  RecipeOrganizer is an extended RecipeContainer that
 incorporates equation building, constraints and Restraints.
-equationFromString creates an Equation instance from a string.
+get_equation_from_string creates an Equation instance from a string.
 """
 
-__all__ = ["RecipeContainer", "RecipeOrganizer", "equationFromString"]
+__all__ = ["RecipeContainer", "RecipeOrganizer", "get_equation_from_string"]
 
 import re
 from collections import OrderedDict
 from functools import partial
 from itertools import chain, groupby
 
-import six
 from numpy import inf
 
 from diffpy.srfit.equation import Equation
@@ -42,6 +41,131 @@ from diffpy.srfit.util import _DASHEDLINE
 from diffpy.srfit.util import sortKeyForNumericString as numstr
 from diffpy.srfit.util.nameutils import validateName
 from diffpy.srfit.util.observable import Observable
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+recipecontainer_base = "diffpy.srfit.fitbase.recipeorganizer.RecipeContainer"
+removal_version = "4.0.0"
+
+getValues_deprecation_msg = build_deprecation_message(
+    recipecontainer_base,
+    "getValues",
+    "get_values",
+    removal_version,
+)
+
+getNames_deprecation_msg = build_deprecation_message(
+    recipecontainer_base,
+    "getNames",
+    "get_names",
+    removal_version,
+)
+
+iterPars_deprecation_msg = build_deprecation_message(
+    recipecontainer_base,
+    "iterPars",
+    "iterate_over_parameters",
+    removal_version,
+)
+
+recipeorganizer_base = "diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer"
+
+registerCalculator_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "registerCalculator",
+    "register_calculator",
+    removal_version,
+)
+
+registerFunction_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "registerFunction",
+    "register_function",
+    removal_version,
+)
+
+registerStringFunction_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "registerStringFunction",
+    "register_string_function",
+    removal_version,
+)
+
+evaluateEquation_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "evaluateEquation",
+    "evaluate_equation",
+    removal_version,
+)
+
+isConstrained_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "isConstrained",
+    "is_constrained",
+    removal_version,
+)
+
+getConstrainedPars_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "getConstrainedPars",
+    "get_constrained_parmeters",
+    removal_version,
+)
+
+clearConstraints_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "clearConstraints",
+    "clear_all_constraints",
+    removal_version,
+)
+
+addRestraint_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "addRestraint",
+    "register_soft_bounds",
+    removal_version,
+)
+
+constrain_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "constrain",
+    "add_constraint",
+    removal_version,
+)
+
+unconstrain_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "unconstrain",
+    "remove_constraint",
+    removal_version,
+)
+
+restrain_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "restrain",
+    "add_soft_bounds",
+    removal_version,
+)
+
+unrestrain_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "unrestrain",
+    "remove_soft_bounds",
+    removal_version,
+)
+
+clearRestraints_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "clearRestraints",
+    "clear_all_soft_bounds",
+    removal_version,
+)
+
+equationFromString_deprecation_msg = build_deprecation_message(
+    recipeorganizer_base,
+    "equationFromString",
+    "get_equation_from_string",
+    removal_version,
+)
 
 
 class RecipeContainer(Observable, Configurable, Validatable):
@@ -83,13 +207,13 @@ class RecipeContainer(Observable, Configurable, Validatable):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
-    names = property(lambda self: self.getNames())
-    values = property(lambda self: self.getValues())
+    names = property(lambda self: self.get_names())
+    values = property(lambda self: self.get_values())
 
     def __init__(self, name):
         Observable.__init__(self)
@@ -181,6 +305,17 @@ class RecipeContainer(Observable, Configurable, Validatable):
                     ):
                         yield par
 
+    @deprecated(iterPars_deprecation_msg)
+    def iterPars(self, pattern="", recurse=True):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.iterate_over_parameters
+        instead.
+        """
+        return self.iterate_over_parameters(pattern=pattern, recurse=recurse)
+
     def __iter__(self):
         """Iterate over top-level parameters."""
         return iter(self._parameters.values())
@@ -226,11 +361,11 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def __setattr__(self, name, value):
         """Parameter access and object checking."""
         if name in self._parameters:
-            par = self._parameters[name]
+            parameter = self._parameters[name]
             if isinstance(value, Parameter):
-                par.value = value.value
+                parameter.value = value.value
             else:
-                par.value = value
+                parameter.value = value
             return
 
         m = self.get(name)
@@ -267,18 +402,40 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         return default
 
-    def getNames(self):
+    def get_names(self):
         """Get the names of managed parameters."""
         return [p.name for p in self._parameters.values()]
 
-    def getValues(self):
+    @deprecated(getNames_deprecation_msg)
+    def getNames(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get_names
+        instead.
+        """
+        return self.get_names()
+
+    def get_values(self):
         """Get the values of managed parameters."""
         return [p.value for p in self._parameters.values()]
+
+    @deprecated(getValues_deprecation_msg)
+    def getValues(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeContainer.get_values
+        instead.
+        """
+        return self.get_values()
 
     def _add_object(self, obj, d, check=True):
         """Add an object to a managed dictionary.
 
-        Attributes
+        Parameters
         ----------
         obj
             The object to be stored.
@@ -347,7 +504,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _locate_managed_object(self, obj):
         """Find the location a managed object within the hierarchy.
 
-        Attributes
+        Parameters
         ----------
         obj
             The object to find.
@@ -438,9 +595,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
 
 
     Raises ValueError if the name is not a valid attribute identifier
@@ -470,14 +627,14 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._add_parameter(p, check)
         return p
 
-    def _add_parameter(self, par, check=True):
+    def _add_parameter(self, parameter, check=True):
         """Store a Parameter.
 
         Parameters added in this way are registered with the _eqfactory.
 
-        Attributes
+        Parameters
         ----------
-        par
+        parameter
             The Parameter to be stored.
         check
             If True (default), a ValueError is raised a Parameter of
@@ -490,13 +647,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """
 
         # Store the Parameter
-        RecipeContainer._add_object(self, par, self._parameters, check)
+        RecipeContainer._add_object(self, parameter, self._parameters, check)
 
         # Register the Parameter
-        self._eqfactory.registerArgument(par.name, par)
+        self._eqfactory.registerArgument(parameter.name, parameter)
         return
 
-    def _remove_parameter(self, par):
+    def _remove_parameter(self, parameter):
         """Remove a parameter.
 
         This de-registers the Parameter with the _eqfactory. The
@@ -505,14 +662,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Note that constraints and restraints involving the Parameter are
         not modified.
 
-        Raises ValueError if par is not part of the RecipeOrganizer.
+        Raises ValueError if parameter is not part of the
+        RecipeOrganizer.
         """
-        self._remove_object(par, self._parameters)
-        self._eqfactory.deRegisterBuilder(par.name)
+        self._remove_object(parameter, self._parameters)
+        self._eqfactory.deRegisterBuilder(parameter.name)
         return
 
-    def registerCalculator(self, f, argnames=None):
-        """Register a Calculator so it can be used within equation strings.
+    def register_calculator(self, calculator, argnames=None):
+        """Register a Calculator so it can be used within equation
+        strings.
 
         A Calculator is an elaborate function that can organize Parameters.
         This creates a function with this class that can be used within string
@@ -520,79 +679,101 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         arguments like a function or without, in which case the values of the
         Parameters created from argnames will be be used to compute the value.
 
-        Attributes
+        Parameters
         ----------
-        f
+        calculator : Calculator object
             The Calculator to register.
-        argnames
-            The names of the arguments to f (list or None).
+        argnames :  list or None, optional
+            The names of the arguments to `calculator` (list or None).
             If this is None, then the argument names will be
             extracted from the function.
         """
-        self._eqfactory.registerOperator(f.name, f)
-        self._add_object(f, self._calculators)
+        self._eqfactory.registerOperator(calculator.name, calculator)
+        self._add_object(calculator, self._calculators)
         # Register arguments of the calculator
         if argnames is None:
-            fncode = f.__call__.__func__.__code__
+            fncode = calculator.__call__.__func__.__code__
             argnames = list(fncode.co_varnames)
             argnames = argnames[1 : fncode.co_argcount]
 
         for pname in argnames:
             if pname not in self._eqfactory.builders:
-                par = self._new_parameter(pname, 0)
+                parameter = self._new_parameter(pname, 0)
             else:
-                par = self.get(pname)
-            f.addLiteral(par)
+                parameter = self.get(pname)
+            calculator.addLiteral(parameter)
 
         # Now return an equation object
-        eq = self._eqfactory.makeEquation(f.name)
+        eq = self._eqfactory.makeEquation(calculator.name)
         return eq
 
-    def registerFunction(self, f, name=None, argnames=None):
-        """Register a function so it can be used within equation strings.
+    @deprecated(registerCalculator_deprecation_msg)
+    def registerCalculator(self, f, argnames=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.register_calculator
+        instead.
+        """
+        return self.register_calculator(f, argnames=argnames)
+
+    def register_function(self, function, name=None, argnames=None):
+        """Register a function so it can be used within equation
+        strings.
 
         This creates a function with this class that can be used within string
-        equations.  The resulting equation does not require the arguments to be
+        equations. The resulting equation does not require the arguments to be
         passed in the equation string, as this will be handled automatically.
 
-        Attributes
+        Parameters
         ----------
-        f
+        function : callable
             The callable to register. If this is an Equation
             instance, then all that needs to be provided is a name.
-        name
+        name : str or None, optional
             The name of the function to be used in equations. If
             this is None (default), the method will try to
             determine the name of the function automatically.
-        argnames
-            The names of the arguments to f (list or None).
+        argnames : list or None, optional
+            The names of the arguments to `function` (list or None).
             If this is None (default), then the argument names will
             be extracted from the function.
 
-
-        Note that name and argnames can be extracted from regular python
-        functions (of type 'function'), bound class methods and callable
+        Note
+        ----
+        The `name` and `argnames` args can be extracted from regular Python
+        functions (of type <function>), bound class methods, and callable
         classes.
 
+        Raises
+        ------
+        TypeError
+            If name or argnames cannot be automatically extracted.
+        TypeError
+            If an automatically extracted name is '<lambda>'.
+        ValueError
+            If function is an Equation object and name is None.
 
-        Raises TypeError if name or argnames cannot be automatically
-        extracted.
-        Raises TypeError if an automatically extracted name is '<lambda>'.
-        Raises ValueError if f is an Equation object and name is None.
-
-        Returns the callable Equation object.
+        Returns
+        -------
+        equation_object : Equation
+            The callable Equation object.
         """
 
         # If the function is an equation, we treat it specially. This is
         # required so that the objects observed by the root get observed if the
         # Equation is used within another equation. It is assumed that a plain
         # function is not observable.
-        if isinstance(f, Equation):
+        if isinstance(function, Equation):
             if name is None:
-                m = "Equation must be given a name"
+                m = (
+                    "The equation must be given a name. "
+                    "Specify a name with the 'name' argument."
+                )
                 raise ValueError(m)
-            self._eqfactory.registerOperator(name, f)
-            return f
+            self._eqfactory.registerOperator(name, function)
+            return function
 
         # Introspection code
         if name is None or argnames is None:
@@ -605,15 +786,17 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             offset = 0
 
             # check regular functions
-            if inspect.isfunction(f):
-                fncode = f.__code__
+            if inspect.isfunction(function):
+                fncode = function.__code__
             # check class method
-            elif inspect.ismethod(f):
-                fncode = f.__func__.__code__
+            elif inspect.ismethod(function):
+                fncode = function.__func__.__code__
                 offset = 1
             # check functor
-            elif hasattr(f, "__call__") and hasattr(f.__call__, "__func__"):
-                fncode = f.__call__.__func__.__code__
+            elif hasattr(function, "__call__") and hasattr(
+                function.__call__, "__func__"
+            ):
+                fncode = function.__call__.__func__.__code__
                 offset = 1
             else:
                 m = "Cannot extract name or argnames"
@@ -641,179 +824,271 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         # Initialize and register
         from diffpy.srfit.fitbase.calculator import Calculator
 
-        if isinstance(f, Calculator):
+        if isinstance(function, Calculator):
             for pname in argnames:
-                par = self.get(pname)
-                f.addLiteral(par)
-            self._eqfactory.registerOperator(name, f)
+                parameter = self.get(pname)
+                function.addLiteral(parameter)
+            self._eqfactory.registerOperator(name, function)
         else:
-            self._eqfactory.registerFunction(name, f, argnames)
+            self._eqfactory.register_function(name, function, argnames)
 
         # Now we can create the Equation and return it to the user.
-        eq = self._eqfactory.makeEquation(name)
+        equation_object = self._eqfactory.makeEquation(name)
 
-        return eq
+        return equation_object
 
-    def registerStringFunction(self, fstr, name, ns={}):
+    @deprecated(registerFunction_deprecation_msg)
+    def registerFunction(self, f, name=None, argnames=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.register_function
+        instead.
+        """
+        return self.register_function(f, name=name, argnames=argnames)
+
+    def register_string_function(self, function_str, name, func_params={}):
         """Register a string function.
 
         This creates a function with this class that can be used within string
-        equations.  The resulting equation does not require the arguments to be
+        equations. The resulting equation does not require the arguments to be
         passed in the function string, as this will be handled automatically.
 
-        Attributes
+        Parameters
         ----------
-        fstr
+        function_str : str
             A string equation to register.
-        name
+        name : str
             The name of the function to be used in equations.
-        ns
+        func_params : dict, optional
             A dictionary of Parameters, indexed by name, that are
-            used in fstr, but not part of the FitRecipe (default
-            {}).
+            used in `function_str`, but not part of the FitRecipe (default {}).
 
+        Raises
+        ------
+        ValueError
+            If `func_params` uses a name that is already used for another
+            managed object.
+        ValueError
+            If the function name is the name of another managed object.
 
-        Raises ValueError if ns uses a name that is already used for another
-        managed object.
-        Raises ValueError if the function name is the name of another managed
-        object.
-
-        Returns the callable Equation object.
+        Returns
+        -------
+        equation_object : Equation
+            The callable Equation object.
         """
 
         # Build the equation instance.
-        eq = equationFromString(fstr, self._eqfactory, ns=ns, buildargs=True)
+        eq = get_equation_from_string(
+            function_str, self._eqfactory, ns=func_params, buildargs=True
+        )
         eq.name = name
 
         # Register any new Parameters.
-        for par in self._eqfactory.newargs:
-            self._add_parameter(par)
+        for parameter in self._eqfactory.newargs:
+            self._add_parameter(parameter)
 
         # Register the equation as a callable function.
         argnames = eq.argdict.keys()
-        return self.registerFunction(eq, name, argnames)
+        equation_object = self.register_function(
+            eq, name=name, argnames=argnames
+        )
+        return equation_object
 
-    def evaluateEquation(self, eqstr, ns={}):
+    @deprecated(registerStringFunction_deprecation_msg)
+    def registerStringFunction(self, fstr, name, ns={}):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.register_string_function
+        instead.
+        """
+        return self.register_string_function(fstr, name, func_params=ns)
+
+    def evaluate_equation(self, equation_str, func_params={}):
         """Evaluate a string equation.
 
-        Attributes
+        This method takes a string representation of a mathematical equation
+        and evaluates it using the current values of the registered Parameters
+        in the FitRecipe. Additional parameters not part of the FitRecipe can
+        also be provided via the `func_params` dictionary.
+
+        Parameters
         ----------
-        eqstr
-            A string equation to evaluate. The equation is evaluated at
+        equation_str
+            The string equation to evaluate. The equation is evaluated at
             the current value of the registered Parameters.
-        ns
-            A dictionary of Parameters, indexed by name, that are
-            used in fstr, but not part of the FitRecipe (default {}).
+        func_params : dict, optional
+            The dictionary of Parameters, indexed by name, that are
+            used in `equation_str`, but not part of the FitRecipe
+            (default `{}`).
 
+        Returns
+        -------
+        returned_value : float
+            The value of the evaluated equation.
 
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
+        Raises
+        ------
+        ValueError
+            If `func_params` uses a name that is already used for a
+            variable.
         """
-        eq = equationFromString(eqstr, self._eqfactory, ns)
+        eq = get_equation_from_string(
+            equation_str, self._eqfactory, func_params
+        )
         try:
-            rv = eq()
+            returned_value = eq()
         finally:
             self._eqfactory.wipeout(eq)
-        return rv
+        return returned_value
 
-    def constrain(self, par, con, ns={}):
+    @deprecated(evaluateEquation_deprecation_msg)
+    def evaluateEquation(self, eqstr, ns={}):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.evaluate_equation
+        instead.
+        """
+        return self.evaluate_equation(eqstr, func_params=ns)
+
+    def add_constraint(self, parameter, constraint_eq, params={}):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
 
-        Attributes
+        Parameters
         ----------
-        par
+        parameter : str or Parameter
             The name of a Parameter or a Parameter to constrain.
-        con
+        constraint_eq : str or Equation
             A string representation of the constraint equation or a
-            Parameter to constrain to.  A constraint equation must
+            Parameter to constrain to. A constraint equation must
             consist of numpy operators and "known" Parameters.
-            Parameters are known if they are in the ns argument, or if
-            they are managed by this object.
-        ns
+            Parameters are known if they are in the `params`
+            argument, or if they are managed by this object.
+        params : dict, optional
             A dictionary of Parameters, indexed by name, that are used
-            in the parameter, but not part of this object (default {}).
+            in `parameter`, but not part of this object (default {}).
 
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
-        Raises ValueError if par is a string but not part of this object or in
-        ns.
-        Raises ValueError if par is marked as constant.
+        Raises
+        ------
+        ValueError
+            If `params` uses a name that is already used for a
+            variable.
+        ValueError
+            If `parameter` is a string but not part of this object or
+            in `params`.
+        ValueError
+            If `parameter` is marked as constant.
         """
-        if isinstance(par, six.string_types):
-            name = par
-            par = self.get(name)
-            if par is None:
-                par = ns.get(name)
+        if isinstance(parameter, str):
+            name = parameter
+            parameter = self.get(name)
+            if parameter is None:
+                parameter = params.get(name)
 
-        if par is None:
+        if parameter is None:
             raise ValueError("The parameter cannot be found")
 
-        if par.const:
-            raise ValueError("The parameter '%s' is constant" % par)
+        if parameter.const:
+            raise ValueError("The parameter '%s' is constant" % parameter)
 
-        if isinstance(con, six.string_types):
-            eqstr = con
-            eq = equationFromString(con, self._eqfactory, ns)
+        if isinstance(constraint_eq, str):
+            eqstr = constraint_eq
+            eq = get_equation_from_string(
+                constraint_eq, self._eqfactory, params
+            )
         else:
-            eq = Equation(root=con)
-            eqstr = con.name
+            eq = Equation(root=constraint_eq)
+            eqstr = constraint_eq.name
 
-        eq.name = "_constraint_%s" % par.name
+        eq.name = "_constraint_%s" % parameter.name
 
         # Make and store the constraint
-        con = Constraint()
-        con.constrain(par, eq)
+        constraint_eq = Constraint()
+        constraint_eq.add_constraint(parameter, eq)
         # Store the equation string so it can be shown later.
-        con.eqstr = eqstr
-        self._constraints[par] = con
+        constraint_eq.eqstr = eqstr
+        self._constraints[parameter] = constraint_eq
 
         # Our configuration changed
         self._update_configuration()
 
         return
 
-    def isConstrained(self, par):
+    @deprecated(constrain_deprecation_msg)
+    def constrain(self, parameter, constraint_eq, params={}):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_constraint
+        instead.
+        """
+        self.add_constraint(parameter, constraint_eq, params=params)
+        return
+
+    def is_constrained(self, parameter):
         """Determine if a Parameter is constrained in this object.
 
-        Attributes
+        Parameters
         ----------
-        par
+        parameter : str or Parameter
             The name of a Parameter or a Parameter to check.
+
+        Returns
+        -------
+        bool
+            True if the Parameter is constrained in this object, False
+            otherwise.
         """
-        if isinstance(par, six.string_types):
-            name = par
-            par = self.get(name)
+        if isinstance(parameter, str):
+            name = parameter
+            parameter = self.get(name)
 
-        return par in self._constraints
+        return parameter in self._constraints
 
-    def unconstrain(self, *pars):
+    @deprecated(isConstrained_deprecation_msg)
+    def isConstrained(self, parameter):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.is_constrained
+        instead.
+        """
+        return self.is_constrained(parameter)
+
+    def remove_constraint(self, *pars):
         """Unconstrain a Parameter.
 
         This removes any constraints on a Parameter.
 
-        Attributes
+        Parameters
         ----------
-        *pars
+        *pars : str or Parameter
             The names of Parameters or Parameters to unconstrain.
 
 
         Raises ValueError if the Parameter is not constrained.
         """
         update = False
-        for par in pars:
-            if isinstance(par, six.string_types):
-                name = par
-                par = self.get(name)
+        for parameter in pars:
+            if isinstance(parameter, str):
+                name = parameter
+                parameter = self.get(name)
 
-            if par is None:
+            if parameter is None:
                 raise ValueError("The parameter cannot be found")
 
-            if par in self._constraints:
-                self._constraints[par].unconstrain()
-                del self._constraints[par]
+            if parameter in self._constraints:
+                self._constraints[parameter].remove_constraint()
+                del self._constraints[parameter]
                 update = True
 
         if update:
@@ -826,95 +1101,199 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
+    @deprecated(unconstrain_deprecation_msg)
+    def unconstrain(self, *pars):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.remove_constraint
+        instead.
+        """
+        self.remove_constraint(*pars)
+        return
+
+    def get_constrained_parmeters(self, recurse=False):
+        """Get a list of constrained managed Parameters in this object.
+
+        Parameters
+        ----------
+        recurse : bool, optional
+            If False (default), only constrained Parameters in
+            this object are returned. If True, constrained
+            Parameters in managed sub-objects are also included.
+
+        Return
+        ------
+        constrained_params : list of Parameter
+            A list of constrained managed Parameters in this object.
+        """
+        const = self._get_constraints(recurse)
+        constrained_params = const.keys()
+        return constrained_params
+
+    @deprecated(getConstrainedPars_deprecation_msg)
     def getConstrainedPars(self, recurse=False):
         """Get a list of constrained managed Parameters in this object.
 
-        Attributes
+        Parameters
         ----------
         recurse
             Recurse into managed objects and retrieve their constrained
             Parameters as well (default False).
         """
-        const = self._get_constraints(recurse)
-        return const.keys()
+        return self.get_constrained_parmeters(recurse=recurse)
 
-    def clearConstraints(self, recurse=False):
+    def clear_all_constraints(self, recurse=False):
         """Clear all constraints managed by this organizer.
-
-        Attributes
-        ----------
-        recurse
-            Recurse into managed objects and clear all constraints
-            found there as well.
-
 
         This removes constraints that are held in this organizer, no matter
         where the constrained parameters are from.
+
+        Parameters
+        ----------
+        recurse : bool, optional
+            If False (default), only constraints in this object
+            are cleared. If True, constraints in managed
+            sub-objects are also cleared.
         """
         if self._constraints:
-            self.unconstrain(*self._constraints)
+            self.remove_constraint(*self._constraints)
 
         if recurse:
             for m in filter(_has_clear_constraints, self._iter_managed()):
-                m.clearConstraints(recurse)
+                m.clear_all_constraints(recurse)
         return
 
-    def restrain(self, res, lb=-inf, ub=inf, sig=1, scaled=False, ns={}):
+    @deprecated(clearConstraints_deprecation_msg)
+    def clearConstraints(self, recurse=False):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clear_all_constraints
+        instead.
+        """
+        return self.clear_all_constraints(recurse=recurse)
+
+    def add_soft_bounds(
+        self,
+        param_or_eq,
+        lower_bound=-inf,
+        upper_bound=inf,
+        sig=1,
+        scaled=False,
+        params={},
+    ):
         """Restrain an expression to specified bounds.
 
-        Attributes
+        See Notes for how the penalty is calculated.
+
+        Parameters
         ----------
-        res
-            An equation string or Parameter to restrain.
-        lb
-            The lower bound on the restraint evaluation (default -inf).
-        ub
-            The lower bound on the restraint evaluation (default inf).
-        sig
-            The uncertainty on the bounds (default 1).
-        scaled
-            A flag indicating if the restraint is scaled (multiplied)
-            by the unrestrained point-average chi^2 (chi^2/numpoints)
-            (default False).
-        ns
-            A dictionary of Parameters, indexed by name, that are used
-            in the equation string, but not part of the RecipeOrganizer
-            (default {}).
+        param_or_eq : str
+            The equation or parameter to restrain.
+        lower_bound : float, optional
+            The lower bound for the restraint evaluation (default is -inf).
+        upper_bound : float, optional
+            The upper bound for the restraint evaluation (default is inf).
+        sig : float, optional
+            The uncertainty associated with the bounds (default is 1).
+            Please see Notes for how this is used in the penalty calculation.
+        scaled : bool, optional
+            If True, the restraint penalty is scaled by the unrestrained
+            point-average chi^2 (chi^2/numpoints) (default is False).
+        params : dict, optional
+            The dictionary of Parameters, indexed by name, that are used in
+            `param_or_eq` (if an equation string is used) but are not part
+            of the RecipeOrganizer (default is {}).
 
+        Returns
+        -------
+        Restraint
+            The created Restraint object, which can be used with the
+            'unrestrain' method.
 
-        The penalty is calculated as
-        (max(0, lb - val, val - ub)/sig)**2
-        and val is the value of the calculated equation.  This is multiplied by
-        the average chi^2 if scaled is True.
+        Notes
+        -----
+        The penalty is calculated as:
 
+        ..
+            (max(0, lower_bound - val, val - upper_bound) / sig) ** 2
 
-        Raises ValueError if ns uses a name that is already used for a
-        Parameter.
-        Raises ValueError if res depends on a Parameter that is not part of
-        the RecipeOrganizer and that is not defined in ns.
+        where `val` is the value of the evaluated `param_or_eq`.
+        If `scaled` is True, this penalty is multiplied by
+        the average chi^2.
 
-        Returns the Restraint object for use with the 'unrestrain' method.
+        Examples
+        --------
+        Restraining the lattice parameters of an Ni lattice to be
+        approximately 7.4Å (2x the original lattice param)
+        can be done with the following code:
+        ..
+            recipe.add_soft_bounds(
+                "a_ni + b_ni",
+                lower_bound=7.0,
+                upper_bound=7.5,
+                sig=0.1,
+                scaled=True,
+                params={"b_ni": Parameter("b_ni", 3.473)}
+            )
+
+        Raises
+        ------
+        ValueError
+            If `params` contains a name that is already used
+            for a Parameter.
+        ValueError
+            If `param_or_eq` depends on a Parameter that is not part of the
+            RecipeOrganizer and is not defined in `params`.
         """
-
-        if isinstance(res, six.string_types):
-            eqstr = res
-            eq = equationFromString(res, self._eqfactory, ns)
+        if isinstance(param_or_eq, str):
+            eqstr = param_or_eq
+            eq = get_equation_from_string(param_or_eq, self._eqfactory, params)
         else:
-            eq = Equation(root=res)
-            eqstr = res.name
+            eq = Equation(root=param_or_eq)
+            eqstr = param_or_eq.name
 
         # Make and store the restraint
-        res = Restraint(eq, lb, ub, sig, scaled)
-        res.eqstr = eqstr
-        self.addRestraint(res)
-        return res
+        param_or_eq = Restraint(eq, lower_bound, upper_bound, sig, scaled)
+        param_or_eq.eqstr = eqstr
+        self.register_soft_bounds(param_or_eq)
+        return param_or_eq
 
-    def addRestraint(self, res):
+    @deprecated(restrain_deprecation_msg)
+    def restrain(
+        self,
+        param_or_eq,
+        lower_bound=-inf,
+        upper_bound=inf,
+        sig=1,
+        scaled=False,
+        params={},
+    ):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_soft_bounds
+        instead.
+        """
+        return self.add_soft_bounds(
+            param_or_eq,
+            lower_bound=lower_bound,
+            upper_bound=upper_bound,
+            sig=sig,
+            scaled=scaled,
+            params=params,
+        )
+
+    def register_soft_bounds(self, res):
         """Add a Restraint instance to the RecipeOrganizer.
 
-        Attributes
+        Parameters
         ----------
-        res
+        res : Restraint
             A Restraint instance.
         """
         self._restraints.add(res)
@@ -922,14 +1301,26 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self._update_configuration()
         return
 
-    def unrestrain(self, *ress):
+    @deprecated(addRestraint_deprecation_msg)
+    def addRestraint(self, res):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.register_soft_bounds
+        instead.
+        """
+        self.register_soft_bounds(res)
+        return
+
+    def remove_soft_bounds(self, *ress):
         """Remove a Restraint from the RecipeOrganizer.
 
-        Attributes
+        Parameters
         ----------
-        *ress
-            Restraints returned from the 'restrain' method or added
-            with the 'addRestraint' method.
+        *ress : Restraint
+            The Restraints returned from the 'add_soft_bounds' method or added
+            with the 'register_soft_bounds' method.
         """
         update = False
         restuple = tuple(self._restraints)
@@ -944,23 +1335,48 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         return
 
-    def clearRestraints(self, recurse=False):
+    @deprecated(unrestrain_deprecation_msg)
+    def unrestrain(self, *ress):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.remove_soft_bounds
+        instead.
+        """
+        self.remove_soft_bounds(*ress)
+        return
+
+    def clear_all_soft_bounds(self, recurse=False):
         """Clear all restraints.
 
-        Attributes
+        Parameters
         ----------
         recurse
             Recurse into managed objects and clear all restraints
             found there as well.
         """
-        self.unrestrain(*self._restraints)
+        self.remove_soft_bounds(*self._restraints)
         if recurse:
             for msg in filter(_has_clear_restraints, self._iter_managed()):
-                msg.clearRestraints(recurse)
+                msg.clear_all_soft_bounds(recurse)
+        return
+
+    @deprecated(clearRestraints_deprecation_msg)
+    def clearRestraints(self, recurse=False):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.clear_all_soft_bounds
+        instead.
+        """
+        self.clear_all_soft_bounds(recurse=recurse)
         return
 
     def _get_constraints(self, recurse=True):
-        """Get the constrained Parameters for this and managed sub-objects."""
+        """Get the constrained Parameters for this and managed sub-
+        objects."""
         constraints = {}
         if recurse:
             for m in filter(_has_get_constraints, self._iter_managed()):
@@ -1045,13 +1461,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         cdict = self._get_constraints()
         # Find each constraint and format the equation
         clines = []
-        for par, con in cdict.items():
-            loc = self._locate_managed_object(par)
+        for parameter, con in cdict.items():
+            loc = self._locate_managed_object(parameter)
             if loc:
                 locstr = ".".join(o.name for o in loc[1:])
                 clines.append("%s <-- %s" % (locstr, con.eqstr))
             else:
-                clines.append("%s <-- %s" % (par.name, con.eqstr))
+                clines.append("%s <-- %s" % (parameter.name, con.eqstr))
         clines.sort(key=numstr)
         return clines
 
@@ -1070,12 +1486,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         rset = self._get_restraints()
         rlines = []
         for res in rset:
-            line = "%s: lb = %f, ub = %f, sig = %f, scaled = %s" % (
-                res.eqstr,
-                res.lb,
-                res.ub,
-                res.sig,
-                res.scaled,
+            line = (
+                "%s: lower_bound = %f, upper_bound = %f, sig = %f, scaled = %s"
+                % (
+                    res.eqstr,
+                    res.lower_bound,
+                    res.upper_bound,
+                    res.sig,
+                    res.scaled,
+                )
             )
             rlines.append(line)
         rlines.sort(key=numstr)
@@ -1141,38 +1560,45 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 # End RecipeOrganizer
 
 
-def equationFromString(
+def get_equation_from_string(
     eqstr, factory, ns={}, buildargs=False, argclass=Parameter, argkw={}
 ):
-    """Make an equation from a string.
+    """Make an Equation object from a string.
 
-    Attributes
+    Parameters
     ----------
-    eqstr
+    eqstr : str
         A string representation of the equation. The equation must
         consist of numpy operators and "known" Parameters. Parameters
         are known if they are in ns, or already defined in the factory.
-    factory
+    factory : EquationFactory
         An EquationFactory instance.
-    ns
-        A dictionary of Parameters indexed by name that are used
+    ns : dict, optional
+        The dictionary of Parameters indexed by name that are used
         in the eqstr but not already defined in the factory
         (default {}).
-    buildargs
+    buildargs : bool, optional
         A flag indicating whether missing Parameters can be created
         by the Factory (default False). If False, then the a ValueError
         will be raised if there are undefined arguments in the eqstr.
-    argclass
+    argclass : Parameter class, optional
         Class to use when creating new Arguments (default
         Parameter). The class constructor must accept the 'name' key
         word.
-    argkw
+    argkw : dict, optional
         Key word dictionary to pass to the argclass constructor
         (default {}).
 
+    Returns
+    -------
+    eq : Equation
+        An Equation instance representing the equation in eqstr.
 
-    Raises ValueError if ns uses a name that is already defined in the factory.
-    Raises ValueError if the equation has undefined parameters.
+    Raises
+    ------
+    ValueError
+        If buildargs is False and there are undefined parameters in eqstr
+        or if ns uses a name that is already defined in the factory.
     """
 
     defined = set(factory.builders.keys())
@@ -1194,12 +1620,33 @@ def equationFromString(
     return eq
 
 
+@deprecated(equationFromString_deprecation_msg)
+def equationFromString(
+    eqstr, factory, ns={}, buildargs=False, argclass=Parameter, argkw={}
+):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use
+    diffpy.srfit.fitbase.recipeorganizer.get_equation_from_string
+    instead.
+    """
+    return get_equation_from_string(
+        eqstr,
+        factory,
+        ns=ns,
+        buildargs=buildargs,
+        argclass=argclass,
+        argkw=argkw,
+    )
+
+
 def _has_clear_constraints(msg):
-    return hasattr(msg, "clearConstraints")
+    return hasattr(msg, "clear_all_constraints")
 
 
 def _has_clear_restraints(msg):
-    return hasattr(msg, "clearRestraints")
+    return hasattr(msg, "clear_all_soft_bounds")
 
 
 def _has_get_restraints(msg):

@@ -20,7 +20,7 @@ fits.
 
 __all__ = ["PDFContribution"]
 
-from diffpy.srfit.fitbase import FitContribution, Profile
+from diffpy.srfit.fitbase import FitContribution, Profile, ProfileParser
 
 
 class PDFContribution(FitContribution):
@@ -84,7 +84,7 @@ class PDFContribution(FitContribution):
     def __init__(self, name):
         """Create the PDFContribution.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of the contribution.
@@ -105,31 +105,19 @@ class PDFContribution(FitContribution):
 
     # Data methods
 
-    def loadData(self, data):
-        """Load the data in various formats.
+    def loadData(self, datafile):
+        """Load the data from a datafile.
 
-        This uses the PDFParser to load the data and then passes it to the
-        built-in profile with loadParsedData.
-
-        Attributes
+        Parameters
         ----------
-        data
-            An open file-like object, name of a file that contains data
-            or a string containing the data.
+        data : str or Path
+            The path to the data file.
         """
-        # Get the data into a string
-        from diffpy.srfit.util.inpututils import inputToString
-
-        datstr = inputToString(data)
-
-        # Load data with a PDFParser
-        from diffpy.srfit.pdf.pdfparser import PDFParser
-
-        parser = PDFParser()
-        parser.parseString(datstr)
+        parser = ProfileParser()
+        parser.parse_file(datafile)
 
         # Pass it to the profile
-        self.profile.loadParsedData(parser)
+        self.profile.load_parsed_data(parser)
         return
 
     def setCalculationRange(self, xmin=None, xmax=None, dx=None):
@@ -164,7 +152,7 @@ class PDFContribution(FitContribution):
         ValueError
             When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
         """
-        return self.profile.setCalculationRange(xmin, xmax, dx)
+        return self.profile.set_calculation_range(xmin, xmax, dx)
 
     def savetxt(self, fname, **kwargs):
         """Call numpy.savetxt with x, ycalc, y, dy.
@@ -180,7 +168,7 @@ class PDFContribution(FitContribution):
     def addStructure(self, name, stru, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
-        Attributes
+        Parameters
         ----------
         name
             A name to give the generator that will manage the PDF
@@ -224,7 +212,7 @@ class PDFContribution(FitContribution):
     def addPhase(self, name, parset, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
-        Attributes
+        Parameters
         ----------
         name
             A name to give the generator that will manage the PDF
@@ -273,22 +261,22 @@ class PDFContribution(FitContribution):
         with setStructure or setPhase.
         """
         # Add the generator to this FitContribution
-        self.addProfileGenerator(gen)
+        self.add_profile_generator(gen)
 
         # Set the proper equation for the fit, depending on the number of
         # phases we have.
         gnames = self._generators.keys()
         eqstr = " + ".join(gnames)
         eqstr = "scale * (%s)" % eqstr
-        self.setEquation(eqstr)
+        self.set_equation(eqstr)
 
         # Update with our metadata
         gen.meta.update(self._meta)
-        gen.processMetaData()
+        gen._process_metadata()
 
         # Constrain the shared parameters
-        self.constrain(gen.qdamp, self.qdamp)
-        self.constrain(gen.qbroad, self.qbroad)
+        self.add_constraint(gen.qdamp, self.qdamp)
+        self.add_constraint(gen.qbroad, self.qbroad)
         return
 
     # Calculation setup methods
@@ -307,7 +295,7 @@ class PDFContribution(FitContribution):
     def setScatteringType(self, type="X"):
         """Set the scattering type.
 
-        Attributes
+        Parameters
         ----------
         type
             "X" for x-ray or "N" for neutron

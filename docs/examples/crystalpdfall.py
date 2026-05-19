@@ -27,8 +27,9 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
+    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator, PDFParser
+from diffpy.srfit.pdf import PDFGenerator
 
 ######
 #  Example Code
@@ -37,17 +38,17 @@ from diffpy.srfit.pdf import PDFGenerator, PDFParser
 def makeProfile(datafile):
     """Make an place data within a Profile."""
     profile = Profile()
-    parser = PDFParser()
+    parser = ProfileParser()
     parser.parseFile(datafile)
-    profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax=20)
+    profile.load_parsed_data(parser)
+    profile.set_calculation_range(xmax=20)
     return profile
 
 
 def makeContribution(name, generator, profile):
     """Make a FitContribution and add a generator and profile."""
     contribution = FitContribution(name)
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="r")
     return contribution
 
@@ -93,44 +94,44 @@ def makeRecipe(
     xcontribution_sini = makeContribution(
         "xsini", xgenerator_sini_ni, xprofile_sini
     )
-    xcontribution_sini.addProfileGenerator(xgenerator_sini_si)
-    xcontribution_sini.setEquation("scale * (xG_sini_ni +  xG_sini_si)")
+    xcontribution_sini.add_profile_generator(xgenerator_sini_si)
+    xcontribution_sini.set_equation("scale * (xG_sini_ni +  xG_sini_si)")
 
     # As explained in another example, we want to minimize using Rw^2.
-    xcontribution_ni.setResidualEquation("resv")
-    xcontribution_si.setResidualEquation("resv")
-    ncontribution_ni.setResidualEquation("resv")
-    xcontribution_sini.setResidualEquation("resv")
+    xcontribution_ni.set_residual_equation("resv")
+    xcontribution_si.set_residual_equation("resv")
+    ncontribution_ni.set_residual_equation("resv")
+    xcontribution_sini.set_residual_equation("resv")
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(xcontribution_ni)
-    recipe.addContribution(xcontribution_si)
-    recipe.addContribution(ncontribution_ni)
-    recipe.addContribution(xcontribution_sini)
+    recipe.add_contribution(xcontribution_ni)
+    recipe.add_contribution(xcontribution_si)
+    recipe.add_contribution(ncontribution_ni)
+    recipe.add_contribution(xcontribution_sini)
 
     # Now we vary and constrain Parameters as before.
     for par in phase_ni.sgpars:
-        recipe.addVar(par, name=par.name + "_ni")
-    delta2_ni = recipe.newVar("delta2_ni", 2.5)
-    recipe.constrain(xgenerator_ni.delta2, delta2_ni)
-    recipe.constrain(ngenerator_ni.delta2, delta2_ni)
-    recipe.constrain(xgenerator_sini_ni.delta2, delta2_ni)
+        recipe.add_variable(par, name=par.name + "_ni")
+    delta2_ni = recipe.create_new_variable("delta2_ni", 2.5)
+    recipe.add_constraint(xgenerator_ni.delta2, delta2_ni)
+    recipe.add_constraint(ngenerator_ni.delta2, delta2_ni)
+    recipe.add_constraint(xgenerator_sini_ni.delta2, delta2_ni)
 
     for par in phase_si.sgpars:
-        recipe.addVar(par, name=par.name + "_si")
-    delta2_si = recipe.newVar("delta2_si", 2.5)
-    recipe.constrain(xgenerator_si.delta2, delta2_si)
-    recipe.constrain(xgenerator_sini_si.delta2, delta2_si)
+        recipe.add_variable(par, name=par.name + "_si")
+    delta2_si = recipe.create_new_variable("delta2_si", 2.5)
+    recipe.add_constraint(xgenerator_si.delta2, delta2_si)
+    recipe.add_constraint(xgenerator_sini_si.delta2, delta2_si)
 
     # Now the experimental parameters
-    recipe.addVar(xgenerator_ni.scale, name="xscale_ni")
-    recipe.addVar(xgenerator_si.scale, name="xscale_si")
-    recipe.addVar(ngenerator_ni.scale, name="nscale_ni")
-    recipe.addVar(xcontribution_sini.scale, 1.0, "xscale_sini")
-    recipe.newVar("pscale_sini_ni", 0.8)
-    recipe.constrain(xgenerator_sini_ni.scale, "pscale_sini_ni")
-    recipe.constrain(xgenerator_sini_si.scale, "1 - pscale_sini_ni")
+    recipe.add_variable(xgenerator_ni.scale, name="xscale_ni")
+    recipe.add_variable(xgenerator_si.scale, name="xscale_si")
+    recipe.add_variable(ngenerator_ni.scale, name="nscale_ni")
+    recipe.add_variable(xcontribution_sini.scale, 1.0, "xscale_sini")
+    recipe.create_new_variable("pscale_sini_ni", 0.8)
+    recipe.add_constraint(xgenerator_sini_ni.scale, "pscale_sini_ni")
+    recipe.add_constraint(xgenerator_sini_si.scale, "1 - pscale_sini_ni")
 
     # The qdamp parameters are too correlated to vary so we fix them based on
     # previous measurements.
@@ -232,7 +233,7 @@ if __name__ == "__main__":
 
     # Generate and print the FitResults
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     # Plot!
     plotResults(recipe)

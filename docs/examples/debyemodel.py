@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of fitting the Debye model to experimental Debye-Waller factors.
+"""Example of fitting the Debye model to experimental Debye-Waller
+factors.
 
 In this example, we build a fit recipe that uses an external function that can
 simulate a atomic displacement parameters using the Debye model. This serves as
@@ -93,7 +94,7 @@ def makeRecipe():
     # data into the profile.
     xydy = numpy.array(data.split(), dtype=float).reshape(-1, 3)
     x, y, dy = xydy.T
-    profile.setObservedProfile(x, y, dy)
+    profile.set_observed_profile(x, y, dy)
 
     # The FitContribution
     # The FitContribution associates the profile with the Debye function.
@@ -105,14 +106,14 @@ def makeRecipe():
     contribution.set_profile(profile, xname="T")
 
     # We now need to create the fitting equation.  We tell the FitContribution
-    # to use the 'debye' function defined below. The 'registerFunction' method
+    # to use the 'debye' function defined below. The 'register_function' method
     # will let us do this. Since we haven't told it otherwise,
-    # 'registerFunction' will extract the name of the function ('debye') and
+    # 'register_function' will extract the name of the function ('debye') and
     # the names of the arguments ('T', 'm', 'thetaD'). These arguments will
     # become Parameters of the FitContribution. Since we named the x-variable
     # 'T' above, the 'T' in the 'debye' equation will refer to this x-variable
     # whenever it is used.
-    contribution.registerFunction(debye)
+    contribution.register_function(debye)
 
     # Now we can create the fitting equation. We want to extend the 'debye'
     # equation by adding a vertical offset. We could wrap 'debye' in a new
@@ -126,7 +127,7 @@ def makeRecipe():
     # the debye equation to be positive, so we specify the input as abs(thetaD)
     # in the equation below.  Furthermore, we know 'm', the mass of lead, so we
     # can specify that as well.
-    contribution.setEquation("debye(T, 207.2, abs(thetaD)) + offset")
+    contribution.set_equation("debye(T, 207.2, abs(thetaD)) + offset")
 
     # The FitRecipe
     # The FitRecipe lets us define what we want to fit. It is where we can
@@ -134,14 +135,14 @@ def makeRecipe():
     # to fit simultaneously, the contribution from each could be added to the
     # recipe.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Specify which Parameters we want to refine.
 
     # Vary the offset
-    recipe.addVar(contribution.offset, 0)
+    recipe.add_variable(contribution.offset, 0)
     # We also vary the Debye temperature.
-    recipe.addVar(contribution.thetaD, 100)
+    recipe.add_variable(contribution.thetaD, 100)
 
     # We would like to 'suggest' that the offset should remain positive. This
     # is somethine that we know about the system that might help the refinement
@@ -151,7 +152,7 @@ def makeRecipe():
     # breaking the restraint by the point-average chi^2 value so that the
     # restraint is roughly as significant as any other data point throughout
     # the fit.
-    recipe.restrain(recipe.offset, lb=0, scaled=True)
+    recipe.add_soft_bounds(recipe.offset, lower_bound=0, scaled=True)
 
     # We're done setting up the recipe. We can now do other things with it.
     return recipe
@@ -193,7 +194,7 @@ def main():
     res = FitResults(recipe)
 
     # Print the results
-    res.printResults()
+    res.print_results()
 
     # Plot the results
     plotResults(recipe)
@@ -207,7 +208,8 @@ def main():
 
 
 def debye(T, m, thetaD):
-    """A wrapped version of 'adps' that can handle an array of T-values."""
+    """A wrapped version of 'adps' that can handle an array of
+    T-values."""
     y = numpy.array([adps(m, thetaD, x) for x in T])
     return y
 

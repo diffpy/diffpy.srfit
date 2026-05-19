@@ -12,7 +12,8 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ########################################################################
-"""Example of extracting information from multiple data sets simultaneously.
+"""Example of extracting information from multiple data sets
+simultaneously.
 
 This example builds on npintensitygenerator.py, and uses IntensityGenerator
 from that example to build a recipe that simultaneously refines two data sets
@@ -83,15 +84,15 @@ def makeRecipe(strufile, datname1, datname2):
     generator1 = IntensityGenerator("I")
     generator1.setStructure(strufile)
     generator2 = IntensityGenerator("I")
-    generator2.addParameterSet(generator1.phase)
+    generator2.add_parameter_set(generator1.phase)
 
     # The FitContributions
     # Create the FitContributions.
     contribution1 = FitContribution("bucky1")
-    contribution1.addProfileGenerator(generator1)
+    contribution1.add_profile_generator(generator1)
     contribution1.set_profile(profile1, xname="q")
     contribution2 = FitContribution("bucky2")
-    contribution2.addProfileGenerator(generator2)
+    contribution2.add_profile_generator(generator2)
     contribution2.set_profile(profile2, xname="q")
 
     # Now we're ready to define the fitting equation for each FitContribution.
@@ -99,12 +100,13 @@ def makeRecipe(strufile, datname1, datname2):
     # the same form and use the same Parameter names.  By default, Parameters
     # in different contributions are different Parameters even if they have the
     # same names.  FitContributions are isolated namespaces than only share
-    # information if you tell them to by using addParameter or addParameterSet.
+    # information if you tell them to by using addParameter or
+    # add_parameter_set.
     bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
                b7*q**7 +b8*q**8 + b9*q**9"
 
-    contribution1.registerStringFunction(bkgdstr, "bkgd")
-    contribution2.registerStringFunction(bkgdstr, "bkgd")
+    contribution1.register_string_function(bkgdstr, "bkgd")
+    contribution2.register_string_function(bkgdstr, "bkgd")
 
     # We will create the broadening function by registering a python function.
     pi = numpy.pi
@@ -117,69 +119,69 @@ def makeRecipe(strufile, datname1, datname2):
             * exp(-0.5 * ((q - q0) / width) ** 2)
         )
 
-    contribution1.registerFunction(gaussian)
-    contribution2.registerFunction(gaussian)
+    contribution1.register_function(gaussian)
+    contribution2.register_function(gaussian)
     # Center the gaussian
     contribution1.q0.value = x[len(x) // 2]
     contribution2.q0.value = x[len(x) // 2]
 
     # Now we can incorporate the scale and bkgd into our calculation. We also
     # convolve the signal with the gaussian to broaden it.
-    contribution1.setEquation("scale * convolve(I, gaussian) + bkgd")
-    contribution2.setEquation("scale * convolve(I, gaussian) + bkgd")
+    contribution1.set_equation("scale * convolve(I, gaussian) + bkgd")
+    contribution2.set_equation("scale * convolve(I, gaussian) + bkgd")
 
     # Make a FitRecipe and associate the FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(contribution1)
-    recipe.addContribution(contribution2)
+    recipe.add_contribution(contribution1)
+    recipe.add_contribution(contribution2)
 
     # Specify which Parameters we want to refine. We want to refine the
     # background that we just defined in the FitContributions. We have to do
     # this separately for each FitContribution. We tag the variables so it is
     # easy to retrieve the background variables.
-    recipe.addVar(contribution1.b0, 0, name="b1_0", tag="bcoeffs1")
-    recipe.addVar(contribution1.b1, 0, name="b1_1", tag="bcoeffs1")
-    recipe.addVar(contribution1.b2, 0, name="b1_2", tag="bcoeffs1")
-    recipe.addVar(contribution1.b3, 0, name="b1_3", tag="bcoeffs1")
-    recipe.addVar(contribution1.b4, 0, name="b1_4", tag="bcoeffs1")
-    recipe.addVar(contribution1.b5, 0, name="b1_5", tag="bcoeffs1")
-    recipe.addVar(contribution1.b6, 0, name="b1_6", tag="bcoeffs1")
-    recipe.addVar(contribution1.b7, 0, name="b1_7", tag="bcoeffs1")
-    recipe.addVar(contribution1.b8, 0, name="b1_8", tag="bcoeffs1")
-    recipe.addVar(contribution1.b9, 0, name="b1_9", tag="bcoeffs1")
-    recipe.addVar(contribution2.b0, 0, name="b2_0", tag="bcoeffs2")
-    recipe.addVar(contribution2.b1, 0, name="b2_1", tag="bcoeffs2")
-    recipe.addVar(contribution2.b2, 0, name="b2_2", tag="bcoeffs2")
-    recipe.addVar(contribution2.b3, 0, name="b2_3", tag="bcoeffs2")
-    recipe.addVar(contribution2.b4, 0, name="b2_4", tag="bcoeffs2")
-    recipe.addVar(contribution2.b5, 0, name="b2_5", tag="bcoeffs2")
-    recipe.addVar(contribution2.b6, 0, name="b2_6", tag="bcoeffs2")
-    recipe.addVar(contribution2.b7, 0, name="b2_7", tag="bcoeffs2")
-    recipe.addVar(contribution2.b8, 0, name="b2_8", tag="bcoeffs2")
-    recipe.addVar(contribution2.b9, 0, name="b2_9", tag="bcoeffs2")
+    recipe.add_variable(contribution1.b0, 0, name="b1_0", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b1, 0, name="b1_1", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b2, 0, name="b1_2", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b3, 0, name="b1_3", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b4, 0, name="b1_4", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b5, 0, name="b1_5", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b6, 0, name="b1_6", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b7, 0, name="b1_7", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b8, 0, name="b1_8", tag="bcoeffs1")
+    recipe.add_variable(contribution1.b9, 0, name="b1_9", tag="bcoeffs1")
+    recipe.add_variable(contribution2.b0, 0, name="b2_0", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b1, 0, name="b2_1", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b2, 0, name="b2_2", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b3, 0, name="b2_3", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b4, 0, name="b2_4", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b5, 0, name="b2_5", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b6, 0, name="b2_6", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b7, 0, name="b2_7", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b8, 0, name="b2_8", tag="bcoeffs2")
+    recipe.add_variable(contribution2.b9, 0, name="b2_9", tag="bcoeffs2")
 
     # We also want to adjust the scale and the convolution width
-    recipe.addVar(contribution1.scale, 1, name="scale1")
-    recipe.addVar(contribution1.width, 0.1, name="width1")
-    recipe.addVar(contribution2.scale, 1, name="scale2")
-    recipe.addVar(contribution2.width, 0.1, name="width2")
+    recipe.add_variable(contribution1.scale, 1, name="scale1")
+    recipe.add_variable(contribution1.width, 0.1, name="width1")
+    recipe.add_variable(contribution2.scale, 1, name="scale2")
+    recipe.add_variable(contribution2.width, 0.1, name="width2")
 
     # We can also refine structural parameters. We only have to do this once,
     # since each generator holds the same DiffpyStructureParSet.
     phase = generator1.phase
     lattice = phase.getLattice()
-    a = recipe.addVar(lattice.a)
+    a = recipe.add_variable(lattice.a)
     # We want to allow for isotropic expansion, so we'll make constraints for
     # that.
-    recipe.constrain(lattice.b, a)
-    recipe.constrain(lattice.c, a)
+    recipe.add_constraint(lattice.b, a)
+    recipe.add_constraint(lattice.c, a)
     # We want to refine the thermal parameters as well. We will add a new
     # variable that we call "Uiso" and constrain the atomic Uiso values to
     # this. Note that we don't give Uiso an initial value. The initial value
     # will be inferred from the subsequent constraints.
-    Uiso = recipe.newVar("Uiso")
+    Uiso = recipe.create_new_variable("Uiso")
     for atom in phase.getScatterers():
-        recipe.constrain(atom.Uiso, Uiso)
+        recipe.add_constraint(atom.Uiso, Uiso)
 
     # Give the recipe away so it can be used!
     return recipe
@@ -194,11 +196,11 @@ def plotResults(recipe):
     # Plot this for fun.
     I1 = recipe.bucky1.profile.y
     Icalc1 = recipe.bucky1.profile.ycalc
-    bkgd1 = recipe.bucky1.evaluateEquation("bkgd")
+    bkgd1 = recipe.bucky1.evaluate_equation("bkgd")
     diff1 = I1 - Icalc1
     I2 = recipe.bucky2.profile.y
     Icalc2 = recipe.bucky2.profile.ycalc
-    bkgd2 = recipe.bucky2.evaluateEquation("bkgd")
+    bkgd2 = recipe.bucky2.evaluate_equation("bkgd")
     diff2 = I2 - Icalc2
     offset = 1.2 * max(I2) * numpy.ones_like(I2)
     I1 += offset
@@ -248,22 +250,22 @@ def main():
     # fit.
     recipe.fix("all")
     recipe.free("bcoeffs1")
-    recipe.setWeight(recipe.bucky2, 0)
+    recipe.set_weight(recipe.bucky2, 0)
     scipyOptimize(recipe)
     # Now do the same for the second background
     recipe.fix("all")
     recipe.free("bcoeffs1")
-    recipe.setWeight(recipe.bucky2, 1)
-    recipe.setWeight(recipe.bucky1, 0)
+    recipe.set_weight(recipe.bucky2, 1)
+    recipe.set_weight(recipe.bucky1, 0)
     scipyOptimize(recipe)
     # Now refine everything with the structure parameters included
     recipe.free("all")
-    recipe.setWeight(recipe.bucky1, 1)
+    recipe.set_weight(recipe.bucky1, 1)
     scipyOptimize(recipe)
 
     # Generate and print the FitResults
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     # Plot!
     plotResults(recipe)

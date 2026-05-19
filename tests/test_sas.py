@@ -31,7 +31,7 @@ def testParser(sas_available, datafile):
     data = datafile("sas_ascii_test_1.txt")
     parser = SASParser()
     parser.parseFile(data)
-    x, y, dx, dy = parser.getData()
+    x, y, dx, dy = parser.get_data()
     testx = numpy.array(
         [
             0.002618,
@@ -123,10 +123,10 @@ def test_generator(sas_available):
         par = gen.get(pname)
         assert defval == par.getValue()
         # Test setting values
-        par.setValue(1.0)
+        par.set_value(1.0)
         assert 1.0 == par.getValue()
         assert 1.0 == model.getParam(pname)
-        par.setValue(defval)
+        par.set_value(defval)
         assert defval == par.getValue()
         assert defval == model.getParam(pname)
 

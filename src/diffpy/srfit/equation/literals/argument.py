@@ -37,9 +37,9 @@ class Argument(Literal, ArgumentABC):
         A flag indicating whether this is considered a constant.
         Constants may be given special treatment by the Visitors.
     _value
-        The value of the Argument. Modified with 'setValue'.
+        The value of the Argument. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'setValue'.
+        Property for 'getValue' and 'set_value'.
     """
 
     const = None
@@ -59,10 +59,10 @@ class Argument(Literal, ArgumentABC):
         """Get the value of this Literal."""
         return self._value
 
-    def setValue(self, val):
+    def set_value(self, val):
         """Set the value of the Literal.
 
-        Attributes
+        Parameters
         ----------
         val
             The value to assign
@@ -77,7 +77,7 @@ class Argument(Literal, ArgumentABC):
         return
 
     value = property(
-        lambda self: self.getValue(), lambda self, val: self.setValue(val)
+        lambda self: self.getValue(), lambda self, val: self.set_value(val)
     )
 
 

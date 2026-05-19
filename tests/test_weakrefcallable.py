@@ -14,7 +14,6 @@
 ##############################################################################
 """Unit tests for the weakrefcallable module."""
 
-
 import pickle
 import unittest
 
@@ -29,7 +28,7 @@ class TestWeakBoundMethod(unittest.TestCase):
 
     def setUp(self):
         self.f = FitContribution("f")
-        self.f.setEquation("7")
+        self.f.set_equation("7")
         self.w = weak_ref(self.f._eq._flush, fallback=_fallback_example)
         return
 
@@ -112,14 +111,14 @@ class TestWeakBoundMethod(unittest.TestCase):
         """Check if Observable drops dead Observer."""
         f = self.f
         x = f.newParameter("x", 5)
-        f.setEquation("3 * x")
+        f.set_equation("3 * x")
         self.assertEqual(15, f.evaluate())
         self.assertEqual(15, f._eq._value)
         # get one of the observer callables that are associated with f
         xof = next(iter(x._observers))
         self.assertTrue(isinstance(xof, WeakBoundMethod))
         # changing value of x should reset f._eq
-        x.setValue(x.value + 1)
+        x.set_value(x.value + 1)
         self.assertTrue(None is f._eq._value)
         self.assertEqual(18, f.evaluate())
         # deallocate f now
@@ -127,7 +126,7 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertTrue(xof in x._observers)
         # since f does not exist anymore, the next notification call
         # should drop the associated observer.
-        x.setValue(x.value + 1)
+        x.set_value(x.value + 1)
         self.assertEqual(0, len(x._observers))
         return
 

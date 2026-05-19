@@ -28,16 +28,52 @@ from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.recipeorganizer import get_equation_from_string
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 base = "diffpy.srfit.fitbase.FitContribution"
 removal_version = "4.0.0"
 
+setequation_dep_msg = build_deprecation_message(
+    base,
+    "setEquation",
+    "set_equation",
+    removal_version,
+)
+
+
 setprofile_dep_msg = build_deprecation_message(
     base,
     "setProfile",
     "set_profile",
+    removal_version,
+)
+
+addprofilegenerator_dep_msg = build_deprecation_message(
+    base,
+    "addProfileGenerator",
+    "add_profile_generator",
+    removal_version,
+)
+
+getequation_dep_msg = build_deprecation_message(
+    base,
+    "getEquation",
+    "get_equation",
+    removal_version,
+)
+
+setresidualequation_dep_msg = build_deprecation_message(
+    base,
+    "setResidualEquation",
+    "set_residual_equation",
+    removal_version,
+)
+
+getresidualequation_dep_msg = build_deprecation_message(
+    base,
+    "getResidualEquation",
+    "get_residual_equation",
     removal_version,
 )
 
@@ -89,9 +125,9 @@ class FitContribution(ParameterSet):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
     def __init__(self, name):
@@ -111,7 +147,7 @@ class FitContribution(ParameterSet):
     def set_profile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
-        Attributes
+        Parameters
         ----------
         profile
             A Profile that specifies the calculation points and that
@@ -164,7 +200,7 @@ class FitContribution(ParameterSet):
 
         # If we have _eq, but not _reseq, set the residual
         if self._eq is not None and self._reseq is None:
-            self.setResidualEquation("chiv")
+            self.set_residual_equation("chiv")
 
         return
 
@@ -179,7 +215,7 @@ class FitContribution(ParameterSet):
             profile, xname=xname, yname=yname, dyname=dyname
         )
 
-    def addProfileGenerator(self, gen, name=None):
+    def add_profile_generator(self, gen, name=None):
         """Add a ProfileGenerator to be used by this FitContribution.
 
         The ProfileGenerator is given a name so that it can be used as part of
@@ -191,7 +227,7 @@ class FitContribution(ParameterSet):
         Calling addProfileGenerator sets the profile equation to call the
         calculator and if there is not a profile equation already.
 
-        Attributes
+        Parameters
         ----------
         gen
             A ProfileGenerator instance
@@ -219,24 +255,36 @@ class FitContribution(ParameterSet):
         # Make this our equation if we don't have one. This will set the
         # residual equation if necessary.
         if self._eq is None:
-            self.setEquation(name)
+            self.set_equation(name)
 
         return
 
-    def setEquation(self, eqstr, ns={}):
+    @deprecated(addprofilegenerator_dep_msg)
+    def addProfileGenerator(self, gen, name=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.FitContribution.add_profile_generator
+        instead.
+        """
+        self.add_profile_generator(gen, name=name)
+        return
+
+    def set_equation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual
         for this FitContribution.  The equation will be usable within
-        setResidualEquation as "eq", and it takes no arguments.
+        set_residual_equation as "eq", and it takes no arguments.
 
-        Attributes
+        Parameters
         ----------
         eqstr
             A string representation of the equation. Any Parameter
             registered by addParameter or setProfile, or function
-            registered by setCalculator, registerFunction or
-            registerStringFunction can be can be used in the equation
+            registered by setCalculator, register_function or
+            register_string_function can be can be used in the equation
             by name. Other names will be turned into Parameters of this
             FitContribution.
         ns
@@ -248,7 +296,9 @@ class FitContribution(ParameterSet):
         variable.
         """
         # Build the equation instance.
-        eq = equationFromString(eqstr, self._eqfactory, buildargs=True, ns=ns)
+        eq = get_equation_from_string(
+            eqstr, self._eqfactory, buildargs=True, ns=ns
+        )
         eq.name = "eq"
 
         # Register any new Parameters.
@@ -262,11 +312,22 @@ class FitContribution(ParameterSet):
 
         # Set the residual if we need to
         if self.profile is not None and self._reseq is None:
-            self.setResidualEquation("chiv")
+            self.set_residual_equation("chiv")
 
         return
 
-    def getEquation(self):
+    @deprecated(setequation_dep_msg)
+    def setEquation(self, eqstr, ns={}):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitContribution.set_equation
+        instead.
+        """
+        self.set_equation(eqstr, ns=ns)
+        return
+
+    def get_equation(self):
         """Get math expression string for the active profile equation.
 
         Return normalized math expression or an empty string if profile
@@ -279,10 +340,20 @@ class FitContribution(ParameterSet):
             rv = getExpression(self._eq)
         return rv
 
-    def setResidualEquation(self, eqstr):
+    @deprecated(getequation_dep_msg)
+    def getEquation(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitContribution.get_equation
+        instead.
+        """
+        return self.get_equation()
+
+    def set_residual_equation(self, eqstr):
         """Set the residual equation for the FitContribution.
 
-        Attributes
+        Parameters
         ----------
         eqstr
             A string representation of the residual. If eqstr is None
@@ -317,13 +388,25 @@ class FitContribution(ParameterSet):
         elif eqstr == "resv":
             eqstr = resvstr
 
-        reseq = equationFromString(eqstr, self._eqfactory)
+        reseq = get_equation_from_string(eqstr, self._eqfactory)
         self._eqfactory.wipeout(self._reseq)
         self._reseq = reseq
 
         return
 
-    def getResidualEquation(self):
+    @deprecated(setresidualequation_dep_msg)
+    def setResidualEquation(self, eqstr):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.FitContribution.set_residual_equation
+        instead.
+        """
+        self.set_residual_equation(eqstr)
+        return
+
+    def get_residual_equation(self):
         """Get math expression string for the active residual equation.
 
         Return normalized math formula or an empty string if residual
@@ -336,6 +419,18 @@ class FitContribution(ParameterSet):
             rv = getExpression(self._reseq, eqskip="eq$")
         return rv
 
+    @deprecated(getresidualequation_dep_msg)
+    def getResidualEquation(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.FitContribution.get_residual_equation
+        instead.
+        """
+
+        return self.get_residual_equation()
+
     def residual(self):
         """Calculate the residual for this fitcontribution.
 
@@ -347,7 +442,7 @@ class FitContribution(ParameterSet):
         chiv = (eq() - self.profile.y) / self.profile.dy
         The value that is optimized is dot(chiv, chiv).
 
-        The residual equation can be changed with the setResidualEquation
+        The residual equation can be changed with the set_residual_equation
         method.
         """
         # Assign the calculated profile
@@ -357,7 +452,8 @@ class FitContribution(ParameterSet):
         return self._reseq()
 
     def evaluate(self):
-        """Evaluate the contribution equation and update profile.ycalc."""
+        """Evaluate the contribution equation and update
+        profile.ycalc."""
         yc = self._eq()
         if self.profile is not None:
             self.profile.ycalc = yc

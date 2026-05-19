@@ -24,6 +24,24 @@ __all__ = ["Constraint"]
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.validatable import Validatable
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.srfit.fitbase.constraint.Constraint"
+removal_version = "4.0.0"
+
+constrain_deprecation_msg = build_deprecation_message(
+    base,
+    "constrain",
+    "add_constraint",
+    removal_version,
+)
+
+unconstrain_deprecation_msg = build_deprecation_message(
+    base,
+    "unconstrain",
+    "remove_constraint",
+    removal_version,
+)
 
 
 class Constraint(Validatable):
@@ -47,13 +65,23 @@ class Constraint(Validatable):
         self.eq = None
         return
 
-    def constrain(self, par, eq):
+    def add_constraint(self, par, eq):
         """Constrain a Parameter according to an Equation.
 
         The parameter will be set constant once it is constrained. This
         will keep it from being constrained multiple times.
 
-        Raises a ValueError if par is const.
+        Parameters
+        ----------
+        par : Parameter
+            The Parameter to constrain.
+        eq : Equation
+            The Equation to use to constrain the Parameter.
+
+        Raises
+        ------
+        ValueError
+            If par is constant or already constrained.
         """
 
         if par.const:
@@ -69,11 +97,35 @@ class Constraint(Validatable):
         self.update()
         return
 
-    def unconstrain(self):
-        """Clear the constraint."""
+    @deprecated(constrain_deprecation_msg)
+    def constrain(self, par, eq):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.constraint.Constraint.add_constraint
+        instead.
+        """
+        self.add_constraint(par, eq)
+        return
+
+    def remove_constraint(self):
+        """Clear the constraint from a Parameter."""
         self.par.constrained = False
         self.par = None
         self.eq = None
+        return
+
+    @deprecated(unconstrain_deprecation_msg)
+    def unconstrain(self):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.constraint.Constraint.remove_constraint
+        instead.
+        """
+        self.remove_constraint()
         return
 
     def update(self):
@@ -82,7 +134,7 @@ class Constraint(Validatable):
         val = self.eq()
         # This will only change the Parameter if val is different from the
         # currently stored value.
-        self.par.setValue(val)
+        self.par.set_value(val)
         return
 
     def _validate(self):
@@ -107,7 +159,7 @@ class Constraint(Validatable):
         # Try to get the value of eq.
         try:
             val = self.eq()
-            self.par.setValue(val)
+            self.par.set_value(val)
         except TypeError:
             raise SrFitError("eq cannot be evaluated")
         finally:

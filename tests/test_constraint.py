@@ -19,10 +19,49 @@ import unittest
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.constraint import Constraint
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.recipeorganizer import get_equation_from_string
 
 
 class TestConstraint(unittest.TestCase):
+
+    def test_constrain_parameter(self):
+        """Test the Constraint class."""
+
+        p1 = Parameter("p1", 1)
+        p2 = Parameter("p2", 2)
+
+        factory = EquationFactory()
+
+        factory.registerArgument("p1", p1)
+        factory.registerArgument("p2", p2)
+
+        c = Constraint()
+        # Constrain p1 = 2*p2
+        eq = get_equation_from_string("2*p2", factory)
+        c.add_constraint(p1, eq)
+
+        self.assertTrue(p1.constrained)
+        self.assertFalse(p2.constrained)
+
+        eq2 = get_equation_from_string("2*p2+1", factory)
+        c2 = Constraint()
+        self.assertRaises(ValueError, c2.constrain, p1, eq2)
+        p2.set_constant()
+        eq3 = get_equation_from_string("p1", factory)
+        self.assertRaises(ValueError, c2.constrain, p2, eq3)
+
+        p2.set_value(2.5)
+        c.update()
+        self.assertEqual(5.0, p1.getValue())
+
+        p2.set_value(8.1)
+        self.assertEqual(5.0, p1.getValue())
+        c.update()
+        self.assertEqual(16.2, p1.getValue())
+        return
+
+
+class TestConstraint_deprecated(unittest.TestCase):
 
     def testConstraint(self):
         """Test the Constraint class."""
@@ -37,24 +76,24 @@ class TestConstraint(unittest.TestCase):
 
         c = Constraint()
         # Constrain p1 = 2*p2
-        eq = equationFromString("2*p2", factory)
+        eq = get_equation_from_string("2*p2", factory)
         c.constrain(p1, eq)
 
         self.assertTrue(p1.constrained)
         self.assertFalse(p2.constrained)
 
-        eq2 = equationFromString("2*p2+1", factory)
+        eq2 = get_equation_from_string("2*p2+1", factory)
         c2 = Constraint()
         self.assertRaises(ValueError, c2.constrain, p1, eq2)
         p2.setConst()
-        eq3 = equationFromString("p1", factory)
+        eq3 = get_equation_from_string("p1", factory)
         self.assertRaises(ValueError, c2.constrain, p2, eq3)
 
-        p2.setValue(2.5)
+        p2.set_value(2.5)
         c.update()
         self.assertEqual(5.0, p1.getValue())
 
-        p2.setValue(8.1)
+        p2.set_value(8.1)
         self.assertEqual(5.0, p1.getValue())
         c.update()
         self.assertEqual(16.2, p1.getValue())

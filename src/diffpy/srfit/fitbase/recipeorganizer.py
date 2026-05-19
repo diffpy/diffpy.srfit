@@ -294,10 +294,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
     def _iterpars_fullnames(self, regexp, recurse=True, prefix=""):
         """Internal helper for iterPars(fullnames=True)."""
-        for par in list(self._parameters.values()):
-            name = f"{prefix}{par.name}"
+        for parameter in list(self._parameters.values()):
+            name = f"{prefix}{parameter.name}"
             if regexp.search(name):
-                yield par
+                yield parameter
 
         if not recurse:
             return
@@ -308,17 +308,17 @@ class RecipeContainer(Observable, Configurable, Validatable):
             for obj in m.values():
                 if hasattr(obj, "_iterpars_fullnames"):
                     childprefix = f"{prefix}{obj.name}."
-                    for par in obj._iterpars_fullnames(
+                    for parameter in obj._iterpars_fullnames(
                         regexp,
                         recurse=True,
                         prefix=childprefix,
                     ):
-                        yield par
+                        yield parameter
                 elif hasattr(obj, "iterate_over_parameters"):
-                    for par in obj.iterate_over_parameters(
+                    for parameter in obj.iterate_over_parameters(
                         pattern=regexp.pattern, recurse=True
                     ):
-                        yield par
+                        yield parameter
 
     @deprecated(iterPars_deprecation_msg)
     def iterPars(self, pattern="", recurse=True):

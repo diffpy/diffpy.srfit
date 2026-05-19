@@ -282,7 +282,9 @@ class RecipeContainer(Observable, Configurable, Validatable):
             for m in managed:
                 for obj in m.values():
                     if hasattr(obj, "iterate_over_parameters"):
-                        for parameter in obj.iterate_over_parameters(pattern=pattern, recurse=True):
+                        for parameter in obj.iterate_over_parameters(
+                            pattern=pattern, recurse=True
+                        ):
                             yield parameter
             return
         for parameter in self._iterpars_fullnames(

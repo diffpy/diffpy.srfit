@@ -39,6 +39,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 from bg_mpl_stylesheets.styles import all_styles
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 from numpy import array, concatenate, dot, sqrt
 
 import diffpy.srfit.util.inpututils as utils
@@ -47,7 +48,6 @@ from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.tagmanager import TagManager
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 plt.style.use(all_styles["bg-style"])
 

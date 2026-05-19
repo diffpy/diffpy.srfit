@@ -24,12 +24,12 @@ __all__ = ["Parameter", "Profile"]
 
 import numpy
 import six
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.util.observable import Observable
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 # This is the roundoff tolerance for selecting bounds on arrays.
 epsilon = 1e-8

@@ -19,11 +19,11 @@ data. It uses the PDFContribution class to simplify fit setup.
 """
 
 from crystalpdf import plotResults
+from diffpy.structure import Structure
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults
 from diffpy.srfit.pdf import PDFContribution
-from diffpy.structure import Structure
 
 ######
 #  Example Code

@@ -27,6 +27,7 @@ __all__ = ["Parameter", "ParameterProxy", "ParameterAdapter"]
 from functools import wraps
 
 import numpy
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 from diffpy.srfit.equation.literals import Argument
 from diffpy.srfit.exceptions import SrFitError
@@ -34,7 +35,6 @@ from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _parameter_interface
 from diffpy.srfit.util.argbinders import bind2nd
 from diffpy.srfit.util.nameutils import validateName
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 parameter_base = "diffpy.srfit.fitbase.Parameter"
 removal_version = "4.0.0"

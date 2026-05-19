@@ -623,8 +623,9 @@ class TestCreateSpaceGroup:
             pytest.skip("pyobjcryst package not available")
 
         global ObjCrystCrystalParSet, spacegroups
-        from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
         from diffpy.structure import spacegroups
+
+        from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
 
     @staticmethod
     def getObjCrystParSetSpaceGroup(sg):

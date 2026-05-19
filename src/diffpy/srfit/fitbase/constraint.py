@@ -22,9 +22,10 @@ Constraint.constrain method is used to create this association.
 
 __all__ = ["Constraint"]
 
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.validatable import Validatable
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 base = "diffpy.srfit.fitbase.constraint.Constraint"
 removal_version = "4.0.0"

@@ -24,8 +24,9 @@ __all__ = ["ParameterSet"]
 
 from collections import OrderedDict
 
-from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 
 base = "diffpy.srfit.fitbase.parameterset.ParameterSet"
 removal_version = "4.0.0"

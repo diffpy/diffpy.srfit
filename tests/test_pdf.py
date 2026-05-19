@@ -368,12 +368,26 @@ def _make_iterpars_tree():
 @pytest.mark.parametrize(
     ("pattern", "kwargs", "expected_values"),
     [
+        # C1: Match leaf parameter names without fullnames.
+        # Expected: all Biso parameters in the hierarchy are returned.
         (r"^Biso$", {}, [10, 20, 40, 50]),
+        # C2: Match hierarchical names without fullnames.
+        # Expected: no leaf names match the hierarchical pattern.
         (r"^Ni\d+\.Biso$", {}, []),
+        # C3: Match hierarchical names with fullnames enabled.
+        # Expected: matching Ni Biso parameters are returned.
         (r"^Ni\d+\.Biso$", {"fullnames": True}, [20, 40]),
+        # C4: Match one hierarchical Uiso name.
+        # Expected: only Ni0.Uiso is returned.
         (r"^Ni0\.Uiso$", {"fullnames": True}, [30]),
+        # C5: Match one hierarchical Biso name outside Ni containers.
+        # Expected: only O0.Biso is returned.
         (r"^O0\.Biso$", {"fullnames": True}, [50]),
+        # C6: Disable recursion while matching child fullnames.
+        # Expected: no child parameters are returned.
         (r"^Ni\d+\.Biso$", {"fullnames": True, "recurse": False}, []),
+        # C7: Disable recursion while matching root fullname.
+        # Expected: only the root-level Biso parameter is returned.
         (r"^Biso$", {"fullnames": True, "recurse": False}, [10]),
     ],
 )
@@ -383,24 +397,40 @@ def test_iterpars_fullname_matching(pattern, kwargs, expected_values):
     objs = _make_iterpars_tree()
     root = objs["root"]
 
-    values = [
-        par.value for par in root.iterate_over_parameters(pattern, **kwargs)
+    actual_values = [
+        parameter.value
+        for parameter in root.iterate_over_parameters(pattern, **kwargs)
     ]
 
-    assert values == expected_values
+    assert actual_values == expected_values
 
 
-def test_iterpars_fullnames_are_relative_to_called_container():
+@pytest.mark.parametrize(
+    ("pattern", "expected_name"),
+    [
+        # C1: Match Biso relative to the called Ni0 container.
+        # Expected: Ni0.Biso is returned without the Ni0 prefix.
+        (r"^Biso$", ["Biso"]),
+        # C2: Match Uiso relative to the called Ni0 container.
+        # Expected: Ni0.Uiso is returned without the Ni0 prefix.
+        (r"^Uiso$", ["Uiso"]),
+        # C3: Match with the parent container prefix from inside Ni0.
+        # Expected: no parameter is returned because fullnames are relative
+        # to the container on which iterate_over_parameters is called.
+        (r"^Ni0\.Biso$", []),
+    ],
+)
+def test_iterpars_fullnames_are_relative_to_called_container(
+    pattern,
+    expected_name,
+):
     """Verify fullname matching is relative to the called container."""
     objs = _make_iterpars_tree()
     ni0 = objs["ni0"]
 
-    assert list(ni0.iterate_over_parameters(r"^Biso$", fullnames=True)) == [
-        objs["ni0_biso"]
+    actual_name = [
+        parameter.name
+        for parameter in ni0.iterate_over_parameters(pattern, fullnames=True)
     ]
-    assert list(ni0.iterate_over_parameters(r"^Uiso$", fullnames=True)) == [
-        objs["ni0_uiso"]
-    ]
-    assert (
-        list(ni0.iterate_over_parameters(r"^Ni0\.Biso$", fullnames=True)) == []
-    )
+
+    assert actual_name == expected_name

@@ -24,6 +24,8 @@ import pytest
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase import ProfileParser
+from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
 from diffpy.srfit.pdf import PDFContribution, PDFGenerator, PDFParser
 
 # ----------------------------------------------------------------------------
@@ -321,3 +323,84 @@ def test_pickling(
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _make_iterpars_tree():
+    """Build a small hierarchy for iterPars tests."""
+    root = RecipeContainer("root")
+    root._containers = {}
+    root._manage(root._containers)
+
+    root_biso = Parameter("Biso", 10)
+    root._add_object(root_biso, root._parameters)
+
+    ni0 = RecipeContainer("Ni0")
+    ni0_biso = Parameter("Biso", 20)
+    ni0_uiso = Parameter("Uiso", 30)
+    ni0._add_object(ni0_biso, ni0._parameters)
+    ni0._add_object(ni0_uiso, ni0._parameters)
+
+    ni1 = RecipeContainer("Ni1")
+    ni1_biso = Parameter("Biso", 40)
+    ni1._add_object(ni1_biso, ni1._parameters)
+
+    o0 = RecipeContainer("O0")
+    o0_biso = Parameter("Biso", 50)
+    o0._add_object(o0_biso, o0._parameters)
+
+    root._add_object(ni0, root._containers)
+    root._add_object(ni1, root._containers)
+    root._add_object(o0, root._containers)
+
+    return {
+        "root": root,
+        "root_biso": root_biso,
+        "ni0": ni0,
+        "ni0_biso": ni0_biso,
+        "ni0_uiso": ni0_uiso,
+        "ni1": ni1,
+        "ni1_biso": ni1_biso,
+        "o0": o0,
+        "o0_biso": o0_biso,
+    }
+
+
+@pytest.mark.parametrize(
+    ("pattern", "kwargs", "expected_values"),
+    [
+        (r"^Biso$", {}, [10, 20, 40, 50]),
+        (r"^Ni\d+\.Biso$", {}, []),
+        (r"^Ni\d+\.Biso$", {"fullnames": True}, [20, 40]),
+        (r"^Ni0\.Uiso$", {"fullnames": True}, [30]),
+        (r"^O0\.Biso$", {"fullnames": True}, [50]),
+        (r"^Ni\d+\.Biso$", {"fullnames": True, "recurse": False}, []),
+        (r"^Biso$", {"fullnames": True, "recurse": False}, [10]),
+    ],
+)
+def test_iterpars_fullname_matching(pattern, kwargs, expected_values):
+    """Verify leaf-name and fullname matching in
+    iterate_over_parameters."""
+    objs = _make_iterpars_tree()
+    root = objs["root"]
+
+    values = [
+        par.value for par in root.iterate_over_parameters(pattern, **kwargs)
+    ]
+
+    assert values == expected_values
+
+
+def test_iterpars_fullnames_are_relative_to_called_container():
+    """Verify fullname matching is relative to the called container."""
+    objs = _make_iterpars_tree()
+    ni0 = objs["ni0"]
+
+    assert list(ni0.iterate_over_parameters(r"^Biso$", fullnames=True)) == [
+        objs["ni0_biso"]
+    ]
+    assert list(ni0.iterate_over_parameters(r"^Uiso$", fullnames=True)) == [
+        objs["ni0_uiso"]
+    ]
+    assert (
+        list(ni0.iterate_over_parameters(r"^Ni0\.Biso$", fullnames=True)) == []
+    )

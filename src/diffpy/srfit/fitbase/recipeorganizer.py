@@ -274,9 +274,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
         regexp = re.compile(pattern)
         if not fullnames:
             yield from self._iterpars_leafnames(regexp, pattern, recurse)
-            return
-
-        yield from self._iterpars_fullnames(regexp, recurse=recurse, prefix="")
+        else:
+            yield from self._iterpars_fullnames(
+                regexp, recurse=recurse, prefix=""
+            )
 
     def _iter_local_parameters(self, regexp, prefix=""):
         """Iterate over local Parameters with matching names."""
@@ -290,7 +291,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
         Parameters."""
         managed = self.__managed[:]
         managed.remove(self._parameters)
-
         for managed_dict in managed:
             for obj in managed_dict.values():
                 if hasattr(obj, "iterate_over_parameters"):
@@ -299,15 +299,12 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _iterpars_leafnames(self, regexp, pattern, recurse=True):
         """Iterate over Parameters matched by leaf parameter names."""
         yield from self._iter_local_parameters(regexp)
-
-        if not recurse:
-            return
-
-        for obj in self._iter_managed_parameter_containers():
-            yield from obj.iterate_over_parameters(
-                pattern=pattern,
-                recurse=True,
-            )
+        if recurse:
+            for obj in self._iter_managed_parameter_containers():
+                yield from obj.iterate_over_parameters(
+                    pattern=pattern,
+                    recurse=True,
+                )
 
     def _iter_child_fullname_parameters(self, obj, regexp, prefix):
         """Iterate over one child's Parameters with hierarchical
@@ -319,27 +316,23 @@ class RecipeContainer(Observable, Configurable, Validatable):
                 recurse=True,
                 prefix=childprefix,
             )
-            return
-
-        yield from obj.iterate_over_parameters(
-            pattern=regexp.pattern,
-            recurse=True,
-        )
+        else:
+            yield from obj.iterate_over_parameters(
+                pattern=regexp.pattern,
+                recurse=True,
+            )
 
     def _iterpars_fullnames(self, regexp, recurse=True, prefix=""):
         """Iterate over Parameters matched by hierarchical dotted
         names."""
         yield from self._iter_local_parameters(regexp, prefix=prefix)
-
-        if not recurse:
-            return
-
-        for obj in self._iter_managed_parameter_containers():
-            yield from self._iter_child_fullname_parameters(
-                obj,
-                regexp,
-                prefix,
-            )
+        if recurse:
+            for obj in self._iter_managed_parameter_containers():
+                yield from self._iter_child_fullname_parameters(
+                    obj,
+                    regexp,
+                    prefix,
+                )
 
     @deprecated(iterPars_deprecation_msg)
     def iterPars(self, pattern="", recurse=True):

@@ -14,7 +14,6 @@
 ##############################################################################
 """Picklable storage of callable objects using weak references."""
 
-
 import types
 import weakref
 
@@ -123,7 +122,7 @@ class WeakBoundMethod(object):
 
     def __setstate__(self, state):
         """Restore the weak reference in this wrapper upon unpickling."""
-        (self._class, nm, self.fallback, mobj) = state
+        self._class, nm, self.fallback, mobj = state
         self.function = getattr(self._class, nm)
         if mobj is None:
             # use a fake weak reference that mimics deallocated object.

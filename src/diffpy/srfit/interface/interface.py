@@ -147,10 +147,8 @@ class FitRecipeInterface(object):
 def _applymanyargs(args, f):
     """Apply arguments to a function.
 
-    Args can be any of the following.
-    arg
-    (arg1, arg2, ...)
-    ((arg1a, arg1b, ...), ...)
+    Args can be any of the following. arg (arg1, arg2, ...) ((arg1a,
+    arg1b, ...), ...)
     """
     if not hasattr(args, "__iter__"):
         f(args)
@@ -168,10 +166,8 @@ def _applymanyargs(args, f):
 def _applyargs(args, f):
     """Apply arguments to a function.
 
-    Args can be any of the following.
-    arg
-    (arg1, arg2, ...)
-    ((arg1a, arg1b, ...), ...)
+    Args can be any of the following. arg (arg1, arg2, ...) ((arg1a,
+    arg1b, ...), ...)
     """
     if not hasattr(args, "__iter__"):
         f(args)

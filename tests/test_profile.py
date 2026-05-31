@@ -196,7 +196,6 @@ class TestProfile(unittest.TestCase):
 
 def testLoadtxt(datafile):
     """Test the loadtxt method."""
-
     prof = Profile()
     data = datafile("testdata.txt")
 

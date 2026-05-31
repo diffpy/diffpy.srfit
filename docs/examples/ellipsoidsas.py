@@ -30,7 +30,6 @@ from diffpy.srfit.sas import SASGenerator, SASParser
 
 def makeRecipe(datname):
     """Create a fitting recipe for ellipsoidal SAS data."""
-
     # The Profile
     # This will be used to store the observed and calculated I(Q) data.
     profile = Profile()
@@ -89,7 +88,6 @@ def makeRecipe(datname):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # All this should be pretty familiar by now.
     r = recipe.ellipsoid.profile.x
     y = recipe.ellipsoid.profile.y

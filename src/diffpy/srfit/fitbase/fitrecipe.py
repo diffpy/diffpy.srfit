@@ -375,7 +375,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Raises AttributeError if there are variables without a value.
         """
-
         # Only prepare if the configuration has changed within the recipe
         # hierarchy.
         if self._ready:
@@ -426,7 +425,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
     def __verify_parameters(self):
         """Verify that all Parameters have values."""
-
         # Get all parameters with a value of None
         badpars = []
         for par in self.iterPars():
@@ -595,7 +593,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Raises ValueError if var is not part of the FitRecipe.
         """
-
         self._remove_parameter(var)
         self._tagmanager.untag(var)
         return
@@ -988,7 +985,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 fit_color='red'
             )
         """
-
         for key in kwargs:
             if key not in self.plot_options:
                 print(

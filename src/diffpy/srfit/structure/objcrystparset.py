@@ -1302,7 +1302,6 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
             If this is None (default), then a new StretchModeBondLength
             will be built.
         """
-
         # Create the mode
         self.mode = mode
         if mode is None:
@@ -1444,7 +1443,6 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
             A pre-built mode to place in this Parameter. If this is
             None (default), then a StretchMode will be built.
         """
-
         # Create the stretch mode
         self.mode = mode
         if mode is None:
@@ -1606,7 +1604,6 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
             A pre-built mode to place in this Parameter. If this is
             None (default), then a StretchMode will be built.
         """
-
         # Create the stretch mode
         self.mode = mode
         if mode is None:
@@ -1715,7 +1712,6 @@ class ObjCrystCrystalParSet(SrRealParSet):
     occ
         Occupancy of the scatterer on its crystal site (ParameterWraper)
     """
-
     def __init__(self, name, cryst):
         """Initialize.
 

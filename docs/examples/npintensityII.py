@@ -99,8 +99,7 @@ def makeRecipe(strufile, datname1, datname2):
     # in different contributions are different Parameters even if they have the
     # same names.  FitContributions are isolated namespaces than only share
     # information if you tell them to by using addParameter or addParameterSet.
-    bkgdstr =\
-              "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
+    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
                b7*q**7 +b8*q**8 + b9*q**9"
 
     contribution1.registerStringFunction(bkgdstr, "bkgd")

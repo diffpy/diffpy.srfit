@@ -12,7 +12,8 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-"""Universal import functions for volatile SasView/SansViews API-s."""
+"Universal import functions for volatile SasView/SansViews API-s."
+
 
 def sasimport(modname):
     """Import specified module from the SasView sas package.

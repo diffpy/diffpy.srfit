@@ -12,9 +12,9 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-"""
-Exceptions used for SrFit - specific errors.
-"""
+
+"Exceptions used for SrFit - specific errors."
+
 
 class SrFitError(Exception):
     """Generic error in SrFit expressions or recipe."""

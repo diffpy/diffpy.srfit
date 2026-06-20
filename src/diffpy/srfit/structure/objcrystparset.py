@@ -1712,6 +1712,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
     occ
         Occupancy of the scatterer on its crystal site (ParameterWraper)
     """
+
     def __init__(self, name, cryst):
         """Initialize.
 

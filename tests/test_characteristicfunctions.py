@@ -14,6 +14,9 @@
 ##############################################################################
 """Tests for sas package."""
 
+# FIXME: remove this line when `docformatter` fixes the blank line bug
+
+
 import unittest
 
 import numpy

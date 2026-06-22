@@ -12,7 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-"Functions for binding arguments of callable objects."
+"""Functions for binding arguments of callable objects."""
 
 # FIXME: remove this line when `docformatter` fixes the blank line bug
 

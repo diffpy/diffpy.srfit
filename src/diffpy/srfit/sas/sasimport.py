@@ -14,6 +14,8 @@
 ##############################################################################
 "Universal import functions for volatile SasView/SansViews API-s."
 
+# FIXME: remove this line when `docformatter` fixes the blank line bug
+
 
 def sasimport(modname):
     """Import specified module from the SasView sas package.

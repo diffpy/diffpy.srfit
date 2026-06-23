@@ -128,7 +128,6 @@ def testCylinder(sas_available):
         + "remove skip when our code is refactored to use the "
         + "latest sasview API"
     )
-
     load_standard_models()
     """Make sure cylinder works over different r-ranges."""
     radius = 100

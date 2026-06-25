@@ -26,7 +26,6 @@ x = numpy.arange(0, 20, 0.05)
 
 def makeLazyEquation(make_args):
     """Make a lazy equation and see how fast it is."""
-
     # Make some variables
     v1, v2, v3, v4, v5, v6, v7 = make_args(7)
 
@@ -74,7 +73,6 @@ def makeLazyEquation(make_args):
 
 def makeEquation1():
     """Make the same equation as the lazy one."""
-
     y = 50 * x
 
     def _f(a, b, c, d, e):
@@ -196,7 +194,6 @@ def speedTest3(mutate=2):
             - diffpy.srfit.equation is slightly slower when using arrays, but
               not considerably worse than versus numpy alone.
     """
-
     from diffpy.srfit.equation.builder import EquationFactory
 
     factory = EquationFactory()
@@ -285,7 +282,6 @@ def speedTest4(mutate=2):
             - diffpy.srfit.equation is slightly slower when using arrays, but
               not considerably worse than versus numpy alone.
     """
-
     from diffpy.srfit.equation.builder import EquationFactory
 
     factory = EquationFactory()
@@ -344,7 +340,6 @@ def speedTest4(mutate=2):
 
 def weightedTest(mutate=2):
     """Show the benefits of a properly balanced equation tree."""
-
     from diffpy.srfit.equation.builder import EquationFactory
 
     factory = EquationFactory()

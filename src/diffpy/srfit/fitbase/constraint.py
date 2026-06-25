@@ -55,7 +55,6 @@ class Constraint(Validatable):
 
         Raises a ValueError if par is const.
         """
-
         if par.const:
             raise ValueError("The parameter '%s' is constant" % par)
 

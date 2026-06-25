@@ -29,7 +29,6 @@ class TestValidator:
 
     def testSimpleFunction(self):
         """Test a simple function."""
-
         # Make some variables
         v1, v2, v3, v4 = self.make_args(4)
 
@@ -98,7 +97,6 @@ class TestArgFinder:
 
     def testSimpleFunction(self):
         """Test a simple function."""
-
         # Make some variables
         v1, v2, v3, v4 = self.make_args(4)
 
@@ -151,7 +149,6 @@ class TestSwapper:
 
     def testSimpleFunction(self):
         """Test a simple function."""
-
         # Make some variables
         v1, v2, v3, v4, v5 = self.make_args(5)
 

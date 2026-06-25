@@ -43,7 +43,6 @@ def makeRecipe(ciffile, grdata, iqdata):
     The fit I(q) is fed into the calculation of G(r), which provides
     feedback for the fit parameters of both.
     """
-
     # Create a PDF contribution as before
     pdfprofile = Profile()
     pdfparser = PDFParser()
@@ -120,7 +119,6 @@ def makeRecipe(ciffile, grdata, iqdata):
 
 def fitRecipe(recipe):
     """We refine in stages to help the refinement converge."""
-
     # Tune SAS.
     recipe.setWeight(recipe.pdf, 0)
     recipe.fix("all")
@@ -147,7 +145,6 @@ def fitRecipe(recipe):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # All this should be pretty familiar by now.
     r = recipe.pdf.profile.x
     g = recipe.pdf.profile.y

@@ -255,7 +255,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
         Raises ValueError if the object has the same name as some other managed
         object.
         """
-
         # Check name
         if not obj.name:
             message = "%s has no name" % obj.__class__.__name__
@@ -450,7 +449,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises ValueError if the Parameter has the same name as a contained
         RecipeContainer.
         """
-
         # Store the Parameter
         RecipeContainer._add_object(self, par, self._parameters, check)
 
@@ -544,7 +542,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Returns the callable Equation object.
         """
-
         # If the function is an equation, we treat it specially. This is
         # required so that the objects observed by the root get observed if the
         # Equation is used within another equation. It is assumed that a plain
@@ -642,7 +639,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Returns the callable Equation object.
         """
-
         # Build the equation instance.
         eq = equationFromString(fstr, self._eqfactory, ns=ns, buildargs=True)
         eq.name = name
@@ -857,7 +853,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Returns the Restraint object for use with the 'unrestrain' method.
         """
-
         if isinstance(res, six.string_types):
             eqstr = res
             eq = equationFromString(res, self._eqfactory, ns)
@@ -1136,7 +1131,6 @@ def equationFromString(
     Raises ValueError if ns uses a name that is already defined in the factory.
     Raises ValueError if the equation has undefined parameters.
     """
-
     defined = set(factory.builders.keys())
 
     # Check if ns overloads any parameters.

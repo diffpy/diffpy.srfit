@@ -12,9 +12,9 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-"""
-Exceptions used for SrFit - specific errors.
-"""
+"""Exceptions used for SrFit - specific errors."""
+
+# FIXME: remove this line when `docformatter` fixes the blank line bug
 
 
 class SrFitError(Exception):

@@ -1,5 +1,5 @@
 Authors
-=======
+-------
 
 Christopher Farrow, Pavol Juhas, Simon J. L. Billinge, and members of the Billinge Group
 

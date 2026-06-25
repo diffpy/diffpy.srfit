@@ -43,7 +43,6 @@ class TestArgument(unittest.TestCase):
 
     def testValue(self):
         """Test value setting."""
-
         a = literals.Argument()
 
         self.assertEqual(None, a.getValue())
@@ -160,7 +159,6 @@ class TestConvolutionOperator(unittest.TestCase):
 
     def testValue(self):
         """Make sure the convolution operator is working properly."""
-
         exp = numpy.exp
 
         x = numpy.linspace(0, 10, 1000)

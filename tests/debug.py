@@ -19,7 +19,6 @@ python -m diffpy.srfit.tests.debug
 Exceptions raised by failed tests or other errors are not caught.
 """
 
-
 if __name__ == "__main__":
     import sys
 

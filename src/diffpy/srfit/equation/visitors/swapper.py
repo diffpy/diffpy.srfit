@@ -44,7 +44,6 @@ class Swapper(Visitor):
             The literal to be placed into the literal tree. See the
             class for how the replacement takes place.
         """
-
         self.newlit = newlit
         self.oldlit = oldlit
 
@@ -58,7 +57,6 @@ class Swapper(Visitor):
         Tell the parent to swap the old Argument with the replacement
         Literal.
         """
-
         if arg is self.oldlit:
             self._swap = True
 
@@ -70,7 +68,6 @@ class Swapper(Visitor):
         Tell the parent to swap the old Operator with the replacement
         Literal.
         """
-
         # Check to see if we need to swap out this Operator. If so, then we
         # don't need to traverse into its arguments.
         if op is self.oldlit:

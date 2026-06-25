@@ -124,7 +124,6 @@ def makeRecipe():
     This will create a FitContribution that uses the GaussianGenerator,
     associate this with a Profile, and use this to define a FitRecipe.
     """
-
     # The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()

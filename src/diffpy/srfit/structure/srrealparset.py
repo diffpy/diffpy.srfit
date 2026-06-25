@@ -63,7 +63,6 @@ class SrRealParSet(BaseStructureParSet):
 
         Returns the BVSRestraint object for use with the 'unrestrain' method.
         """
-
         # Create the Restraint object
         res = BVSRestraint(self, sig, scaled)
         # Add it to the _restraints set

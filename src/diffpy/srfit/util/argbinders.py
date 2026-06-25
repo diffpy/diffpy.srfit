@@ -14,6 +14,8 @@
 ##############################################################################
 """Functions for binding arguments of callable objects."""
 
+# FIXME: remove this line when `docformatter` fixes the blank line bug
+
 
 class bind2nd(object):
     """Freeze second argument of a callable object to a given constant."""

@@ -22,7 +22,6 @@ from diffpy.srfit.equation import Equation
 
 def testSimpleFunction(make_args, noObserversInGlobalBuilders):
     """Test a simple function."""
-
     # Make some variables
     v1, v2, v3, v4, c = make_args(5)
     c.name = "c"
@@ -111,7 +110,6 @@ def testSimpleFunction(make_args, noObserversInGlobalBuilders):
 
 def testEmbeddedEquation(make_args, noObserversInGlobalBuilders):
     """Test a simple function."""
-
     # Make some variables
     v1, v2, v3, v4, c = make_args(5)
     c.name = "c"

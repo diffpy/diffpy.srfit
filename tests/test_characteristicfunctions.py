@@ -21,7 +21,11 @@ import unittest
 
 import numpy
 import pytest
-from sasmodels.sasview_model import find_model, load_standard_models
+
+try:
+    from sasmodels.sasview_model import find_model, load_standard_models
+except ModuleNotFoundError:
+    pass
 
 import diffpy.srfit.pdf.characteristicfunctions as cf
 

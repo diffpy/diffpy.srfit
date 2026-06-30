@@ -261,9 +261,9 @@ class FitResults(object):
     def _calculate_covariance(self):
         """Calculate the covariance matrix.
 
-        This is called by update.         This code borrowed from PARK.
-        It finds the pseudo-inverse of the         Jacobian using the
-        singular value decomposition.
+        This is called by update. This code borrowed from PARK. It finds
+        the pseudo-inverse of the Jacobian using the singular value
+        decomposition.
         """
         try:
             J = self._calculate_jacobian()

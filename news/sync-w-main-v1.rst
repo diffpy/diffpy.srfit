@@ -1,6 +1,6 @@
 **Added:**
 
-* No news needed: refactoring of pytest fixtures
+* No news needed: refactoring of pytest fixtures and merging with main branch.
 
 **Changed:**
 

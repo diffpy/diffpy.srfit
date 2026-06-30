@@ -101,8 +101,7 @@ def makeRecipe(strufile, datname1, datname2):
     # same names.  FitContributions are isolated namespaces than only share
     # information if you tell them to by using addParameter or
     # add_parameter_set.
-    bkgdstr =\
-              "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
+    bkgdstr = "b0 + b1*q + b2*q**2 + b3*q**3 + b4*q**4 + b5*q**5 + b6*q**6 +\
                b7*q**7 +b8*q**8 + b9*q**9"
 
     contribution1.register_string_function(bkgdstr, "bkgd")

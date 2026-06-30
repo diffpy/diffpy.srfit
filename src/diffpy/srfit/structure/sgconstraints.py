@@ -633,6 +633,8 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 def _constrain_triclinic(lattice):
     """Make constraints for Triclinic systems."""
     return
+
+
 def _constrain_monoclinic(lattice):
     """Make constraints for Monoclinic systems.
 

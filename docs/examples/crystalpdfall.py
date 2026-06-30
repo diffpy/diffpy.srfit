@@ -57,7 +57,6 @@ def makeRecipe(
     ciffile_ni, ciffile_si, xdata_ni, ndata_ni, xdata_si, xdata_sini
 ):
     """Create a fitting recipe for crystalline PDF data."""
-
     # The Profiles
     # We need a profile for each data set.
     xprofile_ni = makeProfile(xdata_ni)
@@ -147,7 +146,6 @@ def makeRecipe(
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # All this should be pretty familiar by now.
     xnickel = recipe.xnickel
     xr_ni = xnickel.profile.x

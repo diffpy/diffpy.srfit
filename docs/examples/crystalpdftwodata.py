@@ -39,7 +39,6 @@ from diffpy.srfit.pdf import PDFGenerator
 
 def makeRecipe(ciffile, xdatname, ndatname):
     """Create a fitting recipe for crystalline PDF data."""
-
     # The Profiles
     # We need a profile for each data set. This means that we will need two
     # FitContributions as well.
@@ -138,7 +137,6 @@ def makeRecipe(ciffile, xdatname, ndatname):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # All this should be pretty familiar by now.
     xr = recipe.xnickel.profile.x
     xg = recipe.xnickel.profile.y

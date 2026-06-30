@@ -34,7 +34,6 @@ from diffpy.srfit.pdf import DebyePDFGenerator
 
 def makeRecipe(molecule, datname):
     """Create a recipe that uses the DebyePDFGenerator."""
-
     # The Profile
     profile = Profile()
 
@@ -110,7 +109,6 @@ def makeRecipe(molecule, datname):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # Plot this.
     r = recipe.bucky.profile.x
     g = recipe.bucky.profile.y
@@ -221,7 +219,6 @@ c60xyz = """
 
 def makeC60():
     """Make the C60 molecule using pyobjcryst."""
-
     from pyobjcryst.crystal import Crystal
     from pyobjcryst.molecule import Molecule
     from pyobjcryst.scatteringpower import ScatteringPowerAtom

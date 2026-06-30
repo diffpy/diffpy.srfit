@@ -428,7 +428,6 @@ class FitContribution(ParameterSet):
         diffpy.srfit.fitbase.FitContribution.get_residual_equation
         instead.
         """
-
         return self.get_residual_equation()
 
     def residual(self):

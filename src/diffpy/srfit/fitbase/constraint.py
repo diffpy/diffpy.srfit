@@ -83,7 +83,6 @@ class Constraint(Validatable):
         ValueError
             If par is constant or already constrained.
         """
-
         if par.const:
             raise ValueError("The parameter '%s' is constant" % par)
 

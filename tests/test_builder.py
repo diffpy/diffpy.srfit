@@ -50,7 +50,6 @@ def testRegisterArg(make_args, noObserversInGlobalBuilders):
 
 def testRegisterOperator(make_args, noObserversInGlobalBuilders):
     """Try to use an operator without arguments in an equation."""
-
     factory = builder.EquationFactory()
     v1, v2, v3, v4 = make_args(4)
 

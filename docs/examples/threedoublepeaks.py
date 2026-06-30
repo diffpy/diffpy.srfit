@@ -176,7 +176,6 @@ def scipyOptimize(recipe):
     we can be minimized using a scipy optimizer. The details are
     described in the source.
     """
-
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
     # scipy. We simply have to give it the function to minimize
     # (recipe.residual) and the starting values of the Variables
@@ -191,7 +190,6 @@ def scipyOptimize(recipe):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # We can access the data and fit profile through the Profile we created
     # above. We get to it through our FitContribution, which we named "g1".
     #

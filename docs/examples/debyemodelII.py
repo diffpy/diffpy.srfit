@@ -55,7 +55,6 @@ def makeRecipeII():
     constrain the Debye temperature in each FitContribution to be the
     same.
     """
-
     # We'll throw these away. We just want the FitContributions that are
     # configured within the recipes.
     m1 = makeRecipe()
@@ -96,7 +95,6 @@ def makeRecipeII():
 
 def plotResults(recipe):
     """Display the results contained within a refined FitRecipe."""
-
     # The variable values are returned in the order in which the variables were
     # added to the FitRecipe.
     lowToffset, highToffset, thetaD = recipe.get_values()

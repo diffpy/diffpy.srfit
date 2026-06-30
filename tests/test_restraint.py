@@ -26,7 +26,6 @@ class TestRestraint(unittest.TestCase):
 
     def testRestraint(self):
         """Test the Restraint class."""
-
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
 

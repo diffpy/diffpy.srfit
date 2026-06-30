@@ -14,7 +14,6 @@
 ##############################################################################
 """Functions for binding arguments of callable objects."""
 
-
 class bind2nd(object):
     """Freeze second argument of a callable object to a given
     constant."""

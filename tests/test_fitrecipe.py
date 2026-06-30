@@ -200,7 +200,6 @@ class TestFitRecipe(unittest.TestCase):
 
     def testResidual(self):
         """Test the residual and everything that can change it."""
-
         # With thing set up as they are, the residual should be 0
         res = self.recipe.residual()
         self.assertAlmostEqual(0, dot(res, res))

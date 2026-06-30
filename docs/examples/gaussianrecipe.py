@@ -58,7 +58,6 @@ from diffpy.srfit.fitbase import (
 
 def main():
     """The workflow of creating, running and inspecting a fit."""
-
     # Start by creating the recipe. The recipe describes the data to be fit,
     # the profile generator used to simulate the data and the variables that
     # will be tuned by the optimizer.
@@ -95,7 +94,6 @@ def makeRecipe():
     Once we define the FitRecipe, we can send it an optimizer to be
     optimized. See the 'scipyOptimize' function.
     """
-
     # The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
@@ -168,7 +166,6 @@ def scipyOptimize(recipe):
     we can be minimized using a scipy optimizer. The details are
     described in the source.
     """
-
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
     # scipy. We simply have to give it the function to minimize
     # (recipe.residual) and the starting values of the Variables
@@ -183,7 +180,6 @@ def scipyOptimize(recipe):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # We can access the data and fit profile through the Profile we created
     # above. We get to it through our FitContribution, which we named "g1".
     #

@@ -27,7 +27,6 @@ from diffpy.srfit.pdf import PDFContribution
 
 def makeRecipe(niciffile, siciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
-
     # Load data and add it to the profile
     contribution = PDFContribution("nisi")
     contribution.loadData(datname)

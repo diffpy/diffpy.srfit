@@ -35,7 +35,6 @@ class TestEquationFromString(unittest.TestCase):
 
     def test_get_equation_from_string(self):
         """Test the get_equation_from_string method."""
-
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
         p3 = Parameter("p3", 3)
@@ -189,7 +188,6 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def testNewParameter(self):
         """Test the addParameter method."""
-
         m = self.m
 
         p1 = Parameter("p1", 1)
@@ -205,7 +203,6 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def testAddParameter(self):
         """Test the addParameter method."""
-
         m = self.m
 
         p1 = Parameter("p1", 1)
@@ -243,7 +240,6 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def testRemoveParameter(self):
         """Test removeParameter method."""
-
         m = self.m
 
         p1 = Parameter("p1", 1)
@@ -268,7 +264,6 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def test_constrain_parameter(self):
         """Test the constrain method."""
-
         p1 = self.m._new_parameter("p1", 1)
         p2 = self.m._new_parameter("p2", 2)
         p3 = Parameter("p3", 3)
@@ -337,7 +332,6 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def test_add_restraint(self):
         """Test the restrain method."""
-
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
         p3 = Parameter("p3", 3)
@@ -560,7 +554,6 @@ class TestRecipeOrganizer(unittest.TestCase):
 
     def test_register_string_function(self):
         """Test registering string functions in various ways."""
-
         # Make an equation.
         eq1 = self.m.register_string_function("x**2 + 3", "eq1")
         eq1.x.set_value(0)

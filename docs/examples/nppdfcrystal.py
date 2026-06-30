@@ -39,7 +39,6 @@ from diffpy.srfit.pdf import PDFGenerator
 
 def makeRecipe(ciffile, grdata):
     """Make a recipe to model a crystal-like nanoparticle PDF."""
-
     # Set up a PDF fit as has been done in other examples.
     pdfprofile = Profile()
 
@@ -84,7 +83,6 @@ def makeRecipe(ciffile, grdata):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # All this should be pretty familiar by now.
     r = recipe.pdf.profile.x
     g = recipe.pdf.profile.y

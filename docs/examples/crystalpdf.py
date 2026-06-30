@@ -43,7 +43,6 @@ from diffpy.structure import Structure
 
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
-
     # The Profile
     # This will be used to store the observed and calculated PDF profile.
     profile = Profile()
@@ -133,7 +132,6 @@ def makeRecipe(ciffile, datname):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # All this should be pretty familiar by now.
     r = recipe.nickel.profile.x
     g = recipe.nickel.profile.y

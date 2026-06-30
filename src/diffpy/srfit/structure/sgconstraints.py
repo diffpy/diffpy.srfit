@@ -101,7 +101,6 @@ def constrainAsSpaceGroup(
             b and c are constrained to a, and alpha, beta and
             gamma are fixed to 90.
     """
-
     from diffpy.structure.spacegroups import GetSpaceGroup, SpaceGroup
 
     sg = spacegroup
@@ -138,7 +137,6 @@ def _constrain_as_space_group(
     sg
         diffpy.structure.spacegroups.SpaceGroup instance
     """
-
     from diffpy.structure.symmetryutilities import stdUsymbols
 
     if scatterers is None:
@@ -356,7 +354,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
         This works as described by the constrainAsSpaceGroup method.
         """
-
         # Start by clearing the constraints
         self._clear_constraints()
 
@@ -431,7 +428,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
     def _constrain_lattice(self):
         """Constrain the lattice parameters."""
-
         if not self.constrainlat:
             return
 
@@ -474,7 +470,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         positions
             The coordinates of the scatterers.
         """
-
         from diffpy.structure.symmetryutilities import SymmetryConstraints
 
         sg = self.sg
@@ -517,7 +512,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         positions
             The coordinates of the scatterers.
         """
-
         from diffpy.structure.symmetryutilities import (
             SymmetryConstraints,
             stdUsymbols,
@@ -639,8 +633,6 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 def _constrain_triclinic(lattice):
     """Make constraints for Triclinic systems."""
     return
-
-
 def _constrain_monoclinic(lattice):
     """Make constraints for Monoclinic systems.
 

@@ -39,7 +39,6 @@ from diffpy.srfit.pdf import PDFGenerator
 
 def makeRecipe(niciffile, siciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
-
     # The Profile
     profile = Profile()
 
@@ -155,7 +154,6 @@ def makeRecipe(niciffile, siciffile, datname):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # All this should be pretty familiar by now.
     r = recipe.nisi.profile.x
     g = recipe.nisi.profile.y

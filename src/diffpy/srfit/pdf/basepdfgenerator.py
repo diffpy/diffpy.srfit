@@ -244,7 +244,6 @@ class BasePDFGenerator(ProfileGenerator):
             periodicity, in which case this will have no effect on the
             PDF calculation.
         """
-
         # Create the ParameterSet
         parset = struToParameterSet(name, stru)
 

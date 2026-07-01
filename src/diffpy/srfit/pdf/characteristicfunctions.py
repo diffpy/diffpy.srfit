@@ -408,7 +408,6 @@ class SASCF(Calculator):
     def __call__(self, r):
         """Calculate the characteristic function from the transform of
         the BaseModel."""
-
         # Determine q-values.
         # We want very fine r-spacing so we can properly normalize f(r). This
         # equates to having a large qmax so that the Fourier transform is

@@ -144,9 +144,9 @@ class UnaryOperator(Operator):
     """Abstract class for an unary operator with one input and one
     result.
 
-    This base class defines the `nin` and `nout` attributes.  The derived
-    concrete operator must provide the remaining abstract attributes
-    of the `Operator` class.
+    This base class defines the `nin` and `nout` attributes.  The
+    derived concrete operator must provide the remaining abstract
+    attributes of the `Operator` class.
     """
 
     nin = 1
@@ -158,9 +158,9 @@ class BinaryOperator(Operator):
     """Abstract class for a binary operator with two inputs and one
     result.
 
-    This base class defines the `nin` and `nout` attributes.  The derived
-    concrete operator must define the remaining abstract attributes
-    of the `Operator` class.
+    This base class defines the `nin` and `nout` attributes.  The
+    derived concrete operator must define the remaining abstract
+    attributes of the `Operator` class.
     """
 
     nin = 2

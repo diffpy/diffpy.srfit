@@ -156,7 +156,6 @@ class Equation(Operator):
         Raises:
         ValueError if errors are found in the Literal tree.
         """
-
         # Validate the new root
         validate(root)
 

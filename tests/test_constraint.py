@@ -26,7 +26,6 @@ class TestConstraint(unittest.TestCase):
 
     def test_constrain_parameter(self):
         """Test the Constraint class."""
-
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
 
@@ -65,7 +64,6 @@ class TestConstraint_deprecated(unittest.TestCase):
 
     def testConstraint(self):
         """Test the Constraint class."""
-
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
 

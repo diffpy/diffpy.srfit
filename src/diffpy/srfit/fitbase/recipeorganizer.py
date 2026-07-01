@@ -479,7 +479,6 @@ class RecipeContainer(Observable, Configurable, Validatable):
         Raises ValueError if the object has the same name as some other managed
         object.
         """
-
         # Check name
         if not obj.name:
             message = "%s has no name" % obj.__class__.__name__
@@ -674,7 +673,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises ValueError if the Parameter has the same name as a contained
         RecipeContainer.
         """
-
         # Store the Parameter
         RecipeContainer._add_object(self, parameter, self._parameters, check)
 
@@ -789,7 +787,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         equation_object : Equation
             The callable Equation object.
         """
-
         # If the function is an equation, we treat it specially. This is
         # required so that the objects observed by the root get observed if the
         # Equation is used within another equation. It is assumed that a plain
@@ -907,7 +904,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         equation_object : Equation
             The callable Equation object.
         """
-
         # Build the equation instance.
         eq = get_equation_from_string(
             function_str, self._eqfactory, ns=func_params, buildargs=True
@@ -1629,7 +1625,6 @@ def get_equation_from_string(
         If buildargs is False and there are undefined parameters in eqstr
         or if ns uses a name that is already defined in the factory.
     """
-
     defined = set(factory.builders.keys())
 
     # Check if ns overloads any parameters.

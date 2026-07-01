@@ -38,7 +38,6 @@ from diffpy.srfit.pdf import PDFGenerator
 
 def makeRecipe(stru1, stru2, datname):
     """Create a fitting recipe for crystalline PDF data."""
-
     # The Profile
     profile = Profile()
 
@@ -138,7 +137,6 @@ def makeRecipe(stru1, stru2, datname):
 
 def plotResults(recipe):
     """Plot the results contained within a refined FitRecipe."""
-
     # All this should be pretty familiar by now.
     r = recipe.cdszns.profile.x
     g = recipe.cdszns.profile.y
@@ -162,7 +160,6 @@ def plotResults(recipe):
 
 def main():
     """Set up and refine the recipe."""
-
     # Make the data and the recipe
     cdsciffile = "data/CdS.cif"
     znsciffile = "data/ZnS.cif"

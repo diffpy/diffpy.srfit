@@ -133,7 +133,7 @@ def testCylinder(sas_available):
     from sasmodels.sasview_model import find_model, load_standard_models
 
     load_standard_models()
-    """Make sure cylinder works over different r-ranges."""
+    # Make sure cylinder works over different r-ranges.
     radius = 100
     length = 30
 

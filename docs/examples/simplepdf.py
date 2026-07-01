@@ -31,7 +31,6 @@ from diffpy.structure import Structure
 
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
-
     # Work directly with a custom PDFContribution to load the data
     contribution = PDFContribution("nickel")
     contribution.loadData(datname)

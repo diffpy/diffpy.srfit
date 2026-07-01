@@ -139,7 +139,6 @@ class PDFParser(ProfileParser):
 
         Raises ParseError if the string cannot be parsed
         """
-
         # useful regex patterns:
         rx = {"f": r"[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE][-+]?\d+)?"}
         # find where does the data start

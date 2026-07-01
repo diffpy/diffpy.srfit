@@ -38,7 +38,6 @@ from diffpy.srfit.pdf import PDFGenerator
 
 def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
-
     # The Profile
     # This will be used to store the observed and calculated PDF profile.
     profile = Profile()

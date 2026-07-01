@@ -164,7 +164,6 @@ class TestParameterAdapter:
 
     def testObjCrystParSet(self):
         """Test the structure conversion."""
-
         occryst = self.occryst
         ocmol = self.ocmol
         cryst = ObjCrystCrystalParSet("bucky", occryst)
@@ -652,7 +651,6 @@ class TestCreateSpaceGroup:
     def xtestCreateSpaceGroup(self):
         """Check all sgtbx space groups for proper conversion to
         SpaceGroup."""
-
         try:
             from cctbx import sgtbx
         except ImportError:

@@ -359,7 +359,6 @@ class EquationFactory(object):
 
         Returns a dictionary of the name, BaseBuilder pairs.
         """
-
         eqargs = self._get_undefined_args(eqstr)
 
         # Raise an error if there are arguments that need to be created, but

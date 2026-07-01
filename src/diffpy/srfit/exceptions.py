@@ -16,6 +16,8 @@
 Exceptions used for SrFit - specific errors.
 """
 
+# FIXME: remove this line when black and docformatter agree.
+
 
 class SrFitError(Exception):
     """Generic error in SrFit expressions or recipe."""

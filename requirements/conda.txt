@@ -3,3 +3,4 @@ numpy
 scipy
 bg-mpl-stylesheets
 diffpy.utils
+diffpy.structure

@@ -143,11 +143,7 @@ def testParser2(datafile):
     return
 
 
-def testGenerator(
-    diffpy_srreal_available, diffpy_structure_available, datafile
-):
-    if not diffpy_structure_available:
-        pytest.skip("diffpy.structure package not available")
+def testGenerator(diffpy_srreal_available, datafile):
     if not diffpy_srreal_available:
         pytest.skip("diffpy.srreal package not available")
 
@@ -203,7 +199,7 @@ def testGenerator(
     return
 
 
-def test_setQmin(diffpy_structure_available, diffpy_srreal_available):
+def test_setQmin(diffpy_srreal_available):
     """Verify qmin is propagated to the calculator object."""
     if not diffpy_srreal_available:
         pytest.skip("diffpy.srreal package not available")
@@ -217,10 +213,8 @@ def test_setQmin(diffpy_structure_available, diffpy_srreal_available):
     return
 
 
-def test_setQmax(diffpy_structure_available, diffpy_srreal_available):
+def test_setQmax(diffpy_srreal_available):
     """Check PDFContribution.setQmax()"""
-    if not diffpy_structure_available:
-        pytest.skip("diffpy.structure package not available")
     from diffpy.structure import Structure
 
     if not diffpy_srreal_available:
@@ -236,10 +230,8 @@ def test_setQmax(diffpy_structure_available, diffpy_srreal_available):
     return
 
 
-def test_getQmax(diffpy_structure_available, diffpy_srreal_available):
+def test_getQmax(diffpy_srreal_available):
     """Check PDFContribution.getQmax()"""
-    if not diffpy_structure_available:
-        pytest.skip("diffpy.structure package not available")
     from diffpy.structure import Structure
 
     if not diffpy_srreal_available:
@@ -263,12 +255,8 @@ def test_getQmax(diffpy_structure_available, diffpy_srreal_available):
     return
 
 
-def test_savetxt(
-    diffpy_structure_available, diffpy_srreal_available, datafile
-):
+def test_savetxt(diffpy_srreal_available, datafile):
     "check PDFContribution.savetxt()"
-    if not diffpy_structure_available:
-        pytest.skip("diffpy.structure package not available")
     from diffpy.structure import Structure
 
     if not diffpy_srreal_available:
@@ -289,12 +277,8 @@ def test_savetxt(
     return
 
 
-def test_pickling(
-    diffpy_structure_available, diffpy_srreal_available, datafile
-):
+def test_pickling(diffpy_srreal_available, datafile):
     "validate PDFContribution.residual() after pickling."
-    if not diffpy_structure_available:
-        pytest.skip("diffpy.structure package not available")
     from diffpy.structure import loadStructure
 
     if not diffpy_srreal_available:

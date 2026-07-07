@@ -74,11 +74,6 @@ def sas_available():
 
 
 @pytest.fixture(scope="session")
-def diffpy_structure_available():
-    return has_diffpy_structure()
-
-
-@pytest.fixture(scope="session")
 def diffpy_srreal_available():
     return has_diffpy_srreal()
 

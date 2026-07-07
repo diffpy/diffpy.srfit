@@ -12,9 +12,7 @@
 # See LICENSE.txt for license information.
 #
 ##############################################################################
-"""
-Exceptions used for SrFit - specific errors.
-"""
+"""Exceptions used for SrFit - specific errors."""
 
 # FIXME: remove this line when black and docformatter agree.
 

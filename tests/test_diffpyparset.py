@@ -18,15 +18,12 @@ import pickle
 import unittest
 
 import numpy as np
-import pytest
 
 from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
 
-def testDiffpyStructureParSet(diffpy_structure_available):
+def testDiffpyStructureParSet():
     """Test the structure conversion."""
-    if not diffpy_structure_available:
-        pytest.skip("diffpy.structure package not available")
     from diffpy.structure import Atom, Lattice, Structure
 
     a1 = Atom("Cu", xyz=np.array([0.0, 0.1, 0.2]), Uisoequiv=0.003)
@@ -103,10 +100,8 @@ def testDiffpyStructureParSet(diffpy_structure_available):
     return
 
 
-def test___repr__(diffpy_structure_available):
+def test___repr__():
     """Test representation of DiffpyStructureParSet objects."""
-    if not diffpy_structure_available:
-        pytest.skip("diffpy.structure package not available")
     from diffpy.structure import Atom, Lattice, Structure
 
     lat = Lattice(3, 3, 2, 90, 90, 90)
@@ -119,10 +114,8 @@ def test___repr__(diffpy_structure_available):
     return
 
 
-def test_pickling(diffpy_structure_available):
+def test_pickling():
     """Test pickling of DiffpyStructureParSet."""
-    if not diffpy_structure_available:
-        pytest.skip("diffpy.structure package not available")
     from diffpy.structure import Atom, Structure
 
     stru = Structure([Atom("C", [0, 0.2, 0.5])])

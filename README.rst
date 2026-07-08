@@ -199,7 +199,7 @@ Before contributing, please read our `Code of Conduct <https://github.com/diffpy
 Contact
 -------
 
-For more information on diffpy.srfit please visit the project `web-page <https://diffpy.github.io/>`_ or email the maintainers ``Caden Myers (cjm2304@columbia.edu) and Simon J. L. Billinge (sbillinge@ucsb.edu)``.
+For more information on diffpy.srfit please visit the project `web-page <https://diffpy.github.io/>`_ or email the maintainers ``Caden Myers(cjm2304@columbia.edu) and Simon J. L. Billinge(sbillinge@ucsb.edu)``.
 
 Acknowledgements
 ----------------

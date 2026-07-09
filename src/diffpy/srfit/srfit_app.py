@@ -1,6 +1,6 @@
 import argparse
 
-from diffpy.srfit.version import __version__
+from diffpy.srfit.version import __version__  # noqa
 
 
 def main():

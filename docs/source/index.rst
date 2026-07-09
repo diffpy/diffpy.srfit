@@ -42,7 +42,7 @@ Authors
 =======
 
 diffpy.srfit is developed by members of the Billinge Group at
-Columbia University and at Brookhaven National Laboratory including
+the University of California, Santa Barbara, Columbia University and at Brookhaven National Laboratory including
 Christopher L. Farrow, Pavol Juhás, Simon J.L. Billinge.
 
 The source code in *observable.py* was derived from the 1.0 version
@@ -80,9 +80,10 @@ Table of contents
 .. toctree::
    :titlesonly:
 
+   getting-started
+   Package API <api/diffpy.srfit>
    license
    release
-   Package API <api/diffpy.srfit>
 
 .. faq.rst
 

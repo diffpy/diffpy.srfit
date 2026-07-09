@@ -4,7 +4,7 @@
 
 **Changed:**
 
-* Updated project to the latest scikit-package template
+* <news item>
 
 **Deprecated:**
 
@@ -16,7 +16,7 @@
 
 **Fixed:**
 
-* <news item>
+* Updated project to the latest scikit-package template
 
 **Security:**
 

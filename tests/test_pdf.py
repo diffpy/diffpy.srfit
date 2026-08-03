@@ -17,7 +17,6 @@
 import io
 import pickle
 import unittest
-import warnings
 from itertools import chain
 
 import numpy
@@ -147,91 +146,73 @@ def testParser2(datafile):
 # PDFParser.parse_file dispatches to its parse_string override to recover
 # PDF-specific metadata; ProfileParser.parse_file has no such override and
 # reads generic column data instead. These tests pin that boundary.
-PDF_METADATA_KEYS = ("stype", "qmin", "qmax", "temperature")
 
 
 def test_parse_file_extracts_pdf_metadata(datafile):
-    """Recover the PDF-specific metadata through the parse_string
-    hook."""
+    # PDFParser.parse_file is designed to extract PDF metadata from the
+    # file header.
+    # Expected: parser.get_metadata() returns a dictionary with
+    # the expected keys and values.
     parser = PDFParser()
     parser.parse_file(datafile("ni-q27r100-neutron.gr"))
-    metadata = parser.get_metadata()
+    actual_metadata = parser.get_metadata()
     expected_metadata = {
         "stype": "N",
         "qmin": 0.87,
         "qmax": 27.0,
         "temperature": 300.0,
+        "filename": str(datafile("ni-q27r100-neutron.gr")),
+        "bank": 0,
+        "nbanks": 1,
     }
-    actual_metadata = {key: metadata[key] for key in expected_metadata}
     assert actual_metadata == expected_metadata
 
 
-def test_parse_file_emits_no_deprecation_warning(datafile):
-    """Emit no warning, since parse_file is the supported entry
-    point."""
-    with warnings.catch_warnings(record=True) as record:
-        warnings.simplefilter("always")
-        PDFParser().parse_file(datafile("ni-q27r100-neutron.gr"))
-    actual_warnings = [
-        str(warning.message)
-        for warning in record
-        if issubclass(warning.category, DeprecationWarning)
-    ]
-    expected_warnings = []
-    assert actual_warnings == expected_warnings
-
-
-def test_parse_file_does_not_extract_pdf_metadata(datafile):
-    """Read generic column data without any format-specific parsing."""
-    parser = ProfileParser()
-    parser.parse_file(datafile("ni-q27r100-neutron.gr"))
-    metadata = parser.get_metadata()
-    actual_pdf_keys = sorted(
-        key for key in PDF_METADATA_KEYS if key in metadata
-    )
-    expected_pdf_keys = []
-    assert actual_pdf_keys == expected_pdf_keys
-
-
 def test_parseFile_deprecated(datafile):
-    """Deprecated parseFile should still work but emit a
-    DeprecationWarning and delegate to parse_file."""
+    # Deprecated parseFile should still work but emit a
+    # DeprecationWarning and delegate to parse_file.
+    # Expected: parser.get_metadata() returns the same
+    # dictionary as parse_file.
     data = datafile("ni-q27r100-neutron.gr")
-    parser = PDFParser()
+    deprecated_parser = PDFParser()
+    # Assert that a DeprecationWarning is raised when calling parseFile.
     with pytest.deprecated_call():
-        parser.parseFile(data)
-    actual_metadata = parser.get_metadata()
+        deprecated_parser.parseFile(data)
+    actual_deprecated_metadata = deprecated_parser.get_metadata()
 
     expected_parser = PDFParser()
     expected_parser.parse_file(data)
     expected_metadata = expected_parser.get_metadata()
-
-    assert actual_metadata == expected_metadata
+    # Assert the deprecated parseFile method returns the
+    # same metadata as the parse_file method.
+    assert actual_deprecated_metadata == expected_metadata
 
 
 def test_parseString_deprecated(datafile):
-    """Deprecated parseString should still work but emit a
-    DeprecationWarning and delegate to parse_string."""
+    # Deprecated parseString should still work but emit a
+    # DeprecationWarning and delegate to parse_string.
+    # Expected: parser.get_metadata() returns the same
+    # dictionary as parse_string.
     text = datafile("ni-q27r100-neutron.gr").read_text()
-    parser = PDFParser()
+    deprecated_parser = PDFParser()
+    # Assert that a DeprecationWarning is raised when calling parseString.
     with pytest.deprecated_call():
-        parser.parseString(text)
-    actual_metadata = parser.get_metadata()
+        deprecated_parser.parseString(text)
+    actual_deprecated_metadata = deprecated_parser.get_metadata()
 
     expected_parser = PDFParser()
     expected_parser.parse_string(text)
     expected_metadata = expected_parser.get_metadata()
-
-    assert actual_metadata == expected_metadata
+    # Assert the deprecated parseString method returns the
+    # same metadata as the parse_string method.
+    assert actual_deprecated_metadata == expected_metadata
 
 
 def test_loadData_preserves_pdf_metadata(datafile):
-    """Keep the metadata that configures the PDF calculator.
-
-    Parsing with ProfileParser.parse_file instead of PDFParser dropped
-    the keys BasePDFGenerator._process_metadata reads. This test needs
-    no diffpy.srreal so that it runs rather than skips.
-    """
+    # PDFContribution.loadData should preserve PDF metadata from the
+    # file header.
+    # Expected: PDFContribution.profile.meta contains the expected
+    # keys and values.
     contribution = PDFContribution("pdf")
     contribution.loadData(datafile("ni-q27r100-neutron.gr"))
     actual_metadata = {

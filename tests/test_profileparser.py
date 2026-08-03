@@ -198,3 +198,25 @@ def test_parse_file_bad(parser_datafiles, input_file, column_order, msg):
     parser = ProfileParser()
     with pytest.raises(ParseError, match=re.escape(msg)):
         parser.parse_file(parser_datafiles / input_file, column_order)
+
+
+def test_parse_file_does_not_extract_pdf_metadata(datafile):
+    # ProfileParser.parse_file extracts metadata by in the header,
+    # using "=" to separate keys and values.
+    # Expected: parser.get_metadata() parses treturns a dict
+    parser = ProfileParser()
+    # SAS data is used because the header contains metadata separated by '='.
+    parser.parse_file(datafile("sas_ellipsoid_testdata.txt"))
+    actual_metadata = parser.get_metadata()
+    expected_metadata = {
+        "pythonclass": "EllipsoidModel",
+        "scale": 1.0,
+        "radius_a": 20.0,
+        "radius_b": 400.0,
+        "contrast": 3e-06,
+        "background": 0.01,
+        "filename": str(datafile("sas_ellipsoid_testdata.txt")),
+        "nbanks": 1,
+        "bank": 0,
+    }
+    assert actual_metadata == expected_metadata

@@ -239,10 +239,8 @@ class ProfileParser(object):
         self._meta = {}
         self.parse_string(filestring)
         self._meta["filename"] = str(filename)
-
         if len(self._banks) < 1:
             raise ParseError("There are no data in the banks")
-
         self.select_bank(0)
         return
 
@@ -302,7 +300,6 @@ class ProfileParser(object):
     def _detect_column_format(self, data, column_format):
         """Auto-detect or validate column format."""
         num_cols = data.shape[1]
-
         if column_format is None:
             if num_cols == 2:
                 column_format = ("x", "y")
@@ -334,12 +331,10 @@ class ProfileParser(object):
         columns = {}
         for i, label in enumerate(column_format):
             columns[label] = data[:, i]
-
         if "x" not in columns or "y" not in columns:
             raise ParseError(
                 "Both 'x' and 'y' columns must be present in the data."
             )
-
         return columns
 
     @staticmethod
@@ -389,17 +384,13 @@ class ProfileParser(object):
         """
         if index is None:
             index = self._meta.get("bank", 0)
-
         numbanks = self.get_num_banks()
         if index > numbanks:
             raise IndexError("Bank index out of range")
-
         if index < 0:
             index += numbanks
-
         if index < 0:
             raise IndexError("Bank index out of range")
-
         self._meta["bank"] = index
         self._meta["nbanks"] = numbanks
         self._x, self._y, self._dx, self._dy = self._banks[index]

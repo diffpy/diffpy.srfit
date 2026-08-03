@@ -35,6 +35,15 @@ from diffpy.srfit.fitbase.profileparser import ProfileParser
 # UC11: User loads file with x, y, dx, and dy but specifies column_format with
 # duplicate values
 # expected: ParseError is raised
+# UC13: User loads file with only dx, dy columns specified in column_format
+# (neither x nor y is present)
+# expected: ParseError is raised
+# UC14: User loads a file with a format-specific parser (parse_string
+# overridden, as PDFParser does) and also specifies column_format
+# expected: ParseError is raised
+# UC15: User loads a file with a format-specific parser whose parse_string
+# does not populate any banks
+# expected: ParseError is raised
 
 EXPECTED_META = {
     "wavelength": 0.1,
@@ -192,12 +201,62 @@ def test_parse_file(
             "column_format contains invalid label 'invalid'. "
             "Valid labels are 'x', 'y', 'dx', and 'dy'.",
         ),
+        # UC13: column_format specifies dx, dy but neither x nor y
+        # expected: ParseError is raised
+        (
+            "two_col.txt",
+            ("dx", "dy"),
+            "Both 'x' and 'y' columns must be present in the data.",
+        ),
     ],
 )
 def test_parse_file_bad(parser_datafiles, input_file, column_order, msg):
     parser = ProfileParser()
     with pytest.raises(ParseError, match=re.escape(msg)):
         parser.parse_file(parser_datafiles / input_file, column_order)
+
+
+class _FormatSpecificParser(ProfileParser):
+    """A parser with a format-specific parse_string override, mimicking
+    PDFParser, used to test parse_file's dispatch logic."""
+
+    def parse_string(self, patstring):
+        raise NotImplementedError
+
+
+class _NoBanksParser(ProfileParser):
+    """A parser whose parse_string never populates any banks."""
+
+    def parse_string(self, patstring):
+        pass
+
+
+def test_parse_file_bad_parser(
+    parser_datafiles,
+):
+    # UC14: column_format is specified for a parser that overrides
+    # parse_string, so it determines the column layout from the file
+    # format instead.
+    # expected: ParseError is raised
+    parser = _FormatSpecificParser()
+    expected_msg = (
+        "_FormatSpecificParser determines the column layout from the "
+        "file format, so 'column_format' is not supported."
+    )
+    with pytest.raises(ParseError, match=re.escape(expected_msg)):
+        parser.parse_file(
+            parser_datafiles / "four_col.gr", ("x", "y", "dx", "dy")
+        )
+
+
+def test_parse_file_bad_no_banks_parsed(parser_datafiles):
+    # UC15: A format-specific parser's parse_string does not populate any
+    # banks.
+    # expected: ParseError is raised
+    parser = _NoBanksParser()
+    expected_msg = "There are no data in the banks"
+    with pytest.raises(ParseError, match=re.escape(expected_msg)):
+        parser.parse_file(parser_datafiles / "four_col.gr")
 
 
 def test_parse_file_does_not_extract_pdf_metadata(datafile):

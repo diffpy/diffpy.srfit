@@ -20,7 +20,8 @@ fits.
 
 __all__ = ["PDFContribution"]
 
-from diffpy.srfit.fitbase import FitContribution, Profile, ProfileParser
+from diffpy.srfit.fitbase import FitContribution, Profile
+from diffpy.srfit.pdf.pdfparser import PDFParser
 
 
 class PDFContribution(FitContribution):
@@ -113,7 +114,7 @@ class PDFContribution(FitContribution):
         data : str or Path
             The path to the data file.
         """
-        parser = ProfileParser()
+        parser = PDFParser()
         parser.parse_file(datafile)
 
         # Pass it to the profile

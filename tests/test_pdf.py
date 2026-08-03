@@ -225,6 +225,24 @@ def test_parseString_deprecated(datafile):
     assert actual_metadata == expected_metadata
 
 
+def test_loadData_preserves_pdf_metadata(datafile):
+    """Keep the metadata that configures the PDF calculator.
+
+    Parsing with ProfileParser.parse_file instead of PDFParser dropped
+    the keys BasePDFGenerator._process_metadata reads. This test needs
+    no diffpy.srreal so that it runs rather than skips.
+    """
+    contribution = PDFContribution("pdf")
+    contribution.loadData(datafile("ni-q27r100-neutron.gr"))
+    actual_metadata = {
+        "stype": contribution.profile.meta["stype"],
+        "temperature": contribution.profile.meta["temperature"],
+        "qmax": contribution.getQmax(),
+    }
+    expected_metadata = {"stype": "N", "temperature": 300.0, "qmax": 27.0}
+    assert actual_metadata == expected_metadata
+
+
 def testGenerator(diffpy_srreal_available, datafile):
     if not diffpy_srreal_available:
         pytest.skip("diffpy.srreal package not available")

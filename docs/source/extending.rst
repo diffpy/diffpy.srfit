@@ -122,22 +122,24 @@ functions as in the second example.
 Extending Profile Parsers
 --------------------------
 
-The ``ProfileParser`` class is located in the ``diffpy.srfit.fitbase.parser``
-module.  The purpose of this class is to read data and metadata from a file or
-string and pass those data and metadata to a ``Profile`` instance. The
-``Profile`` in turn will pass this information to a ``ProfileGenerator``.
+The ``ProfileParser`` class is located in the
+``diffpy.srfit.fitbase.profileparser`` module.  The purpose of this class is
+to read data and metadata from a file or string and pass those data and
+metadata to a ``Profile`` instance. The ``Profile`` in turn will pass this
+information to a ``ProfileGenerator``.
 
 The simplest way to extend the ``ProfileParser`` is to derive a new class from
-``ProfileParser`` and overload the ``parseString`` method. By default, the
-``parseFile`` method can read an ASCII file and passes the loaded string to the
-``parseString`` method. For non-ASCII data one should overload both of these
-methods. An example of a customized ``ProfileParser`` is the ``PDFParser``
-class in the ``diffpy.srfit.pdf.pdfparser`` module.
+``ProfileParser`` and overload the ``parse_string`` method. By default, the
+``parse_file`` method reads generic column data, but once a subclass overloads
+``parse_string`` it reads an ASCII file instead and passes the loaded string
+to ``parse_string``. For non-ASCII data one should overload ``parse_file`` as
+well. An example of a customized ``ProfileParser`` is the ``PDFParser`` class
+in the ``diffpy.srfit.pdf.pdfparser`` module.
 
 Here is a simple example demonstrating how to extract (x,y) data from a
 two-column string. ::
 
-    def parseString(self, datastring):
+    def parse_string(self, datastring):
 
         xvals = []
         yvals = []

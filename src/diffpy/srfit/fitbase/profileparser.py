@@ -31,19 +31,22 @@ from diffpy.utils._deprecator import build_deprecation_message, deprecated
 from diffpy.utils.parsers import load_data
 
 removal_verison = "4.0.0"
-pdfparser_base = "diffpy.srfit.pdf.pdfparser.PDFParser"
-new_base = "diffpy.srfit.fitbase.ProfileParser"
 
+pp_base = "diffpy.srfit.fitbase.profileparser.ProfileParser"
 
 parseFile_dep_msg = build_deprecation_message(
-    pdfparser_base,
+    pp_base,
     "parseFile",
     "parse_file",
     removal_verison,
-    new_base=new_base,
 )
 
-pp_base = "diffpy.srfit.fitbase.profileparser.ProfileParser"
+parseString_dep_msg = build_deprecation_message(
+    pp_base,
+    "parseString",
+    "parse_string",
+    removal_verison,
+)
 
 getNumBanks_dep_msg = build_deprecation_message(
     pp_base,
@@ -139,9 +142,13 @@ class ProfileParser(object):
         """Get the format string."""
         return self._format
 
-    def parseString(self, patstring):
+    def parse_string(self, patstring):
         """Parse a string and set the _x, _y, _dx, _dy and _meta
         variables.
+
+        Override this in a subclass to add support for a specific data
+        format. When overridden, `parse_file` dispatches to this method
+        instead of reading the file as generic column data.
 
         When _dx or _dy cannot be obtained in the data format it is set to
         None.
@@ -159,43 +166,17 @@ class ProfileParser(object):
         """
         raise NotImplementedError()
 
-    # remove parseString too when this file is removed.
-    @deprecated(parseFile_dep_msg)
-    def parseFile(self, filename):
-        """Parse a file and set the _x, _y, _dx, _dy and _meta
-        variables.
-
-        This wipes out the currently loaded data and selected bank number.
-
-        Parameters
-        ----------
-        filename
-            The name of the file to parse
-
-        Raises
-        ----------
-        IOError
-            if the file cannot be read
-        ParseError
-            if the file cannot be parsed
-        """
-        infile = open(filename, "r")
-        self._banks = []
-        self._meta = {}
-        filestring = infile.read()
-        self.parseString(filestring)
-        infile.close()
-        self._meta["filename"] = filename
-
-        if len(self._banks) < 1:
-            raise ParseError("There are no data in the banks")
-
-        self.select_bank(0)
-        return
-
     def parse_file(self, filename, column_format=None):
-        """Parse a data file to extract data and metadata, with
-        automatic handling of uncertainties.
+        """Parse a data file to extract data and metadata.
+
+        If a subclass overrides `parse_string`, e.g.
+        `diffpy.srfit.pdf.pdfparser.PDFParser`, this reads the file as
+        text and dispatches to it to perform format-specific parsing,
+        including extracting metadata such as `stype`, `qmax` and
+        `qdamp`. Subclasses may append more than one bank this way.
+
+        Otherwise this reads generic column data, with automatic handling
+        of uncertainties, and always produces a single bank:
 
         - For files with 2 columns: assumes (x, y) and sets dx, dy to 0.
         - For files with 3 columns: assumes (x, y, dy) and sets dx to 0.
@@ -212,7 +193,10 @@ class ProfileParser(object):
         filename : str or Path
             The name of the file to parse.
         column_format : tuple of str, optional
-            The order in which columns appear in the file.
+            The order in which columns appear in the file. Only used for
+            generic column data; raises `ParseError` if given for a
+            parser that overrides `parse_string`, since such parsers
+            determine the column layout from the file format.
             If None, the format is auto-detected based on the
             number of columns.
 
@@ -227,9 +211,43 @@ class ProfileParser(object):
 
         Raises
         ------
+        IOError
+            if the file cannot be read
         ParseError
-            If parsing fails or ambiguity detected.
+            if parsing fails, ambiguity is detected, or column_format is
+            given for a format-specific parser
         """
+        if self._has_format_parser():
+            if column_format is not None:
+                raise ParseError(
+                    f"{type(self).__name__} determines the column layout "
+                    "from the file format, so 'column_format' is not "
+                    "supported."
+                )
+            return self._parse_file_via_string(filename)
+        return self._parse_columns(filename, column_format)
+
+    def _has_format_parser(self):
+        """Return True if a subclass overrides `parse_string`."""
+        return type(self).parse_string is not ProfileParser.parse_string
+
+    def _parse_file_via_string(self, filename):
+        """Read a file as text and dispatch to `parse_string`."""
+        with open(filename, "r") as infile:
+            filestring = infile.read()
+        self._banks = []
+        self._meta = {}
+        self.parse_string(filestring)
+        self._meta["filename"] = str(filename)
+
+        if len(self._banks) < 1:
+            raise ParseError("There are no data in the banks")
+
+        self.select_bank(0)
+        return
+
+    def _parse_columns(self, filename, column_format=None):
+        """Read generic column data."""
         # Reset internal state
         self._banks = []
         if isinstance(filename, Path):
@@ -250,6 +268,25 @@ class ProfileParser(object):
         self._banks = [(x, y, dx, dy)]
         self._meta["nbanks"] = 1
         self.select_bank(0)
+
+    @deprecated(parseFile_dep_msg)
+    def parseFile(self, filename):
+        """This function is deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.ProfileParser.parse_file instead.
+        """
+        return self.parse_file(filename)
+
+    @deprecated(parseString_dep_msg)
+    def parseString(self, patstring):
+        """This function is deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.ProfileParser.parse_string
+        instead.
+        """
+        return self.parse_string(patstring)
 
     def _load_file(self, filename):
         """Load metadata and numeric data from a file."""

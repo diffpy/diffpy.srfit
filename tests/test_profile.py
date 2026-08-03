@@ -18,11 +18,12 @@ import io
 import re
 import unittest
 
+import numpy as np
 import pytest
 from numpy import allclose, arange, array, array_equal, ones_like
 
 from diffpy.srfit.exceptions import SrFitError
-from diffpy.srfit.fitbase import ProfileParser
+from diffpy.srfit.fitbase import FitContribution, ProfileParser
 from diffpy.srfit.fitbase.profile import Profile
 
 
@@ -320,6 +321,35 @@ def test_load_parsed_data(parser_datafiles):
     assert prof.xobs.tolist() == expected_xobs
     assert prof.yobs.tolist() == expected_yobs
     assert prof.dyobs.tolist() == expected_dyobs
+
+
+def test_load_parsed_data_without_uncertainties(parser_datafiles):
+    """Load a file with no uncertainty column as unweighted."""
+    parser = ProfileParser()
+    parser.parse_file(parser_datafiles / "two_col.txt")
+    prof = Profile()
+    prof.load_parsed_data(parser)
+    actual_dyobs = prof.dyobs.tolist()
+    expected_dyobs = ones_like(prof.xobs).tolist()
+    assert actual_dyobs == expected_dyobs
+
+
+def test_residual_is_finite_without_uncertainties(datafile):
+    """Compute finite residuals for a file with no uncertainty
+    column."""
+    parser = ProfileParser()
+    parser.parse_file(datafile("ni-q27r100-neutron.gr"))
+    prof = Profile()
+    prof.load_parsed_data(parser)
+    contribution = FitContribution("test")
+    contribution.set_profile(prof)
+    contribution.set_equation("A*x")
+    contribution.A.set_value(1)
+    actual_nonfinite_count = int(
+        np.count_nonzero(~np.isfinite(contribution.residual()))
+    )
+    expected_nonfinite_count = 0
+    assert actual_nonfinite_count == expected_nonfinite_count
 
 
 if __name__ == "__main__":

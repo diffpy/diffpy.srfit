@@ -139,7 +139,8 @@ def testParser2(datafile):
     res = numpy.dot(diff, diff)
     assert 0 == pytest.approx(res)
 
-    assert dx.tolist() == [0] * len(dx)
+    # si-q27r60-xray.gr has a negative dx column, so it is invalid.
+    assert dx is None
     return
 
 

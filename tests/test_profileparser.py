@@ -17,7 +17,7 @@ from diffpy.srfit.fitbase.profileparser import ProfileParser
 # expected: x, y, dx, dy, and metadata are all read correctly
 # UC5: User loads file with dy and dx values containing NaN and inf values
 # expected: x, y, and metadata are all read correctly and dx and dy are set to
-# 0 for all values
+# None
 
 # UC6: User loads file with only one column
 # expected: ParseError is raised
@@ -35,6 +35,12 @@ from diffpy.srfit.fitbase.profileparser import ProfileParser
 # UC11: User loads file with x, y, dx, and dy but specifies column_format with
 # duplicate values
 # expected: ParseError is raised
+
+
+def as_list(values):
+    """Unavailable uncertainties are None rather than an array."""
+    return None if values is None else values.tolist()
+
 
 EXPECTED_META = {
     "wavelength": 0.1,
@@ -81,7 +87,7 @@ EXPECTED_META = {
             None,
             [1.0, 1.1, 1.2],
             [2.0, 2.1, 2.2],
-            [0.0, 0.0, 0.0],
+            None,
             [0.2, 0.4, 0.6],
         ),
         # UC3: 2-column file (x, y) — dx and dy are missing
@@ -91,8 +97,8 @@ EXPECTED_META = {
             None,
             [1.0, 1.1, 1.2],
             [2.0, 2.1, 2.2],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
+            None,
+            None,
         ),
         # UC4: 4-column file in (x, dx, y, dy) order with explicit
         # column_format
@@ -107,14 +113,14 @@ EXPECTED_META = {
         ),
         # UC5: 4-column file where dx/dy contain NaN and inf values
         # expected: x, y, and metadata are read correctly; dx and dy
-        # are set to 0
+        # are set to None
         (
             Path("four_col_nan_inf.gr"),
             None,
             [1.0, 1.1, 1.2],
             [2.0, 2.1, 2.2],
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
+            None,
+            None,
         ),
     ],
 )
@@ -131,8 +137,8 @@ def test_parse_file(
     parser.parse_file(parser_datafiles / input_file, column_order)
     actual_x = parser._x.tolist()
     actual_y = parser._y.tolist()
-    actual_dx = parser._dx.tolist()
-    actual_dy = parser._dy.tolist()
+    actual_dx = as_list(parser._dx)
+    actual_dy = as_list(parser._dy)
     actual_metadata = parser._meta
     actual_metadata["filename"] = actual_metadata["filename"].split("/")[-1]
 

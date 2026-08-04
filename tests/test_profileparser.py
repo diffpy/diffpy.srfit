@@ -37,11 +37,6 @@ from diffpy.srfit.fitbase.profileparser import ProfileParser
 # expected: ParseError is raised
 
 
-def as_list(values):
-    """Unavailable uncertainties are None rather than an array."""
-    return None if values is None else values.tolist()
-
-
 EXPECTED_META = {
     "wavelength": 0.1,
     "dataformat": "QA",
@@ -125,6 +120,7 @@ EXPECTED_META = {
     ],
 )
 def test_parse_file(
+    as_list,
     parser_datafiles,
     input_file,
     column_order,

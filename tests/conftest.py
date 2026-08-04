@@ -219,6 +219,15 @@ def build_recipe_two_contributions():
     return recipe
 
 
+@pytest.fixture(scope="session")
+def as_list():
+    def _as_list(values):
+        """Unavailable uncertainties are None rather than an array."""
+        return None if values is None else values.tolist()
+
+    return _as_list
+
+
 @pytest.fixture(scope="function")
 def build_recipe_with_uncertainty():
     """Helper to build a sine recipe whose profile carries the observed

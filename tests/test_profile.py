@@ -309,8 +309,7 @@ def testLoadtxt(datafile):
 
 # The parsed x, y and dy arrays are copied onto the observed profile.
 # Uncertainties on x are dropped, since srfit treats the independent
-# variable as having no uncertainty, although for PDFs uncertainties in
-# the r grid do arise from binning in Q space.
+# variable as having no uncertainty.
 @pytest.mark.parametrize(
     "input_filename, expected_xobs, expected_yobs, expected_dyobs",
     [
@@ -318,6 +317,14 @@ def testLoadtxt(datafile):
         # Expected: xobs, yobs and dyobs are loaded and dx is dropped.
         (
             "four_col.gr",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            [0.2, 0.4, 0.6],
+        ),
+        # C3: File has three columns, so uncertainties are present.
+        # Expected: xobs, yobs and dyobs are loaded.
+        (
+            "three_col.dat",
             [1.0, 1.1, 1.2],
             [2.0, 2.1, 2.2],
             [0.2, 0.4, 0.6],
@@ -334,6 +341,7 @@ def testLoadtxt(datafile):
     ],
 )
 def test_load_parsed_data(
+    as_list,
     parser_datafiles,
     input_filename,
     expected_xobs,
@@ -348,7 +356,7 @@ def test_load_parsed_data(
     actual_xobs = prof.xobs.tolist()
     actual_yobs = prof.yobs.tolist()
     # Unavailable uncertainties are None rather than an array.
-    actual_dyobs = None if prof.dyobs is None else prof.dyobs.tolist()
+    actual_dyobs = as_list(prof.dyobs)
     assert actual_xobs == expected_xobs
     assert actual_yobs == expected_yobs
     assert actual_dyobs == expected_dyobs

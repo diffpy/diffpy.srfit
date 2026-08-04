@@ -219,6 +219,34 @@ def build_recipe_two_contributions():
     return recipe
 
 
+@pytest.fixture(scope="function")
+def build_recipe_with_uncertainty():
+    """Helper to build a sine recipe whose profile carries the observed
+    uncertainties returned by ``make_dyobs``.
+
+    The observed profile is a noiseless sine, so a refinement recovers
+    ``A=1``, ``k=1`` and ``c=0`` regardless of how it is weighted.
+    """
+
+    def _build_recipe(make_dyobs):
+        xobs = linspace(0, pi, 21)
+        yobs = sin(xobs)
+        profile = Profile()
+        profile.set_observed_profile(xobs, yobs, make_dyobs(xobs))
+        contribution = FitContribution("c1")
+        contribution.set_profile(profile)
+        contribution.set_equation("A*sin(k*x + c)")
+        recipe = FitRecipe()
+        recipe.fithooks[0].verbose = 0
+        recipe.add_contribution(contribution)
+        recipe.add_variable(contribution.A, 0.8)
+        recipe.add_variable(contribution.k, 1.2)
+        recipe.add_variable(contribution.c, 0.1)
+        return recipe, profile
+
+    return _build_recipe
+
+
 @pytest.fixture
 def temp_data_files(tmp_path):
     """

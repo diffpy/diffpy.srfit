@@ -20,7 +20,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
-from numpy import array_equal, dot, linspace, pi, sin
+from numpy import array_equal, dot, linspace, ones_like, pi, sin
 from scipy.optimize import leastsq
 
 from diffpy.srfit.fitbase import FitResults, ProfileParser
@@ -516,7 +516,7 @@ def test_initialize_recipe_from_recipe(build_recipes_one_contribution):
     assert sorted(list(expected_values)) == sorted(list(actual_values))
 
 
-def test_initialize_recipe_from_recipe_bad(build_recipe_two_contributions):
+def test_initialize_recipe_from_recipe_bad():
     # Case: User tries to initialize a FitRecipe from a non recipe object
     # expected: raised ValueError with message
     recipe_bad = 12345  # not a FitRecipe object
@@ -1058,6 +1058,79 @@ def test_plot_recipe_reset_all_defaults(build_recipes_one_contribution):
     expected_legend = expected_defaults["legend"]
 
     assert actual_legend == expected_legend
+
+
+# Observed uncertainties are optional. A profile loaded without an
+# uncertainty column keeps dyobs as None and is refined unweighted, with
+# dy falling back to one at every calculation point. The cases below
+# refine the same noiseless sine profile so that the known solution
+# (A=1, k=1, c=0) is recovered no matter how the fit is weighted.
+@pytest.mark.parametrize(
+    "make_input_dyobs, expected_dyobs_is_set",
+    [
+        # C1: No uncertainties are observed, as for a file with no
+        # uncertainty column.
+        # Expected: The refinement converges and dyobs stays None.
+        (lambda xobs: None, False),
+        # C2: Uniform uncertainties of one are observed explicitly.
+        # Expected: The refinement converges to the same values as C1,
+        # since an unweighted fit is weighted by one everywhere.
+        (lambda xobs: ones_like(xobs), True),
+        # C3: Uncertainties vary across the profile, so the refinement
+        # is weighted point by point.
+        # Expected: The refinement still converges to the known values.
+        (lambda xobs: linspace(0.1, 1.0, len(xobs)), True),
+    ],
+)
+def test_refine_with_and_without_uncertainty(
+    build_recipe_with_uncertainty, make_input_dyobs, expected_dyobs_is_set
+):
+    recipe, profile = build_recipe_with_uncertainty(make_input_dyobs)
+    optimize_recipe(recipe)
+    actual_dyobs_is_set = profile.dyobs is not None
+    actual_names = recipe.get_names()
+    actual_values = recipe.get_values()
+    expected_names = ["A", "k", "c"]
+    expected_values = [1.0, 1.0, 0.0]
+    assert actual_dyobs_is_set == expected_dyobs_is_set
+    assert actual_names == expected_names
+    assert actual_values == pytest.approx(expected_values, abs=1e-5)
+
+
+# The residual that is optimized is (ycalc - y)/dy, so dy is what
+# actually weights a refinement. These cases check that a profile with
+# no observed uncertainties is weighted identically to one whose
+# uncertainties are all one, and that observed uncertainties are carried
+# through to the residual unchanged.
+@pytest.mark.parametrize(
+    "make_input_dyobs, make_expected_dy",
+    [
+        # C1: No uncertainties are observed.
+        # Expected: dy falls back to one everywhere, so the residual is
+        # unweighted.
+        (lambda xobs: None, lambda xobs: ones_like(xobs)),
+        # C2: Uniform uncertainties of one are observed explicitly.
+        # Expected: dy is one everywhere, matching C1.
+        (lambda xobs: ones_like(xobs), lambda xobs: ones_like(xobs)),
+        # C3: Uncertainties vary across the profile.
+        # Expected: dy keeps the observed values, so the residual is
+        # weighted point by point.
+        (
+            lambda xobs: linspace(0.1, 1.0, len(xobs)),
+            lambda xobs: linspace(0.1, 1.0, len(xobs)),
+        ),
+    ],
+)
+def test_residual_is_weighted_by_uncertainty(
+    build_recipe_with_uncertainty, make_input_dyobs, make_expected_dy
+):
+    recipe, profile = build_recipe_with_uncertainty(make_input_dyobs)
+    actual_residual = recipe.residual(recipe.values)
+    actual_dy = profile.dy
+    expected_dy = make_expected_dy(profile.xobs)
+    expected_residual = (profile.ycalc - profile.y) / expected_dy
+    assert actual_dy == pytest.approx(expected_dy)
+    assert actual_residual == pytest.approx(expected_residual)
 
 
 if __name__ == "__main__":

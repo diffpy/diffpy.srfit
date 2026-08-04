@@ -18,7 +18,6 @@ import io
 import re
 import unittest
 
-import numpy as np
 import pytest
 from numpy import allclose, arange, array, array_equal, ones_like
 
@@ -355,22 +354,21 @@ def test_load_parsed_data(
     assert actual_dyobs == expected_dyobs
 
 
-def test_residual_is_finite_without_uncertainties(datafile):
-    """Compute finite residuals for a file with no uncertainty
-    column."""
-    parser = ProfileParser()
-    parser.parse_file(datafile("ni-q27r100-neutron.gr"))
+# Case: A profile is set without uncertainties, so dyobs is None, and a
+# residual is computed from the equation y = A*x with A = 2.
+# Expected: The residual is (A*x - y) with unit weights, since missing
+# uncertainties default to ones rather than being used as divisors.
+def test_residual_without_uncertainties():
+    """Compute the residual for a profile with no uncertainties."""
     prof = Profile()
-    prof.load_parsed_data(parser)
+    prof.set_observed_profile(array([1.0, 2.0, 3.0]), array([1.0, 2.0, 3.0]))
     contribution = FitContribution("test")
     contribution.set_profile(prof)
     contribution.set_equation("A*x")
-    contribution.A.set_value(1)
-    actual_nonfinite_count = int(
-        np.count_nonzero(~np.isfinite(contribution.residual()))
-    )
-    expected_nonfinite_count = 0
-    assert actual_nonfinite_count == expected_nonfinite_count
+    contribution.A.set_value(2)
+    actual_residual = contribution.residual().tolist()
+    expected_residual = [1.0, 2.0, 3.0]
+    assert actual_residual == expected_residual
 
 
 if __name__ == "__main__":

@@ -28,9 +28,8 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
-    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator
+from diffpy.srfit.pdf import PDFGenerator, PDFParser
 
 ######
 #  Example Code
@@ -42,12 +41,12 @@ def makeRecipe(ciffile, datname):
     # This will be used to store the observed and calculated PDF profile.
     profile = Profile()
 
-    # Load data and add it to the Profile. As before we use a ProfileParser.
+    # Load data and add it to the Profile. As before we use a PDFParser.
     # The metadata is still passed to the PDFGenerator later on.
     # The interaction between the PDFGenerator and the metadata does not
     # depend on type of structure being refined.
-    parser = ProfileParser()
-    parser.parseFile(datname)
+    parser = PDFParser()
+    parser.parse_file(datname)
     profile.load_parsed_data(parser)
     profile.set_calculation_range(xmax=20)
 

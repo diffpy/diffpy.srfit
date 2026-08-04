@@ -200,3 +200,130 @@ def test_parse_file_bad(parser_datafiles, input_file, column_order, msg):
     parser = ProfileParser()
     with pytest.raises(ParseError, match=re.escape(msg)):
         parser.parse_file(parser_datafiles / input_file, column_order)
+
+
+# ProfileParser is an extension point. A subclass customizes a format by
+# overriding the _parse_metadata and _parse_data hooks; parse_file itself
+# is a template method that subclasses are not expected to touch. The
+# tests below pin that contract so a future refactor cannot quietly turn
+# parse_file back into a concrete parser.
+
+
+class MetadataOnlyParser(ProfileParser):
+    """A parser that customizes only the metadata, as PDFParser does."""
+
+    _format = "metadata-only"
+
+    def _parse_metadata(self, filename):
+        return {"instrument": "custom"}
+
+
+def test_parse_file_uses_metadata_hook(parser_datafiles):
+    """Overriding _parse_metadata keeps the inherited column
+    handling."""
+    # Case: a subclass overrides _parse_metadata to customize the metadata,
+    # but does not override _parse_data.
+    # Expected: The subclass's metadata parser is used,
+    # but the data columns are still read correctly.
+    parser = MetadataOnlyParser()
+    parser.parse_file(parser_datafiles / "four_col.gr")
+
+    actual_format = parser.get_format()
+    expected_format = "metadata-only"
+    assert actual_format == expected_format
+
+    # The custom hook replaces the generic header scan entirely, so the
+    # name = value pairs the default would have collected are absent.
+    actual_metadata = parser.get_metadata()
+    assert actual_metadata["instrument"] == "custom"
+    assert "wavelength" not in actual_metadata
+
+    actual_x, actual_y, actual_dx, actual_dy = parser.get_data()
+    expected_x = [1.0, 1.1, 1.2]
+    expected_y = [2.0, 2.1, 2.2]
+    expected_dx = [0.1, 0.3, 0.5]
+    expected_dy = [0.2, 0.4, 0.6]
+    assert actual_x.tolist() == expected_x
+    assert actual_y.tolist() == expected_y
+    assert actual_dx.tolist() == expected_dx
+    assert actual_dy.tolist() == expected_dy
+
+
+class TwoBankParser(ProfileParser):
+    """A parser that customizes only the data, adding a second bank."""
+
+    def _parse_data(self, filename, column_format=None, **kwargs):
+        super()._parse_data(filename, column_format, **kwargs)
+        input_x, input_y, input_dx, input_dy = self._banks[0]
+        self._banks.append([input_x, 2 * input_y, input_dx, input_dy])
+
+
+def test_parse_file_uses_data_hook(parser_datafiles):
+    """Overriding _parse_data may contribute several banks."""
+    # Case: a subclass overrides _parse_data to customize the data,
+    # but does not override _parse_metadata.
+    # Expected: The subclass's data parser is used, and the
+    # metadata is still read correctly.
+    parser = TwoBankParser()
+    parser.parse_file(parser_datafiles / "four_col.gr")
+
+    actual_bank_count = parser.get_num_banks()
+    expected_bank_count = 2
+    assert actual_bank_count == expected_bank_count
+
+    actual_reported_bank_count = parser.get_metadata()["nbanks"]
+    assert actual_reported_bank_count == expected_bank_count
+
+    actual_second_bank_y = parser.get_data(1)[1].tolist()
+    expected_second_bank_y = [4.0, 4.2, 4.4]
+    assert actual_second_bank_y == expected_second_bank_y
+
+
+def test_parse_file_deprecated_warns_about_profileparser(parser_datafiles):
+    """The shared parseFile reports its own name, not a subclass one.
+
+    parseFile is inherited by every parser, so a message naming a
+    specific subclass would misdirect users of the others.
+    """
+    # Case: parseFile is called on a subclass of ProfileParser.
+    # Expected: A DeprecationWarning is raised, and the message mentions
+    parser = ProfileParser()
+    expected_msg = (
+        "'diffpy.srfit.fitbase.profileparser.ProfileParser.parseFile' is "
+        "deprecated and will be removed in version 4.0.0. Please use "
+        "'diffpy.srfit.fitbase.profileparser.ProfileParser.parse_file' "
+        "instead."
+    )
+    with pytest.warns(
+        DeprecationWarning,
+        match=re.escape(expected_msg),
+    ):
+        parser.parseFile(parser_datafiles / "two_col.txt")
+
+    actual_x = parser.get_data()[0].tolist()
+    expected_x = [1.0, 1.1, 1.2]
+    assert actual_x == expected_x
+
+
+def test_parse_file_usecols_selects_columns(parser_datafiles):
+    """A file wider than four columns is read by selecting columns.
+
+    column_format has to label every column that is loaded, so a wider
+    file is narrowed first with the load_data usecols argument.
+    """
+    # Case: A file with five columns is loaded, but only the first two are
+    # used.
+    # Expected: The first two columns are read as x and y, and dx and dy are
+    # None.
+    parser = ProfileParser()
+    parser.parse_file(
+        parser_datafiles / "five_col.gr", ("x", "y"), usecols=(0, 1)
+    )
+
+    actual_x, actual_y, actual_dx, actual_dy = parser.get_data()
+    expected_x = [1.0, 1.1, 1.2]
+    expected_y = [2.0, 2.1, 2.2]
+    assert actual_x.tolist() == expected_x
+    assert actual_y.tolist() == expected_y
+    assert actual_dx is None
+    assert actual_dy is None

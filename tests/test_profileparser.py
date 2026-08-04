@@ -231,32 +231,34 @@ class _NoBanksParser(ProfileParser):
         pass
 
 
+@pytest.mark.parametrize(
+    "parser, column_format, expected_msg",
+    [
+        # C1: column_format is specified for a parser that overrides
+        # parse_string, so it determines the column layout from the file
+        # format instead.
+        # Expected: ParseError is raised.
+        (
+            _FormatSpecificParser(),
+            ("x", "y", "dx", "dy"),
+            "_FormatSpecificParser determines the column layout from the "
+            "file format, so 'column_format' is not supported.",
+        ),
+        # C2: A format-specific parser's parse_string does not populate
+        # any banks.
+        # Expected: ParseError is raised.
+        (
+            _NoBanksParser(),
+            None,
+            "There are no data in the banks",
+        ),
+    ],
+)
 def test_parse_file_bad_parser(
-    parser_datafiles,
+    parser_datafiles, parser, column_format, expected_msg
 ):
-    # UC14: column_format is specified for a parser that overrides
-    # parse_string, so it determines the column layout from the file
-    # format instead.
-    # expected: ParseError is raised
-    parser = _FormatSpecificParser()
-    expected_msg = (
-        "_FormatSpecificParser determines the column layout from the "
-        "file format, so 'column_format' is not supported."
-    )
     with pytest.raises(ParseError, match=re.escape(expected_msg)):
-        parser.parse_file(
-            parser_datafiles / "four_col.gr", ("x", "y", "dx", "dy")
-        )
-
-
-def test_parse_file_bad_no_banks_parsed(parser_datafiles):
-    # UC15: A format-specific parser's parse_string does not populate any
-    # banks.
-    # expected: ParseError is raised
-    parser = _NoBanksParser()
-    expected_msg = "There are no data in the banks"
-    with pytest.raises(ParseError, match=re.escape(expected_msg)):
-        parser.parse_file(parser_datafiles / "four_col.gr")
+        parser.parse_file(parser_datafiles / "four_col.gr", column_format)
 
 
 def test_parse_file_does_not_extract_pdf_metadata(datafile):

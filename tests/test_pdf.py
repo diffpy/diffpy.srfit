@@ -194,16 +194,13 @@ def test_deprecated_parse_methods_delegate(
     deprecated_method, current_method, prepare_arg, datafile
 ):
     arg = prepare_arg(datafile)
-
     deprecated_parser = PDFParser()
     with pytest.deprecated_call():
         getattr(deprecated_parser, deprecated_method)(arg)
     actual_metadata = deprecated_parser.get_metadata()
-
     expected_parser = PDFParser()
     getattr(expected_parser, current_method)(arg)
     expected_metadata = expected_parser.get_metadata()
-
     assert actual_metadata == expected_metadata
 
 

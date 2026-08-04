@@ -1065,6 +1065,10 @@ def test_plot_recipe_reset_all_defaults(build_recipes_one_contribution):
 # dy falling back to one at every calculation point. The cases below
 # refine the same noiseless sine profile so that the known solution
 # (A=1, k=1, c=0) is recovered no matter how the fit is weighted.
+
+
+# make_input_dyobs returns a function that evaluates dyobs on the array
+# of xobs for insertion into the build_recipe_with_uncertainty fixture.
 @pytest.mark.parametrize(
     "make_input_dyobs, expected_dyobs_is_set",
     [
@@ -1102,6 +1106,10 @@ def test_refine_with_and_without_uncertainty(
 # no observed uncertainties is weighted identically to one whose
 # uncertainties are all one, and that observed uncertainties are carried
 # through to the residual unchanged.
+
+
+# make_input_dyobs returns a function that evaluates dyobs on the array
+# of xobs for insertion into the build_recipe_with_uncertainty fixture.
 @pytest.mark.parametrize(
     "make_input_dyobs, make_expected_dy",
     [

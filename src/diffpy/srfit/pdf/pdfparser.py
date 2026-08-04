@@ -23,24 +23,9 @@ See the class documentation for more information.
 __all__ = ["PDFParser"]
 
 import re
+from pathlib import Path
 
-import numpy
-
-from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
-from diffpy.utils._deprecator import build_deprecation_message, deprecated
-
-removal_verison = "4.0.0"
-base = "diffpy.srfit.pdf.pdfparser.PDFParser"
-new_base = "diffpy.srfit.fitbase.ProfileParser"
-
-parseFile_dep_msg = build_deprecation_message(
-    base,
-    "parseFile",
-    "parse_file",
-    removal_version=removal_verison,
-    new_base=new_base,
-)
 
 
 class PDFParser(ProfileParser):
@@ -119,47 +104,15 @@ class PDFParser(ProfileParser):
 
     _format = "PDF"
 
-    # Marking this function as deprecated because PDFParser.parseFile calls it
-    # so when people use PDFParser.parseFile, they will get a
-    # warning that it is deprecated and they should use
-    # ProfileParser.parse_file instead.
-    @deprecated(parseFile_dep_msg)
-    def parseString(self, patstring):
-        """Parse a string and set the _x, _y, _dx, _dy and _meta
-        variables.
+    def _parse_metadata(self, filename):
+        """Return the metadata read from a PDFgetX or PDFgetN header."""
+        return self._parse_header(Path(filename).read_text())
 
-        When _dx or _dy cannot be obtained in the data format it is set to
-        None.
-
-        This wipes out the currently loaded data and selected bank number.
-
-        Parameters
-        ----------
-        patstring
-            A string containing the pattern
-
-        Raises
-        ----------
-        ParseError
-            if the string cannot be parsed
-        """
-        # useful regex patterns:
+    def _parse_header(self, patstring):
+        """Return the metadata read from the header part of a
+        pattern."""
         rx = {"f": r"[-+]?(\d+(\.\d*)?|\d*\.\d+)([eE][-+]?\d+)?"}
-        # find where does the data start
-        res = re.search(r"^#+ start data\s*(?:#.*\s+)*", patstring, re.M)
-        # start_data is position where the first data line starts
-        if res:
-            start_data = res.end()
-        else:
-            # find line that starts with a floating point number
-            regexp = r"^\s*%(f)s" % rx
-            res = re.search(regexp, patstring, re.M)
-            if res:
-                start_data = res.start()
-            else:
-                start_data = 0
-        header = patstring[:start_data]
-        databody = patstring[start_data:].strip()
+        header = self._split_header(patstring, rx)
 
         # find where the metadata starts
         metadata = ""
@@ -169,7 +122,7 @@ class PDFParser(ProfileParser):
             header = header[: res.start()]
 
         # parse header
-        meta = self._meta
+        meta = {}
         # stype
         if re.search("(x-?ray|PDFgetX)", header, re.I):
             meta["stype"] = "X"
@@ -227,53 +180,24 @@ class PDFParser(ProfileParser):
                 else:
                     break
 
-        # read actual data - robs, Gobs, drobs, dGobs
-        inf_or_nan = re.compile("(?i)^[+-]?(NaN|Inf)\\b")
-        has_drobs = True
-        has_dGobs = True
-        # raise ParseError if something goes wrong
-        robs = []
-        Gobs = []
-        drobs = []
-        dGobs = []
-        try:
-            for line in databody.split("\n"):
-                v = line.split()
-                # there should be at least 2 value in the line
-                robs.append(float(v[0]))
-                Gobs.append(float(v[1]))
-                # drobs is valid if all values are defined and positive
-                has_drobs = (
-                    has_drobs and len(v) > 2 and not inf_or_nan.match(v[2])
-                )
-                if has_drobs:
-                    v2 = float(v[2])
-                    has_drobs = v2 > 0.0
-                    drobs.append(v2)
-                # dGobs is valid if all values are defined and positive
-                has_dGobs = (
-                    has_dGobs and len(v) > 3 and not inf_or_nan.match(v[3])
-                )
-                if has_dGobs:
-                    v3 = float(v[3])
-                    has_dGobs = v3 > 0.0
-                    dGobs.append(v3)
-        except (ValueError, IndexError) as err:
-            raise ParseError(err)
-        if has_drobs:
-            drobs = numpy.asarray(drobs)
-        else:
-            drobs = None
-        if has_dGobs:
-            dGobs = numpy.asarray(dGobs)
-        else:
-            dGobs = None
+        return meta
 
-        robs = numpy.asarray(robs)
-        Gobs = numpy.asarray(Gobs)
-
-        self._banks.append([robs, Gobs, drobs, dGobs])
-        return
+    @staticmethod
+    def _split_header(patstring, rx):
+        """Return the header part of a pattern."""
+        res = re.search(r"^#+ start data\s*(?:#.*\s+)*", patstring, re.M)
+        # start_data is position where the first data line starts
+        if res:
+            start_data = res.end()
+        else:
+            # find line that starts with a floating point number
+            regexp = r"^\s*%(f)s" % rx
+            res = re.search(regexp, patstring, re.M)
+            if res:
+                start_data = res.start()
+            else:
+                start_data = 0
+        return patstring[:start_data]
 
 
 # End of PDFParser

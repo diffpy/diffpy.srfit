@@ -22,8 +22,6 @@ subclass.
 See the class documentation for more information.
 """
 
-from pathlib import Path
-
 import numpy as np
 
 from diffpy.srfit.exceptions import ParseError
@@ -31,19 +29,21 @@ from diffpy.utils._deprecator import build_deprecation_message, deprecated
 from diffpy.utils.parsers import load_data
 
 removal_verison = "4.0.0"
-pdfparser_base = "diffpy.srfit.pdf.pdfparser.PDFParser"
-new_base = "diffpy.srfit.fitbase.ProfileParser"
-
+pp_base = "diffpy.srfit.fitbase.profileparser.ProfileParser"
 
 parseFile_dep_msg = build_deprecation_message(
-    pdfparser_base,
+    pp_base,
     "parseFile",
     "parse_file",
     removal_verison,
-    new_base=new_base,
 )
 
-pp_base = "diffpy.srfit.fitbase.profileparser.ProfileParser"
+getFormat_dep_msg = build_deprecation_message(
+    pp_base,
+    "getFormat",
+    "get_format",
+    removal_verison,
+)
 
 getNumBanks_dep_msg = build_deprecation_message(
     pp_base,
@@ -135,67 +135,49 @@ class ProfileParser(object):
         self._dy = None
         return
 
-    def getFormat(self):
-        """Get the format string."""
+    def get_format(self):
+        """Get the format string.
+
+        Returns
+        -------
+        str
+            The unique identifier for the data format handled by this
+            parser.
+        """
         return self._format
 
-    def parseString(self, patstring):
-        """Parse a string and set the _x, _y, _dx, _dy and _meta
-        variables.
+    @deprecated(getFormat_dep_msg)
+    def getFormat(self):
+        """This function is deprecated and will be removed in version
+        4.0.0.
 
-        When _dx or _dy cannot be obtained in the data format it is set to
-        None.
-
-        This wipes out the currently loaded data and selected bank number.
-
-        Parameters
-        ----------
-        patstring
-            A string containing the pattern
-
-        Raises
-        ----------
-        ParseError if the string cannot be parsed
+        Please use diffpy.srfit.fitbase.ProfileParser.get_format
+        instead.
         """
-        raise NotImplementedError()
+        return self.get_format()
 
-    # remove parseString too when this file is removed.
     @deprecated(parseFile_dep_msg)
     def parseFile(self, filename):
-        """Parse a file and set the _x, _y, _dx, _dy and _meta
-        variables.
+        """This function is deprecated and will be removed in version
+        4.0.0.
 
-        This wipes out the currently loaded data and selected bank number.
-
-        Parameters
-        ----------
-        filename
-            The name of the file to parse
-
-        Raises
-        ----------
-        IOError
-            if the file cannot be read
-        ParseError
-            if the file cannot be parsed
+        Please use diffpy.srfit.fitbase.ProfileParser.parse_file
+        instead.
         """
-        infile = open(filename, "r")
-        self._banks = []
-        self._meta = {}
-        filestring = infile.read()
-        self.parseString(filestring)
-        infile.close()
-        self._meta["filename"] = filename
+        return self.parse_file(filename)
 
-        if len(self._banks) < 1:
-            raise ParseError("There are no data in the banks")
-
-        self.select_bank(0)
-        return
-
-    def parse_file(self, filename, column_format=None):
+    def parse_file(self, filename, column_format=None, **kwargs):
         """Parse a data file to extract data and metadata, with
         automatic handling of uncertainties.
+
+        This is a template method. Subclasses customize a format by
+        overriding the `_parse_metadata` and `_parse_data` hooks rather
+        than this method. `PDFParser` in the
+        `diffpy.srfit.pdf.pdfparser` module is a worked example: it
+        overrides `_parse_metadata` to read PDFgetX/PDFgetN headers and
+        inherits the data block handling unchanged.
+
+        The default `_parse_data` reads a single bank:
 
         - For files with 2 columns: assumes (x, y) and sets dx, dy to None.
         - For files with 3 columns: assumes (x, y, dy) and sets dx to None.
@@ -225,40 +207,56 @@ class ProfileParser(object):
             - `("x", "y", "dx", "dy")`
             - `("x", "dx", "y", "dy")`
 
+        kwargs
+            The keyword arguments passed on to
+            `diffpy.utils.parsers.load_data`, such as `usecols`,
+            `delimiter`, `comments` and `minrows`. Use `usecols` to
+            select four columns out of a wider file, then label them
+            with `column_format`.
+
         Raises
         ------
         ParseError
             If parsing fails or ambiguity detected.
         """
-        # Reset internal state
         self._banks = []
-        if isinstance(filename, Path):
-            filename = str(filename)
-        # Load metadata and numeric data
-        self._meta, data = self._load_file(filename)
-        column_format = self._detect_column_format(data, column_format)
-        # Map columns to x, y, dx, dy
-        columns = self._map_column_labels_to_data(data, column_format)
-        # Extract required arrays
-        x = columns["x"]
-        y = columns["y"]
-        dx = self._validate_uncertainty(columns.get("dx"))
-        dy = self._validate_uncertainty(columns.get("dy"))
-        # Store as single bank
-        self._banks = [(x, y, dx, dy)]
-        self._meta["nbanks"] = 1
+        self._meta = {}
+        self._meta.update(self._parse_metadata(filename))
+        self._parse_data(filename, column_format, **kwargs)
+        self._meta["filename"] = str(filename)
+        if len(self._banks) < 1:
+            raise ParseError("There are no data in the banks")
         self.select_bank(0)
 
-    def _load_file(self, filename):
-        """Load metadata and numeric data from a file."""
-        meta = load_data(filename, headers=True)
-        meta["filename"] = filename
-        data = load_data(filename)
-        if data.size == 0 or (data.ndim == 1):
+    def _parse_metadata(self, filename):
+        """Return the metadata read from the header of a file.
+
+        Override this hook to parse a format whose header is not a plain
+        list of ``name = value`` pairs.
+        """
+        return load_data(filename, headers=True)
+
+    def _parse_data(self, filename, column_format=None, **kwargs):
+        """Append the banks read from the data block of a file.
+
+        Override this hook to parse a format whose data block is not a
+        plain matrix of columns, or one that holds several banks.
+        """
+        data = load_data(filename, **kwargs)
+        if data.size == 0 or data.ndim == 1:
             raise ParseError(
                 "Data block must have at least two columns (x, y)."
             )
-        return meta, data
+        column_format = self._detect_column_format(data, column_format)
+        columns = self._map_column_labels_to_data(data, column_format)
+        self._banks.append(
+            [
+                columns["x"],
+                columns["y"],
+                self._validate_uncertainty(columns.get("dx")),
+                self._validate_uncertainty(columns.get("dy")),
+            ]
+        )
 
     def _detect_column_format(self, data, column_format):
         """Auto-detect or validate column format."""

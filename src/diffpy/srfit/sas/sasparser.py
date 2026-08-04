@@ -88,9 +88,13 @@ class SASParser(ProfileParser):
 
     _format = "SAS"
 
-    def parseFile(self, filename):
+    def parse_file(self, filename, column_format=None, **kwargs):
         """Parse a file and set the _x, _y, _dx, _dy and _meta
         variables.
+
+        The sas DataLoader reads the data and the metadata together, so
+        this overrides parse_file itself rather than the
+        `_parse_metadata` and `_parse_data` hooks.
 
         This wipes out the currently loaded data and selected bank number.
 
@@ -98,6 +102,12 @@ class SASParser(ProfileParser):
         ----------
         filename
             The name of the file to parse
+        column_format
+            Unused. Accepted so that the signature matches
+            `ProfileParser.parse_file`.
+        kwargs
+            Unused. Accepted so that the signature matches
+            `ProfileParser.parse_file`.
 
         Raises
         ----------
@@ -131,42 +141,6 @@ class SASParser(ProfileParser):
         # Why is a list imported but only the first element is taken?
         # Is this desired behavior?
         self.select_bank(0)
-        return
-
-    def parseString(self, patstring):
-        """Parse a string and set the _x, _y, _dx, _dy and _meta
-        variables.
-
-        When _dx or _dy cannot be obtained in the data format it is set to 0.
-
-        This wipes out the currently loaded data and selected bank number.
-
-        Parameters
-        ----------
-        patstring
-            A string containing the pattern
-
-        Raises
-        ----------
-        ParseError
-            if the string cannot be parsed
-        """
-        # This calls on parseFile, as that is how the sas data loader works.
-        import tempfile
-
-        fh, fn = tempfile.mkstemp()
-        outfile = open(fn, "w")
-        fn.write(patstring)
-        outfile.close()
-        self.parseFile(fn)
-
-        del self._metadata["filename"]
-
-        # Close the temporary file and delete it
-        import os
-
-        os.close(fh)
-        os.remove(fn)
         return
 
 

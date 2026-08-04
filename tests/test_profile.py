@@ -69,7 +69,7 @@ class TestProfile(unittest.TestCase):
 
         self.assertTrue(array_equal(x, prof.xobs))
         self.assertTrue(array_equal(y, prof.yobs))
-        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dyobs))
+        self.assertTrue(prof.dyobs is None)
 
         # Get the ranged profile to make sure its the same
         self.assertTrue(array_equal(x, prof.x))
@@ -105,7 +105,7 @@ class TestProfile(unittest.TestCase):
 
         self.assertTrue(array_equal(x, prof.xobs))
         self.assertTrue(array_equal(y, prof.yobs))
-        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dyobs))
+        self.assertTrue(prof.dyobs is None)
 
         # Get the ranged profile to make sure its the same
         self.assertTrue(array_equal(x, prof.x))
@@ -308,29 +308,50 @@ def testLoadtxt(datafile):
     return
 
 
-def test_load_parsed_data(parser_datafiles):
-    """Test the load_parsed_data method."""
-    prof = Profile()
+# The parsed x, y and dy arrays are copied onto the observed profile.
+# Uncertainties on x are dropped, since srfit treats the independent
+# variable as having no uncertainty, although for PDFs uncertainties in
+# the r grid do arise from binning in Q space.
+@pytest.mark.parametrize(
+    "input_filename, expected_xobs, expected_yobs, expected_dyobs",
+    [
+        # C1: File has four columns, so uncertainties are present.
+        # Expected: xobs, yobs and dyobs are loaded and dx is dropped.
+        (
+            "four_col.gr",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            [0.2, 0.4, 0.6],
+        ),
+        # C2: File has two columns, so no uncertainties are present.
+        # Expected: xobs and yobs are loaded and dyobs stays None,
+        # marking the profile as unweighted.
+        (
+            "two_col.txt",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            None,
+        ),
+    ],
+)
+def test_load_parsed_data(
+    parser_datafiles,
+    input_filename,
+    expected_xobs,
+    expected_yobs,
+    expected_dyobs,
+):
+    """Load a parsed profile onto the observed arrays."""
     parser = ProfileParser()
-    datafile = parser_datafiles / "four_col.gr"
-    parser.parse_file(datafile)
-    prof.load_parsed_data(parser)
-    expected_xobs = [1.0, 1.1, 1.2]
-    expected_yobs = [2.0, 2.1, 2.2]
-    expected_dyobs = [0.2, 0.4, 0.6]
-    assert prof.xobs.tolist() == expected_xobs
-    assert prof.yobs.tolist() == expected_yobs
-    assert prof.dyobs.tolist() == expected_dyobs
-
-
-def test_load_parsed_data_without_uncertainties(parser_datafiles):
-    """Load a file with no uncertainty column as unweighted."""
-    parser = ProfileParser()
-    parser.parse_file(parser_datafiles / "two_col.txt")
+    parser.parse_file(parser_datafiles / input_filename)
     prof = Profile()
     prof.load_parsed_data(parser)
-    actual_dyobs = prof.dyobs.tolist()
-    expected_dyobs = ones_like(prof.xobs).tolist()
+    actual_xobs = prof.xobs.tolist()
+    actual_yobs = prof.yobs.tolist()
+    # Unavailable uncertainties are None rather than an array.
+    actual_dyobs = None if prof.dyobs is None else prof.dyobs.tolist()
+    assert actual_xobs == expected_xobs
+    assert actual_yobs == expected_yobs
     assert actual_dyobs == expected_dyobs
 
 

@@ -168,44 +168,43 @@ def test_parse_file_extracts_pdf_metadata(datafile):
     assert actual_metadata == expected_metadata
 
 
-def test_parseFile_deprecated(datafile):
-    # Deprecated parseFile should still work but emit a
-    # DeprecationWarning and delegate to parse_file.
-    # Expected: parser.get_metadata() returns the same
-    # dictionary as parse_file.
-    data = datafile("ni-q27r100-neutron.gr")
+@pytest.mark.parametrize(
+    ("deprecated_method", "current_method", "prepare_arg"),
+    [
+        # C1: parseFile is deprecated in favor of parse_file.
+        # Expected: parseFile still parses the file but emits a
+        # DeprecationWarning and returns the same metadata as parse_file.
+        (
+            "parseFile",
+            "parse_file",
+            lambda datafile: datafile("ni-q27r100-neutron.gr"),
+        ),
+        # C2: parseString is deprecated in favor of parse_string.
+        # Expected: parseString still parses the text but emits a
+        # DeprecationWarning and returns the same metadata as
+        # parse_string.
+        (
+            "parseString",
+            "parse_string",
+            lambda datafile: datafile("ni-q27r100-neutron.gr").read_text(),
+        ),
+    ],
+)
+def test_deprecated_parse_methods_delegate(
+    deprecated_method, current_method, prepare_arg, datafile
+):
+    arg = prepare_arg(datafile)
+
     deprecated_parser = PDFParser()
-    # Assert that a DeprecationWarning is raised when calling parseFile.
     with pytest.deprecated_call():
-        deprecated_parser.parseFile(data)
-    actual_deprecated_metadata = deprecated_parser.get_metadata()
+        getattr(deprecated_parser, deprecated_method)(arg)
+    actual_metadata = deprecated_parser.get_metadata()
 
     expected_parser = PDFParser()
-    expected_parser.parse_file(data)
+    getattr(expected_parser, current_method)(arg)
     expected_metadata = expected_parser.get_metadata()
-    # Assert the deprecated parseFile method returns the
-    # same metadata as the parse_file method.
-    assert actual_deprecated_metadata == expected_metadata
 
-
-def test_parseString_deprecated(datafile):
-    # Deprecated parseString should still work but emit a
-    # DeprecationWarning and delegate to parse_string.
-    # Expected: parser.get_metadata() returns the same
-    # dictionary as parse_string.
-    text = datafile("ni-q27r100-neutron.gr").read_text()
-    deprecated_parser = PDFParser()
-    # Assert that a DeprecationWarning is raised when calling parseString.
-    with pytest.deprecated_call():
-        deprecated_parser.parseString(text)
-    actual_deprecated_metadata = deprecated_parser.get_metadata()
-
-    expected_parser = PDFParser()
-    expected_parser.parse_string(text)
-    expected_metadata = expected_parser.get_metadata()
-    # Assert the deprecated parseString method returns the
-    # same metadata as the parse_string method.
-    assert actual_deprecated_metadata == expected_metadata
+    assert actual_metadata == expected_metadata
 
 
 def test_loadData_preserves_pdf_metadata(datafile):

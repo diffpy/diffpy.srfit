@@ -10,7 +10,7 @@
 
 **Changed:**
 
-* Change ``PDFParser`` to read its data block with ``load_data`` from ``diffpy.utils``, by overriding only the ``_parse_metadata`` hook. ``PDFParser.parse_file`` returns the same data and metadata that ``PDFParser.parseFile`` did.
+* Change ``PDFParser`` to inherit ``_parse_metadata`` and ``_parse_data`` unchanged from ``ProfileParser``, since PDFgetX and PDFgetN headers are now plain ``name = value`` pairs. ``PDFParser.parse_file`` returns the same data and metadata that ``PDFParser.parseFile`` did.
 * Change ``ProfileParser.parse_file`` to accept the keyword arguments of ``load_data``, such as ``usecols``, ``delimiter`` and ``comments``. Use ``usecols`` to select columns from a file with more than four of them.
 * Change ``PDFContribution.loadData`` to take a file name only.
 * Change the headers of the ``si-q27r60-xray.gr`` and ``ni-q27r100-neutron.gr`` test files to the modern ``diffpy.pdfgetx`` and xPDFsuite configuration formats, replacing the 2008-era PDFgetX2/PDFgetN headers. The data values are unchanged.

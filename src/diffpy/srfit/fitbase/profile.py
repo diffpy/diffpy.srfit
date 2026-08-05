@@ -186,8 +186,9 @@ class Profile(Observable, Validatable):
             Numpy array of the observed signal.
         dyobs
             Numpy array of the uncertainty in the observed signal. If
-            `dyobs` is None (default), it will be set to 1 at each
-            observed `xobs`.
+            `dyobs` is None (default), `dyobs` stays None to indicate
+            no uncertainty was observed, and the calculated `dy` will
+            be set to 1 at each calculation point instead.
 
 
         Raises
@@ -206,7 +207,7 @@ class Profile(Observable, Validatable):
         self._yobs = numpy.asarray(yobs, dtype=float)
 
         if dyobs is None:
-            self._dyobs = numpy.ones_like(xobs)
+            self._dyobs = None
         else:
             self._dyobs = numpy.asarray(dyobs, dtype=float)
 
@@ -328,7 +329,11 @@ class Profile(Observable, Validatable):
             indices = (lo - epslo <= self.xobs) & (self.xobs <= hi + epshi)
             self.x = self.xobs[indices]
             self.y = self.yobs[indices]
-            self.dy = self.dyobs[indices]
+            self.dy = (
+                self.dyobs[indices]
+                if self.dyobs is not None
+                else numpy.ones_like(self.x)
+            )
         else:
             x1 = numpy.arange(lo, hi + epshi, step)
             self.set_calculation_points(x1)
@@ -373,6 +378,8 @@ class Profile(Observable, Validatable):
                 # FIXME - This does not follow error propagation rules and it
                 # introduces (more) correlation between the data points.
                 self.dy = _rebin_array(self.dyobs, self.xobs, self.x)
+        elif self.yobs is not None:
+            self.dy = numpy.ones_like(self.x)
 
         return
 
@@ -477,8 +484,9 @@ class Profile(Observable, Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates that x, y, dy, xobx, yobs and dyobs are not None.
-        This validates that x, y, and dy are the same length.
+        This validates that x, y, dy, xobs and yobs are not None. dyobs
+        may be None, since observed uncertainties are optional. This
+        validates that x, y, and dy are the same length.
 
         Raises SrFitError if validation fails.
         """
@@ -490,7 +498,6 @@ class Profile(Observable, Validatable):
                 self.dy,
                 self.xobs,
                 self.yobs,
-                self.dyobs,
             ]
         )
         if datanotset:

@@ -94,11 +94,11 @@ class ProfileParser(object):
             from the file.
         dx : np.ndarray
             The uncertainties associated with x
-            read from the file. This is 0 if the
+            read from the file. This is None if the
             uncertainty cannot be read.
         dy : np.ndarray
             The uncertainties associated with y
-            read from the file. This is 0 if the
+            read from the file. This is None if the
             uncertainty cannot be read.
     _x : np.ndarray
         Independent variable from the chosen bank
@@ -197,13 +197,13 @@ class ProfileParser(object):
         """Parse a data file to extract data and metadata, with
         automatic handling of uncertainties.
 
-        - For files with 2 columns: assumes (x, y) and sets dx, dy to 0.
-        - For files with 3 columns: assumes (x, y, dy) and sets dx to 0.
+        - For files with 2 columns: assumes (x, y) and sets dx, dy to None.
+        - For files with 3 columns: assumes (x, y, dy) and sets dx to None.
         - For files with 4 columns: assumes (x, y, dx, dy).
         - For other cases: `column_format` must be explicitly specified.
 
         Uncertainty columns (dx, dy) are only considered valid if all values
-        are positive and not NaN/Inf. Otherwise they are set to 0.
+        are positive and not NaN/Inf. Otherwise they are set to None.
 
         This wipes out the currently loaded data and selected bank number.
 
@@ -242,10 +242,8 @@ class ProfileParser(object):
         # Extract required arrays
         x = columns["x"]
         y = columns["y"]
-        x_length = len(x)
-        y_length = len(y)
-        dx = self._validate_uncertainty(columns.get("dx"), x_length)
-        dy = self._validate_uncertainty(columns.get("dy"), y_length)
+        dx = self._validate_uncertainty(columns.get("dx"))
+        dy = self._validate_uncertainty(columns.get("dy"))
         # Store as single bank
         self._banks = [(x, y, dx, dy)]
         self._meta["nbanks"] = 1
@@ -306,10 +304,10 @@ class ProfileParser(object):
         return columns
 
     @staticmethod
-    def _validate_uncertainty(data, length):
-        """Return the uncertainty data if valid, otherwise 0."""
+    def _validate_uncertainty(data):
+        """Return the uncertainty data if valid, otherwise None."""
         if data is None or not np.all(np.isfinite(data)) or np.any(data <= 0):
-            return np.zeros(length)
+            return None
         return data
 
     def get_num_banks(self):
@@ -395,8 +393,8 @@ class ProfileParser(object):
 
         Returns
         ----------
-        This returns (x, y, dx, dy) tuple for the bank. dx is 0 if it cannot
-        be determined from the data format.
+        This returns (x, y, dx, dy) tuple for the bank. dx is None if it
+        cannot be determined from the data format.
         """
         self.select_bank(index)
 

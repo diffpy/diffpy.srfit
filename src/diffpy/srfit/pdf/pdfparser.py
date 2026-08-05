@@ -63,11 +63,11 @@ class PDFParser(ProfileParser):
             from the file.
         dx
             A numpy array containing the uncertainty in x
-            read from the file. This is 0 if the
+            read from the file. This is None if the
             uncertainty cannot be read.
         dy
             A numpy array containing the uncertainty read
-            from the file. This is 0 if the uncertainty
+            from the file. This is None if the uncertainty
             cannot be read.
     _x
         Independent variable from the chosen bank
@@ -128,7 +128,8 @@ class PDFParser(ProfileParser):
         """Parse a string and set the _x, _y, _dx, _dy and _meta
         variables.
 
-        When _dx or _dy cannot be obtained in the data format it is set to 0.
+        When _dx or _dy cannot be obtained in the data format it is set to
+        None.
 
         This wipes out the currently loaded data and selected bank number.
 

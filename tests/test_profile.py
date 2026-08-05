@@ -22,7 +22,7 @@ import pytest
 from numpy import allclose, arange, array, array_equal, ones_like
 
 from diffpy.srfit.exceptions import SrFitError
-from diffpy.srfit.fitbase import ProfileParser
+from diffpy.srfit.fitbase import FitContribution, ProfileParser
 from diffpy.srfit.fitbase.profile import Profile
 
 
@@ -68,7 +68,7 @@ class TestProfile(unittest.TestCase):
 
         self.assertTrue(array_equal(x, prof.xobs))
         self.assertTrue(array_equal(y, prof.yobs))
-        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dyobs))
+        self.assertTrue(prof.dyobs is None)
 
         # Get the ranged profile to make sure its the same
         self.assertTrue(array_equal(x, prof.x))
@@ -104,7 +104,7 @@ class TestProfile(unittest.TestCase):
 
         self.assertTrue(array_equal(x, prof.xobs))
         self.assertTrue(array_equal(y, prof.yobs))
-        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dyobs))
+        self.assertTrue(prof.dyobs is None)
 
         # Get the ranged profile to make sure its the same
         self.assertTrue(array_equal(x, prof.x))
@@ -307,19 +307,76 @@ def testLoadtxt(datafile):
     return
 
 
-def test_load_parsed_data(parser_datafiles):
-    """Test the load_parsed_data method."""
-    prof = Profile()
+# The parsed x, y and dy arrays are copied onto the observed profile.
+# Uncertainties on x are dropped, since srfit treats the independent
+# variable as having no uncertainty.
+@pytest.mark.parametrize(
+    "input_filename, expected_xobs, expected_yobs, expected_dyobs",
+    [
+        # C1: File has four columns, so uncertainties are present.
+        # Expected: xobs, yobs and dyobs are loaded and dx is dropped.
+        (
+            "four_col.gr",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            [0.2, 0.4, 0.6],
+        ),
+        # C3: File has three columns, so uncertainties are present.
+        # Expected: xobs, yobs and dyobs are loaded.
+        (
+            "three_col.dat",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            [0.2, 0.4, 0.6],
+        ),
+        # C2: File has two columns, so no uncertainties are present.
+        # Expected: xobs and yobs are loaded and dyobs stays None,
+        # marking the profile as unweighted.
+        (
+            "two_col.txt",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            None,
+        ),
+    ],
+)
+def test_load_parsed_data(
+    as_list,
+    parser_datafiles,
+    input_filename,
+    expected_xobs,
+    expected_yobs,
+    expected_dyobs,
+):
+    """Load a parsed profile onto the observed arrays."""
     parser = ProfileParser()
-    datafile = parser_datafiles / "four_col.gr"
-    parser.parse_file(datafile)
+    parser.parse_file(parser_datafiles / input_filename)
+    prof = Profile()
     prof.load_parsed_data(parser)
-    expected_xobs = [1.0, 1.1, 1.2]
-    expected_yobs = [2.0, 2.1, 2.2]
-    expected_dyobs = [0.2, 0.4, 0.6]
-    assert prof.xobs.tolist() == expected_xobs
-    assert prof.yobs.tolist() == expected_yobs
-    assert prof.dyobs.tolist() == expected_dyobs
+    actual_xobs = prof.xobs.tolist()
+    actual_yobs = prof.yobs.tolist()
+    # Unavailable uncertainties are None rather than an array.
+    actual_dyobs = as_list(prof.dyobs)
+    assert actual_xobs == expected_xobs
+    assert actual_yobs == expected_yobs
+    assert actual_dyobs == expected_dyobs
+
+
+# Case: A profile is set without uncertainties, so dyobs is None, and a
+# residual is computed from the equation y = A*x with A = 2.
+# Expected: The residual is (A*x - y) with unit weights, since missing
+# uncertainties default to ones rather than being used as divisors.
+def test_residual_without_uncertainties():
+    """Compute the residual for a profile with no uncertainties."""
+    prof = Profile()
+    prof.set_observed_profile(array([1.0, 2.0, 3.0]), array([1.0, 2.0, 3.0]))
+    contribution = FitContribution("test")
+    contribution.set_profile(prof)
+    contribution.set_equation("A*x")
+    contribution.A.set_value(2)
+    actual_residual = contribution.residual().tolist()
+    expected_residual = [1.0, 2.0, 3.0]
+    assert actual_residual == expected_residual
 
 
 if __name__ == "__main__":

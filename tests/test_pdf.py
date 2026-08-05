@@ -113,24 +113,34 @@ def test_pdfparser_data(
     assert actual_dy == approx_or_none(expected_dy)
 
 
-# PDFParser is the reference example of extending ProfileParser. It
-# overrides the _parse_metadata hook so that PDFgetX and PDFgetN headers
-# yield PDF specific values, and inherits the load_data based reading of
-# the data block. The metadata below reaches PDFGenerator, which uses it
-# to set the scattering type and the Q range, so losing a key silently
-# changes a refinement.
+# PDFParser inherits ProfileParser's hooks unchanged: PDFgetX and
+# PDFgetN headers are already plain name = value pairs, including
+# stype = X or stype = N for the scattering type. The metadata below
+# reaches PDFGenerator, which uses stype, qmin and qmax to set the
+# scattering type and the Q range, so losing a key silently changes a
+# refinement.
 @pytest.mark.parametrize(
     "input_filename, expected_metadata",
     [
         # C1: An x-ray PDF written by PDFgetX2.
         # Expected: The header yields the x-ray scattering type,
-        # the Q range and the temperature.
+        # the Q range and the rest of the diffpy.pdfgetx config.
         (
             "si-q27r60-xray.gr",
             {
+                "version": "diffpy.pdfgetx-2.4.0",
+                "dataformat": "QA",
+                "outputtype": "gr",
                 "stype": "X",
+                "composition": "Si",
+                "bgscale": 1.0,
+                "rpoly": 0.9,
+                "qmaxinst": 29.0,
                 "qmin": 0.01,
                 "qmax": 27.0,
+                "rmin": 0.0,
+                "rmax": 60.0,
+                "rstep": 0.01,
                 "temperature": 300.0,
                 "bank": 0,
                 "nbanks": 1,
@@ -138,14 +148,28 @@ def test_pdfparser_data(
         ),
         # C2: A neutron PDF written by PDFgetN.
         # Expected: The header yields the neutron scattering type,
-        # the Q range and the temperature.
+        # the Q range and the rest of the xPDFsuite config.
         (
             "ni-q27r100-neutron.gr",
             {
+                "wavelength": 1.333,
+                "dataformat": "QA",
+                "inputfile": "npdf_03315.chi",
+                "backgroundfile": "npdf_03001.chi",
                 "stype": "N",
+                "bgscale": 1.0,
+                "composition": "Ni",
+                "outputtype": "gr",
+                "qmaxinst": 27.0,
                 "qmin": 0.87,
                 "qmax": 27.0,
                 "temperature": 300.0,
+                "rmax": 100.0,
+                "rmin": 0.0,
+                "rstep": 0.01,
+                "rpoly": 0.9,
+                "inputdir": "/data/npdf/chi",
+                "savedir": "/data/npdf/gr",
                 "bank": 0,
                 "nbanks": 1,
             },
@@ -191,9 +215,19 @@ def test_pdfcontribution_loadData(datafile):
     contribution.loadData(datafile("si-q27r60-xray.gr"))
 
     expected_metadata = {
+        "version": "diffpy.pdfgetx-2.4.0",
+        "dataformat": "QA",
+        "outputtype": "gr",
         "stype": "X",
-        "qmax": 27.0,
+        "composition": "Si",
+        "bgscale": 1.0,
+        "rpoly": 0.9,
+        "qmaxinst": 29.0,
         "qmin": 0.01,
+        "qmax": 27.0,
+        "rmin": 0.0,
+        "rmax": 60.0,
+        "rstep": 0.01,
         "temperature": 300.0,
         "filename": str(datafile("si-q27r60-xray.gr")),
         "bank": 0,

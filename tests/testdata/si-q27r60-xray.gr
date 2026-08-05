@@ -7,7 +7,7 @@ dataformat = QA
 outputtype = gr
 
 # PDF calculation setup
-mode = xray
+stype = X
 composition = Si
 bgscale = 1.0
 rpoly = 0.9

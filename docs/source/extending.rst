@@ -143,10 +143,12 @@ one or both hooks:
     default implementation reads a single bank with ``load_data`` and maps its
     columns onto ``x``, ``y``, ``dx`` and ``dy``.
 
-An example of a customized ``ProfileParser`` is the ``PDFParser`` class in the
-``diffpy.srfit.pdf.pdfparser`` module. It overrides ``_parse_metadata`` alone,
-so that PDFgetX and PDFgetN headers yield ``stype``, ``qmin``, ``qmax`` and the
-other PDF specific values, while the column handling is inherited unchanged.
+The ``PDFParser`` class in the ``diffpy.srfit.pdf.pdfparser`` module is a
+``ProfileParser`` subclass for PDFgetX and PDFgetN data. PDFgetX and PDFgetN
+write their header as plain ``name = value`` pairs, including ``stype``,
+``qmin``, ``qmax`` and other PDF specific values, so ``PDFParser`` inherits
+both ``_parse_metadata`` and ``_parse_data`` unchanged and only sets
+``_format`` to identify the data as PDF data.
 
 Here is a simple example demonstrating how to read metadata that is stored as
 ``name: value`` pairs rather than the default ``name = value``. ::

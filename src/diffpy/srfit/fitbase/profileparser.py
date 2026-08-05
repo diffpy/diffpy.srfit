@@ -172,10 +172,7 @@ class ProfileParser(object):
 
         This is a template method. Subclasses customize a format by
         overriding the `_parse_metadata` and `_parse_data` hooks rather
-        than this method. `PDFParser` in the
-        `diffpy.srfit.pdf.pdfparser` module needs neither: PDFgetX and
-        PDFgetN headers are already plain `name = value` pairs, so it
-        inherits both hooks unchanged.
+        than this method.
 
         The default `_parse_data` reads a single bank:
 

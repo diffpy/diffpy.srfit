@@ -34,6 +34,8 @@ Extensions
   first step towards writing a user interface.
 """
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy
 from gaussianrecipe import scipyOptimize
@@ -202,9 +204,6 @@ def plot_results(recipe):
     figs, axes = recipe.plot_recipe(
         show=False,
         return_fig=True,
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
         data_label="I(Q) Data",
         fit_label="I(Q) Fit",
         diff_label="I(Q) diff",
@@ -225,7 +224,7 @@ def main():
 
     # Make two different data sets, each from the same structure, but with
     # different scale, noise, broadening and background.
-    strufile = "data/C60.stru"
+    strufile = Path(__file__).parent / "data/C60.stru"
     q = numpy.arange(1, 20, 0.05)
     makeData(strufile, q, "C60_1.iq", 8.1, 101.68, 0.008, 0.12, 2, 0.01)
     makeData(strufile, q, "C60_2.iq", 3.2, 101.68, 0.02, 0.003, 0, 1)

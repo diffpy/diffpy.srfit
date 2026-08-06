@@ -18,6 +18,8 @@ This example uses PDFGenerator to refine a the two phase nickel-silicon
 structure to all the available data.
 """
 
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -142,34 +144,20 @@ def makeRecipe(
     return recipe
 
 
-def plot_results(recipe):
-    """Plot the results contained within a refined FitRecipe.
-
-    The recipe has four contributions ("xnickel", "xsilicon", "nnickel",
-    "xsini"), so plot_recipe produces one figure per contribution.
-    """
-    recipe.plot_recipe(
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="G(r) Data",
-        fit_label="G(r) Fit",
-        diff_label="G(r) diff",
-        xlabel=r"$r (\AA)$",
-        ylabel=r"$G (\AA^{-2})$",
-    )
-    return
-
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile_ni = "data/ni.cif"
-    ciffile_si = "data/si.cif"
-    xdata_ni = "data/ni-q27r60-xray.gr"
-    ndata_ni = "data/ni-q27r100-neutron.gr"
-    xdata_si = "data/si-q27r60-xray.gr"
-    xdata_sini = "data/si90ni10-q27r60-xray.gr"
+    ciffile_ni = Path(__file__).parent / "data/ni.cif"
+    ciffile_si = Path(__file__).parent / "data/si.cif"
+    xdata_ni = Path(__file__).parent / "data/ni-q27r60-xray.gr"
+    ndata_ni = Path(__file__).parent / "data/ni-q27r100-neutron.gr"
+    xdata_si = Path(__file__).parent / "data/si-q27r60-xray.gr"
+    xdata_sini = Path(__file__).parent / "data/si90ni10-q27r60-xray.gr"
 
     # Make the recipe
     recipe = makeRecipe(
@@ -183,7 +171,9 @@ if __name__ == "__main__":
     res = FitResults(recipe)
     res.print_results()
 
-    # Plot!
-    plot_results(recipe)
+    # Plot! The recipe has four contributions ("xnickel", "xsilicon",
+    # "nnickel", "xsini"), so plot_recipe produces one figure per
+    # contribution.
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

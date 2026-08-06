@@ -19,7 +19,8 @@ pyobjcryst crystal object. In this example we use internal constraints
 provided by the ObjCrystCrystalParSet structure adapter.
 """
 
-from crystalpdf import plot_results
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -90,9 +91,6 @@ def makeRecipe(ciffile, datname):
     # things by iterating through all the sgpars.
     for par in phase.sgpars:
         recipe.add_variable(par)
-    # set the initial thermal factor to a non-zero value
-    assert hasattr(recipe, "B11_0")
-    recipe.B11_0 = 0.1
 
     # We now select non-structural parameters to refine.
     # This controls the scaling of the PDF.
@@ -106,11 +104,17 @@ def makeRecipe(ciffile, datname):
     return recipe
 
 
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
+
+
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile = "data/si.cif"
-    data = "data/si-q27r60-xray.gr"
+    ciffile = Path(__file__).parent / "data/si.cif"
+    data = Path(__file__).parent / "data/si-q27r60-xray.gr"
 
     # Make the recipe
     recipe = makeRecipe(ciffile, data)
@@ -123,6 +127,6 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot!
-    plot_results(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

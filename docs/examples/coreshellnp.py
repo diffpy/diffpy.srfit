@@ -20,6 +20,8 @@ modeling approach we use is to refine the core and shell as two
 different phases, each with an appropriate characteristic function.
 """
 
+from pathlib import Path
+
 from pyobjcryst import loadCrystal
 from scipy.optimize import leastsq
 
@@ -133,27 +135,18 @@ def makeRecipe(stru1, stru2, datname):
     return recipe
 
 
-def plot_results(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    recipe.plot_recipe(
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="G(r) Data",
-        fit_label="G(r) Fit",
-        diff_label="G(r) diff",
-        xlabel=r"$r (\AA)$",
-        ylabel=r"$G (\AA^{-2})$",
-    )
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 def main():
     """Set up and refine the recipe."""
     # Make the data and the recipe
-    cdsciffile = "data/CdS.cif"
-    znsciffile = "data/ZnS.cif"
-    data = "data/CdS_ZnS_nano.gr"
+    cdsciffile = Path(__file__).parent / "data/CdS.cif"
+    znsciffile = Path(__file__).parent / "data/ZnS.cif"
+    data = Path(__file__).parent / "data/CdS_ZnS_nano.gr"
 
     # Make the recipe
     stru1 = loadCrystal(cdsciffile)
@@ -197,7 +190,7 @@ def main():
     res.print_results()
 
     # Plot!
-    plot_results(recipe)
+    recipe.plot_recipe(**plot_styles)
     return
 
 

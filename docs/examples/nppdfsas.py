@@ -22,6 +22,8 @@ portions of the fit to guide one another, and in the end gives the shape
 of the nanoparticle that agrees best with both the PDF and SAS data.
 """
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
@@ -164,12 +166,6 @@ def plot_results(recipe):
     figs, axes = recipe.plot_recipe(
         show=False,
         return_fig=True,
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="G(r) Data",
-        fit_label="G(r) Fit",
-        diff_label="G(r) diff",
         xlabel=r"$r (\AA)$",
         ylabel=r"$G (\AA^{-2})$",
     )
@@ -185,9 +181,9 @@ def plot_results(recipe):
 
 if __name__ == "__main__":
 
-    ciffile = "data/pb.cif"
-    grdata = "data/pb_100_qmin1.gr"
-    iqdata = "data/pb_100_qmax1.iq"
+    ciffile = Path(__file__).parent / "data/pb.cif"
+    grdata = Path(__file__).parent / "data/pb_100_qmin1.gr"
+    iqdata = Path(__file__).parent / "data/pb_100_qmax1.iq"
 
     recipe = makeRecipe(ciffile, grdata, iqdata)
     recipe.fithooks[0].verbose = 3

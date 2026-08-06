@@ -20,6 +20,8 @@ multiple PDFGenerators. This example refines a physical mixture of
 nickel and silicon to find the structures and phase fractions.
 """
 
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -150,27 +152,18 @@ def makeRecipe(niciffile, siciffile, datname):
     return recipe
 
 
-def plot_results(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    recipe.plot_recipe(
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="G(r) Data",
-        fit_label="G(r) Fit",
-        diff_label="G(r) diff",
-        xlabel=r"$r (\AA)$",
-        ylabel=r"$G (\AA^{-2})$",
-    )
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    niciffile = "data/ni.cif"
-    siciffile = "data/si.cif"
-    data = "data/si90ni10-q27r60-xray.gr"
+    niciffile = Path(__file__).parent / "data/ni.cif"
+    siciffile = Path(__file__).parent / "data/si.cif"
+    data = Path(__file__).parent / "data/si90ni10-q27r60-xray.gr"
 
     # Make the recipe
     recipe = makeRecipe(niciffile, siciffile, data)
@@ -183,6 +176,6 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot!
-    plot_results(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

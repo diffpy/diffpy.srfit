@@ -43,6 +43,8 @@ Extensions
 
 from __future__ import print_function
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy
 from gaussianrecipe import scipyOptimize
@@ -142,7 +144,7 @@ class IntensityGenerator(ProfileGenerator):
         from diffpy.structure import Structure
 
         stru = Structure()
-        stru.read(strufile)
+        stru.read(str(strufile))
 
         # Create a ParameterSet designed to interface with
         # diffpy.structure.Structure objects that organizes the Parameter
@@ -307,7 +309,7 @@ def makeRecipe(strufile, datname):
 def main():
 
     # Make the data and the recipe
-    strufile = "data/C60.stru"
+    strufile = Path(__file__).parent / "data/C60.stru"
     q = numpy.arange(1, 20, 0.05)
     makeData(strufile, q, "C60.iq", 1.0, 100.68, 0.005, 0.13, 2)
 
@@ -488,7 +490,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl=1):
     from diffpy.structure import Structure
 
     S = Structure()
-    S.read(strufile)
+    S.read(str(strufile))
 
     # Set the lattice parameters
     S.lattice.setLatPar(a, a, a)

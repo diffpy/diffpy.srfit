@@ -20,6 +20,8 @@ its own PDFGenerator. However, the PDFGenerators will refer to the same
 underlying ObjCrystCrystalParSet.
 """
 
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -133,31 +135,18 @@ def makeRecipe(ciffile, xdatname, ndatname):
     return recipe
 
 
-def plot_results(recipe):
-    """Plot the results contained within a refined FitRecipe.
-
-    The recipe has two contributions ("xnickel" for x-ray, "nnickel" for
-    neutron), so plot_recipe produces one figure per contribution.
-    """
-    recipe.plot_recipe(
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="G(r) Data",
-        fit_label="G(r) Fit",
-        diff_label="G(r) diff",
-        xlabel=r"$r (\AA)$",
-        ylabel=r"$G (\AA^{-2})$",
-    )
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile = "data/ni.cif"
-    xdata = "data/ni-q27r60nodg-xray.gr"
-    ndata = "data/ni-q27r100-neutron.gr"
+    ciffile = Path(__file__).parent / "data/ni.cif"
+    xdata = Path(__file__).parent / "data/ni-q27r60nodg-xray.gr"
+    ndata = Path(__file__).parent / "data/ni-q27r100-neutron.gr"
 
     # Make the recipe
     recipe = makeRecipe(ciffile, xdata, ndata)
@@ -169,7 +158,9 @@ if __name__ == "__main__":
     res = FitResults(recipe)
     res.print_results()
 
-    # Plot!
-    plot_results(recipe)
+    # Plot! The recipe has two contributions ("xnickel" for x-ray,
+    # "nnickel" for neutron), so plot_recipe produces one figure per
+    # contribution.
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

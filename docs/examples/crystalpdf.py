@@ -24,6 +24,8 @@ structure to PDF data and data from other sources. This example
 demonstrates only the basic configuration.
 """
 
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import (
@@ -66,7 +68,7 @@ def makeRecipe(ciffile, datname):
     # Qmax value, as well as initial values for the non-structural Parameters.
     generator = PDFGenerator("G")
     stru = Structure()
-    stru.read(ciffile)
+    stru.read(str(ciffile))
     generator.setStructure(stru)
 
     # The FitContribution
@@ -128,26 +130,17 @@ def makeRecipe(ciffile, datname):
     return recipe
 
 
-def plot_results(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    recipe.plot_recipe(
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="G(r) Data",
-        fit_label="G(r) Fit",
-        diff_label="G(r) diff",
-        xlabel=r"$r (\AA)$",
-        ylabel=r"$G (\AA^{-2})$",
-    )
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile = "data/ni.cif"
-    data = "data/ni-q27r100-neutron.gr"
+    ciffile = Path(__file__).parent / "data/ni.cif"
+    data = Path(__file__).parent / "data/ni-q27r100-neutron.gr"
 
     # Make the recipe
     recipe = makeRecipe(ciffile, data)
@@ -161,6 +154,6 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot!
-    plot_results(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

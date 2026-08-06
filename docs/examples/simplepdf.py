@@ -18,7 +18,8 @@ This is example of fitting the fcc nickel structure to measured PDF
 data. It uses the PDFContribution class to simplify fit setup.
 """
 
-from crystalpdf import plot_results
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults
@@ -38,7 +39,7 @@ def makeRecipe(ciffile, datname):
 
     # and the phase
     stru = Structure()
-    stru.read(ciffile)
+    stru.read(str(ciffile))
     contribution.addStructure("nickel", stru)
 
     # Make the FitRecipe and add the FitContribution.
@@ -65,11 +66,17 @@ def makeRecipe(ciffile, datname):
     return recipe
 
 
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
+
+
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile = "data/ni.cif"
-    data = "data/ni-q27r100-neutron.gr"
+    ciffile = Path(__file__).parent / "data/ni.cif"
+    data = Path(__file__).parent / "data/ni-q27r100-neutron.gr"
 
     # Make the recipe
     recipe = makeRecipe(ciffile, data)
@@ -85,6 +92,6 @@ if __name__ == "__main__":
     res.save_results("nickel_example.res")
 
     # Plot!
-    plot_results(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

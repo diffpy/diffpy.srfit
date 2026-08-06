@@ -18,6 +18,8 @@ This example is similar to crystalpdfobjcryst.py, except that it uses
 the DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.
 """
 
+from pathlib import Path
+
 from diffpy.srfit.fitbase import (
     FitContribution,
     FitRecipe,
@@ -105,26 +107,17 @@ def makeRecipe(molecule, datname):
     return recipe
 
 
-def plot_results(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    recipe.plot_recipe(
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="G(r) Data",
-        fit_label="G(r) Fit",
-        diff_label="G(r) diff",
-        xlabel=r"$r (\AA)$",
-        ylabel=r"$G (\AA^{-2})$",
-    )
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 def main():
 
     molecule = makeC60()
     # Make the data and the recipe
-    recipe = makeRecipe(molecule, "data/C60.gr")
+    recipe = makeRecipe(molecule, Path(__file__).parent / "data/C60.gr")
     # Tell the fithook that we want very verbose output.
     recipe.fithooks[0].verbose = 3
 
@@ -138,7 +131,7 @@ def main():
     res.print_results()
 
     # Plot results
-    plot_results(recipe)
+    recipe.plot_recipe(**plot_styles)
 
     return
 

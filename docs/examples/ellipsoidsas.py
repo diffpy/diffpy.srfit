@@ -14,6 +14,8 @@
 ########################################################################
 """Example of a refinement of SAS I(Q) data to an ellipsoidal model."""
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
 
@@ -115,7 +117,7 @@ def plot_results(recipe):
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    data = "data/sas_ellipsoid_testdata.txt"
+    data = Path(__file__).parent / "data/sas_ellipsoid_testdata.txt"
 
     # Make the recipe
     recipe = makeRecipe(data)

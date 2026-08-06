@@ -23,6 +23,8 @@ calculating the characteristic function in the
 diffpy.srfit.pdf.characteristicfunctions module.
 """
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
@@ -96,12 +98,6 @@ def plot_results(recipe):
     fig, ax = recipe.plot_recipe(
         show=False,
         return_fig=True,
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="G(r) Data",
-        fit_label="G(r) Fit",
-        diff_label="G(r) diff",
         xlabel=r"$r (\AA)$",
         ylabel=r"$G (\AA^{-2})$",
     )
@@ -115,8 +111,8 @@ def plot_results(recipe):
 
 if __name__ == "__main__":
 
-    ciffile = "data/pb.cif"
-    grdata = "data/pb_100_qmin1.gr"
+    ciffile = Path(__file__).parent / "data/pb.cif"
+    grdata = Path(__file__).parent / "data/pb_100_qmin1.gr"
 
     recipe = makeRecipe(ciffile, grdata)
     scipyOptimize(recipe)

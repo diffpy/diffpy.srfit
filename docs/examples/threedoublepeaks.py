@@ -16,6 +16,8 @@
 
 from __future__ import print_function
 
+from pathlib import Path
+
 import numpy
 
 from diffpy.srfit.fitbase import (
@@ -47,7 +49,9 @@ def makeRecipe():
     # The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
-    x, y, dy = profile.loadtxt("data/threedoublepeaks.dat")
+    x, y, dy = profile.loadtxt(
+        Path(__file__).parent / "data/threedoublepeaks.dat"
+    )
 
     # Create the contribution
     contribution = FitContribution("peaks")
@@ -188,23 +192,10 @@ def scipyOptimize(recipe):
     return
 
 
-def plot_results(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # We can access the data and fit profile through the Profile we created
-    # above. We get to it through our FitContribution, which we named "peaks".
-    recipe.plot_recipe(
-        data_style=".",
-        data_color="b",
-        fit_color="r",
-        diff_color="g",
-        data_label="observed profile",
-        fit_label="calculated profile",
-        diff_label="difference",
-        xlabel="x",
-        ylabel="y",
-        legend_loc=(0.0, 0.8),
-    )
-    return
+plot_styles = {
+    "xlabel": "x",
+    "ylabel": "y",
+}
 
 
 def steerFit(recipe):
@@ -246,7 +237,7 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot the results
-    plot_results(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 
 # End of file

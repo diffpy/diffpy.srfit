@@ -22,6 +22,8 @@ subclass.
 See the class documentation for more information.
 """
 
+import warnings
+
 import numpy as np
 
 from diffpy.srfit.exceptions import ParseError
@@ -166,7 +168,11 @@ class ProfileParser(object):
         """
         return self.parse_file(filename)
 
-    def parse_file(self, filename, column_format=None, **kwargs):
+    _reserved_metadata_keys = {"filename", "bank", "nbanks"}
+
+    def parse_file(
+        self, filename, column_format=None, metadata=None, **kwargs
+    ):
         """Parse a data file to extract data and metadata, with
         automatic handling of uncertainties.
 
@@ -204,6 +210,16 @@ class ProfileParser(object):
             - `("x", "y", "dx", "dy")`
             - `("x", "dx", "y", "dy")`
 
+        metadata : dict, optional
+            Additional metadata to merge into the metadata parsed from
+            the file. Keys must be strings. A key that collides with
+            one already present in the parsed metadata overrides the
+            parsed value. A key that collides with `"filename"`,
+            `"bank"`, or `"nbanks"`, which `parse_file` sets itself,
+            also overrides the automatically set value, but raises a
+            `UserWarning` since it may affect other code that relies
+            on the automatically set value.
+
         kwargs
             The keyword arguments passed on to
             `diffpy.utils.parsers.load_data`, such as `usecols`,
@@ -216,6 +232,7 @@ class ProfileParser(object):
         ParseError
             If parsing fails or ambiguity detected.
         """
+        metadata = self._validate_metadata(metadata)
         self._banks = []
         self._meta = {}
         self._meta.update(self._parse_metadata(filename))
@@ -224,6 +241,39 @@ class ProfileParser(object):
         if len(self._banks) < 1:
             raise ParseError("There are no data in the banks")
         self.select_bank(0)
+        self._apply_extra_metadata(metadata)
+
+    @staticmethod
+    def _validate_metadata(metadata):
+        """Validate and copy a user-supplied metadata dict."""
+        if metadata is None:
+            return None
+        if not isinstance(metadata, dict):
+            raise ParseError(
+                "The metadata argument must be a dictionary. "
+                f"Received type '{type(metadata).__name__}' instead."
+            )
+        for key in metadata:
+            if not isinstance(key, str):
+                raise ParseError(
+                    f"Key '{key}' in the metadata dictionary is not a "
+                    "string. All keys in the metadata dictionary must "
+                    "be strings."
+                )
+        return dict(metadata)
+
+    def _apply_extra_metadata(self, metadata):
+        """Merge validated user-supplied metadata into `self._meta`."""
+        if not metadata:
+            return
+        for key in metadata:
+            if key in self._reserved_metadata_keys:
+                warnings.warn(
+                    f"'{key}' is a reserved metadata key normally set "
+                    "by parse_file. The supplied value will override "
+                    "it."
+                )
+        self._meta.update(metadata)
 
     def _parse_metadata(self, filename):
         """Return the metadata read from the header of a file.

@@ -26,7 +26,7 @@ single residual.
 
 Variables added to a FitRecipe can be tagged with string identifiers.
 Variables can be later retrieved or manipulated by tag. The tag name
-"__fixed" is reserved.
+``__fixed`` is reserved.
 
 See the examples in the documentation for how to create an optimization
 problem using FitRecipe.
@@ -135,7 +135,8 @@ unconstrain_dep_msg = build_deprecation_message(
 
 
 class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
-    """FitRecipe class.
+    """Organize FitContributions, variables, restraints, and constraints
+    into a refinable recipe.
 
     Attributes
     ----------
@@ -148,7 +149,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     _constraints : dict
         The dictionary of Constraints, indexed by the constrained
         Parameter. Constraints can be added using the
-        'constrain' method.
+        `add_constraint` method.
     _oconstraints : list
         The ordered list of the constraints from this and all
         sub-components.
@@ -180,7 +181,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         weights are multiplied by the residual of the
         FitContribution when determining the overall residual.
     _fixedtag : str
-        "__fixed", used for tagging variables as fixed. Don't
+        ``__fixed``, used for tagging variables as fixed. Don't
         use this tag unless you want issues.
 
     Properties
@@ -221,7 +222,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     bounds2 = property(lambda self: self.get_bounds_array())
 
     def __init__(self, name="fit"):
-        """Initialization."""
+        """Initialize the FitRecipe.
+
+        Parameters
+        ----------
+        name : str, optional
+            The name for this FitRecipe. Default is "fit".
+        """
         RecipeOrganizer.__init__(self, name)
         self.fithooks = []
         self.pushFitHook(PrintFitHook())
@@ -337,7 +344,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         return
 
     def get_fit_hooks(self):
-        """Get the sequence of FitHook instances."""
+        """Get the sequence of FitHook instances.
+
+        Returns
+        -------
+        list
+            The list of FitHook instances registered with this FitRecipe.
+        """
         return self.fithooks[:]
 
     @deprecated(getfithooks_dep_msg)
@@ -454,13 +467,13 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         hierarchy of managed ParameterSets. If the provided ParameterSet is not
         currently managed by this object, a ValueError will be raised.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         parset : ParameterSet
             The ParameterSet instance to be removed from the hierarchy.
 
-        Raises:
-        -------
+        Raises
+        ------
         ValueError
             If the provided ParameterSet is not managed by this object.
         """
@@ -482,8 +495,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         The residual is by default the weighted concatenation of each
         FitContribution's residual, plus the value of each restraint. The array
-        returned, denoted chiv, is such that
-        dot(chiv, chiv) = chi^2 + restraints.
+        returned, denoted ``chiv``, is such that
+        ``dot(chiv, chiv) = chi^2 + restraints``.
 
         Parameters
         ----------
@@ -494,11 +507,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             been updated in some other way, and the explicit update within
             this function is skipped.
 
-        Return
-        ------
+        Returns
+        -------
         chiv : numpy.ndarray
             The array of residuals to be optimized. The array is such that
-            dot(chiv, chiv) = chi^2 + restraints.
+            ``dot(chiv, chiv) = chi^2 + restraints``.
         """
 
         # Prepare, if necessary
@@ -546,6 +559,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             been updated in some other way, and the explicit update within
             this function is skipped.
 
+        Returns
+        -------
+        float
+            The scalar residual, ``dot(chiv, chiv)``, where ``chiv`` is
+            the vector residual returned by `residual`.
+
         Notes
         -----
         The residual is by default the weighted concatenation of each
@@ -567,7 +586,19 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         return self.scalar_residual(p)
 
     def __call__(self, p=[]):
-        """Same as scalar_residual method."""
+        """Compute the scalar residual, same as `scalar_residual`.
+
+        Parameters
+        ----------
+        p : list or numpy.ndarray, optional
+            The list of current variable values, provided in the same order
+            as the ``_parameters`` list. Default is an empty list.
+
+        Returns
+        -------
+        float
+            The scalar residual, ``dot(chiv, chiv)``.
+        """
         return self.scalar_residual(p)
 
     def _prepare(self):
@@ -754,7 +785,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         Returns
         -------
         ParameterProxy
-            ParameterProxy (variable) for the passed Parameter.
+            The ParameterProxy (variable) for the passed Parameter.
 
         Raises
         ------
@@ -827,6 +858,8 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         return
 
     def __delattr__(self, name):
+        """Delete a variable if name refers to one, otherwise defer to
+        the base class."""
         if name in self._parameters:
             self.delete_variable(self._parameters[name])
             return
@@ -910,8 +943,15 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         var
             A variable of the FitRecipe, or the name of a variable.
 
-        Returns the variable or None if the variable cannot be found in the
-        _parameters list.
+        Returns
+        -------
+        object
+            The variable.
+
+        Raises
+        ------
+        ValueError
+            If the variable is not part of the FitRecipe.
         """
         if isinstance(var, str):
             var = self._parameters.get(var)
@@ -973,24 +1013,24 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Parameters
         ----------
-            *args : str or Parameter
-                The positional arguments specifying the parameters to fix.
-                These can be parameter objects, their names as strings, or
-                tags. The special string "all" can be used to select all
-                parameters.
-            **kw : dict
-                The keyword arguments where the keys are parameter names and
-                the values are the values to assign to the corresponding
-                fixed parameters.
+        *args : str or Parameter
+            The positional arguments specifying the parameters to fix.
+            These can be parameter objects, their names as strings, or
+            tags. The special string "all" can be used to select all
+            parameters.
+        **kw : dict
+            The keyword arguments where the keys are parameter names and
+            the values are the values to assign to the corresponding
+            fixed parameters.
 
         Raises
         ------
-            ValueError:
-                If an unknown parameter, name, or tag is passed, or if a
-                tag is passed as a keyword argument.
+        ValueError
+            If an unknown parameter, name, or tag is passed, or if a
+            tag is passed as a keyword argument.
 
-        Example
-        -------
+        Examples
+        --------
 
         ::
 
@@ -1044,6 +1084,10 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             their values to assign after freeing. This is useful
             for setting the value of a parameter while marking it as free.
 
+        Returns
+        -------
+        None
+
         Raises
         ------
         ValueError
@@ -1057,10 +1101,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
           are freed.
         - If keyword arguments are provided, the corresponding parameter values
           will be updated after freeing.
-
-        Returns
-        -------
-        None
         """
         # Check the inputs and get the variables from them
         varargs = self.__get_vars_from_args(*args, **kw)
@@ -1238,7 +1278,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Returns
         -------
-
         values_array : numpy.ndarray
             The array containing the current values of all free
             variables in the fit recipe.
@@ -1264,7 +1303,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Returns
         -------
-        parameter_names :list of str
+        parameter_names : list of str
             The list containing the names of free variables.
         """
         parameter_names = [
@@ -1518,11 +1557,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             Default is 1.0.
         show : bool, optional
             The plot is displayed using `plt.show()` if True. Default is True.
-        ax : matplotlib.axes.Axes or None, optional
-            The axes object to plot on. If None, creates a new figure.
-            Default is None.
-        return_fig : bool, optional
-            The figure and axes objects are returned if True. Default is False.
 
         Examples
         --------
@@ -1577,9 +1611,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
 
         Returns
         -------
-        fig, axes : tuple of (mpl.figure.Figure, list of mpl.axes.Axes)
-            The figure object and a list of axes objects (one per contribution)
-            are returned if return_fig=True.
+        fig, axes : tuple
+            The figure and axes objects, returned only if
+            ``return_fig=True``. If the recipe has a single contribution,
+            a single ``mpl.figure.Figure`` and ``mpl.axes.Axes`` are
+            returned. If it has multiple contributions, a list of figures
+            and a list of axes (one per contribution) are returned instead.
 
         Examples
         --------
@@ -1744,7 +1781,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             Smaller values produce stronger restraints. If a scalar is given,
             the same value is applied to all parameters. If an iterable is
             provided, it must match the number of parameters. Default is 1.
-
         scaled : bool, optional
             If True, scale each restraint by the magnitude of the corresponding
             parameter, consistent with the behavior of :meth:`restrain`.

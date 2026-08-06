@@ -136,10 +136,18 @@ class ProfileGenerator(Operator, ParameterSet):
     def __call__(self, x):
         """Evaluate the profile.
 
-        This method must be overloaded.
+        This method must be overloaded. It only takes the independent
+        variable to calculate over.
 
-        This method only takes the independent variables to calculate
-        over.
+        Parameters
+        ----------
+        x : ndarray
+            The independent variable over which to calculate.
+
+        Returns
+        -------
+        ndarray
+            The calculated profile.
         """
         return x
 
@@ -148,7 +156,10 @@ class ProfileGenerator(Operator, ParameterSet):
     def operation(self):
         """Evaluate the profile.
 
-        Return the result of __call__(profile.x).
+        Returns
+        -------
+        ndarray
+            The result of ``__call__(profile.x)``.
         """
         y = self.__call__(self.profile.x)
         return y
@@ -158,8 +169,8 @@ class ProfileGenerator(Operator, ParameterSet):
 
         Parameters
         ----------
-        profile
-            A Profile that specifies the calculation points and which
+        profile : Profile
+            The Profile that specifies the calculation points and which
             will store the calculated signal.
         """
         if self.profile is not None:
@@ -191,7 +202,10 @@ class ProfileGenerator(Operator, ParameterSet):
         could be costly. The operation should be validated with a
         containing equation.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self.profile is None:
             raise SrFitError("profile is None")

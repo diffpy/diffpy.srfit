@@ -102,8 +102,8 @@ class FitResults(object):
         The estimated standard uncertainties of the variables. None if invalid.
 
     showfixed : bool
-        Show the fixed variables in the formatted output
-        (default True).
+        The flag indicating whether to show the fixed variables in the
+        formatted output (default True).
 
     fixednames : list[str]
         The names of variables held fixed during refinement.
@@ -112,8 +112,8 @@ class FitResults(object):
         The values of the fixed variables.
 
     showcon : bool
-        show the constrained parameters in the formatted output
-        (default False).
+        The flag indicating whether to show the constrained parameters
+        in the formatted output (default False).
 
     connames : list[str]
         The names of constrained parameters.
@@ -170,9 +170,11 @@ class FitResults(object):
             The flag indicating whether to do an immediate update
             (default True).
         showfixed : bool
-            Show fixed variables in the output (default True).
+            The flag indicating whether to show fixed variables in the
+            output (default True).
         showcon : bool
-            Show constraint values in the output (default False).
+            The flag indicating whether to show constraint values in
+            the output (default False).
         """
         self.recipe = recipe
         self.conresults = OrderedDict()
@@ -394,8 +396,9 @@ class FitResults(object):
     def get_results_string(self, header="", footer="", update=False):
         """Format the results and return them in a string.
 
-        This function is called by print_results and save_results. Overloading
-        the formatting here will change all three functions.
+        This function is called by ``print_results`` and
+        ``save_results``. Overloading the formatting here will change
+        all three functions.
 
         Parameters
         ----------
@@ -404,12 +407,13 @@ class FitResults(object):
         footer : str
             The footer to add to the output (default "")
         update : bool
-            The flag indicating whether to call update() (default False).
+            The flag indicating whether to call ``update()`` (default
+            False).
 
         Returns
         -------
-        out : str
-            a string containing the formatted results.
+        str
+            The string containing the formatted results.
         """
         if update:
             self.update()
@@ -598,12 +602,13 @@ class FitResults(object):
 
         Parameters
         ----------
-        header
+        header : str
             The header to add to the output (default "")
-        footer
+        footer : str
             The footer to add to the output (default "")
-        update
-            The flag indicating whether to call update() (default False).
+        update : bool
+            The flag indicating whether to call ``update()`` (default
+            False).
         """
         print(self.get_results_string(header, footer, update).rstrip())
         return
@@ -620,21 +625,23 @@ class FitResults(object):
         return
 
     def __str__(self):
+        """Return the formatted results string."""
         return self.get_results_string()
 
     def save_results(self, filename, header="", footer="", update=False):
         """Format and save the results.
 
         Parameters
-        ----------------------------------
-        filename
+        ----------
+        filename : str
             The name of the save file.
-        header
+        header : str
             The header to add to the output (default "")
-        footer
+        footer : str
             The footer to add to the output (default "")
-        update
-            The flag indicating whether to call update() (default False).
+        update : bool
+            The flag indicating whether to call ``update()`` (default
+            False).
         """
         # Save the time and user
         from getpass import getuser
@@ -736,12 +743,13 @@ class ContributionResults(object):
 
         Parameters
         ----------
-        con
-            The FitContribution
-        weight
-            The weight of the FitContribution in the recipe
-        fitres
-            The FitResults instance to contain this ContributionResults
+        con : FitContribution
+            The FitContribution to summarize.
+        weight : float
+            The weight of the FitContribution in the recipe.
+        fitres : FitResults
+            The FitResults instance containing this
+            ContributionResults.
         """
         self.x = None
         self.y = None
@@ -819,11 +827,11 @@ class ContributionResults(object):
 
 @deprecated(resultsDictionary_dep_msg)
 def resultsDictionary(results):
-    """**This function has been deprecated and will be** **removed in version
-    4.0.0.**
+    """This function has been deprecated and will be removed in version
+    4.0.0.
 
-    **Please use**
-    **diffpy.srfit.fitbase.FitResults.get_results_dictionary instead.**
+    Please use
+    diffpy.srfit.fitbase.FitResults.get_results_dictionary instead.
 
     Get dictionary of results from file.
 
@@ -832,9 +840,14 @@ def resultsDictionary(results):
 
     Parameters
     ----------
-    results
-        An open file-like object, name of a file that contains
-        results from FitResults or a string containing fit results.
+    results : str or file-like
+        The open file-like object, name of a file that contains
+        results from FitResults, or a string containing fit results.
+
+    Returns
+    -------
+    dict
+        The mapping of result names to their string values.
     """
     resstr = inputToString(results)
 
@@ -853,12 +866,12 @@ def resultsDictionary(results):
 
 @deprecated(initializeRecipe_dep_msg)
 def initializeRecipe(recipe, results):
-    """**This function has been deprecated and will be** **removed in
-    version 4.0.0.**
+    """This function has been deprecated and will be removed in version
+    4.0.0.
 
-    **Please use**
-    **diffpy.srfit.fitbase.FitRecipe.initialize_recipe_with_results**
-    **instead.**
+    Please use
+    diffpy.srfit.fitbase.FitRecipe.initialize_recipe_with_results
+    instead.
 
     Initialize the variables of a recipe from a results file.
 
@@ -868,11 +881,16 @@ def initializeRecipe(recipe, results):
 
     Parameters
     ----------
-    recipe
-        A configured recipe with variables
-    results
-        An open file-like object, name of a file that contains
-        results from FitResults or a string containing fit results.
+    recipe : FitRecipe
+        The configured recipe with variables.
+    results : str or file-like
+        The open file-like object, name of a file that contains
+        results from FitResults, or a string containing fit results.
+
+    Raises
+    ------
+    AttributeError
+        If no results can be found in ``results``.
     """
     mpairs = resultsDictionary(results)
     if not mpairs:

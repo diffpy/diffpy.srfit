@@ -44,7 +44,7 @@ setConst_dep_msg = build_deprecation_message(
 
 
 class ParameterSet(RecipeOrganizer):
-    """Class for organizing Parameters and other ParameterSets.
+    """Organize Parameters and other ParameterSets in a hierarchy.
 
     ParameterSets are hierarchical organizations of Parameters, Constraints,
     Restraints and other ParameterSets.
@@ -52,8 +52,8 @@ class ParameterSet(RecipeOrganizer):
     Contained Parameters and other ParameterSets can be accessed by name as
     attributes in order to facilitate multi-level constraints and restraints.
     These constraints and restraints can be placed at any level and a flattened
-    list of them can be retrieved with the getConstraints and getRestraints
-    methods.
+    list of them can be retrieved with the '_get_constraints' and
+    '_get_restraints' methods.
 
     Attributes
     ----------
@@ -89,7 +89,7 @@ class ParameterSet(RecipeOrganizer):
 
         Parameters
         ----------
-        name
+        name : str
             The name of this ParameterSet.
         """
         RecipeOrganizer.__init__(self, name)
@@ -108,13 +108,14 @@ class ParameterSet(RecipeOrganizer):
 
         Parameters
         ----------
-        parset
+        parset : ParameterSet
             The ParameterSet to be stored.
 
-
-        Raises ValueError if the ParameterSet has no name.
-        Raises ValueError if the ParameterSet has the same name as some other
-        managed object.
+        Raises
+        ------
+        ValueError
+            If the ParameterSet has no name, or if it has the same name
+            as some other managed object.
         """
         self._add_object(parset, self._parsets, True)
         return
@@ -134,7 +135,15 @@ class ParameterSet(RecipeOrganizer):
     def remove_parameter_set(self, parset):
         """Remove a ParameterSet from the hierarchy.
 
-        Raises ValueError if parset is not managed by this object.
+        Parameters
+        ----------
+        parset : ParameterSet
+            The ParameterSet to remove.
+
+        Raises
+        ------
+        ValueError
+            If parset is not managed by this object.
         """
         self._remove_object(parset, self._parsets)
         return

@@ -56,7 +56,7 @@ boundWindow_dep_msg = build_deprecation_message(
 
 
 class Parameter(_parameter_interface, Argument, Validatable):
-    """Parameter class.
+    """Encapsulate an adjustable parameter within SrFit.
 
     Attributes
     ----------
@@ -65,9 +65,9 @@ class Parameter(_parameter_interface, Argument, Validatable):
     const
         A flag indicating whether this is considered a constant.
     _value
-        The value of the Parameter. Modified with 'set_value'.
+        The value of the Parameter. Modified with ``set_value``.
     value
-        Property for 'getValue' and 'set_value'.
+        Property for ``getValue`` and ``set_value``.
     constrained
         A flag indicating if the Parameter is constrained
         (default False).
@@ -78,21 +78,23 @@ class Parameter(_parameter_interface, Argument, Validatable):
     """
 
     def __init__(self, name, value=None, const=False):
-        """Initialization.
+        """Initialize the Parameter.
 
         Parameters
         ----------
-        name
+        name : str
             The name of this Parameter (must be a valid attribute
-            identifier)
-        value
+            identifier).
+        value : float, optional
             The initial value of this Parameter (default 0).
-        const
-            A flag inticating whether the Parameter is a constant (like
+        const : bool, optional
+            A flag indicating whether the Parameter is a constant (like
             pi).
 
-
-        Raises ValueError if the name is not a valid attribute identifier
+        Raises
+        ------
+        ValueError
+            If the name is not a valid attribute identifier.
         """
         self.constrained = False
         self.bounds = [-numpy.inf, +numpy.inf]
@@ -101,23 +103,17 @@ class Parameter(_parameter_interface, Argument, Validatable):
         return
 
     def set_value(self, val):
-        """Set the value of the Parameter and the bounds.
+        """Set the value of the Parameter.
 
         Parameters
         ----------
-        val
+        val : float
             The value to assign.
-        lower_bound : float
-            The lower bounds for the bounds list. If this is None
-            (default), then the lower bound will not be alterered.
-        upper_bound : float
-            The upper bounds for the bounds list. If this is None
-            (default), then the upper bound will not be alterered.
 
         Returns
         -------
-        self
-            Returns self so that mutators can be chained.
+        Parameter
+            Return self so that mutators can be chained.
         """
         Argument.set_value(self, val)
         return self
@@ -140,14 +136,14 @@ class Parameter(_parameter_interface, Argument, Validatable):
             The flag indicating if the parameter is constant (default
             True).
         value : float, optional
-            The value value for the parameter to be set to (default None).
-            If this is not None, then the parameter will get a new value,
-            constant or otherwise.
+            The value to set the parameter to (default None). If this is
+            not None, then the parameter will get a new value, constant
+            or otherwise.
 
         Returns
         -------
-        self
-            Returns self so that mutators can be chained.
+        Parameter
+            Return self so that mutators can be chained.
         """
         self.const = bool(is_constant)
         if value is not None:
@@ -176,8 +172,8 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
         Returns
         -------
-        self
-            Returns self so that mutators can be chained.
+        Parameter
+            Return self so that mutators can be chained.
         """
         if lower_bound is not None:
             self.bounds[0] = lower_bound
@@ -210,8 +206,8 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
         Returns
         -------
-        self
-            Returns self so that mutators can be chained.
+        Parameter
+            Return self so that mutators can be chained.
         """
         val = self.getValue()
         lower_bound = val - lower_radius
@@ -236,7 +232,10 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
         This validates that value is not None.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self.value is None:
             raise SrFitError("value of '%s' is None" % self.name)
@@ -261,17 +260,19 @@ class ParameterProxy(Parameter):
     """
 
     def __init__(self, name, par):
-        """Initialization.
+        """Initialize the ParameterProxy.
 
         Parameters
         ----------
-        name
+        name : str
             The name of this ParameterProxy.
-        par
+        par : Parameter
             The Parameter this is a proxy for.
 
-
-        Raises ValueError if the name is not a valid attribute identifier
+        Raises
+        ------
+        ValueError
+            If the name is not a valid attribute identifier.
         """
         validateName(name)
 
@@ -337,7 +338,10 @@ class ParameterProxy(Parameter):
 
         This validates that value and par are not None.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self.par is None:
             raise SrFitError("par is None")
@@ -360,33 +364,35 @@ class ParameterAdapter(Parameter):
 
         Parameters
         ----------
-        name
+        name : str
             The name of this Parameter.
-        obj
+        obj : object
             The object to be wrapped.
-        getter
+        getter : callable, optional
             The unbound function that can be used to access the
-            attribute containing the parameter value. getter(obj)
-            should return the Parameter value.  If getter is None
+            attribute containing the parameter value. ``getter(obj)``
+            should return the Parameter value. If getter is None
             (default), it is assumed that an attribute is accessed
             via attr. If attr is also specified, then the Parameter
-            value will be accessed via getter(obj, attr).
-        setter
+            value will be accessed via ``getter(obj, attr)``.
+        setter : callable, optional
             The unbound function that can be used to modify the
             attribute containing the parameter value.
-            setter(obj, value) should set the attribute to the
+            ``setter(obj, value)`` should set the attribute to the
             passed value. If setter is None (default), it is assumed
             that an attribute is accessed via attr. If attr is also
             specified, then the Parameter value will be set via
-            setter(obj, attr, value).
-        attr
+            ``setter(obj, attr, value)``.
+        attr : str, optional
             The name of the attribute that contains the value of the
             parameter. If attr is None (default), then both getter and
             setter must be specified.
 
-
-        Raises ValueError if exactly one of getter or setter is not None, or if
-        getter, setter and attr are all None.
+        Raises
+        ------
+        ValueError
+            If exactly one of getter or setter is not None, or if
+            getter, setter and attr are all None.
         """
         if getter is None and setter is None and attr is None:
             raise ValueError("Specify attribute access")
@@ -414,11 +420,28 @@ class ParameterAdapter(Parameter):
         return
 
     def getValue(self):
-        """Get the value of the Parameter."""
+        """Get the value of the Parameter.
+
+        Returns
+        -------
+        object
+            The current value of the wrapped attribute.
+        """
         return self.getter(self.obj)
 
     def set_value(self, value):
-        """Set the value of the Parameter."""
+        """Set the value of the Parameter.
+
+        Parameters
+        ----------
+        value : object
+            The value to assign.
+
+        Returns
+        -------
+        ParameterAdapter
+            Return self so that mutators can be chained.
+        """
         if value != self.getValue():
             self.setter(self.obj, value)
             self.notify()

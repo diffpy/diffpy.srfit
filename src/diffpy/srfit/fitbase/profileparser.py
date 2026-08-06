@@ -77,13 +77,13 @@ getMetaData_dep_msg = build_deprecation_message(
 
 
 class ProfileParser(object):
-    """Class for parsing data from a or string.
+    """Base class for parsing profile data from a file.
 
     Attributes
     ----------
     _format : str, optional
         The name of the data format that this parses (string, default
-        `""`). The format string is a unique identifier for the data
+        ``""``). The format string is a unique identifier for the data
         format handled by the parser.
     _banks : list of tuples
         The data from each bank. Each bank contains a (x, y, dx,
@@ -177,15 +177,15 @@ class ProfileParser(object):
         automatic handling of uncertainties.
 
         This is a template method. Subclasses customize a format by
-        overriding the `_parse_metadata` and `_parse_data` hooks rather
+        overriding the ``_parse_metadata`` and ``_parse_data`` hooks rather
         than this method.
 
-        The default `_parse_data` reads a single bank:
+        The default ``_parse_data`` reads a single bank:
 
         - For files with 2 columns: assumes (x, y) and sets dx, dy to None.
         - For files with 3 columns: assumes (x, y, dy) and sets dx to None.
         - For files with 4 columns: assumes (x, y, dx, dy).
-        - For other cases: `column_format` must be explicitly specified.
+        - For other cases: ``column_format`` must be explicitly specified.
 
         Uncertainty columns (dx, dy) are only considered valid if all values
         are positive and not NaN/Inf. Otherwise they are set to None.
@@ -201,31 +201,31 @@ class ProfileParser(object):
             If None, the format is auto-detected based on the
             number of columns.
 
-            Valid labels: `"x"`, `"y"`, `"dx"`, `"dy"`
+            Valid labels: ``"x"``, ``"y"``, ``"dx"``, ``"dy"``
 
             Examples:
 
-            - `("x", "y")`
-            - `("x", "y", "dy")`
-            - `("x", "y", "dx", "dy")`
-            - `("x", "dx", "y", "dy")`
+            - ``("x", "y")``
+            - ``("x", "y", "dy")``
+            - ``("x", "y", "dx", "dy")``
+            - ``("x", "dx", "y", "dy")``
 
         metadata : dict, optional
             Additional metadata to merge into the metadata parsed from
             the file. Keys must be strings. A key that collides with
             one already present in the parsed metadata overrides the
-            parsed value. A key that collides with `"filename"`,
-            `"bank"`, or `"nbanks"`, which `parse_file` sets itself,
+            parsed value. A key that collides with ``"filename"``,
+            ``"bank"``, or ``"nbanks"``, which ``parse_file`` sets itself,
             also overrides the automatically set value, but raises a
-            `UserWarning` since it may affect other code that relies
+            ``UserWarning`` since it may affect other code that relies
             on the automatically set value.
 
         kwargs
             The keyword arguments passed on to
-            `diffpy.utils.parsers.load_data`, such as `usecols`,
-            `delimiter`, `comments` and `minrows`. Use `usecols` to
+            ``diffpy.utils.parsers.load_data``, such as ``usecols``,
+            ``delimiter``, ``comments`` and ``minrows``. Use ``usecols`` to
             select four columns out of a wider file, then label them
-            with `column_format`.
+            with ``column_format``.
 
         Raises
         ------
@@ -263,7 +263,8 @@ class ProfileParser(object):
         return dict(metadata)
 
     def _apply_extra_metadata(self, metadata):
-        """Merge validated user-supplied metadata into `self._meta`."""
+        """Merge validated user-supplied metadata into
+        ``self._meta``."""
         if not metadata:
             return
         for key in metadata:
@@ -385,13 +386,13 @@ class ProfileParser(object):
 
         Parameters
         ----------
-        index
-            index of bank (integer, starting at 0).
+        index : int
+            The index of the bank (integer, starting at 0).
 
         Raises
-        ----------
+        ------
         IndexError
-            if requesting a bank that does not exist
+            If requesting a bank that does not exist.
         """
         if index is None:
             index = self._meta.get("bank", 0)
@@ -432,14 +433,15 @@ class ProfileParser(object):
 
         Parameters
         ----------
-        index
-            index of bank (integer, starting at 0, default None). If
-            index is None then the currently selected bank is used.
+        index : int, optional
+            The index of the bank (integer, starting at 0, default None).
+            If index is None then the currently selected bank is used.
 
         Returns
-        ----------
-        This returns (x, y, dx, dy) tuple for the bank. dx is None if it
-        cannot be determined from the data format.
+        -------
+        tuple
+            The ``(x, y, dx, dy)`` tuple for the bank. ``dx`` and ``dy``
+            are None if they cannot be determined from the data format.
         """
         self.select_bank(index)
 

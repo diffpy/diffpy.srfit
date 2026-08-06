@@ -6,37 +6,6 @@ import pytest
 from diffpy.srfit.exceptions import ParseError
 from diffpy.srfit.fitbase.profileparser import ProfileParser
 
-# UC1: User loads file with all x, y, dx, dy columns in that format
-# expected: x, y, dx, dy, and metadata are all read correctly
-# UC2: User loads file with x, y, dy columns in that format (dx is missing)
-# expected: x, y, dy, and metadata are all read correctly
-# UC3: User loads file with x, y columns in that format (dx and dy are missing)
-# expected: x, y, and metadata are all read correctly
-# UC4: User loads file with x, dx, y, dy columns in that format and specifies
-# column_format
-# expected: x, y, dx, dy, and metadata are all read correctly
-# UC5: User loads file with dy and dx values containing NaN and inf values
-# expected: x, y, and metadata are all read correctly and dx and dy are set to
-# None
-
-# UC6: User loads file with only one column
-# expected: ParseError is raised
-# UC7: User loads file with 5 columns
-# expected: ParseError is raised
-# UC8: User loads file with x, y, and dy but specifies column_format with 4
-# columns
-# expected: ParseError is raised
-# UC9: User loads file with x, y, dx, and dy but specifies column_format with 5
-# columns
-# expected: ParseError is raised
-# UC10: User loads file with x, y, dx, and dy but specifies column_format with
-# 3 columns
-# expected: ParseError is raised
-# UC11: User loads file with x, y, dx, and dy but specifies column_format with
-# duplicate values
-# expected: ParseError is raised
-
-
 EXPECTED_META = {
     "wavelength": 0.1,
     "dataformat": "QA",
@@ -303,6 +272,152 @@ def test_parse_file_deprecated_warns_about_profileparser(parser_datafiles):
     actual_x = parser.get_data()[0].tolist()
     expected_x = [1.0, 1.1, 1.2]
     assert actual_x == expected_x
+
+
+# parse_file accepts an optional `metadata` dict, merged into the parsed
+# metadata after the file header is read. This lets a caller attach
+# information that is not present in the file itself (e.g. sample name),
+# without having to edit `parser.get_metadata()` by hand after parsing.
+
+
+@pytest.mark.parametrize(
+    "input_metadata, expected_added_metadata",
+    [
+        # UC13: Supplied keys are not present in the file header
+        # Expected: the supplied keys/values are added to the parsed
+        # metadata, alongside the keys read from the file
+        (
+            {"operator": "jdoe", "sample": "LaB6"},
+            {"operator": "jdoe", "sample": "LaB6"},
+        ),
+        # UC14: A supplied key overlaps with one already parsed from the
+        # file header
+        # Expected: the supplied value overrides the value parsed from
+        # the file
+        (
+            {"wavelength": 99.9},
+            {"wavelength": 99.9},
+        ),
+    ],
+)
+def test_parse_file_appends_metadata(
+    parser_datafiles, input_metadata, expected_added_metadata
+):
+    parser = ProfileParser()
+    parser.parse_file(
+        parser_datafiles / "four_col.gr", metadata=input_metadata
+    )
+
+    actual_metadata = parser.get_metadata()
+    for key, expected_value in expected_added_metadata.items():
+        assert actual_metadata[key] == expected_value
+
+
+@pytest.mark.parametrize(
+    "bad_metadata_input, expected_msg",
+    [
+        # UC15: The user supplies a metadata dict with a key that is not
+        # a string.
+        # Expected: A ParseError is raised with a message indicating that
+        # all keys must be strings.
+        (
+            {"operator": "jdoe", 42: "LaB6"},
+            "Key '42' in the metadata dictionary "
+            "is not a string. All keys in the metadata "
+            "dictionary must be strings.",
+        ),
+        # UC16: User supplies metadata not in the form of a dictionary.
+        # Expected: A ParseError is raised with a message indicating that
+        # the metadata must be a dictionary.
+        (
+            ["operator", "jdoe"],
+            "The metadata argument must be a dictionary. "
+            "Received type 'list' instead.",
+        ),
+    ],
+)
+def test_parse_file_appends_metadata_bad(
+    parser_datafiles, bad_metadata_input, expected_msg
+):
+    parser = ProfileParser()
+    with pytest.raises(ParseError, match=re.escape(expected_msg)):
+        parser.parse_file(
+            parser_datafiles / "four_col.gr", metadata=bad_metadata_input
+        )
+
+
+@pytest.mark.parametrize(
+    "input_metadata, reserved_key, expected_value, expected_msg",
+    [
+        # UC17: Supplied metadata overlaps with the "filename" key, which
+        # parse_file normally sets itself from the file argument.
+        # Expected: A UserWarning is raised naming the reserved key, and
+        # the supplied value overrides the automatically parsed one.
+        (
+            {"filename": "spoofed.dat"},
+            "filename",
+            "spoofed.dat",
+            "'filename' is a reserved metadata key normally set by "
+            "parse_file. The supplied value will override it.",
+        ),
+        # UC18: Supplied metadata overlaps with the "bank" key, which
+        # parse_file normally sets from select_bank.
+        # Expected: A UserWarning is raised naming the reserved key, and
+        # the supplied value overrides the automatically parsed one.
+        (
+            {"bank": 5},
+            "bank",
+            5,
+            "'bank' is a reserved metadata key normally set by "
+            "parse_file. The supplied value will override it.",
+        ),
+        # UC19: Supplied metadata overlaps with the "nbanks" key, which
+        # parse_file normally sets from the number of banks read.
+        # Expected: A UserWarning is raised naming the reserved key, and
+        # the supplied value overrides the automatically parsed one.
+        (
+            {"nbanks": 99},
+            "nbanks",
+            99,
+            "'nbanks' is a reserved metadata key normally set by "
+            "parse_file. The supplied value will override it.",
+        ),
+    ],
+)
+def test_parse_file_appends_metadata_warns_on_reserved_key(
+    parser_datafiles,
+    input_metadata,
+    reserved_key,
+    expected_value,
+    expected_msg,
+):
+    parser = ProfileParser()
+    with pytest.warns(UserWarning, match=re.escape(expected_msg)):
+        parser.parse_file(
+            parser_datafiles / "four_col.gr", metadata=input_metadata
+        )
+
+    actual_metadata = parser.get_metadata()
+    actual_value = actual_metadata[reserved_key]
+    assert actual_value == expected_value
+
+
+def test_parse_file_appends_metadata_does_not_mutate_input(parser_datafiles):
+    # Case: the caller's metadata dict is mutated after parse_file returns.
+    # Expected: the parser's own metadata is unaffected, so parse_file must
+    # have copied the dict rather than stored a reference to it.
+    parser = ProfileParser()
+    input_metadata = {"operator": "jdoe"}
+    parser.parse_file(
+        parser_datafiles / "four_col.gr", metadata=input_metadata
+    )
+
+    input_metadata["operator"] = "mutated"
+    input_metadata["sample"] = "added after parsing"
+
+    actual_metadata = parser.get_metadata()
+    assert actual_metadata["operator"] == "jdoe"
+    assert "sample" not in actual_metadata
 
 
 def test_parse_file_usecols_selects_columns(parser_datafiles):

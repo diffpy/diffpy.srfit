@@ -93,7 +93,13 @@ class BasePDFGenerator(ProfileGenerator):
     """
 
     def __init__(self, name="pdf"):
-        """Initialize the generator."""
+        """Initialize the generator.
+
+        Parameters
+        ----------
+        name : str, optional
+            The name for this generator (default "pdf").
+        """
         ProfileGenerator.__init__(self, name)
 
         self._phase = None
@@ -125,13 +131,12 @@ class BasePDFGenerator(ProfileGenerator):
 
         Parameters
         ----------
-        ncpu
-            Number of parallel processes.  Revert to serial mode when 1.
-        mapfunc
-            A mapping function to use. If this is None (default),
-            multiprocessing.Pool.imap_unordered will be used.
-
-        No return value.
+        ncpu : int
+            The number of parallel processes. Revert to serial mode
+            when 1.
+        mapfunc : callable, optional
+            The mapping function to use. If this is None (default),
+            ``multiprocessing.Pool.imap_unordered`` will be used.
         """
         from diffpy.srreal.parallel import createParallelCalculator
 
@@ -183,12 +188,15 @@ class BasePDFGenerator(ProfileGenerator):
 
         Parameters
         ----------
-        stype
+        stype : str, optional
             "X" for x-ray, "N" for neutron, "E" for electrons,
             or any registered type from diffpy.srreal from
-            ScatteringFactorTable.getRegisteredTypes().
+            ScatteringFactorTable.getRegisteredTypes() (default "X").
 
-        Raises ValueError for unknown scattering type.
+        Raises
+        ------
+        ValueError
+            If stype is not a recognized scattering type.
         """
         self._calc.setScatteringFactorTableByType(stype)
         # update the meta dictionary only if there was no exception
@@ -198,28 +206,57 @@ class BasePDFGenerator(ProfileGenerator):
     def getScatteringType(self):
         """Get the scattering type.
 
-        See 'setScatteringType'.
+        See ``setScatteringType``.
+
+        Returns
+        -------
+        str
+            The scattering type used to calculate the PDF.
         """
         return self._calc.getRadiationType()
 
     def setQmax(self, qmax):
-        """Set the qmax value."""
+        """Set the qmax value.
+
+        Parameters
+        ----------
+        qmax : float
+            The maximum scattering vector used to generate the PDF.
+        """
         self._calc.qmax = qmax
         self.meta["qmax"] = self.getQmax()
         return
 
     def getQmax(self):
-        """Get the qmax value."""
+        """Get the qmax value.
+
+        Returns
+        -------
+        float
+            The maximum scattering vector used to generate the PDF.
+        """
         return self._calc.qmax
 
     def setQmin(self, qmin):
-        """Set the qmin value."""
+        """Set the qmin value.
+
+        Parameters
+        ----------
+        qmin : float
+            The minimum scattering vector used to generate the PDF.
+        """
         self._calc.qmin = qmin
         self.meta["qmin"] = self.getQmin()
         return
 
     def getQmin(self):
-        """Get the qmin value."""
+        """Get the qmin value.
+
+        Returns
+        -------
+        float
+            The minimum scattering vector used to generate the PDF.
+        """
         return self._calc.qmin
 
     def setStructure(self, stru, name="phase", periodic=True):
@@ -233,12 +270,12 @@ class BasePDFGenerator(ProfileGenerator):
         Parameters
         ----------
         stru
-            diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
-            pyobjcryst.molecule.Molecule instance.  Default None.
-        name
-            A name to give to the managed ParameterSet that adapts stru
+            The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
+            pyobjcryst.molecule.Molecule instance to adapt (default None).
+        name : str, optional
+            The name to give to the managed ParameterSet that adapts stru
             (default "phase").
-        periodic
+        periodic : bool, optional
             The structure should be treated as periodic (default
             True). Note that some structures do not support
             periodicity, in which case this will have no effect on the
@@ -262,11 +299,11 @@ class BasePDFGenerator(ProfileGenerator):
         Parameters
         ----------
         parset
-            A SrRealParSet that holds the structural information.
+            The SrRealParSet that holds the structural information.
             This can be used to share the phase between multiple
             BasePDFGenerators, and have the changes in one reflect in
             another.
-        periodic
+        periodic : bool, optional
             The structure should be treated as periodic (default True).
             Note that some structures do not support periodicity, in
             which case this will be ignored.
@@ -298,7 +335,10 @@ class BasePDFGenerator(ProfileGenerator):
         This validates that the phase is not None. This performs
         ProfileGenerator validations.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self._calc is None:
             raise SrFitError("_calc is None")
@@ -315,6 +355,16 @@ class BasePDFGenerator(ProfileGenerator):
         evaluated, the crystal has been updated by the optimizer via the
         ObjCrystParSet created in setCrystal. Thus, we need only call
         pdf with the internal structure object.
+
+        Parameters
+        ----------
+        r : np.ndarray
+            The independent variable over which to calculate the PDF.
+
+        Returns
+        -------
+        np.ndarray
+            The calculated PDF, evaluated over r.
         """
         if not numpy.array_equal(r, self._lastr):
             self._prepare(r)

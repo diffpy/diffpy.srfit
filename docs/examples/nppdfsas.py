@@ -31,9 +31,8 @@ from diffpy.srfit.fitbase import (
     FitRecipe,
     FitResults,
     Profile,
-    ProfileParser,
 )
-from diffpy.srfit.pdf import PDFGenerator
+from diffpy.srfit.pdf import PDFGenerator, PDFParser
 from diffpy.srfit.pdf.characteristicfunctions import SASCF
 from diffpy.srfit.sas import SASGenerator, SASParser
 
@@ -47,8 +46,8 @@ def makeRecipe(ciffile, grdata, iqdata):
     """
     # Create a PDF contribution as before
     pdfprofile = Profile()
-    pdfparser = ProfileParser()
-    pdfparser.parseFile(grdata)
+    pdfparser = PDFParser()
+    pdfparser.parse_file(grdata)
     pdfprofile.load_parsed_data(pdfparser)
     pdfprofile.set_calculation_range(xmin=0.1, xmax=20)
 
@@ -66,7 +65,7 @@ def makeRecipe(ciffile, grdata, iqdata):
     # elliptical.
     sasprofile = Profile()
     sasparser = SASParser()
-    sasparser.parseFile(iqdata)
+    sasparser.parse_file(iqdata)
     sasprofile.load_parsed_data(sasparser)
     if all(sasprofile.dy == 0):
         sasprofile.dy[:] = 1

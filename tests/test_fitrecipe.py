@@ -23,7 +23,7 @@ import pytest
 from numpy import array_equal, dot, linspace, ones_like, pi, sin
 from scipy.optimize import leastsq
 
-from diffpy.srfit.fitbase import FitResults, ProfileParser
+from diffpy.srfit.fitbase import FitResults
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.parameter import Parameter
@@ -654,7 +654,7 @@ def build_recipe_from_datafile(datafile):
     """Helper to build a FitRecipe from a datafile using PDFParser and
     PDFGenerator."""
     profile = Profile()
-    parser = ProfileParser()
+    parser = PDFParser()
     parser.parse_file(str(datafile))
     profile.load_parsed_data(parser)
 

@@ -37,7 +37,7 @@ def makeRecipe(datname):
     # Load data and add it to the Profile. We use a SASParser to load the data
     # properly and pass the metadata along.
     parser = SASParser()
-    parser.parseFile(datname)
+    parser.parse_file(datname)
     profile.load_parsed_data(parser)
 
     # The ProfileGenerator

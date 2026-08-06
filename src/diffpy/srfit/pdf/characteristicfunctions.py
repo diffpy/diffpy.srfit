@@ -40,6 +40,8 @@ __all__ = [
     "shellCF2",
 ]
 
+import warnings
+
 import numpy
 from numpy import arctan as atan
 from numpy import arctanh as atanh
@@ -103,6 +105,36 @@ shellCF2_dep_msg = build_deprecation_message(
 )
 
 
+# The record of non-physical input warnings already issued in this process,
+# keyed by (function name, requirement). See _warn_non_physical.
+_warned_non_physical = set()
+
+
+def _warn_non_physical(function_name, requirement):
+    """Warn that non-physical input produced a zero characteristic
+    function.
+
+    A refinement evaluates a characteristic function on every iteration,
+    so the warning is issued only once per process for each distinct
+    requirement. The message must not include the offending value, since
+    the `warnings` registry keys on the message text and a value that
+    drifts from iteration to iteration would defeat the suppression.
+    """
+    key = (function_name, requirement)
+    if key in _warned_non_physical:
+        return
+    _warned_non_physical.add(key)
+    warnings.warn(
+        f"In '{function_name}', {requirement}. The characteristic function "
+        "was set to zero for every r, which flattens the fit residual so a "
+        "refinement cannot recover on its own. Please use a physically "
+        "meaningful starting value, or keep the parameter in range with "
+        "FitRecipe.add_soft_bounds.",
+        RuntimeWarning,
+        stacklevel=3,
+    )
+
+
 def spherical_particle(r, particle_diameter):
     """Compute the spherical nanoparticle characteristic function.
 
@@ -120,15 +152,26 @@ def spherical_particle(r, particle_diameter):
     -------
     numpy.ndarray
         The characteristic function values evaluated at `r`.
+
+    Warns
+    -----
+    RuntimeWarning
+        If `particle_diameter` is not positive, in which case the
+        characteristic function is zero everywhere. The warning is issued
+        only once per process.
     """
     characteristic_function = numpy.zeros(numpy.shape(r), dtype=float)
-    if particle_diameter > 0:
-        scaled_r = numpy.array(r, dtype=float) / particle_diameter
-        inside = scaled_r < 1.0
-        scaled_r_inside = scaled_r[inside]
-        characteristic_function[inside] = (
-            1.0 - 1.5 * scaled_r_inside + 0.5 * scaled_r_inside**3
+    if particle_diameter <= 0:
+        _warn_non_physical(
+            "spherical_particle", "'particle_diameter' must be positive"
         )
+        return characteristic_function
+    scaled_r = numpy.array(r, dtype=float) / particle_diameter
+    inside = scaled_r < 1.0
+    scaled_r_inside = scaled_r[inside]
+    characteristic_function[inside] = (
+        1.0 - 1.5 * scaled_r_inside + 0.5 * scaled_r_inside**3
+    )
     return characteristic_function
 
 
@@ -166,12 +209,27 @@ def spheroidal_particle(r, equatorial_radius, polar_radius):
     -------
     numpy.ndarray
         The characteristic function values evaluated at `r`.
+
+    Warns
+    -----
+    RuntimeWarning
+        If `equatorial_radius` or `polar_radius` is not positive, in which
+        case the characteristic function is zero everywhere. The warning is
+        issued only once per process.
     """
+    if equatorial_radius <= 0:
+        _warn_non_physical(
+            "spheroidal_particle", "'equatorial_radius' must be positive"
+        )
+        return numpy.zeros(numpy.shape(r), dtype=float)
+    if polar_radius <= 0:
+        _warn_non_physical(
+            "spheroidal_particle", "'polar_radius' must be positive"
+        )
+        return numpy.zeros(numpy.shape(r), dtype=float)
+
     particle_diameter = 2.0 * equatorial_radius
     axis_ratio = 1.0 * polar_radius / equatorial_radius
-
-    if particle_diameter <= 0 or axis_ratio <= 0:
-        return numpy.zeros_like(r)
 
     # to simplify the equations
     v = axis_ratio
@@ -327,10 +385,30 @@ def lognormal_spherical_particle(
     -------
     numpy.ndarray
         The characteristic function values evaluated at `r`.
+
+    Warns
+    -----
+    RuntimeWarning
+        If `particle_diameter` is not positive, if `particle_diameter_sigma`
+        is negative, or if `particle_diameter` is too small for
+        `particle_diameter_sigma` for the closed form to hold, in which case
+        the characteristic function is zero everywhere. The warning is issued
+        only once per process. A `particle_diameter_sigma` of zero is the
+        sphere limit rather than an error and does not warn.
     """
     if particle_diameter <= 0:
-        return numpy.zeros_like(r)
-    if particle_diameter_sigma <= 0:
+        _warn_non_physical(
+            "lognormal_spherical_particle",
+            "'particle_diameter' must be positive",
+        )
+        return numpy.zeros(numpy.shape(r), dtype=float)
+    if particle_diameter_sigma < 0:
+        _warn_non_physical(
+            "lognormal_spherical_particle",
+            "'particle_diameter_sigma' must not be negative",
+        )
+        return numpy.zeros(numpy.shape(r), dtype=float)
+    if particle_diameter_sigma == 0:
         return spherical_particle(r, particle_diameter)
 
     sqrt2 = sqrt(2.0)
@@ -344,7 +422,11 @@ def lognormal_spherical_particle(
     )
     mu = log(particle_diameter) - s * s / 2
     if mu < 0:
-        return numpy.zeros_like(r)
+        _warn_non_physical(
+            "lognormal_spherical_particle",
+            "'particle_diameter' is too small for 'particle_diameter_sigma'",
+        )
+        return numpy.zeros(numpy.shape(r), dtype=float)
 
     return (
         0.5 * erfc((-mu - 3 * s * s + log(r)) / (sqrt2 * s))
@@ -389,11 +471,21 @@ def sheet_particle(r, sheet_thickness):
     -------
     numpy.ndarray
         The characteristic function values evaluated at `r`.
+
+    Warns
+    -----
+    RuntimeWarning
+        If `sheet_thickness` is not positive, in which case the
+        characteristic function is zero everywhere. The warning is issued
+        only once per process.
     """
-    # handle zero or negative sheet_thickness. make it work for scalars and
-    # arrays.
     if sheet_thickness <= 0:
-        return 0 * sheet_thickness
+        _warn_non_physical(
+            "sheet_particle", "'sheet_thickness' must be positive"
+        )
+        if numpy.isscalar(r):
+            return 0.0
+        return numpy.zeros(numpy.shape(r), dtype=float)
     # process scalar r
     if numpy.isscalar(r):
         rv = (
@@ -444,7 +536,22 @@ def shell_particle(r, radius, thickness):
     -------
     numpy.ndarray
         The characteristic function values evaluated at `r`.
+
+    Warns
+    -----
+    RuntimeWarning
+        If `thickness` is not positive or `radius` is negative, in which case
+        the characteristic function is zero everywhere. The warning is issued
+        only once per process. A `radius` of zero is the solid sphere limit
+        rather than an error and does not warn.
     """
+    if thickness <= 0:
+        _warn_non_physical("shell_particle", "'thickness' must be positive")
+        return numpy.zeros(numpy.shape(r), dtype=float)
+    if radius < 0:
+        _warn_non_physical("shell_particle", "'radius' must not be negative")
+        return numpy.zeros(numpy.shape(r), dtype=float)
+
     d = 1.0 * thickness
     a = 1.0 * radius + d / 2.0
     a2 = a**2

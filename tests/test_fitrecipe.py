@@ -860,6 +860,96 @@ def test_plot_recipe_set_title(build_recipes_one_contribution):
     assert actual_title == expected_title
 
 
+def test_plot_recipe_default_title(build_recipes_one_contribution):
+    # Case: A single contribution is plotted with no title given.
+    # Expected: The figure is titled with the name of the contribution.
+    recipe, _ = build_recipes_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+    _, ax = recipe.plot_recipe(show=False, return_fig=True)
+    actual_title = ax.get_title()
+    expected_title = "c1"
+    assert actual_title == expected_title
+
+
+def test_plot_recipe_titles_two_contributions(build_recipe_two_contributions):
+    # Case: Two contributions are plotted on separate figures with no
+    # title given.
+    # Expected: Each figure is titled with the name of its contribution.
+    recipe = build_recipe_two_contributions
+    optimize_recipe(recipe)
+    plt.close("all")
+    _, axes = recipe.plot_recipe(show=False, return_fig=True)
+    actual_titles = [ax.get_title() for ax in axes]
+    expected_titles = ["c1", "c2"]
+    assert actual_titles == expected_titles
+
+
+def test_plot_recipe_labels_shared_axes(build_recipe_two_contributions):
+    # Case: Two contributions are plotted on a single user-supplied axes.
+    # Expected: Legend labels are prefixed with the contribution name so
+    # that the curves of each contribution can be told apart.
+    recipe = build_recipe_two_contributions
+    optimize_recipe(recipe)
+    plt.close("all")
+    _, ax = plt.subplots()
+    recipe.plot_recipe(ax=ax, show=False)
+    actual_labels, _ = get_labels_and_linecount(ax)
+    expected_labels = [
+        "c1: Observed",
+        "c1: Calculated",
+        "c1: Difference",
+        "c2: Observed",
+        "c2: Calculated",
+        "c2: Difference",
+    ]
+    assert actual_labels == expected_labels
+
+
+# The legend of each figure describes the curves of the contribution it
+# shows. The cases below cover the labels a recipe of two contributions
+# produces when it is plotted on one figure per contribution.
+@pytest.mark.parametrize(
+    "contributions_without_ycalc, plot_kwargs, expected_labels",
+    [
+        # C1: A label contains the {contribution} placeholder.
+        # Expected: The placeholder is replaced by the contribution name.
+        (
+            [],
+            {
+                "fit_label": "{contribution} calculated",
+                "show_observed": False,
+                "show_diff": False,
+            },
+            [["c1 calculated"], ["c2 calculated"]],
+        ),
+        # C2: Only the second contribution has been evaluated, so the ycalc
+        # of the first one is None.
+        # Expected: The unevaluated contribution shows observed data only
+        # while the other one is still plotted in full.
+        (
+            ["c1"],
+            {},
+            [["Observed"], ["Observed", "Calculated", "Difference"]],
+        ),
+    ],
+)
+def test_plot_recipe_labels(
+    build_recipe_two_contributions,
+    contributions_without_ycalc,
+    plot_kwargs,
+    expected_labels,
+):
+    recipe = build_recipe_two_contributions
+    optimize_recipe(recipe)
+    plt.close("all")
+    for name in contributions_without_ycalc:
+        recipe._contributions[name].profile.ycalc = None
+    _, axes = recipe.plot_recipe(show=False, return_fig=True, **plot_kwargs)
+    actual_labels = [get_labels_and_linecount(ax)[0] for ax in axes]
+    assert actual_labels == expected_labels
+
+
 def test_plot_recipe_set_defaults(build_recipes_one_contribution):
     # Case: user sets default plot options with set_plot_defaults
     # Expected: plot_recipe uses the default options for all calls

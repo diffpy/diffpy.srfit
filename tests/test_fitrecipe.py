@@ -906,47 +906,45 @@ def test_plot_recipe_labels_shared_axes(build_recipe_two_contributions):
     assert actual_labels == expected_labels
 
 
-# The legend of each figure describes the curves of the contribution it
-# shows. The cases below cover the labels a recipe of two contributions
-# produces when it is plotted on one figure per contribution.
-@pytest.mark.parametrize(
-    "contributions_without_ycalc, plot_kwargs, expected_labels",
-    [
-        # C1: A label contains the {contribution} placeholder.
-        # Expected: The placeholder is replaced by the contribution name.
-        (
-            [],
-            {
-                "fit_label": "{contribution} calculated",
-                "show_observed": False,
-                "show_diff": False,
-            },
-            [["c1 calculated"], ["c2 calculated"]],
-        ),
-        # C2: Only the second contribution has been evaluated, so the ycalc
-        # of the first one is None.
-        # Expected: The unevaluated contribution shows observed data only
-        # while the other one is still plotted in full.
-        (
-            ["c1"],
-            {},
-            [["Observed"], ["Observed", "Calculated", "Difference"]],
-        ),
-    ],
-)
-def test_plot_recipe_labels(
+def test_plot_recipe_label_contribution_placeholder(
     build_recipe_two_contributions,
-    contributions_without_ycalc,
-    plot_kwargs,
-    expected_labels,
 ):
+    # Case: User passes a label containing the {contribution} placeholder.
+    # Expected: The placeholder is replaced by the contribution name and no
+    # prefix is added.
     recipe = build_recipe_two_contributions
     optimize_recipe(recipe)
     plt.close("all")
-    for name in contributions_without_ycalc:
-        recipe._contributions[name].profile.ycalc = None
-    _, axes = recipe.plot_recipe(show=False, return_fig=True, **plot_kwargs)
+    _, axes = recipe.plot_recipe(
+        fit_label="{contribution} calculated",
+        show_observed=False,
+        show_diff=False,
+        show=False,
+        return_fig=True,
+    )
     actual_labels = [get_labels_and_linecount(ax)[0] for ax in axes]
+    expected_labels = [["c1 calculated"], ["c2 calculated"]]
+    assert actual_labels == expected_labels
+
+
+def test_plot_recipe_missing_ycalc_one_contribution(
+    build_recipe_two_contributions,
+):
+    # Case: Only the second contribution has been evaluated, so the ycalc of
+    # the first one is None.
+    # Expected: The unevaluated contribution shows observed data only while
+    # the other one is still plotted in full.
+    recipe = build_recipe_two_contributions
+    optimize_recipe(recipe)
+    plt.close("all")
+    # manually set ycalc to None
+    recipe._contributions["c1"].profile.ycalc = None
+    _, axes = recipe.plot_recipe(show=False, return_fig=True)
+    actual_labels = [get_labels_and_linecount(ax)[0] for ax in axes]
+    expected_labels = [
+        ["Observed"],
+        ["Observed", "Calculated", "Difference"],
+    ]
     assert actual_labels == expected_labels
 
 

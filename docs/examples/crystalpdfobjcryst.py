@@ -84,7 +84,7 @@ def makeRecipe(ciffile, datname):
     # constraints get enforced within the ObjCrystCrystalParSet. Free
     # Parameters are stored within the 'sgpars' member of the
     # ObjCrystCrystalParSet, which is the same as the object returned from
-    # 'constrainAsSpaceGroup'.
+    # 'constrain_as_space_group'.
     #
     # As before, we have one free lattice parameter ('a'). We can simplify
     # things by iterating through all the sgpars.

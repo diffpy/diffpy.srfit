@@ -48,9 +48,9 @@ def makeRecipe(ciffile, datname):
     # Configure the fit variables
     phase = contribution.nickel.phase
 
-    from diffpy.srfit.structure import constrainAsSpaceGroup
+    from diffpy.srfit.structure import constrain_as_space_group
 
-    sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
+    sgpars = constrain_as_space_group(phase, "Fm-3m")
 
     for par in sgpars.latpars:
         recipe.add_variable(par)

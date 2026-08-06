@@ -1541,7 +1541,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         ylabel : str, optional
             The label for the y-axis.
         title : str or None, optional
-            The plot title. Default is no title.
+            The plot title. If None (default), each figure created by
+            `plot_recipe` is titled with the name of the contribution it
+            shows. A title is not added to a user-supplied axes.
         legend : bool, optional
             The legend is shown if True. Default is True.
         legend_loc : str, optional
@@ -1557,6 +1559,16 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             Default is 1.0.
         show : bool, optional
             The plot is displayed using `plt.show()` if True. Default is True.
+
+        Notes
+        -----
+        The `data_label`, `fit_label`, `diff_label` and `title` options accept
+        a ``{contribution}`` placeholder that is replaced by the name of the
+        FitContribution being plotted, e.g.
+        ``fit_label="{contribution} calculated"``. When several contributions
+        are drawn on a shared axes, labels without the placeholder are
+        prefixed with the contribution name so the legend entries stay
+        distinguishable.
 
         Examples
         --------
@@ -1574,6 +1586,14 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                     "plot_recipe option and will be ignored."
                 )
         self.plot_options.update(kwargs)
+
+    def _format_plot_label(self, label, contribution_name, add_prefix):
+        """Insert the contribution name into a legend label."""
+        if "{contribution}" in label:
+            return label.format(contribution=contribution_name)
+        if add_prefix:
+            return f"{contribution_name}: {label}"
+        return label
 
     def _set_axes_labels_from_metadata(self, meta, plot_params):
         """Set axes labels based on filename suffix in profile metadata
@@ -1677,20 +1697,23 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             )
         figures = []
         axes_list = []
+        shared_axes = ax is not None and len(self._contributions) > 1
         for name, contrib in self._contributions.items():
             profile = contrib.profile
             x = profile.x
             yobs = profile.y
             ycalc = profile.ycalc
+            show_fit = plot_params["show_fit"]
+            show_diff = plot_params["show_diff"]
             if ycalc is None:
-                if plot_params["show_fit"] or plot_params["show_diff"]:
+                if show_fit or show_diff:
                     print(
                         f"Contribution '{name}' has no calculated values "
                         "(ycalc is None). "
                         "Only observed data will be plotted."
                     )
-                plot_params["show_fit"] = False
-                plot_params["show_diff"] = False
+                show_fit = False
+                show_diff = False
             else:
                 diff = yobs - ycalc
                 y_min = min(yobs.min(), ycalc.min())
@@ -1709,27 +1732,33 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                     x,
                     yobs,
                     plot_params["data_style"],
-                    label=plot_params["data_label"],
+                    label=self._format_plot_label(
+                        plot_params["data_label"], name, shared_axes
+                    ),
                     color=plot_params["data_color"],
                     markersize=plot_params["markersize"],
                     alpha=plot_params["alpha"],
                 )
-            if plot_params["show_fit"]:
+            if show_fit:
                 current_ax.plot(
                     x,
                     ycalc,
                     plot_params["fit_style"],
-                    label=plot_params["fit_label"],
+                    label=self._format_plot_label(
+                        plot_params["fit_label"], name, shared_axes
+                    ),
                     color=plot_params["fit_color"],
                     linewidth=plot_params["linewidth"],
                     alpha=plot_params["alpha"],
                 )
-            if plot_params["show_diff"]:
+            if show_diff:
                 current_ax.plot(
                     x,
                     diff + offset,
                     plot_params["diff_style"],
-                    label=plot_params["diff_label"],
+                    label=self._format_plot_label(
+                        plot_params["diff_label"], name, shared_axes
+                    ),
                     color=plot_params["diff_color"],
                     linewidth=plot_params["linewidth"],
                     alpha=plot_params["alpha"],
@@ -1746,7 +1775,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             if plot_params["ylabel"] is not None:
                 current_ax.set_ylabel(plot_params["ylabel"])
             if plot_params["title"] is not None:
-                current_ax.set_title(plot_params["title"])
+                current_ax.set_title(
+                    self._format_plot_label(plot_params["title"], name, False)
+                )
+            elif ax is None:
+                current_ax.set_title(name)
             if plot_params["legend"]:
                 current_ax.legend(loc=plot_params["legend_loc"], frameon=True)
             if plot_params["grid"]:

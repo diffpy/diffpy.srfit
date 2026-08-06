@@ -23,7 +23,7 @@ calculating the characteristic function in the
 diffpy.srfit.pdf.characteristicfunctions module.
 """
 
-import numpy
+import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -80,34 +80,36 @@ def makeRecipe(ciffile, grdata):
     return recipe
 
 
-def plotResults(recipe):
+def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
     r = recipe.pdf.profile.x
     g = recipe.pdf.profile.y
-    gcalc = recipe.pdf.profile.ycalc
-    diffzero = -0.8 * max(g) * numpy.ones_like(g)
-    diff = g - gcalc + diffzero
 
+    # These two curves are not part of the standard observed/fit/diff plot
+    # that plot_recipe produces, so we overlay them afterwards.
     gcryst = recipe.pdf.evaluate_equation("G")
     gcryst /= recipe.scale.value
 
     fr = recipe.pdf.evaluate_equation("f")
     fr *= max(g) / fr[0]
 
-    import pylab
+    fig, ax = recipe.plot_recipe(
+        show=False,
+        return_fig=True,
+        data_color="b",
+        fit_color="r",
+        diff_color="g",
+        data_label="G(r) Data",
+        fit_label="G(r) Fit",
+        diff_label="G(r) diff",
+        xlabel=r"$r (\AA)$",
+        ylabel=r"$G (\AA^{-2})$",
+    )
+    ax.plot(r, gcryst, "y--", label="G(r) Crystal")
+    ax.plot(r, fr, "k--", label="f(r) calculated (scaled)")
+    ax.legend(loc=1)
 
-    pylab.plot(r, g, "bo", label="G(r) Data")
-    pylab.plot(r, gcryst, "y--", label="G(r) Crystal")
-    pylab.plot(r, fr, "k--", label="f(r) calculated (scaled)")
-    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
-    pylab.plot(r, diff, "g-", label="G(r) diff")
-    pylab.plot(r, diffzero, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
+    plt.show()
     return
 
 
@@ -122,6 +124,6 @@ if __name__ == "__main__":
     res = FitResults(recipe)
     res.print_results()
 
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

@@ -65,9 +65,9 @@ def main():
     # Print the results.
     res.print_results()
     # Plot the results.
-    from gaussianrecipe import plotResults
+    from gaussianrecipe import plot_results
 
-    plotResults(r)
+    plot_results(r)
 
     return
 

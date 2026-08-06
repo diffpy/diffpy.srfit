@@ -18,7 +18,7 @@ This is example of fitting the fcc nickel structure to measured PDF
 data. It uses the PDFContribution class to simplify fit setup.
 """
 
-from crystalpdf import plotResults
+from crystalpdf import plot_results
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults
@@ -85,6 +85,6 @@ if __name__ == "__main__":
     res.save_results("nickel_example.res")
 
     # Plot!
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

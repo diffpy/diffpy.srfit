@@ -19,7 +19,7 @@ pyobjcryst crystal object. In this example we use internal constraints
 provided by the ObjCrystCrystalParSet structure adapter.
 """
 
-from crystalpdf import plotResults
+from crystalpdf import plot_results
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -123,6 +123,6 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

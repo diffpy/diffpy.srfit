@@ -14,7 +14,7 @@
 ########################################################################
 """Example of a simplified PDF refinement of two-phase structure."""
 
-from crystalpdftwophase import plotResults
+from crystalpdftwophase import plot_results
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -128,6 +128,6 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

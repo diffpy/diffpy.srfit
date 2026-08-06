@@ -20,7 +20,6 @@ its own PDFGenerator. However, the PDFGenerators will refer to the same
 underlying ObjCrystCrystalParSet.
 """
 
-import numpy
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -134,40 +133,22 @@ def makeRecipe(ciffile, xdatname, ndatname):
     return recipe
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
-    xr = recipe.xnickel.profile.x
-    xg = recipe.xnickel.profile.y
-    xgcalc = recipe.xnickel.profile.ycalc
-    xdiffzero = -0.8 * max(xg) * numpy.ones_like(xg)
-    xdiff = xg - xgcalc + xdiffzero
+def plot_results(recipe):
+    """Plot the results contained within a refined FitRecipe.
 
-    nr = recipe.nnickel.profile.x
-    ng = recipe.nnickel.profile.y
-    ngcalc = recipe.nnickel.profile.ycalc
-    ndiffzero = -0.8 * max(ng) * numpy.ones_like(ng)
-    ndiff = ng - ngcalc + ndiffzero
-
-    import pylab
-
-    pylab.subplot(2, 1, 1)
-    pylab.plot(xr, xg, "bo", label="G(r) x-ray Data")
-    pylab.plot(xr, xgcalc, "r-", label="G(r) x-ray Fit")
-    pylab.plot(xr, xdiff, "g-", label="G(r) x-ray diff")
-    pylab.plot(xr, xdiffzero, "k-")
-    pylab.legend(loc=1)
-
-    pylab.subplot(2, 1, 2)
-    pylab.plot(nr, ng, "bo", label="G(r) neutron Data")
-    pylab.plot(nr, ngcalc, "r-", label="G(r) neutron Fit")
-    pylab.plot(nr, ndiff, "g-", label="G(r) neutron diff")
-    pylab.plot(nr, ndiffzero, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
+    The recipe has two contributions ("xnickel" for x-ray, "nnickel" for
+    neutron), so plot_recipe produces one figure per contribution.
+    """
+    recipe.plot_recipe(
+        data_color="b",
+        fit_color="r",
+        diff_color="g",
+        data_label="G(r) Data",
+        fit_label="G(r) Fit",
+        diff_label="G(r) diff",
+        xlabel=r"$r (\AA)$",
+        ylabel=r"$G (\AA^{-2})$",
+    )
     return
 
 
@@ -189,6 +170,6 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

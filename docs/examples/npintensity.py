@@ -43,6 +43,7 @@ Extensions
 
 from __future__ import print_function
 
+import matplotlib.pyplot as plt
 import numpy
 from gaussianrecipe import scipyOptimize
 
@@ -328,32 +329,34 @@ def main():
     res.print_results(footer=footer)
 
     # Plot!
-    plotResults(recipe)
+    plot_results(recipe)
 
     return
 
 
-def plotResults(recipe):
+def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
+    # The background is not part of the standard observed/fit/diff plot
+    # that plot_recipe produces, so we overlay it afterwards.
     q = recipe.bucky.profile.x
-
-    Imeas = recipe.bucky.profile.y
-    Icalc = recipe.bucky.profile.ycalc
     bkgd = recipe.bucky.evaluate_equation("bkgd")
-    diff = Imeas - Icalc
 
-    import pylab
+    fig, ax = recipe.plot_recipe(
+        show=False,
+        return_fig=True,
+        data_color="b",
+        fit_color="r",
+        diff_color="g",
+        data_label="I(Q) Data",
+        fit_label="I(Q) Fit",
+        diff_label="I(Q) diff",
+        xlabel=r"$Q (\AA^{-1})$",
+        ylabel="Intensity (arb. units)",
+    )
+    ax.plot(q, bkgd, "c-", label="Bkgd. Fit")
+    ax.legend(loc=1)
 
-    pylab.plot(q, Imeas, "ob", label="I(Q) Data")
-    pylab.plot(q, Icalc, "r-", label="I(Q) Fit")
-    pylab.plot(q, diff, "g-", label="I(Q) diff")
-    pylab.plot(q, bkgd, "c-", label="Bkgd. Fit")
-    pylab.xlabel(r"$Q (\AA^{-1})$")
-    pylab.ylabel("Intensity (arb. units)")
-    pylab.legend(loc=1)
-
-    pylab.show()
+    plt.show()
     return
 
 

@@ -188,29 +188,22 @@ def scipyOptimize(recipe):
     return
 
 
-def plotResults(recipe):
+def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
     # We can access the data and fit profile through the Profile we created
-    # above. We get to it through our FitContribution, which we named "g1".
-    #
-    # The independent variable. This is always under the "x" attribute.
-    x = recipe.peaks.profile.x
-    # The observed profile that we loaded earlier, the "y" attribute.
-    y = recipe.peaks.profile.y
-    # The calculated profile, the "ycalc" attribute.
-    ycalc = recipe.peaks.profile.ycalc
-
-    # This stuff is specific to pylab from the matplotlib distribution.
-    import pylab
-
-    pylab.plot(x, y, "b.", label="observed profile")
-    pylab.plot(x, ycalc, "r-", label="calculated profile")
-    pylab.plot(x, y - ycalc - 0.1 * max(y), "g-", label="difference")
-    pylab.legend(loc=(0.0, 0.8))
-    pylab.xlabel("x")
-    pylab.ylabel("y")
-
-    pylab.show()
+    # above. We get to it through our FitContribution, which we named "peaks".
+    recipe.plot_recipe(
+        data_style=".",
+        data_color="b",
+        fit_color="r",
+        diff_color="g",
+        data_label="observed profile",
+        fit_label="calculated profile",
+        diff_label="difference",
+        xlabel="x",
+        ylabel="y",
+        legend_loc=(0.0, 0.8),
+    )
     return
 
 
@@ -253,7 +246,7 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot the results
-    plotResults(recipe)
+    plot_results(recipe)
 
 
 # End of file

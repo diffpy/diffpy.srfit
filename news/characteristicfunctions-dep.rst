@@ -1,6 +1,7 @@
 **Added:**
 
 * Add ``spherical_particle``, ``spheroidal_particle``, ``lognormal_spherical_particle``, ``sheet_particle``, and ``shell_particle`` to ``diffpy.srfit.pdf.characteristicfunctions``, replacing ``sphericalCF``, ``spheroidalCF``, ``lognormalSphericalCF``, ``sheetCF``, and ``shellCF``.
+* Add ``constrain_as_space_group`` to ``diffpy.srfit.structure.sgconstraints``, replacing ``constrainAsSpaceGroup``.
 
 **Changed:**
 
@@ -9,6 +10,7 @@
 **Deprecated:**
 
 * Deprecate ``sphericalCF``, ``spheroidalCF``, ``spheroidalCF2``, ``lognormalSphericalCF``, ``sheetCF``, ``shellCF``, and ``shellCF2`` in ``diffpy.srfit.pdf.characteristicfunctions``.
+* Deprecate ``constrainAsSpaceGroup`` in ``diffpy.srfit.structure.sgconstraints``.
 
 **Removed:**
 

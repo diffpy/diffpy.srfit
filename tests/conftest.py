@@ -437,3 +437,19 @@ def parser_datafiles(tmp_path):
     )
 
     yield tmp_path
+
+
+@pytest.fixture
+def reset_characteristic_function_warnings():
+    """Clear the record of already-issued non-physical input warnings.
+
+    The characteristic functions warn only once per process for each
+    distinct non-physical input so that a refinement loop does not flood
+    the user with repeated messages. Tests that assert on the warning
+    must start and finish with a clean record.
+    """
+    from diffpy.srfit.pdf.characteristicfunctions import _warned_non_physical
+
+    _warned_non_physical.clear()
+    yield
+    _warned_non_physical.clear()

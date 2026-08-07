@@ -94,16 +94,17 @@ def makeRecipe(ciffile, datname):
 
     # We start by constraining the phase to the known space group. We could do
     # this by hand, but there is a method in diffpy.srfit.structure named
-    # 'constrainAsSpaceGroup' for this purpose. The constraints will by default
-    # be applied to the sites, the lattice and to the ADPs. See the method
-    # documentation for more details. The 'constrainAsSpaceGroup' method may
-    # create new Parameters, which it returns in a SpaceGroupParameters object.
-    from diffpy.srfit.structure import constrainAsSpaceGroup
+    # 'constrain_as_space_group' for this purpose. The constraints will by
+    # default be applied to the sites, the lattice and to the ADPs. See the
+    # method documentation for more details. The 'constrain_as_space_group'
+    # method may create new Parameters, which it returns in a
+    # SpaceGroupParameters object.
+    from diffpy.srfit.structure import constrain_as_space_group
 
-    sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
+    sgpars = constrain_as_space_group(phase, "Fm-3m")
 
-    # The SpaceGroupParameters object returned by 'constrainAsSpaceGroup' holds
-    # the free Parameters allowed by the space group constraints. Once a
+    # The SpaceGroupParameters object returned by 'constrain_as_space_group'
+    # holds the free Parameters allowed by the space group constraints. Once a
     # structure is constrained, we need (should) only use the Parameters
     # provided in the SpaceGroupParameters, as the relevant structure
     # Parameters are constrained to these.

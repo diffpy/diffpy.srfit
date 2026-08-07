@@ -74,10 +74,13 @@ def makeRecipe(stru1, stru2, datname):
     # and a spherical shell CF for the shell. Since this is set up as two
     # phases, we implicitly assume that the core-shell correlations contribute
     # very little to the PDF.
-    from diffpy.srfit.pdf.characteristicfunctions import shellCF, sphericalCF
+    from diffpy.srfit.pdf.characteristicfunctions import (
+        shell_particle,
+        spherical_particle,
+    )
 
-    contribution.register_function(sphericalCF, name="f_CdS")
-    contribution.register_function(shellCF, name="f_ZnS")
+    contribution.register_function(spherical_particle, name="f_CdS")
+    contribution.register_function(shell_particle, name="f_ZnS")
 
     # Write the fitting equation. We want to sum the PDFs from each phase and
     # multiply it by a scaling factor.

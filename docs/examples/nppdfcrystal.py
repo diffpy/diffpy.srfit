@@ -58,9 +58,9 @@ def makeRecipe(ciffile, grdata):
     pdfcontribution.add_profile_generator(pdfgenerator)
 
     # Register the nanoparticle shape factor.
-    from diffpy.srfit.pdf.characteristicfunctions import sphericalCF
+    from diffpy.srfit.pdf.characteristicfunctions import spherical_particle
 
-    pdfcontribution.register_function(sphericalCF, name="f")
+    pdfcontribution.register_function(spherical_particle, name="f")
 
     # Now we set up the fitting equation.
     pdfcontribution.set_equation("f * G")

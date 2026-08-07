@@ -20,11 +20,22 @@ import numpy
 
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.recipeorganizer import RecipeContainer
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
-__all__ = ["constrainAsSpaceGroup"]
+__all__ = ["constrain_as_space_group", "constrainAsSpaceGroup"]
+
+removal_version = "4.0.0"
+sgconstraints_base = "diffpy.srfit.structure.sgconstraints"
+
+constrainAsSpaceGroup_dep_msg = build_deprecation_message(
+    sgconstraints_base,
+    "constrainAsSpaceGroup",
+    "constrain_as_space_group",
+    removal_version,
+)
 
 
-def constrainAsSpaceGroup(
+def constrain_as_space_group(
     phase,
     spacegroup,
     scatterers=None,
@@ -120,6 +131,36 @@ def constrainAsSpaceGroup(
     return sgp
 
 
+@deprecated(constrainAsSpaceGroup_dep_msg)
+def constrainAsSpaceGroup(
+    phase,
+    spacegroup,
+    scatterers=None,
+    sgoffset=[0, 0, 0],
+    constrainlat=True,
+    constrainadps=True,
+    adpsymbols=None,
+    isosymbol="Uiso",
+):
+    """This function is deprecated and will be removed in version
+    4.0.0.
+
+    Please use
+    diffpy.srfit.structure.sgconstraints.constrain_as_space_group
+    instead.
+    """
+    return constrain_as_space_group(
+        phase,
+        spacegroup,
+        scatterers,
+        sgoffset,
+        constrainlat,
+        constrainadps,
+        adpsymbols,
+        isosymbol,
+    )
+
+
 def _constrain_as_space_group(
     phase,
     sg,
@@ -130,10 +171,10 @@ def _constrain_as_space_group(
     adpsymbols=None,
     isosymbol="Uiso",
 ):
-    """Restricted interface to constrainAsSpaceGroup.
+    """Restricted interface to constrain_as_space_group.
 
-    Arguments: As constrainAsSpaceGroup, except
-    -------------------------------------------
+    Arguments: As constrain_as_space_group, except
+    -----------------------------------------------
     sg
         diffpy.structure.spacegroups.SpaceGroup instance
     """
@@ -158,7 +199,7 @@ def _constrain_as_space_group(
     return sgp
 
 
-# End constrainAsSpaceGroup
+# End constrain_as_space_group
 
 
 class BaseSpaceGroupParameters(RecipeContainer):
@@ -210,7 +251,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
 
     This class is used to store the variable Parameters of a structure, leaving
     out those that constrained or fixed due to space group.  This does the work
-    of the constrainAsSpaceGroup method.  This class has the same Parameter
+    of the constrain_as_space_group method.  This class has the same Parameter
     attribute access of a ParameterSet.
 
     Attributes
@@ -352,7 +393,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
     def _make_constraints(self):
         """Constrain the structure to the space group.
 
-        This works as described by the constrainAsSpaceGroup method.
+        This works as described by the constrain_as_space_group method.
         """
         # Start by clearing the constraints
         self._clear_constraints()

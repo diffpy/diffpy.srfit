@@ -18,7 +18,7 @@ This example is similar to crystalpdfobjcryst.py, except that it uses
 the DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.
 """
 
-import numpy
+from pathlib import Path
 
 from diffpy.srfit.fitbase import (
     FitContribution,
@@ -39,7 +39,7 @@ def makeRecipe(molecule, datname):
 
     # Load data and add it to the profile
     profile.loadtxt(datname)
-    profile.setCalculationRange(xmin=1.2, xmax=8)
+    profile.set_calculation_range(xmin=1.2, xmax=8)
 
     # The ProfileGenerator
     # Create a DebyePDFGenerator named "G".
@@ -51,12 +51,12 @@ def makeRecipe(molecule, datname):
 
     # The FitContribution
     contribution = FitContribution("bucky")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="r")
 
     # Make a FitRecipe.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Specify which parameters we want to refine. We'll be using the
     # MoleculeParSet within the generator, so let's get a handle to it. See the
@@ -65,14 +65,14 @@ def makeRecipe(molecule, datname):
     c60 = generator.phase
 
     # First, the isotropic thermal displacement factor.
-    Biso = recipe.newVar("Biso")
+    Biso = recipe.create_new_variable("Biso")
     for atom in c60.getScatterers():
 
         # We have defined a 'center' atom that is a dummy, which means that it
         # has no scattering power. It is only used as a reference point for
         # our bond length. We don't want to constrain it.
         if not atom.isDummy():
-            recipe.constrain(atom.Biso, Biso)
+            recipe.add_constraint(atom.Biso, Biso)
 
     # We need to let the molecule expand. If we were modeling it as a crystal,
     # we could let the unit cell expand. For instruction purposes, we use a
@@ -87,7 +87,7 @@ def makeRecipe(molecule, datname):
     # that we don't give it an initial value. Since the variable is being
     # directly constrained to further below, its initial value will be inferred
     # from the constraint.
-    radius = recipe.newVar("radius")
+    radius = recipe.create_new_variable("radius")
     for i, atom in enumerate(c60.getScatterers()):
 
         if atom.isDummy():
@@ -96,59 +96,42 @@ def makeRecipe(molecule, datname):
         # This creates a Parameter that moves the second atom according to the
         # bond length. Note that each Parameter needs a unique name.
         par = c60.addBondLengthParameter("rad%i" % i, center, atom)
-        recipe.constrain(par, radius)
+        recipe.add_constraint(par, radius)
 
     # Add the correlation term, scale. The scale is too short to effectively
     # determine qdamp.
-    recipe.addVar(generator.delta2, 2)
-    recipe.addVar(generator.scale, 1.3e4)
+    recipe.add_variable(generator.delta2, 2)
+    recipe.add_variable(generator.scale, 1.3e4)
 
     # Give the recipe away so it can be used!
     return recipe
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # Plot this.
-    r = recipe.bucky.profile.x
-    g = recipe.bucky.profile.y
-    gcalc = recipe.bucky.profile.ycalc
-    diffzero = -0.8 * max(g) * numpy.ones_like(g)
-    diff = g - gcalc + diffzero
-
-    import pylab
-
-    pylab.plot(r, g, "ob", label="G(r) Data")
-    pylab.plot(r, gcalc, "-r", label="G(r) Fit")
-    pylab.plot(r, diff, "-g", label="G(r) diff")
-    pylab.plot(r, diffzero, "-k")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 def main():
 
     molecule = makeC60()
     # Make the data and the recipe
-    recipe = makeRecipe(molecule, "data/C60.gr")
+    recipe = makeRecipe(molecule, Path(__file__).parent / "data/C60.gr")
     # Tell the fithook that we want very verbose output.
     recipe.fithooks[0].verbose = 3
 
     # Optimize
     from scipy.optimize import leastsq
 
-    leastsq(recipe.residual, recipe.getValues())
+    leastsq(recipe.residual, recipe.get_values())
 
     # Print results
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     # Plot results
-    plotResults(recipe)
+    recipe.plot_recipe(**plot_styles)
 
     return
 

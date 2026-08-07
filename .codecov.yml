@@ -5,6 +5,9 @@ coverage:
         target: auto # use the coverage from the base commit, fail if coverage is lower
         threshold: 0% # allow the coverage to drop by
 
+  ignore:
+    - "tests/test_speed.py" # ignore performance testing in test coverage.
+
 comment:
   layout: " diff, flags, files"
   behavior: default

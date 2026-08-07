@@ -14,6 +14,9 @@
 ########################################################################
 """Example of a refinement of SAS I(Q) data to an ellipsoidal model."""
 
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import (
@@ -37,8 +40,8 @@ def makeRecipe(datname):
     # Load data and add it to the Profile. We use a SASParser to load the data
     # properly and pass the metadata along.
     parser = SASParser()
-    parser.parseFile(datname)
-    profile.loadParsedData(parser)
+    parser.parse_file(datname)
+    profile.load_parsed_data(parser)
 
     # The ProfileGenerator
     # The SASGenerator is for configuring and calculating a SAS profile. We use
@@ -56,18 +59,18 @@ def makeRecipe(datname):
     # Here we associate the Profile and ProfileGenerator, as has been done
     # before.
     contribution = FitContribution("ellipsoid")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="q")
 
     # We want to fit the log of the signal to the log of the data so that the
     # higher-Q information remains significant. There are no I(Q) uncertainty
     # values with the data, so we do not need to worry about the effect this
     # will have on the estimated parameter uncertainties.
-    contribution.setResidualEquation("log(eq) - log(y)")
+    contribution.set_residual_equation("log(eq) - log(y)")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Configure the fit variables
     # The SASGenerator uses the parameters from the params and dispersion
@@ -77,40 +80,44 @@ def makeRecipe(datname):
     # SASGenerator these are named like "radius_width".
     #
     # We want to fit the scale factor, radii and background factors.
-    recipe.addVar(generator.scale, 1)
-    recipe.addVar(generator.radius_a, 50)
-    recipe.addVar(generator.radius_b, 500)
-    recipe.addVar(generator.background, 0)
+    recipe.add_variable(generator.scale, 1)
+    recipe.add_variable(generator.radius_a, 50)
+    recipe.add_variable(generator.radius_b, 500)
+    recipe.add_variable(generator.background, 0)
 
     # Give the recipe away so it can be used!
     return recipe
 
 
-def plotResults(recipe):
+def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
-    r = recipe.ellipsoid.profile.x
-    y = recipe.ellipsoid.profile.y
-    ycalc = recipe.ellipsoid.profile.ycalc
-    diff = y - ycalc + min(y)
-
-    import pylab
-
-    pylab.loglog(r, y, "bo", label="I(Q) Data")
-    pylab.loglog(r, ycalc, "r-", label="I(Q) Fit")
-    pylab.loglog(r, diff, "g-", label="I(Q) diff")
-    pylab.xlabel(r"$Q (\AA^{-1})$")
-    pylab.ylabel("$I (arb. units)$")
-    pylab.legend(loc=1)
-
-    pylab.show()
+    # I(Q) SAS data is best viewed on a log-log scale, so we prepare the
+    # axes ourselves and hand them to plot_recipe. The residual difference
+    # curve is not shown since it can go negative and is not meaningful on
+    # a log scale.
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    recipe.plot_recipe(
+        ax=ax,
+        show=False,
+        show_diff=False,
+        data_color="b",
+        fit_color="r",
+        data_label="I(Q) Data",
+        fit_label="I(Q) Fit",
+        xlabel=r"$Q (\AA^{-1})$",
+        ylabel="$I (arb. units)$",
+    )
+    plt.show()
     return
 
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    data = "data/sas_ellipsoid_testdata.txt"
+    data = Path(__file__).parent / "data/sas_ellipsoid_testdata.txt"
 
     # Make the recipe
     recipe = makeRecipe(data)
@@ -120,9 +127,9 @@ if __name__ == "__main__":
 
     # Generate and print the FitResults
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

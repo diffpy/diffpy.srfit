@@ -20,11 +20,11 @@ cctbx.crystal should be done before wrapping. Changes made to the cctbx.crystal
 object after wrapping may not be reflected within the wrapper, which can have
 unpredictable results during a structure refinement.
 
-Classes:
+The following classes are adapted:
 
-CCTBXCrystalParSet  --  Wrapper for cctbx.crystal
-CCTBXUnitCellParSet --  Wrapper for the unit cell of cctbx.crystal
-CCTBXScattererParSet --  Wrapper for cctbx.xray.scatterer
+- `CCTBXCrystalParSet`: wrapper for `cctbx.crystal`.
+- `CCTBXUnitCellParSet`: wrapper for the unit cell of `cctbx.crystal`.
+- `CCTBXScattererParSet`: wrapper for `cctbx.xray.scatterer`.
 """
 
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
@@ -56,7 +56,7 @@ class CCTBXScattererParSet(ParameterSet):
     def __init__(self, name, strups, idx):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             The name of this scatterer.
@@ -153,7 +153,7 @@ class CCTBXUnitCellParSet(ParameterSet):
     def __init__(self, strups):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         strups
             The CCTBXCrystalParSet that contains the cctbx structure
@@ -228,7 +228,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
     def __init__(self, name, stru):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             A name for this
@@ -237,7 +237,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         """
         ParameterSet.__init__(self, name)
         self.stru = stru
-        self.addParameterSet(CCTBXUnitCellParSet(self))
+        self.add_parameter_set(CCTBXUnitCellParSet(self))
         self.scatterers = []
 
         self._update = False
@@ -249,7 +249,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
             sname = "%s%i" % (el, i)
             cdict[el] = i + 1
             scatterer = CCTBXScattererParSet(sname, self, i)
-            self.addParameterSet(scatterer)
+            self.add_parameter_set(scatterer)
             self.scatterers.append(scatterer)
 
         # Constrain the lattice

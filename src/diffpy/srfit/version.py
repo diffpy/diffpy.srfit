@@ -3,12 +3,12 @@
 #
 # (c) 2008-2025 The Trustees of Columbia University in the City of New York.
 # All rights reserved.
+# (c) 2026-present The DiffPy Team. All rights reserved.
 #
-# File coded by: Christopher Farrow, Pavol Juhas, and members of the
-# Billinge Group.
-#
+# File coded by: Christopher Farrow, Pavol Juhas, Caden Myers,
+# Simon J. L. Billinge, Billinge Group members and community contributors.
 # See GitHub contributions for a more detailed list of contributors.
-# https://github.com/diffpy/diffpy.srfit/graphs/contributors
+# https://github.com/diffpy/diffpy.srfit/graphs/contributors  # noqa: E501
 #
 # See LICENSE.rst for license information.
 #
@@ -19,8 +19,9 @@
 #  __all__ = ["__date__", "__git_commit__", "__timestamp__", "__version__"]
 
 # obtain version information
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 
-__version__ = version("diffpy.srfit")
-
-# End of file
+try:
+    __version__ = version("diffpy.srfit")
+except PackageNotFoundError:
+    __version__ = "unknown"

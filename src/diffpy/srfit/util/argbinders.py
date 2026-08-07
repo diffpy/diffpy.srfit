@@ -14,11 +14,12 @@
 ##############################################################################
 """Functions for binding arguments of callable objects."""
 
-# FIXME: remove this line when `docformatter` fixes the blank line bug
+# FIXME: remove this line when black and docformatter agree.
 
 
 class bind2nd(object):
-    """Freeze second argument of a callable object to a given constant."""
+    """Freeze second argument of a callable object to a given
+    constant."""
 
     def __init__(self, func, arg1):
         """Freeze the second argument of function func to arg1."""

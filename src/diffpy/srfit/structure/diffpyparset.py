@@ -22,9 +22,11 @@ the Structure. Changes in the number of atoms will not be recognized.  Thus,
 the diffpy.structure.Structure object should be fully configured before passing
 it to DiffpyStructureParSet.
 
-DiffpyStructureParSet --  Adapter for diffpy.structure.Structure
-DiffpyLatticeParSet   --  Adapter for diffpy.structure.Lattice
-DiffpyAtomParSet      --  Adapter for diffpy.structure.Atom
+The following classes are adapted:
+
+- `DiffpyStructureParSet`: adapter for `diffpy.structure.Structure`.
+- `DiffpyLatticeParSet`: adapter for `diffpy.structure.Lattice`.
+- `DiffpyAtomParSet`: adapter for `diffpy.structure.Atom`.
 """
 
 __all__ = ["DiffpyStructureParSet"]
@@ -91,7 +93,7 @@ class DiffpyAtomParSet(ParameterSet):
     def __init__(self, name, atom):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         atom
             A diffpy.structure.Atom instance
@@ -205,7 +207,7 @@ class DiffpyLatticeParSet(ParameterSet):
     def __init__(self, lattice):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         lattice
             A diffpy.structure.Lattice instance
@@ -275,7 +277,7 @@ class DiffpyStructureParSet(SrRealParSet):
     def __init__(self, name, stru):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
         name
             A name for the structure
@@ -284,7 +286,7 @@ class DiffpyStructureParSet(SrRealParSet):
         """
         SrRealParSet.__init__(self, name)
         self.stru = stru
-        self.addParameterSet(DiffpyLatticeParSet(stru.lattice))
+        self.add_parameter_set(DiffpyLatticeParSet(stru.lattice))
         self.atoms = []
 
         cdict = {}
@@ -297,7 +299,7 @@ class DiffpyStructureParSet(SrRealParSet):
             aname = "%s%i" % (el, i)
             cdict[el] = i + 1
             atom = DiffpyAtomParSet(aname, a)
-            self.addParameterSet(atom)
+            self.add_parameter_set(atom)
             self.atoms.append(atom)
 
         return

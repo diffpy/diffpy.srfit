@@ -9,7 +9,7 @@ OPEN SOURCE LICENSE AGREEMENT
 - Copyright (c) 2008-2012, The Trustees of Columbia University in the City of New York
 - Copyright (c) 2014-2019, Brookhaven Science Associates, Brookhaven National Laboratory
 - Copyright (c) 2020-2025, The Trustees of Columbia University in the City of New York
-
+- Copyright (c) 2026-present, The DiffPy Team.
 
 The "DiffPy-CMI" is distributed subject to the following license conditions:
 

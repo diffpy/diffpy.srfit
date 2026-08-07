@@ -18,7 +18,8 @@ This is example of fitting the fcc nickel structure to measured PDF
 data. It uses the PDFContribution class to simplify fit setup.
 """
 
-from crystalpdf import plotResults
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults
@@ -34,42 +35,48 @@ def makeRecipe(ciffile, datname):
     # Work directly with a custom PDFContribution to load the data
     contribution = PDFContribution("nickel")
     contribution.loadData(datname)
-    contribution.setCalculationRange(xmin=1, xmax=20, dx=0.1)
+    contribution.set_calculation_range(xmin=1, xmax=20, dx=0.1)
 
     # and the phase
     stru = Structure()
-    stru.read(ciffile)
+    stru.read(str(ciffile))
     contribution.addStructure("nickel", stru)
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Configure the fit variables
     phase = contribution.nickel.phase
 
-    from diffpy.srfit.structure import constrainAsSpaceGroup
+    from diffpy.srfit.structure import constrain_as_space_group
 
-    sgpars = constrainAsSpaceGroup(phase, "Fm-3m")
+    sgpars = constrain_as_space_group(phase, "Fm-3m")
 
     for par in sgpars.latpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
     for par in sgpars.adppars:
-        recipe.addVar(par, 0.005)
+        recipe.add_variable(par, 0.005)
 
-    recipe.addVar(contribution.scale, 1)
-    recipe.addVar(contribution.qdamp, 0.03, fixed=True)
-    recipe.addVar(contribution.nickel.delta2, 5)
+    recipe.add_variable(contribution.scale, 1)
+    recipe.add_variable(contribution.qdamp, 0.03, fixed=True)
+    recipe.add_variable(contribution.nickel.delta2, 5)
 
     # Give the recipe away so it can be used!
     return recipe
 
 
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
+
+
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile = "data/ni.cif"
-    data = "data/ni-q27r100-neutron.gr"
+    ciffile = Path(__file__).parent / "data/ni.cif"
+    data = Path(__file__).parent / "data/ni-q27r100-neutron.gr"
 
     # Make the recipe
     recipe = makeRecipe(ciffile, data)
@@ -81,10 +88,10 @@ if __name__ == "__main__":
 
     # Generate, print and save the FitResults
     res = FitResults(recipe)
-    res.printResults()
-    res.saveResults("nickel_example.res")
+    res.print_results()
+    res.save_results("nickel_example.res")
 
     # Plot!
-    plotResults(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

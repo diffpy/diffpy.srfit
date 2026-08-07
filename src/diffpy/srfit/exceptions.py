@@ -14,7 +14,7 @@
 ##############################################################################
 """Exceptions used for SrFit - specific errors."""
 
-# FIXME: remove this line when `docformatter` fixes the blank line bug
+# FIXME: remove this line when black and docformatter agree.
 
 
 class SrFitError(Exception):

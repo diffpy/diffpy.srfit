@@ -1,130 +1,26 @@
-History written: Mon Apr 21 20:48:28 2008
-Produced by
-####### Get_XPDF #######
+[DEFAULT]
 
-##### General_Setting
-title=X-ray PDF
-workingdirectory=e:\Ahmad\MUCAT0804\standards\pdfgetx2
-sourcedir=C:\Program Files\PDFgetX2\
-logfile=.pdfgetx2.log
-quiet=0    debug=0    autosave_isa=1    savefilenamebase=si325_mesh_300k_nor_4-8
-iqfilesurfix=.iq    sqfilesurfix=.sq    fqfilesurfix=.fq    grfilesurfix=.gr
+version = diffpy.pdfgetx-2.4.0
 
-##### DataFileFormat
-datatype=1    (0:SPEC, 1:CHI, 2:nxm column, 3:unknown)
-num_skiplines=3    comment_id=#    delimiter=
-### SPEC Format    scan_id=#S    scan_delimiter=
-columnname_id=#L    columnname_delimiter=
-data_id=    data_delimiter=
-### CHI Format
-### nxm column Format
-### End of file format
+# input and output specifications
+dataformat = QA
+outputtype = gr
 
-##### Data&Background
-samfile=si325_mesh_300k_nor_4-8.chi    num_sams=1
-sambkgfile=kapton_bgrd_300k_nor_2-3.chi    num_sambkgs=1
-confile=    num_cons=1
-conbkgfile=    num_conbkgs=1
-det#  used  xcol detcol deterrcol xmin  xmax  add_det  mul_det   add_bkg  mul_bkg  add_con  mul_con  add_conbkg   mul_conbkg
-  0    1    0    1    3    0.600000    32.0000    0.000000    1.00000    0.000000    1.00000    0.000000    1.00000    0.000000    1.00000
+# PDF calculation setup
+stype = X
+composition = Si
+bgscale = 1.0
+rpoly = 0.9
+qmaxinst = 29
+qmin = 0.01
+qmax = 27
+rmin = 0
+rmax = 60
+rstep = 0.01
+temperature = 300
 
-##### Experiment_Setup
-title=PDF analysis
-user=me
-facility=In house
-temperature=300.000    containermut=0.000500000    filtermut=0.0200000
-## X-Ray   radiationtype=3
-           (0: Ag K_alpha, 1:Cu K_alpha, 2:Mo K_alpha, 3:Customize)
-lambda=0.142773    energy=86.8406    polartype=0    polardegree=1.00000
-## MonoChromator  crystaltype=0    (0:Perfect, 1:Mosaic, 2:None)
-position=0    (0:Primary beam, 1:Diffracted beam)
-dspacetype=0    (0:Si{111}, 1:Ge{111}, 2:Customize)    dspacing=3.13200
+# End of config --------------------------------------------------------------
 
-##### Sample_Setup information    num_atoms=1
-#L symbol valence fractions z user_f1 user_f2 user_macoef
-  Si    0.00   1.000000    14   0.000000   0.000000   0.001000
-geometry=2    mut=0.50000000    numberdensity=0.00600000
-thickness=2.00000    packingFraction=0.500000    theory_mut=0.00579218
-
-##### GetIQ_Setup
-xformat=1
-smoothcorr_isa=0    selfnormalize_isa=0
-#L par_name sample sample_bkg  container container_bkg
-smooth_degree  2    2    2    2
-smooth_width  6    6    6    6
-selfnormalize 0    0    0    0
-filtercorr_isa=0    samfiltercorr_isa=0    sambkgfiltercorr_isa=0
-confiltercorr_isa=0    conbkgfiltercorr_isa=0
-scatveffcorr_isa=1    samconveffcorr_isa=1    sambkgveffcorr_isa=0
-conbkgveffcorr_isa=0
-nonegative_isa=1    negativevalue=-1.00000
-
-##### Calibration_Data
-## Detection efficiency energy dependence    detedepxaxis=0
-detedepfunctype=0    detedep_elastic=1.00000    detedep_fluores=1.80000
-detedep_quadra=0.000000    detedep_spline=0.000000    detedep_file=
-## Detector transmission energy dependence    dettcoefxaxis=0
-dettcoeffunctype=0    dettcoef_elastic=0.950000    dettcoef_fluores=0.600000
-dettcoef_quadra=0.000000    dettcoef_spline=0.000000    dettcoef_file=
-
-##### IQ_Simulation
-### Elastic    used_isa=1    mymethod=1
-do_samabsorp=1    do_multscat=1    do_conabsorp=0    do_airabsorp=0
-do_polarization=1    do_oblincident=0    do_energydep=0
-do_breitdirac=0    breitdiracexpo=2.00000
-do_rulandwin=0    rulandwinwidth=0.00100000
-do_useredit=0    add_user=0.000000    mul_user=1.00000
-### Compton    used_isa=1    mymethod=1
-do_samabsorp=1    do_multscat=1    do_conabsorp=0    do_airabsorp=0
-do_polarization=1    do_oblincident=0    do_energydep=0
-do_breitdirac=0    breitdiracexpo=2.00000
-do_rulandwin=0    rulandwinwidth=0.00100000
-do_useredit=0    add_user=0.000000    mul_user=1.00000
-### Fluores    used_isa=1    mymethod=1
-do_samabsorp=1    do_multscat=1    do_conabsorp=0    do_airabsorp=0
-do_polarization=1    do_oblincident=0    do_energydep=0
-do_breitdirac=0    breitdiracexpo=2.00000
-do_rulandwin=0    rulandwinwidth=0.00100000
-do_useredit=0    add_user=0.000000    mul_user=1.00000
-
-##### Correction_Setup    corrmethod=0
-oblincident_isa=1    dettranscoef=0.980000    samfluore_isa=1
-samfluoretype=0    samfluorescale=15.000000
-multiscat_isa=1    xraypolar_isa=1    samabsorp_isa=1
-highqscale_isa=1    highqratio=0.600000    scaleconst=0.039181914
-scaleconst_theory=0.039181914
-comptonscat_isa=1    rulandwin_isa=0    rulandintewidth=0.0100000
-comptonmethod=0    breitdirac_isa=1    breitdiracexponent=3
-detefficiency_isa=1    detefficiencytype=2    (0-1: linear, 2-3: quadratic)
-detefficiency_a=-0.054826792    detefficiency_b=0.028062565
-lauediffuse_isa=1
-weight_isa=1    weighttype=0    (0: <ASF>^2, 1: <ASF^2>, 2: Data Smoothed)
-weightsmoothrmin=3.00000    weightsmoothwidth=100    weightsmoothcycles=600
-editsq_isa=0    editsqtype=0    add_sq=0.000000    mul_sq=1.00000
-editsqsmoothrmin=3.00000    editsqsmoothwidth=100    editsqsmoothcycles=600
-smoothdata_isa=0    smoothfunctype=0    smoothqmin=12.0000    smoothboxwidth=9
-interpolateqmin_isa=0    qmininterpolationtype=0
-dampfq_isa=0    dampfqtype=0    dampfqwidth=23.0000
-
-##### SqGr_Optimization Setup
-ftmethod=0
-## S(q)  qmin=0.010000    qmax=27.000000    qgrid=0.000000
-## G(r)  rmin=0.010000    rmax=60.000000    rgrid=0.010000
-## SqOptimization  sqoptfunction=1
-optqmin=15.0000    optqmax=40.0000    optqgrid=0.000000
-optrmin=0.000000    optrmax=2.20000    optrgrid=0.0200000
-maxiter=20    relstep=0.000000    weighttype=0    weightfunc=0
-fitbkgmult_isa=0    fitsampmut_isa=1    fitpolariz_isa=1
-fitoblique_isa=0    fitfluores_isa=0
-fitrulandw_isa=0    fitenergya_isa=1    fitenergyb_isa=1
-fitsimurulandw_isa=1    fitDetEdepfluores_isa=0    fitDetEdepquadra_isa=0
-fitDetEdepspline_isa=0    fitDetTCoefElastic_isa=0    fitDetTCoefFluores_isa=0
-fitDetTcoefquadra_isa=0    fitDetTcoefspline_isa=0
-
-##### Save&Plot Settings
-datatype=GrData    iqcorrtype=Int    iqsimutype=SimuIq
-sqcorrtype=Oblin    sqtofqtype=DampFq
-gropttype=OptFq    miscdatatype=AtomASF
 ##### start data
 #F si325_mesh_300k_nor_4-8.gr
 #D Mon Apr 21 21:17:23 2008

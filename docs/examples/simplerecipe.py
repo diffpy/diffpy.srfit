@@ -19,6 +19,8 @@ integrates the FitContribution and Profile objects for simple recipe
 creation.
 """
 
+from pathlib import Path
+
 from diffpy.srfit.fitbase import SimpleRecipe
 
 ######
@@ -32,12 +34,12 @@ def main():
     recipe = SimpleRecipe()
 
     # Load text from file.
-    recipe.loadtxt("data/gaussian.dat")
+    recipe.loadtxt(Path(__file__).parent / "data/gaussian.dat")
 
     # Set the equation. The variable "x" is taken from the data that was just
     # loaded. The other variables, "A", "x0" and "sigma" are turned into
     # attributes with an initial value of 0.
-    recipe.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
+    recipe.set_equation("A * exp(-0.5*(x-x0)**2/sigma**2)")
 
     # We can give them other values here.
     recipe.A = 1
@@ -50,7 +52,7 @@ def main():
     leastsq(recipe.residual, recipe.values)
 
     # Print the results
-    recipe.printResults()
+    recipe.print_results()
 
     return
 

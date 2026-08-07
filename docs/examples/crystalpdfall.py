@@ -18,7 +18,8 @@ This example uses PDFGenerator to refine a the two phase nickel-silicon
 structure to all the available data.
 """
 
-import numpy
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -38,16 +39,16 @@ def makeProfile(datafile):
     """Make an place data within a Profile."""
     profile = Profile()
     parser = PDFParser()
-    parser.parseFile(datafile)
-    profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax=20)
+    parser.parse_file(datafile)
+    profile.load_parsed_data(parser)
+    profile.set_calculation_range(xmax=20)
     return profile
 
 
 def makeContribution(name, generator, profile):
     """Make a FitContribution and add a generator and profile."""
     contribution = FitContribution(name)
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="r")
     return contribution
 
@@ -92,44 +93,44 @@ def makeRecipe(
     xcontribution_sini = makeContribution(
         "xsini", xgenerator_sini_ni, xprofile_sini
     )
-    xcontribution_sini.addProfileGenerator(xgenerator_sini_si)
-    xcontribution_sini.setEquation("scale * (xG_sini_ni +  xG_sini_si)")
+    xcontribution_sini.add_profile_generator(xgenerator_sini_si)
+    xcontribution_sini.set_equation("scale * (xG_sini_ni +  xG_sini_si)")
 
     # As explained in another example, we want to minimize using Rw^2.
-    xcontribution_ni.setResidualEquation("resv")
-    xcontribution_si.setResidualEquation("resv")
-    ncontribution_ni.setResidualEquation("resv")
-    xcontribution_sini.setResidualEquation("resv")
+    xcontribution_ni.set_residual_equation("resv")
+    xcontribution_si.set_residual_equation("resv")
+    ncontribution_ni.set_residual_equation("resv")
+    xcontribution_sini.set_residual_equation("resv")
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(xcontribution_ni)
-    recipe.addContribution(xcontribution_si)
-    recipe.addContribution(ncontribution_ni)
-    recipe.addContribution(xcontribution_sini)
+    recipe.add_contribution(xcontribution_ni)
+    recipe.add_contribution(xcontribution_si)
+    recipe.add_contribution(ncontribution_ni)
+    recipe.add_contribution(xcontribution_sini)
 
     # Now we vary and constrain Parameters as before.
     for par in phase_ni.sgpars:
-        recipe.addVar(par, name=par.name + "_ni")
-    delta2_ni = recipe.newVar("delta2_ni", 2.5)
-    recipe.constrain(xgenerator_ni.delta2, delta2_ni)
-    recipe.constrain(ngenerator_ni.delta2, delta2_ni)
-    recipe.constrain(xgenerator_sini_ni.delta2, delta2_ni)
+        recipe.add_variable(par, name=par.name + "_ni")
+    delta2_ni = recipe.create_new_variable("delta2_ni", 2.5)
+    recipe.add_constraint(xgenerator_ni.delta2, delta2_ni)
+    recipe.add_constraint(ngenerator_ni.delta2, delta2_ni)
+    recipe.add_constraint(xgenerator_sini_ni.delta2, delta2_ni)
 
     for par in phase_si.sgpars:
-        recipe.addVar(par, name=par.name + "_si")
-    delta2_si = recipe.newVar("delta2_si", 2.5)
-    recipe.constrain(xgenerator_si.delta2, delta2_si)
-    recipe.constrain(xgenerator_sini_si.delta2, delta2_si)
+        recipe.add_variable(par, name=par.name + "_si")
+    delta2_si = recipe.create_new_variable("delta2_si", 2.5)
+    recipe.add_constraint(xgenerator_si.delta2, delta2_si)
+    recipe.add_constraint(xgenerator_sini_si.delta2, delta2_si)
 
     # Now the experimental parameters
-    recipe.addVar(xgenerator_ni.scale, name="xscale_ni")
-    recipe.addVar(xgenerator_si.scale, name="xscale_si")
-    recipe.addVar(ngenerator_ni.scale, name="nscale_ni")
-    recipe.addVar(xcontribution_sini.scale, 1.0, "xscale_sini")
-    recipe.newVar("pscale_sini_ni", 0.8)
-    recipe.constrain(xgenerator_sini_ni.scale, "pscale_sini_ni")
-    recipe.constrain(xgenerator_sini_si.scale, "1 - pscale_sini_ni")
+    recipe.add_variable(xgenerator_ni.scale, name="xscale_ni")
+    recipe.add_variable(xgenerator_si.scale, name="xscale_si")
+    recipe.add_variable(ngenerator_ni.scale, name="nscale_ni")
+    recipe.add_variable(xcontribution_sini.scale, 1.0, "xscale_sini")
+    recipe.create_new_variable("pscale_sini_ni", 0.8)
+    recipe.add_constraint(xgenerator_sini_ni.scale, "pscale_sini_ni")
+    recipe.add_constraint(xgenerator_sini_si.scale, "1 - pscale_sini_ni")
 
     # The qdamp parameters are too correlated to vary so we fix them based on
     # previous measurements.
@@ -143,82 +144,20 @@ def makeRecipe(
     return recipe
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
-    xnickel = recipe.xnickel
-    xr_ni = xnickel.profile.x
-    xg_ni = xnickel.profile.y
-    xgcalc_ni = xnickel.profile.ycalc
-    xdiffzero_ni = -0.8 * max(xg_ni) * numpy.ones_like(xg_ni)
-    xdiff_ni = xg_ni - xgcalc_ni + xdiffzero_ni
-
-    xsilicon = recipe.xsilicon
-    xr_si = xsilicon.profile.x
-    xg_si = xsilicon.profile.y
-    xgcalc_si = xsilicon.profile.ycalc
-    xdiffzero_si = -0.8 * max(xg_si) * numpy.ones_like(xg_si)
-    xdiff_si = xg_si - xgcalc_si + xdiffzero_si
-
-    nnickel = recipe.nnickel
-    nr_ni = nnickel.profile.x
-    ng_ni = nnickel.profile.y
-    ngcalc_ni = nnickel.profile.ycalc
-    ndiffzero_ni = -0.8 * max(ng_ni) * numpy.ones_like(ng_ni)
-    ndiff_ni = ng_ni - ngcalc_ni + ndiffzero_ni
-
-    xsini = recipe.xsini
-    xr_sini = xsini.profile.x
-    xg_sini = xsini.profile.y
-    xgcalc_sini = xsini.profile.ycalc
-    xdiffzero_sini = -0.8 * max(xg_sini) * numpy.ones_like(xg_sini)
-    xdiff_sini = xg_sini - xgcalc_sini + xdiffzero_sini
-
-    import pylab
-
-    pylab.subplot(2, 2, 1)
-    pylab.plot(xr_ni, xg_ni, "bo", label="G(r) x-ray nickel Data")
-    pylab.plot(xr_ni, xgcalc_ni, "r-", label="G(r) x-ray nickel Fit")
-    pylab.plot(xr_ni, xdiff_ni, "g-", label="G(r) x-ray nickel diff")
-    pylab.plot(xr_ni, xdiffzero_ni, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.subplot(2, 2, 2)
-    pylab.plot(xr_si, xg_si, "bo", label="G(r) x-ray silicon Data")
-    pylab.plot(xr_si, xgcalc_si, "r-", label="G(r) x-ray silicon Fit")
-    pylab.plot(xr_si, xdiff_si, "g-", label="G(r) x-ray silicon diff")
-    pylab.plot(xr_si, xdiffzero_si, "k-")
-    pylab.legend(loc=1)
-
-    pylab.subplot(2, 2, 3)
-    pylab.plot(nr_ni, ng_ni, "bo", label="G(r) neutron nickel Data")
-    pylab.plot(nr_ni, ngcalc_ni, "r-", label="G(r) neutron nickel Fit")
-    pylab.plot(nr_ni, ndiff_ni, "g-", label="G(r) neutron nickel diff")
-    pylab.plot(nr_ni, ndiffzero_ni, "k-")
-    pylab.legend(loc=1)
-
-    pylab.subplot(2, 2, 4)
-    pylab.plot(xr_sini, xg_sini, "bo", label="G(r) x-ray sini Data")
-    pylab.plot(xr_sini, xgcalc_sini, "r-", label="G(r) x-ray sini Fit")
-    pylab.plot(xr_sini, xdiff_sini, "g-", label="G(r) x-ray sini diff")
-    pylab.plot(xr_sini, xdiffzero_sini, "k-")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
-
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile_ni = "data/ni.cif"
-    ciffile_si = "data/si.cif"
-    xdata_ni = "data/ni-q27r60-xray.gr"
-    ndata_ni = "data/ni-q27r100-neutron.gr"
-    xdata_si = "data/si-q27r60-xray.gr"
-    xdata_sini = "data/si90ni10-q27r60-xray.gr"
+    ciffile_ni = Path(__file__).parent / "data/ni.cif"
+    ciffile_si = Path(__file__).parent / "data/si.cif"
+    xdata_ni = Path(__file__).parent / "data/ni-q27r60-xray.gr"
+    ndata_ni = Path(__file__).parent / "data/ni-q27r100-neutron.gr"
+    xdata_si = Path(__file__).parent / "data/si-q27r60-xray.gr"
+    xdata_sini = Path(__file__).parent / "data/si90ni10-q27r60-xray.gr"
 
     # Make the recipe
     recipe = makeRecipe(
@@ -230,9 +169,11 @@ if __name__ == "__main__":
 
     # Generate and print the FitResults
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
-    # Plot!
-    plotResults(recipe)
+    # Plot! The recipe has four contributions ("xnickel", "xsilicon",
+    # "nnickel", "xsini"), so plot_recipe produces one figure per
+    # contribution.
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

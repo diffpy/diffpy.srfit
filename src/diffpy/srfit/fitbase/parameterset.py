@@ -25,10 +25,26 @@ __all__ = ["ParameterSet"]
 from collections import OrderedDict
 
 from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.srfit.fitbase.parameterset.ParameterSet"
+removal_version = "4.0.0"
+
+addparset_dep_msg = build_deprecation_message(
+    base, "addParameterSet", "add_parameter_set", removal_version
+)
+
+removeParameterSet_dep_msg = build_deprecation_message(
+    base, "removeParameterSet", "remove_parameter_set", removal_version
+)
+
+setConst_dep_msg = build_deprecation_message(
+    base, "setConst", "set_constant", removal_version
+)
 
 
 class ParameterSet(RecipeOrganizer):
-    """Class for organizing Parameters and other ParameterSets.
+    """Organize Parameters and other ParameterSets in a hierarchy.
 
     ParameterSets are hierarchical organizations of Parameters, Constraints,
     Restraints and other ParameterSets.
@@ -36,8 +52,8 @@ class ParameterSet(RecipeOrganizer):
     Contained Parameters and other ParameterSets can be accessed by name as
     attributes in order to facilitate multi-level constraints and restraints.
     These constraints and restraints can be placed at any level and a flattened
-    list of them can be retrieved with the getConstraints and getRestraints
-    methods.
+    list of them can be retrieved with the '_get_constraints' and
+    '_get_restraints' methods.
 
     Attributes
     ----------
@@ -63,17 +79,17 @@ class ParameterSet(RecipeOrganizer):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
     def __init__(self, name):
         """Initialize.
 
-        Attributes
+        Parameters
         ----------
-        name
+        name : str
             The name of this ParameterSet.
         """
         RecipeOrganizer.__init__(self, name)
@@ -87,42 +103,86 @@ class ParameterSet(RecipeOrganizer):
     newParameter = RecipeOrganizer._new_parameter
     removeParameter = RecipeOrganizer._remove_parameter
 
-    def addParameterSet(self, parset):
+    def add_parameter_set(self, parset):
         """Add a ParameterSet to the hierarchy.
 
-        Attributes
+        Parameters
         ----------
-        parset
+        parset : ParameterSet
             The ParameterSet to be stored.
 
-
-        Raises ValueError if the ParameterSet has no name.
-        Raises ValueError if the ParameterSet has the same name as some other
-        managed object.
+        Raises
+        ------
+        ValueError
+            If the ParameterSet has no name, or if it has the same name
+            as some other managed object.
         """
         self._add_object(parset, self._parsets, True)
         return
 
-    def removeParameterSet(self, parset):
+    @deprecated(addparset_dep_msg)
+    def addParameterSet(self, parset):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.add_parameter_set
+        instead.
+        """
+        self.add_parameter_set(parset)
+        return
+
+    def remove_parameter_set(self, parset):
         """Remove a ParameterSet from the hierarchy.
 
-        Raises ValueError if parset is not managed by this object.
+        Parameters
+        ----------
+        parset : ParameterSet
+            The ParameterSet to remove.
+
+        Raises
+        ------
+        ValueError
+            If parset is not managed by this object.
         """
         self._remove_object(parset, self._parsets)
         return
 
-    def setConst(self, const=True):
+    @deprecated(removeParameterSet_dep_msg)
+    def removeParameterSet(self, parset):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.remove_parameter_set
+        instead.
+        """
+        self.remove_parameter_set(parset)
+        return
+
+    def set_constant(self, is_constant=True):
         """Set every parameter within the set to a constant.
 
-        Attributes
+        Parameters
         ----------
-        const
-            Flag indicating if the parameter is constant (default
+        is_constant : bool, optional
+            The flag indicating if the parameter is constant (default
             True).
         """
-        for par in self.iterPars():
-            par.setConst(const)
+        for par in self.iterate_over_parameters():
+            par.set_constant(is_constant)
+        return
 
+    @deprecated(setConst_dep_msg)
+    def setConst(self, const=True):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.set_constant
+        instead.
+        """
+        self.set_constant(const)
         return
 
 

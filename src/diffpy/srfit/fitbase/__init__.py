@@ -39,6 +39,7 @@ __all__ = [
     "Profile",
     "ProfileGenerator",
     "SimpleRecipe",
+    "ProfileParser",
 ]
 
 from diffpy.srfit.fitbase.calculator import Calculator
@@ -48,6 +49,7 @@ from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import FitResults, initializeRecipe
 from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
+from diffpy.srfit.fitbase.profileparser import ProfileParser
 from diffpy.srfit.fitbase.simplerecipe import SimpleRecipe
 
 # End of file

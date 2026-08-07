@@ -26,7 +26,8 @@ from diffpy.srfit.util.observable import Observable
 
 
 class Literal(Observable, LiteralABC):
-    """Abstract class for equation pieces, such as operators and arguments.
+    """Abstract class for equation pieces, such as operators and
+    arguments.
 
     Literal derives from Observable. See diffpy.srfit.util.observable.
 

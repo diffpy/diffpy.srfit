@@ -47,7 +47,7 @@ class BVSRestraint(Restraint):
     def __init__(self, parset, sig=1, scaled=False):
         """Initialize the Restraint.
 
-        Attributes
+        Parameters
         ----------
         parset
             SrRealParSet that creates this BVSRestraint.
@@ -69,7 +69,7 @@ class BVSRestraint(Restraint):
     def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 
-        Attributes
+        Parameters
         ----------
         w
             The point-average chi^2 which is optionally used to scale the

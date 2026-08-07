@@ -23,7 +23,9 @@ calculating the characteristic function in the
 diffpy.srfit.pdf.characteristicfunctions module.
 """
 
-import numpy
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -42,9 +44,9 @@ def makeRecipe(ciffile, grdata):
     pdfprofile = Profile()
 
     pdfparser = PDFParser()
-    pdfparser.parseFile(grdata)
-    pdfprofile.loadParsedData(pdfparser)
-    pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
+    pdfparser.parse_file(grdata)
+    pdfprofile.load_parsed_data(pdfparser)
+    pdfprofile.set_calculation_range(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
     pdfcontribution.set_profile(pdfprofile, xname="r")
@@ -53,75 +55,71 @@ def makeRecipe(ciffile, grdata):
     pdfgenerator.setQmax(30.0)
     stru = loadCrystal(ciffile)
     pdfgenerator.setStructure(stru)
-    pdfcontribution.addProfileGenerator(pdfgenerator)
+    pdfcontribution.add_profile_generator(pdfgenerator)
 
     # Register the nanoparticle shape factor.
-    from diffpy.srfit.pdf.characteristicfunctions import sphericalCF
+    from diffpy.srfit.pdf.characteristicfunctions import spherical_particle
 
-    pdfcontribution.registerFunction(sphericalCF, name="f")
+    pdfcontribution.register_function(spherical_particle, name="f")
 
     # Now we set up the fitting equation.
-    pdfcontribution.setEquation("f * G")
+    pdfcontribution.set_equation("f * G")
 
     # Now make the recipe. Make sure we fit the characteristic function shape
     # parameters, in this case 'psize', which is the diameter of the particle.
     recipe = FitRecipe()
-    recipe.addContribution(pdfcontribution)
+    recipe.add_contribution(pdfcontribution)
 
     phase = pdfgenerator.phase
     for par in phase.sgpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
 
-    recipe.addVar(pdfcontribution.psize, 20)
-    recipe.addVar(pdfgenerator.scale, 1)
-    recipe.addVar(pdfgenerator.delta2, 0)
+    recipe.add_variable(pdfcontribution.psize, 20)
+    recipe.add_variable(pdfgenerator.scale, 1)
+    recipe.add_variable(pdfgenerator.delta2, 0)
     recipe.B11_0 = 0.1
 
     return recipe
 
 
-def plotResults(recipe):
+def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
     r = recipe.pdf.profile.x
     g = recipe.pdf.profile.y
-    gcalc = recipe.pdf.profile.ycalc
-    diffzero = -0.8 * max(g) * numpy.ones_like(g)
-    diff = g - gcalc + diffzero
 
-    gcryst = recipe.pdf.evaluateEquation("G")
+    # These two curves are not part of the standard observed/fit/diff plot
+    # that plot_recipe produces, so we overlay them afterwards.
+    gcryst = recipe.pdf.evaluate_equation("G")
     gcryst /= recipe.scale.value
 
-    fr = recipe.pdf.evaluateEquation("f")
+    fr = recipe.pdf.evaluate_equation("f")
     fr *= max(g) / fr[0]
 
-    import pylab
+    fig, ax = recipe.plot_recipe(
+        show=False,
+        return_fig=True,
+        xlabel=r"$r (\AA)$",
+        ylabel=r"$G (\AA^{-2})$",
+    )
+    ax.plot(r, gcryst, "y--", label="G(r) Crystal")
+    ax.plot(r, fr, "k--", label="f(r) calculated (scaled)")
+    ax.legend(loc=1)
 
-    pylab.plot(r, g, "bo", label="G(r) Data")
-    pylab.plot(r, gcryst, "y--", label="G(r) Crystal")
-    pylab.plot(r, fr, "k--", label="f(r) calculated (scaled)")
-    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
-    pylab.plot(r, diff, "g-", label="G(r) diff")
-    pylab.plot(r, diffzero, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
+    plt.show()
     return
 
 
 if __name__ == "__main__":
 
-    ciffile = "data/pb.cif"
-    grdata = "data/pb_100_qmin1.gr"
+    ciffile = Path(__file__).parent / "data/pb.cif"
+    grdata = Path(__file__).parent / "data/pb_100_qmin1.gr"
 
     recipe = makeRecipe(ciffile, grdata)
     scipyOptimize(recipe)
 
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

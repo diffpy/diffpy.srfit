@@ -16,14 +16,10 @@
 
 __all__ = ["LiteralABC", "ArgumentABC", "OperatorABC"]
 
-
-from abc import ABCMeta, abstractmethod, abstractproperty
-
-import six
+from abc import ABC, abstractmethod
 
 
-@six.add_metaclass(ABCMeta)
-class LiteralABC(object):
+class LiteralABC(ABC):
     """Abstract Base Class for Literal.
 
     See Literal for usage.
@@ -31,13 +27,19 @@ class LiteralABC(object):
 
     @abstractmethod
     def identify(self, visitor):
+        """Identify this literal using a visitor."""
         pass
 
     @abstractmethod
     def getValue(self):
+        """Return the value of the literal."""
         pass
 
-    name = abstractproperty(None, None)
+    @property
+    @abstractmethod
+    def name(self):
+        """Name of the literal."""
+        pass
 
 
 # End class LiteralABC
@@ -50,11 +52,21 @@ class ArgumentABC(LiteralABC):
     """
 
     @abstractmethod
-    def setValue(self, value):
+    def set_value(self, value):
+        """Set the value of the argument."""
         pass
 
-    const = abstractproperty(None, None)
-    value = abstractproperty(None, None)
+    @property
+    @abstractmethod
+    def const(self):
+        """Whether the argument is constant."""
+        pass
+
+    @property
+    @abstractmethod
+    def value(self):
+        """Value of the argument."""
+        pass
 
 
 # End class ArgumentABC
@@ -68,14 +80,44 @@ class OperatorABC(LiteralABC):
 
     @abstractmethod
     def addLiteral(self, literal):
+        """Add a literal argument to the operator."""
         pass
 
-    args = abstractproperty(None, None)
-    nin = abstractproperty(None, None)
-    nout = abstractproperty(None, None)
-    operation = abstractproperty(None, None)
-    symbol = abstractproperty(None, None)
-    value = abstractproperty(None, None)
+    @property
+    @abstractmethod
+    def args(self):
+        """Arguments of the operator."""
+        pass
+
+    @property
+    @abstractmethod
+    def nin(self):
+        """Number of input arguments."""
+        pass
+
+    @property
+    @abstractmethod
+    def nout(self):
+        """Number of outputs."""
+        pass
+
+    @property
+    @abstractmethod
+    def operation(self):
+        """Callable implementing the operator."""
+        pass
+
+    @property
+    @abstractmethod
+    def symbol(self):
+        """Symbol representing the operator."""
+        pass
+
+    @property
+    @abstractmethod
+    def value(self):
+        """Value produced by the operator."""
+        pass
 
 
 # End class OperatorABC

@@ -12,16 +12,70 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Simple FitRecipe class that includes a FitContribution and Profile."""
+"""Simple FitRecipe class that includes a FitContribution and
+Profile."""
 
 from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 from diffpy.srfit.fitbase.fitresults import FitResults
 from diffpy.srfit.fitbase.profile import Profile
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+base = "diffpy.srfit.fitbase.SimpleRecipe"
+removal_version = "4.0.0"
+
+loadParsedData_dep_msg = build_deprecation_message(
+    base,
+    "loadParsedData",
+    "load_parsed_data",
+    removal_version,
+)
+
+setObservedProfile_dep_msg = build_deprecation_message(
+    base,
+    "setObservedProfile",
+    "set_observed_profile",
+    removal_version,
+)
+
+setCalculationRange_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationRange",
+    "set_calculation_range",
+    removal_version,
+)
+
+setCalculationPoints_dep_msg = build_deprecation_message(
+    base,
+    "setCalculationPoints",
+    "set_calculation_points",
+    removal_version,
+)
+
+setEquation_dep_msg = build_deprecation_message(
+    base,
+    "setEquation",
+    "set_equation",
+    removal_version,
+)
+
+printResults_dep_msg = build_deprecation_message(
+    base,
+    "printResults",
+    "print_results",
+    removal_version,
+)
+
+saveResults_dep_msg = build_deprecation_message(
+    base,
+    "saveResults",
+    "save_results",
+    removal_version,
+)
 
 
 class SimpleRecipe(FitRecipe):
-    """SimpleRecipe class.
+    """FitRecipe with a built-in Profile and FitContribution.
 
     This is a FitRecipe with a built-in Profile (the 'profile' attribute) and
     FitContribution (the 'contribution' attribute). Unique methods from each of
@@ -38,10 +92,10 @@ class SimpleRecipe(FitRecipe):
         The built-in FitResults object.
     name
         A name for this FitRecipe.
-    fithook
-        An object to be called whenever within the residual
-        (default FitHook()) that can pass information out of
-        the system during a refinement.
+    fithooks : list
+        The list of FitHook instances that can pass information out
+        of the system during a refinement. By default, this is
+        populated by a PrintFitHook instance.
     _constraints
         A dictionary of Constraints, indexed by the constrained
         Parameter. Constraints can be added using the
@@ -61,7 +115,7 @@ class SimpleRecipe(FitRecipe):
     _eqfactory
         A diffpy.srfit.equation.builder.EquationFactory
         instance that is used to create constraints and
-        restraints from string
+        restraints from string equations.
     _fixed
         A set of parameters that are not actually varied.
     _restraintlist
@@ -82,19 +136,29 @@ class SimpleRecipe(FitRecipe):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
     def __init__(self, name="fit", conclass=FitContribution):
-        """Initialization."""
+        """Initialize the recipe with a built-in Profile and
+        FitContribution.
+
+        Parameters
+        ----------
+        name : str, optional
+            The name of this FitRecipe (default "fit").
+        conclass : type, optional
+            The FitContribution class used to create the built-in
+            contribution (default FitContribution).
+        """
         FitRecipe.__init__(self, name)
         self.fithooks[0].verbose = 3
         contribution = conclass("contribution")
         self.profile = Profile()
         contribution.set_profile(self.profile)
-        self.addContribution(contribution)
+        self.add_contribution(contribution)
         self.results = FitResults(self, update=False)
 
         # Adopt all the FitContribution methods
@@ -109,37 +173,62 @@ class SimpleRecipe(FitRecipe):
         return
 
     # Profile methods
-    def loadParsedData(self, parser):
+    def load_parsed_data(self, parser):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
-        """
-        return self.profile.loadParsedData(parser)
 
-    def setObservedProfile(self, xobs, yobs, dyobs=None):
+        Parameters
+        ----------
+        parser : ProfileParser
+            The ProfileParser to load data from.
+        """
+        return self.profile.load_parsed_data(parser)
+
+    @deprecated(loadParsedData_dep_msg)
+    def loadParsedData(self, parser):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.load_parsed_data
+        instead.
+        """
+        return self.load_parsed_data(parser)
+
+    def set_observed_profile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         Parameters
         ----------
-        xobs
-            Numpy array of the independent variable
-        yobs
-            Numpy array of the observed signal.
-        dyobs
-            Numpy array of the uncertainty in the observed signal. If
-            dyobs is None (default), it will be set to 1 at each
-            observed xobs.
+        xobs : ndarray
+            The independent variable.
+        yobs : ndarray
+            The observed signal.
+        dyobs : ndarray, optional
+            The uncertainty in the observed signal. If dyobs is None
+            (default), it will be set to 1 at each observed xobs.
 
         Raises
-        ----------
+        ------
         ValueError
-            if len(yobs) != len(xobs)
-        ValueError
-            if dyobs != None and len(dyobs) != len(xobs)
+            If len(yobs) != len(xobs), or if dyobs is not None and
+            len(dyobs) != len(xobs).
         """
-        return self.profile.setObservedProfile(xobs, yobs, dyobs)
+        return self.profile.set_observed_profile(xobs, yobs, dyobs)
 
-    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+    @deprecated(setObservedProfile_dep_msg)
+    def setObservedProfile(self, xobs, yobs, dyobs=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.set_observed_profile
+        instead.
+        """
+        return self.set_observed_profile(xobs, yobs, dyobs)
+
+    def set_calculation_range(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
 
         Adhere to the observed ``xobs`` points when ``dx`` is the same
@@ -148,7 +237,6 @@ class SimpleRecipe(FitRecipe):
 
         Parameters
         ----------
-
         xmin : float or `obs`, optional
             The minimum value of the independent variable.  Keep the
             current minimum when not specified.  If specified as "obs"
@@ -171,21 +259,43 @@ class SimpleRecipe(FitRecipe):
         ValueError
             When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
         """
-        return self.profile.setCalculationRange(xmin, xmax, dx)
+        return self.profile.set_calculation_range(xmin, xmax, dx)
 
-    def setCalculationPoints(self, x):
+    @deprecated(setCalculationRange_dep_msg)
+    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.set_calculation_range
+        instead.
+        """
+        return self.set_calculation_range(xmin, xmax, dx)
+
+    def set_calculation_points(self, x):
         """Set the calculation points.
+
+        This will create y and dy on the specified grid if xobs, yobs
+        and dyobs exist.
 
         Parameters
         ----------
-        x
-            A non-empty numpy array containing the calculation points. If
-            xobs exists, the bounds of x will be limited to its bounds.
-
-        This will create y and dy on the specified grid if xobs, yobs and
-        dyobs exist.
+        x : ndarray
+            The non-empty array of calculation points. If xobs exists,
+            the bounds of x will be limited to its bounds.
         """
-        return self.profile.setCalculationPoints(x)
+        return self.profile.set_calculation_points(x)
+
+    @deprecated(setCalculationPoints_dep_msg)
+    def setCalculationPoints(self, x):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.set_calculation_points
+        instead.
+        """
+        return self.set_calculation_points(x)
 
     def loadtxt(self, *args, **kw):
         """Use numpy.loadtxt to load data.
@@ -194,38 +304,44 @@ class SimpleRecipe(FitRecipe):
         enforced. The first two arrays returned by numpy.loadtxt are
         assumed to be x and y. If there is a third array, it is assumed
         to by dy. Any other arrays are ignored. These are passed to
-        setObservedProfile.
+        set_observed_profile.
 
-         Raises ValueError if the call to numpy.loadtxt returns fewer
-        than 2 arrays.
+        Raises
+        ------
+        ValueError
+            If the call to numpy.loadtxt returns fewer than 2 arrays.
 
-        Returns the x, y and dy arrays loaded from the file
+        Returns
+        -------
+        tuple
+            The x, y and dy arrays loaded from the file.
         """
         return self.profile.loadtxt(*args, **kw)
 
     # FitContribution
-    def setEquation(self, eqstr, ns={}):
+    def set_equation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual.
-        The equation will be usable within setResidualEquation as "eq", and it
-        takes no arguments.
+        The equation will be usable within set_residual_equation as "eq", and
+        it takes no arguments.
 
-        Attributes
+        Parameters
         ----------
-        eqstr
-            A string representation of the equation. Variables will be
-            extracted from this equation and be given an initial value
-            of 0.
-        ns
-            A dictionary of Parameters, indexed by name, that are used
-            in the eqstr, but not registered (default {}).
+        eqstr : str
+            The string representation of the equation. Variables will
+            be extracted from this equation and be given an initial
+            value of 0.
+        ns : dict, optional
+            The dictionary of Parameters, indexed by name, that are
+            used in the eqstr, but not registered (default {}).
 
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
+        Raises
+        ------
+        ValueError
+            If ns uses a name that is already used for a variable.
         """
-        self.contribution.setEquation(eqstr, ns={})
+        self.contribution.set_equation(eqstr, ns={})
         # Extract variables
         for par in self.contribution:
             # Skip Profile  Parameters
@@ -234,7 +350,19 @@ class SimpleRecipe(FitRecipe):
             if par.value is None:
                 par.value = 0
             if par.name not in self._parameters:
-                self.addVar(par)
+                self.add_variable(par)
+        return
+
+    @deprecated(setEquation_dep_msg)
+    def setEquation(self, eqstr, ns={}):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.set_equation
+        instead.
+        """
+        self.set_equation(eqstr, ns)
         return
 
     def __call__(self):
@@ -242,33 +370,55 @@ class SimpleRecipe(FitRecipe):
         return self.contribution.evaluate()
 
     # FitResults methods
-
-    def printResults(self, header="", footer=""):
+    def print_results(self, header="", footer=""):
         """Format and print the results.
 
-        Attributes
+        Parameters
         ----------
-        header
-            A header to add to the output (default "")
-        footer
-            A footer to add to the output (default "")
+        header : str, optional
+            The header to add to the output (default "").
+        footer : str, optional
+            The footer to add to the output (default "").
         """
-        self.results.printResults(header, footer, True)
+        self.results.print_results(header, footer, True)
         return
 
-    def saveResults(self, filename, header="", footer=""):
+    @deprecated(printResults_dep_msg)
+    def printResults(self, header="", footer=""):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.print_results
+        instead.
+        """
+        self.print_results(header, footer)
+        return
+
+    def save_results(self, filename, header="", footer=""):
         """Format and save the results.
 
         Parameters
         ----------
-        filename
-            Name of the save file.
-        header
-            A header to add to the output (default "")
-        footer
-            A footer to add to the output (default "")
+        filename : str
+            The name of the save file.
+        header : str, optional
+            The header to add to the output (default "").
+        footer : str, optional
+            The footer to add to the output (default "").
         """
-        self.results.saveResults(filename, header, footer, True)
+        self.results.save_results(filename, header, footer, True)
+
+    @deprecated(saveResults_dep_msg)
+    def saveResults(self, filename, header="", footer=""):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.SimpleRecipe.save_results
+        instead.
+        """
+        self.save_results(filename, header, footer)
 
 
 # End class SimpleRecipe

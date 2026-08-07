@@ -28,11 +28,19 @@ from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.fitbase.recipeorganizer import equationFromString
+from diffpy.srfit.fitbase.recipeorganizer import get_equation_from_string
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 base = "diffpy.srfit.fitbase.FitContribution"
 removal_version = "4.0.0"
+
+setequation_dep_msg = build_deprecation_message(
+    base,
+    "setEquation",
+    "set_equation",
+    removal_version,
+)
+
 
 setprofile_dep_msg = build_deprecation_message(
     base,
@@ -41,9 +49,37 @@ setprofile_dep_msg = build_deprecation_message(
     removal_version,
 )
 
+addprofilegenerator_dep_msg = build_deprecation_message(
+    base,
+    "addProfileGenerator",
+    "add_profile_generator",
+    removal_version,
+)
+
+getequation_dep_msg = build_deprecation_message(
+    base,
+    "getEquation",
+    "get_equation",
+    removal_version,
+)
+
+setresidualequation_dep_msg = build_deprecation_message(
+    base,
+    "setResidualEquation",
+    "set_residual_equation",
+    removal_version,
+)
+
+getresidualequation_dep_msg = build_deprecation_message(
+    base,
+    "getResidualEquation",
+    "get_residual_equation",
+    removal_version,
+)
+
 
 class FitContribution(ParameterSet):
-    """FitContribution class.
+    """Organize an Equation, a Profile, and their supporting objects.
 
     FitContributions organize an Equation that calculates the signal, and a
     Profile that holds the signal. ProfileGenerators and Calculators can be
@@ -61,14 +97,14 @@ class FitContribution(ParameterSet):
         A managed dictionary of Calculators, indexed by name.
     _constraints
         A set of constrained Parameters. Constraints can be
-        added using the 'constrain' methods.
+        added using the ``constrain`` methods.
     _generators
         A managed dictionary of ProfileGenerators.
     _parameters
         A managed OrderedDict of parameters.
     _restraints
         A set of Restraints. Restraints can be added using the
-        'restrain' method.
+        ``restrain`` method.
     _parsets
         A managed dictionary of ParameterSets.
     _eqfactory
@@ -89,13 +125,19 @@ class FitContribution(ParameterSet):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
     def __init__(self, name):
-        """Initialization."""
+        """Initialize the FitContribution.
+
+        Parameters
+        ----------
+        name : str
+            The name of this FitContribution.
+        """
         ParameterSet.__init__(self, name)
         self._eq = None
         self._reseq = None
@@ -111,22 +153,22 @@ class FitContribution(ParameterSet):
     def set_profile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
-        Attributes
+        Parameters
         ----------
-        profile
-            A Profile that specifies the calculation points and that
+        profile : Profile
+            The Profile that specifies the calculation points and that
             will store the calculated signal.
-        xname
+        xname : str, optional
             The name of the independent variable from the Profile. If
             this is None (default), then the name specified by the
             Profile for this parameter will be used.  This variable is
             usable within string equations with the specified name.
-        yname
+        yname : str, optional
             The name of the observed Profile.  If this is None
             (default), then the name specified by the Profile for this
             parameter will be used.  This variable is usable within
             string equations with the specified name.
-        dyname
+        dyname : str, optional
             The name of the uncertainty in the observed Profile. If
             this is None (default), then the name specified by the
             Profile for this parameter will be used.  This variable is
@@ -164,7 +206,7 @@ class FitContribution(ParameterSet):
 
         # If we have _eq, but not _reseq, set the residual
         if self._eq is not None and self._reseq is None:
-            self.setResidualEquation("chiv")
+            self.set_residual_equation("chiv")
 
         return
 
@@ -179,30 +221,32 @@ class FitContribution(ParameterSet):
             profile, xname=xname, yname=yname, dyname=dyname
         )
 
-    def addProfileGenerator(self, gen, name=None):
+    def add_profile_generator(self, gen, name=None):
         """Add a ProfileGenerator to be used by this FitContribution.
 
         The ProfileGenerator is given a name so that it can be used as part of
-        the profile equation (see setEquation). This can be different from the
-        name of the ProfileGenerator used for attribute access.
+        the profile equation (see ``set_equation``). This can be different
+        from the name of the ProfileGenerator used for attribute access.
         FitContributions should not share ProfileGenerator instances. Different
         ProfileGenerators can share Parameters and ParameterSets, however.
 
-        Calling addProfileGenerator sets the profile equation to call the
-        calculator and if there is not a profile equation already.
+        Calling ``add_profile_generator`` sets the profile equation to call
+        the calculator if there is not a profile equation already.
 
-        Attributes
+        Parameters
         ----------
-        gen
-            A ProfileGenerator instance
-        name
+        gen : ProfileGenerator
+            The ProfileGenerator instance to add.
+        name : str, optional
             A name for the calculator. If name is None (default), then
             the ProfileGenerator's name attribute will be used.
 
-
-        Raises ValueError if the ProfileGenerator has no name.
-        Raises ValueError if the ProfileGenerator has the same name as some
-        other managed object.
+        Raises
+        ------
+        ValueError
+            If the ProfileGenerator has no name, or if the
+            ProfileGenerator has the same name as some other managed
+            object.
         """
         if name is None:
             name = gen.name
@@ -219,36 +263,51 @@ class FitContribution(ParameterSet):
         # Make this our equation if we don't have one. This will set the
         # residual equation if necessary.
         if self._eq is None:
-            self.setEquation(name)
+            self.set_equation(name)
 
         return
 
-    def setEquation(self, eqstr, ns={}):
+    @deprecated(addprofilegenerator_dep_msg)
+    def addProfileGenerator(self, gen, name=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.FitContribution.add_profile_generator
+        instead.
+        """
+        self.add_profile_generator(gen, name=name)
+        return
+
+    def set_equation(self, eqstr, ns={}):
         """Set the profile equation for the FitContribution.
 
         This sets the equation that will be used when generating the residual
         for this FitContribution.  The equation will be usable within
-        setResidualEquation as "eq", and it takes no arguments.
+        ``set_residual_equation`` as ``"eq"``, and it takes no arguments.
 
-        Attributes
+        Parameters
         ----------
-        eqstr
+        eqstr : str
             A string representation of the equation. Any Parameter
-            registered by addParameter or setProfile, or function
-            registered by setCalculator, registerFunction or
-            registerStringFunction can be can be used in the equation
+            registered by ``addParameter`` or ``set_profile``, or function
+            registered by ``register_calculator``, ``register_function`` or
+            ``register_string_function`` can be used in the equation
             by name. Other names will be turned into Parameters of this
             FitContribution.
-        ns
+        ns : dict, optional
             A dictionary of Parameters, indexed by name, that are used
             in the eqstr, but not registered (default {}).
 
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
+        Raises
+        ------
+        ValueError
+            If ns uses a name that is already used for a variable.
         """
         # Build the equation instance.
-        eq = equationFromString(eqstr, self._eqfactory, buildargs=True, ns=ns)
+        eq = get_equation_from_string(
+            eqstr, self._eqfactory, buildargs=True, ns=ns
+        )
         eq.name = "eq"
 
         # Register any new Parameters.
@@ -262,15 +321,30 @@ class FitContribution(ParameterSet):
 
         # Set the residual if we need to
         if self.profile is not None and self._reseq is None:
-            self.setResidualEquation("chiv")
+            self.set_residual_equation("chiv")
 
         return
 
-    def getEquation(self):
-        """Get math expression string for the active profile equation.
+    @deprecated(setequation_dep_msg)
+    def setEquation(self, eqstr, ns={}):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
 
-        Return normalized math expression or an empty string if profile
-        equation has not been set yet.
+        Please use diffpy.srfit.fitbase.FitContribution.set_equation
+        instead.
+        """
+        self.set_equation(eqstr, ns=ns)
+        return
+
+    def get_equation(self):
+        """Get the math expression string for the active profile
+        equation.
+
+        Returns
+        -------
+        str
+            The normalized math expression, or an empty string if the
+            profile equation has not been set yet.
         """
         from diffpy.srfit.equation.visitors import getExpression
 
@@ -279,29 +353,42 @@ class FitContribution(ParameterSet):
             rv = getExpression(self._eq)
         return rv
 
-    def setResidualEquation(self, eqstr):
+    @deprecated(getequation_dep_msg)
+    def getEquation(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.srfit.fitbase.FitContribution.get_equation
+        instead.
+        """
+        return self.get_equation()
+
+    def set_residual_equation(self, eqstr):
         """Set the residual equation for the FitContribution.
 
-        Attributes
-        ----------
-        eqstr
-            A string representation of the residual. If eqstr is None
-            (default), then the previous residual equation will be
-            used, or the chi2 residual will be used if that does not
-            exist.
-
-
-        Two residuals are preset for convenience, "chiv" and "resv".
-        chiv is defined such that dot(chiv, chiv) = chi^2.
-        resv is defined such that dot(resv, resv) = Rw^2.
+        Two residuals are preset for convenience, ``"chiv"`` and ``"resv"``.
+        ``chiv`` is defined such that ``dot(chiv, chiv) = chi^2``.
+        ``resv`` is defined such that ``dot(resv, resv) = Rw^2``.
         You can call on these in your residual equation. Note that the quantity
         that will be optimized is the summed square of the residual equation.
         Keep that in mind when defining a new residual or using the built-in
         ones.
 
-        Raises SrFitError if the Profile is not yet defined.
-        Raises ValueError if eqstr depends on a Parameter that is not part of
-        the FitContribution.
+        Parameters
+        ----------
+        eqstr : str
+            A string representation of the residual. If eqstr is None
+            (default), then the previous residual equation will be
+            used, or the chi2 residual will be used if that does not
+            exist.
+
+        Raises
+        ------
+        SrFitError
+            If the Profile is not yet defined.
+        ValueError
+            If eqstr depends on a Parameter that is not part of the
+            FitContribution.
         """
         if self.profile is None:
             raise SrFitError("Assign the Profile first")
@@ -317,17 +404,33 @@ class FitContribution(ParameterSet):
         elif eqstr == "resv":
             eqstr = resvstr
 
-        reseq = equationFromString(eqstr, self._eqfactory)
+        reseq = get_equation_from_string(eqstr, self._eqfactory)
         self._eqfactory.wipeout(self._reseq)
         self._reseq = reseq
 
         return
 
-    def getResidualEquation(self):
-        """Get math expression string for the active residual equation.
+    @deprecated(setresidualequation_dep_msg)
+    def setResidualEquation(self, eqstr):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
 
-        Return normalized math formula or an empty string if residual
-        equation has not been configured yet.
+        Please use
+        diffpy.srfit.fitbase.FitContribution.set_residual_equation
+        instead.
+        """
+        self.set_residual_equation(eqstr)
+        return
+
+    def get_residual_equation(self):
+        """Get the math expression string for the active residual
+        equation.
+
+        Returns
+        -------
+        str
+            The normalized math formula, or an empty string if the
+            residual equation has not been configured yet.
         """
         from diffpy.srfit.equation.visitors import getExpression
 
@@ -336,19 +439,35 @@ class FitContribution(ParameterSet):
             rv = getExpression(self._reseq, eqskip="eq$")
         return rv
 
+    @deprecated(getresidualequation_dep_msg)
+    def getResidualEquation(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.FitContribution.get_residual_equation
+        instead.
+        """
+        return self.get_residual_equation()
+
     def residual(self):
-        """Calculate the residual for this fitcontribution.
+        """Calculate the residual for this FitContribution.
 
         When this method is called, it is assumed that all parameters have been
         assigned their most current values by the FitRecipe. This will be the
         case when being called as part of a FitRecipe refinement.
 
-        The residual is by default an array chiv:
-        chiv = (eq() - self.profile.y) / self.profile.dy
-        The value that is optimized is dot(chiv, chiv).
+        The residual is by default an array ``chiv``:
+        ``chiv = (eq() - self.profile.y) / self.profile.dy``.
+        The value that is optimized is ``dot(chiv, chiv)``.
 
-        The residual equation can be changed with the setResidualEquation
-        method.
+        The residual equation can be changed with the
+        ``set_residual_equation`` method.
+
+        Returns
+        -------
+        numpy.ndarray
+            The array of residual values.
         """
         # Assign the calculated profile
         self.profile.ycalc = self._eq()
@@ -357,7 +476,13 @@ class FitContribution(ParameterSet):
         return self._reseq()
 
     def evaluate(self):
-        """Evaluate the contribution equation and update profile.ycalc."""
+        """Evaluate the contribution equation and update profile.ycalc.
+
+        Returns
+        -------
+        numpy.ndarray
+            The calculated signal.
+        """
         yc = self._eq()
         if self.profile is not None:
             self.profile.ycalc = yc
@@ -370,7 +495,10 @@ class FitContribution(ParameterSet):
         ProfileGenerator validations. This validates _eq. This validates
         _reseq and residual.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         self.profile._validate()
         ParameterSet._validate(self)

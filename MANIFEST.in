@@ -11,4 +11,3 @@ global-exclude __pycache__  # Exclude Python cache directories.
 global-exclude .git*  # Exclude git files and directories.
 global-exclude .idea  # Exclude PyCharm project settings.
 exclude .codecov.yml
-exclude .coveragerc

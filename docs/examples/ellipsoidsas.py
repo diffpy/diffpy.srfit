@@ -14,6 +14,9 @@
 ########################################################################
 """Example of a refinement of SAS I(Q) data to an ellipsoidal model."""
 
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import (
@@ -86,31 +89,35 @@ def makeRecipe(datname):
     return recipe
 
 
-def plotResults(recipe):
+def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
-    r = recipe.ellipsoid.profile.x
-    y = recipe.ellipsoid.profile.y
-    ycalc = recipe.ellipsoid.profile.ycalc
-    diff = y - ycalc + min(y)
-
-    import pylab
-
-    pylab.loglog(r, y, "bo", label="I(Q) Data")
-    pylab.loglog(r, ycalc, "r-", label="I(Q) Fit")
-    pylab.loglog(r, diff, "g-", label="I(Q) diff")
-    pylab.xlabel(r"$Q (\AA^{-1})$")
-    pylab.ylabel("$I (arb. units)$")
-    pylab.legend(loc=1)
-
-    pylab.show()
+    # I(Q) SAS data is best viewed on a log-log scale, so we prepare the
+    # axes ourselves and hand them to plot_recipe. The residual difference
+    # curve is not shown since it can go negative and is not meaningful on
+    # a log scale.
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    recipe.plot_recipe(
+        ax=ax,
+        show=False,
+        show_diff=False,
+        data_color="b",
+        fit_color="r",
+        data_label="I(Q) Data",
+        fit_label="I(Q) Fit",
+        xlabel=r"$Q (\AA^{-1})$",
+        ylabel="$I (arb. units)$",
+    )
+    plt.show()
     return
 
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    data = "data/sas_ellipsoid_testdata.txt"
+    data = Path(__file__).parent / "data/sas_ellipsoid_testdata.txt"
 
     # Make the recipe
     recipe = makeRecipe(data)
@@ -123,6 +130,6 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

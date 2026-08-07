@@ -22,7 +22,7 @@ calculated. Depending on the verbosity, it will also report the residual
 and the current variable values.
 
 Custom FitHooks can be added to a FitRecipe with the
-FitRecipe.setFitHook method.
+FitRecipe.push_fit_hook method.
 """
 
 from __future__ import print_function
@@ -60,8 +60,8 @@ class FitHook(object):
 
         Parameters
         ----------
-        recipe
-            The FitRecipe instance
+        recipe : FitRecipe
+            The FitRecipe instance.
         """
         return
 
@@ -71,10 +71,10 @@ class FitHook(object):
 
         Parameters
         ----------
-        recipe
-            The FitRecipe instance
-        chiv
-            The residual vector
+        recipe : FitRecipe
+            The FitRecipe instance.
+        chiv : ndarray
+            The residual vector.
         """
         return
 
@@ -83,7 +83,7 @@ class FitHook(object):
 
 
 class PrintFitHook(FitHook):
-    """Base class for inspecting the progress of a FitRecipe refinement.
+    """Print the progress of a FitRecipe refinement.
 
     This FitHook prints out a running count of the number of times the residual
     has been called, or other information, based on the verbosity.
@@ -94,14 +94,15 @@ class PrintFitHook(FitHook):
         The number of times the residual has been called (default 0).
     verbose
         An integer telling how verbose to be (default 1).
-                0
-        print nothing
-                1
-        print the count during the precall
-                2
-        print the residual during the postcall
-                >=3
-        print the variables during the postcall
+
+        0
+            Print nothing.
+        1
+            Print the count during the precall.
+        2
+            Print the residual during the postcall.
+        >=3
+            Print the variables during the postcall.
     """
 
     def __init__(self):
@@ -127,8 +128,8 @@ class PrintFitHook(FitHook):
 
         Parameters
         ----------
-        recipe
-            The FitRecipe instance
+        recipe : FitRecipe
+            The FitRecipe instance.
         """
         self.count += 1
         if self.verbose > 0:
@@ -141,10 +142,10 @@ class PrintFitHook(FitHook):
 
         Parameters
         ----------
-        recipe
-            The FitRecipe instance
-        chiv
-            The residual vector
+        recipe : FitRecipe
+            The FitRecipe instance.
+        chiv : ndarray
+            The residual vector.
         """
         if self.verbose < 2:
             return
@@ -185,7 +186,7 @@ def _byname(nv):
 
 # TODO - Display the chi^2 on the plot during refinement.
 class PlotFitHook(FitHook):
-    """This FitHook has live plotting of whatever is being refined."""
+    """Live-plot the progress of a FitRecipe refinement."""
 
     def reset(self, recipe):
         """Set up the plot."""
@@ -237,10 +238,10 @@ class PlotFitHook(FitHook):
 
         Parameters
         ----------
-        recipe
-            The FitRecipe instance
-        chiv
-            The residual vector
+        recipe : FitRecipe
+            The FitRecipe instance.
+        chiv : ndarray
+            The residual vector.
         """
         FitHook.postcall(self, recipe, chiv)
         import pylab

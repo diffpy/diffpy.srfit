@@ -39,6 +39,8 @@ Extensions
   GaussianGenerator will be accessible by its name, "g".
 """
 
+from pathlib import Path
+
 from numpy import exp
 
 from diffpy.srfit.fitbase import (
@@ -131,7 +133,7 @@ def makeRecipe():
 
     # Load data and add it to the profile. This uses the loadtxt function from
     # numpy.
-    profile.loadtxt("data/gaussian.dat")
+    profile.loadtxt(Path(__file__).parent / "data/gaussian.dat")
 
     # The ProfileGenerator
     # Create a GaussianGenerator named "g". This will be the name we use to

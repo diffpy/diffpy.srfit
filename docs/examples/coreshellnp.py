@@ -20,7 +20,8 @@ modeling approach we use is to refine the core and shell as two
 different phases, each with an appropriate characteristic function.
 """
 
-import numpy
+from pathlib import Path
+
 from pyobjcryst import loadCrystal
 from scipy.optimize import leastsq
 
@@ -134,35 +135,18 @@ def makeRecipe(stru1, stru2, datname):
     return recipe
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
-    r = recipe.cdszns.profile.x
-    g = recipe.cdszns.profile.y
-    gcalc = recipe.cdszns.profile.ycalc
-    diffzero = -0.8 * max(g) * numpy.ones_like(g)
-    diff = g - gcalc + diffzero
-
-    import pylab
-
-    pylab.plot(r, g, "bo", label="G(r) Data")
-    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
-    pylab.plot(r, diff, "g-", label="G(r) diff")
-    pylab.plot(r, diffzero, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 def main():
     """Set up and refine the recipe."""
     # Make the data and the recipe
-    cdsciffile = "data/CdS.cif"
-    znsciffile = "data/ZnS.cif"
-    data = "data/CdS_ZnS_nano.gr"
+    cdsciffile = Path(__file__).parent / "data/CdS.cif"
+    znsciffile = Path(__file__).parent / "data/ZnS.cif"
+    data = Path(__file__).parent / "data/CdS_ZnS_nano.gr"
 
     # Make the recipe
     stru1 = loadCrystal(cdsciffile)
@@ -206,7 +190,7 @@ def main():
     res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    recipe.plot_recipe(**plot_styles)
     return
 
 

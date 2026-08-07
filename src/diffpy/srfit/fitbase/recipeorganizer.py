@@ -174,10 +174,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
     RecipeContainers are hierarchical organizations of Parameters and other
     RecipeContainers. This class provides attribute-access to these contained
     objects.  Parameters and other RecipeContainers can be found within the
-    hierarchy with the _locate_managed_object method.
+    hierarchy with the `_locate_managed_object` method.
 
     A RecipeContainer can manage dictionaries for that store various objects.
-    These dictionaries can be added to the RecipeContainer using the _manage
+    These dictionaries can be added to the RecipeContainer using the `_manage`
     method. RecipeContainer methods that add, remove or retrieve objects will
     work with any managed dictionary. This makes it easy to add new types of
     objects to be contained by a RecipeContainer. By default, the
@@ -260,11 +260,16 @@ class RecipeContainer(Observable, Configurable, Validatable):
             top-level parameters will be iterated over.
         fullnames : bool, optional
             The flag indicating whether to match against hierarchical
-            dotted namesrelative to this object.
+            dotted names relative to this object.
             If False (default), match only leaf parameter names.
 
-        Example
-        -------
+        Yields
+        ------
+        Parameter
+            The next Parameter whose name matches `pattern`.
+
+        Examples
+        --------
 
         ..
             for param in recipe.iterate_over_parameters(pattern="scale_"):
@@ -346,20 +351,59 @@ class RecipeContainer(Observable, Configurable, Validatable):
         return self.iterate_over_parameters(pattern=pattern, recurse=recurse)
 
     def __iter__(self):
-        """Iterate over top-level parameters."""
+        """Iterate over top-level parameters.
+
+        Returns
+        -------
+        iterator
+            The iterator over the top-level Parameters.
+        """
         return iter(self._parameters.values())
 
     def __len__(self):
-        """Get number of top-level parameters."""
+        """Get number of top-level parameters.
+
+        Returns
+        -------
+        int
+            The number of top-level Parameters.
+        """
         return len(self._parameters)
 
     def __getitem__(self, idx):
-        """Get top-level parameters by index."""
+        """Get top-level parameters by index.
+
+        Parameters
+        ----------
+        idx : int or slice
+            The index, or slice, of the top-level Parameters to get.
+
+        Returns
+        -------
+        Parameter or list of Parameter
+            The Parameter, or list of Parameters, at `idx`.
+        """
         # need to wrap this in a list for python 3 compatibility.
         return list(self._parameters.values())[idx]
 
     def __getattr__(self, name):
-        """Gives access to the contained objects as attributes."""
+        """Give access to the contained objects as attributes.
+
+        Parameters
+        ----------
+        name : str
+            The name of the managed object to retrieve.
+
+        Returns
+        -------
+        object
+            The managed object registered under `name`.
+
+        Raises
+        ------
+        AttributeError
+            If no managed object is registered under `name`.
+        """
         arg = self.get(name)
         if arg is None:
             raise AttributeError(name)
@@ -374,7 +418,14 @@ class RecipeContainer(Observable, Configurable, Validatable):
     )
 
     def __dir__(self):
-        """Return sorted list of attributes for this object."""
+        """Return sorted list of attributes for this object.
+
+        Returns
+        -------
+        list of str
+            The sorted list of attribute names, including managed
+            objects.
+        """
         rv = set(dir(type(self)))
         rv.update(self.__dict__)
         # self.get fetches looks up for items in all managed dictionaries.
@@ -388,7 +439,28 @@ class RecipeContainer(Observable, Configurable, Validatable):
     __managed = []
 
     def __setattr__(self, name, value):
-        """Parameter access and object checking."""
+        """Set an attribute, routing Parameter names to Parameter
+        values.
+
+        If `name` matches a managed Parameter, the Parameter's value is
+        set rather than replacing the Parameter itself. Otherwise this
+        behaves like normal attribute assignment, except that a managed
+        non-Parameter object of that name may not be overwritten.
+
+        Parameters
+        ----------
+        name : str
+            The name of the attribute to set.
+        value
+            The value to assign. If `name` refers to a managed
+            Parameter, this may be a plain value or a Parameter, whose
+            value will be copied.
+
+        Raises
+        ------
+        AttributeError
+            If `name` refers to a managed, non-Parameter object.
+        """
         if name in self._parameters:
             parameter = self._parameters[name]
             if isinstance(value, Parameter):
@@ -405,11 +477,21 @@ class RecipeContainer(Observable, Configurable, Validatable):
         return
 
     def __delattr__(self, name):
-        """Delete parameters with del.
+        """Delete parameters with ``del``.
 
         This does not allow deletion of non-parameters, as this may
         require configuration changes that are not yet handled in a
         general way.
+
+        Parameters
+        ----------
+        name : str
+            The name of the Parameter to delete.
+
+        Raises
+        ------
+        AttributeError
+            If `name` refers to a managed, non-Parameter object.
         """
         if name in self._parameters:
             self._remove_parameter(self._parameters[name])
@@ -423,7 +505,22 @@ class RecipeContainer(Observable, Configurable, Validatable):
         return
 
     def get(self, name, default=None):
-        """Get a managed object."""
+        """Get a managed object.
+
+        Parameters
+        ----------
+        name : str
+            The name of the managed object to retrieve.
+        default : optional
+            The value to return if no managed object is found under
+            `name` (default None).
+
+        Returns
+        -------
+        object
+            The managed object registered under `name`, or `default`
+            if no such object exists.
+        """
         for d in self.__managed:
             arg = d.get(name)
             if arg is not None:
@@ -432,7 +529,13 @@ class RecipeContainer(Observable, Configurable, Validatable):
         return default
 
     def get_names(self):
-        """Get the names of managed parameters."""
+        """Get the names of managed parameters.
+
+        Returns
+        -------
+        list of str
+            The names of the managed Parameters.
+        """
         return [p.name for p in self._parameters.values()]
 
     @deprecated(getNames_deprecation_msg)
@@ -447,7 +550,13 @@ class RecipeContainer(Observable, Configurable, Validatable):
         return self.get_names()
 
     def get_values(self):
-        """Get the values of managed parameters."""
+        """Get the values of managed parameters.
+
+        Returns
+        -------
+        list
+            The values of the managed Parameters.
+        """
         return [p.value for p in self._parameters.values()]
 
     @deprecated(getValues_deprecation_msg)
@@ -471,13 +580,16 @@ class RecipeContainer(Observable, Configurable, Validatable):
         d
             The managed dictionary to store the object in.
         check
-            If True (default), a ValueError is raised an object of the
-            given name already exists.
+            If True (default), a ValueError is raised if an object of
+            the given name already exists.
 
-
-        Raises ValueError if the object has no name.
-        Raises ValueError if the object has the same name as some other managed
-        object.
+        Raises
+        ------
+        ValueError
+            If the object has no name.
+        ValueError
+            If the object has the same name as some other managed
+            object.
         """
         # Check name
         if not obj.name:
@@ -518,7 +630,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def _remove_object(self, obj, d):
         """Remove an object from a managed dictionary.
 
-        Raises ValueError if obj is not part of the dictionary.
+        Raises
+        ------
+        ValueError
+            If `obj` is not part of the dictionary.
         """
         if obj not in d.values():
             m = "'%s' is not part of the %s" % (obj, self.__class__.__name__)
@@ -537,11 +652,13 @@ class RecipeContainer(Observable, Configurable, Validatable):
         obj
             The object to find.
 
-
-        Returns a list of objects. The first member of the list is this object,
-        and each subsequent member is a sub-object of the previous one.  The
-        last entry in the list is obj. If obj cannot be found, the list is
-        empty.
+        Returns
+        -------
+        list
+            The list of objects. The first member of the list is this
+            object, and each subsequent member is a sub-object of the
+            previous one. The last entry in the list is `obj`. If `obj`
+            cannot be found, the list is empty.
         """
         loc = [self]
 
@@ -580,7 +697,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
         This validates that contained Parameters and managed objects are
         valid.
 
-        Raises AttributeError if validation fails.
+        Raises
+        ------
+        AttributeError
+            If validation fails.
         """
         iterable = chain(self.__iter__(), self._iter_managed())
         self._validate_others(iterable)
@@ -597,7 +717,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     Restraints, as well as Equations that can be used in Constraint and
     Restraint equations.  These constraints and Restraints can be placed at any
     level and a flattened list of them can be retrieved with the
-    _get_constraints and _get_restraints methods.
+    `_get_constraints` and `_get_restraints` methods.
 
     Attributes
     ----------
@@ -627,8 +747,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     values
         Variable values (read only). See get_values.
 
-
-    Raises ValueError if the name is not a valid attribute identifier
+    Raises
+    ------
+    ValueError
+        If the name is not a valid attribute identifier.
     """
 
     def __init__(self, name):
@@ -647,9 +769,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Add a new Parameter to the container.
 
         This creates a new Parameter and adds it to the container using
-        the _add_parameter method.
+        the `_add_parameter` method.
 
-        Returns the Parameter.
+        Returns
+        -------
+        Parameter
+            The newly created Parameter.
         """
         p = Parameter(name, value)
         self._add_parameter(p, check)
@@ -665,13 +790,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         parameter
             The Parameter to be stored.
         check
-            If True (default), a ValueError is raised a Parameter of
+            If True (default), a ValueError is raised if a Parameter of
             the specified name has already been inserted.
 
-
-        Raises ValueError if the Parameter has no name.
-        Raises ValueError if the Parameter has the same name as a contained
-        RecipeContainer.
+        Raises
+        ------
+        ValueError
+            If the Parameter has no name.
+        ValueError
+            If the Parameter has the same name as a contained
+            RecipeContainer.
         """
         # Store the Parameter
         RecipeContainer._add_object(self, parameter, self._parameters, check)
@@ -683,14 +811,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     def _remove_parameter(self, parameter):
         """Remove a parameter.
 
-        This de-registers the Parameter with the _eqfactory. The
+        This de-registers the Parameter with the `_eqfactory`. The
         Parameter will remain part of built equations.
 
         Note that constraints and restraints involving the Parameter are
         not modified.
 
-        Raises ValueError if parameter is not part of the
-        RecipeOrganizer.
+        Raises
+        ------
+        ValueError
+            If `parameter` is not part of the RecipeOrganizer.
         """
         self._remove_object(parameter, self._parameters)
         self._eqfactory.deRegisterBuilder(parameter.name)
@@ -714,6 +844,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             The names of the arguments to `calculator` (list or None).
             If this is None, then the argument names will be
             extracted from the function.
+
+        Returns
+        -------
+        Equation
+            The callable Equation object wrapping `calculator`.
         """
         self._eqfactory.registerOperator(calculator.name, calculator)
         self._add_object(calculator, self._calculators)
@@ -767,11 +902,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             If this is None (default), then the argument names will
             be extracted from the function.
 
-        Note
-        ----
-        The `name` and `argnames` args can be extracted from regular Python
-        functions (of type <function>), bound class methods, and callable
-        classes.
+        Returns
+        -------
+        equation_object : Equation
+            The callable Equation object.
 
         Raises
         ------
@@ -782,10 +916,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ValueError
             If function is an Equation object and name is None.
 
-        Returns
-        -------
-        equation_object : Equation
-            The callable Equation object.
+        Notes
+        -----
+        The `name` and `argnames` args can be extracted from regular Python
+        functions (of type <function>), bound class methods, and callable
+        classes.
         """
         # If the function is an equation, we treat it specially. This is
         # required so that the objects observed by the root get observed if the
@@ -891,6 +1026,11 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             A dictionary of Parameters, indexed by name, that are
             used in `function_str`, but not part of the FitRecipe (default {}).
 
+        Returns
+        -------
+        equation_object : Equation
+            The callable Equation object.
+
         Raises
         ------
         ValueError
@@ -898,11 +1038,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             managed object.
         ValueError
             If the function name is the name of another managed object.
-
-        Returns
-        -------
-        equation_object : Equation
-            The callable Equation object.
         """
         # Build the equation instance.
         eq = get_equation_from_string(
@@ -1099,8 +1234,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         *pars : str or Parameter
             The names of Parameters or Parameters to unconstrain.
 
-
-        Raises ValueError if the Parameter is not constrained.
+        Raises
+        ------
+        ValueError
+            If the Parameter is not constrained.
         """
         update = False
         for parameter in pars:
@@ -1148,10 +1285,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             this object are returned. If True, constrained
             Parameters in managed sub-objects are also included.
 
-        Return
-        ------
+        Returns
+        -------
         constrained_params : list of Parameter
-            A list of constrained managed Parameters in this object.
+            The list of constrained managed Parameters in this object.
         """
         const = self._get_constraints(recurse)
         constrained_params = const.keys()
@@ -1159,13 +1296,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
     @deprecated(getConstrainedPars_deprecation_msg)
     def getConstrainedPars(self, recurse=False):
-        """Get a list of constrained managed Parameters in this object.
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
 
-        Parameters
-        ----------
-        recurse
-            Recurse into managed objects and retrieve their constrained
-            Parameters as well (default False).
+        Please use
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.get_constrained_parmeters
+        instead.
         """
         return self.get_constrained_parmeters(recurse=recurse)
 
@@ -1377,9 +1513,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Parameters
         ----------
-        recurse
-            Recurse into managed objects and clear all restraints
-            found there as well.
+        recurse : bool, optional
+            If False (default), only restraints in this object are
+            cleared. If True, restraints in managed sub-objects are
+            also cleared.
         """
         self.remove_soft_bounds(*self._restraints)
         if recurse:
@@ -1429,7 +1566,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         This performs RecipeContainer validations. This validates
         contained Restraints and Constraints.
 
-        Raises AttributeError if validation fails.
+        Raises
+        ------
+        AttributeError
+            If validation fails.
         """
         RecipeContainer._validate(self)
         iterable = chain(self._restraints, self._constraints.values())
@@ -1449,7 +1589,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns
         -------
         list
-            List of formatted lines, one per each Parameter.
+            The list of formatted lines, one per each Parameter.
         """
         lines = []
         formatstr = "{:<W}{}"
@@ -1480,8 +1620,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns
         -------
         list
-            List of formatted lines displaying the defined constraints.
-            Return empty list when no constraints were defined.
+            The list of formatted lines displaying the defined
+            constraints. Empty list when no constraints were defined.
         """
         cdict = self._get_constraints()
         # Find each constraint and format the equation
@@ -1505,8 +1645,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns
         -------
         list
-            List of formatted lines displaying the defined restraints.
-            Return empty list when no restraints were defined.
+            The list of formatted lines displaying the defined
+            restraints. Empty list when no restraints were defined.
         """
         rset = self._get_restraints()
         rlines = []
@@ -1666,21 +1806,26 @@ def equationFromString(
 
 
 def _has_clear_constraints(msg):
+    """Check whether `msg` has a `clear_all_constraints` method."""
     return hasattr(msg, "clear_all_constraints")
 
 
 def _has_clear_restraints(msg):
+    """Check whether `msg` has a `clear_all_soft_bounds` method."""
     return hasattr(msg, "clear_all_soft_bounds")
 
 
 def _has_get_restraints(msg):
+    """Check whether `msg` has a `_get_restraints` method."""
     return hasattr(msg, "_get_restraints")
 
 
 def _has_get_constraints(msg):
+    """Check whether `msg` has a `_get_constraints` method."""
     return hasattr(msg, "_get_constraints")
 
 
 def _pmatch(inp_str, regexp):
+    """Check whether the leading name in `inp_str` matches `regexp`."""
     parts = inp_str.split(None, 1)
     return len(parts) < 2 or regexp.search(parts[0])

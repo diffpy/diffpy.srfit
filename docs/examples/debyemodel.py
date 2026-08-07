@@ -157,25 +157,19 @@ def makeRecipe():
     return recipe
 
 
-def plotResults(recipe):
+def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
-    # Plot this.
     # Note that since the contribution was given the name "pb", it is
     # accessible from the recipe with this name. This is a useful way to
     # organize multiple contributions to a fit.
-    T = recipe.pb.profile.x
-    U = recipe.pb.profile.y
-    Ucalc = recipe.pb.profile.ycalc
-
-    import pylab
-
-    pylab.plot(T, U, "o", label="Pb $U_{iso}$ Data")
-    pylab.plot(T, Ucalc)
-    pylab.xlabel("T (K)")
-    pylab.ylabel(r"$U_{iso} (\AA^2)$")
-    pylab.legend(loc=(0.0, 0.8))
-
-    pylab.show()
+    recipe.plot_recipe(
+        show_diff=False,
+        data_label=r"Pb $U_{iso}$ Data",
+        fit_label="Calculated",
+        xlabel="T (K)",
+        ylabel=r"$U_{iso} (\AA^2)$",
+        legend_loc=(0.0, 0.8),
+    )
     return
 
 
@@ -194,7 +188,7 @@ def main():
     res.print_results()
 
     # Plot the results
-    plotResults(recipe)
+    plot_results(recipe)
 
     return
 

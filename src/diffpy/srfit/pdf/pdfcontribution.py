@@ -24,10 +24,9 @@ from diffpy.srfit.fitbase import FitContribution, Profile
 
 
 class PDFContribution(FitContribution):
-    """PDFContribution class.
+    """A FitContribution that is customized for PDF fits.
 
-    PDFContribution is a FitContribution that is customized for PDF fits. Data
-    and phases can be added directly to the PDFContribution. Setup of
+    Data and phases can be added directly to the PDFContribution. Setup of
     constraints and restraints requires direct interaction with the generator
     attributes (see setPhase).
 
@@ -86,7 +85,7 @@ class PDFContribution(FitContribution):
 
         Parameters
         ----------
-        name
+        name : str
             The name of the contribution.
         """
         FitContribution.__init__(self, name)
@@ -134,16 +133,15 @@ class PDFContribution(FitContribution):
 
         Parameters
         ----------
-
-        xmin : float or `obs`, optional
+        xmin : float or ``obs``, optional
             The minimum value of the independent variable.  Keep the
             current minimum when not specified.  If specified as "obs"
             reset to the minimum observed value.
-        xmax : float or `obs`, optional
+        xmax : float or ``obs``, optional
             The maximum value of the independent variable.  Keep the
             current maximum when not specified.  If specified as "obs"
             reset to the maximum observed value.
-        dx : float or `obs`, optional
+        dx : float or ``obs``, optional
             The sample spacing in the independent variable.  When different
             from the data, resample the ``x`` as anchored at ``xmin``.
 
@@ -164,7 +162,12 @@ class PDFContribution(FitContribution):
 
         This calls on the built-in Profile.
 
-        Arguments are passed to numpy.savetxt.
+        Parameters
+        ----------
+        fname : str or Path
+            The file or filename to which the data is saved.
+        **kwargs
+            Additional arguments passed to numpy.savetxt.
         """
         return self.profile.savetxt(fname, **kwargs)
 
@@ -175,7 +178,7 @@ class PDFContribution(FitContribution):
 
         Parameters
         ----------
-        name
+        name : str
             A name to give the generator that will manage the PDF
             calculation from the passed structure. The adapted
             structure will be accessible via the name "phase" as an
@@ -184,9 +187,9 @@ class PDFContribution(FitContribution):
             contribution and 'name' is passed name.
             (default), then the name will be set as "phase".
         stru
-            diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
-            pyobjcryst.molecule.Molecule instance.  Default None.
-        periodic
+            The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
+            pyobjcryst.molecule.Molecule instance to adapt (default None).
+        periodic : bool, optional
             The structure should be treated as periodic.  If this is
             True (default), then a PDFGenerator will be used to
             calculate the PDF from the phase. Otherwise, a
@@ -194,9 +197,11 @@ class PDFContribution(FitContribution):
             do not support periodicity, in which case this may be
             ignored.
 
-
-        Returns the new phase (ParameterSet appropriate for what was passed in
-        stru.)
+        Returns
+        -------
+        ParameterSet
+            The new phase, of the type appropriate for what was passed
+            in stru.
         """
         # Based on periodic, create the proper generator.
         if periodic:
@@ -219,7 +224,7 @@ class PDFContribution(FitContribution):
 
         Parameters
         ----------
-        name
+        name : str
             A name to give the generator that will manage the PDF
             calculation from the passed parameter phase. The parset
             will be accessible via the name "phase" as an attribute
@@ -227,11 +232,11 @@ class PDFContribution(FitContribution):
             'contribution' is this contribution and 'name' is passed
             name.
         parset
-            A SrRealParSet that holds the structural information.
+            The SrRealParSet that holds the structural information.
             This can be used to share the phase between multiple
             BasePDFGenerators, and have the changes in one reflect in
             another.
-        periodic
+        periodic : bool, optional
             The structure should be treated as periodic.  If this is
             True (default), then a PDFGenerator will be used to
             calculate the PDF from the phase. Otherwise, a
@@ -239,9 +244,11 @@ class PDFContribution(FitContribution):
             do not support periodicity, in which case this may be
             ignored.
 
-
-        Returns the new phase (ParameterSet appropriate for what was passed in
-        stru.)
+        Returns
+        -------
+        ParameterSet
+            The new phase, of the type appropriate for what was passed
+            in parset.
         """
         # Based on periodic, create the proper generator.
         if periodic:
@@ -302,10 +309,13 @@ class PDFContribution(FitContribution):
 
         Parameters
         ----------
-        type
-            "X" for x-ray or "N" for neutron
+        type : str, optional
+            "X" for x-ray or "N" for neutron (default "X").
 
-        Raises ValueError if type is not "X" or "N"
+        Raises
+        ------
+        ValueError
+            If type is not "X" or "N".
         """
         self._meta["stype"] = type
         for gen in self._generators.values():
@@ -315,30 +325,59 @@ class PDFContribution(FitContribution):
     def getScatteringType(self):
         """Get the scattering type.
 
-        See 'setScatteringType'.
+        See ``setScatteringType``.
+
+        Returns
+        -------
+        str
+            The scattering type used to calculate the PDF.
         """
         return self._get_meta_value("stype")
 
     def setQmax(self, qmax):
-        """Set the qmax value."""
+        """Set the qmax value.
+
+        Parameters
+        ----------
+        qmax : float
+            The maximum scattering vector used to generate the PDF.
+        """
         self._meta["qmax"] = qmax
         for gen in self._generators.values():
             gen.setQmax(qmax)
         return
 
     def getQmax(self):
-        """Get the qmax value."""
+        """Get the qmax value.
+
+        Returns
+        -------
+        float
+            The maximum scattering vector used to generate the PDF.
+        """
         return self._get_meta_value("qmax")
 
     def setQmin(self, qmin):
-        """Set the qmin value."""
+        """Set the qmin value.
+
+        Parameters
+        ----------
+        qmin : float
+            The minimum scattering vector used to generate the PDF.
+        """
         self._meta["qmin"] = qmin
         for gen in self._generators.values():
             gen.setQmin(qmin)
         return
 
     def getQmin(self):
-        """Get the qmin value."""
+        """Get the qmin value.
+
+        Returns
+        -------
+        float
+            The minimum scattering vector used to generate the PDF.
+        """
         return self._get_meta_value("qmin")
 
 

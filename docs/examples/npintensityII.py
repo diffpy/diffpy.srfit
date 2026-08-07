@@ -34,6 +34,9 @@ Extensions
   first step towards writing a user interface.
 """
 
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 import numpy
 from gaussianrecipe import scipyOptimize
 from npintensity import IntensityGenerator, makeData
@@ -186,45 +189,34 @@ def makeRecipe(strufile, datname1, datname2):
     return recipe
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # plotting song and dance
+def plot_results(recipe):
+    """Plot the results contained within a refined FitRecipe.
+
+    The recipe has two contributions ("bucky1" and "bucky2"), so
+    plot_recipe produces one figure per contribution. The backgrounds
+    are not part of the standard observed/fit/diff plot, so they are
+    overlaid on each figure afterwards.
+    """
     q = recipe.bucky1.profile.x
-
-    # Plot this for fun.
-    I1 = recipe.bucky1.profile.y
-    Icalc1 = recipe.bucky1.profile.ycalc
     bkgd1 = recipe.bucky1.evaluate_equation("bkgd")
-    diff1 = I1 - Icalc1
-    I2 = recipe.bucky2.profile.y
-    Icalc2 = recipe.bucky2.profile.ycalc
     bkgd2 = recipe.bucky2.evaluate_equation("bkgd")
-    diff2 = I2 - Icalc2
-    offset = 1.2 * max(I2) * numpy.ones_like(I2)
-    I1 += offset
-    Icalc1 += offset
-    bkgd1 += offset
-    diff1 += offset
 
-    import pylab
+    figs, axes = recipe.plot_recipe(
+        show=False,
+        return_fig=True,
+        data_label="I(Q) Data",
+        fit_label="I(Q) Fit",
+        diff_label="I(Q) diff",
+        xlabel=r"$Q (\AA^{-1})$",
+        ylabel="Intensity (arb. units)",
+    )
+    # "bucky1" was added to the recipe first, so its axes come first.
+    axes[0].plot(q, bkgd1, "c-", label="Bkgd1 Fit")
+    axes[0].legend(loc=1)
+    axes[1].plot(q, bkgd2, "c-", label="Bkgd2 Fit")
+    axes[1].legend(loc=1)
 
-    pylab.subplot(2, 1, 1)
-    pylab.plot(q, I1, "bo", label="I1(Q) Data")
-    pylab.plot(q, Icalc1, "r-", label="I1(Q) Fit")
-    pylab.plot(q, diff1, "g-", label="I1(Q) diff")
-    pylab.plot(q, bkgd1, "c-", label="Bkgd1 Fit")
-    pylab.legend(loc=1)
-
-    pylab.subplot(2, 1, 2)
-    pylab.plot(q, I2, "bo", label="I2(Q) Data")
-    pylab.plot(q, Icalc2, "r-", label="I2(Q) Fit")
-    pylab.plot(q, diff2, "g-", label="I2(Q) diff")
-    pylab.plot(q, bkgd2, "c-", label="Bkgd2 Fit")
-    pylab.xlabel(r"$Q (\AA^{-1})$")
-    pylab.ylabel("Intensity (arb. units)")
-    pylab.legend(loc=1)
-
-    pylab.show()
+    plt.show()
     return
 
 
@@ -232,7 +224,7 @@ def main():
 
     # Make two different data sets, each from the same structure, but with
     # different scale, noise, broadening and background.
-    strufile = "data/C60.stru"
+    strufile = Path(__file__).parent / "data/C60.stru"
     q = numpy.arange(1, 20, 0.05)
     makeData(strufile, q, "C60_1.iq", 8.1, 101.68, 0.008, 0.12, 2, 0.01)
     makeData(strufile, q, "C60_2.iq", 3.2, 101.68, 0.02, 0.003, 0, 1)
@@ -266,7 +258,7 @@ def main():
     res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    plot_results(recipe)
 
     return
 

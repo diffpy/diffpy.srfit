@@ -16,25 +16,27 @@
 ParameterSet.
 
 This will adapt a Crystal or Molecule object from pyobjcryst into the
-ParameterSet interface. The following classes are adapted.
+ParameterSet interface. The following classes are adapted:
 
-ObjCrystCrystalParSet   --  Adapter for pyobjcryst.crystal.Crystal
-ObjCrystAtomParSet      --  Adapter for pyobjcryst.atom.Atom
-ObjCrystMoleculeParSet  --  Adapter for pyobjcryst.molecule.Molecule
-ObjCrystMolAtomParSet   --  Adapter for pyobjcryst.molecule.MolAtom
+- `ObjCrystCrystalParSet`: adapter for `pyobjcryst.crystal.Crystal`.
+- `ObjCrystAtomParSet`: adapter for `pyobjcryst.atom.Atom`.
+- `ObjCrystMoleculeParSet`: adapter for `pyobjcryst.molecule.Molecule`.
+- `ObjCrystMolAtomParSet`: adapter for `pyobjcryst.molecule.MolAtom`.
 
-Related to the adaptation of Molecule and MolAtom, there are adaptors for
-specifying molecule restraints.
-ObjCrystBondLengthRestraint
-ObjCrystBondAngleRestraint
-ObjCrystDihedralAngleRestraint
+Related to the adaptation of Molecule and MolAtom, there are adaptors
+for specifying molecule restraints:
 
-There are also Parameters for encapsulating and modifying atoms via their
-relative positions. These Parameters can also act like constraints, and can
-modify the positions of multiple MolAtoms.
-ObjCrystBondLengthParameter
-ObjCrystBondAngleParameter
-ObjCrystDihedralAngleParameter
+- `ObjCrystBondLengthRestraint`
+- `ObjCrystBondAngleRestraint`
+- `ObjCrystDihedralAngleRestraint`
+
+There are also Parameters for encapsulating and modifying atoms via
+their relative positions. These Parameters can also act like
+constraints, and can modify the positions of multiple MolAtoms:
+
+- `ObjCrystBondLengthParameter`
+- `ObjCrystBondAngleParameter`
+- `ObjCrystDihedralAngleParameter`
 """
 
 __all__ = ["ObjCrystMoleculeParSet", "ObjCrystCrystalParSet"]

@@ -75,7 +75,7 @@ saveResults_dep_msg = build_deprecation_message(
 
 
 class SimpleRecipe(FitRecipe):
-    """SimpleRecipe class.
+    """FitRecipe with a built-in Profile and FitContribution.
 
     This is a FitRecipe with a built-in Profile (the 'profile' attribute) and
     FitContribution (the 'contribution' attribute). Unique methods from each of
@@ -92,10 +92,10 @@ class SimpleRecipe(FitRecipe):
         The built-in FitResults object.
     name
         A name for this FitRecipe.
-    fithook
-        An object to be called whenever within the residual
-        (default FitHook()) that can pass information out of
-        the system during a refinement.
+    fithooks : list
+        The list of FitHook instances that can pass information out
+        of the system during a refinement. By default, this is
+        populated by a PrintFitHook instance.
     _constraints
         A dictionary of Constraints, indexed by the constrained
         Parameter. Constraints can be added using the
@@ -115,7 +115,7 @@ class SimpleRecipe(FitRecipe):
     _eqfactory
         A diffpy.srfit.equation.builder.EquationFactory
         instance that is used to create constraints and
-        restraints from string
+        restraints from string equations.
     _fixed
         A set of parameters that are not actually varied.
     _restraintlist
@@ -142,7 +142,17 @@ class SimpleRecipe(FitRecipe):
     """
 
     def __init__(self, name="fit", conclass=FitContribution):
-        """Initialization."""
+        """Initialize the recipe with a built-in Profile and
+        FitContribution.
+
+        Parameters
+        ----------
+        name : str, optional
+            The name of this FitRecipe (default "fit").
+        conclass : type, optional
+            The FitContribution class used to create the built-in
+            contribution (default FitContribution).
+        """
         FitRecipe.__init__(self, name)
         self.fithooks[0].verbose = 3
         contribution = conclass("contribution")
@@ -167,6 +177,11 @@ class SimpleRecipe(FitRecipe):
         """Load parsed data from a ProfileParser.
 
         This sets the xobs, yobs, dyobs arrays as well as the metadata.
+
+        Parameters
+        ----------
+        parser : ProfileParser
+            The ProfileParser to load data from.
         """
         return self.profile.load_parsed_data(parser)
 
@@ -186,21 +201,19 @@ class SimpleRecipe(FitRecipe):
 
         Parameters
         ----------
-        xobs
-            Numpy array of the independent variable
-        yobs
-            Numpy array of the observed signal.
-        dyobs
-            Numpy array of the uncertainty in the observed signal. If
-            dyobs is None (default), it will be set to 1 at each
-            observed xobs.
+        xobs : ndarray
+            The independent variable.
+        yobs : ndarray
+            The observed signal.
+        dyobs : ndarray, optional
+            The uncertainty in the observed signal. If dyobs is None
+            (default), it will be set to 1 at each observed xobs.
 
         Raises
-        ----------
+        ------
         ValueError
-            if len(yobs) != len(xobs)
-        ValueError
-            if dyobs != None and len(dyobs) != len(xobs)
+            If len(yobs) != len(xobs), or if dyobs is not None and
+            len(dyobs) != len(xobs).
         """
         return self.profile.set_observed_profile(xobs, yobs, dyobs)
 
@@ -224,7 +237,6 @@ class SimpleRecipe(FitRecipe):
 
         Parameters
         ----------
-
         xmin : float or `obs`, optional
             The minimum value of the independent variable.  Keep the
             current minimum when not specified.  If specified as "obs"
@@ -263,14 +275,14 @@ class SimpleRecipe(FitRecipe):
     def set_calculation_points(self, x):
         """Set the calculation points.
 
+        This will create y and dy on the specified grid if xobs, yobs
+        and dyobs exist.
+
         Parameters
         ----------
-        x
-            A non-empty numpy array containing the calculation points. If
-            xobs exists, the bounds of x will be limited to its bounds.
-
-        This will create y and dy on the specified grid if xobs, yobs and
-        dyobs exist.
+        x : ndarray
+            The non-empty array of calculation points. If xobs exists,
+            the bounds of x will be limited to its bounds.
         """
         return self.profile.set_calculation_points(x)
 
@@ -294,10 +306,15 @@ class SimpleRecipe(FitRecipe):
         to by dy. Any other arrays are ignored. These are passed to
         set_observed_profile.
 
-         Raises ValueError if the call to numpy.loadtxt returns fewer
-        than 2 arrays.
+        Raises
+        ------
+        ValueError
+            If the call to numpy.loadtxt returns fewer than 2 arrays.
 
-        Returns the x, y and dy arrays loaded from the file
+        Returns
+        -------
+        tuple
+            The x, y and dy arrays loaded from the file.
         """
         return self.profile.loadtxt(*args, **kw)
 
@@ -311,17 +328,18 @@ class SimpleRecipe(FitRecipe):
 
         Parameters
         ----------
-        eqstr
-            A string representation of the equation. Variables will be
-            extracted from this equation and be given an initial value
-            of 0.
-        ns
-            A dictionary of Parameters, indexed by name, that are used
-            in the eqstr, but not registered (default {}).
+        eqstr : str
+            The string representation of the equation. Variables will
+            be extracted from this equation and be given an initial
+            value of 0.
+        ns : dict, optional
+            The dictionary of Parameters, indexed by name, that are
+            used in the eqstr, but not registered (default {}).
 
-
-        Raises ValueError if ns uses a name that is already used for a
-        variable.
+        Raises
+        ------
+        ValueError
+            If ns uses a name that is already used for a variable.
         """
         self.contribution.set_equation(eqstr, ns={})
         # Extract variables
@@ -357,10 +375,10 @@ class SimpleRecipe(FitRecipe):
 
         Parameters
         ----------
-        header
-            A header to add to the output (default "")
-        footer
-            A footer to add to the output (default "")
+        header : str, optional
+            The header to add to the output (default "").
+        footer : str, optional
+            The footer to add to the output (default "").
         """
         self.results.print_results(header, footer, True)
         return
@@ -382,12 +400,12 @@ class SimpleRecipe(FitRecipe):
 
         Parameters
         ----------
-        filename
-            Name of the save file.
-        header
-            A header to add to the output (default "")
-        footer
-            A footer to add to the output (default "")
+        filename : str
+            The name of the save file.
+        header : str, optional
+            The header to add to the output (default "").
+        footer : str, optional
+            The footer to add to the output (default "").
         """
         self.results.save_results(filename, header, footer, True)
 

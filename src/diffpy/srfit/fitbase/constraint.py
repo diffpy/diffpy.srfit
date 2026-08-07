@@ -45,7 +45,7 @@ unconstrain_deprecation_msg = build_deprecation_message(
 
 
 class Constraint(Validatable):
-    """Constraint class.
+    """Associate a Parameter with an equation that determines its value.
 
     Constraints are designed to be stored in only one place. (The holder of the
     constraint owns it).
@@ -53,14 +53,14 @@ class Constraint(Validatable):
     Attributes
     ----------
     par
-        A Parameter that is the subject of the constraint.
+        The Parameter that is the subject of the constraint.
     eq
-        An equation whose evaluation is used to set the value of the
+        The equation whose evaluation is used to set the value of the
         constraint.
     """
 
     def __init__(self):
-        """Initialization."""
+        """Initialize an empty constraint."""
         self.par = None
         self.eq = None
         return
@@ -139,9 +139,12 @@ class Constraint(Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates that par is not None. This validates eq.
+        This validates that ``par`` is not None. This validates ``eq``.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self.par is None:
             raise SrFitError("par is None")

@@ -20,11 +20,11 @@ cctbx.crystal should be done before wrapping. Changes made to the cctbx.crystal
 object after wrapping may not be reflected within the wrapper, which can have
 unpredictable results during a structure refinement.
 
-Classes:
+The following classes are adapted:
 
-CCTBXCrystalParSet  --  Wrapper for cctbx.crystal
-CCTBXUnitCellParSet --  Wrapper for the unit cell of cctbx.crystal
-CCTBXScattererParSet --  Wrapper for cctbx.xray.scatterer
+- `CCTBXCrystalParSet`: wrapper for `cctbx.crystal`.
+- `CCTBXUnitCellParSet`: wrapper for the unit cell of `cctbx.crystal`.
+- `CCTBXScattererParSet`: wrapper for `cctbx.xray.scatterer`.
 """
 
 from diffpy.srfit.fitbase.parameter import ParameterAdapter

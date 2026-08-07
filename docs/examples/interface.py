@@ -18,6 +18,8 @@ This is like gaussianrecipe.py, but it uses a shorthand interface
 defined in the diffpy.srfit.interface.interface.py module.
 """
 
+from pathlib import Path
+
 from diffpy.srfit.fitbase import (
     FitContribution,
     FitRecipe,
@@ -32,7 +34,7 @@ from diffpy.srfit.fitbase import (
 def main():
 
     p = Profile()
-    p.loadtxt("data/gaussian.dat")
+    p.loadtxt(Path(__file__).parent / "data/gaussian.dat")
 
     # FitContribution operations
     # "<<"  -   Inject a parameter value
@@ -65,9 +67,11 @@ def main():
     # Print the results.
     res.print_results()
     # Plot the results.
-    from gaussianrecipe import plotResults
-
-    plotResults(r)
+    plot_styles = {
+        "xlabel": "x",
+        "ylabel": "y",
+    }
+    r.plot_recipe(**plot_styles)
 
     return
 

@@ -29,29 +29,28 @@ from diffpy.srfit.fitbase.validatable import Validatable
 
 
 class Restraint(Validatable):
-    """Restraint class.
+    """Restrain an equation to specified bounds.
+
+    The penalty for breaking the restraint is calculated as
+    ``(max(0, lower_bound - val, val - upper_bound) / sig) ** 2``, where
+    ``val`` is the value of the calculated equation. This is multiplied
+    by the average chi^2 if ``scaled`` is True.
 
     Attributes
     ----------
     eq : Equation
-        An equation whose evaluation is compared against the restraint
+        The equation whose evaluation is compared against the restraint
         bounds.
     lower_bound : float
         The lower bound on the restraint evaluation (default -inf).
     upper_bound : float
-        The lower bound on the restraint evaluation (default inf).
+        The upper bound on the restraint evaluation (default inf).
     sig : float
         The uncertainty on the bounds (default 1).
     scaled : bool
         A flag indicating if the restraint is scaled (multiplied) by
         the unrestrained point-average chi^2 (chi^2/numpoints)
         (default False).
-
-
-    The penalty is calculated as
-    (max(0, lower_bound - val, val - upper_bound)/sig)**2
-    and val is the value of the calculated equation.  This is multiplied by the
-    average chi^2 if scaled is True.
     """
 
     def __init__(
@@ -61,21 +60,19 @@ class Restraint(Validatable):
 
         Parameters
         ----------
-        eq
-            An equation whose evaluation is compared against the
+        eq : Equation
+            The equation whose evaluation is compared against the
             restraint bounds.
-        lower_bound
-            The lower bound on the restraint evaluation (float, default
-            -inf).
-        upper_bound
-            The lower bound on the restraint evaluation (float, default
-            inf).
-        sig
+        lower_bound : float, optional
+            The lower bound on the restraint evaluation (default -inf).
+        upper_bound : float, optional
+            The upper bound on the restraint evaluation (default inf).
+        sig : float, optional
             The uncertainty on the bounds (default 1).
-        scaled
-            A flag indicating if the restraint is scaled (multiplied)
+        scaled : bool, optional
+            The flag indicating if the restraint is scaled (multiplied)
             by the unrestrained point-average chi^2 (chi^2/numpoints)
-            (bool, default False).
+            (default False).
         """
         self.eq = eq
         self.lower_bound = float(lower_bound)
@@ -89,14 +86,14 @@ class Restraint(Validatable):
 
         Parameters
         ----------
-        w
-            The point-average chi^2 which is optionally used to scale the
-            penalty (default 1.0).
+        w : float, optional
+            The point-average chi^2 which is optionally used to scale
+            the penalty (default 1.0).
 
         Returns
         -------
-        penalty
-            Returns the penalty as a float
+        float
+            The penalty for breaking the restraint.
         """
         val = self.eq()
         penalty = (
@@ -111,9 +108,12 @@ class Restraint(Validatable):
     def _validate(self):
         """Validate my state.
 
-        This validates eq.
+        This validates ``eq``.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self.eq is None:
             raise SrFitError("eq is None")

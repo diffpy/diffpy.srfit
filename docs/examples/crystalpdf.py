@@ -24,7 +24,8 @@ structure to PDF data and data from other sources. This example
 demonstrates only the basic configuration.
 """
 
-import numpy
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 
 from diffpy.srfit.fitbase import (
@@ -67,7 +68,7 @@ def makeRecipe(ciffile, datname):
     # Qmax value, as well as initial values for the non-structural Parameters.
     generator = PDFGenerator("G")
     stru = Structure()
-    stru.read(ciffile)
+    stru.read(str(ciffile))
     generator.setStructure(stru)
 
     # The FitContribution
@@ -129,34 +130,17 @@ def makeRecipe(ciffile, datname):
     return recipe
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
-    r = recipe.nickel.profile.x
-    g = recipe.nickel.profile.y
-    gcalc = recipe.nickel.profile.ycalc
-    diffzero = -0.8 * max(g) * numpy.ones_like(g)
-    diff = g - gcalc + diffzero
-
-    import pylab
-
-    pylab.plot(r, g, "bo", label="G(r) Data")
-    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
-    pylab.plot(r, diff, "g-", label="G(r) diff")
-    pylab.plot(r, diffzero, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile = "data/ni.cif"
-    data = "data/ni-q27r100-neutron.gr"
+    ciffile = Path(__file__).parent / "data/ni.cif"
+    data = Path(__file__).parent / "data/ni-q27r100-neutron.gr"
 
     # Make the recipe
     recipe = makeRecipe(ciffile, data)
@@ -170,6 +154,6 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

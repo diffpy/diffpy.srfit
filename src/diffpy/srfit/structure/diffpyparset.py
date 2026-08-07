@@ -22,9 +22,11 @@ the Structure. Changes in the number of atoms will not be recognized.  Thus,
 the diffpy.structure.Structure object should be fully configured before passing
 it to DiffpyStructureParSet.
 
-DiffpyStructureParSet --  Adapter for diffpy.structure.Structure
-DiffpyLatticeParSet   --  Adapter for diffpy.structure.Lattice
-DiffpyAtomParSet      --  Adapter for diffpy.structure.Atom
+The following classes are adapted:
+
+- `DiffpyStructureParSet`: adapter for `diffpy.structure.Structure`.
+- `DiffpyLatticeParSet`: adapter for `diffpy.structure.Lattice`.
+- `DiffpyAtomParSet`: adapter for `diffpy.structure.Atom`.
 """
 
 __all__ = ["DiffpyStructureParSet"]

@@ -16,6 +16,8 @@
 
 from __future__ import print_function
 
+from pathlib import Path
+
 import numpy
 
 from diffpy.srfit.fitbase import (
@@ -47,7 +49,9 @@ def makeRecipe():
     # The Profile
     # Create a Profile to hold the experimental and calculated signal.
     profile = Profile()
-    x, y, dy = profile.loadtxt("data/threedoublepeaks.dat")
+    x, y, dy = profile.loadtxt(
+        Path(__file__).parent / "data/threedoublepeaks.dat"
+    )
 
     # Create the contribution
     contribution = FitContribution("peaks")
@@ -188,30 +192,10 @@ def scipyOptimize(recipe):
     return
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # We can access the data and fit profile through the Profile we created
-    # above. We get to it through our FitContribution, which we named "g1".
-    #
-    # The independent variable. This is always under the "x" attribute.
-    x = recipe.peaks.profile.x
-    # The observed profile that we loaded earlier, the "y" attribute.
-    y = recipe.peaks.profile.y
-    # The calculated profile, the "ycalc" attribute.
-    ycalc = recipe.peaks.profile.ycalc
-
-    # This stuff is specific to pylab from the matplotlib distribution.
-    import pylab
-
-    pylab.plot(x, y, "b.", label="observed profile")
-    pylab.plot(x, ycalc, "r-", label="calculated profile")
-    pylab.plot(x, y - ycalc - 0.1 * max(y), "g-", label="difference")
-    pylab.legend(loc=(0.0, 0.8))
-    pylab.xlabel("x")
-    pylab.ylabel("y")
-
-    pylab.show()
-    return
+plot_styles = {
+    "xlabel": "x",
+    "ylabel": "y",
+}
 
 
 def steerFit(recipe):
@@ -253,7 +237,7 @@ if __name__ == "__main__":
     res.print_results()
 
     # Plot the results
-    plotResults(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 
 # End of file

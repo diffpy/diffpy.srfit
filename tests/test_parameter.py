@@ -165,7 +165,7 @@ def test_boundRange(lower, upper, expected):
     # If testing overwrite, pre-set bounds to see overwrite effect
     if expected == [2, 6]:
         p.boundRange(0, 10)
-    p.boundRange(lower_bound=lower, upper_bound=upper)
+    p.boundRange(lb=lower, ub=upper)
     actual = p.bounds
     assert actual == expected
 

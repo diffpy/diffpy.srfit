@@ -182,13 +182,13 @@ class Parameter(_parameter_interface, Argument, Validatable):
         return self
 
     @deprecated(boundRange_dep_msg)
-    def boundRange(self, lower_bound=None, upper_bound=None):
+    def boundRange(self, lb=None, ub=None):
         """This function has been deprecated and will be removed in
         version 4.0.0.
 
         Please use diffpy.srfit.fitbase.Parameter.bound_range instead.
         """
-        self.bound_range(lower_bound, upper_bound)
+        self.bound_range(lb, ub)
         return self
 
     def bound_window(self, lower_radius=0, upper_radius=None):

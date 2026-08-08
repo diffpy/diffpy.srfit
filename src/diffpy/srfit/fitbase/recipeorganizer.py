@@ -941,23 +941,28 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
             import inspect
 
+            # A decorator such as `deprecated` replaces the code object with
+            # that of its (*args, **kwargs) wrapper, so introspect the
+            # function it wraps while still registering the decorated one.
+            wrapped_function = inspect.unwrap(function)
+
             fncode = None
 
             # This will let us offset the argument list to eliminate 'self'
             offset = 0
 
             # check regular functions
-            if inspect.isfunction(function):
-                fncode = function.__code__
+            if inspect.isfunction(wrapped_function):
+                fncode = wrapped_function.__code__
             # check class method
             elif inspect.ismethod(function):
                 fncode = function.__func__.__code__
                 offset = 1
             # check functor
-            elif hasattr(function, "__call__") and hasattr(
-                function.__call__, "__func__"
+            elif hasattr(wrapped_function, "__call__") and hasattr(
+                wrapped_function.__call__, "__func__"
             ):
-                fncode = function.__call__.__func__.__code__
+                fncode = wrapped_function.__call__.__func__.__code__
                 offset = 1
             else:
                 m = "Cannot extract name or argnames"
@@ -1182,7 +1187,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return
 
     @deprecated(constrain_deprecation_msg)
-    def constrain(self, parameter, constraint_eq, params={}):
+    def constrain(self, par, con, ns={}):
         """This function has been deprecated and will be removed in
         version 4.0.0.
 
@@ -1190,7 +1195,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.add_constraint
         instead.
         """
-        self.add_constraint(parameter, constraint_eq, params=params)
+        self.add_constraint(par, con, params=ns)
         return
 
     def is_constrained(self, parameter):
@@ -1214,7 +1219,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return parameter in self._constraints
 
     @deprecated(isConstrained_deprecation_msg)
-    def isConstrained(self, parameter):
+    def isConstrained(self, par):
         """This function has been deprecated and will be removed in
         version 4.0.0.
 
@@ -1222,7 +1227,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.is_constrained
         instead.
         """
-        return self.is_constrained(parameter)
+        return self.is_constrained(par)
 
     def remove_constraint(self, *pars):
         """Unconstrain a Parameter.
@@ -1424,15 +1429,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return param_or_eq
 
     @deprecated(restrain_deprecation_msg)
-    def restrain(
-        self,
-        param_or_eq,
-        lower_bound=-inf,
-        upper_bound=inf,
-        sig=1,
-        scaled=False,
-        params={},
-    ):
+    def restrain(self, res, lb=-inf, ub=inf, sig=1, scaled=False, ns={}):
         """This function has been deprecated and will be removed in
         version 4.0.0.
 
@@ -1441,12 +1438,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         instead.
         """
         return self.add_soft_bounds(
-            param_or_eq,
-            lower_bound=lower_bound,
-            upper_bound=upper_bound,
+            res,
+            lower_bound=lb,
+            upper_bound=ub,
             sig=sig,
             scaled=scaled,
-            params=params,
+            params=ns,
         )
 
     def register_soft_bounds(self, res):

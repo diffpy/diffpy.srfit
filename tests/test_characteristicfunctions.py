@@ -594,85 +594,272 @@ def test_non_physical_input_warns_only_once(
 # ----------------------------------------------------------------------------
 # sphericalCF, spheroidalCF, spheroidalCF2, lognormalSphericalCF, sheetCF,
 # shellCF, and shellCF2 are deprecated in favor of the snake_case functions
-# above. Each old name must still work, emit a DeprecationWarning naming its
-# replacement, and forward to the new implementation (translating arguments
-# where the old and new parameterizations differ).
+# above, and forward to them directly (translating arguments where the old
+# and new parameterizations differ). Consequently they also inherit the
+# replacement's handling of non-physical input in full: values that the old,
+# pre-3.3.0 implementation used to accept silently, or handled with its own
+# quirks, now warn and return zero exactly like the replacement. Each old
+# name must still work, forward the (translated) arguments, and emit a
+# DeprecationWarning naming its replacement.
 
-module_path = "diffpy.srfit.pdf.characteristicfunctions"
+# The warning must also tell the caller how to translate the old arguments,
+# so each case pins the exact note appended to the standard message. A case
+# whose parameters did not change appends nothing.
 
 
 @pytest.mark.parametrize(
-    "old_name, new_name, old_args, expected_characteristic_function",
+    "old_name, new_name, expected_signature_note, old_args, new_args",
     [
-        # C1: sphericalCF forwards directly to spherical_particle.
+        # C1: sphericalCF forwards its arguments unchanged, only renamed.
+        # Expected: The note names the renamed parameter.
         (
             "sphericalCF",
             "spherical_particle",
+            "Additionally, the signature has changed. Please pass the "
+            "parameter 'psize' as 'particle_diameter'.",
             (numpy.array([0.0, 5.0, 10.0]), 10.0),
-            cf.spherical_particle(numpy.array([0.0, 5.0, 10.0]), 10.0),
+            (numpy.array([0.0, 5.0, 10.0]), 10.0),
         ),
-        # C2: spheroidalCF forwards directly to spheroidal_particle.
+        # C2: spheroidalCF forwards its arguments unchanged, only renamed.
+        # Expected: The note names both renamed parameters.
         (
             "spheroidalCF",
             "spheroidal_particle",
+            "Additionally, the signature has changed. Please pass the "
+            "parameters 'erad' and 'prad' as 'equatorial_radius' and "
+            "'polar_radius', respectively.",
             (numpy.array([0.0, 5.0, 10.0]), 10.0, 15.0),
-            cf.spheroidal_particle(numpy.array([0.0, 5.0, 10.0]), 10.0, 15.0),
+            (numpy.array([0.0, 5.0, 10.0]), 10.0, 15.0),
         ),
         # C3: spheroidalCF2 used the raw (diameter, axis ratio)
         # parameterization, which must be converted to (equatorial_radius,
         # polar_radius) before forwarding to spheroidal_particle.
+        # Expected: The note gives the conversion, not a rename.
         (
             "spheroidalCF2",
             "spheroidal_particle",
+            "Additionally, the parameterization has changed. 'spheroidalCF2' "
+            "took the equatorial diameter 'psize' and the axis ratio "
+            "'axrat', while 'spheroidal_particle' takes radii. Please pass "
+            "equatorial_radius = psize / 2 and "
+            "polar_radius = axrat * psize / 2.",
             (numpy.array([0.0, 5.0, 10.0]), 20.0, 1.5),
-            cf.spheroidal_particle(numpy.array([0.0, 5.0, 10.0]), 10.0, 15.0),
+            (numpy.array([0.0, 5.0, 10.0]), 10.0, 15.0),
         ),
-        # C4: lognormalSphericalCF forwards directly to
-        # lognormal_spherical_particle.
+        # C4: lognormalSphericalCF forwards its arguments unchanged, only
+        # renamed.
+        # Expected: The note names both renamed parameters.
         (
             "lognormalSphericalCF",
             "lognormal_spherical_particle",
+            "Additionally, the signature has changed. Please pass the "
+            "parameters 'psize' and 'psig' as 'particle_diameter' and "
+            "'particle_diameter_sigma', respectively.",
             (numpy.array([1.0, 5.0, 10.0]), 10.0, 2.0),
-            cf.lognormal_spherical_particle(
-                numpy.array([1.0, 5.0, 10.0]), 10.0, 2.0
-            ),
+            (numpy.array([1.0, 5.0, 10.0]), 10.0, 2.0),
         ),
-        # C5: sheetCF forwards directly to sheet_particle.
+        # C5: sheetCF forwards its arguments unchanged, only renamed.
+        # Expected: The note names the renamed parameter.
         (
             "sheetCF",
             "sheet_particle",
+            "Additionally, the signature has changed. Please pass the "
+            "parameter 'sthick' as 'sheet_thickness'.",
             (numpy.array([0.0, 2.0, 4.0]), 4.0),
-            cf.sheet_particle(numpy.array([0.0, 2.0, 4.0]), 4.0),
+            (numpy.array([0.0, 2.0, 4.0]), 4.0),
         ),
-        # C6: shellCF forwards directly to shell_particle.
+        # C6: shellCF, whose parameters kept their names and meanings.
+        # Expected: The standard message with no note appended.
         (
             "shellCF",
             "shell_particle",
+            "",
             (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
-            cf.shell_particle(numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
+            (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
         ),
         # C7: shellCF2 used the raw (central_radius, thickness)
         # parameterization, which must be converted to (radius, thickness)
         # before forwarding to shell_particle.
+        # Expected: The note gives the conversion, not a rename.
         (
             "shellCF2",
             "shell_particle",
+            "Additionally, the parameterization has changed. 'shellCF2' took "
+            "the central radius 'a' and the shell thickness 'delta', while "
+            "'shell_particle' takes the inner radius. Please pass "
+            "radius = a - delta / 2 and thickness = delta.",
             (numpy.array([0.0, 5.0, 12.5]), 12.5, 5.0),
-            cf.shell_particle(numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
+            (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
         ),
     ],
 )
 def test_deprecated_functions_warn_and_forward(
-    old_name, new_name, old_args, expected_characteristic_function
+    old_name,
+    new_name,
+    expected_signature_note,
+    old_args,
+    new_args,
 ):
     old_function = getattr(cf, old_name)
+    new_function = getattr(cf, new_name)
+    module_path = "diffpy.srfit.pdf.characteristicfunctions"
+    expected_characteristic_function = new_function(*new_args)
     expected_msg = (
         f"'{module_path}.{old_name}' is deprecated and will be removed "
         f"in version 4.0.0. Please use '{module_path}.{new_name}' "
         "instead."
     )
-    with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
+    if expected_signature_note:
+        expected_msg = f"{expected_msg} {expected_signature_note}"
+    # Capture every warning rather than using pytest.warns, which only
+    # checks that a matching warning occurred somewhere and would not
+    # notice a second, irrelevant DeprecationWarning from a call chained
+    # through another deprecated function.
+    with warnings.catch_warnings(record=True) as raised_warnings:
+        warnings.simplefilter("always")
         actual_characteristic_function = old_function(*old_args)
+    deprecation_warnings = [
+        raised
+        for raised in raised_warnings
+        if raised.category is DeprecationWarning
+    ]
+    actual_deprecation_count = len(deprecation_warnings)
+    expected_deprecation_count = 1
+    assert actual_deprecation_count == expected_deprecation_count
+    actual_msg = str(deprecation_warnings[0].message)
+    assert actual_msg == expected_msg
+    npt.assert_allclose(
+        actual_characteristic_function, expected_characteristic_function
+    )
+
+
+# Because the deprecated functions forward to their replacements, they must
+# also forward the replacement's non-physical-input handling: a
+# RuntimeWarning alongside the DeprecationWarning, and a result of zero (or,
+# for a translated case, zero reached via the translated argument).
+
+
+@pytest.mark.parametrize(
+    "old_name, new_name, old_args, new_args, expected_requirement",
+    [
+        # C1: sphericalCF forwards a non-positive diameter unchanged.
+        # Expected: the RuntimeWarning names the forwarded parameter.
+        (
+            "sphericalCF",
+            "spherical_particle",
+            (numpy.array([1.0, 5.0]), -10.0),
+            (numpy.array([1.0, 5.0]), -10.0),
+            "'particle_diameter' must be positive",
+        ),
+        # C2: spheroidalCF2 translates a non-positive equatorial diameter
+        # into a non-positive equatorial radius.
+        # Expected: the RuntimeWarning names the translated parameter.
+        (
+            "spheroidalCF2",
+            "spheroidal_particle",
+            (numpy.array([1.0, 5.0]), -20.0, 1.5),
+            (numpy.array([1.0, 5.0]), -10.0, -15.0),
+            "'equatorial_radius' must be positive",
+        ),
+        # C3: lognormalSphericalCF forwards a negative distribution width
+        # unchanged. This is the case where the old, pre-3.3.0 code and the
+        # new function most disagreed: the old code treated a negative width
+        # as the zero-width (sphere) limit, where the new function rejects
+        # it outright.
+        # Expected: the RuntimeWarning that the old code never raised.
+        (
+            "lognormalSphericalCF",
+            "lognormal_spherical_particle",
+            (numpy.array([1.0, 5.0, 10.0]), 10.0, -2.0),
+            (numpy.array([1.0, 5.0, 10.0]), 10.0, -2.0),
+            "'particle_diameter_sigma' must not be negative",
+        ),
+        # C4: sheetCF forwards a non-positive thickness unchanged. The old
+        # code returned a bare scalar 0 regardless of the shape of r, where
+        # the new function returns an array shaped like r.
+        # Expected: an array of zeros shaped like r.
+        (
+            "sheetCF",
+            "sheet_particle",
+            (numpy.array([1.0, 5.0]), 0.0),
+            (numpy.array([1.0, 5.0]), 0.0),
+            "'sheet_thickness' must be positive",
+        ),
+        # C5: shellCF forwards a zero thickness unchanged. The old code hit
+        # a vanishing normalization denominator and substituted one, where
+        # the new function rejects the input outright.
+        # Expected: zero everywhere rather than the old fallback of one.
+        (
+            "shellCF",
+            "shell_particle",
+            (numpy.array([1.0, 5.0]), 10.0, 0.0),
+            (numpy.array([1.0, 5.0]), 10.0, 0.0),
+            "'thickness' must be positive",
+        ),
+        # C6: shellCF2 translates a central radius smaller than half the
+        # thickness into a negative inner radius.
+        # Expected: the RuntimeWarning names the translated parameter.
+        (
+            "shellCF2",
+            "shell_particle",
+            (numpy.array([1.0, 5.0]), 1.0, 5.0),
+            (numpy.array([1.0, 5.0]), -1.5, 5.0),
+            "'radius' must not be negative",
+        ),
+    ],
+)
+def test_deprecated_functions_forward_non_physical_input(
+    old_name,
+    new_name,
+    old_args,
+    new_args,
+    expected_requirement,
+    reset_characteristic_function_warnings,
+):
+    old_function = getattr(cf, old_name)
+    new_function = getattr(cf, new_name)
+    expected_characteristic_function = new_function(*new_args)
+
+    # The oracle call above already consumed the once-per-process
+    # RuntimeWarning for this (function, requirement) pair; clear the
+    # record so the call under test below is free to raise it again.
+    cf._warned_non_physical.clear()
+
+    with warnings.catch_warnings(record=True) as raised_warnings:
+        warnings.simplefilter("always")
+        actual_characteristic_function = old_function(*old_args)
+
+    # Exactly two warnings are expected: the DeprecationWarning for the old
+    # name, and the RuntimeWarning forwarded from the new function. A stray
+    # third warning, such as a second DeprecationWarning from a call
+    # chained through another deprecated function, must fail this check.
+    actual_warning_count = len(raised_warnings)
+    expected_warning_count = 2
+    assert actual_warning_count == expected_warning_count
+
+    actual_categories = {raised.category for raised in raised_warnings}
+    expected_categories = {DeprecationWarning, RuntimeWarning}
+    assert actual_categories == expected_categories
+
+    # The RuntimeWarning always names the new function, since that is where
+    # it is actually raised, regardless of which name the caller used.
+    expected_remedy = (
+        "The characteristic function was set to zero for every r, which "
+        "flattens the fit residual so a refinement cannot recover on its "
+        "own. Please use a physically meaningful starting value, or keep "
+        "the parameter in range with FitRecipe.add_soft_bounds."
+    )
+    expected_runtime_msg = (
+        f"In '{new_name}', {expected_requirement}. {expected_remedy}"
+    )
+    runtime_warning = next(
+        raised
+        for raised in raised_warnings
+        if raised.category is RuntimeWarning
+    )
+    actual_runtime_msg = str(runtime_warning.message)
+    assert actual_runtime_msg == expected_runtime_msg
+
     npt.assert_allclose(
         actual_characteristic_function, expected_characteristic_function
     )

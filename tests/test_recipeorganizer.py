@@ -15,8 +15,10 @@
 """Tests for refinableobj module."""
 
 import unittest
+import warnings
 
 import numpy
+import pytest
 
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.calculator import Calculator
@@ -27,6 +29,7 @@ from diffpy.srfit.fitbase.recipeorganizer import (
     equationFromString,
     get_equation_from_string,
 )
+from diffpy.utils._deprecator import deprecated
 
 # ----------------------------------------------------------------------------
 
@@ -346,16 +349,14 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m.remove_soft_bounds(r)
         self.assertEqual(0, len(self.m._restraints))
 
-        r = self.m.restrain(p1, upper_bound=10)
+        r = self.m.restrain(p1, ub=10)
         self.assertEqual(1, len(self.m._restraints))
         p1.set_value(11)
         self.assertEqual(1, r.penalty())
 
         # Check errors on unregistered parameters
         self.assertRaises(ValueError, self.m.restrain, "2*p3")
-        self.assertRaises(
-            ValueError, self.m.restrain, "2*p2", params={"p2": p3}
-        )
+        self.assertRaises(ValueError, self.m.restrain, "2*p2", ns={"p2": p3})
         return
 
     def testGetConstraints(self):
@@ -657,6 +658,42 @@ def test_show(capturestdout):
 
 
 # ----------------------------------------------------------------------------
+
+# `register_function` extracts the name and the argument names from the code
+# object of the function it is given. A decorator such as `deprecated`
+# replaces that code object with the one of its (*args, **kwargs) wrapper, so
+# a decorated function must be introspected through the wrapper to give the
+# same result as the undecorated function.
+
+
+def _gaussian(A, c, w, x):
+    return A * numpy.exp(-0.5 * ((x - c) / w) ** 2)
+
+
+@pytest.mark.parametrize(
+    "input_function",
+    [
+        # C1: Plain undecorated function.
+        # Expected: The name and the argument names come from the function.
+        _gaussian,
+        # C2: The same function behind a deprecation decorator.
+        # Expected: The name and the argument names of the wrapped function,
+        # not those of the wrapper.
+        deprecated("'_gaussian' is deprecated.")(_gaussian),
+    ],
+)
+def test_register_function_introspects_through_a_decorator(input_function):
+    organizer = RecipeOrganizer("organizer")
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        equation = organizer.register_function(input_function)
+    actual_name = equation.name
+    expected_name = "_eq__gaussian"
+    actual_argnames = list(equation.argdict.keys())
+    expected_argnames = ["A", "c", "w", "x"]
+    assert actual_name == expected_name
+    assert actual_argnames == expected_argnames
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -53,7 +53,7 @@ class TagManager(object):
 
         Tags are stored as strings.
 
-        Attributes
+        Parameters
         ----------
         obj
             Any hashable object to be untagged.
@@ -71,7 +71,7 @@ class TagManager(object):
     def untag(self, obj, *tags):
         """Remove tags from an object.
 
-        Attributes
+        Parameters
         ----------
         obj
             Any hashable object to be untagged.

@@ -20,7 +20,8 @@ its own PDFGenerator. However, the PDFGenerators will refer to the same
 underlying ObjCrystCrystalParSet.
 """
 
-import numpy
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -46,14 +47,14 @@ def makeRecipe(ciffile, xdatname, ndatname):
 
     # Load data and add it to the proper Profile.
     parser = PDFParser()
-    parser.parseFile(xdatname)
-    xprofile.loadParsedData(parser)
-    xprofile.setCalculationRange(xmax=20)
+    parser.parse_file(xdatname)
+    xprofile.load_parsed_data(parser)
+    xprofile.set_calculation_range(xmax=20)
 
     parser = PDFParser()
-    parser.parseFile(ndatname)
-    nprofile.loadParsedData(parser)
-    nprofile.setCalculationRange(xmax=20)
+    parser.parse_file(ndatname)
+    nprofile.load_parsed_data(parser)
+    nprofile.set_calculation_range(xmax=20)
 
     # The ProfileGenerators
     # We need one of these for the x-ray data.
@@ -83,11 +84,11 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...
     xcontribution = FitContribution("xnickel")
-    xcontribution.addProfileGenerator(xgenerator)
+    xcontribution.add_profile_generator(xgenerator)
     xcontribution.set_profile(xprofile, xname="r")
     # and the neutron objects in another.
     ncontribution = FitContribution("nnickel")
-    ncontribution.addProfileGenerator(ngenerator)
+    ncontribution.add_profile_generator(ngenerator)
     ncontribution.set_profile(nprofile, xname="r")
 
     # This example is different than the previous ones in that we are composing
@@ -104,79 +105,48 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # The contribution's residual can be either chi^2, Rw^2, or custom crafted.
     # In this case, we should minimize Rw^2 of each contribution so that each
     # one can contribute roughly equally to the fit.
-    xcontribution.setResidualEquation("resv")
-    ncontribution.setResidualEquation("resv")
+    xcontribution.set_residual_equation("resv")
+    ncontribution.set_residual_equation("resv")
 
     # Make the FitRecipe and add the FitContributions.
     recipe = FitRecipe()
-    recipe.addContribution(xcontribution)
-    recipe.addContribution(ncontribution)
+    recipe.add_contribution(xcontribution)
+    recipe.add_contribution(ncontribution)
 
     # Now we vary and constrain Parameters as before.
-    recipe.addVar(xgenerator.scale, 1, "xscale")
-    recipe.addVar(ngenerator.scale, 1, "nscale")
-    recipe.addVar(xgenerator.qdamp, 0.01, "xqdamp")
-    recipe.addVar(ngenerator.qdamp, 0.01, "nqdamp")
+    recipe.add_variable(xgenerator.scale, 1, "xscale")
+    recipe.add_variable(ngenerator.scale, 1, "nscale")
+    recipe.add_variable(xgenerator.qdamp, 0.01, "xqdamp")
+    recipe.add_variable(ngenerator.qdamp, 0.01, "nqdamp")
     # delta2 is a non-structual material property. Thus, we constrain together
     # delta2 Parameter from each PDFGenerator.
-    delta2 = recipe.newVar("delta2", 2)
-    recipe.constrain(xgenerator.delta2, delta2)
-    recipe.constrain(ngenerator.delta2, delta2)
+    delta2 = recipe.create_new_variable("delta2", 2)
+    recipe.add_constraint(xgenerator.delta2, delta2)
+    recipe.add_constraint(ngenerator.delta2, delta2)
 
     # We only need to constrain phase properties once since there is a single
     # ObjCrystCrystalParSet for the Crystal.
     phase = xgenerator.phase
     for par in phase.sgpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
     recipe.B11_0 = 0.1
 
     # Give the recipe away so it can be used!
     return recipe
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
-    xr = recipe.xnickel.profile.x
-    xg = recipe.xnickel.profile.y
-    xgcalc = recipe.xnickel.profile.ycalc
-    xdiffzero = -0.8 * max(xg) * numpy.ones_like(xg)
-    xdiff = xg - xgcalc + xdiffzero
-
-    nr = recipe.nnickel.profile.x
-    ng = recipe.nnickel.profile.y
-    ngcalc = recipe.nnickel.profile.ycalc
-    ndiffzero = -0.8 * max(ng) * numpy.ones_like(ng)
-    ndiff = ng - ngcalc + ndiffzero
-
-    import pylab
-
-    pylab.subplot(2, 1, 1)
-    pylab.plot(xr, xg, "bo", label="G(r) x-ray Data")
-    pylab.plot(xr, xgcalc, "r-", label="G(r) x-ray Fit")
-    pylab.plot(xr, xdiff, "g-", label="G(r) x-ray diff")
-    pylab.plot(xr, xdiffzero, "k-")
-    pylab.legend(loc=1)
-
-    pylab.subplot(2, 1, 2)
-    pylab.plot(nr, ng, "bo", label="G(r) neutron Data")
-    pylab.plot(nr, ngcalc, "r-", label="G(r) neutron Fit")
-    pylab.plot(nr, ndiff, "g-", label="G(r) neutron diff")
-    pylab.plot(nr, ndiffzero, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
 
 
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile = "data/ni.cif"
-    xdata = "data/ni-q27r60nodg-xray.gr"
-    ndata = "data/ni-q27r100-neutron.gr"
+    ciffile = Path(__file__).parent / "data/ni.cif"
+    xdata = Path(__file__).parent / "data/ni-q27r60nodg-xray.gr"
+    ndata = Path(__file__).parent / "data/ni-q27r100-neutron.gr"
 
     # Make the recipe
     recipe = makeRecipe(ciffile, xdata, ndata)
@@ -186,9 +156,11 @@ if __name__ == "__main__":
 
     # Generate and print the FitResults
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
-    # Plot!
-    plotResults(recipe)
+    # Plot! The recipe has two contributions ("xnickel" for x-ray,
+    # "nnickel" for neutron), so plot_recipe produces one figure per
+    # contribution.
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

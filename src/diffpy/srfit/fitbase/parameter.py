@@ -34,10 +34,29 @@ from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _parameter_interface
 from diffpy.srfit.util.argbinders import bind2nd
 from diffpy.srfit.util.nameutils import validateName
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+parameter_base = "diffpy.srfit.fitbase.Parameter"
+removal_version = "4.0.0"
+setValue_dep_msg = build_deprecation_message(
+    parameter_base, "setValue", "set_value", removal_version
+)
+
+setConst_dep_msg = build_deprecation_message(
+    parameter_base, "setConst", "set_constant", removal_version
+)
+
+boundRange_dep_msg = build_deprecation_message(
+    parameter_base, "boundRange", "bound_range", removal_version
+)
+
+boundWindow_dep_msg = build_deprecation_message(
+    parameter_base, "boundWindow", "bound_window", removal_version
+)
 
 
 class Parameter(_parameter_interface, Argument, Validatable):
-    """Parameter class.
+    """Encapsulate an adjustable parameter within SrFit.
 
     Attributes
     ----------
@@ -46,34 +65,36 @@ class Parameter(_parameter_interface, Argument, Validatable):
     const
         A flag indicating whether this is considered a constant.
     _value
-        The value of the Parameter. Modified with 'setValue'.
+        The value of the Parameter. Modified with ``set_value``.
     value
-        Property for 'getValue' and 'setValue'.
+        Property for ``getValue`` and ``set_value``.
     constrained
         A flag indicating if the Parameter is constrained
         (default False).
     bounds
         A 2-list defining the bounds on the Parameter. This can be
         used by some optimizers when the Parameter is varied. See
-        FitRecipe.getBounds and FitRecipe.boundsToRestraints.
+        FitRecipe.get_bounds_pairs and FitRecipe.convert_bounds_to_restraints.
     """
 
     def __init__(self, name, value=None, const=False):
-        """Initialization.
+        """Initialize the Parameter.
 
-        Attributes
+        Parameters
         ----------
-        name
+        name : str
             The name of this Parameter (must be a valid attribute
-            identifier)
-        value
+            identifier).
+        value : float, optional
             The initial value of this Parameter (default 0).
-        const
-            A flag inticating whether the Parameter is a constant (like
+        const : bool, optional
+            A flag indicating whether the Parameter is a constant (like
             pi).
 
-
-        Raises ValueError if the name is not a valid attribute identifier
+        Raises
+        ------
+        ValueError
+            If the name is not a valid attribute identifier.
         """
         self.constrained = False
         self.bounds = [-numpy.inf, +numpy.inf]
@@ -81,96 +102,129 @@ class Parameter(_parameter_interface, Argument, Validatable):
         Argument.__init__(self, name, value, const)
         return
 
-    def setValue(self, val):
-        """Set the value of the Parameter and the bounds.
+    def set_value(self, val):
+        """Set the value of the Parameter.
 
-        Attributes
+        Parameters
         ----------
-        val
+        val : float
             The value to assign.
-        lb
-            The lower bounds for the bounds list. If this is None
-            (default), then the lower bound will not be alterered.
-        ub
-            The upper bounds for the bounds list. If this is None
-            (default), then the upper bound will not be alterered.
 
         Returns
         -------
-        self
-            Returns self so that mutators can be chained.
+        Parameter
+            Return self so that mutators can be chained.
         """
-        Argument.setValue(self, val)
+        Argument.set_value(self, val)
         return self
 
-    def setConst(self, const=True, value=None):
+    @deprecated(setValue_dep_msg)
+    def setValue(self, val):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.set_value instead.
+        """
+        return self.set_value(val)
+
+    def set_constant(self, is_constant=True, value=None):
         """Toggle the Parameter as constant.
 
-        Attributes
+        Parameters
         ----------
-        const
-            Flag indicating if the parameter is constant (default
+        is_constant : bool, optional
+            The flag indicating if the parameter is constant (default
             True).
-        value
-            An optional value for the parameter (default None). If this
-            is not None, then the parameter will get a new value,
-            constant or otherwise.
+        value : float, optional
+            The value to set the parameter to (default None). If this is
+            not None, then the parameter will get a new value, constant
+            or otherwise.
 
         Returns
         -------
-        self
-            Returns self so that mutators can be chained.
+        Parameter
+            Return self so that mutators can be chained.
         """
-        self.const = bool(const)
+        self.const = bool(is_constant)
         if value is not None:
-            self.setValue(value)
+            self.set_value(value)
         return self
 
-    def boundRange(self, lb=None, ub=None):
+    @deprecated(setConst_dep_msg)
+    def setConst(self, const=True, value=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.set_constant instead.
+        """
+        self.set_constant(const, value)
+        return self
+
+    def bound_range(self, lower_bound=None, upper_bound=None):
         """Set lower and upper bound of the Parameter.
 
-        Attributes
+        Parameters
         ----------
-        lb
+        lower_bound : float
             The lower bound for the bounds list.
-        ub
+        upper_bound : float
             The upper bound for the bounds list.
 
         Returns
         -------
-        self
-            Returns self so that mutators can be chained.
+        Parameter
+            Return self so that mutators can be chained.
         """
-        if lb is not None:
-            self.bounds[0] = lb
-        if ub is not None:
-            self.bounds[1] = ub
+        if lower_bound is not None:
+            self.bounds[0] = lower_bound
+        if upper_bound is not None:
+            self.bounds[1] = upper_bound
         return self
 
-    def boundWindow(self, lr=0, ur=None):
+    @deprecated(boundRange_dep_msg)
+    def boundRange(self, lb=None, ub=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.bound_range instead.
+        """
+        self.bound_range(lb, ub)
+        return self
+
+    def bound_window(self, lower_radius=0, upper_radius=None):
         """Create bounds centered on the current value of the Parameter.
 
-        Attributes
+        Parameters
         ----------
-        lr
+        lower_radius : float, optional
             The radius of the lower bound (default 0). The lower bound is
-            computed as value - lr.
-        ur
+            computed as value - lower_radius.
+        upper_radius : float, optional
             The radius of the upper bound. The upper bound is computed as
-            value + ur. If this is None (default), then the value of the
-            lower radius is used.
+            value + upper_radius. If this is None (default), then the value
+            of the lower radius is used.
 
         Returns
         -------
-        self
-            Returns self so that mutators can be chained.
+        Parameter
+            Return self so that mutators can be chained.
         """
         val = self.getValue()
-        lb = val - lr
-        if ur is None:
-            ur = lr
-        ub = val + ur
-        self.bounds = [lb, ub]
+        lower_bound = val - lower_radius
+        if upper_radius is None:
+            upper_radius = lower_radius
+        upper_bound = val + upper_radius
+        self.bounds = [lower_bound, upper_bound]
+        return self
+
+    @deprecated(boundWindow_dep_msg)
+    def boundWindow(self, lr=0, ur=None):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.bound_window instead.
+        """
+        self.bound_window(lr, ur)
         return self
 
     def _validate(self):
@@ -178,7 +232,10 @@ class Parameter(_parameter_interface, Argument, Validatable):
 
         This validates that value is not None.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self.value is None:
             raise SrFitError("value of '%s' is None" % self.name)
@@ -203,17 +260,19 @@ class ParameterProxy(Parameter):
     """
 
     def __init__(self, name, par):
-        """Initialization.
+        """Initialize the ParameterProxy.
 
-        Attributes
+        Parameters
         ----------
-        name
+        name : str
             The name of this ParameterProxy.
-        par
+        par : Parameter
             The Parameter this is a proxy for.
 
-
-        Raises ValueError if the name is not a valid attribute identifier
+        Raises
+        ------
+        ValueError
+            If the name is not a valid attribute identifier.
         """
         validateName(name)
 
@@ -238,8 +297,8 @@ class ParameterProxy(Parameter):
         """List of lower and upper bounds of the proxied Parameter.
 
         This can be used by some optimizers when the Parameter is
-        varied. See FitRecipe.getBounds and
-        FitRecipe.boundsToRestraints.
+        varied. See FitRecipe.get_bounds_pairs and
+        FitRecipe.convert_bounds_to_restraints.
         """
         return self.par.bounds
 
@@ -254,32 +313,35 @@ class ParameterProxy(Parameter):
 
     # wrap Parameter methods to use the target object ------------------------
 
-    @wraps(Parameter.setValue)
-    def setValue(self, val):
-        return self.par.setValue(val)
+    @wraps(Parameter.set_value)
+    def set_value(self, val):
+        return self.par.set_value(val)
 
     @wraps(Parameter.getValue)
     def getValue(self):
         return self.par.getValue()
 
-    @wraps(Parameter.setConst)
-    def setConst(self, const=True, value=None):
-        return self.par.setConst(const, value)
+    @wraps(Parameter.set_constant)
+    def set_constant(self, const=True, value=None):
+        return self.par.set_constant(const, value)
 
-    @wraps(Parameter.boundRange)
-    def boundRange(self, lb=None, ub=None):
-        return self.par.boundRange(lb, ub)
+    @wraps(Parameter.bound_range)
+    def bound_range(self, lower_bound=None, upper_bound=None):
+        return self.par.bound_range(lower_bound, upper_bound)
 
-    @wraps(Parameter.boundWindow)
-    def boundWindow(self, lr=0, ur=None):
-        return self.par.boundWindow(lr, ur)
+    @wraps(Parameter.bound_window)
+    def bound_window(self, lr=0, ur=None):
+        return self.par.bound_window(lr, ur)
 
     def _validate(self):
         """Validate my state.
 
         This validates that value and par are not None.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self.par is None:
             raise SrFitError("par is None")
@@ -293,42 +355,44 @@ class ParameterProxy(Parameter):
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.
 
-    This class wraps an object as a Parameter. The getValue and setValue
-    methods defer to the data of the wrapped object.
+    This class wraps an object as a Parameter. The getValue and
+    set_value methods defer to the data of the wrapped object.
     """
 
     def __init__(self, name, obj, getter=None, setter=None, attr=None):
         """Wrap an object as a Parameter.
 
-        Attributes
+        Parameters
         ----------
-        name
+        name : str
             The name of this Parameter.
-        obj
+        obj : object
             The object to be wrapped.
-        getter
+        getter : callable, optional
             The unbound function that can be used to access the
-            attribute containing the parameter value. getter(obj)
-            should return the Parameter value.  If getter is None
+            attribute containing the parameter value. ``getter(obj)``
+            should return the Parameter value. If getter is None
             (default), it is assumed that an attribute is accessed
             via attr. If attr is also specified, then the Parameter
-            value will be accessed via getter(obj, attr).
-        setter
+            value will be accessed via ``getter(obj, attr)``.
+        setter : callable, optional
             The unbound function that can be used to modify the
             attribute containing the parameter value.
-            setter(obj, value) should set the attribute to the
+            ``setter(obj, value)`` should set the attribute to the
             passed value. If setter is None (default), it is assumed
             that an attribute is accessed via attr. If attr is also
             specified, then the Parameter value will be set via
-            setter(obj, attr, value).
-        attr
+            ``setter(obj, attr, value)``.
+        attr : str, optional
             The name of the attribute that contains the value of the
             parameter. If attr is None (default), then both getter and
             setter must be specified.
 
-
-        Raises ValueError if exactly one of getter or setter is not None, or if
-        getter, setter and attr are all None.
+        Raises
+        ------
+        ValueError
+            If exactly one of getter or setter is not None, or if
+            getter, setter and attr are all None.
         """
         if getter is None and setter is None and attr is None:
             raise ValueError("Specify attribute access")
@@ -356,11 +420,28 @@ class ParameterAdapter(Parameter):
         return
 
     def getValue(self):
-        """Get the value of the Parameter."""
+        """Get the value of the Parameter.
+
+        Returns
+        -------
+        object
+            The current value of the wrapped attribute.
+        """
         return self.getter(self.obj)
 
-    def setValue(self, value):
-        """Set the value of the Parameter."""
+    def set_value(self, value):
+        """Set the value of the Parameter.
+
+        Parameters
+        ----------
+        value : object
+            The value to assign.
+
+        Returns
+        -------
+        ParameterAdapter
+            Return self so that mutators can be chained.
+        """
         if value != self.getValue():
             self.setter(self.obj, value)
             self.notify()

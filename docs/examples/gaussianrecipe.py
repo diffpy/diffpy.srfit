@@ -26,8 +26,8 @@ script is driven by the 'main' method defined below. Take a look at that method
 to get an understanding of how a fit recipe can be used once created.  After
 that, read the 'makeRecipe' code to see what goes into a fit recipe. After
 that, read the 'scipyOptimize' code to see how the refinement is executed.
-Finally, read the 'plotResults' code to see how to extracts the refined profile
-and plot it.
+Finally, look at the 'plot_styles' dict and the 'recipe.plot_recipe' call
+to see how the refined profile is plotted.
 
 Extensions
 
@@ -44,6 +44,8 @@ will leave you with a much better understanding of how SrFit works.
 """
 
 from __future__ import print_function
+
+from pathlib import Path
 
 from diffpy.srfit.fitbase import (
     FitContribution,
@@ -72,10 +74,10 @@ def main():
     res = FitResults(recipe)
 
     # Print the results.
-    res.printResults()
+    res.print_results()
 
     # Plot the results.
-    plotResults(recipe)
+    recipe.plot_recipe(**plot_styles)
 
     return
 
@@ -100,7 +102,7 @@ def makeRecipe():
 
     # Load data and add it to the profile. This uses the loadtxt function from
     # numpy.
-    profile.loadtxt("data/gaussian.dat")
+    profile.loadtxt(Path(__file__).parent / "data/gaussian.dat")
 
     # The FitContribution
     # The FitContribution associates the Profile with a fitting equation. The
@@ -122,7 +124,7 @@ def makeRecipe():
     # contribution by name.  Since we told the contribution that our
     # independent variable is named "x", this value will be substituted into
     # the fitting equation whenever it is called.
-    contribution.setEquation("A * exp(-0.5*(x-x0)**2/sigma**2)")
+    contribution.set_equation("A * exp(-0.5*(x-x0)**2/sigma**2)")
 
     # To demonstrate how these parameters are used, we will give "A" an initial
     # value. Note that Parameters are not numbers, but are containers for
@@ -138,7 +140,7 @@ def makeRecipe():
     # Here we tell the FitRecipe to use our FitContribution. When the FitRecipe
     # calculates its residual function, it will call on the FitContribution to
     # do part of the work.
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Specify which Parameters we want to vary in the fit.  This will add
     # Variables to the FitRecipe that directly modify the Parameters of the
@@ -147,13 +149,13 @@ def makeRecipe():
     # Here we create a Variable for the 'A' Parameter from our fit equation.
     # The resulting Variable will be named 'A' as well, but it will be accessed
     # via the FitRecipe.
-    recipe.addVar(contribution.A)
+    recipe.add_variable(contribution.A)
     # Here we create the Variable for 'x0' and give it an initial value of 5.
-    recipe.addVar(contribution.x0, 5)
+    recipe.add_variable(contribution.x0, 5)
     # Here we create a Variable named 'sig', which is tied to the 'sigma'
     # Parameter of our FitContribution. We give it an initial value through the
     # FitRecipe instance.
-    recipe.addVar(contribution.sigma, name="sig")
+    recipe.add_variable(contribution.sigma, name="sig")
     recipe.sig.value = 1
 
     return recipe
@@ -169,38 +171,19 @@ def scipyOptimize(recipe):
     # We're going to use the least-squares (Levenberg-Marquardt) optimizer from
     # scipy. We simply have to give it the function to minimize
     # (recipe.residual) and the starting values of the Variables
-    # (recipe.getValues()).
+    # (recipe.get_values()).
     from scipy.optimize.minpack import leastsq
 
     print("Fit using scipy's LM optimizer")
-    leastsq(recipe.residual, recipe.getValues())
+    leastsq(recipe.residual, recipe.get_values())
 
     return
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # We can access the data and fit profile through the Profile we created
-    # above. We get to it through our FitContribution, which we named "g1".
-    #
-    # The independent variable. This is always under the "x" attribute.
-    x = recipe.g1.profile.x
-    # The observed profile that we loaded earlier, the "y" attribute.
-    y = recipe.g1.profile.y
-    # The calculated profile, the "ycalc" attribute.
-    ycalc = recipe.g1.profile.ycalc
-
-    # This stuff is specific to pylab from the matplotlib distribution.
-    import pylab
-
-    pylab.plot(x, y, "b.", label="observed Gaussian")
-    pylab.plot(x, ycalc, "g-", label="calculated Gaussian")
-    pylab.legend(loc=(0.0, 0.8))
-    pylab.xlabel("x")
-    pylab.ylabel("y")
-
-    pylab.show()
-    return
+plot_styles = {
+    "xlabel": "x",
+    "ylabel": "y",
+}
 
 
 if __name__ == "__main__":

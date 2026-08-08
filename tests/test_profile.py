@@ -22,6 +22,7 @@ import pytest
 from numpy import allclose, arange, array, array_equal, ones_like
 
 from diffpy.srfit.exceptions import SrFitError
+from diffpy.srfit.fitbase import FitContribution, ProfileParser
 from diffpy.srfit.fitbase.profile import Profile
 
 
@@ -43,8 +44,8 @@ class TestProfile(unittest.TestCase):
         self.assertEqual(profile.meta, {})
         return
 
-    def testSetObservedProfile(self):
-        """Test the setObservedProfile method."""
+    def test_set_observed_profile(self):
+        """Test the set_observed_profile method."""
         # Make a profile with defined dy
 
         x = arange(0, 10, 0.1)
@@ -52,7 +53,43 @@ class TestProfile(unittest.TestCase):
         dy = x
 
         prof = self.profile
-        prof.setObservedProfile(x, y, dy)
+        prof.set_observed_profile(x, y, dy)
+
+        self.assertTrue(array_equal(x, prof.xobs))
+        self.assertTrue(array_equal(y, prof.yobs))
+        self.assertTrue(array_equal(dy, prof.dyobs))
+
+        # Make a profile with undefined dy
+        x = arange(0, 10, 0.1)
+        y = x
+        dy = None
+
+        self.profile.set_observed_profile(x, y, dy)
+
+        self.assertTrue(array_equal(x, prof.xobs))
+        self.assertTrue(array_equal(y, prof.yobs))
+        self.assertTrue(prof.dyobs is None)
+
+        # Get the ranged profile to make sure its the same
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dy))
+
+        return
+
+    def testSetObservedProfile(self):
+        """Test the deprecated setObservedProfile method.
+
+        Remove this test when setObservedProfile is removed in 4.0.0.
+        """
+        # Make a profile with defined dy
+
+        x = arange(0, 10, 0.1)
+        y = x
+        dy = x
+
+        prof = self.profile
+        prof.set_observed_profile(x, y, dy)
 
         self.assertTrue(array_equal(x, prof.xobs))
         self.assertTrue(array_equal(y, prof.yobs))
@@ -67,7 +104,7 @@ class TestProfile(unittest.TestCase):
 
         self.assertTrue(array_equal(x, prof.xobs))
         self.assertTrue(array_equal(y, prof.yobs))
-        self.assertTrue(array_equal(ones_like(prof.xobs), prof.dyobs))
+        self.assertTrue(prof.dyobs is None)
 
         # Get the ranged profile to make sure its the same
         self.assertTrue(array_equal(x, prof.x))
@@ -76,19 +113,100 @@ class TestProfile(unittest.TestCase):
 
         return
 
-    def testSetCalculationRange(self):
-        """Test the setCalculationRange method."""
+    def test_set_calculation_range(self):
+        """Test the set_calculation_range method."""
         x = arange(2, 9.6, 0.5)
         y = array(x)
         dy = array(x)
         prof = self.profile
         # Check call before data arrays are present
-        self.assertRaises(AttributeError, prof.setCalculationRange)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0, 5)
-        self.assertRaises(AttributeError, prof.setCalculationRange, 0, 5, 0.2)
+        self.assertRaises(AttributeError, prof.set_calculation_range)
+        self.assertRaises(AttributeError, prof.set_calculation_range, 0)
+        self.assertRaises(AttributeError, prof.set_calculation_range, 0, 5)
+        self.assertRaises(
+            AttributeError, prof.set_calculation_range, 0, 5, 0.2
+        )
         # assign data
-        prof.setObservedProfile(x, y, dy)
+        prof.set_observed_profile(x, y, dy)
+        # Test normal execution w/o arguments
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(dy, prof.dy))
+        prof.set_calculation_range()
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(dy, prof.dy))
+        # Test a lower bound < xmin
+        prof.set_calculation_range(xmin=0)
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(dy, prof.dy))
+        # Test an upper bound > xmax
+        prof.set_calculation_range(xmax=100)
+        self.assertTrue(array_equal(x, prof.x))
+        self.assertTrue(array_equal(y, prof.y))
+        self.assertTrue(array_equal(dy, prof.dy))
+        # Test xmin > xmax
+        self.assertRaises(
+            ValueError, prof.set_calculation_range, xmin=10, xmax=3
+        )
+        # Test xmax - xmin < dx
+        self.assertRaises(
+            ValueError, prof.set_calculation_range, xmin=3, xmax=3.9, dx=1.0
+        )
+        # Test dx <= 0
+        self.assertRaises(ValueError, prof.set_calculation_range, dx=0)
+        self.assertRaises(ValueError, prof.set_calculation_range, dx=-0.000001)
+        # using string other than 'obs'
+        self.assertRaises(ValueError, prof.set_calculation_range, xmin="oobs")
+        self.assertRaises(ValueError, prof.set_calculation_range, xmax="oobs")
+        self.assertRaises(ValueError, prof.set_calculation_range, dx="oobs")
+        # This should be alright
+        prof.set_calculation_range(3, 5)
+        prof.set_calculation_range(xmin="obs", xmax=7, dx=0.001)
+        self.assertEqual(5001, len(prof.x))
+        self.assertEqual(len(prof.x), len(prof.y))
+        self.assertEqual(len(prof.x), len(prof.dy))
+        # Test an internal bound
+        prof.set_calculation_range(4, 7, dx="obs")
+        self.assertTrue(array_equal(prof.x, arange(4, 7.1, 0.5)))
+        self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
+        self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
+        # test setting only one of the bounds
+        prof.set_calculation_range(xmin=3)
+        self.assertTrue(array_equal(prof.x, arange(3, 7.1, 0.5)))
+        self.assertTrue(array_equal(prof.x, prof.y))
+        self.assertTrue(array_equal(prof.x, prof.dy))
+        prof.set_calculation_range(xmax=5.1)
+        self.assertTrue(array_equal(prof.x, arange(3, 5.1, 0.5)))
+        self.assertTrue(array_equal(prof.x, prof.y))
+        self.assertTrue(array_equal(prof.x, prof.dy))
+        prof.set_calculation_range(dx=1)
+        self.assertTrue(array_equal(prof.x, arange(3, 5.1)))
+        self.assertTrue(array_equal(prof.x, prof.y))
+        self.assertTrue(array_equal(prof.x, prof.dy))
+        # Test a new grid
+        prof.set_calculation_range(4.2, 7, 0.3)
+        self.assertTrue(array_equal(prof.x, arange(4.2, 6.901, 0.3)))
+        self.assertTrue(allclose(prof.x, prof.y))
+        self.assertTrue(allclose(prof.x, prof.dy))
+        prof.set_calculation_range(xmin=4.2, xmax=6.001)
+        self.assertTrue(array_equal(prof.x, arange(4.2, 6.001, 0.3)))
+        # resample on a clipped grid
+        prof.set_calculation_range(dx=0.5)
+        self.assertTrue(array_equal(prof.x, arange(4.5, 6.1, 0.5)))
+        return
+
+    def testSetCalculationRange(self):
+        """Test the deprecated setCalculationRange method.
+
+        Remove this test when setCalculationRange is removed in 4.0.0.
+        """
+        x = arange(2, 9.6, 0.5)
+        y = array(x)
+        dy = array(x)
+        prof = self.profile
+        prof.set_observed_profile(x, y, dy)
         # Test normal execution w/o arguments
         self.assertTrue(array_equal(x, prof.x))
         self.assertTrue(array_equal(y, prof.y))
@@ -97,69 +215,32 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(array_equal(x, prof.x))
         self.assertTrue(array_equal(y, prof.y))
         self.assertTrue(array_equal(dy, prof.dy))
-        # Test a lower bound < xmin
-        prof.setCalculationRange(xmin=0)
-        self.assertTrue(array_equal(x, prof.x))
-        self.assertTrue(array_equal(y, prof.y))
-        self.assertTrue(array_equal(dy, prof.dy))
-        # Test an upper bound > xmax
-        prof.setCalculationRange(xmax=100)
-        self.assertTrue(array_equal(x, prof.x))
-        self.assertTrue(array_equal(y, prof.y))
-        self.assertTrue(array_equal(dy, prof.dy))
-        # Test xmin > xmax
-        self.assertRaises(
-            ValueError, prof.setCalculationRange, xmin=10, xmax=3
-        )
-        # Test xmax - xmin < dx
-        self.assertRaises(
-            ValueError, prof.setCalculationRange, xmin=3, xmax=3.9, dx=1.0
-        )
-        # Test dx <= 0
-        self.assertRaises(ValueError, prof.setCalculationRange, dx=0)
-        self.assertRaises(ValueError, prof.setCalculationRange, dx=-0.000001)
-        # using string other than 'obs'
-        self.assertRaises(ValueError, prof.setCalculationRange, xmin="oobs")
-        self.assertRaises(ValueError, prof.setCalculationRange, xmax="oobs")
-        self.assertRaises(ValueError, prof.setCalculationRange, dx="oobs")
-        # This should be alright
-        prof.setCalculationRange(3, 5)
-        prof.setCalculationRange(xmin="obs", xmax=7, dx=0.001)
-        self.assertEqual(5001, len(prof.x))
-        self.assertEqual(len(prof.x), len(prof.y))
-        self.assertEqual(len(prof.x), len(prof.dy))
-        # Test an internal bound
-        prof.setCalculationRange(4, 7, dx="obs")
-        self.assertTrue(array_equal(prof.x, arange(4, 7.1, 0.5)))
-        self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
-        self.assertTrue(array_equal(prof.y, arange(4, 7.1, 0.5)))
-        # test setting only one of the bounds
-        prof.setCalculationRange(xmin=3)
-        self.assertTrue(array_equal(prof.x, arange(3, 7.1, 0.5)))
-        self.assertTrue(array_equal(prof.x, prof.y))
-        self.assertTrue(array_equal(prof.x, prof.dy))
-        prof.setCalculationRange(xmax=5.1)
-        self.assertTrue(array_equal(prof.x, arange(3, 5.1, 0.5)))
-        self.assertTrue(array_equal(prof.x, prof.y))
-        self.assertTrue(array_equal(prof.x, prof.dy))
-        prof.setCalculationRange(dx=1)
-        self.assertTrue(array_equal(prof.x, arange(3, 5.1)))
-        self.assertTrue(array_equal(prof.x, prof.y))
-        self.assertTrue(array_equal(prof.x, prof.dy))
-        # Test a new grid
-        prof.setCalculationRange(4.2, 7, 0.3)
-        self.assertTrue(array_equal(prof.x, arange(4.2, 6.901, 0.3)))
-        self.assertTrue(allclose(prof.x, prof.y))
-        self.assertTrue(allclose(prof.x, prof.dy))
-        prof.setCalculationRange(xmin=4.2, xmax=6.001)
-        self.assertTrue(array_equal(prof.x, arange(4.2, 6.001, 0.3)))
-        # resample on a clipped grid
-        prof.setCalculationRange(dx=0.5)
-        self.assertTrue(array_equal(prof.x, arange(4.5, 6.1, 0.5)))
+        return
+
+    def test_set_calculation_points(self):
+        """Test the set_calculation_points method."""
+        prof = self.profile
+
+        x = arange(2, 10.5, 0.5)
+        y = array(x)
+        dy = array(x)
+
+        # Test without data
+        xcalc = arange(3, 12.2, 0.2)
+        prof.set_calculation_points(xcalc)
+        self.assertTrue(array_equal(xcalc, prof.x))
+
+        # Add the data. This should change the bounds of the calculation array.
+        prof.set_observed_profile(x, y, dy)
+        self.assertTrue(array_equal(arange(3, 10.1, 0.2), prof.x))
+
         return
 
     def testSetCalculationPoints(self):
-        """Test the setCalculationPoints method."""
+        """Test the deprecated setCalculationPoints method.
+
+        Remove this test when setCalculationPoints is removed in 4.0.0.
+        """
         prof = self.profile
 
         x = arange(2, 10.5, 0.5)
@@ -172,7 +253,7 @@ class TestProfile(unittest.TestCase):
         self.assertTrue(array_equal(xcalc, prof.x))
 
         # Add the data. This should change the bounds of the calculation array.
-        prof.setObservedProfile(x, y, dy)
+        prof.set_observed_profile(x, y, dy)
         self.assertTrue(array_equal(arange(3, 10.1, 0.2), prof.x))
 
         return
@@ -183,7 +264,7 @@ class TestProfile(unittest.TestCase):
         self.assertRaises(SrFitError, prof.savetxt, "foo")
         xobs = arange(-2, 3.01, 0.25)
         yobs = xobs**2
-        prof.setObservedProfile(xobs, yobs)
+        prof.set_observed_profile(xobs, yobs)
         prof.ycalc = yobs.copy()
         fp = io.BytesIO()
         prof.savetxt(fp)
@@ -224,6 +305,78 @@ def testLoadtxt(datafile):
     with pytest.raises(ValueError):
         prof.loadtxt(data, usecols=(0,))
     return
+
+
+# The parsed x, y and dy arrays are copied onto the observed profile.
+# Uncertainties on x are dropped, since srfit treats the independent
+# variable as having no uncertainty.
+@pytest.mark.parametrize(
+    "input_filename, expected_xobs, expected_yobs, expected_dyobs",
+    [
+        # C1: File has four columns, so uncertainties are present.
+        # Expected: xobs, yobs and dyobs are loaded and dx is dropped.
+        (
+            "four_col.gr",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            [0.2, 0.4, 0.6],
+        ),
+        # C3: File has three columns, so uncertainties are present.
+        # Expected: xobs, yobs and dyobs are loaded.
+        (
+            "three_col.dat",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            [0.2, 0.4, 0.6],
+        ),
+        # C2: File has two columns, so no uncertainties are present.
+        # Expected: xobs and yobs are loaded and dyobs stays None,
+        # marking the profile as unweighted.
+        (
+            "two_col.txt",
+            [1.0, 1.1, 1.2],
+            [2.0, 2.1, 2.2],
+            None,
+        ),
+    ],
+)
+def test_load_parsed_data(
+    as_list,
+    parser_datafiles,
+    input_filename,
+    expected_xobs,
+    expected_yobs,
+    expected_dyobs,
+):
+    """Load a parsed profile onto the observed arrays."""
+    parser = ProfileParser()
+    parser.parse_file(parser_datafiles / input_filename)
+    prof = Profile()
+    prof.load_parsed_data(parser)
+    actual_xobs = prof.xobs.tolist()
+    actual_yobs = prof.yobs.tolist()
+    # Unavailable uncertainties are None rather than an array.
+    actual_dyobs = as_list(prof.dyobs)
+    assert actual_xobs == expected_xobs
+    assert actual_yobs == expected_yobs
+    assert actual_dyobs == expected_dyobs
+
+
+# Case: A profile is set without uncertainties, so dyobs is None, and a
+# residual is computed from the equation y = A*x with A = 2.
+# Expected: The residual is (A*x - y) with unit weights, since missing
+# uncertainties default to ones rather than being used as divisors.
+def test_residual_without_uncertainties():
+    """Compute the residual for a profile with no uncertainties."""
+    prof = Profile()
+    prof.set_observed_profile(array([1.0, 2.0, 3.0]), array([1.0, 2.0, 3.0]))
+    contribution = FitContribution("test")
+    contribution.set_profile(prof)
+    contribution.set_equation("A*x")
+    contribution.A.set_value(2)
+    actual_residual = contribution.residual().tolist()
+    expected_residual = [1.0, 2.0, 3.0]
+    assert actual_residual == expected_residual
 
 
 if __name__ == "__main__":

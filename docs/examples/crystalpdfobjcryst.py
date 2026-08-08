@@ -19,7 +19,8 @@ pyobjcryst crystal object. In this example we use internal constraints
 provided by the ObjCrystCrystalParSet structure adapter.
 """
 
-from crystalpdf import plotResults
+from pathlib import Path
+
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -41,14 +42,14 @@ def makeRecipe(ciffile, datname):
     # This will be used to store the observed and calculated PDF profile.
     profile = Profile()
 
-    # Load data and add it to the Profile. As before we use a PDFParser. The
-    # metadata is still passed to the PDFGenerator later on. The interaction
-    # between the PDFGenerator and the metadata does not depend on type of
-    # structure being refined.
+    # Load data and add it to the Profile. As before we use a PDFParser.
+    # The metadata is still passed to the PDFGenerator later on.
+    # The interaction between the PDFGenerator and the metadata does not
+    # depend on type of structure being refined.
     parser = PDFParser()
-    parser.parseFile(datname)
-    profile.loadParsedData(parser)
-    profile.setCalculationRange(xmax=20)
+    parser.parse_file(datname)
+    profile.load_parsed_data(parser)
+    profile.set_calculation_range(xmax=20)
 
     # The ProfileGenerator
     # This time we use the CreateCrystalFromCIF method of pyobjcryst.crystal to
@@ -61,12 +62,12 @@ def makeRecipe(ciffile, datname):
 
     # The FitContribution
     contribution = FitContribution("nickel")
-    contribution.addProfileGenerator(generator)
+    contribution.add_profile_generator(generator)
     contribution.set_profile(profile, xname="r")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
-    recipe.addContribution(contribution)
+    recipe.add_contribution(contribution)
 
     # Configure the fit variables
 
@@ -84,33 +85,36 @@ def makeRecipe(ciffile, datname):
     # constraints get enforced within the ObjCrystCrystalParSet. Free
     # Parameters are stored within the 'sgpars' member of the
     # ObjCrystCrystalParSet, which is the same as the object returned from
-    # 'constrainAsSpaceGroup'.
+    # 'constrain_as_space_group'.
     #
     # As before, we have one free lattice parameter ('a'). We can simplify
     # things by iterating through all the sgpars.
     for par in phase.sgpars:
-        recipe.addVar(par)
-    # set the initial thermal factor to a non-zero value
-    assert hasattr(recipe, "B11_0")
-    recipe.B11_0 = 0.1
+        recipe.add_variable(par)
 
     # We now select non-structural parameters to refine.
     # This controls the scaling of the PDF.
-    recipe.addVar(generator.scale, 1)
+    recipe.add_variable(generator.scale, 1)
     # This is a peak-damping resolution term.
-    recipe.addVar(generator.qdamp, 0.01)
+    recipe.add_variable(generator.qdamp, 0.01)
     # This is a vibrational correlation term that sharpens peaks at low-r.
-    recipe.addVar(generator.delta2, 5)
+    recipe.add_variable(generator.delta2, 5)
 
     # Give the recipe away so it can be used!
     return recipe
 
 
+plot_styles = {
+    "xlabel": r"$r (\AA)$",
+    "ylabel": r"$G (\AA^{-2})$",
+}
+
+
 if __name__ == "__main__":
 
     # Make the data and the recipe
-    ciffile = "data/si.cif"
-    data = "data/si-q27r60-xray.gr"
+    ciffile = Path(__file__).parent / "data/si.cif"
+    data = Path(__file__).parent / "data/si-q27r60-xray.gr"
 
     # Make the recipe
     recipe = makeRecipe(ciffile, data)
@@ -120,9 +124,9 @@ if __name__ == "__main__":
 
     # Generate and print the FitResults
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
     # Plot!
-    plotResults(recipe)
+    recipe.plot_recipe(**plot_styles)
 
 # End of file

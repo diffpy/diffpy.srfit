@@ -110,9 +110,9 @@ class ProfileGenerator(Operator, ParameterSet):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
     # define abstract attributes from the Operator base.
@@ -136,10 +136,18 @@ class ProfileGenerator(Operator, ParameterSet):
     def __call__(self, x):
         """Evaluate the profile.
 
-        This method must be overloaded.
+        This method must be overloaded. It only takes the independent
+        variable to calculate over.
 
-        This method only takes the independent variables to calculate
-        over.
+        Parameters
+        ----------
+        x : ndarray
+            The independent variable over which to calculate.
+
+        Returns
+        -------
+        ndarray
+            The calculated profile.
         """
         return x
 
@@ -148,7 +156,10 @@ class ProfileGenerator(Operator, ParameterSet):
     def operation(self):
         """Evaluate the profile.
 
-        Return the result of __call__(profile.x).
+        Returns
+        -------
+        ndarray
+            The result of ``__call__(profile.x)``.
         """
         y = self.__call__(self.profile.x)
         return y
@@ -156,10 +167,10 @@ class ProfileGenerator(Operator, ParameterSet):
     def set_profile(self, profile):
         """Assign the profile.
 
-        Attributes
+        Parameters
         ----------
-        profile
-            A Profile that specifies the calculation points and which
+        profile : Profile
+            The Profile that specifies the calculation points and which
             will store the calculated signal.
         """
         if self.profile is not None:
@@ -173,11 +184,11 @@ class ProfileGenerator(Operator, ParameterSet):
     def _on_profile_update(self, other=()):
         if self.profile is not None:
             self.meta.update(self.profile.meta)
-            self.processMetaData()
+            self._process_metadata()
         self._flush(other=other)
         return
 
-    def processMetaData(self):
+    def _process_metadata(self):
         """Process the metadata.
 
         This can be used to configure a ProfileGenerator upon a change
@@ -194,7 +205,10 @@ class ProfileGenerator(Operator, ParameterSet):
         could be costly. The operation should be validated with a
         containing equation.
 
-        Raises SrFitError if validation fails.
+        Raises
+        ------
+        SrFitError
+            If validation fails.
         """
         if self.profile is None:
             raise SrFitError("profile is None")

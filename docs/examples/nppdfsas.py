@@ -22,7 +22,9 @@ portions of the fit to guide one another, and in the end gives the shape
 of the nanoparticle that agrees best with both the PDF and SAS data.
 """
 
-import numpy
+from pathlib import Path
+
+import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
 from pyobjcryst import loadCrystal
 
@@ -38,7 +40,8 @@ from diffpy.srfit.sas import SASGenerator, SASParser
 
 
 def makeRecipe(ciffile, grdata, iqdata):
-    """Make complex-modeling recipe where I(q) and G(r) are fit simultaneously.
+    """Make complex-modeling recipe where I(q) and G(r) are fit
+    simultaneously.
 
     The fit I(q) is fed into the calculation of G(r), which provides
     feedback for the fit parameters of both.
@@ -46,9 +49,9 @@ def makeRecipe(ciffile, grdata, iqdata):
     # Create a PDF contribution as before
     pdfprofile = Profile()
     pdfparser = PDFParser()
-    pdfparser.parseFile(grdata)
-    pdfprofile.loadParsedData(pdfparser)
-    pdfprofile.setCalculationRange(xmin=0.1, xmax=20)
+    pdfparser.parse_file(grdata)
+    pdfprofile.load_parsed_data(pdfparser)
+    pdfprofile.set_calculation_range(xmin=0.1, xmax=20)
 
     pdfcontribution = FitContribution("pdf")
     pdfcontribution.set_profile(pdfprofile, xname="r")
@@ -57,15 +60,15 @@ def makeRecipe(ciffile, grdata, iqdata):
     pdfgenerator.setQmax(30.0)
     stru = loadCrystal(ciffile)
     pdfgenerator.setStructure(stru)
-    pdfcontribution.addProfileGenerator(pdfgenerator)
-    pdfcontribution.setResidualEquation("resv")
+    pdfcontribution.add_profile_generator(pdfgenerator)
+    pdfcontribution.set_residual_equation("resv")
 
     # Create a SAS contribution as well. We assume the nanoparticle is roughly
     # elliptical.
     sasprofile = Profile()
     sasparser = SASParser()
-    sasparser.parseFile(iqdata)
-    sasprofile.loadParsedData(sasparser)
+    sasparser.parse_file(iqdata)
+    sasprofile.load_parsed_data(sasparser)
     if all(sasprofile.dy == 0):
         sasprofile.dy[:] = 1
 
@@ -76,8 +79,8 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     model = EllipsoidModel()
     sasgenerator = SASGenerator("generator", model)
-    sascontribution.addProfileGenerator(sasgenerator)
-    sascontribution.setResidualEquation("resv")
+    sascontribution.add_profile_generator(sasgenerator)
+    sascontribution.set_residual_equation("resv")
 
     # Now we set up a characteristic function calculator that depends on the
     # sas model.
@@ -85,34 +88,34 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     # Register the calculator with the pdf contribution and define the fitting
     # equation.
-    pdfcontribution.registerCalculator(cfcalculator)
+    pdfcontribution.register_calculator(cfcalculator)
     # The PDF for a nanoscale crystalline is approximated by
     # Gnano = f * Gcryst
-    pdfcontribution.setEquation("f * G")
+    pdfcontribution.set_equation("f * G")
 
     # Moving on
     recipe = FitRecipe()
-    recipe.addContribution(pdfcontribution)
-    recipe.addContribution(sascontribution)
+    recipe.add_contribution(pdfcontribution)
+    recipe.add_contribution(sascontribution)
 
     # PDF
     phase = pdfgenerator.phase
     for par in phase.sgpars:
-        recipe.addVar(par)
+        recipe.add_variable(par)
 
-    recipe.addVar(pdfgenerator.scale, 1)
-    recipe.addVar(pdfgenerator.delta2, 0)
+    recipe.add_variable(pdfgenerator.scale, 1)
+    recipe.add_variable(pdfgenerator.delta2, 0)
 
     # SAS
-    recipe.addVar(sasgenerator.scale, 1, name="iqscale")
-    recipe.addVar(sasgenerator.radius_a, 10)
-    recipe.addVar(sasgenerator.radius_b, 10)
+    recipe.add_variable(sasgenerator.scale, 1, name="iqscale")
+    recipe.add_variable(sasgenerator.radius_a, 10)
+    recipe.add_variable(sasgenerator.radius_b, 10)
 
     # Even though the cfcalculator and sasgenerator depend on the same sas
     # model, we must still constrain the cfcalculator Parameters so that it is
     # informed of changes in the refined parameters.
-    recipe.constrain(cfcalculator.radius_a, "radius_a")
-    recipe.constrain(cfcalculator.radius_b, "radius_b")
+    recipe.add_constraint(cfcalculator.radius_a, "radius_a")
+    recipe.add_constraint(cfcalculator.radius_b, "radius_b")
 
     return recipe
 
@@ -120,73 +123,75 @@ def makeRecipe(ciffile, grdata, iqdata):
 def fitRecipe(recipe):
     """We refine in stages to help the refinement converge."""
     # Tune SAS.
-    recipe.setWeight(recipe.pdf, 0)
+    recipe.set_weight(recipe.pdf, 0)
     recipe.fix("all")
     recipe.free("radius_a", "radius_b", iqscale=1e8)
-    recipe.constrain("radius_b", "radius_a")
+    recipe.add_constraint("radius_b", "radius_a")
     scipyOptimize(recipe)
-    recipe.unconstrain("radius_b")
+    recipe.remove_constraint("radius_b")
 
     # Tune PDF
-    recipe.setWeight(recipe.pdf, 1)
-    recipe.setWeight(recipe.sas, 0)
+    recipe.set_weight(recipe.pdf, 1)
+    recipe.set_weight(recipe.sas, 0)
     recipe.fix("all")
     recipe.free("a", "Biso_0", "scale", "delta2")
     scipyOptimize(recipe)
 
     # Tune all
-    recipe.setWeight(recipe.pdf, 1)
-    recipe.setWeight(recipe.sas, 1)
+    recipe.set_weight(recipe.pdf, 1)
+    recipe.set_weight(recipe.sas, 1)
     recipe.free("all")
     scipyOptimize(recipe)
 
     return
 
 
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
+def plot_results(recipe):
+    """Plot the results contained within a refined FitRecipe.
+
+    The recipe has two contributions ("pdf" and "sas"), so plot_recipe
+    produces one figure per contribution. The G(r) crystal and shape
+    curves are not part of the standard observed/fit/diff plot, so they
+    are overlaid on the "pdf" figure afterwards.
+    """
     r = recipe.pdf.profile.x
     g = recipe.pdf.profile.y
-    gcalc = recipe.pdf.profile.ycalc
-    diffzero = -0.8 * max(g) * numpy.ones_like(g)
-    diff = g - gcalc + diffzero
 
-    gcryst = recipe.pdf.evaluateEquation("G")
+    gcryst = recipe.pdf.evaluate_equation("G")
     gcryst /= recipe.scale.value
 
-    fr = recipe.pdf.evaluateEquation("f")
+    fr = recipe.pdf.evaluate_equation("f")
     fr *= max(g) / fr[0]
 
-    import pylab
+    figs, axes = recipe.plot_recipe(
+        show=False,
+        return_fig=True,
+        xlabel=r"$r (\AA)$",
+        ylabel=r"$G (\AA^{-2})$",
+    )
+    # "pdf" was added to the recipe first, so its axes come first.
+    ax = axes[0]
+    ax.plot(r, gcryst, "y--", label="G(r) Crystal")
+    ax.plot(r, fr, "k--", label="f(r) calculated (scaled)")
+    ax.legend(loc=1)
 
-    pylab.plot(r, g, "bo", label="G(r) Data")
-    pylab.plot(r, gcryst, "y--", label="G(r) Crystal")
-    pylab.plot(r, fr, "k--", label="f(r) calculated (scaled)")
-    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
-    pylab.plot(r, diff, "g-", label="G(r) diff")
-    pylab.plot(r, diffzero, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
+    plt.show()
     return
 
 
 if __name__ == "__main__":
 
-    ciffile = "data/pb.cif"
-    grdata = "data/pb_100_qmin1.gr"
-    iqdata = "data/pb_100_qmax1.iq"
+    ciffile = Path(__file__).parent / "data/pb.cif"
+    grdata = Path(__file__).parent / "data/pb_100_qmin1.gr"
+    iqdata = Path(__file__).parent / "data/pb_100_qmax1.iq"
 
     recipe = makeRecipe(ciffile, grdata, iqdata)
     recipe.fithooks[0].verbose = 3
     fitRecipe(recipe)
 
     res = FitResults(recipe)
-    res.printResults()
+    res.print_results()
 
-    plotResults(recipe)
+    plot_results(recipe)
 
 # End of file

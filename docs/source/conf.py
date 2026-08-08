@@ -32,9 +32,7 @@ sys.path.insert(0, str(Path("../..").resolve()))
 sys.path.insert(0, str(Path("../../src").resolve()))
 
 # abbreviations
-ab_authors = (
-    "Christopher Farrow, Pavol Juhas, and members of the Billinge Group"
-)
+ab_authors = "Christopher Farrow, Pavol Juhas, Caden Myers, Simon J. L. Billinge, and members of the Billinge Group."
 
 # -- General configuration ------------------------------------------------
 
@@ -86,7 +84,7 @@ napoleon_custom_sections = [
 
 # General information about the project.
 project = "diffpy.srfit"
-copyright = "%Y, The Trustees of Columbia University in the City of New York"
+copyright = "%Y, The DiffPy Team"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -317,7 +315,7 @@ texinfo_documents = [
         "diffpy.srfit Documentation",
         ab_authors,
         "diffpy.srfit",
-        "Configurable code for solving atomic structures.",
+        "Generalized code base for modeling problems.",
         "Miscellaneous",
     ),
 ]

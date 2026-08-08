@@ -43,7 +43,7 @@ class SASGenerator(ProfileGenerator):
     def __init__(self, name, model):
         """Initialize the generator.
 
-        Attributes
+        Parameters
         ----------
         name
             A name for the SASGenerator

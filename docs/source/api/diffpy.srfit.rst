@@ -1,7 +1,9 @@
 :tocdepth: -1
 
-diffpy.srfit package
-====================
+|title|
+=======
+
+.. |title| replace:: diffpy.srfit package
 
 .. automodule:: diffpy.srfit
     :members:
@@ -25,8 +27,10 @@ Subpackages
 Submodules
 ----------
 
-diffpy.srfit.exceptions module
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+|module|
+--------
+
+.. |module| replace:: diffpy.srfit.exceptions module
 
 .. automodule:: diffpy.srfit.exceptions
     :members:

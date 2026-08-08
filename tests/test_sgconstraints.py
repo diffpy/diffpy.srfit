@@ -14,6 +14,7 @@
 ##############################################################################
 """Tests space group constraints."""
 
+import re
 import unittest
 
 import numpy
@@ -87,36 +88,36 @@ def test_ObjCryst_constrain_space_group(pyobjcryst_available):
 
     # Make sure we can't constrain these
     with pytest.raises(ValueError):
-        mn.constrain(mn.x, "y")
+        mn.add_constraint(mn.x, "y")
 
     with pytest.raises(ValueError):
-        mn.constrain(mn.y, "z")
+        mn.add_constraint(mn.y, "z")
 
     with pytest.raises(ValueError):
-        mn.constrain(mn.z, "x")
+        mn.add_constraint(mn.z, "x")
 
     # Nor can we make them into variables
     from diffpy.srfit.fitbase.fitrecipe import FitRecipe
 
     f = FitRecipe()
     with pytest.raises(ValueError):
-        f.addVar(mn.x)
+        f.add_variable(mn.x)
 
     return
 
 
 def test_DiffPy_constrain_as_space_group(datafile, pyobjcryst_available):
-    """Test the constrainAsSpaceGroup function."""
+    """Test the constrain_as_space_group function."""
     if not pyobjcryst_available:
         pytest.skip("pyobjcrysta package not available")
 
     from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
-    from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
+    from diffpy.srfit.structure.sgconstraints import constrain_as_space_group
 
     stru = makeLaMnO3_P1(datafile)
     parset = DiffpyStructureParSet("LaMnO3", stru)
 
-    sgpars = constrainAsSpaceGroup(
+    sgpars = constrain_as_space_group(
         parset,
         "P b n m",
         scatterers=parset.getScatterers()[::2],
@@ -179,23 +180,60 @@ def test_DiffPy_constrain_as_space_group(datafile, pyobjcryst_available):
 
 
 def test_constrain_as_space_group_args(pyobjcryst_available, datafile):
-    """Test the arguments processing of constrainAsSpaceGroup function."""
+    """Test the arguments processing of constrain_as_space_group
+    function."""
     if not pyobjcryst_available:
         pytest.skip("pyobjcrysta package not available")
 
     from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
-    from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup
+    from diffpy.srfit.structure.sgconstraints import constrain_as_space_group
     from diffpy.structure.spacegroups import GetSpaceGroup
 
     stru = makeLaMnO3_P1(datafile)
     parset = DiffpyStructureParSet("LaMnO3", stru)
-    sgpars = constrainAsSpaceGroup(parset, "P b n m")
+    sgpars = constrain_as_space_group(parset, "P b n m")
     sg = GetSpaceGroup("P b n m")
     parset2 = DiffpyStructureParSet("LMO", makeLaMnO3_P1(datafile))
-    sgpars2 = constrainAsSpaceGroup(parset2, sg)
+    sgpars2 = constrain_as_space_group(parset2, sg)
     list(sgpars)
     list(sgpars2)
     assert sgpars.names == sgpars2.names
+    return
+
+
+# ----------------------------------------------------------------------------
+# constrainAsSpaceGroup is deprecated in favor of constrain_as_space_group.
+# The old name must still work, emit a DeprecationWarning naming its
+# replacement, and forward to the new implementation.
+
+
+def test_constrainAsSpaceGroup_warns_and_forwards(
+    pyobjcryst_available, datafile
+):
+    if not pyobjcryst_available:
+        pytest.skip("pyobjcrysta package not available")
+
+    from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+    from diffpy.srfit.structure.sgconstraints import (
+        constrain_as_space_group,
+        constrainAsSpaceGroup,
+    )
+
+    module_path = "diffpy.srfit.structure.sgconstraints"
+    expected_msg = (
+        f"'{module_path}.constrainAsSpaceGroup' is deprecated and will be "
+        f"removed in version 4.0.0. Please use "
+        f"'{module_path}.constrain_as_space_group' instead."
+    )
+
+    parset = DiffpyStructureParSet("LaMnO3", makeLaMnO3_P1(datafile))
+    with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
+        actual_sgpars = constrainAsSpaceGroup(parset, "P b n m")
+
+    parset2 = DiffpyStructureParSet("LMO", makeLaMnO3_P1(datafile))
+    expected_sgpars = constrain_as_space_group(parset2, "P b n m")
+
+    assert actual_sgpars.names == expected_sgpars.names
     return
 
 

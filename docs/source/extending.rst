@@ -108,7 +108,7 @@ can be adapted as::
             setter = SimpleAtom.set, attr = "x")
 
 Thus, when ``xpar.getValue()`` is called, it in turn calls
-``SimpleAtom.get(atom, "x")``. ``xpar.setValue(value)`` calls
+``SimpleAtom.get(atom, "x")``. ``xpar.set_value(value)`` calls
 ``SimpleAtom.set(atom, "x", value)``.
 
 If the attributes of an object cannot be accessed in one of these three ways,
@@ -122,29 +122,65 @@ functions as in the second example.
 Extending Profile Parsers
 --------------------------
 
-The ``ProfileParser`` class is located in the ``diffpy.srfit.fitbase.parser``
-module.  The purpose of this class is to read data and metadata from a file or
-string and pass those data and metadata to a ``Profile`` instance. The
-``Profile`` in turn will pass this information to a ``ProfileGenerator``.
+The ``ProfileParser`` class is located in the
+``diffpy.srfit.fitbase.profileparser`` module.  The purpose of this class is to
+read data and metadata from a file and pass those data and metadata to a
+``Profile`` instance. The ``Profile`` in turn will pass this information to a
+``ProfileGenerator``.
 
-The simplest way to extend the ``ProfileParser`` is to derive a new class from
-``ProfileParser`` and overload the ``parseString`` method. By default, the
-``parseFile`` method can read an ASCII file and passes the loaded string to the
-``parseString`` method. For non-ASCII data one should overload both of these
-methods. An example of a customized ``ProfileParser`` is the ``PDFParser``
-class in the ``diffpy.srfit.pdf.pdfparser`` module.
+``parse_file`` is a template method that a subclass is not expected to
+override. It resets the parser, calls the two hooks described below, records
+the file name and selects the first bank. A format is customized by overriding
+one or both hooks:
 
-Here is a simple example demonstrating how to extract (x,y) data from a
-two-column string. ::
+``_parse_metadata(filename)``
+    Return the metadata read from the header, as a dictionary. The default
+    implementation uses ``load_data`` from ``diffpy.utils.parsers`` to collect
+    plain ``name = value`` pairs.
 
-    def parseString(self, datastring):
+``_parse_data(filename, column_format=None, **kwargs)``
+    Append one entry to ``self._banks`` for each data set in the file. The
+    default implementation reads a single bank with ``load_data`` and maps its
+    columns onto ``x``, ``y``, ``dx`` and ``dy``.
+
+The ``PDFParser`` class in the ``diffpy.srfit.pdf.pdfparser`` module is a
+``ProfileParser`` subclass for PDFgetX and PDFgetN data. PDFgetX and PDFgetN
+write their header as plain ``name = value`` pairs, including ``stype``,
+``qmin``, ``qmax`` and other PDF specific values, so ``PDFParser`` inherits
+both ``_parse_metadata`` and ``_parse_data`` unchanged and only sets
+``_format`` to identify the data as PDF data.
+
+Here is a simple example demonstrating how to read metadata that is stored as
+``name: value`` pairs rather than the default ``name = value``. ::
+
+    def _parse_metadata(self, filename):
+
+        meta = {}
+
+        for line in Path(filename).read_text().splitlines():
+            if not line.startswith("#"):
+                break
+            name, sep, value = line.lstrip("# ").partition(":")
+            if sep:
+                meta[name.strip()] = value.strip()
+
+        return meta
+
+The parser can put any information into the returned dictionary; it is merged
+into the ``_meta`` attribute. It is up to a ``ProfileGenerator`` that may use
+the parsed data to define and retrieve usable metadata.
+
+A format whose data block is not a plain matrix of columns overrides
+``_parse_data`` instead. ::
+
+    def _parse_data(self, filename, column_format=None, **kwargs):
 
         xvals = []
         yvals = []
         dxvals = None
         dyvals = None
 
-        for line in datastring.splitlines():
+        for line in Path(filename).read_text().splitlines():
 
             sline = line.split()
             x, y = map(float, sline)
@@ -158,15 +194,14 @@ The ``self._banks.append`` line puts the data arrays into the ``_banks`` list.
 This list is for collecting multiple data sets that may be present within a
 single file.  The ``dxvals`` and ``dyvals`` are the uncertainty values on the
 ``xvals`` and ``yvals``.  In this simple example they are not present, and so
-are set to None.
-
-In general, the data string may contain metadata. The ``ProfileParser`` has a
-dictionary attribute named ``_meta``. The parser can put any information into
-this dictionary. It is up to a ``ProfileGenerator`` that may use the parsed
-data to define and retrieve usable metadata.
+are set to None. A ``Profile`` reads that as an unweighted data set.
 
 If the data are not in a form that can be stored in a ``Profile`` then it is
 the responsibility of the parser to convert this data to a usable form.
+
+Parsers read from a file, not from a string. The older ``parseString`` method
+has been removed, and ``parseFile`` is deprecated: it now delegates to
+``parse_file`` and will be removed in version 4.0.0.
 
 
 Extending Profiles
@@ -185,7 +220,7 @@ customized Profile is the ``SASProfile`` class in the
 
 The ``__init__`` method sets the ``xobs``, ``yobs`` and ``dyobs`` attributes of
 the ``SASProfile`` to the associated arrays within the ``_datainfo`` attribute.
-The ``setObservedProfile`` method is overloaded to modify the ``_datainfo``
+The ``set_observed_profile`` method is overloaded to modify the ``_datainfo``
 arrays when their corresponding attributes are modified. This keeps the arrays
 in sync.
 
@@ -263,5 +298,5 @@ overload.
 * .. automethod:: FitHook.postcall
 
 To use a custom ``FitHook``, assign an instance to a ``FitRecipe`` using the
-``pushFitHook`` method. All ``FitHook`` instances held by a ``FitRecipe`` will
+``push_fit_hook`` method. All ``FitHook`` instances held by a ``FitRecipe`` will
 be used in sequence during a call to ``FitRecipe.residual``.

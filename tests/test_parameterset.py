@@ -27,14 +27,35 @@ class TestParameterSet(unittest.TestCase):
         return
 
     def testAddParameterSet(self):
-        """Test the addParameterSet method."""
+        """Test the deprecated addParameterSet method.
+
+        Remove this test after the addParameterSet is removed in version
+        4.0.0.
+        """
         parset2 = ParameterSet("parset2")
         p1 = Parameter("parset2", 1)
 
         self.parset.addParameterSet(parset2)
         self.assertTrue(self.parset.parset2 is parset2)
 
-        self.assertRaises(ValueError, self.parset.addParameterSet, p1)
+        self.assertRaises(ValueError, self.parset.add_parameter_set, p1)
+
+        p1.name = "p1"
+        parset2.addParameter(p1)
+
+        self.assertTrue(self.parset.parset2.p1 is p1)
+
+        return
+
+    def test_add_parameter_set(self):
+        """Test the add_parameter_set method."""
+        parset2 = ParameterSet("parset2")
+        p1 = Parameter("parset2", 1)
+
+        self.parset.add_parameter_set(parset2)
+        self.assertTrue(self.parset.parset2 is parset2)
+
+        self.assertRaises(ValueError, self.parset.add_parameter_set, p1)
 
         p1.name = "p1"
         parset2.addParameter(p1)

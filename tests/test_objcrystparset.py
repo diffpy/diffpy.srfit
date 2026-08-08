@@ -222,11 +222,11 @@ class TestParameterAdapter:
         _testMolecule()
 
         # Now change values from the srfit StructureParSet
-        cryst.c60.C44.x.setValue(1.1)
-        cryst.c60.C44.occ.setValue(1.1)
-        cryst.c60.C44.Biso.setValue(1.1)
-        cryst.c60.q3.setValue(1.1)
-        cryst.a.setValue(1.1)
+        cryst.c60.C44.x.set_value(1.1)
+        cryst.c60.C44.occ.set_value(1.1)
+        cryst.c60.C44.Biso.set_value(1.1)
+        cryst.c60.q3.set_value(1.1)
+        cryst.a.set_value(1.1)
 
         _testCrystal()
         _testMolecule()
@@ -410,7 +410,7 @@ class TestParameterAdapter:
 
         # Change the value
         scale = 1.05
-        p1.setValue(scale * d0)
+        p1.set_value(scale * d0)
 
         # Verify that it has changed.
         assert scale * d0 == pytest.approx(p1.getValue(), abs=1e-6)
@@ -482,7 +482,7 @@ class TestParameterAdapter:
 
         # Change the value
         scale = 1.05
-        p1.setValue(scale * angle0)
+        p1.set_value(scale * angle0)
 
         # Verify that it has changed.
         assert scale * angle0 == pytest.approx(p1.getValue(), abs=1e-6)
@@ -563,7 +563,7 @@ class TestParameterAdapter:
 
         # Change the value
         scale = 1.05
-        p1.setValue(scale * angle0)
+        p1.set_value(scale * angle0)
 
         # Verify that it has changed.
         assert scale * angle0 == pytest.approx(p1.getValue(), abs=1e-6)
@@ -649,7 +649,8 @@ class TestCreateSpaceGroup:
     # FIXME: only about 50% of the spacegroups pass the assertion
     # test disabled even if cctbx is installed
     def xtestCreateSpaceGroup(self):
-        """Check all sgtbx space groups for proper conversion to SpaceGroup."""
+        """Check all sgtbx space groups for proper conversion to
+        SpaceGroup."""
         try:
             from cctbx import sgtbx
         except ImportError:

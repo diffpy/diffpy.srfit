@@ -20,7 +20,7 @@ Constraints and Restraints. Also, the __call__ function can be
 overloaded to accept external arguments. Calculators are used to wrap
 registered functions so that the function's Parameters are contained in
 an object specific to the function.  A custom Calculator can be added to
-another RecipeOrganizer with the 'registerCalculator' method.
+another RecipeOrganizer with the 'register_calculator' method.
 """
 
 __all__ = ["Calculator"]
@@ -77,9 +77,9 @@ class Calculator(Operator, ParameterSet):
     Properties
     ----------
     names
-        Variable names (read only). See getNames.
+        Variable names (read only). See get_names.
     values
-        Variable values (read only). See getValues.
+        Variable values (read only). See get_values.
     """
 
     # define abstract attributes from the Operator base.
@@ -101,15 +101,37 @@ class Calculator(Operator, ParameterSet):
 
     # Overload me!
     def __call__(self, *args):
-        """Calculate something.
+        """Calculate the signal produced by this Calculator.
 
         This method must be overloaded. When overloading, you should
         specify the arguments explicitly, otherwise the parameters must
         be specified when adding the Calculator to a RecipeOrganizer.
+
+        Parameters
+        ----------
+        *args
+            The arguments needed to calculate the signal.
+
+        Returns
+        -------
+        object
+            The calculated signal.
         """
         return 0
 
     def operation(self, *args):
+        """Calculate and cache the signal produced by this Calculator.
+
+        Parameters
+        ----------
+        *args
+            The arguments needed to calculate the signal.
+
+        Returns
+        -------
+        object
+            The calculated signal.
+        """
         self._value = self.__call__(*args)
         return self._value
 
@@ -120,7 +142,10 @@ class Calculator(Operator, ParameterSet):
         the operation, since this could be costly. The operation should
         be validated with a containing equation.
 
-        Raises AttributeError if validation fails.
+        Raises
+        ------
+        AttributeError
+            If validation fails.
         """
         ParameterSet._validate(self)
 

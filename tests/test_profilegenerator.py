@@ -29,7 +29,7 @@ class TestProfileGenerator(unittest.TestCase):
         self.gen = ProfileGenerator("test")
         self.profile = Profile()
         x = arange(0, 10, 0.1)
-        self.profile.setCalculationPoints(x)
+        self.profile.set_calculation_points(x)
         self.gen.set_profile(self.profile)
         return
 
@@ -48,14 +48,15 @@ class TestProfileGenerator(unittest.TestCase):
         return
 
     def testUpdate(self):
-        """Update and change the profile to make sure generator is flushed."""
+        """Update and change the profile to make sure generator is
+        flushed."""
         gen = self.gen
         prof = self.profile
 
         # Make sure attributes get updated with a change in the calculation
         # points.
         x = arange(0, 9, 0.1)
-        prof.setCalculationPoints(x)
+        prof.set_calculation_points(x)
         self.assertTrue(gen._value is None)
         val = gen.value
         self.assertTrue(array_equal(x, val))
@@ -68,7 +69,7 @@ class TestProfileGenerator(unittest.TestCase):
         # Make sure attributes get updated with a new profile.
         x = arange(0, 8, 0.1)
         prof = Profile()
-        prof.setCalculationPoints(x)
+        prof.set_calculation_points(x)
         gen.set_profile(prof)
         self.assertTrue(gen._value is None)
         self.assertTrue(array_equal(x, gen.value))

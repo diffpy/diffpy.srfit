@@ -92,15 +92,15 @@ class DebyePDFGenerator(BasePDFGenerator):
         See those classes (located in diffpy.srfit.structure) for how they are
         used. The resulting ParameterSet will be managed by this generator.
 
-        Attributes
+        Parameters
         ----------
         stru
-            diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
-            pyobjcryst.molecule.Molecule instance.  Default None.
-        name
-            A name to give to the managed ParameterSet that adapts stru
+            The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
+            pyobjcryst.molecule.Molecule instance to adapt (default None).
+        name : str, optional
+            The name to give to the managed ParameterSet that adapts stru
             (default "phase").
-        periodic
+        periodic : bool, optional
             The structure should be treated as periodic (default
             False). Note that some structures do not support
             periodicity, in which case this will have no effect on the
@@ -116,14 +116,14 @@ class DebyePDFGenerator(BasePDFGenerator):
         object (from diffpy or pyobjcryst).  The passed ParameterSet will be
         managed by this generator.
 
-        Attributes
+        Parameters
         ----------
         parset
-            A SrRealParSet that holds the structural information.
+            The SrRealParSet that holds the structural information.
             This can be used to share the phase between multiple
             BasePDFGenerators, and have the changes in one reflect in
             another.
-        periodic
+        periodic : bool, optional
             The structure should be treated as periodic (default True).
             Note that some structures do not support periodicity, in
             which case this will be ignored.
@@ -131,7 +131,13 @@ class DebyePDFGenerator(BasePDFGenerator):
         return BasePDFGenerator.setPhase(self, parset, periodic)
 
     def __init__(self, name="pdf"):
-        """Initialize the generator."""
+        """Initialize the generator.
+
+        Parameters
+        ----------
+        name : str, optional
+            The name for this generator (default "pdf").
+        """
         from diffpy.srreal.pdfcalculator import DebyePDFCalculator
 
         BasePDFGenerator.__init__(self, name)

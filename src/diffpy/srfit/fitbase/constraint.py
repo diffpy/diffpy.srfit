@@ -71,7 +71,6 @@ class Constraint(Validatable):
         The parameter will be set constant once it is constrained. This
         will keep it from being constrained multiple times.
 
-<<<<<<< HEAD
         Parameters
         ----------
         par : Parameter
@@ -83,9 +82,6 @@ class Constraint(Validatable):
         ------
         ValueError
             If par is constant or already constrained.
-=======
-        Raises a ValueError if par is const.
->>>>>>> origin/main
         """
         if par.const:
             raise ValueError("The parameter '%s' is constant" % par)

@@ -263,15 +263,9 @@ class FitResults(object):
     def _calculate_covariance(self):
         """Calculate the covariance matrix.
 
-<<<<<<< HEAD
         This is called by update. This code borrowed from PARK. It finds
         the pseudo-inverse of the Jacobian using the singular value
         decomposition.
-=======
-        This is called by update.         This code borrowed from PARK.
-        It finds the pseudo-inverse of the         Jacobian using the
-        singular value decomposition.
->>>>>>> origin/main
         """
         try:
             J = self._calculate_jacobian()
@@ -887,7 +881,6 @@ def initializeRecipe(recipe, results):
 
     Parameters
     ----------
-<<<<<<< HEAD
     recipe : FitRecipe
         The configured recipe with variables.
     results : str or file-like
@@ -898,13 +891,6 @@ def initializeRecipe(recipe, results):
     ------
     AttributeError
         If no results can be found in ``results``.
-=======
-    recipe
-        A configured recipe with variables
-    results
-        An open file-like object, name of a file that contains
-        results from FitResults or a string containing fit results.
->>>>>>> origin/main
     """
     mpairs = resultsDictionary(results)
     if not mpairs:

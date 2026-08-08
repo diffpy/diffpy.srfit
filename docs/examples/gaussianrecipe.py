@@ -180,36 +180,10 @@ def scipyOptimize(recipe):
     return
 
 
-<<<<<<< HEAD
 plot_styles = {
     "xlabel": "x",
     "ylabel": "y",
 }
-=======
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # We can access the data and fit profile through the Profile we created
-    # above. We get to it through our FitContribution, which we named "g1".
-    #
-    # The independent variable. This is always under the "x" attribute.
-    x = recipe.g1.profile.x
-    # The observed profile that we loaded earlier, the "y" attribute.
-    y = recipe.g1.profile.y
-    # The calculated profile, the "ycalc" attribute.
-    ycalc = recipe.g1.profile.ycalc
-
-    # This stuff is specific to pylab from the matplotlib distribution.
-    import pylab
-
-    pylab.plot(x, y, "b.", label="observed Gaussian")
-    pylab.plot(x, ycalc, "g-", label="calculated Gaussian")
-    pylab.legend(loc=(0.0, 0.8))
-    pylab.xlabel("x")
-    pylab.ylabel("y")
-
-    pylab.show()
-    return
->>>>>>> origin/main
 
 
 if __name__ == "__main__":

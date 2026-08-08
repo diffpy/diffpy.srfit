@@ -493,7 +493,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
     def residual(self, p=[]):
         """Calculate the vector residual to be optimized.
 
-<<<<<<< HEAD
         The residual is by default the weighted concatenation of each
         FitContribution's residual, plus the value of each restraint. The array
         returned, denoted ``chiv``, is such that
@@ -513,23 +512,6 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         chiv : numpy.ndarray
             The array of residuals to be optimized. The array is such that
             ``dot(chiv, chiv) = chi^2 + restraints``.
-=======
-        Parameters
-        ----------
-        p
-            The list of current variable values, provided in the same order
-            as the ``_parameters`` list. If ``p`` is an empty iterable
-            (default), then it is assumed that the parameters have already
-            been updated in some other way, and the explicit update within
-            this function is skipped.
-
-        Notes
-        -----
-        The residual is by default the weighted concatenation of each
-        :class:`FitContribution` residual, plus the value of each restraint.
-        The returned array ``chiv`` satisfies
-        ``dot(chiv, chiv) = chi^2 + restraints``.
->>>>>>> origin/main
         """
 
         # Prepare, if necessary
@@ -577,15 +559,12 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             been updated in some other way, and the explicit update within
             this function is skipped.
 
-<<<<<<< HEAD
         Returns
         -------
         float
             The scalar residual, ``dot(chiv, chiv)``, where ``chiv`` is
             the vector residual returned by `residual`.
 
-=======
->>>>>>> origin/main
         Notes
         -----
         The residual is by default the weighted concatenation of each

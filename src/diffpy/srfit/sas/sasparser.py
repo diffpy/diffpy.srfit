@@ -140,46 +140,7 @@ class SASParser(ProfileParser):
         # FIXME: Revisit when we refactor the SAS characteristic functions.
         # Why is a list imported but only the first element is taken?
         # Is this desired behavior?
-<<<<<<< HEAD
         self.select_bank(0)
-=======
-        self.selectBank(0)
-        return
-
-    def parseString(self, patstring):
-        """Parse a string and set the _x, _y, _dx, _dy and _meta variables.
-
-        When _dx or _dy cannot be obtained in the data format it is set to 0.
-
-        This wipes out the currently loaded data and selected bank number.
-
-        Parameters
-        ----------
-        patstring
-            A string containing the pattern
-
-        Raises
-        ----------
-        ParseError
-            if the string cannot be parsed
-        """
-        # This calls on parseFile, as that is how the sas data loader works.
-        import tempfile
-
-        fh, fn = tempfile.mkstemp()
-        outfile = open(fn, "w")
-        fn.write(patstring)
-        outfile.close()
-        self.parseFile(fn)
-
-        del self._metadata["filename"]
-
-        # Close the temporary file and delete it
-        import os
-
-        os.close(fh)
-        os.remove(fn)
->>>>>>> origin/main
         return
 
 

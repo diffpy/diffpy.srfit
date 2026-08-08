@@ -181,17 +181,9 @@ class ProfileGenerator(Operator, ParameterSet):
         self._on_profile_update(other=(self,))
         return
 
-<<<<<<< HEAD
         # Merge the profiles metadata with our own
         self.meta.update(self.profile.meta)
         self._process_metadata()
-=======
-    def _on_profile_update(self, other=()):
-        if self.profile is not None:
-            self.meta.update(self.profile.meta)
-            self.processMetaData()
-        self._flush(other=other)
->>>>>>> origin/main
         return
 
     def _process_metadata(self):

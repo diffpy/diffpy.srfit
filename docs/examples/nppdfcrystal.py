@@ -84,10 +84,6 @@ def makeRecipe(ciffile, grdata):
 
 def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
-<<<<<<< HEAD
-=======
-    # All this should be pretty familiar by now.
->>>>>>> origin/main
     r = recipe.pdf.profile.x
     g = recipe.pdf.profile.y
 

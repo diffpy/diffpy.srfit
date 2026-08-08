@@ -146,7 +146,6 @@ def fitRecipe(recipe):
     return
 
 
-<<<<<<< HEAD
 def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe.
 
@@ -155,11 +154,6 @@ def plot_results(recipe):
     curves are not part of the standard observed/fit/diff plot, so they
     are overlaid on the "pdf" figure afterwards.
     """
-=======
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
->>>>>>> origin/main
     r = recipe.pdf.profile.x
     g = recipe.pdf.profile.y
 

@@ -338,12 +338,8 @@ def main():
 
 def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
-<<<<<<< HEAD
     # The background is not part of the standard observed/fit/diff plot
     # that plot_recipe produces, so we overlay it afterwards.
-=======
-    # All this should be pretty familiar by now.
->>>>>>> origin/main
     q = recipe.bucky.profile.x
     bkgd = recipe.bucky.evaluate_equation("bkgd")
 

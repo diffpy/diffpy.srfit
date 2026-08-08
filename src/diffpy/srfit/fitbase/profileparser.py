@@ -22,13 +22,10 @@ subclass.
 See the class documentation for more information.
 """
 
-<<<<<<< HEAD
 import warnings
 
 import numpy as np
 
-=======
->>>>>>> origin/main
 from diffpy.srfit.exceptions import ParseError
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 from diffpy.utils.parsers import load_data
@@ -156,24 +153,8 @@ class ProfileParser(object):
         """This function is deprecated and will be removed in version
         4.0.0.
 
-<<<<<<< HEAD
         Please use diffpy.srfit.fitbase.ProfileParser.get_format
         instead.
-=======
-        When _dx or _dy cannot be obtained in the data format it is set to
-        None.
-
-        This wipes out the currently loaded data and selected bank number.
-
-        Parameters
-        ----------
-        patstring
-            A string containing the pattern
-
-        Raises
-        ----------
-        ParseError if the string cannot be parsed
->>>>>>> origin/main
         """
         return self.get_format()
 
@@ -220,7 +201,6 @@ class ProfileParser(object):
             If None, the format is auto-detected based on the
             number of columns.
 
-<<<<<<< HEAD
             Valid labels: ``"x"``, ``"y"``, ``"dx"``, ``"dy"``
 
             Examples:
@@ -251,14 +231,6 @@ class ProfileParser(object):
         ------
         ParseError
             If parsing fails or ambiguity detected.
-=======
-        Raises
-        ----------
-        IOError
-            if the file cannot be read
-        ParseError
-            if the file cannot be parsed
->>>>>>> origin/main
         """
         metadata = self._validate_metadata(metadata)
         self._banks = []
@@ -418,15 +390,9 @@ class ProfileParser(object):
             The index of the bank (integer, starting at 0).
 
         Raises
-<<<<<<< HEAD
         ------
         IndexError
             If requesting a bank that does not exist.
-=======
-        ----------
-        IndexError
-            if requesting a bank that does not exist
->>>>>>> origin/main
         """
         if index is None:
             index = self._meta.get("bank", 0)
@@ -472,16 +438,10 @@ class ProfileParser(object):
             If index is None then the currently selected bank is used.
 
         Returns
-<<<<<<< HEAD
         -------
         tuple
             The ``(x, y, dx, dy)`` tuple for the bank. ``dx`` and ``dy``
             are None if they cannot be determined from the data format.
-=======
-        ----------
-        This returns (x, y, dx, dy) tuple for the bank. dx is 0 if it cannot
-        be determined from the data format.
->>>>>>> origin/main
         """
         self.select_bank(index)
 

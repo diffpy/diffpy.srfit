@@ -18,10 +18,7 @@ calculator wrapper."""
 # FIXME: remove this line when `docformatter` fixes the blank line bug
 
 
-<<<<<<< HEAD
 import re
-=======
->>>>>>> origin/main
 import unittest
 import warnings
 

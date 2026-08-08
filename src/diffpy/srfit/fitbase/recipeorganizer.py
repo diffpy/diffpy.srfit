@@ -1415,15 +1415,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             If `param_or_eq` depends on a Parameter that is not part of the
             RecipeOrganizer and is not defined in `params`.
         """
-<<<<<<< HEAD
         if isinstance(param_or_eq, str):
             eqstr = param_or_eq
             eq = get_equation_from_string(param_or_eq, self._eqfactory, params)
-=======
-        if isinstance(res, six.string_types):
-            eqstr = res
-            eq = equationFromString(res, self._eqfactory, ns)
->>>>>>> origin/main
         else:
             eq = Equation(root=param_or_eq)
             eqstr = param_or_eq.name

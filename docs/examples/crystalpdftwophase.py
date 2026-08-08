@@ -152,34 +152,10 @@ def makeRecipe(niciffile, siciffile, datname):
     return recipe
 
 
-<<<<<<< HEAD
 plot_styles = {
     "xlabel": r"$r (\AA)$",
     "ylabel": r"$G (\AA^{-2})$",
 }
-=======
-def plotResults(recipe):
-    """Plot the results contained within a refined FitRecipe."""
-    # All this should be pretty familiar by now.
-    r = recipe.nisi.profile.x
-    g = recipe.nisi.profile.y
-    gcalc = recipe.nisi.profile.ycalc
-    diffzero = -0.8 * max(g) * numpy.ones_like(g)
-    diff = g - gcalc + diffzero
-
-    import pylab
-
-    pylab.plot(r, g, "bo", label="G(r) Data")
-    pylab.plot(r, gcalc, "r-", label="G(r) Fit")
-    pylab.plot(r, diff, "g-", label="G(r) diff")
-    pylab.plot(r, diffzero, "k-")
-    pylab.xlabel(r"$r (\AA)$")
-    pylab.ylabel(r"$G (\AA^{-2})$")
-    pylab.legend(loc=1)
-
-    pylab.show()
-    return
->>>>>>> origin/main
 
 
 if __name__ == "__main__":

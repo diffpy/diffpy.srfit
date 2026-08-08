@@ -4,7 +4,7 @@
 
 **Changed:**
 
-* Change the characteristic functions in ``diffpy.srfit.pdf.characteristicfunctions`` to emit a ``RuntimeWarning`` when a non-physical shape parameter makes them return zero, since a zero return flattens the fit residual and stalls a refinement without any other sign to the user. The warning is issued once per process for each distinct problem so a refinement loop does not repeat it.
+* Change the current characteristic functions in ``diffpy.srfit.pdf.characteristicfunctions`` (``spherical_particle``, ``spheroidal_particle``, ``lognormal_spherical_particle``, ``sheet_particle`` and ``shell_particle``) to emit a ``RuntimeWarning`` when a non-physical shape parameter makes them return zero, since a zero return flattens the fit residual and stalls a refinement without any other sign to the user. The warning is issued once per process for each distinct problem so a refinement loop does not repeat it. The deprecated camel-case functions forward to these functions directly, so they emit the same warning and return the same result for non-physical input.
 * Change ``lognormal_spherical_particle`` in ``diffpy.srfit.pdf.characteristicfunctions`` to return zero for a negative ``particle_diameter_sigma`` instead of silently returning ``spherical_particle``. A ``particle_diameter_sigma`` of zero is still the sphere limit.
 * Change ``sheet_particle`` in ``diffpy.srfit.pdf.characteristicfunctions`` to return an array of zeros for a non-positive ``sheet_thickness`` when ``r`` is an array, instead of a scalar zero.
 

@@ -159,6 +159,10 @@ def makeRecipe():
 
 def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
+<<<<<<< HEAD
+=======
+    # Plot this.
+>>>>>>> origin/main
     # Note that since the contribution was given the name "pb", it is
     # accessible from the recipe with this name. This is a useful way to
     # organize multiple contributions to a fit.

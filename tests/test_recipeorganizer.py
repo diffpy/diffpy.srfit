@@ -36,8 +36,13 @@ from diffpy.utils._deprecator import deprecated
 
 class TestEquationFromString(unittest.TestCase):
 
+<<<<<<< HEAD
     def test_get_equation_from_string(self):
         """Test the get_equation_from_string method."""
+=======
+    def testEquationFromString(self):
+        """Test the equationFromString method."""
+>>>>>>> origin/main
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
         p3 = Parameter("p3", 3)

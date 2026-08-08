@@ -210,10 +210,18 @@ class SimpleRecipe(FitRecipe):
             (default), it will be set to 1 at each observed xobs.
 
         Raises
+<<<<<<< HEAD
         ------
         ValueError
             If len(yobs) != len(xobs), or if dyobs is not None and
             len(dyobs) != len(xobs).
+=======
+        ----------
+        ValueError
+            if len(yobs) != len(xobs)
+        ValueError
+            if dyobs != None and len(dyobs) != len(xobs)
+>>>>>>> origin/main
         """
         return self.profile.set_observed_profile(xobs, yobs, dyobs)
 
@@ -237,6 +245,10 @@ class SimpleRecipe(FitRecipe):
 
         Parameters
         ----------
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
         xmin : float or `obs`, optional
             The minimum value of the independent variable.  Keep the
             current minimum when not specified.  If specified as "obs"

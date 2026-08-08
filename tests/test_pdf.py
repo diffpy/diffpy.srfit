@@ -37,6 +37,7 @@ def approx_or_none(expected_values):
     return pytest.approx(expected_values)
 
 
+<<<<<<< HEAD
 @pytest.mark.parametrize(
     "input_filename, expected_x, expected_y, expected_dy",
     [
@@ -238,6 +239,70 @@ def test_pdfcontribution_loadData(datafile):
     actual_point_count = len(contribution.profile.xobs)
     expected_point_count = 5999
     assert actual_point_count == expected_point_count
+=======
+def testParser2(datafile):
+    data = datafile("si-q27r60-xray.gr")
+    parser = PDFParser()
+    parser.parseFile(data)
+
+    meta = parser._meta
+
+    assert data == meta["filename"]
+    assert 1 == meta["nbanks"]
+    assert "X" == meta["stype"]
+    assert 27 == meta["qmax"]
+    assert 300 == meta.get("temperature")
+    assert meta.get("qdamp") is None
+    assert meta.get("qbroad") is None
+    assert meta.get("spdiameter") is None
+    assert meta.get("scale") is None
+    assert meta.get("doping") is None
+
+    x, y, dx, dy = parser.getData()
+    testx = numpy.linspace(0.01, 60, 5999, endpoint=False)
+    diff = testx - x
+    res = numpy.dot(diff, diff)
+    assert 0 == pytest.approx(res)
+
+    testy = numpy.array(
+        [
+            0.1105784,
+            0.2199684,
+            0.3270088,
+            0.4305913,
+            0.5296853,
+            0.6233606,
+            0.7108060,
+            0.7913456,
+            0.8644501,
+            0.9297440,
+        ]
+    )
+    diff = testy - y[:10]
+    res = numpy.dot(diff, diff)
+    assert 0 == pytest.approx(res)
+
+    testdy = numpy.array(
+        [
+            0.001802192,
+            0.003521449,
+            0.005079115,
+            0.006404892,
+            0.007440527,
+            0.008142955,
+            0.008486813,
+            0.008466340,
+            0.008096858,
+            0.007416456,
+        ]
+    )
+    diff = testdy - dy[:10]
+    res = numpy.dot(diff, diff)
+    assert 0 == pytest.approx(res)
+
+    assert dx is None
+    return
+>>>>>>> origin/main
 
 
 def testGenerator(diffpy_srreal_available, datafile):

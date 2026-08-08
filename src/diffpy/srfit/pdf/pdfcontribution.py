@@ -133,6 +133,7 @@ class PDFContribution(FitContribution):
 
         Parameters
         ----------
+<<<<<<< HEAD
         xmin : float or ``obs``, optional
             The minimum value of the independent variable.  Keep the
             current minimum when not specified.  If specified as "obs"
@@ -142,6 +143,18 @@ class PDFContribution(FitContribution):
             current maximum when not specified.  If specified as "obs"
             reset to the maximum observed value.
         dx : float or ``obs``, optional
+=======
+
+        xmin : float or `obs`, optional
+            The minimum value of the independent variable.  Keep the
+            current minimum when not specified.  If specified as "obs"
+            reset to the minimum observed value.
+        xmax : float or `obs`, optional
+            The maximum value of the independent variable.  Keep the
+            current maximum when not specified.  If specified as "obs"
+            reset to the maximum observed value.
+        dx : float or `obs`, optional
+>>>>>>> origin/main
             The sample spacing in the independent variable.  When different
             from the data, resample the ``x`` as anchored at ``xmin``.
 

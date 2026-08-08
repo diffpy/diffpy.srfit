@@ -14,7 +14,11 @@
 ##############################################################################
 """Functions for binding arguments of callable objects."""
 
+<<<<<<< HEAD
 # FIXME: remove this line when black and docformatter agree.
+=======
+# FIXME: remove this line when `docformatter` fixes the blank line bug
+>>>>>>> origin/main
 
 
 class bind2nd(object):

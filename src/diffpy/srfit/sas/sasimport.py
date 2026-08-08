@@ -14,7 +14,11 @@
 ##############################################################################
 """Universal import functions for volatile SasView/SansViews API-s."""
 
+<<<<<<< HEAD
 # FIXME: remove this line when black and docformatter agree.
+=======
+# FIXME: remove this line when `docformatter` fixes the blank line bug
+>>>>>>> origin/main
 
 
 def sasimport(modname):

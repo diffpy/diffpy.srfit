@@ -189,6 +189,7 @@ def makeRecipe(strufile, datname1, datname2):
     return recipe
 
 
+<<<<<<< HEAD
 def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe.
 
@@ -197,6 +198,11 @@ def plot_results(recipe):
     are not part of the standard observed/fit/diff plot, so they are
     overlaid on each figure afterwards.
     """
+=======
+def plotResults(recipe):
+    """Plot the results contained within a refined FitRecipe."""
+    # plotting song and dance
+>>>>>>> origin/main
     q = recipe.bucky1.profile.x
     bkgd1 = recipe.bucky1.evaluate_equation("bkgd")
     bkgd2 = recipe.bucky2.evaluate_equation("bkgd")

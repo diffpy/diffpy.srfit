@@ -91,6 +91,7 @@ def makeRecipe(datname):
 
 def plot_results(recipe):
     """Plot the results contained within a refined FitRecipe."""
+<<<<<<< HEAD
     # I(Q) SAS data is best viewed on a log-log scale, so we prepare the
     # axes ourselves and hand them to plot_recipe. The residual difference
     # curve is not shown since it can go negative and is not meaningful on
@@ -111,6 +112,24 @@ def plot_results(recipe):
         ylabel="$I (arb. units)$",
     )
     plt.show()
+=======
+    # All this should be pretty familiar by now.
+    r = recipe.ellipsoid.profile.x
+    y = recipe.ellipsoid.profile.y
+    ycalc = recipe.ellipsoid.profile.ycalc
+    diff = y - ycalc + min(y)
+
+    import pylab
+
+    pylab.loglog(r, y, "bo", label="I(Q) Data")
+    pylab.loglog(r, ycalc, "r-", label="I(Q) Fit")
+    pylab.loglog(r, diff, "g-", label="I(Q) diff")
+    pylab.xlabel(r"$Q (\AA^{-1})$")
+    pylab.ylabel("$I (arb. units)$")
+    pylab.legend(loc=1)
+
+    pylab.show()
+>>>>>>> origin/main
     return
 
 

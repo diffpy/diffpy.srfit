@@ -186,6 +186,7 @@ class Profile(Observable, Validatable):
 
         Parameters
         ----------
+<<<<<<< HEAD
         xobs : numpy.ndarray
             The array of the independent variable.
         yobs : numpy.ndarray
@@ -202,6 +203,24 @@ class Profile(Observable, Validatable):
             If ``len(yobs) != len(xobs)``.
         ValueError
             If ``dyobs`` is not None and ``len(dyobs) != len(xobs)``.
+=======
+        xobs
+            Numpy array of the independent variable
+        yobs
+            Numpy array of the observed signal.
+        dyobs
+            Numpy array of the uncertainty in the observed signal. If
+            `dyobs` is None (default), it will be set to 1 at each
+            observed `xobs`.
+
+
+        Raises
+        -----------
+        ValueError
+            if len(yobs) != len(xobs)
+        ValueError
+            if dyobs != None and len(dyobs) != len(xobs)
+>>>>>>> origin/main
         """
         if len(yobs) != len(xobs):
             raise ValueError("xobs and yobs are different lengths")

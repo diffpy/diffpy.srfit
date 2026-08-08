@@ -122,8 +122,12 @@ class WeakBoundMethod(object):
         return state
 
     def __setstate__(self, state):
+<<<<<<< HEAD
         """Restore the weak reference in this wrapper upon
         unpickling."""
+=======
+        """Restore the weak reference in this wrapper upon unpickling."""
+>>>>>>> origin/main
         self._class, nm, self.fallback, mobj = state
         self.function = getattr(self._class, nm)
         if mobj is None:

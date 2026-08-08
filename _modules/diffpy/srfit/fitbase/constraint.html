@@ -5,17 +5,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.constraint &mdash; diffpy.srfit 3.2.0 documentation</title>
+  <title>diffpy.srfit.fitbase.constraint &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=a2ac599a"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=0aaa1ac4"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../../_static/copybutton.js?v=cca77546"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -47,9 +47,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
 </ul>
 
         </div>
@@ -103,12 +103,30 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SrFitError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.validatable</span><span class="w"> </span><span class="kn">import</span> <span class="n">Validatable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.fitbase.constraint.Constraint&quot;</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
+
+<span class="n">constrain_deprecation_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">base</span><span class="p">,</span>
+    <span class="s2">&quot;constrain&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;add_constraint&quot;</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">unconstrain_deprecation_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">base</span><span class="p">,</span>
+    <span class="s2">&quot;unconstrain&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;remove_constraint&quot;</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="Constraint">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.constraint.Constraint">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Constraint</span><span class="p">(</span><span class="n">Validatable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constraint class.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Associate a Parameter with an equation that determines its value.</span>
 
 <span class="sd">    Constraints are designed to be stored in only one place. (The holder of the</span>
 <span class="sd">    constraint owns it).</span>
@@ -116,29 +134,38 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par</span>
-<span class="sd">        A Parameter that is the subject of the constraint.</span>
+<span class="sd">        The Parameter that is the subject of the constraint.</span>
 <span class="sd">    eq</span>
-<span class="sd">        An equation whose evaluation is used to set the value of the</span>
+<span class="sd">        The equation whose evaluation is used to set the value of the</span>
 <span class="sd">        constraint.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize an empty constraint.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eq</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span>
 
-<div class="viewcode-block" id="Constraint.constrain">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.constraint.Constraint.constrain">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">constrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
+<div class="viewcode-block" id="Constraint.add_constraint">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.constraint.Constraint.add_constraint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain a Parameter according to an Equation.</span>
 
 <span class="sd">        The parameter will be set constant once it is constrained. This</span>
 <span class="sd">        will keep it from being constrained multiple times.</span>
 
-<span class="sd">        Raises a ValueError if par is const.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par : Parameter</span>
+<span class="sd">            The Parameter to constrain.</span>
+<span class="sd">        eq : Equation</span>
+<span class="sd">            The Equation to use to constrain the Parameter.</span>
 
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If par is constant or already constrained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">const</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The parameter &#39;</span><span class="si">%s</span><span class="s2">&#39; is constant&quot;</span> <span class="o">%</span> <span class="n">par</span><span class="p">)</span>
 
@@ -153,13 +180,43 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="Constraint.unconstrain">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.constraint.Constraint.unconstrain">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">unconstrain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the constraint.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Constraint.constrain">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.constraint.Constraint.constrain">[docs]</a>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">constrain_deprecation_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">constrain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.fitbase.constraint.Constraint.add_constraint</span>
+<span class="sd">        instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">eq</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Constraint.remove_constraint">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.constraint.Constraint.remove_constraint">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_constraint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the constraint from a Parameter.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">constrained</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eq</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Constraint.unconstrain">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.constraint.Constraint.unconstrain">[docs]</a>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">unconstrain_deprecation_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unconstrain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.fitbase.constraint.Constraint.remove_constraint</span>
+<span class="sd">        instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_constraint</span><span class="p">()</span>
         <span class="k">return</span></div>
 
 
@@ -171,16 +228,19 @@
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span>
         <span class="c1"># This will only change the Parameter if val is different from the</span>
         <span class="c1"># currently stored value.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
 
-<span class="sd">        This validates that par is not None. This validates eq.</span>
+<span class="sd">        This validates that ``par`` is not None. This validates ``eq``.</span>
 
-<span class="sd">        Raises SrFitError if validation fails.</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        SrFitError</span>
+<span class="sd">            If validation fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;par is None&quot;</span><span class="p">)</span>
@@ -197,7 +257,7 @@
         <span class="c1"># Try to get the value of eq.</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;eq cannot be evaluated&quot;</span><span class="p">)</span>
         <span class="k">finally</span><span class="p">:</span>
@@ -218,7 +278,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2026, The DiffPy Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

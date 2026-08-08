@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.configurable &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
+  <title>diffpy.srfit.util.argbinders &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -67,7 +67,8 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">diffpy.srfit.fitbase.configurable</li>
+          <li class="breadcrumb-item"><a href="../util.html">diffpy.srfit.util</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.util.argbinders</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -76,67 +77,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for diffpy.srfit.fitbase.configurable</h1><div class="highlight"><pre>
+  <h1>Source code for diffpy.srfit.util.argbinders</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1">##############################################################################</span>
 <span class="c1">#</span>
-<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
-<span class="c1">#                   Simon J. L. Billinge</span>
-<span class="c1">#                   (c) 2008 The Trustees of Columbia University</span>
-<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1"># diffpy.srfit      Complex Modeling Initiative</span>
+<span class="c1">#                   (c) 2014 Brookhaven Science Associates,</span>
+<span class="c1">#                   Brookhaven National Laboratory.</span>
+<span class="c1">#                   All rights reserved.</span>
 <span class="c1">#</span>
-<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1"># File coded by:    Pavol Juhas</span>
 <span class="c1">#</span>
 <span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
-<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1"># See LICENSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Configurable class.</span>
+<span class="sd">&quot;&quot;&quot;Functions for binding arguments of callable objects.&quot;&quot;&quot;</span>
 
-<span class="sd">A Configurable has state of which a FitRecipe must be aware.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Configurable&quot;</span><span class="p">]</span>
+<span class="c1"># FIXME: remove this line when black and docformatter agree.</span>
 
 
-<div class="viewcode-block" id="Configurable">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.configurable.Configurable">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Configurable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for objects with state a FitRecipe must be aware of.</span>
+<div class="viewcode-block" id="bind2nd">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.argbinders.bind2nd">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">bind2nd</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Freeze second argument of a callable object to a given</span>
+<span class="sd">    constant.&quot;&quot;&quot;</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    _configobjs</span>
-<span class="sd">        The set of Configurables in a hierarchy of instances.</span>
-<span class="sd">        Messages get passed up the hierarchy to a FitRecipe</span>
-<span class="sd">        via these objects.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_configobjs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">arg1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Freeze the second argument of function func to arg1.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arg1</span> <span class="o">=</span> <span class="n">arg1</span>
         <span class="k">return</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_update_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Notify Configurables in hierarchy of configuration change.&quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configobjs</span><span class="p">:</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">_update_configuration</span><span class="p">()</span>
-        <span class="k">return</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">boundargs</span> <span class="o">=</span> <span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">arg1</span><span class="p">)</span> <span class="o">+</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">boundargs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_store_configurable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a Configurable.</span>
-
-<span class="sd">        The passed obj is only stored if it is a Configurable, otherwise</span>
-<span class="sd">        this method quietly exits.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Configurable</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_configobjs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-        <span class="k">return</span></div>
-
-
-
-<span class="c1"># End class Configurable</span>
-
-<span class="c1"># End of file</span>
 </pre></div>
 
            </div>

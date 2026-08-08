@@ -5,17 +5,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.pdf.characteristicfunctions &mdash; diffpy.srfit 3.2.0 documentation</title>
+  <title>diffpy.srfit.pdf.characteristicfunctions &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=a2ac599a"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=0aaa1ac4"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../../_static/copybutton.js?v=cca77546"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -47,9 +47,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
 </ul>
 
         </div>
@@ -91,7 +91,8 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Form factors (characteristic functions) used in PDF nanoshape fitting.</span>
+<span class="sd">&quot;&quot;&quot;Form factors (characteristic functions) used in PDF nanoshape</span>
+<span class="sd">fitting.</span>
 
 <span class="sd">These are used to calculate the attenuation of the PDF due to a finite</span>
 <span class="sd">size. For a crystal-like nanoparticle, one can calculate the PDF via</span>
@@ -99,10 +100,16 @@
 <span class="sd">function and Gcryst(f) is the crystal PDF.</span>
 
 <span class="sd">These functions are meant to be imported and added to a FitContribution</span>
-<span class="sd">using the &#39;registerFunction&#39; method of that class.</span>
+<span class="sd">using the &#39;register_function&#39; method of that class.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;spherical_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spheroidal_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lognormal_spherical_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sheet_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;shell_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SASCF&quot;</span><span class="p">,</span>
     <span class="s2">&quot;sphericalCF&quot;</span><span class="p">,</span>
     <span class="s2">&quot;spheroidalCF&quot;</span><span class="p">,</span>
     <span class="s2">&quot;spheroidalCF2&quot;</span><span class="p">,</span>
@@ -110,8 +117,9 @@
     <span class="s2">&quot;sheetCF&quot;</span><span class="p">,</span>
     <span class="s2">&quot;shellCF&quot;</span><span class="p">,</span>
     <span class="s2">&quot;shellCF2&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SASCF&quot;</span><span class="p">,</span>
 <span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">arctan</span> <span class="k">as</span> <span class="n">atan</span>
@@ -121,96 +129,209 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">erf</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.calculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calculator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
+<span class="n">cf_base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.pdf.characteristicfunctions&quot;</span>
 
 
-<div class="viewcode-block" id="sphericalCF">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.sphericalCF">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sphericalCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spherical nanoparticle characteristic function.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_dep_msg</span><span class="p">(</span><span class="n">old_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">,</span> <span class="n">signature_note</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the deprecation message for a camel case function.</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    r</span>
-<span class="sd">        distance of interaction</span>
-<span class="sd">    psize</span>
-<span class="sd">        The particle diameter</span>
-
-
-<span class="sd">    From Kodama et al., Acta Cryst. A, 62, 444-453</span>
-<span class="sd">    (converted from radius to diameter)</span>
+<span class="sd">    The note describing how the signature changed, when there is one, is</span>
+<span class="sd">    appended to the standard message from `build_deprecation_message`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">psize</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">psize</span>
-        <span class="n">inside</span> <span class="o">=</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mf">1.0</span>
-        <span class="n">xin</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">inside</span><span class="p">]</span>
-        <span class="n">f</span><span class="p">[</span><span class="n">inside</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">xin</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">xin</span> <span class="o">*</span> <span class="n">xin</span> <span class="o">*</span> <span class="n">xin</span>
-    <span class="k">return</span> <span class="n">f</span></div>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+        <span class="n">cf_base</span><span class="p">,</span> <span class="n">old_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">,</span> <span class="n">removal_version</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">signature_note</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">message</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">signature_note</span><span class="si">}</span><span class="s2">&quot;</span>
 
 
+<span class="n">sphericalCF_dep_msg</span> <span class="o">=</span> <span class="n">_build_dep_msg</span><span class="p">(</span>
+    <span class="s2">&quot;sphericalCF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spherical_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Additionally, the signature has changed. Please pass the parameter &quot;</span>
+    <span class="s2">&quot;&#39;psize&#39; as &#39;particle_diameter&#39;.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
-<div class="viewcode-block" id="spheroidalCF">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">spheroidalCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">erad</span><span class="p">,</span> <span class="n">prad</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spheroidal characteristic function specified using radii.</span>
+<span class="n">spheroidalCF_dep_msg</span> <span class="o">=</span> <span class="n">_build_dep_msg</span><span class="p">(</span>
+    <span class="s2">&quot;spheroidalCF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spheroidal_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Additionally, the signature has changed. Please pass the parameters &quot;</span>
+    <span class="s2">&quot;&#39;erad&#39; and &#39;prad&#39; as &#39;equatorial_radius&#39; and &#39;polar_radius&#39;, &quot;</span>
+    <span class="s2">&quot;respectively.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="sd">    Spheroid with radii (erad, erad, prad)</span>
+<span class="n">spheroidalCF2_dep_msg</span> <span class="o">=</span> <span class="n">_build_dep_msg</span><span class="p">(</span>
+    <span class="s2">&quot;spheroidalCF2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;spheroidal_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Additionally, the parameterization has changed. &#39;spheroidalCF2&#39; took &quot;</span>
+    <span class="s2">&quot;the equatorial diameter &#39;psize&#39; and the axis ratio &#39;axrat&#39;, while &quot;</span>
+    <span class="s2">&quot;&#39;spheroidal_particle&#39; takes radii. Please pass &quot;</span>
+    <span class="s2">&quot;equatorial_radius = psize / 2 and polar_radius = axrat * psize / 2.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    prad</span>
-<span class="sd">        polar radius</span>
-<span class="sd">    erad</span>
-<span class="sd">        equatorial radius</span>
+<span class="n">lognormalSphericalCF_dep_msg</span> <span class="o">=</span> <span class="n">_build_dep_msg</span><span class="p">(</span>
+    <span class="s2">&quot;lognormalSphericalCF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;lognormal_spherical_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Additionally, the signature has changed. Please pass the parameters &quot;</span>
+    <span class="s2">&quot;&#39;psize&#39; and &#39;psig&#39; as &#39;particle_diameter&#39; and &quot;</span>
+    <span class="s2">&quot;&#39;particle_diameter_sigma&#39;, respectively.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">sheetCF_dep_msg</span> <span class="o">=</span> <span class="n">_build_dep_msg</span><span class="p">(</span>
+    <span class="s2">&quot;sheetCF&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;sheet_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Additionally, the signature has changed. Please pass the parameter &quot;</span>
+    <span class="s2">&quot;&#39;sthick&#39; as &#39;sheet_thickness&#39;.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">shellCF_dep_msg</span> <span class="o">=</span> <span class="n">_build_dep_msg</span><span class="p">(</span><span class="s2">&quot;shellCF&quot;</span><span class="p">,</span> <span class="s2">&quot;shell_particle&quot;</span><span class="p">)</span>
+
+<span class="n">shellCF2_dep_msg</span> <span class="o">=</span> <span class="n">_build_dep_msg</span><span class="p">(</span>
+    <span class="s2">&quot;shellCF2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;shell_particle&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Additionally, the parameterization has changed. &#39;shellCF2&#39; took the &quot;</span>
+    <span class="s2">&quot;central radius &#39;a&#39; and the shell thickness &#39;delta&#39;, while &quot;</span>
+    <span class="s2">&quot;&#39;shell_particle&#39; takes the inner radius. Please pass &quot;</span>
+    <span class="s2">&quot;radius = a - delta / 2 and thickness = delta.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<span class="sd">    erad &lt; prad equates to a prolate spheroid</span>
-<span class="sd">    erad &gt; prad equates to a oblate spheroid</span>
-<span class="sd">    erad == prad is a sphere</span>
+<span class="c1"># The record of non-physical input warnings already issued in this process,</span>
+<span class="c1"># keyed by (function name, requirement). See _warn_non_physical.</span>
+<span class="n">_warned_non_physical</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_warn_non_physical</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">requirement</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Warn that non-physical input produced a zero characteristic</span>
+<span class="sd">    function.</span>
+
+<span class="sd">    A refinement evaluates a characteristic function on every iteration,</span>
+<span class="sd">    so the warning is issued only once per process for each distinct</span>
+<span class="sd">    requirement. The message must not include the offending value, since</span>
+<span class="sd">    the `warnings` registry keys on the message text and a value that</span>
+<span class="sd">    drifts from iteration to iteration would defeat the suppression.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">psize</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">erad</span>
-    <span class="n">pelpt</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">prad</span> <span class="o">/</span> <span class="n">erad</span>
-    <span class="k">return</span> <span class="n">spheroidalCF2</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">pelpt</span><span class="p">)</span></div>
+    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">requirement</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_warned_non_physical</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">_warned_non_physical</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;In &#39;</span><span class="si">{</span><span class="n">function_name</span><span class="si">}</span><span class="s2">&#39;, </span><span class="si">{</span><span class="n">requirement</span><span class="si">}</span><span class="s2">. The characteristic function &quot;</span>
+        <span class="s2">&quot;was set to zero for every r, which flattens the fit residual so a &quot;</span>
+        <span class="s2">&quot;refinement cannot recover on its own. Please use a physically &quot;</span>
+        <span class="s2">&quot;meaningful starting value, or keep the parameter in range with &quot;</span>
+        <span class="s2">&quot;FitRecipe.add_soft_bounds.&quot;</span><span class="p">,</span>
+        <span class="ne">RuntimeWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="p">)</span>
 
 
+<div class="viewcode-block" id="spherical_particle">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.spherical_particle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">spherical_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">particle_diameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the spherical nanoparticle characteristic function.</span>
 
-<div class="viewcode-block" id="spheroidalCF2">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF2">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">spheroidalCF2</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">axrat</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spheroidal nanoparticle characteristic function.</span>
+<span class="sd">    From Kodama et al., Acta Cryst. A, 62, 444-453 (converted from</span>
+<span class="sd">    radius to diameter).</span>
 
-<span class="sd">    Form factor for ellipsoid with radii (psize/2, psize/2, axrat*psize/2)</span>
-
-<span class="sd">    Attributes</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    r</span>
-<span class="sd">        distance of interaction</span>
-<span class="sd">    psize</span>
-<span class="sd">        The equatorial diameter</span>
-<span class="sd">    axrat</span>
-<span class="sd">        The ratio of axis lengths</span>
+<span class="sd">    r : array_like</span>
+<span class="sd">        The distance of interaction.</span>
+<span class="sd">    particle_diameter : float</span>
+<span class="sd">        The particle diameter.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        The characteristic function values evaluated at `r`.</span>
 
-<span class="sd">    From Lei et al., Phys. Rev. B, 80, 024118 (2009)</span>
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    RuntimeWarning</span>
+<span class="sd">        If `particle_diameter` is not positive, in which case the</span>
+<span class="sd">        characteristic function is zero everywhere. The warning is issued</span>
+<span class="sd">        only once per process.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pelpt</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">axrat</span>
+    <span class="n">characteristic_function</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">particle_diameter</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span>
+            <span class="s2">&quot;spherical_particle&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;particle_diameter&#39; must be positive&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">characteristic_function</span>
+    <span class="n">scaled_r</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">particle_diameter</span>
+    <span class="n">inside</span> <span class="o">=</span> <span class="n">scaled_r</span> <span class="o">&lt;</span> <span class="mf">1.0</span>
+    <span class="n">scaled_r_inside</span> <span class="o">=</span> <span class="n">scaled_r</span><span class="p">[</span><span class="n">inside</span><span class="p">]</span>
+    <span class="n">characteristic_function</span><span class="p">[</span><span class="n">inside</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">scaled_r_inside</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">scaled_r_inside</span><span class="o">**</span><span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">characteristic_function</span></div>
 
-    <span class="k">if</span> <span class="n">psize</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">pelpt</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="spheroidal_particle">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">spheroidal_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">equatorial_radius</span><span class="p">,</span> <span class="n">polar_radius</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the spheroidal nanoparticle characteristic function.</span>
+
+<span class="sd">    Spheroid with radii (equatorial_radius, equatorial_radius,</span>
+<span class="sd">    polar_radius). ``equatorial_radius &lt; polar_radius`` equates to a</span>
+<span class="sd">    prolate spheroid, ``equatorial_radius &gt; polar_radius`` equates to</span>
+<span class="sd">    an oblate spheroid, and ``equatorial_radius == polar_radius`` is a</span>
+<span class="sd">    sphere. From Lei et al., Phys. Rev. B, 80, 024118 (2009).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array_like</span>
+<span class="sd">        The distance of interaction.</span>
+<span class="sd">    equatorial_radius : float</span>
+<span class="sd">        The equatorial radius.</span>
+<span class="sd">    polar_radius : float</span>
+<span class="sd">        The polar radius.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        The characteristic function values evaluated at `r`.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    RuntimeWarning</span>
+<span class="sd">        If `equatorial_radius` or `polar_radius` is not positive, in which</span>
+<span class="sd">        case the characteristic function is zero everywhere. The warning is</span>
+<span class="sd">        issued only once per process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">equatorial_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span>
+            <span class="s2">&quot;spheroidal_particle&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;equatorial_radius&#39; must be positive&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">polar_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span>
+            <span class="s2">&quot;spheroidal_particle&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;polar_radius&#39; must be positive&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">particle_diameter</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">equatorial_radius</span>
+    <span class="n">axis_ratio</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">polar_radius</span> <span class="o">/</span> <span class="n">equatorial_radius</span>
 
     <span class="c1"># to simplify the equations</span>
-    <span class="n">v</span> <span class="o">=</span> <span class="n">pelpt</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">psize</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">axis_ratio</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">particle_diameter</span>
     <span class="n">d2</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">d</span>
     <span class="n">v2</span> <span class="o">=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">v</span>
 
     <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">sphericalCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spherical_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">particle_diameter</span><span class="p">)</span>
 
     <span class="n">rx</span> <span class="o">=</span> <span class="n">r</span>
     <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">psize</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">d</span><span class="p">]</span>
         <span class="n">r2</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">r</span>
         <span class="n">f1</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mi">1</span>
@@ -224,7 +345,7 @@
             <span class="o">*</span> <span class="n">atanh</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">v2</span><span class="p">))</span>
         <span class="p">)</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">rx</span> <span class="o">&gt;</span> <span class="n">v</span> <span class="o">*</span> <span class="n">psize</span><span class="p">,</span> <span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">psize</span><span class="p">)]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">rx</span> <span class="o">&gt;</span> <span class="n">v</span> <span class="o">*</span> <span class="n">d</span><span class="p">,</span> <span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">d</span><span class="p">)]</span>
         <span class="n">r2</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">r</span>
         <span class="n">f2</span> <span class="o">=</span> <span class="p">(</span>
             <span class="p">(</span>
@@ -239,14 +360,14 @@
             <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">v2</span><span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">rx</span> <span class="o">&gt;</span> <span class="n">psize</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">rx</span> <span class="o">&gt;</span> <span class="n">d</span><span class="p">]</span>
         <span class="n">f3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
         <span class="n">f</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">))</span>
 
     <span class="k">elif</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">psize</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">d</span><span class="p">]</span>
         <span class="n">r2</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">r</span>
         <span class="n">f1</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mi">1</span>
@@ -260,7 +381,7 @@
             <span class="o">*</span> <span class="n">atan</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
         <span class="p">)</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">rx</span> <span class="o">&gt;</span> <span class="n">psize</span><span class="p">,</span> <span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">psize</span><span class="p">)]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">rx</span> <span class="o">&gt;</span> <span class="n">d</span><span class="p">,</span> <span class="n">rx</span> <span class="o">&lt;=</span> <span class="n">v</span> <span class="o">*</span> <span class="n">d</span><span class="p">)]</span>
         <span class="n">r2</span> <span class="o">=</span> <span class="n">r</span> <span class="o">*</span> <span class="n">r</span>
         <span class="n">f2</span> <span class="o">=</span> <span class="p">(</span>
             <span class="mi">1</span>
@@ -280,7 +401,7 @@
             <span class="o">*</span> <span class="p">(</span><span class="n">atan</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="n">atan</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r2</span> <span class="o">/</span> <span class="n">d2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
         <span class="p">)</span>
 
-        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">rx</span> <span class="o">&gt;</span> <span class="n">v</span> <span class="o">*</span> <span class="n">psize</span><span class="p">]</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rx</span><span class="p">[</span><span class="n">rx</span> <span class="o">&gt;</span> <span class="n">v</span> <span class="o">*</span> <span class="n">d</span><span class="p">]</span>
         <span class="n">f3</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
 
         <span class="n">f</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">))</span>
@@ -289,50 +410,88 @@
 
 
 
-<div class="viewcode-block" id="lognormalSphericalCF">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.lognormalSphericalCF">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">lognormalSphericalCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">psig</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spherical nanoparticle characteristic function with lognormal size</span>
-<span class="sd">    distribution.</span>
+<div class="viewcode-block" id="lognormal_spherical_particle">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.lognormal_spherical_particle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">lognormal_spherical_particle</span><span class="p">(</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">particle_diameter</span><span class="p">,</span> <span class="n">particle_diameter_sigma</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the spherical nanoparticle characteristic function with</span>
+<span class="sd">    lognormal size distribution.</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    r</span>
-<span class="sd">        distance of interaction</span>
-<span class="sd">    psize</span>
-<span class="sd">        The mean particle diameter</span>
-<span class="sd">    psig</span>
-<span class="sd">        The log-normal width of the particle diameter</span>
-
-
-<span class="sd">    Here, r is the independent variable, mu is the mean of the distribution</span>
-<span class="sd">    (not of the particle size), and s is the width of the distribution. This is</span>
-<span class="sd">    the characteristic function for the lognormal distribution of particle</span>
-<span class="sd">    diameter:</span>
+<span class="sd">    Here, r is the independent variable, mu is the mean of the</span>
+<span class="sd">    distribution (not of the particle size), and s is the width of</span>
+<span class="sd">    the distribution. This is the characteristic function for the</span>
+<span class="sd">    lognormal distribution of particle diameter:</span>
 
 <span class="sd">    F(r, mu, s) = 0.5*Erfc((-mu-3*s^2+Log(r))/(sqrt(2)*s))</span>
 <span class="sd">               + 0.25*r^3*Erfc((-mu+Log(r))/(sqrt(2)*s))*exp(-3*mu-4.5*s^2)</span>
 <span class="sd">               - 0.75*r*Erfc((-mu-2*s^2+Log(r))/(sqrt(2)*s))*exp(-mu-2.5*s^2)</span>
 
 <span class="sd">    The expectation value of the distribution gives the average particle</span>
-<span class="sd">    diameter, psize. The variance of the distribution gives psig^2. mu and s</span>
-<span class="sd">    can be expressed in terms of these as:</span>
+<span class="sd">    diameter, particle_diameter. The variance of the distribution gives</span>
+<span class="sd">    particle_diameter_sigma^2. mu and s can be expressed in terms of these</span>
+<span class="sd">    as:</span>
 
-<span class="sd">    s^2 = log((psig/psize)^2 + 1)</span>
-<span class="sd">    mu = log(psize) - s^2/2</span>
+<span class="sd">    s^2 = log((particle_diameter_sigma/particle_diameter)^2 + 1)</span>
+<span class="sd">    mu = log(particle_diameter) - s^2/2</span>
 
-<span class="sd">    Source unknown</span>
+<span class="sd">    Source unknown.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array_like</span>
+<span class="sd">        The distance of interaction.</span>
+<span class="sd">    particle_diameter : float</span>
+<span class="sd">        The mean particle diameter.</span>
+<span class="sd">    particle_diameter_sigma : float</span>
+<span class="sd">        The log-normal width of the particle diameter.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        The characteristic function values evaluated at `r`.</span>
+
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    RuntimeWarning</span>
+<span class="sd">        If `particle_diameter` is not positive, if `particle_diameter_sigma`</span>
+<span class="sd">        is negative, or if `particle_diameter` is too small for</span>
+<span class="sd">        `particle_diameter_sigma` for the closed form to hold, in which case</span>
+<span class="sd">        the characteristic function is zero everywhere. The warning is issued</span>
+<span class="sd">        only once per process. A `particle_diameter_sigma` of zero is the</span>
+<span class="sd">        sphere limit rather than an error and does not warn.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">psize</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">psig</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">sphericalCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">particle_diameter</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span>
+            <span class="s2">&quot;lognormal_spherical_particle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&#39;particle_diameter&#39; must be positive&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">particle_diameter_sigma</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span>
+            <span class="s2">&quot;lognormal_spherical_particle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&#39;particle_diameter_sigma&#39; must not be negative&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">particle_diameter_sigma</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">spherical_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">particle_diameter</span><span class="p">)</span>
 
     <span class="n">sqrt2</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="n">psig</span> <span class="o">*</span> <span class="n">psig</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">psize</span> <span class="o">*</span> <span class="n">psize</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="n">mu</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">psize</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">log</span><span class="p">(</span>
+            <span class="n">particle_diameter_sigma</span>
+            <span class="o">*</span> <span class="n">particle_diameter_sigma</span>
+            <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">particle_diameter</span> <span class="o">*</span> <span class="n">particle_diameter</span><span class="p">)</span>
+            <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">particle_diameter</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="k">if</span> <span class="n">mu</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span>
+            <span class="s2">&quot;lognormal_spherical_particle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;&#39;particle_diameter&#39; is too small for &#39;particle_diameter_sigma&#39;&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">(</span>
         <span class="mf">0.5</span> <span class="o">*</span> <span class="n">erfc</span><span class="p">((</span><span class="o">-</span><span class="n">mu</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">log</span><span class="p">(</span><span class="n">r</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">sqrt2</span> <span class="o">*</span> <span class="n">s</span><span class="p">))</span>
@@ -350,81 +509,99 @@
 
 
 
-<div class="viewcode-block" id="sheetCF">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.sheetCF">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sheetCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">sthick</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Nanosheet characteristic function.</span>
+<div class="viewcode-block" id="sheet_particle">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.sheet_particle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sheet_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">sheet_thickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the nanosheet characteristic function.</span>
 
-<span class="sd">    Attributes</span>
+<span class="sd">    From Kodama et al., Acta Cryst. A, 62, 444-453.</span>
+
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    r</span>
-<span class="sd">        distance of interaction</span>
-<span class="sd">    sthick</span>
-<span class="sd">        Thickness of nanosheet</span>
+<span class="sd">    r : array_like</span>
+<span class="sd">        The distance of interaction.</span>
+<span class="sd">    sheet_thickness : float</span>
+<span class="sd">        The thickness of the nanosheet.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        The characteristic function values evaluated at `r`.</span>
 
-<span class="sd">    From Kodama et al., Acta Cryst. A, 62, 444-453</span>
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    RuntimeWarning</span>
+<span class="sd">        If `sheet_thickness` is not positive, in which case the</span>
+<span class="sd">        characteristic function is zero everywhere. The warning is issued</span>
+<span class="sd">        only once per process.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># handle zero or negative sthick.  make it work for scalars and arrays.</span>
-    <span class="k">if</span> <span class="n">sthick</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">sthick</span>
+    <span class="k">if</span> <span class="n">sheet_thickness</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span>
+            <span class="s2">&quot;sheet_particle&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;sheet_thickness&#39; must be positive&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="c1"># process scalar r</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
-        <span class="n">rv</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">r</span> <span class="o">/</span> <span class="n">sthick</span> <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">sthick</span> <span class="k">else</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sthick</span> <span class="o">/</span> <span class="n">r</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">r</span> <span class="o">/</span> <span class="n">sheet_thickness</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">sheet_thickness</span>
+            <span class="k">else</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sheet_thickness</span> <span class="o">/</span> <span class="n">r</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">rv</span>
     <span class="c1"># handle array-type r</span>
-    <span class="n">ra</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-    <span class="n">lo</span> <span class="o">=</span> <span class="n">ra</span> <span class="o">&lt;</span> <span class="n">sthick</span>
-    <span class="n">hi</span> <span class="o">=</span> <span class="o">~</span><span class="n">lo</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">f</span><span class="p">[</span><span class="n">lo</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">ra</span><span class="p">[</span><span class="n">lo</span><span class="p">]</span> <span class="o">/</span> <span class="n">sthick</span>
-    <span class="n">f</span><span class="p">[</span><span class="n">hi</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sthick</span> <span class="o">/</span> <span class="n">ra</span><span class="p">[</span><span class="n">hi</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">f</span></div>
+    <span class="n">r_array</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">inside</span> <span class="o">=</span> <span class="n">r_array</span> <span class="o">&lt;</span> <span class="n">sheet_thickness</span>
+    <span class="n">outside</span> <span class="o">=</span> <span class="o">~</span><span class="n">inside</span>
+    <span class="n">characteristic_function</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">r_array</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">characteristic_function</span><span class="p">[</span><span class="n">inside</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">r_array</span><span class="p">[</span><span class="n">inside</span><span class="p">]</span> <span class="o">/</span> <span class="n">sheet_thickness</span>
+    <span class="p">)</span>
+    <span class="n">characteristic_function</span><span class="p">[</span><span class="n">outside</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">sheet_thickness</span> <span class="o">/</span> <span class="n">r_array</span><span class="p">[</span><span class="n">outside</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">characteristic_function</span></div>
 
 
 
-<div class="viewcode-block" id="shellCF">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.shellCF">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">shellCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">thickness</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spherical shell characteristic function.</span>
+<div class="viewcode-block" id="shell_particle">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.shell_particle">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shell_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">thickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the spherical shell characteristic function.</span>
 
-<span class="sd">    Attributes</span>
+<span class="sd">    The outer radius equals ``radius + thickness``. From Lei et al.,</span>
+<span class="sd">    Phys. Rev. B, 80, 024118 (2009).</span>
+
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    radius</span>
-<span class="sd">        Inner radius</span>
-<span class="sd">    thickness</span>
-<span class="sd">        Thickness of shell</span>
+<span class="sd">    r : array_like</span>
+<span class="sd">        The distance of interaction.</span>
+<span class="sd">    radius : float</span>
+<span class="sd">        The inner radius.</span>
+<span class="sd">    thickness : float</span>
+<span class="sd">        The thickness of the shell.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        The characteristic function values evaluated at `r`.</span>
 
-<span class="sd">    outer radius = radius + thickness</span>
-
-<span class="sd">    From Lei et al., Phys. Rev. B, 80, 024118 (2009)</span>
+<span class="sd">    Warns</span>
+<span class="sd">    -----</span>
+<span class="sd">    RuntimeWarning</span>
+<span class="sd">        If `thickness` is not positive or `radius` is negative, in which case</span>
+<span class="sd">        the characteristic function is zero everywhere. The warning is issued</span>
+<span class="sd">        only once per process. A `radius` of zero is the solid sphere limit</span>
+<span class="sd">        rather than an error and does not warn.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">thickness</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span><span class="s2">&quot;shell_particle&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;thickness&#39; must be positive&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">radius</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">_warn_non_physical</span><span class="p">(</span><span class="s2">&quot;shell_particle&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;radius&#39; must not be negative&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
     <span class="n">d</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">thickness</span>
     <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">d</span> <span class="o">/</span> <span class="mf">2.0</span>
-    <span class="k">return</span> <span class="n">shellCF2</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span></div>
-
-
-
-<div class="viewcode-block" id="shellCF2">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.shellCF2">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">shellCF2</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spherical shell characteristic function.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    a</span>
-<span class="sd">        Central radius</span>
-<span class="sd">    delta</span>
-<span class="sd">        Thickness of shell</span>
-
-<span class="sd">    outer radius = a + thickness/2</span>
-
-
-<span class="sd">    From Lei et al., Phys. Rev. B, 80, 024118 (2009)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">a</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">delta</span>
     <span class="n">a2</span> <span class="o">=</span> <span class="n">a</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">d2</span> <span class="o">=</span> <span class="n">d</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">dmr</span> <span class="o">=</span> <span class="n">d</span> <span class="o">-</span> <span class="n">r</span>
@@ -454,6 +631,105 @@
 
 
 
+<div class="viewcode-block" id="sphericalCF">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.sphericalCF">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">sphericalCF_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sphericalCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.pdf.characteristicfunctions.spherical_particle</span>
+<span class="sd">    instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">spherical_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="spheroidalCF">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">spheroidalCF_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spheroidalCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">erad</span><span class="p">,</span> <span class="n">prad</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle</span>
+<span class="sd">    instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">spheroidal_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">erad</span><span class="p">,</span> <span class="n">prad</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="spheroidalCF2">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.spheroidalCF2">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">spheroidalCF2_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">spheroidalCF2</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">axrat</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle</span>
+<span class="sd">    instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">spheroidal_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axrat</span> <span class="o">*</span> <span class="n">psize</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lognormalSphericalCF">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.lognormalSphericalCF">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">lognormalSphericalCF_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lognormalSphericalCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">psig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use</span>
+<span class="sd">    diffpy.srfit.pdf.characteristicfunctions.lognormal_spherical_particle</span>
+<span class="sd">    instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">lognormal_spherical_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">psize</span><span class="p">,</span> <span class="n">psig</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="sheetCF">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.sheetCF">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">sheetCF_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sheetCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">sthick</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.pdf.characteristicfunctions.sheet_particle</span>
+<span class="sd">    instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sheet_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">sthick</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="shellCF">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.shellCF">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">shellCF_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">shellCF</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">thickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.pdf.characteristicfunctions.shell_particle</span>
+<span class="sd">    instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">shell_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">thickness</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="shellCF2">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.shellCF2">[docs]</a>
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">shellCF2_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">shellCF2</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.pdf.characteristicfunctions.shell_particle</span>
+<span class="sd">    instead.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">shell_particle</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span> <span class="o">-</span> <span class="n">delta</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="SASCF">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.characteristicfunctions.SASCF">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SASCF</span><span class="p">(</span><span class="n">Calculator</span><span class="p">):</span>
@@ -479,12 +755,12 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the generator.</span>
 
-<span class="sd">        Attributes</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        name</span>
-<span class="sd">            A name for the SASCF</span>
-<span class="sd">        model</span>
-<span class="sd">            SASModel object this adapts.</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name for the SASCF.</span>
+<span class="sd">        model : BaseModel</span>
+<span class="sd">            The sas.models.BaseModel object this adapts.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Calculator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
@@ -507,9 +783,8 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the characteristic function from the transform of the</span>
-<span class="sd">        BaseModel.&quot;&quot;&quot;</span>
-
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the characteristic function from the transform of</span>
+<span class="sd">        the BaseModel.&quot;&quot;&quot;</span>
         <span class="c1"># Determine q-values.</span>
         <span class="c1"># We want very fine r-spacing so we can properly normalize f(r). This</span>
         <span class="c1"># equates to having a large qmax so that the Fourier transform is</span>
@@ -519,7 +794,8 @@
         <span class="c1">#</span>
         <span class="c1"># The initial dr is somewhat arbitrary, but using dr = 0.01 allows for</span>
         <span class="c1"># the f(r) calculated from a particle of diameter 50, over r =</span>
-        <span class="c1"># arange(1, 60, 0.1) to agree with the sphericalCF with Rw &lt; 1e-4%.</span>
+        <span class="c1"># arange(1, 60, 0.1) to agree with the spherical_particle with Rw &lt;</span>
+        <span class="c1"># 1e-4%.</span>
         <span class="c1">#</span>
         <span class="c1"># We also have to make a q-spacing small enough to compute out to at</span>
         <span class="c1"># least the size of the signal.</span>
@@ -576,6 +852,18 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">erfc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the complementary error function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : array_like</span>
+<span class="sd">        The input value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        The complementary error function evaluated at `x`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">erf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 
 
@@ -589,7 +877,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2026, The DiffPy Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

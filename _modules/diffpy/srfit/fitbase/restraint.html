@@ -5,17 +5,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.restraint &mdash; diffpy.srfit 3.2.0 documentation</title>
+  <title>diffpy.srfit.fitbase.restraint &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=a2ac599a"></script>
-      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=0aaa1ac4"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../../_static/copybutton.js?v=cca77546"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -47,9 +47,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
 </ul>
 
         </div>
@@ -110,55 +110,54 @@
 <div class="viewcode-block" id="Restraint">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.restraint.Restraint">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Restraint</span><span class="p">(</span><span class="n">Validatable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Restraint class.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Restrain an equation to specified bounds.</span>
+
+<span class="sd">    The penalty for breaking the restraint is calculated as</span>
+<span class="sd">    ``(max(0, lower_bound - val, val - upper_bound) / sig) ** 2``, where</span>
+<span class="sd">    ``val`` is the value of the calculated equation. This is multiplied</span>
+<span class="sd">    by the average chi^2 if ``scaled`` is True.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    eq</span>
-<span class="sd">        An equation whose evaluation is compared against the restraint</span>
+<span class="sd">    eq : Equation</span>
+<span class="sd">        The equation whose evaluation is compared against the restraint</span>
 <span class="sd">        bounds.</span>
-<span class="sd">    lb</span>
+<span class="sd">    lower_bound : float</span>
 <span class="sd">        The lower bound on the restraint evaluation (default -inf).</span>
-<span class="sd">    ub</span>
-<span class="sd">        The lower bound on the restraint evaluation (default inf).</span>
-<span class="sd">    sig</span>
+<span class="sd">    upper_bound : float</span>
+<span class="sd">        The upper bound on the restraint evaluation (default inf).</span>
+<span class="sd">    sig : float</span>
 <span class="sd">        The uncertainty on the bounds (default 1).</span>
-<span class="sd">    scaled</span>
+<span class="sd">    scaled : bool</span>
 <span class="sd">        A flag indicating if the restraint is scaled (multiplied) by</span>
 <span class="sd">        the unrestrained point-average chi^2 (chi^2/numpoints)</span>
 <span class="sd">        (default False).</span>
-
-
-<span class="sd">    The penalty is calculated as</span>
-<span class="sd">    (max(0, lb - val, val - ub)/sig)**2</span>
-<span class="sd">    and val is the value of the calculated equation.  This is multiplied by the</span>
-<span class="sd">    average chi^2 if scaled is True.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">,</span> <span class="n">lb</span><span class="o">=-</span><span class="n">inf</span><span class="p">,</span> <span class="n">ub</span><span class="o">=</span><span class="n">inf</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=-</span><span class="n">inf</span><span class="p">,</span> <span class="n">upper_bound</span><span class="o">=</span><span class="n">inf</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Restrain an equation to specified bounds.</span>
 
-<span class="sd">        Attributes</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        eq</span>
-<span class="sd">            An equation whose evaluation is compared against the</span>
+<span class="sd">        eq : Equation</span>
+<span class="sd">            The equation whose evaluation is compared against the</span>
 <span class="sd">            restraint bounds.</span>
-<span class="sd">        lb</span>
-<span class="sd">            The lower bound on the restraint evaluation (float, default</span>
-<span class="sd">            -inf).</span>
-<span class="sd">        ub</span>
-<span class="sd">            The lower bound on the restraint evaluation (float, default</span>
-<span class="sd">            inf).</span>
-<span class="sd">        sig</span>
+<span class="sd">        lower_bound : float, optional</span>
+<span class="sd">            The lower bound on the restraint evaluation (default -inf).</span>
+<span class="sd">        upper_bound : float, optional</span>
+<span class="sd">            The upper bound on the restraint evaluation (default inf).</span>
+<span class="sd">        sig : float, optional</span>
 <span class="sd">            The uncertainty on the bounds (default 1).</span>
-<span class="sd">        scaled</span>
-<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">        scaled : bool, optional</span>
+<span class="sd">            The flag indicating if the restraint is scaled (multiplied)</span>
 <span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
-<span class="sd">            (bool, default False).</span>
+<span class="sd">            (default False).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">eq</span> <span class="o">=</span> <span class="n">eq</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lb</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ub</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ub</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scaled</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
         <span class="k">return</span>
@@ -168,19 +167,21 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">penalty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the penalty of the restraint.</span>
 
-<span class="sd">        Attributes</span>
+<span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        w</span>
-<span class="sd">            The point-average chi^2 which is optionally used to scale the</span>
-<span class="sd">            penalty (default 1.0).</span>
+<span class="sd">        w : float, optional</span>
+<span class="sd">            The point-average chi^2 which is optionally used to scale</span>
+<span class="sd">            the penalty (default 1.0).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        penalty</span>
-<span class="sd">            Returns the penalty as a float</span>
+<span class="sd">        float</span>
+<span class="sd">            The penalty for breaking the restraint.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span>
-        <span class="n">penalty</span> <span class="o">=</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lb</span> <span class="o">-</span> <span class="n">val</span><span class="p">,</span> <span class="n">val</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ub</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">penalty</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">-</span> <span class="n">val</span><span class="p">,</span> <span class="n">val</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span>
+        <span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaled</span><span class="p">:</span>
             <span class="n">penalty</span> <span class="o">*=</span> <span class="n">w</span>
@@ -191,9 +192,12 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
 
-<span class="sd">        This validates eq.</span>
+<span class="sd">        This validates ``eq``.</span>
 
-<span class="sd">        Raises SrFitError if validation fails.</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        SrFitError</span>
+<span class="sd">            If validation fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;eq is None&quot;</span><span class="p">)</span>
@@ -229,7 +233,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2026, The DiffPy Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

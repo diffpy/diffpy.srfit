@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.util &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
+  <title>diffpy.srfit.exceptions &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -67,7 +67,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">diffpy.srfit.util</li>
+      <li class="breadcrumb-item active">diffpy.srfit.exceptions</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -76,60 +76,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for diffpy.srfit.util</h1><div class="highlight"><pre>
+  <h1>Source code for diffpy.srfit.exceptions</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1">##############################################################################</span>
 <span class="c1">#</span>
-<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
-<span class="c1">#                   Simon J. L. Billinge</span>
-<span class="c1">#                   (c) 2008 The Trustees of Columbia University</span>
-<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1"># diffpy.srfit      Complex Modeling Initiative</span>
+<span class="c1">#                   (c) 2016 Brookhaven Science Associates,</span>
+<span class="c1">#                   Brookhaven National Laboratory.</span>
+<span class="c1">#                   All rights reserved.</span>
 <span class="c1">#</span>
-<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1"># File coded by:    Pavol Juhas</span>
 <span class="c1">#</span>
 <span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
-<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1"># See LICENSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Utilities and constants used throughout SrFit.&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Exceptions used for SrFit - specific errors.&quot;&quot;&quot;</span>
 
-<span class="n">_DASHEDLINE</span> <span class="o">=</span> <span class="mi">78</span> <span class="o">*</span> <span class="s2">&quot;-&quot;</span>
+<span class="c1"># FIXME: remove this line when black and docformatter agree.</span>
 
 
-<div class="viewcode-block" id="sortKeyForNumericString">
-<a class="viewcode-back" href="../../../api/diffpy.srfit.util.html#diffpy.srfit.util.sortKeyForNumericString">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sortKeyForNumericString</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute key for sorting strings according to their integer</span>
-<span class="sd">    numeric value.</span>
+<div class="viewcode-block" id="SrFitError">
+<a class="viewcode-back" href="../../../api/diffpy.srfit.html#diffpy.srfit.exceptions.SrFitError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SrFitError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic error in SrFit expressions or recipe.&quot;&quot;&quot;</span>
 
-<span class="sd">    Each string gets split to string and integer segments to create keys</span>
-<span class="sd">    for comparison.  Signs, decimal points and exponents are ignored.</span>
-<span class="sd">    This function is intended as the ``key`` argument for the ``sorted``</span>
-<span class="sd">    or ``list.sort`` function.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    s : str</span>
-<span class="sd">        String which may have numeric components, e.g., &quot;a12b&quot;.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    tuple</span>
-<span class="sd">        Tuple of non-numeric segments intermixed with integer values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">sortKeyForNumericString</span><span class="o">.</span><span class="n">_rx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-
-        <span class="n">sortKeyForNumericString</span><span class="o">.</span><span class="n">_rx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d+)&quot;</span><span class="p">)</span>
-    <span class="n">rx</span> <span class="o">=</span> <span class="n">sortKeyForNumericString</span><span class="o">.</span><span class="n">_rx</span>
-    <span class="n">rv</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rx</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
-    <span class="k">return</span> <span class="n">rv</span></div>
+    <span class="k">pass</span></div>
 
 
 
-<span class="n">sortKeyForNumericString</span><span class="o">.</span><span class="n">_rx</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="viewcode-block" id="ParseError">
+<a class="viewcode-back" href="../../../api/diffpy.srfit.html#diffpy.srfit.exceptions.ParseError">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ParseError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception used by ProfileParsers.&quot;&quot;&quot;</span>
 
-<span class="c1"># End of file</span>
+    <span class="k">pass</span></div>
+
 </pre></div>
 
            </div>

@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>crystalpdftwodata.py &mdash; diffpy.srfit 3.2.0 documentation</title>
+  <title>crystalpdftwodata.py &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=a2ac599a"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=0aaa1ac4"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=cca77546"></script>
     <script src="../_static/js/theme.js"></script>
@@ -75,9 +75,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../extending.html">Extending SrFit</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffpy.srfit.html">Package API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/diffpy.srfit.html">Package API</a></li>
 </ul>
 
         </div>
@@ -129,7 +129,8 @@
 <span class="sd">underlying ObjCrystCrystalParSet.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">gaussianrecipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">scipyOptimize</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadCrystal</span>
 
@@ -147,7 +148,6 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">xdatname</span><span class="p">,</span> <span class="n">ndatname</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a fitting recipe for crystalline PDF data.&quot;&quot;&quot;</span>
-
     <span class="c1"># The Profiles</span>
     <span class="c1"># We need a profile for each data set. This means that we will need two</span>
     <span class="c1"># FitContributions as well.</span>
@@ -156,14 +156,14 @@
 
     <span class="c1"># Load data and add it to the proper Profile.</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">PDFParser</span><span class="p">()</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">parseFile</span><span class="p">(</span><span class="n">xdatname</span><span class="p">)</span>
-    <span class="n">xprofile</span><span class="o">.</span><span class="n">loadParsedData</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-    <span class="n">xprofile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">(</span><span class="n">xmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">xdatname</span><span class="p">)</span>
+    <span class="n">xprofile</span><span class="o">.</span><span class="n">load_parsed_data</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="n">xprofile</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">PDFParser</span><span class="p">()</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">parseFile</span><span class="p">(</span><span class="n">ndatname</span><span class="p">)</span>
-    <span class="n">nprofile</span><span class="o">.</span><span class="n">loadParsedData</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
-    <span class="n">nprofile</span><span class="o">.</span><span class="n">setCalculationRange</span><span class="p">(</span><span class="n">xmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">ndatname</span><span class="p">)</span>
+    <span class="n">nprofile</span><span class="o">.</span><span class="n">load_parsed_data</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="n">nprofile</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
     <span class="c1"># The ProfileGenerators</span>
     <span class="c1"># We need one of these for the x-ray data.</span>
@@ -193,12 +193,12 @@
     <span class="c1"># The FitContributions</span>
     <span class="c1"># We associate the x-ray PDFGenerator and Profile in one FitContribution...</span>
     <span class="n">xcontribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;xnickel&quot;</span><span class="p">)</span>
-    <span class="n">xcontribution</span><span class="o">.</span><span class="n">addProfileGenerator</span><span class="p">(</span><span class="n">xgenerator</span><span class="p">)</span>
-    <span class="n">xcontribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">xprofile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">xcontribution</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">xgenerator</span><span class="p">)</span>
+    <span class="n">xcontribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">xprofile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
     <span class="c1"># and the neutron objects in another.</span>
     <span class="n">ncontribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;nnickel&quot;</span><span class="p">)</span>
-    <span class="n">ncontribution</span><span class="o">.</span><span class="n">addProfileGenerator</span><span class="p">(</span><span class="n">ngenerator</span><span class="p">)</span>
-    <span class="n">ncontribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">nprofile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">ncontribution</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">ngenerator</span><span class="p">)</span>
+    <span class="n">ncontribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">nprofile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
 
     <span class="c1"># This example is different than the previous ones in that we are composing</span>
     <span class="c1"># a residual function from other residuals (one for the x-ray contribution</span>
@@ -214,80 +214,48 @@
     <span class="c1"># The contribution&#39;s residual can be either chi^2, Rw^2, or custom crafted.</span>
     <span class="c1"># In this case, we should minimize Rw^2 of each contribution so that each</span>
     <span class="c1"># one can contribute roughly equally to the fit.</span>
-    <span class="n">xcontribution</span><span class="o">.</span><span class="n">setResidualEquation</span><span class="p">(</span><span class="s2">&quot;resv&quot;</span><span class="p">)</span>
-    <span class="n">ncontribution</span><span class="o">.</span><span class="n">setResidualEquation</span><span class="p">(</span><span class="s2">&quot;resv&quot;</span><span class="p">)</span>
+    <span class="n">xcontribution</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;resv&quot;</span><span class="p">)</span>
+    <span class="n">ncontribution</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;resv&quot;</span><span class="p">)</span>
 
     <span class="c1"># Make the FitRecipe and add the FitContributions.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">xcontribution</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">ncontribution</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_contribution</span><span class="p">(</span><span class="n">xcontribution</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_contribution</span><span class="p">(</span><span class="n">ncontribution</span><span class="p">)</span>
 
     <span class="c1"># Now we vary and constrain Parameters as before.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">xgenerator</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;xscale&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">ngenerator</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;nscale&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">xgenerator</span><span class="o">.</span><span class="n">qdamp</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">&quot;xqdamp&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">ngenerator</span><span class="o">.</span><span class="n">qdamp</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">&quot;nqdamp&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">xgenerator</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;xscale&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">ngenerator</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;nscale&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">xgenerator</span><span class="o">.</span><span class="n">qdamp</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">&quot;xqdamp&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">ngenerator</span><span class="o">.</span><span class="n">qdamp</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">&quot;nqdamp&quot;</span><span class="p">)</span>
     <span class="c1"># delta2 is a non-structual material property. Thus, we constrain together</span>
     <span class="c1"># delta2 Parameter from each PDFGenerator.</span>
-    <span class="n">delta2</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">newVar</span><span class="p">(</span><span class="s2">&quot;delta2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">xgenerator</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">constrain</span><span class="p">(</span><span class="n">ngenerator</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2</span><span class="p">)</span>
+    <span class="n">delta2</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">&quot;delta2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">ngenerator</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2</span><span class="p">)</span>
 
     <span class="c1"># We only need to constrain phase properties once since there is a single</span>
     <span class="c1"># ObjCrystCrystalParSet for the Crystal.</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="n">xgenerator</span><span class="o">.</span><span class="n">phase</span>
     <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">phase</span><span class="o">.</span><span class="n">sgpars</span><span class="p">:</span>
-        <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+        <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">B11_0</span> <span class="o">=</span> <span class="mf">0.1</span>
 
     <span class="c1"># Give the recipe away so it can be used!</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
-
-    <span class="c1"># All this should be pretty familiar by now.</span>
-    <span class="n">xr</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">xnickel</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span>
-    <span class="n">xg</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">xnickel</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
-    <span class="n">xgcalc</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">xnickel</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span>
-    <span class="n">xdiffzero</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.8</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">xg</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">xg</span><span class="p">)</span>
-    <span class="n">xdiff</span> <span class="o">=</span> <span class="n">xg</span> <span class="o">-</span> <span class="n">xgcalc</span> <span class="o">+</span> <span class="n">xdiffzero</span>
-
-    <span class="n">nr</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">nnickel</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span>
-    <span class="n">ng</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">nnickel</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
-    <span class="n">ngcalc</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">nnickel</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span>
-    <span class="n">ndiffzero</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.8</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">ng</span><span class="p">)</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">ng</span><span class="p">)</span>
-    <span class="n">ndiff</span> <span class="o">=</span> <span class="n">ng</span> <span class="o">-</span> <span class="n">ngcalc</span> <span class="o">+</span> <span class="n">ndiffzero</span>
-
-    <span class="kn">import</span><span class="w"> </span><span class="nn">pylab</span>
-
-    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span> <span class="n">xg</span><span class="p">,</span> <span class="s2">&quot;bo&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;G(r) x-ray Data&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span> <span class="n">xgcalc</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;G(r) x-ray Fit&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span> <span class="n">xdiff</span><span class="p">,</span> <span class="s2">&quot;g-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;G(r) x-ray diff&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span> <span class="n">xdiffzero</span><span class="p">,</span> <span class="s2">&quot;k-&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">ng</span><span class="p">,</span> <span class="s2">&quot;bo&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;G(r) neutron Data&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">ngcalc</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;G(r) neutron Fit&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">ndiff</span><span class="p">,</span> <span class="s2">&quot;g-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;G(r) neutron diff&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">ndiffzero</span><span class="p">,</span> <span class="s2">&quot;k-&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$r (\AA)$&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$G (\AA^{-2})$&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-    <span class="k">return</span>
+<span class="n">plot_styles</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$r (\AA)$&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$G (\AA^{-2})$&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
     <span class="c1"># Make the data and the recipe</span>
-    <span class="n">ciffile</span> <span class="o">=</span> <span class="s2">&quot;data/ni.cif&quot;</span>
-    <span class="n">xdata</span> <span class="o">=</span> <span class="s2">&quot;data/ni-q27r60nodg-xray.gr&quot;</span>
-    <span class="n">ndata</span> <span class="o">=</span> <span class="s2">&quot;data/ni-q27r100-neutron.gr&quot;</span>
+    <span class="n">ciffile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni.cif&quot;</span>
+    <span class="n">xdata</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni-q27r60nodg-xray.gr&quot;</span>
+    <span class="n">ndata</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni-q27r100-neutron.gr&quot;</span>
 
     <span class="c1"># Make the recipe</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">xdata</span><span class="p">,</span> <span class="n">ndata</span><span class="p">)</span>
@@ -297,10 +265,12 @@
 
     <span class="c1"># Generate and print the FitResults</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">printResults</span><span class="p">()</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
 
-    <span class="c1"># Plot!</span>
-    <span class="n">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+    <span class="c1"># Plot! The recipe has two contributions (&quot;xnickel&quot; for x-ray,</span>
+    <span class="c1"># &quot;nnickel&quot; for neutron), so plot_recipe produces one figure per</span>
+    <span class="c1"># contribution.</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">plot_recipe</span><span class="p">(</span><span class="o">**</span><span class="n">plot_styles</span><span class="p">)</span>
 
 <span class="c1"># End of file</span>
 </pre></div>
@@ -318,7 +288,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2026, The DiffPy Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ellipsoidsas.py &mdash; diffpy.srfit 3.2.0 documentation</title>
+  <title>ellipsoidsas.py &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=a2ac599a"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=0aaa1ac4"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=cca77546"></script>
     <script src="../_static/js/theme.js"></script>
@@ -75,9 +75,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../extending.html">Extending SrFit</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffpy.srfit.html">Package API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/diffpy.srfit.html">Package API</a></li>
 </ul>
 
         </div>
@@ -123,6 +123,9 @@
 <span class="c1">########################################################################</span>
 <span class="sd">&quot;&quot;&quot;Example of a refinement of SAS I(Q) data to an ellipsoidal model.&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gaussianrecipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">scipyOptimize</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -139,7 +142,6 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">(</span><span class="n">datname</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a fitting recipe for ellipsoidal SAS data.&quot;&quot;&quot;</span>
-
     <span class="c1"># The Profile</span>
     <span class="c1"># This will be used to store the observed and calculated I(Q) data.</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
@@ -147,8 +149,8 @@
     <span class="c1"># Load data and add it to the Profile. We use a SASParser to load the data</span>
     <span class="c1"># properly and pass the metadata along.</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">SASParser</span><span class="p">()</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">parseFile</span><span class="p">(</span><span class="n">datname</span><span class="p">)</span>
-    <span class="n">profile</span><span class="o">.</span><span class="n">loadParsedData</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">datname</span><span class="p">)</span>
+    <span class="n">profile</span><span class="o">.</span><span class="n">load_parsed_data</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
 
     <span class="c1"># The ProfileGenerator</span>
     <span class="c1"># The SASGenerator is for configuring and calculating a SAS profile. We use</span>
@@ -166,18 +168,18 @@
     <span class="c1"># Here we associate the Profile and ProfileGenerator, as has been done</span>
     <span class="c1"># before.</span>
     <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;ellipsoid&quot;</span><span class="p">)</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">addProfileGenerator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">setProfile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;q&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;q&quot;</span><span class="p">)</span>
 
     <span class="c1"># We want to fit the log of the signal to the log of the data so that the</span>
     <span class="c1"># higher-Q information remains significant. There are no I(Q) uncertainty</span>
     <span class="c1"># values with the data, so we do not need to worry about the effect this</span>
     <span class="c1"># will have on the estimated parameter uncertainties.</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">setResidualEquation</span><span class="p">(</span><span class="s2">&quot;log(eq) - log(y)&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;log(eq) - log(y)&quot;</span><span class="p">)</span>
 
     <span class="c1"># Make the FitRecipe and add the FitContribution.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addContribution</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_contribution</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
 
     <span class="c1"># Configure the fit variables</span>
     <span class="c1"># The SASGenerator uses the parameters from the params and dispersion</span>
@@ -187,41 +189,44 @@
     <span class="c1"># SASGenerator these are named like &quot;radius_width&quot;.</span>
     <span class="c1">#</span>
     <span class="c1"># We want to fit the scale factor, radii and background factors.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">radius_a</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">radius_b</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">addVar</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">radius_a</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">radius_b</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">background</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># Give the recipe away so it can be used!</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_results</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
-
-    <span class="c1"># All this should be pretty familiar by now.</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">ellipsoid</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">ellipsoid</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">y</span>
-    <span class="n">ycalc</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">ellipsoid</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span>
-    <span class="n">diff</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">ycalc</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="kn">import</span><span class="w"> </span><span class="nn">pylab</span>
-
-    <span class="n">pylab</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;bo&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;I(Q) Data&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ycalc</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;I(Q) Fit&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="s2">&quot;g-&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;I(Q) diff&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$Q (\AA^{-1})$&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;$I (arb. units)$&quot;</span><span class="p">)</span>
-    <span class="n">pylab</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="c1"># I(Q) SAS data is best viewed on a log-log scale, so we prepare the</span>
+    <span class="c1"># axes ourselves and hand them to plot_recipe. The residual difference</span>
+    <span class="c1"># curve is not shown since it can go negative and is not meaningful on</span>
+    <span class="c1"># a log scale.</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">plot_recipe</span><span class="p">(</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+        <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_diff</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">data_color</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">,</span>
+        <span class="n">fit_color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span>
+        <span class="n">data_label</span><span class="o">=</span><span class="s2">&quot;I(Q) Data&quot;</span><span class="p">,</span>
+        <span class="n">fit_label</span><span class="o">=</span><span class="s2">&quot;I(Q) Fit&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$Q (\AA^{-1})$&quot;</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">&quot;$I (arb. units)$&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="k">return</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 
     <span class="c1"># Make the data and the recipe</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;data/sas_ellipsoid_testdata.txt&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/sas_ellipsoid_testdata.txt&quot;</span>
 
     <span class="c1"># Make the recipe</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -231,10 +236,10 @@
 
     <span class="c1"># Generate and print the FitResults</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">printResults</span><span class="p">()</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
 
     <span class="c1"># Plot!</span>
-    <span class="n">plotResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+    <span class="n">plot_results</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
 <span class="c1"># End of file</span>
 </pre></div>
@@ -252,7 +257,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2026, The DiffPy Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

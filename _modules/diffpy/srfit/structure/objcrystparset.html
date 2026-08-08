@@ -1,0 +1,2122 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>diffpy.srfit.structure.objcrystparset &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=0aaa1ac4"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=cca77546"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            diffpy.srfit
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../extending.html">Extending SrFit</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/diffpy.srfit.html">Package API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../release.html">Release notes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">diffpy.srfit</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../structure.html">diffpy.srfit.structure</a></li>
+      <li class="breadcrumb-item active">diffpy.srfit.structure.objcrystparset</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for diffpy.srfit.structure.objcrystparset</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1">##############################################################################</span>
+<span class="c1">#</span>
+<span class="c1"># diffpy.srfit      by DANSE Diffraction group</span>
+<span class="c1">#                   Simon J. L. Billinge</span>
+<span class="c1">#                   (c) 2009 The Trustees of Columbia University</span>
+<span class="c1">#                   in the City of New York.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># File coded by:    Chris Farrow</span>
+<span class="c1">#</span>
+<span class="c1"># See AUTHORS.txt for a list of people who contributed.</span>
+<span class="c1"># See LICENSE_DANSE.txt for license information.</span>
+<span class="c1">#</span>
+<span class="c1">##############################################################################</span>
+<span class="sd">&quot;&quot;&quot;Wrappers for adapting pyobjcryst.crystal.Crystal to a srfit</span>
+<span class="sd">ParameterSet.</span>
+
+<span class="sd">This will adapt a Crystal or Molecule object from pyobjcryst into the</span>
+<span class="sd">ParameterSet interface. The following classes are adapted:</span>
+
+<span class="sd">- `ObjCrystCrystalParSet`: adapter for `pyobjcryst.crystal.Crystal`.</span>
+<span class="sd">- `ObjCrystAtomParSet`: adapter for `pyobjcryst.atom.Atom`.</span>
+<span class="sd">- `ObjCrystMoleculeParSet`: adapter for `pyobjcryst.molecule.Molecule`.</span>
+<span class="sd">- `ObjCrystMolAtomParSet`: adapter for `pyobjcryst.molecule.MolAtom`.</span>
+
+<span class="sd">Related to the adaptation of Molecule and MolAtom, there are adaptors</span>
+<span class="sd">for specifying molecule restraints:</span>
+
+<span class="sd">- `ObjCrystBondLengthRestraint`</span>
+<span class="sd">- `ObjCrystBondAngleRestraint`</span>
+<span class="sd">- `ObjCrystDihedralAngleRestraint`</span>
+
+<span class="sd">There are also Parameters for encapsulating and modifying atoms via</span>
+<span class="sd">their relative positions. These Parameters can also act like</span>
+<span class="sd">constraints, and can modify the positions of multiple MolAtoms:</span>
+
+<span class="sd">- `ObjCrystBondLengthParameter`</span>
+<span class="sd">- `ObjCrystBondAngleParameter`</span>
+<span class="sd">- `ObjCrystDihedralAngleParameter`</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ObjCrystMoleculeParSet&quot;</span><span class="p">,</span> <span class="s2">&quot;ObjCrystCrystalParSet&quot;</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst.molecule</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GetBondAngle</span><span class="p">,</span>
+    <span class="n">GetBondLength</span><span class="p">,</span>
+    <span class="n">GetDihedralAngle</span><span class="p">,</span>
+    <span class="n">StretchModeBondAngle</span><span class="p">,</span>
+    <span class="n">StretchModeBondLength</span><span class="p">,</span>
+    <span class="n">StretchModeTorsion</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Parameter</span><span class="p">,</span>
+    <span class="n">ParameterAdapter</span><span class="p">,</span>
+    <span class="n">ParameterProxy</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameterset</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParameterSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.srrealparset</span><span class="w"> </span><span class="kn">import</span> <span class="n">SrRealParSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
+<span class="n">bl_base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.structure.objcrystparset.ObjCrystBondLengthParameter&quot;</span>
+
+<span class="n">bl_setConst_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">bl_base</span><span class="p">,</span>
+    <span class="s2">&quot;setConst&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;set_constant&quot;</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ba_base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.structure.objcrystparset.ObjCrystBondAngleParameter&quot;</span>
+
+<span class="n">ba_setConst_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">ba_base</span><span class="p">,</span>
+    <span class="s2">&quot;setConst&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;set_constant&quot;</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">da_base</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;diffpy.srfit.structure.objcrystparset.ObjCrystDihedralAngleParameter&quot;</span>
+<span class="p">)</span>
+
+<span class="n">da_setConst_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">da_base</span><span class="p">,</span>
+    <span class="s2">&quot;setConst&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;set_constant&quot;</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystScattererParSet</span><span class="p">(</span><span class="n">ParameterSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base adaptor for an Objcryst Scatterer.</span>
+
+<span class="sd">    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet and</span>
+<span class="sd">    adapts pyobjcryst.scatterer.Scatterer derivatives (Molecule, Atom) and</span>
+<span class="sd">    objects with a similar interface (MolAtom).  See the ParameterSet class for</span>
+<span class="sd">    base attributes.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scat</span>
+<span class="sd">        The adapted pyobjcryst object.</span>
+<span class="sd">    parent</span>
+<span class="sd">        The ParameterSet this belongs to</span>
+
+<span class="sd">    Managed Parameters</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    occ</span>
+<span class="sd">        Occupancy of the scatterer on its crystal site</span>
+<span class="sd">        (ParameterWraper)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">scat</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the scatterer</span>
+<span class="sd">        scat</span>
+<span class="sd">            The pyobjcryst.Scatterer instance</span>
+<span class="sd">        parent</span>
+<span class="sd">            The ParameterSet this belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ParameterSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scat</span> <span class="o">=</span> <span class="n">scat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+        <span class="c1"># x, y, z, occ</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Y&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Z&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;occ&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Occupancy&quot;</span><span class="p">))</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">isDummy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicate whether this scatterer is a dummy atom.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasScatterers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicate if this scatterer has its own scatterers.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;getScatterers&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># End class ObjCrystScattererParSet</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystAtomParSet</span><span class="p">(</span><span class="n">ObjCrystScattererParSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A adaptor for a pyobjcryst.Atom.</span>
+
+<span class="sd">    This class derives from ObjCrystScattererParSet.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scat</span>
+<span class="sd">        The adapted pyobjcryst.atom.Atom.</span>
+<span class="sd">    element</span>
+<span class="sd">        Non-refinable name of the element (property).</span>
+<span class="sd">    parent</span>
+<span class="sd">        The ObjCrystCrystalParSet this belongs to.</span>
+
+<span class="sd">    Managed Parameters</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    occ</span>
+<span class="sd">        Occupancy of the atom on its crystal location</span>
+<span class="sd">        (ParameterAdapter)</span>
+<span class="sd">    Biso</span>
+<span class="sd">        Isotropic scattering factor (ParameterAdapter).</span>
+<span class="sd">        B11, B22, B33, B12, B21, B23, B32, B13, B31</span>
+<span class="sd">        --  Anisotropic displacement factor for scatterer</span>
+<span class="sd">        (ParameterAdapter or ParameterProxy). Note that the Bij and Bji</span>
+<span class="sd">        parameters are the same.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the scatterer</span>
+<span class="sd">        scat</span>
+<span class="sd">            The Scatterer instance</span>
+<span class="sd">        parent</span>
+<span class="sd">            The ObjCrystCrystalParSet this belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ObjCrystScattererParSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">atom</span><span class="o">.</span><span class="n">GetScatteringPower</span><span class="p">()</span>
+
+        <span class="c1"># The B-parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;Biso&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Biso&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B11&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B11&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B22&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B22&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B33&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B33&quot;</span><span class="p">))</span>
+        <span class="n">B12</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B12&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B12&quot;</span><span class="p">)</span>
+        <span class="n">B21</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B21&quot;</span><span class="p">,</span> <span class="n">B12</span><span class="p">)</span>
+        <span class="n">B13</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B13&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B13&quot;</span><span class="p">)</span>
+        <span class="n">B31</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B31&quot;</span><span class="p">,</span> <span class="n">B13</span><span class="p">)</span>
+        <span class="n">B23</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B23&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B23&quot;</span><span class="p">)</span>
+        <span class="n">B32</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B32&quot;</span><span class="p">,</span> <span class="n">B23</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B12</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B21</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B13</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B31</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B23</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B32</span><span class="p">)</span>
+
+        <span class="c1"># Give a value to Biso if it doesn&#39;t have one, and this is isotropic</span>
+        <span class="k">if</span> <span class="n">sp</span><span class="o">.</span><span class="n">IsIsotropic</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">Biso</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Biso</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getelem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for the element type.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetScatteringPower</span><span class="p">()</span><span class="o">.</span><span class="n">GetSymbol</span><span class="p">()</span>
+
+    <span class="n">element</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_getelem</span><span class="p">)</span>
+
+
+<span class="c1"># End class ObjCrystAtomParSet</span>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystMoleculeParSet</span><span class="p">(</span><span class="n">ObjCrystScattererParSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A adaptor for a pyobjcryst.Molecule.</span>
+
+<span class="sd">    This class derives from ObjCrystScattererParSet.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scat</span>
+<span class="sd">        The adapted pyobjcryst.molecule.Molecule.</span>
+<span class="sd">    stru</span>
+<span class="sd">        The adapted pyobjcryst.molecule.Molecule.</span>
+<span class="sd">    parent</span>
+<span class="sd">        The ObjCrystCrystalParSet this belongs to.</span>
+<span class="sd">        ObjCrystMoleculeParSets can be used on their own, in which</span>
+<span class="sd">        case this is None.</span>
+
+<span class="sd">    Managed Parameters</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    occ</span>
+<span class="sd">        Occupancy of the molecule on its crystal location</span>
+<span class="sd">        (ParameterAdapter)</span>
+<span class="sd">        q0, q1, q2, q3  --  Orientational quaternion (ParameterAdapter)</span>
+
+
+<span class="sd">    Other attributes are inherited from</span>
+<span class="sd">    diffpy.srfit.fitbase.parameterset.ParameterSet</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">molecule</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the scatterer</span>
+<span class="sd">        molecule</span>
+<span class="sd">            The pyobjcryst.Molecule instance</span>
+<span class="sd">        parent</span>
+<span class="sd">            The ObjCrystCrystalParSet this belongs to (default None).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ObjCrystScattererParSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">molecule</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stru</span> <span class="o">=</span> <span class="n">molecule</span>
+
+        <span class="c1"># Add orientation quaternion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;q0&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Q0&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;q1&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Q1&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;q2&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Q2&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;q3&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Q3&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Wrap the MolAtoms within the molecule</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">anames</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">molecule</span><span class="p">:</span>
+
+            <span class="n">name</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Each MolAtom must have a name&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">anames</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;MolAtom name &#39;</span><span class="si">%s</span><span class="s2">&#39; is duplicated&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">ObjCrystMolAtomParSet</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="n">atom</span><span class="o">.</span><span class="n">molecule</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter_set</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+            <span class="n">anames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.canAdapt">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.canAdapt">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">canAdapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stru</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the structure can be adapted by this class.&quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst.molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Molecule</span>
+
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stru</span><span class="p">,</span> <span class="n">Molecule</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Part of SrRealParSet interface</span>
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.useSymmetry">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.useSymmetry">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">useSymmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set this structure to use symmetry.</span>
+
+<span class="sd">        This structure object does not support symmetry.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span></div>
+
+
+    <span class="c1"># Part of SrRealParSet interface</span>
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.usingSymmetry">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.usingSymmetry">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">usingSymmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if symmetry is being used.</span>
+
+<span class="sd">        This structure object does not support symmetry.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+    <span class="c1"># Part of SrRealParSet interface</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_srreal_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the structure object for use with SrReal calculators.</span>
+
+<span class="sd">        Molecule objects are never periodic. Return the object and let</span>
+<span class="sd">        the SrReal adapters do the proper thing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span>
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.getLattice">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.getLattice">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getLattice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the ParameterSet containing the lattice Parameters.&quot;&quot;&quot;</span>
+        <span class="n">lattice</span> <span class="o">=</span> <span class="n">ParameterSet</span><span class="p">(</span><span class="s2">&quot;lattice&quot;</span><span class="p">)</span>
+        <span class="n">lattice</span><span class="o">.</span><span class="n">newPar</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">lattice</span><span class="o">.</span><span class="n">newPar</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">lattice</span><span class="o">.</span><span class="n">newPar</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">lattice</span><span class="o">.</span><span class="n">newPar</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="n">lattice</span><span class="o">.</span><span class="n">newPar</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="n">lattice</span><span class="o">.</span><span class="n">newPar</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="mi">90</span><span class="p">)</span>
+        <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">=</span> <span class="s2">&quot;deg&quot;</span>
+        <span class="k">return</span> <span class="n">lattice</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.getScatterers">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.getScatterers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getScatterers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of ParameterSets that represents the scatterers.</span>
+
+<span class="sd">        The site positions must be accessible from the list entries via</span>
+<span class="sd">        the names &quot;x&quot;, &quot;y&quot;, and &quot;z&quot;. The ADPs must be accessible as</span>
+<span class="sd">        well, but the name and nature of the ADPs (U-factors, B-factors,</span>
+<span class="sd">        isotropic, anisotropic) depends on the adapted structure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.wrapRestraints">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.wrapRestraints">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapRestraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap the restraints implicit to the molecule.</span>
+
+<span class="sd">        This will wrap MolBonds, MolBondAngles and MolDihedralAngles of</span>
+<span class="sd">        the Molecule as ObjCrystMoleculeRestraint objects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Wrap restraints. Restraints wrapped in this way cannot be modified</span>
+        <span class="c1"># from within this class.</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetBondList</span><span class="p">():</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ObjCrystMoleculeRestraint</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ba</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetBondAngleList</span><span class="p">():</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ObjCrystMoleculeRestraint</span><span class="p">(</span><span class="n">ba</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">da</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetDihedralAngleList</span><span class="p">():</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">ObjCrystMoleculeRestraint</span><span class="p">(</span><span class="n">da</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.wrapStretchModeParameters">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.wrapStretchModeParameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapStretchModeParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap the stretch modes implicit to the Molecule as</span>
+<span class="sd">        Parameters.</span>
+
+<span class="sd">        This will wrap StretchModeBondLengths and StretchModeBondAngles of the</span>
+<span class="sd">        Molecule as Parameters. Note that this requires that the MolBondAtoms</span>
+<span class="sd">        in the Molecule came in with unique names.  Torsion angles are not</span>
+<span class="sd">        wrapped, as there is not enough information to determine each MolAtom</span>
+<span class="sd">        in the angle.</span>
+
+<span class="sd">        The Parameters will be given the concatenated name of its constituents.</span>
+<span class="sd">        bond lengths: &quot;bl_aname1_aname2&quot;</span>
+<span class="sd">        bond angles: &quot;ba_aname1_aname2_aname3&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetStretchModeBondLengthList</span><span class="p">():</span>
+            <span class="n">name1</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">mpAtom0</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+            <span class="n">name2</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">mpAtom1</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;bl_&quot;</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">))</span>
+
+            <span class="n">atom1</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name1</span><span class="p">)</span>
+            <span class="n">atom2</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name2</span><span class="p">)</span>
+
+            <span class="n">par</span> <span class="o">=</span> <span class="n">ObjCrystBondLengthParameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+
+            <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">mode</span><span class="o">.</span><span class="n">GetAtoms</span><span class="p">():</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+                <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+
+            <span class="n">par</span><span class="o">.</span><span class="n">AddAtoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetStretchModeBondAngleList</span><span class="p">():</span>
+            <span class="n">name1</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">mpAtom0</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+            <span class="n">name2</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">mpAtom1</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+            <span class="n">name3</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">mpAtom2</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;ba_&quot;</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">,</span> <span class="n">name3</span><span class="p">))</span>
+
+            <span class="n">atom1</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name1</span><span class="p">)</span>
+            <span class="n">atom2</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name2</span><span class="p">)</span>
+            <span class="n">atom3</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name3</span><span class="p">)</span>
+
+            <span class="n">par</span> <span class="o">=</span> <span class="n">ObjCrystBondAngleParameter</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span>
+            <span class="p">)</span>
+
+            <span class="n">atoms</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">mode</span><span class="o">.</span><span class="n">GetAtoms</span><span class="p">():</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+                <span class="n">atoms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">AddAtoms</span><span class="p">(</span><span class="n">atoms</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.restrainBondLength">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondLength">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrainBondLength</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a bond length restraint.</span>
+
+<span class="sd">        This creates an instance of ObjCrystBondLengthRestraint and adds it to</span>
+<span class="sd">        the ObjCrystMoleculeParSet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom1</span>
+<span class="sd">            First atom (ObjCrystMolAtomParSet) in the bond</span>
+<span class="sd">        atom2</span>
+<span class="sd">            Second atom (ObjCrystMolAtomParSet) in the bond</span>
+<span class="sd">        length</span>
+<span class="sd">            The length of the bond (Angstroms)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the bond length (Angstroms)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the bond (Angstroms)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        res</span>
+<span class="sd">            The ObjCrystBondLengthRestraint object for use with the</span>
+<span class="sd">            &#39;unrestrain&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">ObjCrystBondLengthRestraint</span><span class="p">(</span>
+            <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.restrainBondLengthParameter">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondLengthParameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrainBondLengthParameter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a bond length restraint.</span>
+
+<span class="sd">        This creates an instance of ObjCrystBondLengthRestraint and adds it to</span>
+<span class="sd">        the ObjCrystMoleculeParSet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par</span>
+<span class="sd">            A ObjCrystBondLengthParameter (see addBondLengthParameter)</span>
+<span class="sd">        length</span>
+<span class="sd">            The length of the bond (Angstroms)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the bond length (Angstroms)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the bond (Angstroms)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ObjCrystBondLengthRestraint object</span>
+<span class="sd">            Returns the ObjCrystBondLengthRestraint object for use with the</span>
+<span class="sd">            &#39;unrestrain&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrainBondLength</span><span class="p">(</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">atom1</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">atom2</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.restrainBondAngle">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondAngle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrainBondAngle</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a bond angle restraint.</span>
+
+<span class="sd">        This creates an instance of ObjCrystBondAngleRestraint and adds it to</span>
+<span class="sd">        the ObjCrystMoleculeParSet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom1</span>
+<span class="sd">            First atom (ObjCrystMolAtomParSet) in the bond angle</span>
+<span class="sd">        atom2</span>
+<span class="sd">            Second (central) atom (ObjCrystMolAtomParSet) in the bond</span>
+<span class="sd">            angle</span>
+<span class="sd">        atom3</span>
+<span class="sd">            Third atom (ObjCrystMolAtomParSet) in the bond angle</span>
+<span class="sd">        angle</span>
+<span class="sd">            The bond angle (radians)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the bond angle (radians)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the bond angle (radians)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ObjCrystBondAngleRestraint object</span>
+<span class="sd">            Returns the ObjCrystBondAngleRestraint object for use with the</span>
+<span class="sd">            &#39;unrestrain&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">ObjCrystBondAngleRestraint</span><span class="p">(</span>
+            <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.restrainBondAngleParameter">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainBondAngleParameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrainBondAngleParameter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a bond angle restraint.</span>
+
+<span class="sd">        This creates an instance of ObjCrystBondAngleRestraint and adds it to</span>
+<span class="sd">        the ObjCrystMoleculeParSet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par</span>
+<span class="sd">            A ObjCrystBondAngleParameter (see addBondAngleParameter)</span>
+<span class="sd">        angle</span>
+<span class="sd">            The bond angle (radians)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the bond angle (radians)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the bond angle (radians)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ObjCrystBondAngleRestraint object</span>
+<span class="sd">            Returns the ObjCrystBondAngleRestraint object for use with the</span>
+<span class="sd">            &#39;unrestrain&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrainBondAngle</span><span class="p">(</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">atom1</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">atom2</span><span class="p">,</span> <span class="n">par</span><span class="o">.</span><span class="n">atom3</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.restrainDihedralAngle">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainDihedralAngle">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrainDihedralAngle</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">atom4</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a dihedral angle restraint.</span>
+
+<span class="sd">        This creates an instance of ObjCrystDihedralAngleRestraint and adds it</span>
+<span class="sd">        to the ObjCrystMoleculeParSet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom1</span>
+<span class="sd">            First atom (ObjCrystMolAtomParSet) in the angle</span>
+<span class="sd">        atom2</span>
+<span class="sd">            Second (central) atom (ObjCrystMolAtomParSet) in the angle</span>
+<span class="sd">        atom3</span>
+<span class="sd">            Third (central) atom (ObjCrystMolAtomParSet) in the angle</span>
+<span class="sd">        atom4</span>
+<span class="sd">            Fourth atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">        angle</span>
+<span class="sd">            The dihedral angle (radians)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the dihedral angle (radians)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the dihedral angle (radians)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ObjCrystDihedralAngleRestraint object</span>
+<span class="sd">            Returns the ObjCrystDihedralAngleRestraint object for use with the</span>
+<span class="sd">            &#39;unrestrain&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">ObjCrystDihedralAngleRestraint</span><span class="p">(</span>
+            <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">atom4</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restraints</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.restrainDihedralAngleParameter">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.restrainDihedralAngleParameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrainDihedralAngleParameter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a dihedral angle restraint.</span>
+
+<span class="sd">        This creates an instance of ObjCrystDihedralAngleRestraint and adds it</span>
+<span class="sd">        to the ObjCrystMoleculeParSet.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        par</span>
+<span class="sd">            A ObjCrystDihedralAngleParameter (see</span>
+<span class="sd">            addDihedralAngleParameter)</span>
+<span class="sd">        angle</span>
+<span class="sd">            The dihedral angle (radians)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the dihedral angle (radians)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the dihedral angle (radians)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ObjCrystDihedralAngleRestraint object</span>
+<span class="sd">            Returns the ObjCrystDihedralAngleRestraint object for use with the</span>
+<span class="sd">            &#39;unrestrain&#39; method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrainDihedralAngle</span><span class="p">(</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">atom1</span><span class="p">,</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">atom2</span><span class="p">,</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">atom3</span><span class="p">,</span>
+            <span class="n">par</span><span class="o">.</span><span class="n">atom4</span><span class="p">,</span>
+            <span class="n">angle</span><span class="p">,</span>
+            <span class="n">sigma</span><span class="p">,</span>
+            <span class="n">delta</span><span class="p">,</span>
+            <span class="n">scaled</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.addBondLengthParameter">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addBondLengthParameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addBondLengthParameter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a bond length to the Molecule.</span>
+
+<span class="sd">        This creates a ObjCrystBondLengthParameter to the</span>
+<span class="sd">        ObjCrystMoleculeParSet that can be adjusted during the fit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the ObjCrystBondLengthParameter</span>
+<span class="sd">        atom1</span>
+<span class="sd">            The first atom (ObjCrystMolAtomParSet) in the bond</span>
+<span class="sd">        atom2</span>
+<span class="sd">            The second (mutated) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            bond</span>
+<span class="sd">        value</span>
+<span class="sd">            An initial value for the bond length. If this is None</span>
+<span class="sd">            (default), then the current distance between the atoms will</span>
+<span class="sd">            be used.</span>
+<span class="sd">        const</span>
+<span class="sd">            A flag indicating whether the Parameter is constant</span>
+<span class="sd">            (default False)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ObjCrystBondLengthParameter object</span>
+<span class="sd">            Returns the new ObjCrystBondLengthParameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">ObjCrystBondLengthParameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">par</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.addBondAngleParameter">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addBondAngleParameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addBondAngleParameter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a bond angle to the Molecule.</span>
+
+<span class="sd">        This creates a ObjCrystBondAngleParameter to the ObjCrystMoleculeParSet</span>
+<span class="sd">        that can be adjusted during the fit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the ObjCrystBondAngleParameter</span>
+<span class="sd">        atom1</span>
+<span class="sd">            The first atom (ObjCrystMolAtomParSet) in the bond angle</span>
+<span class="sd">        atom2</span>
+<span class="sd">            The second (central) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            bond angle</span>
+<span class="sd">        atom3</span>
+<span class="sd">            The third (mutated) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            bond angle</span>
+<span class="sd">        value</span>
+<span class="sd">            An initial value for the bond angle. If this is None</span>
+<span class="sd">            (default), then the current bond angle between the atoms</span>
+<span class="sd">            will be used.</span>
+<span class="sd">        const</span>
+<span class="sd">            A flag indicating whether the Parameter is constant</span>
+<span class="sd">            (default False).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ObjCrystBondAngleParameter object</span>
+<span class="sd">            Returns the new ObjCrystBondAngleParameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">ObjCrystBondAngleParameter</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">const</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">par</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystMoleculeParSet.addDihedralAngleParameter">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet.addDihedralAngleParameter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addDihedralAngleParameter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">atom4</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a dihedral angle to the Molecule.</span>
+
+<span class="sd">        This creates a ObjCrystDihedralAngleParameter to the</span>
+<span class="sd">        ObjCrystMoleculeParSet that can be adjusted during the fit.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the ObjCrystDihedralAngleParameter.</span>
+<span class="sd">        atom1</span>
+<span class="sd">            The first atom (ObjCrystMolAtomParSet) in the dihderal</span>
+<span class="sd">            angle.</span>
+<span class="sd">        atom2</span>
+<span class="sd">            The second (central) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            dihderal angle</span>
+<span class="sd">        atom3</span>
+<span class="sd">            The third (central) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            dihderal angle</span>
+<span class="sd">        atom4</span>
+<span class="sd">            The fourth (mutated) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            dihderal angle</span>
+<span class="sd">        value</span>
+<span class="sd">            An initial value for the dihedral angle. If this is None</span>
+<span class="sd">            (default), then the current dihedral angle between atoms</span>
+<span class="sd">            will be used.</span>
+<span class="sd">        const</span>
+<span class="sd">            A flag indicating whether the Parameter is constant</span>
+<span class="sd">            (default False).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ObjCrystDihedralAngleParameter object</span>
+<span class="sd">            Returns the new ObjCrystDihedralAngleParameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">ObjCrystDihedralAngleParameter</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">atom4</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">const</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">par</span></div>
+</div>
+
+
+
+<span class="c1"># End class ObjCrystMoleculeParSet</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystMolAtomParSet</span><span class="p">(</span><span class="n">ObjCrystScattererParSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A adaptor for an pyobjcryst.molecule.MolAtom.</span>
+
+<span class="sd">    This class derives from srfit.fitbase.parameterset.ParameterSet. Note that</span>
+<span class="sd">    MolAtom does not derive from Scatterer, but the relevant interface is the</span>
+<span class="sd">    same within pyobjcryst. See the ParameterSet class for base attributes.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scat</span>
+<span class="sd">        The adapted pyobjcryst.molecule.MolAtom.</span>
+<span class="sd">    parent</span>
+<span class="sd">        The ObjCrystCrystalParSet this belongs to</span>
+<span class="sd">    element</span>
+<span class="sd">        Non-refinable name of the element (property).</span>
+
+<span class="sd">    Managed Parameters</span>
+<span class="sd">    ------------------</span>
+<span class="sd">    occ</span>
+<span class="sd">        Occupancy of the atom on its crystal location</span>
+<span class="sd">        (ParameterAdapter)</span>
+<span class="sd">    Biso</span>
+<span class="sd">        Isotropic scattering factor (ParameterAdapter). This does</span>
+<span class="sd">        not exist for dummy atoms. See the &#39;isDummy&#39; method.</span>
+<span class="sd">        B11, B22, B33, B12, B21, B23, B32, B13, B31</span>
+<span class="sd">        --  Anisotropic displacement factor for scatterer</span>
+<span class="sd">        (ParameterAdapter or ParameterProxy). Note that the Bij and Bji</span>
+<span class="sd">        parameters are the same.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">scat</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the scatterer</span>
+<span class="sd">        scat</span>
+<span class="sd">            The Scatterer instance</span>
+<span class="sd">        parent</span>
+<span class="sd">            The ObjCrystCrystalParSet this belongs to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ObjCrystScattererParSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">scat</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+        <span class="n">sp</span> <span class="o">=</span> <span class="n">scat</span><span class="o">.</span><span class="n">GetScatteringPower</span><span class="p">()</span>
+
+        <span class="c1"># Only wrap this if there is a scattering power</span>
+        <span class="k">if</span> <span class="n">sp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;Biso&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;Biso&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B11&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B11&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B22&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B22&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B33&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B33&quot;</span><span class="p">))</span>
+            <span class="n">B12</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B12&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B12&quot;</span><span class="p">)</span>
+            <span class="n">B21</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B21&quot;</span><span class="p">,</span> <span class="n">B12</span><span class="p">)</span>
+            <span class="n">B13</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B13&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B13&quot;</span><span class="p">)</span>
+            <span class="n">B31</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B31&quot;</span><span class="p">,</span> <span class="n">B13</span><span class="p">)</span>
+            <span class="n">B23</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;B23&quot;</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;B23&quot;</span><span class="p">)</span>
+            <span class="n">B32</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="s2">&quot;B32&quot;</span><span class="p">,</span> <span class="n">B23</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B12</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B21</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B13</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B31</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B23</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">B32</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_getelem</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for the element type.&quot;&quot;&quot;</span>
+        <span class="n">sp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetScatteringPower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">sp</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">GetSymbol</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;dummy&quot;</span>
+
+    <span class="n">element</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_getelem</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">isDummy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicate whether this atom is a dummy atom.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">IsDummy</span><span class="p">()</span>
+
+
+<span class="c1"># End class ObjCrystMolAtomParSet</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystMoleculeRestraint</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for adapting pyobjcryst Molecule restraints to srfit.</span>
+
+<span class="sd">    The &#39;penalty&#39; method calls &#39;GetLogLikelihood&#39; of the pyobjcryst restraint.</span>
+<span class="sd">    This implements the &#39;penalty&#39; method from</span>
+<span class="sd">    diffpy.srfit.fitbase.restraint.Restraint.  The &#39;restrain&#39; method is not</span>
+<span class="sd">    needed or implemented.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    res</span>
+<span class="sd">        The pyobjcryst Molecule restraint.</span>
+<span class="sd">    scaled</span>
+<span class="sd">        A flag indicating if the restraint is scaled (multiplied) by</span>
+<span class="sd">        the unrestrained point-average chi^2 (chi^2/numpoints) (default</span>
+<span class="sd">        False).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a Restraint-like from a pyobjcryst Molecule restraint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        res</span>
+<span class="sd">            The pyobjcryst Molecule restraint.</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="n">res</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaled</span> <span class="o">=</span> <span class="n">scaled</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">penalty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the penalty of the restraint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        w</span>
+<span class="sd">            The point-average chi^2 which is optionally used to scale the</span>
+<span class="sd">            penalty (default 1.0).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">penalty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetLogLikelihood</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaled</span><span class="p">:</span>
+            <span class="n">penalty</span> <span class="o">*=</span> <span class="n">w</span>
+        <span class="k">return</span> <span class="n">penalty</span>
+
+
+<span class="c1"># End class ObjCrystMoleculeRestraint</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystBondLengthRestraint</span><span class="p">(</span><span class="n">ObjCrystMoleculeRestraint</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Restrain the distance between two atoms.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom1</span>
+<span class="sd">        The first atom in the bond (ObjCrystMolAtomParSet)</span>
+<span class="sd">    atom2</span>
+<span class="sd">        The second atom in the bond (ObjCrystMolAtomParSet)</span>
+<span class="sd">    length</span>
+<span class="sd">        The length of the bond (Angstroms)</span>
+<span class="sd">    sigma</span>
+<span class="sd">        The uncertainty of the bond length (Angstroms)</span>
+<span class="sd">    delta</span>
+<span class="sd">        The width of the bond (Angstroms)</span>
+<span class="sd">    res</span>
+<span class="sd">        The pyobjcryst BondLength restraint</span>
+<span class="sd">    scaled</span>
+<span class="sd">        A flag indicating if the restraint is scaled (multiplied) by</span>
+<span class="sd">        the unrestrained point-average chi^2 (chi^2/numpoints) (default</span>
+<span class="sd">        False)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a bond length restraint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom1</span>
+<span class="sd">            First atom (ObjCrystMolAtomParSet) in the bond</span>
+<span class="sd">        atom2</span>
+<span class="sd">            Second atom (ObjCrystMolAtomParSet) in the bond</span>
+<span class="sd">        length</span>
+<span class="sd">            The length of the bond (Angstroms)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the bond length (Angstroms)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the bond (Angstroms)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span> <span class="o">=</span> <span class="n">atom1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span> <span class="o">=</span> <span class="n">atom2</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetMolecule</span><span class="p">()</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">AddBond</span><span class="p">(</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+
+        <span class="n">ObjCrystMoleculeRestraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Give access to the parameters of the restraint</span>
+    <span class="n">length</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetLength0</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetLength0</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetLengthSigma</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetLengthSigma</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetLengthDelta</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetLengthDelta</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># End class ObjCrystBondLengthRestraint</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystBondAngleRestraint</span><span class="p">(</span><span class="n">ObjCrystMoleculeRestraint</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Restrain the angle defined by three atoms.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom1</span>
+<span class="sd">        The first atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">    atom2</span>
+<span class="sd">        The second atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">    atom3</span>
+<span class="sd">        The third atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">    angle</span>
+<span class="sd">        The bond angle (radians)</span>
+<span class="sd">    sigma</span>
+<span class="sd">        The uncertainty of the bond angle (radians)</span>
+<span class="sd">    delta</span>
+<span class="sd">        The width of the bond angle (radians)</span>
+<span class="sd">    res</span>
+<span class="sd">        The pyobjcryst BondAngle restraint</span>
+<span class="sd">    scaled</span>
+<span class="sd">        A flag indicating if the restraint is scaled (multiplied) by</span>
+<span class="sd">        the unrestrained point-average chi^2 (chi^2/numpoints) (default</span>
+<span class="sd">        False)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a bond angle restraint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom1</span>
+<span class="sd">            First atom (ObjCrystMolAtomParSet) in the bond angle</span>
+<span class="sd">        atom2</span>
+<span class="sd">            Second (central) atom (ObjCrystMolAtomParSet) in the bond</span>
+<span class="sd">            angle</span>
+<span class="sd">        atom3</span>
+<span class="sd">            Third atom (ObjCrystMolAtomParSet) in the bond angle</span>
+<span class="sd">        angle</span>
+<span class="sd">            The bond angle (radians)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the bond angle (radians)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the bond angle (radians)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span> <span class="o">=</span> <span class="n">atom1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span> <span class="o">=</span> <span class="n">atom2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom3</span> <span class="o">=</span> <span class="n">atom3</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetMolecule</span><span class="p">()</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">AddBondAngle</span><span class="p">(</span>
+            <span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom3</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span>
+        <span class="p">)</span>
+
+        <span class="n">ObjCrystMoleculeRestraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Give access to the parameters of the restraint</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetAngle0</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetAngle0</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetAngleSigma</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetAngleSigma</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetAngleDelta</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetAngleDelta</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># End class ObjCrystBondAngleRestraint</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystDihedralAngleRestraint</span><span class="p">(</span><span class="n">ObjCrystMoleculeRestraint</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Restrain the dihedral (torsion) angle defined by four atoms.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom1</span>
+<span class="sd">        The first atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">    atom2</span>
+<span class="sd">        The second (central) atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">    atom3</span>
+<span class="sd">        The third (central) atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">    atom4</span>
+<span class="sd">        The fourth atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">    angle</span>
+<span class="sd">        The dihedral angle (radians)</span>
+<span class="sd">    sigma</span>
+<span class="sd">        The uncertainty of the dihedral angle (radians)</span>
+<span class="sd">    delta</span>
+<span class="sd">        The width of the dihedral angle (radians)</span>
+<span class="sd">    res</span>
+<span class="sd">        The pyobjcryst DihedralAngle restraint</span>
+<span class="sd">    scaled</span>
+<span class="sd">        A flag indicating if the restraint is scaled (multiplied) by</span>
+<span class="sd">        the unrestrained point-average chi^2 (chi^2/numpoints) (default</span>
+<span class="sd">        False)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">atom4</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a dihedral angle restraint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        atom1</span>
+<span class="sd">            First atom (ObjCrystMolAtomParSet) in the angle</span>
+<span class="sd">        atom2</span>
+<span class="sd">            Second (central) atom (ObjCrystMolAtomParSet) in the angle</span>
+<span class="sd">        atom3</span>
+<span class="sd">            Third (central) atom (ObjCrystMolAtomParSet) in the angle</span>
+<span class="sd">        atom4</span>
+<span class="sd">            Fourth atom in the angle (ObjCrystMolAtomParSet)</span>
+<span class="sd">        angle</span>
+<span class="sd">            The dihedral angle (radians)</span>
+<span class="sd">        sigma</span>
+<span class="sd">            The uncertainty of the dihedral angle (radians)</span>
+<span class="sd">        delta</span>
+<span class="sd">            The width of the dihedral angle (radians)</span>
+<span class="sd">        scaled</span>
+<span class="sd">            A flag indicating if the restraint is scaled (multiplied)</span>
+<span class="sd">            by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
+<span class="sd">            (default False).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span> <span class="o">=</span> <span class="n">atom1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span> <span class="o">=</span> <span class="n">atom2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom3</span> <span class="o">=</span> <span class="n">atom3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom4</span> <span class="o">=</span> <span class="n">atom4</span>
+
+        <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="o">.</span><span class="n">GetMolecule</span><span class="p">()</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">AddDihedralAngle</span><span class="p">(</span>
+            <span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom3</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom4</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">delta</span>
+        <span class="p">)</span>
+
+        <span class="n">ObjCrystMoleculeRestraint</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Give access to the parameters of the restraint</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetAngle0</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetAngle0</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetAngleSigma</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetAngleSigma</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">GetAngleDelta</span><span class="p">(),</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">SetAngleDelta</span><span class="p">(</span><span class="n">val</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="c1"># End class ObjCrystDihedralAngleRestraint</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">StretchModeParameter</span><span class="p">(</span><span class="n">Parameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Partial Parameter class encapsulating pyobjcryst stretch modes.</span>
+
+<span class="sd">    This class relies upon attributes that do not belong to it. Do not</span>
+<span class="sd">    instantiate this class.</span>
+
+<span class="sd">    Required attributes</span>
+<span class="sd">    -------------------</span>
+<span class="sd">    matoms</span>
+<span class="sd">        The set of all mutated AtomParSets</span>
+<span class="sd">    molecule</span>
+<span class="sd">        The ObjCrystMoleculeParSet the atoms belong to</span>
+<span class="sd">    mode</span>
+<span class="sd">        The pyobjcryst.molecule.StretchMode used to change atomic</span>
+<span class="sd">        positions.</span>
+<span class="sd">    keepcenter</span>
+<span class="sd">        Flag indicating whether to keep the center of mass of the</span>
+<span class="sd">        molecule stationary within the crystal when changing the</span>
+<span class="sd">        value of the parameter (bool, default True).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of this Parameter (must be a valid attribute</span>
+<span class="sd">            identifier)</span>
+<span class="sd">        value</span>
+<span class="sd">            The initial value of this Parameter (default 0).</span>
+<span class="sd">        const</span>
+<span class="sd">            A flag inticating whether the Parameter is a constant (like</span>
+<span class="sd">            pi).</span>
+
+<span class="sd">        Raises ValueError if the name is not a valid attribute identifier</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Parameter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keepcenter</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change the value of the Parameter.&quot;&quot;&quot;</span>
+        <span class="n">curval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">val</span> <span class="o">==</span> <span class="n">curval</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="c1"># The StretchMode expects the change in mutated value.</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">val</span> <span class="o">-</span> <span class="n">curval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">keepcenter</span><span class="p">)</span>
+
+        <span class="c1"># Let Parameter take care of the general details</span>
+        <span class="n">Parameter</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">addAtoms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atomlist</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Associate ObjCrystMolAtomParSets with the Parameter.</span>
+
+<span class="sd">        This will associate additional ObjCrystMolAtomParSets with the</span>
+<span class="sd">        Parameter. These will be mutated in the exact same way as the</span>
+<span class="sd">        primary mutated ObjCrystMolAtomParSet. This is useful when a</span>
+<span class="sd">        group of atoms should move rigidly in response to a change in a</span>
+<span class="sd">        bond property.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">atomlist</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
+            <span class="n">atomlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">atomlist</span><span class="p">]</span>
+        <span class="c1"># Record the added atoms in the Parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matoms</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">atomlist</span><span class="p">)</span>
+        <span class="c1"># Make sure we&#39;re observing these atoms</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">atomlist</span><span class="p">:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+
+        <span class="c1"># Record the added atoms in the StretchMode</span>
+        <span class="n">scatlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">scat</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">atomlist</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">AddAtoms</span><span class="p">(</span><span class="n">scatlist</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="p">()):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Notify all mutated Parameters and observers.</span>
+
+<span class="sd">        Some of the mutated parameters will be observing us. At the same</span>
+<span class="sd">        time we need to observe them. Observable won&#39;t let us do both,</span>
+<span class="sd">        so we notify the Parameters that we mutate directly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">noneother</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="c1"># Notify the atoms that have moved</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">matoms</span><span class="p">:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">noneother</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">noneother</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">noneother</span><span class="p">)</span>
+        <span class="c1"># Notify the molecule position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">noneother</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">noneother</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">noneother</span><span class="p">)</span>
+
+        <span class="c1"># Notify observers</span>
+        <span class="n">Parameter</span><span class="o">.</span><span class="n">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span>
+
+
+<span class="c1"># End class StretchModeParameter</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystBondLengthParameter</span><span class="p">(</span><span class="n">StretchModeParameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for abstracting a bond length in a Molecule to a Parameter.</span>
+
+<span class="sd">    This wraps up a pyobjcryst.molecule.StretchModeBondLength object so that</span>
+<span class="sd">    the distance between two MolAtoms in a Molecule can be used as an</span>
+<span class="sd">    adjustable Parameter. When a bond length is adjusted, the second MolAtom is</span>
+<span class="sd">    moved, and the absolute position of the Molecule is altered to preserve the</span>
+<span class="sd">    location of the center of mass within the Crystal. Thus, the x, y and z</span>
+<span class="sd">    Parameters of the MolAtom and its parent Molecule are altered. This can be</span>
+<span class="sd">    changed by setting the &#39;keepcenter&#39; attribute of the parameter to False.</span>
+
+<span class="sd">    This Parameter makes it possible to mutate a MolAtom multiple times in a</span>
+<span class="sd">    single refinement step. If these mutations are not orthogonal, then this</span>
+<span class="sd">    could lead to nonconvergence of a fit, depending on the optimizer. Consider</span>
+<span class="sd">    mutating atom2 of a bond directly, and via a ObjCrystBondLengthParameter.</span>
+<span class="sd">    The two mutations of atom2 may be determined independently by the</span>
+<span class="sd">    optimizer, in which case the composed mutation will have an unexpected</span>
+<span class="sd">    effect on the residual. It is best practice to either modify MolAtom</span>
+<span class="sd">    positions directly, or thorough BondLengthParameters, BondAngleParameters</span>
+<span class="sd">    and DihedralAngleParameters (which are mutually orthogonal).</span>
+
+<span class="sd">    Note that by making a ObjCrystBondLengthParameter constant it also makes</span>
+<span class="sd">    the underlying ObjCrystMolAtomParSets constant. When setting it as</span>
+<span class="sd">    nonconstant, each ObjCrystMolAtomParSet is set nonconstant.  Changing the</span>
+<span class="sd">    bond length changes the position of the second MolAtom and Molecule, even</span>
+<span class="sd">    if either is set as constant.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom1</span>
+<span class="sd">        The first ObjCrystMolAtomParSet in the bond</span>
+<span class="sd">    atom2</span>
+<span class="sd">        The second (mutated) ObjCrystMolAtomParSet in the bond</span>
+<span class="sd">    matoms</span>
+<span class="sd">        The set of all mutated ObjCrystMolAtomParSets</span>
+<span class="sd">    molecule</span>
+<span class="sd">        The ObjCrystMoleculeParSet the ObjCrystMolAtomParSets</span>
+<span class="sd">        belong to</span>
+<span class="sd">    mode</span>
+<span class="sd">        The pyobjcryst.molecule.StretchModeBondLength for the bond</span>
+
+<span class="sd">    Inherited Attributes</span>
+<span class="sd">    --------------------</span>
+<span class="sd">    name</span>
+<span class="sd">        A name for this Parameter.</span>
+<span class="sd">    const</span>
+<span class="sd">        A flag indicating whether this is considered a constant.</span>
+<span class="sd">    _value</span>
+<span class="sd">        The value of the Parameter. Modified with &#39;set_value&#39;.</span>
+<span class="sd">    value</span>
+<span class="sd">        Property for &#39;getValue&#39; and &#39;set_value&#39;.</span>
+<span class="sd">    constraint</span>
+<span class="sd">        A callable that calculates the value of this Parameter. If</span>
+<span class="sd">        this is None (None), the the Parameter is responsible for its</span>
+<span class="sd">        own value. The callable takes no arguments.</span>
+<span class="sd">    bounds</span>
+<span class="sd">        A 2-list defining the bounds on the Parameter. This can be</span>
+<span class="sd">        used by some optimizers when the Parameter is varied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a ObjCrystBondLengthParameter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the ObjCrystBondLengthParameter</span>
+<span class="sd">        atom1</span>
+<span class="sd">            The first atom (ObjCrystMolAtomParSet) in the bond</span>
+<span class="sd">        atom2</span>
+<span class="sd">            The second (mutated) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            bond</span>
+<span class="sd">        value</span>
+<span class="sd">            An initial value for the bond length. If this is None</span>
+<span class="sd">            (default), then the current distance between the atoms will</span>
+<span class="sd">            be used.</span>
+<span class="sd">        const</span>
+<span class="sd">            A flag indicating whether the Parameter is constant</span>
+<span class="sd">            (default False)</span>
+<span class="sd">        mode</span>
+<span class="sd">            An extant pyobjcryst.molecule.StretchModeBondLength to use.</span>
+<span class="sd">            If this is None (default), then a new StretchModeBondLength</span>
+<span class="sd">            will be built.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create the mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">StretchModeBondLength</span><span class="p">(</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># We only add the last atom. This is the one that will move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matoms</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">atom2</span><span class="p">])</span>
+
+        <span class="c1"># Observe the atom positions</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">]:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span> <span class="o">=</span> <span class="n">atom1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span> <span class="o">=</span> <span class="n">atom2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">molecule</span> <span class="o">=</span> <span class="n">atom1</span><span class="o">.</span><span class="n">parent</span>
+
+        <span class="c1"># We do this last so the atoms are defined before we set any values.</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">GetBondLength</span><span class="p">(</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">)</span>
+        <span class="n">StretchModeParameter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_constant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Toggle the Parameter as constant.</span>
+
+<span class="sd">        This sets the underlying ObjCrystMolAtomParSet positions</span>
+<span class="sd">        constant as well.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        is_constant</span>
+<span class="sd">            Flag indicating if the Parameter is constant (default</span>
+<span class="sd">            True).</span>
+<span class="sd">        value</span>
+<span class="sd">            An optional value for the Parameter (default None). If this</span>
+<span class="sd">            is not None, then the Parameter will get a new value,</span>
+<span class="sd">            constant or otherwise.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        self</span>
+<span class="sd">            Returns self so that mutators can be chained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">StretchModeParameter</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_constant</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span><span class="p">]:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">bl_setConst_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setConst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="sd">        4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.structure.objcryst.ObjCrystBondLengthParameter.set_constant</span>
+<span class="sd">        instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This calculates the value if it might have been changed.</span>
+
+<span class="sd">        There is no guarantee that the ObjCrystMolAtomParSets underlying</span>
+<span class="sd">        the bond won&#39;t change, so the bond length is calculated if</span>
+<span class="sd">        necessary each time this is called.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">GetBondLength</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">)</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+
+<span class="c1"># End class ObjCrystBondLengthParameter</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystBondAngleParameter</span><span class="p">(</span><span class="n">StretchModeParameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for abstracting a bond angle in a Molecule to a Parameter.</span>
+
+<span class="sd">    This wraps up a pyobjcryst.molecule.StretchModeBondAngle object so that the</span>
+<span class="sd">    angle defined by three MolAtoms in a Molecule can be used as an adjustable</span>
+<span class="sd">    Parameter. When a bond angle is adjusted, the third MolAtom is moved, and</span>
+<span class="sd">    the absolute position of the Molecule is altered to preserve the location</span>
+<span class="sd">    of the center of mass within the crystal. This can be changed by setting</span>
+<span class="sd">    the &#39;keepcenter&#39; attribute of the parameter to False.</span>
+
+<span class="sd">    See precautions in the ObjCrystBondLengthParameter class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom1</span>
+<span class="sd">        The first ObjCrystAtomParSet in the bond angle</span>
+<span class="sd">    atom2</span>
+<span class="sd">        The second (central) ObjCrystMolAtomParSet in the bond angle</span>
+<span class="sd">    atom3</span>
+<span class="sd">        The third (mutated) ObjCrystMolAtomParSet in the bond angle</span>
+<span class="sd">    matoms</span>
+<span class="sd">        The set of all mutated ObjCrystMolAtomParSets</span>
+<span class="sd">    molecule</span>
+<span class="sd">        The ObjCrystMoleculeParSet the ObjCrystMolAtomParSets</span>
+<span class="sd">        belong to</span>
+<span class="sd">    mode</span>
+<span class="sd">        The pyobjcryst.molecule.StretchModeBondAngle for the bond angle</span>
+
+<span class="sd">    Inherited Attributes</span>
+<span class="sd">    --------------------</span>
+<span class="sd">    name</span>
+<span class="sd">        A name for this Parameter.</span>
+<span class="sd">    const</span>
+<span class="sd">        A flag indicating whether this is considered a constant.</span>
+<span class="sd">    _value</span>
+<span class="sd">        The value of the Parameter. Modified with &#39;set_value&#39;.</span>
+<span class="sd">    value</span>
+<span class="sd">        Property for &#39;getValue&#39; and &#39;set_value&#39;.</span>
+<span class="sd">    constraint</span>
+<span class="sd">        A callable that calculates the value of this Parameter. If</span>
+<span class="sd">        this is None (None), the the Parameter is responsible for its</span>
+<span class="sd">        own value. The callable takes no arguments.</span>
+<span class="sd">    bounds</span>
+<span class="sd">        A 2-list defining the bounds on the Parameter. This can be</span>
+<span class="sd">        used by some optimizers when the Parameter is varied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a ObjCrystBondAngleParameter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the ObjCrystBondAngleParameter.</span>
+<span class="sd">        atom1</span>
+<span class="sd">            The first atom (ObjCrystMolAtomParSet) in the bond angle</span>
+<span class="sd">        atom2</span>
+<span class="sd">            The second (central) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            bond angle</span>
+<span class="sd">        atom3</span>
+<span class="sd">            The third (mutated) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            bond angle</span>
+<span class="sd">        value</span>
+<span class="sd">            An initial value for the bond length. If this is None</span>
+<span class="sd">            (default), then the current bond angle between the atoms</span>
+<span class="sd">            will be used.</span>
+<span class="sd">        const</span>
+<span class="sd">            A flag indicating whether the Parameter is constant</span>
+<span class="sd">            (default False).</span>
+<span class="sd">        mode</span>
+<span class="sd">            A pre-built mode to place in this Parameter. If this is</span>
+<span class="sd">            None (default), then a StretchMode will be built.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create the stretch mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">StretchModeBondAngle</span><span class="p">(</span>
+                <span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom3</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="kc">None</span>
+            <span class="p">)</span>
+        <span class="c1"># We only add the last atom. This is the one that will move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="n">atom3</span><span class="o">.</span><span class="n">scat</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matoms</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">atom3</span><span class="p">])</span>
+
+        <span class="c1"># Observe the atom positions</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">]:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span> <span class="o">=</span> <span class="n">atom1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span> <span class="o">=</span> <span class="n">atom2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom3</span> <span class="o">=</span> <span class="n">atom3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">molecule</span> <span class="o">=</span> <span class="n">atom1</span><span class="o">.</span><span class="n">parent</span>
+
+        <span class="c1"># We do this last so the atoms are defined before we set any values.</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">GetBondAngle</span><span class="p">(</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom3</span><span class="o">.</span><span class="n">scat</span><span class="p">)</span>
+        <span class="n">StretchModeParameter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_constant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Toggle the Parameter as constant.</span>
+
+<span class="sd">        This sets the underlying ObjCrystMolAtomParSet positions</span>
+<span class="sd">        constant as well.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        is_constant</span>
+<span class="sd">            Flag indicating if the Parameter is constant (default</span>
+<span class="sd">            True).</span>
+<span class="sd">        value</span>
+<span class="sd">            An optional value for the Parameter (default None). If this</span>
+<span class="sd">            is not None, then the Parameter will get a new value,</span>
+<span class="sd">            constant or otherwise.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        self</span>
+<span class="sd">            Returns self so that mutators can be chained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">StretchModeParameter</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_constant</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom3</span><span class="p">]:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">ba_setConst_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setConst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.structure.objcryst.ObjCrystBondAngleParameter.set_constant</span>
+<span class="sd">        instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This calculates the value if it might have been changed.</span>
+
+<span class="sd">        There is no guarantee that the MolAtoms underlying the bond</span>
+<span class="sd">        angle won&#39;t change, so the bond angle is calculated if necessary</span>
+<span class="sd">        each time this is called.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">GetBondAngle</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom3</span><span class="o">.</span><span class="n">scat</span>
+            <span class="p">)</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+
+<span class="c1"># End class ObjCrystBondAngleParameter</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystDihedralAngleParameter</span><span class="p">(</span><span class="n">StretchModeParameter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for abstracting a dihedral angle in a Molecule to a</span>
+<span class="sd">    Parameter.</span>
+
+<span class="sd">    This wraps up a pyobjcryst.molecule.StretchModeTorsion object so that the</span>
+<span class="sd">    angle defined by four MolAtoms ([a1-a2].[a3-a4]) in a Molecule can be used</span>
+<span class="sd">    as an adjustable parameter. When a dihedral angle is adjusted, the fourth</span>
+<span class="sd">    MolAtom is moved, and the absolute position of the Molecule is altered to</span>
+<span class="sd">    preserve the location of the center of mass within the crystal.  This can</span>
+<span class="sd">    be changed by setting the &#39;keepcenter&#39; attribute of the parameter to False.</span>
+
+<span class="sd">    See precautions in the ObjCrystBondLengthParameter class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    atom1</span>
+<span class="sd">        The first ObjCrystMolAtomParSet in the dihedral angle</span>
+<span class="sd">    atom2</span>
+<span class="sd">        The second (central) ObjCrystMolAtomParSet in the dihedral</span>
+<span class="sd">        angle</span>
+<span class="sd">    atom3</span>
+<span class="sd">        The third (central) ObjCrystMolAtomParSet in the dihedral angle</span>
+<span class="sd">    atom4</span>
+<span class="sd">        The fourth (mutated) ObjCrystMolAtomParSet in the dihedral</span>
+<span class="sd">        angle</span>
+<span class="sd">    matoms</span>
+<span class="sd">        The set of all mutated ObjCrystMolAtomParSets</span>
+<span class="sd">    molecule</span>
+<span class="sd">        The ObjCrystMoleculeParSet the atoms belong to</span>
+<span class="sd">    mode</span>
+<span class="sd">        The pyobjcryst.molecule.StretchModeTorsion for the dihedral</span>
+<span class="sd">        angle</span>
+
+<span class="sd">    Inherited Attributes</span>
+<span class="sd">    --------------------</span>
+<span class="sd">    name</span>
+<span class="sd">        A name for this Parameter.</span>
+<span class="sd">    const</span>
+<span class="sd">        A flag indicating whether this is considered a constant.</span>
+<span class="sd">    _value</span>
+<span class="sd">        The value of the Parameter. Modified with &#39;set_value&#39;.</span>
+<span class="sd">    value</span>
+<span class="sd">        Property for &#39;getValue&#39; and &#39;set_value&#39;.</span>
+<span class="sd">    constraint</span>
+<span class="sd">        A callable that calculates the value of this Parameter. If</span>
+<span class="sd">        this is None (None), the the Parameter is responsible for its</span>
+<span class="sd">        own value. The callable takes no arguments.</span>
+<span class="sd">    bounds</span>
+<span class="sd">        A 2-list defining the bounds on the Parameter. This can be</span>
+<span class="sd">        used by some optimizers when the Parameter is varied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">atom1</span><span class="p">,</span>
+        <span class="n">atom2</span><span class="p">,</span>
+        <span class="n">atom3</span><span class="p">,</span>
+        <span class="n">atom4</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">const</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a ObjCrystDihedralAngleParameter.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            The name of the ObjCrystDihedralAngleParameter</span>
+<span class="sd">        atom1</span>
+<span class="sd">            The first atom (ObjCrystMolAtomParSet) in the dihderal</span>
+<span class="sd">            angle</span>
+<span class="sd">        atom2</span>
+<span class="sd">            The second (central) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            dihderal angle</span>
+<span class="sd">        atom3</span>
+<span class="sd">            The third (central) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            dihderal angle</span>
+<span class="sd">        atom4</span>
+<span class="sd">            The fourth (mutated) atom (ObjCrystMolAtomParSet) in the</span>
+<span class="sd">            dihderal angle</span>
+<span class="sd">        value</span>
+<span class="sd">            An initial value for the bond length. If this is None</span>
+<span class="sd">            (default), then the current dihedral angle between atoms</span>
+<span class="sd">            will be used.</span>
+<span class="sd">        const</span>
+<span class="sd">            A flag indicating whether the Parameter is constant</span>
+<span class="sd">            (default False).</span>
+<span class="sd">        mode</span>
+<span class="sd">            A pre-built mode to place in this Parameter. If this is</span>
+<span class="sd">            None (default), then a StretchMode will be built.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create the stretch mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">StretchModeTorsion</span><span class="p">(</span><span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom3</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># We only add the last atom. This is the one that will move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="n">atom4</span><span class="o">.</span><span class="n">scat</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matoms</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">atom4</span><span class="p">])</span>
+
+        <span class="c1"># Observe the atom positions</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">atom3</span><span class="p">,</span> <span class="n">atom4</span><span class="p">]:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span> <span class="o">=</span> <span class="n">atom1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span> <span class="o">=</span> <span class="n">atom2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom3</span> <span class="o">=</span> <span class="n">atom3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom4</span> <span class="o">=</span> <span class="n">atom4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">molecule</span> <span class="o">=</span> <span class="n">atom1</span><span class="o">.</span><span class="n">parent</span>
+
+        <span class="c1"># We do this last so the atoms are defined before we set any values.</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">GetDihedralAngle</span><span class="p">(</span>
+                <span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom3</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span> <span class="n">atom4</span><span class="o">.</span><span class="n">scat</span>
+            <span class="p">)</span>
+        <span class="n">StretchModeParameter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">const</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_constant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Toggle the Parameter as constant.</span>
+
+<span class="sd">        This sets the underlying ObjCrystMolAtomParSet positions const as well.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        is_constant</span>
+<span class="sd">            Flag indicating if the Parameter is constant (default</span>
+<span class="sd">            True).</span>
+<span class="sd">        value</span>
+<span class="sd">            An optional value for the Parameter (default None). If this</span>
+<span class="sd">            is not None, then the Parameter will get a new value,</span>
+<span class="sd">            constant or otherwise.</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        self</span>
+<span class="sd">            Returns self so that mutators can be chained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">StretchModeParameter</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_constant</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom4</span><span class="p">]:</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">da_setConst_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setConst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.structure.objcryst.ObjCrystDihedralAngleParameter.set_constant</span>
+<span class="sd">        instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This calculates the value if it might have been changed.</span>
+
+<span class="sd">        There is no guarantee that the ObjCrystMolAtomParSets underlying</span>
+<span class="sd">        the dihedral angle won&#39;t change from some other Parameter, so</span>
+<span class="sd">        the value is recalculated each time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">GetDihedralAngle</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">atom1</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">atom2</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">atom3</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">atom4</span><span class="o">.</span><span class="n">scat</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+
+<span class="c1"># End class ObjCrystDihedralAngleParameter</span>
+
+
+<div class="viewcode-block" id="ObjCrystCrystalParSet">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObjCrystCrystalParSet</span><span class="p">(</span><span class="n">SrRealParSet</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A adaptor for pyobjcryst.crystal.Crystal instance.</span>
+
+<span class="sd">    This class derives from diffpy.srfit.fitbase.parameterset.ParameterSet.</span>
+<span class="sd">    See this class for base attributes.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    stru</span>
+<span class="sd">        The adapted pyobjcryst.Crystal.</span>
+<span class="sd">    scatterers</span>
+<span class="sd">        The list of aggregated ScattererParSets (either</span>
+<span class="sd">        ObjCrystAtomParSet or ObjCrystMoleculeParSet), provided for</span>
+<span class="sd">        convenience.</span>
+<span class="sd">    _sgpars</span>
+<span class="sd">        A BaseSpaceGroupParameters object containing free structure</span>
+<span class="sd">        Parameters. See the diffpy.srfit.structure.sgconstraints</span>
+<span class="sd">        module.</span>
+<span class="sd">    sgpars</span>
+<span class="sd">        property that creates _sgpars when it is needed.</span>
+<span class="sd">    angunits</span>
+<span class="sd">        &quot;rad&quot;, the units of angle</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x</span>
+<span class="sd">        Scatterer position in crystal coordinates (ParameterWraper)</span>
+<span class="sd">    y</span>
+<span class="sd">        Scatterer position in crystal coordinates (ParameterWraper)</span>
+<span class="sd">    z</span>
+<span class="sd">        Scatterer position in crystal coordinates (ParameterWraper)</span>
+<span class="sd">    occ</span>
+<span class="sd">        Occupancy of the scatterer on its crystal site (ParameterWraper)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">cryst</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name</span>
+<span class="sd">            A name for this ParameterSet</span>
+<span class="sd">        cryst</span>
+<span class="sd">            An pyobjcryst.Crystal instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">SrRealParSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angunits</span> <span class="o">=</span> <span class="s2">&quot;rad&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stru</span> <span class="o">=</span> <span class="n">cryst</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sgpars</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;c&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;alpha&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;beta&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="p">,</span> <span class="n">attr</span><span class="o">=</span><span class="s2">&quot;gamma&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Now we must loop over the scatterers and create parameter sets from</span>
+        <span class="c1"># them.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scatterers</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">snames</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="o">.</span><span class="n">GetNbScatterer</span><span class="p">()):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="o">.</span><span class="n">GetScatt</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Each Scatterer must have a name&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">snames</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scatterer name &#39;</span><span class="si">%s</span><span class="s2">&#39; is duplicated&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Now create the proper object</span>
+            <span class="n">cname</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">GetClassName</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">cname</span> <span class="o">==</span> <span class="s2">&quot;Atom&quot;</span><span class="p">:</span>
+                <span class="n">parset</span> <span class="o">=</span> <span class="n">ObjCrystAtomParSet</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">cname</span> <span class="o">==</span> <span class="s2">&quot;Molecule&quot;</span><span class="p">:</span>
+                <span class="n">parset</span> <span class="o">=</span> <span class="n">ObjCrystMoleculeParSet</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized scatterer &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">cname</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter_set</span><span class="p">(</span><span class="n">parset</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scatterers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parset</span><span class="p">)</span>
+            <span class="n">snames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_space_group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain the space group.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sgpars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sgpars</span>
+        <span class="n">sg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_space_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stru</span><span class="o">.</span><span class="n">GetSpaceGroup</span><span class="p">())</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.sgconstraints</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">_constrain_as_space_group</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">adpsymbols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;B11&quot;</span><span class="p">,</span> <span class="s2">&quot;B22&quot;</span><span class="p">,</span> <span class="s2">&quot;B33&quot;</span><span class="p">,</span> <span class="s2">&quot;B12&quot;</span><span class="p">,</span> <span class="s2">&quot;B13&quot;</span><span class="p">,</span> <span class="s2">&quot;B23&quot;</span><span class="p">]</span>
+        <span class="n">isosymbol</span> <span class="o">=</span> <span class="s2">&quot;Biso&quot;</span>
+        <span class="n">sgoffset</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sgpars</span> <span class="o">=</span> <span class="n">_constrain_as_space_group</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">sg</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scatterers</span><span class="p">,</span>
+            <span class="n">sgoffset</span><span class="p">,</span>
+            <span class="n">adpsymbols</span><span class="o">=</span><span class="n">adpsymbols</span><span class="p">,</span>
+            <span class="n">isosymbol</span><span class="o">=</span><span class="n">isosymbol</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sgpars</span>
+
+    <span class="n">sgpars</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_constrain_space_group</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_space_group</span><span class="p">(</span><span class="n">sgobjcryst</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a diffpy.structure SpaceGroup object from pyobjcryst.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        sgobjcryst</span>
+<span class="sd">            A pyobjcryst.spacegroup.SpaceGroup instance.</span>
+
+<span class="sd">        This uses the actual space group operations from the</span>
+<span class="sd">        pyobjcryst.spacegroup.SpaceGroup instance so there is no ambiguity</span>
+<span class="sd">        about the actual space group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure.spacegroups</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetSpaceGroup</span><span class="p">,</span> <span class="n">SymOp</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="n">sgobjcryst</span><span class="o">.</span><span class="n">GetName</span><span class="p">()</span>
+        <span class="n">extnstr</span> <span class="o">=</span> <span class="s2">&quot;:</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sgobjcryst</span><span class="o">.</span><span class="n">GetExtension</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">extnstr</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">extnstr</span><span class="p">)]</span>
+
+        <span class="c1"># Get whatever spacegroup we can get by name. This will set the proper</span>
+        <span class="c1"># crystal system.  Creating a copy of the singleton from GetSpaceGroup,</span>
+        <span class="c1"># as this function messes with sg.symop_list.</span>
+        <span class="n">sg</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">GetSpaceGroup</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="c1"># Replace the symmetry operations to guarantee that we get it right.</span>
+        <span class="n">symops</span> <span class="o">=</span> <span class="n">sgobjcryst</span><span class="o">.</span><span class="n">GetSymmetryOperations</span><span class="p">()</span>
+        <span class="n">tranops</span> <span class="o">=</span> <span class="n">sgobjcryst</span><span class="o">.</span><span class="n">GetTranslationVectors</span><span class="p">()</span>
+        <span class="n">sg</span><span class="o">.</span><span class="n">symop_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">tranops</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">shift</span><span class="p">,</span> <span class="n">rot</span> <span class="ow">in</span> <span class="n">symops</span><span class="p">:</span>
+                <span class="n">tv</span> <span class="o">=</span> <span class="n">trans</span> <span class="o">+</span> <span class="n">shift</span>
+                <span class="n">tv</span> <span class="o">-=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">tv</span><span class="p">)</span>
+                <span class="n">sg</span><span class="o">.</span><span class="n">symop_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SymOp</span><span class="p">(</span><span class="n">rot</span><span class="p">,</span> <span class="n">tv</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">sgobjcryst</span><span class="o">.</span><span class="n">IsCentrosymmetric</span><span class="p">():</span>
+            <span class="n">center</span> <span class="o">=</span> <span class="n">sgobjcryst</span><span class="o">.</span><span class="n">GetInversionCenter</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">tranops</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">shift</span><span class="p">,</span> <span class="n">rot</span> <span class="ow">in</span> <span class="n">symops</span><span class="p">:</span>
+                    <span class="n">tv</span> <span class="o">=</span> <span class="n">center</span> <span class="o">-</span> <span class="n">trans</span> <span class="o">-</span> <span class="n">shift</span>
+                    <span class="n">tv</span> <span class="o">-=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">tv</span><span class="p">)</span>
+                    <span class="n">sg</span><span class="o">.</span><span class="n">symop_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SymOp</span><span class="p">(</span><span class="o">-</span><span class="n">rot</span><span class="p">,</span> <span class="n">tv</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">sg</span>
+
+<div class="viewcode-block" id="ObjCrystCrystalParSet.canAdapt">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.canAdapt">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">canAdapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stru</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the structure can be adapted by this class.&quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst.crystal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Crystal</span>
+
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">stru</span><span class="p">,</span> <span class="n">Crystal</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystCrystalParSet.getLattice">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.getLattice">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getLattice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the ParameterSet containing the lattice Parameters.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="ObjCrystCrystalParSet.getScatterers">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet.getScatterers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getScatterers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of ParameterSets that represents the scatterers.</span>
+
+<span class="sd">        The site positions must be accessible from the list entries via</span>
+<span class="sd">        the names &quot;x&quot;, &quot;y&quot;, and &quot;z&quot;. The ADPs must be accessible as</span>
+<span class="sd">        well, but the name and nature of the ADPs (U-factors, B-factors,</span>
+<span class="sd">        isotropic, anisotropic) depends on the adapted structure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatterers</span></div>
+</div>
+
+
+
+<span class="c1"># End class ObjCrystCrystalParSet</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, The DiffPy Team.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

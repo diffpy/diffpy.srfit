@@ -5,17 +5,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview: module code &mdash; diffpy.srfit 3.2.0 documentation</title>
+  <title>Overview: module code &mdash; diffpy.srfit 3.3.0rc2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=a2ac599a"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=0aaa1ac4"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=cca77546"></script>
     <script src="../_static/js/theme.js"></script>
@@ -47,9 +47,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../extending.html">Extending SrFit</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/diffpy.srfit.html">Package API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../release.html">Release notes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/diffpy.srfit.html">Package API</a></li>
 </ul>
 
         </div>
@@ -88,7 +88,8 @@
 <li><a href="diffpy/srfit/equation/visitors/swapper.html">diffpy.srfit.equation.visitors.swapper</a></li>
 <li><a href="diffpy/srfit/equation/visitors/validator.html">diffpy.srfit.equation.visitors.validator</a></li>
 <li><a href="diffpy/srfit/equation/visitors/visitor.html">diffpy.srfit.equation.visitors.visitor</a></li>
-</ul><li><a href="diffpy/srfit/fitbase/calculator.html">diffpy.srfit.fitbase.calculator</a></li>
+</ul><li><a href="diffpy/srfit/exceptions.html">diffpy.srfit.exceptions</a></li>
+<li><a href="diffpy/srfit/fitbase/calculator.html">diffpy.srfit.fitbase.calculator</a></li>
 <li><a href="diffpy/srfit/fitbase/configurable.html">diffpy.srfit.fitbase.configurable</a></li>
 <li><a href="diffpy/srfit/fitbase/constraint.html">diffpy.srfit.fitbase.constraint</a></li>
 <li><a href="diffpy/srfit/fitbase/fitcontribution.html">diffpy.srfit.fitbase.fitcontribution</a></li>
@@ -113,6 +114,7 @@
 <li><a href="diffpy/srfit/pdf/pdfparser.html">diffpy.srfit.pdf.pdfparser</a></li>
 <li><a href="diffpy/srfit/sas/prcalculator.html">diffpy.srfit.sas.prcalculator</a></li>
 <li><a href="diffpy/srfit/sas/sasgenerator.html">diffpy.srfit.sas.sasgenerator</a></li>
+<li><a href="diffpy/srfit/sas/sasimport.html">diffpy.srfit.sas.sasimport</a></li>
 <li><a href="diffpy/srfit/sas/sasparameter.html">diffpy.srfit.sas.sasparameter</a></li>
 <li><a href="diffpy/srfit/sas/sasparser.html">diffpy.srfit.sas.sasparser</a></li>
 <li><a href="diffpy/srfit/sas/sasprofile.html">diffpy.srfit.sas.sasprofile</a></li>
@@ -121,13 +123,16 @@
 <li><a href="diffpy/srfit/structure/bvsrestraint.html">diffpy.srfit.structure.bvsrestraint</a></li>
 <li><a href="diffpy/srfit/structure/cctbxparset.html">diffpy.srfit.structure.cctbxparset</a></li>
 <li><a href="diffpy/srfit/structure/diffpyparset.html">diffpy.srfit.structure.diffpyparset</a></li>
+<li><a href="diffpy/srfit/structure/objcrystparset.html">diffpy.srfit.structure.objcrystparset</a></li>
 <li><a href="diffpy/srfit/structure/sgconstraints.html">diffpy.srfit.structure.sgconstraints</a></li>
 <li><a href="diffpy/srfit/structure/srrealparset.html">diffpy.srfit.structure.srrealparset</a></li>
 </ul><li><a href="diffpy/srfit/util.html">diffpy.srfit.util</a></li>
-<ul><li><a href="diffpy/srfit/util/inpututils.html">diffpy.srfit.util.inpututils</a></li>
+<ul><li><a href="diffpy/srfit/util/argbinders.html">diffpy.srfit.util.argbinders</a></li>
+<li><a href="diffpy/srfit/util/inpututils.html">diffpy.srfit.util.inpututils</a></li>
 <li><a href="diffpy/srfit/util/nameutils.html">diffpy.srfit.util.nameutils</a></li>
 <li><a href="diffpy/srfit/util/observable.html">diffpy.srfit.util.observable</a></li>
 <li><a href="diffpy/srfit/util/tagmanager.html">diffpy.srfit.util.tagmanager</a></li>
+<li><a href="diffpy/srfit/util/weakrefcallable.html">diffpy.srfit.util.weakrefcallable</a></li>
 </ul></ul>
 
            </div>
@@ -137,7 +142,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2025, The Trustees of Columbia University in the City of New York.</p>
+    <p>&#169; Copyright 2026, The DiffPy Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

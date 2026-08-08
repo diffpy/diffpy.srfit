@@ -55,53 +55,69 @@ from diffpy.utils._deprecator import build_deprecation_message, deprecated
 removal_version = "4.0.0"
 cf_base = "diffpy.srfit.pdf.characteristicfunctions"
 
-sphericalCF_dep_msg = build_deprecation_message(
-    cf_base,
+
+def _build_dep_msg(old_name, new_name, signature_note=None):
+    """Build the deprecation message for a camel case function.
+
+    The note describing how the signature changed, when there is one, is
+    appended to the standard message from `build_deprecation_message`.
+    """
+    message = build_deprecation_message(
+        cf_base, old_name, new_name, removal_version
+    )
+    if signature_note is None:
+        return message
+    return f"{message} {signature_note}"
+
+
+sphericalCF_dep_msg = _build_dep_msg(
     "sphericalCF",
     "spherical_particle",
-    removal_version,
+    "Additionally, the signature has changed. Please pass the parameter "
+    "'psize' as 'particle_diameter'.",
 )
 
-spheroidalCF_dep_msg = build_deprecation_message(
-    cf_base,
+spheroidalCF_dep_msg = _build_dep_msg(
     "spheroidalCF",
     "spheroidal_particle",
-    removal_version,
+    "Additionally, the signature has changed. Please pass the parameters "
+    "'erad' and 'prad' as 'equatorial_radius' and 'polar_radius', "
+    "respectively.",
 )
 
-spheroidalCF2_dep_msg = build_deprecation_message(
-    cf_base,
+spheroidalCF2_dep_msg = _build_dep_msg(
     "spheroidalCF2",
     "spheroidal_particle",
-    removal_version,
+    "Additionally, the parameterization has changed. 'spheroidalCF2' took "
+    "the equatorial diameter 'psize' and the axis ratio 'axrat', while "
+    "'spheroidal_particle' takes radii. Please pass "
+    "equatorial_radius = psize / 2 and polar_radius = axrat * psize / 2.",
 )
 
-lognormalSphericalCF_dep_msg = build_deprecation_message(
-    cf_base,
+lognormalSphericalCF_dep_msg = _build_dep_msg(
     "lognormalSphericalCF",
     "lognormal_spherical_particle",
-    removal_version,
+    "Additionally, the signature has changed. Please pass the parameters "
+    "'psize' and 'psig' as 'particle_diameter' and "
+    "'particle_diameter_sigma', respectively.",
 )
 
-sheetCF_dep_msg = build_deprecation_message(
-    cf_base,
+sheetCF_dep_msg = _build_dep_msg(
     "sheetCF",
     "sheet_particle",
-    removal_version,
+    "Additionally, the signature has changed. Please pass the parameter "
+    "'sthick' as 'sheet_thickness'.",
 )
 
-shellCF_dep_msg = build_deprecation_message(
-    cf_base,
-    "shellCF",
-    "shell_particle",
-    removal_version,
-)
+shellCF_dep_msg = _build_dep_msg("shellCF", "shell_particle")
 
-shellCF2_dep_msg = build_deprecation_message(
-    cf_base,
+shellCF2_dep_msg = _build_dep_msg(
     "shellCF2",
     "shell_particle",
-    removal_version,
+    "Additionally, the parameterization has changed. 'shellCF2' took the "
+    "central radius 'a' and the shell thickness 'delta', while "
+    "'shell_particle' takes the inner radius. Please pass "
+    "radius = a - delta / 2 and thickness = delta.",
 )
 
 
@@ -173,18 +189,6 @@ def spherical_particle(r, particle_diameter):
         1.0 - 1.5 * scaled_r_inside + 0.5 * scaled_r_inside**3
     )
     return characteristic_function
-
-
-@deprecated(sphericalCF_dep_msg)
-def sphericalCF(r, psize):
-    """This function is deprecated and will be removed in version
-    4.0.0.
-
-    Please use
-    diffpy.srfit.pdf.characteristicfunctions.spherical_particle
-    instead.
-    """
-    return spherical_particle(r, psize)
 
 
 def spheroidal_particle(r, equatorial_radius, polar_radius):
@@ -321,32 +325,6 @@ def spheroidal_particle(r, equatorial_radius, polar_radius):
     return f
 
 
-@deprecated(spheroidalCF_dep_msg)
-def spheroidalCF(r, erad, prad):
-    """This function is deprecated and will be removed in version
-    4.0.0.
-
-    Please use
-    diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle
-    instead.
-    """
-    return spheroidal_particle(r, erad, prad)
-
-
-@deprecated(spheroidalCF2_dep_msg)
-def spheroidalCF2(r, psize, axrat):
-    """This function is deprecated and will be removed in version
-    4.0.0.
-
-    Please use
-    diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle
-    instead.
-    """
-    equatorial_radius = 0.5 * psize
-    polar_radius = axrat * equatorial_radius
-    return spheroidal_particle(r, equatorial_radius, polar_radius)
-
-
 def lognormal_spherical_particle(
     r, particle_diameter, particle_diameter_sigma
 ):
@@ -443,18 +421,6 @@ def lognormal_spherical_particle(
     )
 
 
-@deprecated(lognormalSphericalCF_dep_msg)
-def lognormalSphericalCF(r, psize, psig):
-    """This function is deprecated and will be removed in version
-    4.0.0.
-
-    Please use
-    diffpy.srfit.pdf.characteristicfunctions.lognormal_spherical_particle
-    instead.
-    """
-    return lognormal_spherical_particle(r, psize, psig)
-
-
 def sheet_particle(r, sheet_thickness):
     """Compute the nanosheet characteristic function.
 
@@ -504,17 +470,6 @@ def sheet_particle(r, sheet_thickness):
     )
     characteristic_function[outside] = 0.5 * sheet_thickness / r_array[outside]
     return characteristic_function
-
-
-@deprecated(sheetCF_dep_msg)
-def sheetCF(r, sthick):
-    """This function is deprecated and will be removed in version
-    4.0.0.
-
-    Please use diffpy.srfit.pdf.characteristicfunctions.sheet_particle
-    instead.
-    """
-    return sheet_particle(r, sthick)
 
 
 def shell_particle(r, radius, thickness):
@@ -582,9 +537,65 @@ def shell_particle(r, radius, thickness):
     return f
 
 
+@deprecated(sphericalCF_dep_msg)
+def sphericalCF(r, psize):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.pdf.characteristicfunctions.spherical_particle
+    instead.
+    """
+    return spherical_particle(r, psize)
+
+
+@deprecated(spheroidalCF_dep_msg)
+def spheroidalCF(r, erad, prad):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle
+    instead.
+    """
+    return spheroidal_particle(r, erad, prad)
+
+
+@deprecated(spheroidalCF2_dep_msg)
+def spheroidalCF2(r, psize, axrat):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle
+    instead.
+    """
+    return spheroidal_particle(r, psize / 2, axrat * psize / 2)
+
+
+@deprecated(lognormalSphericalCF_dep_msg)
+def lognormalSphericalCF(r, psize, psig):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use
+    diffpy.srfit.pdf.characteristicfunctions.lognormal_spherical_particle
+    instead.
+    """
+    return lognormal_spherical_particle(r, psize, psig)
+
+
+@deprecated(sheetCF_dep_msg)
+def sheetCF(r, sthick):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.pdf.characteristicfunctions.sheet_particle
+    instead.
+    """
+    return sheet_particle(r, sthick)
+
+
 @deprecated(shellCF_dep_msg)
 def shellCF(r, radius, thickness):
-    """This function is deprecated and will be removed in version
+    """This function has been deprecated and will be removed in version
     4.0.0.
 
     Please use diffpy.srfit.pdf.characteristicfunctions.shell_particle
@@ -595,15 +606,13 @@ def shellCF(r, radius, thickness):
 
 @deprecated(shellCF2_dep_msg)
 def shellCF2(r, a, delta):
-    """This function is deprecated and will be removed in version
+    """This function has been deprecated and will be removed in version
     4.0.0.
 
     Please use diffpy.srfit.pdf.characteristicfunctions.shell_particle
     instead.
     """
-    radius = a - 0.5 * delta
-    thickness = delta
-    return shell_particle(r, radius, thickness)
+    return shell_particle(r, a - delta / 2, delta)
 
 
 class SASCF(Calculator):

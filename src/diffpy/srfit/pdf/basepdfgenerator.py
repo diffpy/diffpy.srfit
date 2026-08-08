@@ -26,6 +26,7 @@ from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import struToParameterSet
+from diffpy.srreal.srreal_ext import SFTNeutron
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
@@ -198,7 +199,8 @@ class BasePDFGenerator(ProfileGenerator):
         ValueError
             If stype is not a recognized scattering type.
         """
-        self._calc.setScatteringFactorTableByType(stype)
+        self._calc.scatteringfactortable = SFTNeutron()
+        self._calc.scatteringfactortable.createByType(stype)
         # update the meta dictionary only if there was no exception
         self.meta["stype"] = self.getScatteringType()
         return

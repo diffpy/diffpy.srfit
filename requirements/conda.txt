@@ -4,3 +4,4 @@ scipy
 bg-mpl-stylesheets
 diffpy.utils
 diffpy.structure
+diffpy.srreal

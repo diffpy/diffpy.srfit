@@ -12,7 +12,6 @@ authors = [
   {name='Simon J. L. Billinge', email='sbillinge@ucsb.edu'},
 ]
 maintainers = [
-  {name='Caden Myers', email='cjm2304@columbia.edu'},
   {name='Simon J. L. Billinge', email='sbillinge@ucsb.edu'},
 ]
 description = "Generalized code base for modeling problems."

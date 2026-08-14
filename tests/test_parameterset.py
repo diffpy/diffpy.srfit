@@ -26,16 +26,12 @@ class TestParameterSet(unittest.TestCase):
         self.parset = ParameterSet("test")
         return
 
-    def testAddParameterSet(self):
-        """Test the deprecated addParameterSet method.
-
-        Remove this test after the addParameterSet is removed in version
-        4.0.0.
-        """
+    def test_add_parameter_set(self):
+        """Test the add_parameter_set method."""
         parset2 = ParameterSet("parset2")
         p1 = Parameter("parset2", 1)
 
-        self.parset.addParameterSet(parset2)
+        self.parset.add_parameter_set(parset2)
         self.assertTrue(self.parset.parset2 is parset2)
 
         self.assertRaises(ValueError, self.parset.add_parameter_set, p1)
@@ -47,12 +43,28 @@ class TestParameterSet(unittest.TestCase):
 
         return
 
-    def test_add_parameter_set(self):
-        """Test the add_parameter_set method."""
+
+# ----------------------------------------------------------------------------
+# addParameterSet is deprecated in favor of add_parameter_set. The old name
+# must still work and forward to the new implementation.
+
+
+class TestParameterSetDeprecated(unittest.TestCase):
+
+    def setUp(self):
+        self.parset = ParameterSet("test")
+        return
+
+    def test_add_parameter_set_deprecated(self):
+        """Test the deprecated addParameterSet method.
+
+        Remove this test after the addParameterSet is removed in version
+        4.0.0.
+        """
         parset2 = ParameterSet("parset2")
         p1 = Parameter("parset2", 1)
 
-        self.parset.add_parameter_set(parset2)
+        self.parset.addParameterSet(parset2)
         self.assertTrue(self.parset.parset2 is parset2)
 
         self.assertRaises(ValueError, self.parset.add_parameter_set, p1)

@@ -178,6 +178,11 @@ def test_pdfparser_metadata(datafile, input_filename, expected_metadata):
     assert actual_metadata == expected_metadata
 
 
+# ----------------------------------------------------------------------------
+# parseFile is deprecated in favor of parse_file. The old name must still
+# work, emit a DeprecationWarning, and forward to the new implementation.
+
+
 def test_pdfparser_deprecated_parseFile(datafile):
     """The deprecated parseFile warns and delegates to parse_file."""
     input_filename = datafile("si-q27r60-xray.gr")

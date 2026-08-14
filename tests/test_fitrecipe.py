@@ -340,62 +340,6 @@ def test_convert_bounds_to_restraints():
     assert r.scaled is True
 
 
-def testPrintFitHook(capturestdout):
-    "check output from default PrintFitHook."
-    recipe = FitRecipe("recipe")
-    recipe.fithooks[0].verbose = 0
-
-    # Set up the Profile
-    profile = Profile()
-    x = linspace(0, pi, 10)
-    y = sin(x)
-    profile.set_observed_profile(x, y)
-
-    # Set up the FitContribution
-    fitcontribution = FitContribution("cont")
-    fitcontribution.set_profile(profile)
-    fitcontribution.set_equation("A*sin(k*x + c)")
-    fitcontribution.A.set_value(1)
-    fitcontribution.k.set_value(1)
-    fitcontribution.c.set_value(0)
-
-    recipe.addContribution(fitcontribution)
-
-    recipe.add_variable(fitcontribution.c)
-    recipe.add_soft_bounds("c", lower_bound=5)
-    (pfh,) = recipe.getFitHooks()
-    out = capturestdout(recipe.scalar_residual)
-    assert "" == out
-    pfh.verbose = 1
-    out = capturestdout(recipe.scalar_residual)
-    assert out.strip().isdigit()
-    assert "\nRestraints:" not in out
-    pfh.verbose = 2
-    out = capturestdout(recipe.scalar_residual)
-    assert "\nResidual:" in out
-    assert "\nRestraints:" in out
-    assert "\nVariables" not in out
-    pfh.verbose = 3
-    out = capturestdout(recipe.scalarResidual)
-    assert "\nVariables" in out
-    assert "c = " in out
-    return
-
-
-def test_add_and_remove_ParameterSet():
-    # add a parset
-    recipe = FitRecipe("recipe")
-    parameter_to_add = Parameter("added_param", 1)
-    recipe.addParameterSet(parameter_to_add)
-    # check that the parameter is added
-    assert recipe.added_param == parameter_to_add
-    assert recipe.added_param.value == 1
-    # remove the added parameter
-    recipe.removeParameterSet(parameter_to_add)
-    # check that the parameter is removed
-    assert not hasattr(recipe, "added_param")
-
-
 def test_add_and_remove_parameter_set():
     recipe = FitRecipe("recipe")
     parameter_to_add = Parameter("added_param", 1)
@@ -411,12 +355,12 @@ def test_add_and_remove_parameter_set():
 
 
 def test_add_contribution(capturestdout):
-    """Duplicated test of PrintFitHooks except addContribution method
-    has changed to the new add_contribution method. This is because
-    addContribution is deprecated.
+    """Check output from default PrintFitHook using add_contribution.
 
-    Remove this test after addContribution is removed and update
-    testPrintFitHook to use add_contribution instead of addContribution.
+    Covers the same behavior as test_print_fit_hook_deprecated (see the
+    deprecated-API section at the bottom of this file), which uses the
+    deprecated addContribution instead. Once addContribution is removed
+    in 4.0.0, delete that test and keep this one.
     """
     recipe = FitRecipe("recipe")
     recipe.fithooks[0].verbose = 0
@@ -657,27 +601,6 @@ def build_recipe_from_datafile(datafile):
     parser = PDFParser()
     parser.parse_file(str(datafile))
     profile.load_parsed_data(parser)
-
-    contribution = FitContribution("c")
-    contribution.set_profile(profile)
-    contribution.set_equation("m*x + b")
-    recipe = FitRecipe()
-    recipe.add_contribution(contribution)
-    recipe.add_variable(contribution.m, 1)
-    recipe.add_variable(contribution.b, 0)
-    return recipe
-
-
-def build_recipe_from_datafile_deprecated(datafile):
-    """Duplicate of build_recipe_from_datafile to use deprecated
-    loadParsedData method.
-
-    Remove in version 4.0.0.
-    """
-    profile = Profile()
-    parser = PDFParser()
-    parser.parseFile(str(datafile))
-    profile.loadParsedData(parser)
 
     contribution = FitContribution("c")
     contribution.set_profile(profile)
@@ -1043,23 +966,6 @@ def test_plot_recipe_labels_from_gr_file_overwrite(temp_data_files):
     assert actual_ylabel == expected_ylabel
 
 
-def test_plot_recipe_labels_from_gr_file_overwrite_deprecated(temp_data_files):
-    "Remove this test with version 4.0.0."
-    gr_file = temp_data_files / "gr_file.gr"
-    recipe = build_recipe_from_datafile_deprecated(gr_file)
-    optimize_recipe(recipe)
-    plt.close("all")
-    fig, ax = recipe.plot_recipe(
-        return_fig=True, show=False, xlabel="My X", ylabel="My Y"
-    )
-    actual_xlabel = ax.get_xlabel()
-    actual_ylabel = ax.get_ylabel()
-    expected_xlabel = "My X"
-    expected_ylabel = "My Y"
-    assert actual_xlabel == expected_xlabel
-    assert actual_ylabel == expected_ylabel
-
-
 def test_plot_recipe_reset_all_defaults(build_recipes_one_contribution):
     expected_defaults = {
         "show_observed": True,
@@ -1227,6 +1133,115 @@ def test_residual_is_weighted_by_uncertainty(
     expected_residual = (profile.ycalc - profile.y) / expected_dy
     assert actual_dy == pytest.approx(expected_dy)
     assert actual_residual == pytest.approx(expected_residual)
+
+
+# ----------------------------------------------------------------------------
+# addContribution, addParameterSet/removeParameterSet, and
+# PDFParser.parseFile/Profile.loadParsedData are deprecated in favor of
+# add_contribution, add_parameter_set/remove_parameter_set, and
+# PDFParser.parse_file/Profile.load_parsed_data. The old names must still
+# work and forward to the new implementation.
+
+
+def test_print_fit_hook_deprecated(capturestdout):
+    """Check output from default PrintFitHook using the deprecated
+    addContribution, getFitHooks, and scalarResidual methods.
+
+    Remove this test after addContribution is removed in 4.0.0; see
+    test_add_contribution for the permanent replacement.
+    """
+    recipe = FitRecipe("recipe")
+    recipe.fithooks[0].verbose = 0
+
+    # Set up the Profile
+    profile = Profile()
+    x = linspace(0, pi, 10)
+    y = sin(x)
+    profile.set_observed_profile(x, y)
+
+    # Set up the FitContribution
+    fitcontribution = FitContribution("cont")
+    fitcontribution.set_profile(profile)
+    fitcontribution.set_equation("A*sin(k*x + c)")
+    fitcontribution.A.set_value(1)
+    fitcontribution.k.set_value(1)
+    fitcontribution.c.set_value(0)
+
+    recipe.addContribution(fitcontribution)
+
+    recipe.add_variable(fitcontribution.c)
+    recipe.add_soft_bounds("c", lower_bound=5)
+    (pfh,) = recipe.getFitHooks()
+    out = capturestdout(recipe.scalar_residual)
+    assert "" == out
+    pfh.verbose = 1
+    out = capturestdout(recipe.scalar_residual)
+    assert out.strip().isdigit()
+    assert "\nRestraints:" not in out
+    pfh.verbose = 2
+    out = capturestdout(recipe.scalar_residual)
+    assert "\nResidual:" in out
+    assert "\nRestraints:" in out
+    assert "\nVariables" not in out
+    pfh.verbose = 3
+    out = capturestdout(recipe.scalarResidual)
+    assert "\nVariables" in out
+    assert "c = " in out
+    return
+
+
+def test_add_and_remove_parameter_set_deprecated():
+    """Test the deprecated addParameterSet and removeParameterSet
+    methods."""
+    recipe = FitRecipe("recipe")
+    parameter_to_add = Parameter("added_param", 1)
+    # add a parset
+    recipe.addParameterSet(parameter_to_add)
+    # check that the parameter is added
+    assert recipe.added_param == parameter_to_add
+    assert recipe.added_param.value == 1
+    # remove the added parameter
+    recipe.removeParameterSet(parameter_to_add)
+    # check that the parameter is removed
+    assert not hasattr(recipe, "added_param")
+
+
+def build_recipe_from_datafile_deprecated(datafile):
+    """Duplicate of build_recipe_from_datafile to use the deprecated
+    PDFParser.parseFile and Profile.loadParsedData methods.
+
+    Remove in version 4.0.0.
+    """
+    profile = Profile()
+    parser = PDFParser()
+    parser.parseFile(str(datafile))
+    profile.loadParsedData(parser)
+
+    contribution = FitContribution("c")
+    contribution.set_profile(profile)
+    contribution.set_equation("m*x + b")
+    recipe = FitRecipe()
+    recipe.add_contribution(contribution)
+    recipe.add_variable(contribution.m, 1)
+    recipe.add_variable(contribution.b, 0)
+    return recipe
+
+
+def test_plot_recipe_labels_from_gr_file_overwrite_deprecated(temp_data_files):
+    "Remove this test with version 4.0.0."
+    gr_file = temp_data_files / "gr_file.gr"
+    recipe = build_recipe_from_datafile_deprecated(gr_file)
+    optimize_recipe(recipe)
+    plt.close("all")
+    fig, ax = recipe.plot_recipe(
+        return_fig=True, show=False, xlabel="My X", ylabel="My Y"
+    )
+    actual_xlabel = ax.get_xlabel()
+    actual_ylabel = ax.get_ylabel()
+    expected_xlabel = "My X"
+    expected_ylabel = "My Y"
+    assert actual_xlabel == expected_xlabel
+    assert actual_ylabel == expected_ylabel
 
 
 if __name__ == "__main__":

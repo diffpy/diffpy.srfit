@@ -159,3 +159,8 @@ future versions.
   recipes to be written with less code. This is not the same as a
   full-featured scripting interface, but rather somewhere in between a
   scripting interface and the API.
+
+- parallel_refinement.py\_
+  This demonstrates fitting the fcc nickel structure to measured PDF data,
+  and compares running several such refinements sequentially versus in
+  parallel using the multiprocessing module.

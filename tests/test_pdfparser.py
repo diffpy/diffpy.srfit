@@ -179,6 +179,33 @@ def test_pdfparser_metadata(datafile, input_filename, expected_metadata):
 
 
 # ----------------------------------------------------------------------------
+# NOMAD (NOM) files at SNS prepend free-text comments instead of plain
+# name = value pairs, e.g.:
+#   # Comment: neutron, Qmax=31.414, Qdamp=0.017659, Qbroad= 0.0191822
+# PDFParser must still recognize the scattering type and pull qmax,
+# qdamp, and qbroad out of that comment, or refinements built from
+# these files silently lose their resolution parameters.
+
+
+def test_pdfparser_nomad_comment_metadata(datafile):
+    """PDFParser recovers stype, qmax, qdamp, and qbroad from the free-
+    text NOMAD instrument comment header."""
+    parser = PDFParser()
+    parser.parse_file(datafile("nom-mno-neutron.gr"))
+    actual_metadata = parser.get_metadata()
+    expected_metadata = {
+        "stype": "N",
+        "qmax": 31.414,
+        "qdamp": 0.017659,
+        "qbroad": 0.0191822,
+    }
+    assert actual_metadata["stype"] == expected_metadata["stype"]
+    assert actual_metadata["qmax"] == expected_metadata["qmax"]
+    assert actual_metadata["qdamp"] == expected_metadata["qdamp"]
+    assert actual_metadata["qbroad"] == expected_metadata["qbroad"]
+
+
+# ----------------------------------------------------------------------------
 # parseFile is deprecated in favor of parse_file. The old name must still
 # work, emit a DeprecationWarning, and forward to the new implementation.
 

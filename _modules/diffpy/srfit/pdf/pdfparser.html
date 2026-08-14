@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.pdf.pdfparser &mdash; diffpy.srfit 3.3.0 documentation</title>
+  <title>diffpy.srfit.pdf.pdfparser &mdash; diffpy.srfit 3.3.1rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=c66389de"></script>
+      <script src="../../../../_static/documentation_options.js?v=f28ebe10"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -101,7 +101,12 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PDFParser&quot;</span><span class="p">]</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.profileparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProfileParser</span>
+
+<span class="n">_FLOAT_RX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?&quot;</span>
 
 
 <div class="viewcode-block" id="PDFParser">
@@ -112,7 +117,11 @@
 <span class="sd">    PDFgetX and PDFgetN write their header as plain ``name = value``</span>
 <span class="sd">    pairs, including ``stype = X`` or ``stype = N`` for the scattering</span>
 <span class="sd">    type, so this class parses files identically to ``ProfileParser``</span>
-<span class="sd">    and only sets ``_format`` to identify PDF data.</span>
+<span class="sd">    for those. Some facilities instead prepend a</span>
+<span class="sd">    free-text instrument comment, so this class also falls back to</span>
+<span class="sd">    scanning that comment for the scattering type, ``qmin``, ``qmax``,</span>
+<span class="sd">    ``qdamp``, and ``qbroad`` when they are not already present as</span>
+<span class="sd">    ``name = value`` pairs.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -166,12 +175,77 @@
 <span class="sd">        The minimum scattering vector (float).</span>
 <span class="sd">    qmax</span>
 <span class="sd">        The maximum scattering vector (float).</span>
+<span class="sd">    qdamp</span>
+<span class="sd">        The Q-resolution damping factor (float).</span>
+<span class="sd">    qbroad</span>
+<span class="sd">        The Q-resolution broadening factor (float).</span>
 
 <span class="sd">    These, along with any other ``name = value`` pairs in the header,</span>
 <span class="sd">    may appear in the metadata dictionary.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_format</span> <span class="o">=</span> <span class="s2">&quot;PDF&quot;</span></div>
+    <span class="n">_format</span> <span class="o">=</span> <span class="s2">&quot;PDF&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the metadata read from a PDFgetX or PDFgetN header.</span>
+
+<span class="sd">        This calls ``ProfileParser``&#39;s ``name = value`` based parsing</span>
+<span class="sd">        first, then falls back to scanning the free-text instrument</span>
+<span class="sd">        comments some facilities prepend to their files for the</span>
+<span class="sd">        scattering type and Q-resolution parameters that</span>
+<span class="sd">        such comments are not already covered by a ``name = value``</span>
+<span class="sd">        pair.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str or Path</span>
+<span class="sd">            The name of the file to parse.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            The metadata read from the file header.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_parse_metadata</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_comment_metadata</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(),</span> <span class="n">metadata</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">metadata</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_comment_metadata</span><span class="p">(</span><span class="n">header_text</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fill in stype, qmin, qmax, qdamp, and qbroad from free-text</span>
+<span class="sd">        instrument comments, without overwriting values already found</span>
+<span class="sd">        by the ``name = value`` based parsing.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        header_text : str</span>
+<span class="sd">            The full text of the file being parsed.</span>
+<span class="sd">        meta : dict</span>
+<span class="sd">            The metadata dictionary to update in place.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            The updated metadata dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;stype&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(x-?ray|PDFgetX)&quot;</span><span class="p">,</span> <span class="n">header_text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">):</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;stype&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;X&quot;</span>
+            <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(neutron|PDFgetN)&quot;</span><span class="p">,</span> <span class="n">header_text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">):</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;stype&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;N&quot;</span>
+        <span class="n">regexes</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;qmin&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\bqmin *= *(</span><span class="si">%s</span><span class="s2">)\b&quot;</span> <span class="o">%</span> <span class="n">_FLOAT_RX</span><span class="p">,</span>
+            <span class="s2">&quot;qmax&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\bqmax *= *(</span><span class="si">%s</span><span class="s2">)\b&quot;</span> <span class="o">%</span> <span class="n">_FLOAT_RX</span><span class="p">,</span>
+            <span class="s2">&quot;qdamp&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\b(?:qdamp|qsig) *= *(</span><span class="si">%s</span><span class="s2">)\b&quot;</span> <span class="o">%</span> <span class="n">_FLOAT_RX</span><span class="p">,</span>
+            <span class="s2">&quot;qbroad&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;\b(?:qbroad|qalp) *= *(</span><span class="si">%s</span><span class="s2">)\b&quot;</span> <span class="o">%</span> <span class="n">_FLOAT_RX</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">regexes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">header_text</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">metadata</span></div>
 
 
 

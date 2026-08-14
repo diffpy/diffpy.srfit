@@ -36,7 +36,7 @@ class PDFParser(ProfileParser):
     PDFgetX and PDFgetN write their header as plain ``name = value``
     pairs, including ``stype = X`` or ``stype = N`` for the scattering
     type, so this class parses files identically to ``ProfileParser``
-    for those. Some facilities (e.g. NOMAD at SNS) instead prepend a
+    for those. Some facilities instead prepend a
     free-text instrument comment, so this class also falls back to
     scanning that comment for the scattering type, ``qmin``, ``qmax``,
     ``qdamp``, and ``qbroad`` when they are not already present as

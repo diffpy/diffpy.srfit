@@ -105,12 +105,13 @@ def test_pdfparser_data(
     assert actual_dy == approx_or_none(expected_dy)
 
 
-# PDFParser inherits ProfileParser's hooks unchanged: PDFgetX and
-# PDFgetN headers are already plain name = value pairs, including
-# stype = X or stype = N for the scattering type. The metadata below
-# reaches PDFGenerator, which uses stype, qmin and qmax to set the
-# scattering type and the Q range, so losing a key silently changes a
-# refinement.
+# PDFParser inherits ProfileParser's hooks for plain name = value
+# headers, including stype = X or stype = N for the scattering type,
+# and falls back to scanning free-text instrument comments (e.g.
+# NOMAD at SNS) for stype, qmax, qdamp, and qbroad when those are not
+# already name = value pairs. The metadata below reaches PDFGenerator,
+# which uses stype, qmin and qmax to set the scattering type and the Q
+# range, so losing a key silently changes a refinement.
 @pytest.mark.parametrize(
     "input_filename, expected_metadata",
     [
@@ -166,43 +167,33 @@ def test_pdfparser_data(
                 "nbanks": 1,
             },
         ),
+        # C3: A neutron PDF written for the NOMAD instrument at SNS,
+        # whose header has no name = value pairs at all, only a
+        # free-text instrument comment.
+        # Expected: The comment yields the neutron scattering type
+        # and the qmax, qdamp, and qbroad resolution parameters.
+        (
+            "nom-mno-neutron.gr",
+            {
+                "stype": "N",
+                "qmax": 31.414,
+                "qdamp": 0.017659,
+                "qbroad": 0.0191822,
+                "bank": 0,
+                "nbanks": 1,
+            },
+        ),
     ],
 )
 def test_pdfparser_metadata(datafile, input_filename, expected_metadata):
-    """PDF specific metadata survives the load_data based parse_file."""
+    """PDF specific metadata survives the load_data based parse_file,
+    including free-text instrument comment headers."""
     parser = PDFParser()
     parser.parse_file(datafile(input_filename))
     actual_metadata = parser.get_metadata()
     # add the filename key to the expected metadata for comparison
     expected_metadata["filename"] = str(datafile(input_filename))
     assert actual_metadata == expected_metadata
-
-
-# ----------------------------------------------------------------------------
-# NOMAD (NOM) files at SNS prepend free-text comments instead of plain
-# name = value pairs, e.g.:
-#   # Comment: neutron, Qmax=31.414, Qdamp=0.017659, Qbroad= 0.0191822
-# PDFParser must still recognize the scattering type and pull qmax,
-# qdamp, and qbroad out of that comment, or refinements built from
-# these files silently lose their resolution parameters.
-
-
-def test_pdfparser_nomad_comment_metadata(datafile):
-    """PDFParser recovers stype, qmax, qdamp, and qbroad from the free-
-    text NOMAD instrument comment header."""
-    parser = PDFParser()
-    parser.parse_file(datafile("nom-mno-neutron.gr"))
-    actual_metadata = parser.get_metadata()
-    expected_metadata = {
-        "stype": "N",
-        "qmax": 31.414,
-        "qdamp": 0.017659,
-        "qbroad": 0.0191822,
-    }
-    assert actual_metadata["stype"] == expected_metadata["stype"]
-    assert actual_metadata["qmax"] == expected_metadata["qmax"]
-    assert actual_metadata["qdamp"] == expected_metadata["qdamp"]
-    assert actual_metadata["qbroad"] == expected_metadata["qbroad"]
 
 
 # ----------------------------------------------------------------------------

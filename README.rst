@@ -50,16 +50,16 @@ target function being optimized can be specified by the user according to the
 data available.
 
 Within the diffpy.srfit framework, any parameter used in describing the
-structure of a material can be passed as a refinable variable to the global
+model can be passed as a refinable variable to the global
 optimizer.  Once parameters are declared as variables they can easily be turned
 "on" or "off", i.e. fixed or allowed to vary. Additionally, variables may be
 constrained to obey mathematical relationships with other parameters or
-variables used in the structural model. Restraints can be applied to
+variables used in the model. Restraints can be applied to
 variables, which adds a penalty to the refinement process commensurate with the
 deviation from the known value or range. The cost function can also be
-customized by the user. If the refinement contains multiple models, each model
+customized by the user. If the refinement contains multiple ``physics" models, each model
 can have its own cost function which will be properly weighted and combined to
-obtain the total cost function. Additionally, diffpy.srfit is designed to be
+obtain the total cost function. Additionally, ``diffpy.srfit`` is designed to be
 extensible, allowing the user to integrate external calculators to perform
 co-refinements with other techniques.
 
@@ -98,7 +98,11 @@ If you use diffpy.srfit in a scientific publication, we would like you to cite t
 Installation
 ------------
 
-The preferred method is to use `Miniconda Python
+The best way to install ``diffpy.srfit`` is as part of the ``diffpy.cmi`` package.  Please
+see https://github.com/diffpy/diffpy.cmi for installation information.
+
+If for some reason you want to install the ``diffpy.srfit`` library on its own,
+the preferred method is to use `Miniconda Python
 <https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html>`_
 and install from the "conda-forge" channel of Conda packages.
 
@@ -113,27 +117,6 @@ The following creates and activates a new environment named ``diffpy.srfit_env``
         conda activate diffpy.srfit_env
 
 The output should print the latest version displayed on the badges above.
-
-This will install the minimal `diffpy.srfit` installation.  It will often be used
-as along with other packages for manipulating and computing crystal structures
-and so on.  We also therefore recommend installing the following:
-
-* ``diffpy.structure`` - crystal structure container and parsers,
-  https://github.com/diffpy/diffpy.structure
-* ``pyobjcryst`` - Crystal and Molecule storage, rigid units, bond
-  length and bond angle restraints, https://github.com/diffpy/pyobjcryst
-
-Optimizations involving pair distribution functions PDF or bond valence
-sums require
-
-* ``diffpy.srreal`` - python library for PDF calculation,
-  https://github.com/diffpy/diffpy.srreal
-
-Optimizations involving small angle scattering or shape characteristic
-functions from the diffpy.srfit.sas module require
-
-* ``sas`` - module for calculation of P(R) in small-angle scattering
-  from the SasView project, http://www.sasview.org
 
 Fallback Installation
 ---------------------

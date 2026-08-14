@@ -60,10 +60,17 @@ class TestConstraint(unittest.TestCase):
         return
 
 
-class TestConstraint_deprecated(unittest.TestCase):
+# ----------------------------------------------------------------------------
+# Constraint.constrain and Parameter.setConst are deprecated in favor of
+# Constraint.add_constraint and Parameter.set_constant. The old names must
+# still work and forward to the new implementation.
 
-    def testConstraint(self):
-        """Test the Constraint class."""
+
+class TestConstraintDeprecated(unittest.TestCase):
+
+    def test_constrain_deprecated(self):
+        """Test the deprecated Constraint.constrain and
+        Parameter.setConst methods."""
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
 

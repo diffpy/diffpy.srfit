@@ -4,6 +4,14 @@ Release notes
 
 .. current developments
 
+3.3.1
+=====
+
+**Added:**
+
+* Add regex parsing ability in ``PDFParser`` for file headers that do not have the structure output by xPDFsuite and PDFgetX.
+
+
 3.3.0
 =====
 

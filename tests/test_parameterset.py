@@ -86,41 +86,63 @@ class TestParameterSetDeprecated(unittest.TestCase):
 # message that names its replacement, and have the same effect on the set.
 
 
-@pytest.mark.parametrize(
-    "deprecated_name, replacement_name",
-    [
-        # C1: A Parameter is stored under the set.
-        # Expected: addParameter warns and stores it as add_parameter does.
-        ("addParameter", "add_parameter"),
-        # C2: A Parameter is created and stored in one call.
-        # Expected: newParameter warns and creates it as new_parameter does.
-        ("newParameter", "new_parameter"),
-        # C3: A stored Parameter is removed from the set.
-        # Expected: removeParameter warns and removes it as
-        # remove_parameter does.
-        ("removeParameter", "remove_parameter"),
-    ],
-)
-def test_parameter_accessors_warn_and_forward(
-    deprecated_name, replacement_name
-):
-    base = "diffpy.srfit.fitbase.parameterset.ParameterSet"
+# C1: A Parameter is stored under the set with the deprecated name.
+# Expected: addParameter warns and stores it as add_parameter does.
+def test_add_parameter_deprecated():
     expected_msg = (
-        f"'{base}.{deprecated_name}' is deprecated and will be removed in "
-        f"version 4.0.0. Please use '{base}.{replacement_name}' instead."
+        "'diffpy.srfit.fitbase.parameterset.ParameterSet.addParameter' is "
+        "deprecated and will be removed in version 4.0.0. "
+        "Please use "
+        "'diffpy.srfit.fitbase.parameterset.ParameterSet.add_parameter' "
+        "instead."
     )
+    expected_names = ["p1"]
     parset = ParameterSet("test")
-    if deprecated_name == "newParameter":
-        arguments = ("p1", 1)
-    elif deprecated_name == "removeParameter":
-        arguments = (parset.new_parameter("p1", 1),)
-    else:
-        arguments = (Parameter("p1", 1),)
 
     with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
-        getattr(parset, deprecated_name)(*arguments)
+        parset.addParameter(Parameter("p1", 1))
 
-    expected_names = [] if deprecated_name == "removeParameter" else ["p1"]
+    actual_names = [par.name for par in parset._parameters.values()]
+    assert actual_names == expected_names
+
+
+# C2: A Parameter is created and stored with the deprecated name.
+# Expected: newParameter warns and creates it as new_parameter does.
+def test_new_parameter_deprecated():
+    expected_msg = (
+        "'diffpy.srfit.fitbase.parameterset.ParameterSet.newParameter' is "
+        "deprecated and will be removed in version 4.0.0. "
+        "Please use "
+        "'diffpy.srfit.fitbase.parameterset.ParameterSet.new_parameter' "
+        "instead."
+    )
+    expected_names = ["p1"]
+    parset = ParameterSet("test")
+
+    with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
+        parset.newParameter("p1", 1)
+
+    actual_names = [par.name for par in parset._parameters.values()]
+    assert actual_names == expected_names
+
+
+# C3: A stored Parameter is removed from the set with the deprecated name.
+# Expected: removeParameter warns and removes it as remove_parameter does.
+def test_remove_parameter_deprecated():
+    expected_msg = (
+        "'diffpy.srfit.fitbase.parameterset.ParameterSet.removeParameter' is "
+        "deprecated and will be removed in version 4.0.0. "
+        "Please use "
+        "'diffpy.srfit.fitbase.parameterset.ParameterSet.remove_parameter' "
+        "instead."
+    )
+    expected_names = []
+    parset = ParameterSet("test")
+    p1 = parset.new_parameter("p1", 1)
+
+    with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
+        parset.removeParameter(p1)
+
     actual_names = [par.name for par in parset._parameters.values()]
     assert actual_names == expected_names
 

@@ -97,7 +97,7 @@ used as::
 
 Note that the *unbound* methods are used. The names ``getter`` and ``setter``
 describe how the accessor attributes are used to access the value of the
-parameter. When ``xpar.getValue()`` is called, it redirects to
+parameter. When ``xpar.get_value()`` is called, it redirects to
 ``SimpleAtom.getX(atom)``.
 
 If instead ``SimpleAtom`` had methods called ``get`` and ``set`` that take as
@@ -107,7 +107,7 @@ can be adapted as::
     xpar = ParameterAdapter("x", atom, getter = SimpleAtom.get,
             setter = SimpleAtom.set, attr = "x")
 
-Thus, when ``xpar.getValue()`` is called, it in turn calls
+Thus, when ``xpar.get_value()`` is called, it in turn calls
 ``SimpleAtom.get(atom, "x")``. ``xpar.set_value(value)`` calls
 ``SimpleAtom.set(atom, "x", value)``.
 

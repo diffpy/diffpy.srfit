@@ -228,7 +228,7 @@ class FitResults(object):
 
         # Store the constraint information
         self.connames = [con.par.name for con in recipe._oconstraints]
-        self.convals = [con.par.getValue() for con in recipe._oconstraints]
+        self.convals = [con.par.get_value() for con in recipe._oconstraints]
 
         if self.varnames:
             # Calculate the covariance
@@ -314,7 +314,7 @@ class FitResults(object):
             cond = []
             for con in recipe._oconstraints:
                 con.update()
-                cond.append(con.par.getValue())
+                cond.append(con.par.get_value())
 
             pvals[k] = v - h
             rk -= self.recipe.residual(pvals)
@@ -322,9 +322,9 @@ class FitResults(object):
             # FIXME - constraints are used for vectors as well!
             for i, con in enumerate(recipe._oconstraints):
                 con.update()
-                val = con.par.getValue()
+                val = con.par.get_value()
                 if numpy.isscalar(val):
-                    cond[i] -= con.par.getValue()
+                    cond[i] -= con.par.get_value()
                     cond[i] /= 2 * h
                 else:
                     cond[i] = 0.0

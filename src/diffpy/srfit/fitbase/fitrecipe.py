@@ -669,7 +669,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         badpars = []
         for par in self.iterate_over_parameters():
             try:
-                par.getValue()
+                par.get_value()
             except ValueError:
                 badpars.append(par)
 
@@ -1246,9 +1246,9 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         # This will pass the value of a constrained parameter to the initial
         # value of a parameter constraint.
         if con in self._parameters.values():
-            val = con.getValue()
+            val = con.get_value()
             if val is None:
-                val = par.getValue()
+                val = par.get_value()
                 con.set_value(val)
 
         if par in self._parameters.values():
@@ -1483,7 +1483,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             print("Parameters set in FitRecipe:")
             print("=" * 30)
             set_parameters_dict = {
-                param.name: param.getValue()
+                param.name: param.get_value()
                 for param in self._parameters.values()
             }
             self._pretty_print_results_dict(set_parameters_dict)

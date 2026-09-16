@@ -294,7 +294,7 @@ class TestRecipeOrganizer(unittest.TestCase):
 
         p2.set_value(10)
         self.m._constraints[p1].update()
-        self.assertEqual(20, p1.getValue())
+        self.assertEqual(20, p1.get_value())
 
         # Check errors on unregistered parameters
         self.assertRaises(ValueError, self.m.constrain, p1, "2*p3")
@@ -310,7 +310,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m.add_constraint(p1, p2)
         p2.set_value(7)
         self.m._constraints[p1].update()
-        self.assertEqual(7, p1.getValue())
+        self.assertEqual(7, p1.get_value())
 
         self.m.clear_all_constraints()
         actual_constrained_params = self.m.get_constrained_parmeters()
@@ -425,9 +425,9 @@ class TestRecipeOrganizer(unittest.TestCase):
                 return
 
             def __call__(self, x):
-                A = self.A.getValue()
-                c = self.center.getValue()
-                w = self.width.getValue()
+                A = self.A.get_value()
+                c = self.center.get_value()
+                w = self.width.get_value()
                 return A * numpy.exp(-0.5 * ((x - c) / w) ** 2)
 
         # End class GCalc
@@ -470,9 +470,9 @@ class TestRecipeOrganizer(unittest.TestCase):
                 return
 
             def __call__(self, x):
-                A = self.A.getValue()
-                c = self.center.getValue()
-                w = self.width.getValue()
+                A = self.A.get_value()
+                c = self.center.get_value()
+                w = self.width.get_value()
                 return A * numpy.exp(-0.5 * ((x - c) / w) ** 2)
 
         # End class GCalc
@@ -566,8 +566,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         self.m._new_parameter("y", 3.0)
 
         # Make sure that x and y are in the organizer
-        self.assertEqual(0, self.m.x.getValue())
-        self.assertEqual(3.0, self.m.y.getValue())
+        self.assertEqual(0, self.m.x.get_value())
+        self.assertEqual(3.0, self.m.y.get_value())
 
         # Use eq1 in some equations
 

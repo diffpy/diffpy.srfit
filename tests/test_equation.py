@@ -69,7 +69,7 @@ def testSimpleFunction(make_args, noObserversInGlobalBuilders):
     assert v4 is eq.v4
 
     assert 20 == eq()  # 20 = 2.5*(1+3)*(4-2)
-    assert 20 == eq.getValue()  # same as above
+    assert 20 == eq.get_value()  # same as above
     assert 20 == eq.value  # same as above
     assert 25 == eq(v1=2)  # 25 = 2.5*(2+3)*(4-2)
     assert 50 == eq(v2=0)  # 50 = 2.5*(2+3)*(4-0)
@@ -164,7 +164,7 @@ def testEmbeddedEquation(make_args, noObserversInGlobalBuilders):
     v1.value = 1
 
     assert 20 == eq()  # 20 = 2.5*(1+3)*(4-2)
-    assert 20 == eq.getValue()  # same as above
+    assert 20 == eq.get_value()  # same as above
     assert 20 == eq.value  # same as above
     assert 25 == eq(v1=2)  # 25 = 2.5*(2+3)*(4-2)
     assert 50 == eq(v2=0)  # 50 = 2.5*(2+3)*(4-0)

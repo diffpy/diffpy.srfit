@@ -205,7 +205,7 @@ class TestSwapper:
 
         # plus2 has no arguments yet. Verify this.
         with pytest.raises(TypeError):
-            mult.getValue()
+            mult.get_value()
         # Add the arguments to plus2.
         plus2.addLiteral(v4)
         plus2.addLiteral(v5)

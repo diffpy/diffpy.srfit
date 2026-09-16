@@ -31,7 +31,7 @@ class LiteralABC(ABC):
         pass
 
     @abstractmethod
-    def getValue(self):
+    def get_value(self):
         """Return the value of the literal."""
         pass
 

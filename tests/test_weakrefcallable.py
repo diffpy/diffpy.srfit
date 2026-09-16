@@ -58,7 +58,7 @@ class TestWeakBoundMethod(unittest.TestCase):
         self.assertTrue(None is f._eq._value)
         # check WeakBoundMethod behavior with no fallback
         x = Parameter("x", value=3)
-        wgetx = weak_ref(x.getValue)
+        wgetx = weak_ref(x.get_value)
         self.assertEqual(3, wgetx())
         del x
         self.assertRaises(ReferenceError, wgetx)

@@ -42,6 +42,10 @@ setValue_dep_msg = build_deprecation_message(
     parameter_base, "setValue", "set_value", removal_version
 )
 
+getValue_dep_msg = build_deprecation_message(
+    parameter_base, "getValue", "get_value", removal_version
+)
+
 setConst_dep_msg = build_deprecation_message(
     parameter_base, "setConst", "set_constant", removal_version
 )
@@ -67,7 +71,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
     _value
         The value of the Parameter. Modified with ``set_value``.
     value
-        Property for ``getValue`` and ``set_value``.
+        Property for ``get_value`` and ``set_value``.
     constrained
         A flag indicating if the Parameter is constrained
         (default False).
@@ -117,6 +121,15 @@ class Parameter(_parameter_interface, Argument, Validatable):
         """
         Argument.set_value(self, val)
         return self
+
+    @deprecated(getValue_dep_msg)
+    def getValue(self):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.fitbase.Parameter.get_value instead.
+        """
+        return self.get_value()
 
     @deprecated(setValue_dep_msg)
     def setValue(self, val):
@@ -209,7 +222,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         Parameter
             Return self so that mutators can be chained.
         """
-        val = self.getValue()
+        val = self.get_value()
         lower_bound = val - lower_radius
         if upper_radius is None:
             upper_radius = lower_radius
@@ -317,9 +330,9 @@ class ParameterProxy(Parameter):
     def set_value(self, val):
         return self.par.set_value(val)
 
-    @wraps(Parameter.getValue)
-    def getValue(self):
-        return self.par.getValue()
+    @wraps(Parameter.get_value)
+    def get_value(self):
+        return self.par.get_value()
 
     @wraps(Parameter.set_constant)
     def set_constant(self, const=True, value=None):
@@ -355,7 +368,7 @@ class ParameterProxy(Parameter):
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.
 
-    This class wraps an object as a Parameter. The getValue and
+    This class wraps an object as a Parameter. The get_value and
     set_value methods defer to the data of the wrapped object.
     """
 
@@ -415,11 +428,11 @@ class ParameterAdapter(Parameter):
             else:
                 self.setter = bind2nd(setter, self.attr)
 
-        value = self.getValue()
+        value = self.get_value()
         Parameter.__init__(self, name, value)
         return
 
-    def getValue(self):
+    def get_value(self):
         """Get the value of the Parameter.
 
         Returns
@@ -442,7 +455,7 @@ class ParameterAdapter(Parameter):
         ParameterAdapter
             Return self so that mutators can be chained.
         """
-        if value != self.getValue():
+        if value != self.get_value():
             self.setter(self.obj, value)
             self.notify()
         return self

@@ -49,12 +49,12 @@ def testGenerator(diffpy_srreal_available, datafile):
     for par in gen.iterPars(recurse=False):
         pname = par.name
         defval = calc._getDoubleAttr(pname)
-        assert defval == par.getValue()
+        assert defval == par.get_value()
         # Test setting values
         par.set_value(1.0)
-        assert 1.0 == par.getValue()
+        assert 1.0 == par.get_value()
         par.set_value(defval)
-        assert defval == par.getValue()
+        assert defval == par.get_value()
 
     r = numpy.arange(0, 10, 0.1)
     y = gen(r)

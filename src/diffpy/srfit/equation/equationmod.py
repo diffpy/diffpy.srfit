@@ -81,7 +81,7 @@ class Equation(Operator):
     _value
         The value of the Operator.
     value
-        Property for 'getValue'.
+        Property for 'get_value'.
     """
 
     # define abstract attributes from the Operator base.
@@ -201,7 +201,7 @@ class Equation(Operator):
                 raise ValueError("No argument named '%s' here" % name)
             arg.set_value(val)
 
-        self._value = self.root.getValue()
+        self._value = self.root.get_value()
         return self._value
 
     def swap(self, oldlit, newlit):

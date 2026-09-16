@@ -585,7 +585,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             Uij = numpy.zeros((3, 3), dtype=float)
             for idx, par in enumerate(pars):
                 i, j = _idxtoij[idx]
-                Uij[i, j] = Uij[j, i] = par.getValue()
+                Uij[i, j] = Uij[j, i] = par.get_value()
 
             Uijs.append(Uij)
 
@@ -687,8 +687,8 @@ def _constrain_monoclinic(lattice):
         afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.alpha.set_constant(True, ang90)
-    beta = lattice.beta.getValue()
-    gamma = lattice.gamma.getValue()
+    beta = lattice.beta.get_value()
+    gamma = lattice.gamma.get_value()
 
     if ang90 != beta and ang90 == gamma:
         lattice.gamma.set_constant(True, ang90)
@@ -741,7 +741,7 @@ def _constrain_trigonal(lattice):
         afactor = deg2rad
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
-    if lattice.gamma.getValue() == ang120:
+    if lattice.gamma.get_value() == ang120:
         lattice.add_constraint(lattice.b, lattice.a)
         lattice.alpha.set_constant(True, ang90)
         lattice.beta.set_constant(True, ang90)

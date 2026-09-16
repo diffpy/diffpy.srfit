@@ -14,6 +14,7 @@
 ##############################################################################
 """Tests for refinableobj module."""
 
+import re
 import unittest
 
 import numpy as np
@@ -33,25 +34,25 @@ class TestParameter(unittest.TestCase):
         par_l = Parameter("l")
 
         par_l.set_value(3.14)
-        self.assertAlmostEqual(3.14, par_l.getValue())
+        self.assertAlmostEqual(3.14, par_l.get_value())
 
         # Try array
         import numpy
 
         x = numpy.arange(0, 10, 0.1)
         par_l.setValue(x)
-        self.assertTrue(par_l.getValue() is x)
+        self.assertTrue(par_l.get_value() is x)
         self.assertTrue(par_l.value is x)
 
         # Change the array
         y = numpy.arange(0, 10, 0.5)
         par_l.value = y
-        self.assertTrue(par_l.getValue() is y)
+        self.assertTrue(par_l.get_value() is y)
         self.assertTrue(par_l.value is y)
 
         # Back to scalar
         par_l.set_value(1.01)
-        self.assertAlmostEqual(1.01, par_l.getValue())
+        self.assertAlmostEqual(1.01, par_l.get_value())
         self.assertAlmostEqual(1.01, par_l.value)
         return
 
@@ -66,16 +67,16 @@ class TestParameterProxy(unittest.TestCase):
         la = ParameterProxy("l2", par_l)
 
         self.assertEqual("l2", la.name)
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
 
         # Change the parameter
         par_l.value = 2.3
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
         self.assertEqual(par_l.value, la.value)
 
         # Change the proxy
         la.value = 3.2
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
         self.assertEqual(par_l.value, la.value)
 
         return
@@ -92,34 +93,34 @@ class TestParameterAdapter(unittest.TestCase):
 
         # Try Accessor adaptation
         la = ParameterAdapter(
-            "l", par_l, getter=Parameter.getValue, setter=Parameter.set_value
+            "l", par_l, getter=Parameter.get_value, setter=Parameter.set_value
         )
 
         self.assertEqual(par_l.name, la.name)
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
 
         # Change the parameter
         par_l.set_value(2.3)
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
 
         # Change the adapter
         la.set_value(3.2)
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
 
         # Try Attribute adaptation
         la = ParameterAdapter("l", par_l, attr="value")
 
         self.assertEqual(par_l.name, la.name)
         self.assertEqual("value", la.attr)
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
 
         # Change the parameter
         par_l.set_value(2.3)
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
 
         # Change the adapter
         la.set_value(3.2)
-        self.assertEqual(par_l.getValue(), la.getValue())
+        self.assertEqual(par_l.get_value(), la.get_value())
 
         return
 
@@ -212,6 +213,61 @@ def test_boundWindow(value, lower_radius, upper_radius, expected):
     p.boundWindow(lr=lower_radius, ur=upper_radius)
     actual = p.bounds
     assert actual == expected
+
+
+# ----------------------------------------------------------------------------
+# getValue is deprecated in favor of get_value. The old name must still work,
+# emit a DeprecationWarning naming its replacement, and return exactly what
+# get_value returns, for Parameter and for both of its wrapping subclasses.
+
+
+class _ValueHolder:
+    """A plain object for ParameterAdapter to wrap."""
+
+    def __init__(self, value):
+        self.value = value
+
+
+def _make_parameter(value):
+    return Parameter("l", value)
+
+
+def _make_parameter_proxy(value):
+    return ParameterProxy("l_proxy", Parameter("l", value))
+
+
+def _make_parameter_adapter(value):
+    return ParameterAdapter("l_adapted", _ValueHolder(value), attr="value")
+
+
+@pytest.mark.parametrize(
+    "make_parameter, input_value",
+    [
+        # C1: Parameter stores the value itself.
+        # Expected: getValue warns and returns the stored value.
+        (_make_parameter, 3.14),
+        # C2: ParameterProxy defers to the Parameter it proxies.
+        # Expected: getValue warns and returns the proxied value.
+        (_make_parameter_proxy, 3.14),
+        # C3: ParameterAdapter defers to the attribute it wraps.
+        # Expected: getValue warns and returns the wrapped value.
+        (_make_parameter_adapter, 3.14),
+    ],
+)
+def test_getValue_warns_and_forwards(make_parameter, input_value):
+    expected_msg = (
+        "'diffpy.srfit.fitbase.Parameter.getValue' is deprecated and will "
+        "be removed in version 4.0.0. Please use "
+        "'diffpy.srfit.fitbase.Parameter.get_value' instead."
+    )
+    parameter = make_parameter(input_value)
+    expected_value = parameter.get_value()
+
+    with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
+        actual_value = parameter.getValue()
+
+    assert actual_value == expected_value
+    assert actual_value == input_value
 
 
 if __name__ == "__main__":

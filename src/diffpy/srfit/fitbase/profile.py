@@ -133,19 +133,19 @@ class Profile(Observable, Validatable):
 
     # We want x, y, ycalc and dy to stay in-sync with xpar, ypar and dypar
     x = property(
-        lambda self: self.xpar.getValue(),
+        lambda self: self.xpar.get_value(),
         lambda self, val: self.xpar.set_value(val),
     )
     y = property(
-        lambda self: self.ypar.getValue(),
+        lambda self: self.ypar.get_value(),
         lambda self, val: self.ypar.set_value(val),
     )
     dy = property(
-        lambda self: self.dypar.getValue(),
+        lambda self: self.dypar.get_value(),
         lambda self, val: self.dypar.set_value(val),
     )
     ycalc = property(
-        lambda self: self.ycpar.getValue(),
+        lambda self: self.ycpar.get_value(),
         lambda self, val: self.ycpar.set_value(val),
     )
 

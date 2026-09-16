@@ -51,9 +51,9 @@ def test_ObjCryst_constrain_space_group(pyobjcryst_available):
     assert lattice.alpha.const
     assert lattice.beta.const
     assert lattice.gamma.const
-    assert pi / 2 == lattice.alpha.getValue()
-    assert pi / 2 == lattice.beta.getValue()
-    assert pi / 2 == lattice.gamma.getValue()
+    assert pi / 2 == lattice.alpha.get_value()
+    assert pi / 2 == lattice.beta.get_value()
+    assert pi / 2 == lattice.gamma.get_value()
 
     assert not lattice.a.const
     assert not lattice.b.const
@@ -127,7 +127,7 @@ def test_DiffPy_constrain_as_space_group(datafile, pyobjcryst_available):
     # Make sure that the new parameters were created
     for par in sgpars:
         assert par is not None
-        assert par.getValue() is not None
+        assert par.get_value() is not None
 
     # Test the unconstrained atoms
     for scatterer in parset.getScatterers()[1::2]:

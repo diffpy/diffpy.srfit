@@ -43,37 +43,37 @@ def testDiffpyStructureParSet():
         # Check the atoms thoroughly
         assert a1.element == s.Cu0.element
         assert a2.element == s.Ag0.element
-        assert a1.Uisoequiv == s.Cu0.Uiso.getValue()
-        assert a2.Uisoequiv == s.Ag0.Uiso.getValue()
-        assert a1.Bisoequiv == s.Cu0.Biso.getValue()
-        assert a2.Bisoequiv == s.Ag0.Biso.getValue()
+        assert a1.Uisoequiv == s.Cu0.Uiso.get_value()
+        assert a2.Uisoequiv == s.Ag0.Uiso.get_value()
+        assert a1.Bisoequiv == s.Cu0.Biso.get_value()
+        assert a2.Bisoequiv == s.Ag0.Biso.get_value()
         for i in range(1, 4):
             for j in range(i, 4):
                 uijstru = getattr(a1, "U%i%i" % (i, j))
-                uij = getattr(s.Cu0, "U%i%i" % (i, j)).getValue()
-                uji = getattr(s.Cu0, "U%i%i" % (j, i)).getValue()
+                uij = getattr(s.Cu0, "U%i%i" % (i, j)).get_value()
+                uji = getattr(s.Cu0, "U%i%i" % (j, i)).get_value()
                 assert uijstru == uij
                 assert uijstru == uji
                 bijstru = getattr(a1, "B%i%i" % (i, j))
-                bij = getattr(s.Cu0, "B%i%i" % (i, j)).getValue()
-                bji = getattr(s.Cu0, "B%i%i" % (j, i)).getValue()
+                bij = getattr(s.Cu0, "B%i%i" % (i, j)).get_value()
+                bji = getattr(s.Cu0, "B%i%i" % (j, i)).get_value()
                 assert bijstru == bij
                 assert bijstru == bji
 
-        assert a1.xyz[0] == s.Cu0.x.getValue()
-        assert a1.xyz[1] == s.Cu0.y.getValue()
-        assert a1.xyz[2] == s.Cu0.z.getValue()
+        assert a1.xyz[0] == s.Cu0.x.get_value()
+        assert a1.xyz[1] == s.Cu0.y.get_value()
+        assert a1.xyz[2] == s.Cu0.z.get_value()
         return
 
     def _testLattice():
 
         # Test the lattice
-        assert dsstru.lattice.a == s.lattice.a.getValue()
-        assert dsstru.lattice.b == s.lattice.b.getValue()
-        assert dsstru.lattice.c == s.lattice.c.getValue()
-        assert dsstru.lattice.alpha == s.lattice.alpha.getValue()
-        assert dsstru.lattice.beta == s.lattice.beta.getValue()
-        assert dsstru.lattice.gamma == s.lattice.gamma.getValue()
+        assert dsstru.lattice.a == s.lattice.a.get_value()
+        assert dsstru.lattice.b == s.lattice.b.get_value()
+        assert dsstru.lattice.c == s.lattice.c.get_value()
+        assert dsstru.lattice.alpha == s.lattice.alpha.get_value()
+        assert dsstru.lattice.beta == s.lattice.beta.get_value()
+        assert dsstru.lattice.gamma == s.lattice.gamma.get_value()
 
     _testAtoms()
     _testLattice()

@@ -35,7 +35,7 @@ class SASParameter(Parameter):
     _value
         The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'set_value'.
+        Property for 'get_value' and 'set_value'.
     constrained
         A flag indicating if the Parameter is constrained
         (default False).
@@ -68,14 +68,14 @@ class SASParameter(Parameter):
         Parameter.__init__(self, name, val)
         return
 
-    def getValue(self):
+    def get_value(self):
         """Get the value of the Parameter."""
         value = self._model.getParam(self._parname)
         return value
 
     def set_value(self, value):
         """Set the value of the Parameter."""
-        if value != self.getValue():
+        if value != self.get_value():
             self._model.setParam(self._parname, value)
             self.notify()
         return self

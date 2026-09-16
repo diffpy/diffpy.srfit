@@ -33,9 +33,9 @@ calculation. A very simple example is
             self.new_parameter("center", 0)
             self.new_parameter("width", 0)
         def __call__(self, x):
-            a = self.amp.getValue()
-            x0 = self.center.getValue()
-            w = self.width.getValue()
+            a = self.amp.get_value()
+            x0 = self.center.get_value()
+            w = self.width.get_value()
             return a * exp(-0.5*((x-x0)/w)**2)
 
 More examples can be found in the example directory of the
@@ -105,7 +105,7 @@ class ProfileGenerator(Operator, ParameterSet):
     _value
         The value of the Operator.
     value
-        Property for 'getValue'.
+        Property for 'get_value'.
 
     Properties
     ----------

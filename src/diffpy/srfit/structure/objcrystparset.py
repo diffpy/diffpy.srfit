@@ -130,10 +130,12 @@ class ObjCrystScattererParSet(ParameterSet):
         self.parent = parent
 
         # x, y, z, occ
-        self.addParameter(ParameterAdapter("x", self.scat, attr="X"))
-        self.addParameter(ParameterAdapter("y", self.scat, attr="Y"))
-        self.addParameter(ParameterAdapter("z", self.scat, attr="Z"))
-        self.addParameter(ParameterAdapter("occ", self.scat, attr="Occupancy"))
+        self.add_parameter(ParameterAdapter("x", self.scat, attr="X"))
+        self.add_parameter(ParameterAdapter("y", self.scat, attr="Y"))
+        self.add_parameter(ParameterAdapter("z", self.scat, attr="Z"))
+        self.add_parameter(
+            ParameterAdapter("occ", self.scat, attr="Occupancy")
+        )
         return
 
     def isDummy(self):
@@ -191,22 +193,22 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
         sp = atom.GetScatteringPower()
 
         # The B-parameters
-        self.addParameter(ParameterAdapter("Biso", sp, attr="Biso"))
-        self.addParameter(ParameterAdapter("B11", sp, attr="B11"))
-        self.addParameter(ParameterAdapter("B22", sp, attr="B22"))
-        self.addParameter(ParameterAdapter("B33", sp, attr="B33"))
+        self.add_parameter(ParameterAdapter("Biso", sp, attr="Biso"))
+        self.add_parameter(ParameterAdapter("B11", sp, attr="B11"))
+        self.add_parameter(ParameterAdapter("B22", sp, attr="B22"))
+        self.add_parameter(ParameterAdapter("B33", sp, attr="B33"))
         B12 = ParameterAdapter("B12", sp, attr="B12")
         B21 = ParameterProxy("B21", B12)
         B13 = ParameterAdapter("B13", sp, attr="B13")
         B31 = ParameterProxy("B31", B13)
         B23 = ParameterAdapter("B23", sp, attr="B23")
         B32 = ParameterProxy("B32", B23)
-        self.addParameter(B12)
-        self.addParameter(B21)
-        self.addParameter(B13)
-        self.addParameter(B31)
-        self.addParameter(B23)
-        self.addParameter(B32)
+        self.add_parameter(B12)
+        self.add_parameter(B21)
+        self.add_parameter(B13)
+        self.add_parameter(B31)
+        self.add_parameter(B23)
+        self.add_parameter(B32)
 
         # Give a value to Biso if it doesn't have one, and this is isotropic
         if sp.IsIsotropic() and self.Biso.value == 0:
@@ -267,10 +269,10 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         self.stru = molecule
 
         # Add orientation quaternion
-        self.addParameter(ParameterAdapter("q0", self.scat, attr="Q0"))
-        self.addParameter(ParameterAdapter("q1", self.scat, attr="Q1"))
-        self.addParameter(ParameterAdapter("q2", self.scat, attr="Q2"))
-        self.addParameter(ParameterAdapter("q3", self.scat, attr="Q3"))
+        self.add_parameter(ParameterAdapter("q0", self.scat, attr="Q0"))
+        self.add_parameter(ParameterAdapter("q1", self.scat, attr="Q1"))
+        self.add_parameter(ParameterAdapter("q2", self.scat, attr="Q2"))
+        self.add_parameter(ParameterAdapter("q3", self.scat, attr="Q3"))
 
         # Wrap the MolAtoms within the molecule
         self.atoms = []
@@ -400,7 +402,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
             par.AddAtoms(atoms)
 
-            self.addParameter(par)
+            self.add_parameter(par)
 
         for mode in self.scat.GetStretchModeBondAngleList():
             name1 = mode.mpAtom0.GetName()
@@ -423,7 +425,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
                 atoms.append(getattr(self, name))
             par.AddAtoms(atoms)
 
-            self.addParameter(par)
+            self.add_parameter(par)
 
         return
 
@@ -686,7 +688,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             Returns the new ObjCrystBondLengthParameter.
         """
         par = ObjCrystBondLengthParameter(name, atom1, atom2, value, const)
-        self.addParameter(par)
+        self.add_parameter(par)
 
         return par
 
@@ -726,7 +728,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         par = ObjCrystBondAngleParameter(
             name, atom1, atom2, atom3, value, const
         )
-        self.addParameter(par)
+        self.add_parameter(par)
 
         return par
 
@@ -770,7 +772,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         par = ObjCrystDihedralAngleParameter(
             name, atom1, atom2, atom3, atom4, value, const
         )
-        self.addParameter(par)
+        self.add_parameter(par)
 
         return par
 
@@ -825,22 +827,22 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
 
         # Only wrap this if there is a scattering power
         if sp is not None:
-            self.addParameter(ParameterAdapter("Biso", sp, attr="Biso"))
-            self.addParameter(ParameterAdapter("B11", sp, attr="B11"))
-            self.addParameter(ParameterAdapter("B22", sp, attr="B22"))
-            self.addParameter(ParameterAdapter("B33", sp, attr="B33"))
+            self.add_parameter(ParameterAdapter("Biso", sp, attr="Biso"))
+            self.add_parameter(ParameterAdapter("B11", sp, attr="B11"))
+            self.add_parameter(ParameterAdapter("B22", sp, attr="B22"))
+            self.add_parameter(ParameterAdapter("B33", sp, attr="B33"))
             B12 = ParameterAdapter("B12", sp, attr="B12")
             B21 = ParameterProxy("B21", B12)
             B13 = ParameterAdapter("B13", sp, attr="B13")
             B31 = ParameterProxy("B31", B13)
             B23 = ParameterAdapter("B23", sp, attr="B23")
             B32 = ParameterProxy("B32", B23)
-            self.addParameter(B12)
-            self.addParameter(B21)
-            self.addParameter(B13)
-            self.addParameter(B31)
-            self.addParameter(B23)
-            self.addParameter(B32)
+            self.add_parameter(B12)
+            self.add_parameter(B21)
+            self.add_parameter(B13)
+            self.add_parameter(B31)
+            self.add_parameter(B23)
+            self.add_parameter(B32)
 
         return
 
@@ -1817,12 +1819,12 @@ class ObjCrystCrystalParSet(SrRealParSet):
         self.stru = cryst
         self._sgpars = None
 
-        self.addParameter(ParameterAdapter("a", self.stru, attr="a"))
-        self.addParameter(ParameterAdapter("b", self.stru, attr="b"))
-        self.addParameter(ParameterAdapter("c", self.stru, attr="c"))
-        self.addParameter(ParameterAdapter("alpha", self.stru, attr="alpha"))
-        self.addParameter(ParameterAdapter("beta", self.stru, attr="beta"))
-        self.addParameter(ParameterAdapter("gamma", self.stru, attr="gamma"))
+        self.add_parameter(ParameterAdapter("a", self.stru, attr="a"))
+        self.add_parameter(ParameterAdapter("b", self.stru, attr="b"))
+        self.add_parameter(ParameterAdapter("c", self.stru, attr="c"))
+        self.add_parameter(ParameterAdapter("alpha", self.stru, attr="alpha"))
+        self.add_parameter(ParameterAdapter("beta", self.stru, attr="beta"))
+        self.add_parameter(ParameterAdapter("gamma", self.stru, attr="gamma"))
 
         # Now we must loop over the scatterers and create parameter sets from
         # them.

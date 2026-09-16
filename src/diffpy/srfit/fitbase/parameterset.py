@@ -34,6 +34,18 @@ addparset_dep_msg = build_deprecation_message(
     base, "addParameterSet", "add_parameter_set", removal_version
 )
 
+addParameter_dep_msg = build_deprecation_message(
+    base, "addParameter", "add_parameter", removal_version
+)
+
+newParameter_dep_msg = build_deprecation_message(
+    base, "newParameter", "new_parameter", removal_version
+)
+
+removeParameter_dep_msg = build_deprecation_message(
+    base, "removeParameter", "remove_parameter", removal_version
+)
+
 removeParameterSet_dep_msg = build_deprecation_message(
     base, "removeParameterSet", "remove_parameter_set", removal_version
 )
@@ -99,9 +111,42 @@ class ParameterSet(RecipeOrganizer):
         return
 
     # Alias Parameter accessors.
-    addParameter = RecipeOrganizer._add_parameter
-    newParameter = RecipeOrganizer._new_parameter
-    removeParameter = RecipeOrganizer._remove_parameter
+    add_parameter = RecipeOrganizer._add_parameter
+    new_parameter = RecipeOrganizer._new_parameter
+    remove_parameter = RecipeOrganizer._remove_parameter
+
+    @deprecated(addParameter_dep_msg)
+    def addParameter(self, parameter, check=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.add_parameter
+        instead.
+        """
+        return self.add_parameter(parameter, check)
+
+    @deprecated(newParameter_dep_msg)
+    def newParameter(self, name, value, check=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.new_parameter
+        instead.
+        """
+        return self.new_parameter(name, value, check)
+
+    @deprecated(removeParameter_dep_msg)
+    def removeParameter(self, parameter):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.srfit.fitbase.parameterset.ParameterSet.remove_parameter
+        instead.
+        """
+        return self.remove_parameter(parameter)
 
     def add_parameter_set(self, parset):
         """Add a ParameterSet to the hierarchy.

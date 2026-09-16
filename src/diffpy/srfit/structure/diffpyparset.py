@@ -102,52 +102,52 @@ class DiffpyAtomParSet(ParameterSet):
         self.atom = atom
         a = atom
         # x, y, z, occupancy
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter("x", a, _xyzgetter(0), _xyzsetter(0))
         )
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter("y", a, _xyzgetter(1), _xyzsetter(1))
         )
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter("z", a, _xyzgetter(2), _xyzsetter(2))
         )
         occupancy = ParameterAdapter("occupancy", a, attr="occupancy")
-        self.addParameter(occupancy)
-        self.addParameter(ParameterProxy("occ", occupancy))
+        self.add_parameter(occupancy)
+        self.add_parameter(ParameterProxy("occ", occupancy))
         # U
-        self.addParameter(ParameterAdapter("U11", a, attr="U11"))
-        self.addParameter(ParameterAdapter("U22", a, attr="U22"))
-        self.addParameter(ParameterAdapter("U33", a, attr="U33"))
+        self.add_parameter(ParameterAdapter("U11", a, attr="U11"))
+        self.add_parameter(ParameterAdapter("U22", a, attr="U22"))
+        self.add_parameter(ParameterAdapter("U33", a, attr="U33"))
         U12 = ParameterAdapter("U12", a, attr="U12")
         U21 = ParameterProxy("U21", U12)
         U13 = ParameterAdapter("U13", a, attr="U13")
         U31 = ParameterProxy("U31", U13)
         U23 = ParameterAdapter("U23", a, attr="U23")
         U32 = ParameterProxy("U32", U23)
-        self.addParameter(U12)
-        self.addParameter(U21)
-        self.addParameter(U13)
-        self.addParameter(U31)
-        self.addParameter(U23)
-        self.addParameter(U32)
-        self.addParameter(ParameterAdapter("Uiso", a, attr="Uisoequiv"))
+        self.add_parameter(U12)
+        self.add_parameter(U21)
+        self.add_parameter(U13)
+        self.add_parameter(U31)
+        self.add_parameter(U23)
+        self.add_parameter(U32)
+        self.add_parameter(ParameterAdapter("Uiso", a, attr="Uisoequiv"))
         # B
-        self.addParameter(ParameterAdapter("B11", a, attr="B11"))
-        self.addParameter(ParameterAdapter("B22", a, attr="B22"))
-        self.addParameter(ParameterAdapter("B33", a, attr="B33"))
+        self.add_parameter(ParameterAdapter("B11", a, attr="B11"))
+        self.add_parameter(ParameterAdapter("B22", a, attr="B22"))
+        self.add_parameter(ParameterAdapter("B33", a, attr="B33"))
         B12 = ParameterAdapter("B12", a, attr="B12")
         B21 = ParameterProxy("B21", B12)
         B13 = ParameterAdapter("B13", a, attr="B13")
         B31 = ParameterProxy("B31", B13)
         B23 = ParameterAdapter("B23", a, attr="B23")
         B32 = ParameterProxy("B32", B23)
-        self.addParameter(B12)
-        self.addParameter(B21)
-        self.addParameter(B13)
-        self.addParameter(B31)
-        self.addParameter(B23)
-        self.addParameter(B32)
-        self.addParameter(ParameterAdapter("Biso", a, attr="Bisoequiv"))
+        self.add_parameter(B12)
+        self.add_parameter(B21)
+        self.add_parameter(B13)
+        self.add_parameter(B31)
+        self.add_parameter(B23)
+        self.add_parameter(B32)
+        self.add_parameter(ParameterAdapter("Biso", a, attr="Bisoequiv"))
         return
 
     def __repr__(self):
@@ -216,26 +216,26 @@ class DiffpyLatticeParSet(ParameterSet):
         self.angunits = "deg"
         self.lattice = lattice
         lat = lattice
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter("a", lat, _latgetter("a"), _latsetter("a"))
         )
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter("b", lat, _latgetter("b"), _latsetter("b"))
         )
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter("c", lat, _latgetter("c"), _latsetter("c"))
         )
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter(
                 "alpha", lat, _latgetter("alpha"), _latsetter("alpha")
             )
         )
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter(
                 "beta", lat, _latgetter("beta"), _latsetter("beta")
             )
         )
-        self.addParameter(
+        self.add_parameter(
             ParameterAdapter(
                 "gamma", lat, _latgetter("gamma"), _latsetter("gamma")
             )

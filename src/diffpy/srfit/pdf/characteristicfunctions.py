@@ -654,14 +654,14 @@ class SASCF(Calculator):
         # Wrap normal parameters
         for parname in model.params:
             par = SASParameter(parname, model)
-            self.addParameter(par)
+            self.add_parameter(par)
 
         # Wrap dispersion parameters
         for parname in model.dispersion:
             name = parname + "_width"
             parname += ".width"
             par = SASParameter(name, model, parname)
-            self.addParameter(par)
+            self.add_parameter(par)
 
         return
 

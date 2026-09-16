@@ -190,7 +190,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         return
 
     def testNewParameter(self):
-        """Test the addParameter method."""
+        """Test the add_parameter method."""
         m = self.m
 
         p1 = Parameter("p1", 1)
@@ -205,7 +205,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         return
 
     def testAddParameter(self):
-        """Test the addParameter method."""
+        """Test the add_parameter method."""
         m = self.m
 
         p1 = Parameter("p1", 1)
@@ -242,7 +242,7 @@ class TestRecipeOrganizer(unittest.TestCase):
         return
 
     def testRemoveParameter(self):
-        """Test removeParameter method."""
+        """Test remove_parameter method."""
         m = self.m
 
         p1 = Parameter("p1", 1)
@@ -419,9 +419,9 @@ class TestRecipeOrganizer(unittest.TestCase):
 
             def __init__(self, name):
                 Calculator.__init__(self, name)
-                self.newParameter("A", 1.0)
-                self.newParameter("center", 0.0)
-                self.newParameter("width", 0.1)
+                self.new_parameter("A", 1.0)
+                self.new_parameter("center", 0.0)
+                self.new_parameter("width", 0.1)
                 return
 
             def __call__(self, x):
@@ -464,9 +464,9 @@ class TestRecipeOrganizer(unittest.TestCase):
 
             def __init__(self, name):
                 Calculator.__init__(self, name)
-                self.newParameter("A", 1.0)
-                self.newParameter("center", 0.0)
-                self.newParameter("width", 0.1)
+                self.new_parameter("A", 1.0)
+                self.new_parameter("center", 0.0)
+                self.new_parameter("width", 0.1)
                 return
 
             def __call__(self, x):

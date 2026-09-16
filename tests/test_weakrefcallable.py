@@ -110,7 +110,7 @@ class TestWeakBoundMethod(unittest.TestCase):
     def test_observable_deregistration(self):
         """Check if Observable drops dead Observer."""
         f = self.f
-        x = f.newParameter("x", 5)
+        x = f.new_parameter("x", 5)
         f.set_equation("3 * x")
         self.assertEqual(15, f.evaluate())
         self.assertEqual(15, f._eq._value)

@@ -72,7 +72,7 @@ class Calculator(Operator, ParameterSet):
     _value
         The value of the Operator.
     value
-        Property for 'getValue'.
+        Property for 'get_value'.
 
     Properties
     ----------

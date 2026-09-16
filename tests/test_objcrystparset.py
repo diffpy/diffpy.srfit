@@ -174,26 +174,26 @@ class TestParameterAdapter:
         def _testCrystal():
             # Test the lattice
             assert occryst.a == pytest.approx(cryst.a.value)
-            assert occryst.b == pytest.approx(cryst.b.getValue())
-            assert occryst.c == pytest.approx(cryst.c.getValue())
-            assert occryst.alpha == pytest.approx(cryst.alpha.getValue())
-            assert occryst.beta == pytest.approx(cryst.beta.getValue())
-            assert occryst.gamma == pytest.approx(cryst.gamma.getValue())
+            assert occryst.b == pytest.approx(cryst.b.get_value())
+            assert occryst.c == pytest.approx(cryst.c.get_value())
+            assert occryst.alpha == pytest.approx(cryst.alpha.get_value())
+            assert occryst.beta == pytest.approx(cryst.beta.get_value())
+            assert occryst.gamma == pytest.approx(cryst.gamma.get_value())
             return
 
         def _testMolecule():
 
             # Test position / occupancy
-            assert ocmol.X == pytest.approx(m.x.getValue())
-            assert ocmol.Y == pytest.approx(m.y.getValue())
-            assert ocmol.Z == pytest.approx(m.z.getValue())
-            assert ocmol.Occupancy == pytest.approx(m.occ.getValue())
+            assert ocmol.X == pytest.approx(m.x.get_value())
+            assert ocmol.Y == pytest.approx(m.y.get_value())
+            assert ocmol.Z == pytest.approx(m.z.get_value())
+            assert ocmol.Occupancy == pytest.approx(m.occ.get_value())
 
             # Test orientation
-            assert ocmol.Q0 == pytest.approx(m.q0.getValue())
-            assert ocmol.Q1 == pytest.approx(m.q1.getValue())
-            assert ocmol.Q2 == pytest.approx(m.q2.getValue())
-            assert ocmol.Q3 == pytest.approx(m.q3.getValue())
+            assert ocmol.Q0 == pytest.approx(m.q0.get_value())
+            assert ocmol.Q1 == pytest.approx(m.q1.get_value())
+            assert ocmol.Q2 == pytest.approx(m.q2.get_value())
+            assert ocmol.Q3 == pytest.approx(m.q3.get_value())
 
             # Check the atoms thoroughly
             for i in range(len(ocmol)):
@@ -201,11 +201,11 @@ class TestParameterAdapter:
                 ocsp = oca.GetScatteringPower()
                 a = m.atoms[i]
                 assert ocsp.GetSymbol() == a.element
-                assert oca.X == pytest.approx(a.x.getValue())
-                assert oca.Y == pytest.approx(a.y.getValue())
-                assert oca.Z == pytest.approx(a.z.getValue())
-                assert oca.Occupancy == pytest.approx(a.occ.getValue())
-                assert ocsp.Biso == pytest.approx(a.Biso.getValue())
+                assert oca.X == pytest.approx(a.x.get_value())
+                assert oca.Y == pytest.approx(a.y.get_value())
+                assert oca.Z == pytest.approx(a.z.get_value())
+                assert oca.Occupancy == pytest.approx(a.occ.get_value())
+                assert ocsp.Biso == pytest.approx(a.Biso.get_value())
             return
 
         _testCrystal()
@@ -395,15 +395,19 @@ class TestParameterAdapter:
         # Have another atom tag along for the ride
         p1.addAtoms([a20])
 
-        xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
-        xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz0 = numpy.array(
+            [a0.x.get_value(), a0.y.get_value(), a0.z.get_value()]
+        )
+        xyz7 = numpy.array(
+            [a7.x.get_value(), a7.y.get_value(), a7.z.get_value()]
+        )
         xyz20 = numpy.array(
-            [a20.x.getValue(), a20.y.getValue(), a20.z.getValue()]
+            [a20.x.get_value(), a20.y.get_value(), a20.z.get_value()]
         )
 
         dd = xyz0 - xyz7
         d0 = numpy.dot(dd, dd) ** 0.5
-        assert d0 == pytest.approx(p1.getValue(), abs=1e-6)
+        assert d0 == pytest.approx(p1.get_value(), abs=1e-6)
 
         # Record the unit direction of change for later
         u = dd / d0
@@ -413,16 +417,16 @@ class TestParameterAdapter:
         p1.set_value(scale * d0)
 
         # Verify that it has changed.
-        assert scale * d0 == pytest.approx(p1.getValue(), abs=1e-6)
+        assert scale * d0 == pytest.approx(p1.get_value(), abs=1e-6)
 
         xyz0a = numpy.array(
-            [a0.x.getValue(), a0.y.getValue(), a0.z.getValue()]
+            [a0.x.get_value(), a0.y.get_value(), a0.z.get_value()]
         )
         xyz7a = numpy.array(
-            [a7.x.getValue(), a7.y.getValue(), a7.z.getValue()]
+            [a7.x.get_value(), a7.y.get_value(), a7.z.get_value()]
         )
         xyz20a = numpy.array(
-            [a20.x.getValue(), a20.y.getValue(), a20.z.getValue()]
+            [a20.x.get_value(), a20.y.get_value(), a20.z.get_value()]
         )
 
         dda = xyz0a - xyz7a
@@ -457,13 +461,17 @@ class TestParameterAdapter:
         a20 = m.atoms[20]
         a25 = m.atoms[25]
 
-        xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
-        xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz0 = numpy.array(
+            [a0.x.get_value(), a0.y.get_value(), a0.z.get_value()]
+        )
+        xyz7 = numpy.array(
+            [a7.x.get_value(), a7.y.get_value(), a7.z.get_value()]
+        )
         xyz20 = numpy.array(
-            [a20.x.getValue(), a20.y.getValue(), a20.z.getValue()]
+            [a20.x.get_value(), a20.y.get_value(), a20.z.get_value()]
         )
         xyz25 = numpy.array(
-            [a25.x.getValue(), a25.y.getValue(), a25.z.getValue()]
+            [a25.x.get_value(), a25.y.get_value(), a25.z.get_value()]
         )
 
         v1 = xyz7 - xyz0
@@ -478,26 +486,26 @@ class TestParameterAdapter:
         # Have another atom tag along for the ride
         p1.addAtoms([a25])
 
-        assert angle0 == pytest.approx(p1.getValue(), abs=1e-6)
+        assert angle0 == pytest.approx(p1.get_value(), abs=1e-6)
 
         # Change the value
         scale = 1.05
         p1.set_value(scale * angle0)
 
         # Verify that it has changed.
-        assert scale * angle0 == pytest.approx(p1.getValue(), abs=1e-6)
+        assert scale * angle0 == pytest.approx(p1.get_value(), abs=1e-6)
 
         xyz0a = numpy.array(
-            [a0.x.getValue(), a0.y.getValue(), a0.z.getValue()]
+            [a0.x.get_value(), a0.y.get_value(), a0.z.get_value()]
         )
         xyz7a = numpy.array(
-            [a7.x.getValue(), a7.y.getValue(), a7.z.getValue()]
+            [a7.x.get_value(), a7.y.get_value(), a7.z.get_value()]
         )
         xyz20a = numpy.array(
-            [a20.x.getValue(), a20.y.getValue(), a20.z.getValue()]
+            [a20.x.get_value(), a20.y.get_value(), a20.z.get_value()]
         )
         xyz25a = numpy.array(
-            [a25.x.getValue(), a25.y.getValue(), a25.z.getValue()]
+            [a25.x.get_value(), a25.y.get_value(), a25.z.get_value()]
         )
 
         v1a = xyz7a - xyz0a
@@ -532,16 +540,20 @@ class TestParameterAdapter:
         a25 = m.atoms[25]
         a33 = m.atoms[33]
 
-        xyz0 = numpy.array([a0.x.getValue(), a0.y.getValue(), a0.z.getValue()])
-        xyz7 = numpy.array([a7.x.getValue(), a7.y.getValue(), a7.z.getValue()])
+        xyz0 = numpy.array(
+            [a0.x.get_value(), a0.y.get_value(), a0.z.get_value()]
+        )
+        xyz7 = numpy.array(
+            [a7.x.get_value(), a7.y.get_value(), a7.z.get_value()]
+        )
         xyz20 = numpy.array(
-            [a20.x.getValue(), a20.y.getValue(), a20.z.getValue()]
+            [a20.x.get_value(), a20.y.get_value(), a20.z.get_value()]
         )
         xyz25 = numpy.array(
-            [a25.x.getValue(), a25.y.getValue(), a25.z.getValue()]
+            [a25.x.get_value(), a25.y.get_value(), a25.z.get_value()]
         )
         xyz33 = numpy.array(
-            [a33.x.getValue(), a33.y.getValue(), a33.z.getValue()]
+            [a33.x.get_value(), a33.y.get_value(), a33.z.get_value()]
         )
 
         v12 = xyz0 - xyz7
@@ -559,29 +571,29 @@ class TestParameterAdapter:
         # Have another atom tag along for the ride
         p1.addAtoms([a33])
 
-        assert angle0 == pytest.approx(p1.getValue(), abs=1e-6)
+        assert angle0 == pytest.approx(p1.get_value(), abs=1e-6)
 
         # Change the value
         scale = 1.05
         p1.set_value(scale * angle0)
 
         # Verify that it has changed.
-        assert scale * angle0 == pytest.approx(p1.getValue(), abs=1e-6)
+        assert scale * angle0 == pytest.approx(p1.get_value(), abs=1e-6)
 
         xyz0a = numpy.array(
-            [a0.x.getValue(), a0.y.getValue(), a0.z.getValue()]
+            [a0.x.get_value(), a0.y.get_value(), a0.z.get_value()]
         )
         xyz7a = numpy.array(
-            [a7.x.getValue(), a7.y.getValue(), a7.z.getValue()]
+            [a7.x.get_value(), a7.y.get_value(), a7.z.get_value()]
         )
         xyz20a = numpy.array(
-            [a20.x.getValue(), a20.y.getValue(), a20.z.getValue()]
+            [a20.x.get_value(), a20.y.get_value(), a20.z.get_value()]
         )
         xyz25a = numpy.array(
-            [a25.x.getValue(), a25.y.getValue(), a25.z.getValue()]
+            [a25.x.get_value(), a25.y.get_value(), a25.z.get_value()]
         )
         xyz33a = numpy.array(
-            [a33.x.getValue(), a33.y.getValue(), a33.z.getValue()]
+            [a33.x.get_value(), a33.y.get_value(), a33.z.get_value()]
         )
 
         v12a = xyz0a - xyz7a

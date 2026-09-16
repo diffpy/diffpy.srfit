@@ -39,7 +39,7 @@ class Argument(Literal, ArgumentABC):
     _value
         The value of the Argument. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'set_value'.
+        Property for 'get_value' and 'set_value'.
     """
 
     const = None
@@ -55,7 +55,7 @@ class Argument(Literal, ArgumentABC):
         """Identify self to a visitor."""
         return visitor.onArgument(self)
 
-    def getValue(self):
+    def get_value(self):
         """Get the value of this Literal."""
         return self._value
 
@@ -77,7 +77,7 @@ class Argument(Literal, ArgumentABC):
         return
 
     value = property(
-        lambda self: self.getValue(), lambda self, val: self.set_value(val)
+        lambda self: self.get_value(), lambda self, val: self.set_value(val)
     )
 
 

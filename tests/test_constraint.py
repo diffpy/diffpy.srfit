@@ -51,12 +51,12 @@ class TestConstraint(unittest.TestCase):
 
         p2.set_value(2.5)
         c.update()
-        self.assertEqual(5.0, p1.getValue())
+        self.assertEqual(5.0, p1.get_value())
 
         p2.set_value(8.1)
-        self.assertEqual(5.0, p1.getValue())
+        self.assertEqual(5.0, p1.get_value())
         c.update()
-        self.assertEqual(16.2, p1.getValue())
+        self.assertEqual(16.2, p1.get_value())
         return
 
 
@@ -96,12 +96,12 @@ class TestConstraintDeprecated(unittest.TestCase):
 
         p2.set_value(2.5)
         c.update()
-        self.assertEqual(5.0, p1.getValue())
+        self.assertEqual(5.0, p1.get_value())
 
         p2.set_value(8.1)
-        self.assertEqual(5.0, p1.getValue())
+        self.assertEqual(5.0, p1.get_value())
         c.update()
-        self.assertEqual(16.2, p1.getValue())
+        self.assertEqual(16.2, p1.get_value())
         return
 
 

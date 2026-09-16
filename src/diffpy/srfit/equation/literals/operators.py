@@ -119,14 +119,14 @@ class Operator(Literal, OperatorABC):
         self._flush(other=(self,))
         return
 
-    def getValue(self):
+    def get_value(self):
         """Get or evaluate the value of the operator."""
         if self._value is None:
             vals = [arg.value for arg in self.args]
             self._value = self.operation(*vals)
         return self._value
 
-    value = property(lambda self: self.getValue())
+    value = property(lambda self: self.get_value())
 
     def _loop_check(self, literal):
         """Check if a literal causes self-reference."""

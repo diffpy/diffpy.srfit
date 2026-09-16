@@ -23,6 +23,13 @@ __all__ = ["Literal"]
 
 from diffpy.srfit.equation.literals.abcs import LiteralABC
 from diffpy.srfit.util.observable import Observable
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+literal_base = "diffpy.srfit.equation.literals.Literal"
+removal_version = "4.0.0"
+getValue_dep_msg = build_deprecation_message(
+    literal_base, "getValue", "get_value", removal_version
+)
 
 
 class Literal(Observable, LiteralABC):
@@ -49,9 +56,19 @@ class Literal(Observable, LiteralABC):
             self.name = name
         return
 
-    def getValue(self):
+    def get_value(self):
         """Get the value of the Literal."""
         raise NotImplementedError("Define in derived class")
+
+    @deprecated(getValue_dep_msg)
+    def getValue(self):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.equation.literals.Literal.get_value
+        instead.
+        """
+        return self.get_value()
 
     def identify(self, visitor):
         """Identify self to a visitor."""

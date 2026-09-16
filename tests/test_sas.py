@@ -121,13 +121,13 @@ def test_generator(sas_available):
     for pname in model.params:
         defval = model.getParam(pname)
         par = gen.get(pname)
-        assert defval == par.getValue()
+        assert defval == par.get_value()
         # Test setting values
         par.set_value(1.0)
-        assert 1.0 == par.getValue()
+        assert 1.0 == par.get_value()
         assert 1.0 == model.getParam(pname)
         par.set_value(defval)
-        assert defval == par.getValue()
+        assert defval == par.get_value()
         assert defval == model.getParam(pname)
 
     r = numpy.arange(1, 10, 0.1, dtype=float)

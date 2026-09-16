@@ -219,8 +219,8 @@ class TestFitRecipe(unittest.TestCase):
         )
         self.assertEqual(2, self.fitcontribution.c.value)
         self.recipe.add_constraint(self.fitcontribution.A, var)
-        self.assertEqual(1, var.getValue())
-        self.assertEqual(self.recipe.cont.A.getValue(), var.getValue())
+        self.assertEqual(1, var.get_value())
+        self.assertEqual(self.recipe.cont.A.get_value(), var.get_value())
         # c is constrained to a constrained parameter.
         self.assertEqual(2, self.fitcontribution.c.value)
         # The equation should evaluate to sin(x+2)
@@ -241,7 +241,7 @@ class TestFitRecipe(unittest.TestCase):
         # give us chi2 = 0 again.
         self.recipe.remove_constraint(self.fitcontribution.c)
         self.fitcontribution.c.set_value(0)
-        res = self.recipe.residual([self.recipe.cont.A.getValue()])
+        res = self.recipe.residual([self.recipe.cont.A.get_value()])
         chi2 = 0
         self.assertAlmostEqual(chi2, dot(res, res))
 

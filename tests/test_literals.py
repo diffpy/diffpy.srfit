@@ -14,12 +14,15 @@
 ##############################################################################
 """Tests for the diffpy.srfit.equation.literals module."""
 
+import re
 import unittest
 
 import numpy
+import pytest
 
 import diffpy.srfit.equation.literals as literals
 import diffpy.srfit.equation.literals.abcs as abcs
+from diffpy.srfit.equation.equationmod import Equation
 
 # ----------------------------------------------------------------------------
 
@@ -45,7 +48,7 @@ class TestArgument(unittest.TestCase):
         """Test value setting."""
         a = literals.Argument()
 
-        self.assertEqual(None, a.getValue())
+        self.assertEqual(None, a.get_value())
 
         # Test setting value
         a.set_value(3.14)
@@ -53,7 +56,7 @@ class TestArgument(unittest.TestCase):
 
         a.set_value(3.14)
         self.assertAlmostEqual(3.14, a.value)
-        self.assertAlmostEqual(3.14, a.getValue())
+        self.assertAlmostEqual(3.14, a.get_value())
         return
 
 
@@ -102,7 +105,7 @@ class TestCustomOperator(unittest.TestCase):
         a.set_value(4)
         self.assertTrue(op._value is None)
         self.assertAlmostEqual(4, op.value)
-        self.assertAlmostEqual(4, op.getValue())
+        self.assertAlmostEqual(4, op.get_value())
 
         b.value = 2
         self.assertTrue(op._value is None)
@@ -114,16 +117,16 @@ class TestCustomOperator(unittest.TestCase):
         """Test adding a literal to an operator node."""
         op = self.op
 
-        self.assertRaises(TypeError, op.getValue)
+        self.assertRaises(TypeError, op.get_value)
         op._value = 1
-        self.assertEqual(op.getValue(), 1)
+        self.assertEqual(op.get_value(), 1)
 
         # Test addition and operations
         a = literals.Argument(name="a", value=0)
         b = literals.Argument(name="b", value=0)
 
         op.addLiteral(a)
-        self.assertRaises(TypeError, op.getValue)
+        self.assertRaises(TypeError, op.get_value)
 
         op.addLiteral(b)
         self.assertAlmostEqual(0, op.value)
@@ -212,6 +215,58 @@ class TestArrayOperator(unittest.TestCase):
         z.value = 7
         self.assertTrue(numpy.array_equal([1, 2, 7], op.value))
         return
+
+
+# ----------------------------------------------------------------------------
+# Literal.getValue is deprecated in favor of Literal.get_value. Every Literal
+# in the hierarchy must keep accepting the old name, warn with a message that
+# names the replacement, and dispatch to the subclass implementation of
+# get_value rather than to Literal's own NotImplementedError stub.
+
+
+def _make_argument():
+    return literals.Argument(name="a", value=3.5)
+
+
+def _make_operator():
+    operator = literals.AdditionOperator()
+    operator.addLiteral(literals.Argument(name="a", value=1.5))
+    operator.addLiteral(literals.Argument(name="b", value=2.0))
+    return operator
+
+
+def _make_equation():
+    return Equation(name="eq", root=_make_operator())
+
+
+@pytest.mark.parametrize(
+    "make_literal",
+    [
+        # C1: Argument holds the value directly.
+        # Expected: getValue warns and returns Argument.get_value.
+        _make_argument,
+        # C2: Operator computes the value from its own literals.
+        # Expected: getValue warns and returns Operator.get_value.
+        _make_operator,
+        # C3: Equation evaluates the operator tree at its root.
+        # Expected: getValue warns and returns Equation.get_value.
+        _make_equation,
+    ],
+)
+def test_getValue_warns_and_forwards(make_literal):
+    expected_msg = (
+        "'diffpy.srfit.equation.literals.Literal.getValue' is deprecated "
+        "and will be removed in version 4.0.0. Please use "
+        "'diffpy.srfit.equation.literals.Literal.get_value' instead."
+    )
+    literal = make_literal()
+    expected_value = literal.get_value()
+
+    with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
+        actual_value = literal.getValue()
+
+    assert actual_value == expected_value
+    assert actual_value == 3.5
 
 
 # ----------------------------------------------------------------------------

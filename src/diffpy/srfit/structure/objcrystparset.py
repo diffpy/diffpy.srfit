@@ -1188,7 +1188,7 @@ class StretchModeParameter(Parameter):
 
     def set_value(self, val):
         """Change the value of the Parameter."""
-        curval = self.getValue()
+        curval = self.get_value()
         val = float(val)
 
         if val == curval:
@@ -1303,7 +1303,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
     _value
         The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'set_value'.
+        Property for 'get_value' and 'set_value'.
     constraint
         A callable that calculates the value of this Parameter. If
         this is None (None), the the Parameter is responsible for its
@@ -1404,7 +1404,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         self.set_constant(const, value)
         return self
 
-    def getValue(self):
+    def get_value(self):
         """This calculates the value if it might have been changed.
 
         There is no guarantee that the ObjCrystMolAtomParSets underlying
@@ -1458,7 +1458,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
     _value
         The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'set_value'.
+        Property for 'get_value' and 'set_value'.
     constraint
         A callable that calculates the value of this Parameter. If
         this is None (None), the the Parameter is responsible for its
@@ -1565,7 +1565,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         self.set_constant(const, value)
         return self
 
-    def getValue(self):
+    def get_value(self):
         """This calculates the value if it might have been changed.
 
         There is no guarantee that the MolAtoms underlying the bond
@@ -1626,7 +1626,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
     _value
         The value of the Parameter. Modified with 'set_value'.
     value
-        Property for 'getValue' and 'set_value'.
+        Property for 'get_value' and 'set_value'.
     constraint
         A callable that calculates the value of this Parameter. If
         this is None (None), the the Parameter is responsible for its
@@ -1745,7 +1745,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
         self.set_constant(const, value)
         return self
 
-    def getValue(self):
+    def get_value(self):
         """This calculates the value if it might have been changed.
 
         There is no guarantee that the ObjCrystMolAtomParSets underlying

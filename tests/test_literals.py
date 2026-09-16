@@ -224,49 +224,60 @@ class TestArrayOperator(unittest.TestCase):
 # get_value rather than to Literal's own NotImplementedError stub.
 
 
-def _make_argument():
-    return literals.Argument(name="a", value=3.5)
-
-
-def _make_operator():
-    operator = literals.AdditionOperator()
-    operator.addLiteral(literals.Argument(name="a", value=1.5))
-    operator.addLiteral(literals.Argument(name="b", value=2.0))
-    return operator
-
-
-def _make_equation():
-    return Equation(name="eq", root=_make_operator())
-
-
-@pytest.mark.parametrize(
-    "make_literal",
-    [
-        # C1: Argument holds the value directly.
-        # Expected: getValue warns and returns Argument.get_value.
-        _make_argument,
-        # C2: Operator computes the value from its own literals.
-        # Expected: getValue warns and returns Operator.get_value.
-        _make_operator,
-        # C3: Equation evaluates the operator tree at its root.
-        # Expected: getValue warns and returns Equation.get_value.
-        _make_equation,
-    ],
-)
-def test_getValue_warns_and_forwards(make_literal):
+# C1: Argument holds the value directly.
+# Expected: getValue warns and returns Argument.get_value.
+def test_argument_get_value_deprecated():
     expected_msg = (
         "'diffpy.srfit.equation.literals.Literal.getValue' is deprecated "
         "and will be removed in version 4.0.0. Please use "
         "'diffpy.srfit.equation.literals.Literal.get_value' instead."
     )
-    literal = make_literal()
-    expected_value = literal.get_value()
+    expected_value = 3.5
+    literal = literals.Argument(name="a", value=expected_value)
 
     with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
         actual_value = literal.getValue()
 
     assert actual_value == expected_value
-    assert actual_value == 3.5
+
+
+# C2: Operator computes the value from its own literals.
+# Expected: getValue warns and returns Operator.get_value.
+def test_operator_get_value_deprecated():
+    expected_msg = (
+        "'diffpy.srfit.equation.literals.Literal.getValue' is deprecated "
+        "and will be removed in version 4.0.0. Please use "
+        "'diffpy.srfit.equation.literals.Literal.get_value' instead."
+    )
+    expected_value = 3.5
+    operator = literals.AdditionOperator()
+    operator.addLiteral(literals.Argument(name="a", value=1.5))
+    operator.addLiteral(literals.Argument(name="b", value=2.0))
+
+    with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
+        actual_value = operator.getValue()
+
+    assert actual_value == expected_value
+
+
+# C3: Equation evaluates the operator tree at its root.
+# Expected: getValue warns and returns Equation.get_value.
+def test_equation_get_value_deprecated():
+    expected_msg = (
+        "'diffpy.srfit.equation.literals.Literal.getValue' is deprecated "
+        "and will be removed in version 4.0.0. Please use "
+        "'diffpy.srfit.equation.literals.Literal.get_value' instead."
+    )
+    expected_value = 3.5
+    operator = literals.AdditionOperator()
+    operator.addLiteral(literals.Argument(name="a", value=1.5))
+    operator.addLiteral(literals.Argument(name="b", value=2.0))
+    equation = Equation(name="eq", root=operator)
+
+    with pytest.warns(DeprecationWarning, match=re.escape(expected_msg)):
+        actual_value = equation.getValue()
+
+    assert actual_value == expected_value
 
 
 # ----------------------------------------------------------------------------

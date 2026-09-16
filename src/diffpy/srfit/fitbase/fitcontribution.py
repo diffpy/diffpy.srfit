@@ -196,9 +196,9 @@ class FitContribution(ParameterSet):
         xpar = ParameterProxy(xname, self.profile.xpar)
         ypar = ParameterProxy(yname, self.profile.ypar)
         dypar = ParameterProxy(dyname, self.profile.dypar)
-        self.addParameter(xpar, check=False)
-        self.addParameter(ypar, check=False)
-        self.addParameter(dypar, check=False)
+        self.add_parameter(xpar, check=False)
+        self.add_parameter(ypar, check=False)
+        self.add_parameter(dypar, check=False)
 
         # If we have ProfileGenerators, set their Profiles.
         for gen in self._generators.values():
@@ -290,7 +290,7 @@ class FitContribution(ParameterSet):
         ----------
         eqstr : str
             A string representation of the equation. Any Parameter
-            registered by ``addParameter`` or ``set_profile``, or function
+            registered by ``add_parameter`` or ``set_profile``, or function
             registered by ``register_calculator``, ``register_function`` or
             ``register_string_function`` can be used in the equation
             by name. Other names will be turned into Parameters of this

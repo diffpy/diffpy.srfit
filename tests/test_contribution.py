@@ -303,9 +303,9 @@ def test_setEquation(noObserversInGlobalBuilders):
     fc.setEquation("x + 5")
     fc.x.set_value(2)
     assert 7 == fc.evaluate()
-    fc.removeParameter(fc.x)
+    fc.remove_parameter(fc.x)
     x = arange(0, 10, 0.5)
-    fc.newParameter("x", x)
+    fc.new_parameter("x", x)
     assert np.array_equal(5 + x, fc.evaluate())
     assert noObserversInGlobalBuilders
     return
@@ -317,9 +317,9 @@ def test_set_equation(noObserversInGlobalBuilders):
     fc.set_equation("x + 5")
     fc.x.set_value(2)
     assert 7 == fc.evaluate()
-    fc.removeParameter(fc.x)
+    fc.remove_parameter(fc.x)
     x = arange(0, 10, 0.5)
-    fc.newParameter("x", x)
+    fc.new_parameter("x", x)
     assert np.array_equal(5 + x, fc.evaluate())
     assert noObserversInGlobalBuilders
     return

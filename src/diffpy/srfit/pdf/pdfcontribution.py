@@ -96,10 +96,10 @@ class PDFContribution(FitContribution):
 
         # Need a parameter for the overall scale, in the case that this is a
         # multi-phase fit.
-        self.newParameter("scale", 1.0)
+        self.new_parameter("scale", 1.0)
         # Profile-related parameters that will be shared between the generators
-        self.newParameter("qdamp", 0)
-        self.newParameter("qbroad", 0)
+        self.new_parameter("qdamp", 0)
+        self.new_parameter("qbroad", 0)
         return
 
     # Data methods

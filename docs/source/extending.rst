@@ -74,9 +74,9 @@ atom object called ``SimpleAtom`` that has attributes ``x``, ``y`` and ``z``.
             zpar = ParameterAdapter("z", atom, attr = "z")
 
             # Add these to the parameter set
-            self.addParameter(xpar)
-            self.addParameter(ypar)
-            self.addParameter(zpar)
+            self.add_parameter(xpar)
+            self.add_parameter(ypar)
+            self.add_parameter(zpar)
 
             return
 
@@ -85,7 +85,7 @@ atom object called ``SimpleAtom`` that has attributes ``x``, ``y`` and ``z``.
 The ``x``, ``y`` and ``z`` attributes (specified by the ``attr`` keyword
 argument of ``ParameterAdapter``) of a ``SimpleAtom`` are wrapped as
 ``ParameterAdapter`` objects named `x`, `y`, and `z`.  They are then added to
-the ``SimpleAtomParSet`` using the ``addParameter`` method, which makes them
+the ``SimpleAtomParSet`` using the ``add_parameter`` method, which makes them
 accessible as attributes.
 
 If SimpleAtom did not have an attribute named ``x``, but rather accessor

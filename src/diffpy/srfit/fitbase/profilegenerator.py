@@ -29,9 +29,9 @@ calculation. A very simple example is
             # Initialize and give this a name
             ProfileGenerator.__init__(self, "g")
             # Add amplitude, center and width parameters
-            self.newParameter("amp", 0)
-            self.newParameter("center", 0)
-            self.newParameter("width", 0)
+            self.new_parameter("amp", 0)
+            self.new_parameter("center", 0)
+            self.new_parameter("width", 0)
         def __call__(self, x):
             a = self.amp.getValue()
             x0 = self.center.getValue()

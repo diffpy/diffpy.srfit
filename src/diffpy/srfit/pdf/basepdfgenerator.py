@@ -122,7 +122,7 @@ class BasePDFGenerator(ProfileGenerator):
         """
         self._calc = calc
         for pname in self.__class__._parnames:
-            self.addParameter(ParameterAdapter(pname, self._calc, attr=pname))
+            self.add_parameter(ParameterAdapter(pname, self._calc, attr=pname))
         self._process_metadata()
         return
 

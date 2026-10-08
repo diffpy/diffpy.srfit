@@ -174,10 +174,10 @@ class ProfileGenerator(Operator, ParameterSet):
             will store the calculated signal.
         """
         if self.profile is not None:
-            self.profile.removeObserver(self._on_profile_update)
+            self.profile.remove_observer(self._on_profile_update)
 
         self.profile = profile
-        self.profile.addObserver(self._on_profile_update)
+        self.profile.add_observer(self._on_profile_update)
         self._on_profile_update(other=(self,))
         return
 

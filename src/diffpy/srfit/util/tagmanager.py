@@ -22,6 +22,17 @@ __all__ = ["TagManager"]
 
 import functools
 
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+tagmanager_base = "diffpy.srfit.util.tagmanager.TagManager"
+removal_version = "4.0.0"
+hasTags_dep_msg = build_deprecation_message(
+    tagmanager_base, "hasTags", "has_tags", removal_version
+)
+verifyTags_dep_msg = build_deprecation_message(
+    tagmanager_base, "verifyTags", "verify_tags", removal_version
+)
+
 
 class TagManager(object):
     """TagManager class.
@@ -30,22 +41,26 @@ class TagManager(object):
 
     Attributes
     ----------
-    silent
-        Flag indicating whether to silently pass by when a tag
-        cannot be found (bool, True). If this is False, then a
-        KeyError will be thrown when a tag cannot be found.
-    _tagdict
-        A dictionary of tags to sets of tagged objects.
+    silent : bool
+        The flag that is True (default) to treat an unknown tag as having
+        no objects. If False, an unknown tag raises a KeyError.
+    _tagdict : dict
+        The mapping of each tag to the set of objects it is applied to.
     """
 
     def __init__(self):
-        """Initialization."""
         self._tagdict = {}
         self.silent = True
         return
 
     def alltags(self):
-        """Get all tags managed by the TagManager."""
+        """Return all tags managed by the TagManager.
+
+        Returns
+        -------
+        dict_keys
+            The tags that have been applied to any object.
+        """
         return self._tagdict.keys()
 
     def tag(self, obj, *tags):
@@ -55,13 +70,15 @@ class TagManager(object):
 
         Parameters
         ----------
-        obj
-            Any hashable object to be untagged.
+        obj : hashable
+            The object to tag.
         *tags
-            Tags to apply to obj.
+            The tags to apply to ``obj``.
 
-
-        Raises TypeError if obj is not hashable.
+        Raises
+        ------
+        TypeError
+            If ``obj`` is not hashable.
         """
         for tag in tags:
             oset = self._tagdict.setdefault(str(tag), set())
@@ -73,15 +90,17 @@ class TagManager(object):
 
         Parameters
         ----------
-        obj
-            Any hashable object to be untagged.
+        obj : hashable
+            The object to untag.
         *tags
-            Tags to remove from obj. If this is empty, then all
-            tags will be removed from obj.
+            The tags to remove from ``obj``. If none are given, all tags
+            are removed from ``obj``.
 
-
-        Raises KeyError if a passed tag does not apply to obj and self.silent
-        is False
+        Raises
+        ------
+        KeyError
+            If a given tag does not apply to ``obj`` and ``silent`` is
+            False.
         """
         if not tags:
             tags = self.tags(obj)
@@ -95,26 +114,63 @@ class TagManager(object):
         return
 
     def tags(self, obj):
-        """Get all tags on an object.
+        """Return all tags on an object.
 
-        Returns list
+        Parameters
+        ----------
+        obj : hashable
+            The object to look up.
+
+        Returns
+        -------
+        list of str
+            The tags applied to ``obj``.
         """
         tags = [k for (k, v) in self._tagdict.items() if obj in v]
         return tags
 
-    def hasTags(self, obj, *tags):
-        """Determine if an object has all passed tags.
+    def has_tags(self, obj, *tags):
+        """Check whether an object has all of the given tags.
 
-        Returns bool
+        Parameters
+        ----------
+        obj : hashable
+            The object to check.
+        *tags
+            The tags to look for.
+
+        Returns
+        -------
+        bool
+            The flag that is True if ``obj`` has every tag in ``tags``.
+
+        Raises
+        ------
+        KeyError
+            If a tag does not exist and ``silent`` is False.
         """
         setgen = (self.__get_object_set(t) for t in tags)
         result = all(obj in s for s in setgen)
         return result
 
     def union(self, *tags):
-        """Get all objects that have any of the passed tags.
+        """Return all objects that have any of the given tags.
 
-        Returns set
+        Parameters
+        ----------
+        *tags
+            The tags to look for.
+
+        Returns
+        -------
+        set
+            The objects that have at least one tag in ``tags``. Empty if
+            no tags are given.
+
+        Raises
+        ------
+        KeyError
+            If a tag does not exist and ``silent`` is False.
         """
         if not tags:
             return set()
@@ -123,9 +179,23 @@ class TagManager(object):
         return objs
 
     def intersection(self, *tags):
-        """Get all objects that have all of the passed tags.
+        """Return all objects that have all of the given tags.
 
-        Returns set
+        Parameters
+        ----------
+        *tags
+            The tags to look for.
+
+        Returns
+        -------
+        set
+            The objects that have every tag in ``tags``. Empty if no tags
+            are given.
+
+        Raises
+        ------
+        KeyError
+            If a tag does not exist and ``silent`` is False.
         """
         if not tags:
             return set()
@@ -133,17 +203,51 @@ class TagManager(object):
         objs = functools.reduce(set.intersection, setgen)
         return objs
 
-    def verifyTags(self, *tags):
-        """Check that tags are all extant.
+    def verify_tags(self, *tags):
+        """Check that all of the given tags exist.
 
-        Raises KeyError if a passed tag does not exist. This ignores
-        self.silent.
+        This ignores ``silent``.
+
+        Parameters
+        ----------
+        *tags
+            The tags to check.
+
+        Returns
+        -------
+        bool
+            True when every tag exists.
+
+        Raises
+        ------
+        KeyError
+            If a tag does not exist.
         """
         keys = self._tagdict.keys()
         for tag in tags:
             if tag not in keys:
                 raise KeyError("Tag '%s' does not exist" % tag)
         return True
+
+    @deprecated(hasTags_dep_msg)
+    def hasTags(self, obj, *tags):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.util.tagmanager.TagManager.has_tags
+        instead.
+        """
+        return self.has_tags(obj, *tags)
+
+    @deprecated(verifyTags_dep_msg)
+    def verifyTags(self, *tags):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.util.tagmanager.TagManager.verify_tags
+        instead.
+        """
+        return self.verify_tags(*tags)
 
     def __get_object_set(self, tag):
         """Helper function for getting an object set with given tag.

@@ -161,11 +161,11 @@ class Equation(Operator):
 
         # Stop observing the old root
         if self.root is not None:
-            self.root.removeObserver(self._flush)
+            self.root.remove_observer(self._flush)
 
         # Add the new root
         self.root = root
-        self.root.addObserver(self._flush)
+        self.root.add_observer(self._flush)
         self._flush(other=(self,))
 
         # Get the args

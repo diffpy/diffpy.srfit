@@ -453,3 +453,14 @@ def reset_characteristic_function_warnings():
     _warned_non_physical.clear()
     yield
     _warned_non_physical.clear()
+
+
+@pytest.fixture
+def tag_manager():
+    from diffpy.srfit.util.tagmanager import TagManager
+
+    manager = TagManager()
+    manager.silent = False
+    manager.tag(3, "3", "number")
+    manager.tag(4, "4", "number")
+    return manager

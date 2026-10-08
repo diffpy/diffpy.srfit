@@ -14,37 +14,55 @@
 ##############################################################################
 """Utilities and constants used throughout SrFit."""
 
+import re
+
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
 _DASHEDLINE = 78 * "-"
 
+sortKeyForNumericString_dep_msg = build_deprecation_message(
+    "diffpy.srfit.util",
+    "sortKeyForNumericString",
+    "sort_key_for_numeric_string",
+    "4.0.0",
+)
 
-def sortKeyForNumericString(s):
-    """Compute key for sorting strings according to their integer
-    numeric value.
 
-    Each string gets split to string and integer segments to create keys
-    for comparison.  Signs, decimal points and exponents are ignored.
-    This function is intended as the ``key`` argument for the ``sorted``
-    or ``list.sort`` function.
+def sort_key_for_numeric_string(string):
+    """Return a sort key that orders the numbers in a string by value.
+
+    The string is split into text and integer segments, so ``"a2"`` sorts
+    before ``"a10"``. Signs, decimal points and exponents are ignored. Use it
+    as the ``key`` argument of ``sorted`` or ``list.sort``.
 
     Parameters
     ----------
-    s : str
-        String which may have numeric components, e.g., "a12b".
+    string : str
+        The string to build a key for, which may contain numbers, e.g.
+        ``"a12b"``.
 
     Returns
     -------
     tuple
-        Tuple of non-numeric segments intermixed with integer values.
+        The text segments of ``string`` with integer values in between,
+        e.g. ``("a", 12, "b")``.
     """
-    if sortKeyForNumericString._rx is None:
-        import re
+    segments = re.split(r"(\d+)", string)
+    sort_key = tuple(
+        int(segment) if segment.isdecimal() else segment
+        for segment in segments
+    )
+    return sort_key
 
-        sortKeyForNumericString._rx = re.compile(r"(\d+)")
-    rx = sortKeyForNumericString._rx
-    rv = tuple((int(w) if i % 2 else w) for i, w in enumerate(rx.split(s)))
-    return rv
 
+@deprecated(sortKeyForNumericString_dep_msg)
+def sortKeyForNumericString(s):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
 
-sortKeyForNumericString._rx = None
+    Please use diffpy.srfit.util.sort_key_for_numeric_string instead.
+    """
+    return sort_key_for_numeric_string(s)
+
 
 # End of file

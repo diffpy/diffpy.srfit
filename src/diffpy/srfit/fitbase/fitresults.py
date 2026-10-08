@@ -30,8 +30,8 @@ from collections import OrderedDict
 import numpy
 
 from diffpy.srfit.util import _DASHEDLINE
-from diffpy.srfit.util import sortKeyForNumericString as numstr
-from diffpy.srfit.util.inpututils import inputToString
+from diffpy.srfit.util import sort_key_for_numeric_string as numstr
+from diffpy.srfit.util.inpututils import convert_input_to_string
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 fitresults_base = "diffpy.srfit.fitbase.FitResults"
@@ -855,7 +855,7 @@ def resultsDictionary(results):
 def _parse_results_dictionary(results):
     """Remove this function when when resultsDictionary and
     initializeRecipe are removed in 4.0.0."""
-    resstr = inputToString(results)
+    resstr = convert_input_to_string(results)
     rx = {
         "f": r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?",
         "n": r"[a-zA-Z_]\w*",

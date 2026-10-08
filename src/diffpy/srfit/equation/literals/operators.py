@@ -115,7 +115,7 @@ class Operator(Literal, OperatorABC):
         # Make sure we don't have self-reference
         self._loop_check(literal)
         self.args.append(literal)
-        literal.addObserver(self._flush)
+        literal.add_observer(self._flush)
         self._flush(other=(self,))
         return
 

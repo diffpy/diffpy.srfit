@@ -47,7 +47,7 @@ from __future__ import print_function
 
 from pathlib import Path
 
-from diffpy.srfit.fitbase import (
+from diffpy.srfit import (
     FitContribution,
     FitRecipe,
     FitResults,

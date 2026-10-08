@@ -21,7 +21,7 @@ creation.
 
 from pathlib import Path
 
-from diffpy.srfit.fitbase import SimpleRecipe
+from diffpy.srfit import SimpleRecipe
 
 ######
 #  Example Code

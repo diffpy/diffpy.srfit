@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
+from diffpy.srfit import ProfileParser
 from diffpy.srfit.exceptions import ParseError
-from diffpy.srfit.fitbase.profileparser import ProfileParser
 
 EXPECTED_META = {
     "wavelength": 0.1,

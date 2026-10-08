@@ -20,7 +20,7 @@ defined in the diffpy.srfit.interface.interface.py module.
 
 from pathlib import Path
 
-from diffpy.srfit.fitbase import (
+from diffpy.srfit import (
     FitContribution,
     FitRecipe,
     FitResults,

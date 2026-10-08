@@ -20,8 +20,8 @@ import warnings
 import numpy
 import pytest
 
+from diffpy.srfit import Calculator
 from diffpy.srfit.equation.builder import EquationFactory
-from diffpy.srfit.fitbase.calculator import Calculator
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.recipeorganizer import (
     RecipeContainer,

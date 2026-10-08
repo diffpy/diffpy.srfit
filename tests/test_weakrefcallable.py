@@ -17,7 +17,7 @@
 import pickle
 import unittest
 
-from diffpy.srfit.fitbase import FitContribution
+from diffpy.srfit import FitContribution
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.util.weakrefcallable import WeakBoundMethod, weak_ref
 

@@ -19,8 +19,7 @@ import unittest
 
 from numpy import arange, array_equal
 
-from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
+from diffpy.srfit import Profile, ProfileGenerator
 
 
 class TestProfileGenerator(unittest.TestCase):

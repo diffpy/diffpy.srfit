@@ -20,14 +20,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
+from bg_mpl_stylesheets.styles import all_styles
 from numpy import array_equal, dot, linspace, ones_like, pi, sin
 from scipy.optimize import leastsq
 
-from diffpy.srfit.fitbase import FitResults
-from diffpy.srfit.fitbase.fitcontribution import FitContribution
-from diffpy.srfit.fitbase.fitrecipe import FitRecipe
+from diffpy.srfit import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.profile import Profile
 from diffpy.srfit.pdf import PDFParser
 
 matplotlib.use("Agg")
@@ -684,6 +682,24 @@ def test_plot_recipe_after_refinement(build_recipes_one_contribution):
     assert actual_line_count == expected_line_count
     assert actual_label == expected_label
     assert len(new_figs) == 1
+
+
+def test_plot_recipe_styles_only_its_own_figure(
+    build_recipes_one_contribution,
+):
+    # C1: A refined recipe is plotted.
+    # Expected: The srfit figure uses the bg-style stylesheet, and the
+    # global matplotlib style is the same after plotting as before.
+    recipe, _ = build_recipes_one_contribution
+    optimize_recipe(recipe)
+    plt.close("all")
+    expected_global_linewidth = plt.rcParams["axes.linewidth"]
+    _, ax = recipe.plot_recipe(show=False, return_fig=True)
+    actual_figure_linewidth = ax.spines["left"].get_linewidth()
+    expected_figure_linewidth = all_styles["bg-style"]["axes.linewidth"]
+    actual_global_linewidth = plt.rcParams["axes.linewidth"]
+    assert actual_figure_linewidth == expected_figure_linewidth
+    assert actual_global_linewidth == expected_global_linewidth
 
 
 def test_plot_recipe_two_contributions(build_recipe_two_contributions):

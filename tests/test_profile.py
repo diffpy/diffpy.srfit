@@ -21,9 +21,8 @@ import unittest
 import pytest
 from numpy import allclose, arange, array, array_equal, ones_like
 
+from diffpy.srfit import FitContribution, Profile, ProfileParser
 from diffpy.srfit.exceptions import SrFitError
-from diffpy.srfit.fitbase import FitContribution, ProfileParser
-from diffpy.srfit.fitbase.profile import Profile
 
 
 class TestProfile(unittest.TestCase):

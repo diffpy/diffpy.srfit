@@ -36,7 +36,7 @@ Extensions
 import numpy
 from gaussianrecipe import scipyOptimize
 
-from diffpy.srfit.fitbase import (
+from diffpy.srfit import (
     FitContribution,
     FitRecipe,
     FitResults,

@@ -20,11 +20,9 @@ import numpy as np
 import pytest
 from numpy import arange, array_equal, dot, sin
 
+from diffpy.srfit import FitContribution, Profile, ProfileGenerator
 from diffpy.srfit.exceptions import SrFitError
-from diffpy.srfit.fitbase.fitcontribution import FitContribution
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.fitbase.profilegenerator import ProfileGenerator
 
 
 class TestContribution(unittest.TestCase):

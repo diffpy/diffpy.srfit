@@ -37,8 +37,6 @@ __all__ = ["FitRecipe"]
 from collections import OrderedDict
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-from bg_mpl_stylesheets.styles import all_styles
 from numpy import array, concatenate, dot, sqrt
 
 import diffpy.srfit.util.inpututils as utils
@@ -48,8 +46,6 @@ from diffpy.srfit.fitbase.recipeorganizer import RecipeOrganizer
 from diffpy.srfit.interface import _fitrecipe_interface
 from diffpy.srfit.util.tagmanager import TagManager
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
-
-plt.style.use(all_styles["bg-style"])
 
 base = "diffpy.srfit.fitbase.FitRecipe"
 removal_version = "4.0.0"
@@ -1695,107 +1691,115 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
                 "No contributions found in recipe. "
                 "Add contributions before plotting."
             )
+        import matplotlib.pyplot as plt
+        from bg_mpl_stylesheets.styles import all_styles
+
         figures = []
         axes_list = []
         shared_axes = ax is not None and len(self._contributions) > 1
-        for name, contrib in self._contributions.items():
-            profile = contrib.profile
-            x = profile.x
-            yobs = profile.y
-            ycalc = profile.ycalc
-            show_fit = plot_params["show_fit"]
-            show_diff = plot_params["show_diff"]
-            if ycalc is None:
-                if show_fit or show_diff:
-                    print(
-                        f"Contribution '{name}' has no calculated values "
-                        "(ycalc is None). "
-                        "Only observed data will be plotted."
+        with plt.style.context(all_styles["bg-style"]):
+            for name, contrib in self._contributions.items():
+                profile = contrib.profile
+                x = profile.x
+                yobs = profile.y
+                ycalc = profile.ycalc
+                show_fit = plot_params["show_fit"]
+                show_diff = plot_params["show_diff"]
+                if ycalc is None:
+                    if show_fit or show_diff:
+                        print(
+                            f"Contribution '{name}' has no calculated values "
+                            "(ycalc is None). "
+                            "Only observed data will be plotted."
+                        )
+                    show_fit = False
+                    show_diff = False
+                else:
+                    diff = yobs - ycalc
+                    y_min = min(yobs.min(), ycalc.min())
+                    y_max = max(yobs.max(), ycalc.max())
+                    y_range = y_max - y_min
+                    base_offset = y_min - 0.1 * y_range
+                    offset = base_offset * plot_params["offset_scale"]
+                if ax is None:
+                    fig = plt.figure(figsize=plot_params["figsize"])
+                    current_ax = fig.add_subplot(111)
+                else:
+                    current_ax = ax
+                    fig = current_ax.figure
+                if plot_params["show_observed"]:
+                    current_ax.plot(
+                        x,
+                        yobs,
+                        plot_params["data_style"],
+                        label=self._format_plot_label(
+                            plot_params["data_label"], name, shared_axes
+                        ),
+                        color=plot_params["data_color"],
+                        markersize=plot_params["markersize"],
+                        alpha=plot_params["alpha"],
                     )
-                show_fit = False
-                show_diff = False
-            else:
-                diff = yobs - ycalc
-                y_min = min(yobs.min(), ycalc.min())
-                y_max = max(yobs.max(), ycalc.max())
-                y_range = y_max - y_min
-                base_offset = y_min - 0.1 * y_range
-                offset = base_offset * plot_params["offset_scale"]
-            if ax is None:
-                fig = plt.figure(figsize=plot_params["figsize"])
-                current_ax = fig.add_subplot(111)
-            else:
-                current_ax = ax
-                fig = current_ax.figure
-            if plot_params["show_observed"]:
-                current_ax.plot(
-                    x,
-                    yobs,
-                    plot_params["data_style"],
-                    label=self._format_plot_label(
-                        plot_params["data_label"], name, shared_axes
-                    ),
-                    color=plot_params["data_color"],
-                    markersize=plot_params["markersize"],
-                    alpha=plot_params["alpha"],
-                )
-            if show_fit:
-                current_ax.plot(
-                    x,
-                    ycalc,
-                    plot_params["fit_style"],
-                    label=self._format_plot_label(
-                        plot_params["fit_label"], name, shared_axes
-                    ),
-                    color=plot_params["fit_color"],
-                    linewidth=plot_params["linewidth"],
-                    alpha=plot_params["alpha"],
-                )
-            if show_diff:
-                current_ax.plot(
-                    x,
-                    diff + offset,
-                    plot_params["diff_style"],
-                    label=self._format_plot_label(
-                        plot_params["diff_label"], name, shared_axes
-                    ),
-                    color=plot_params["diff_color"],
-                    linewidth=plot_params["linewidth"],
-                    alpha=plot_params["alpha"],
-                )
-                current_ax.axhline(
-                    offset,
-                    color="black",
-                )
-            meta = getattr(profile, "meta", None)
-            if meta:
-                self._set_axes_labels_from_metadata(meta, plot_params)
-            if plot_params["xlabel"] is not None:
-                current_ax.set_xlabel(plot_params["xlabel"])
-            if plot_params["ylabel"] is not None:
-                current_ax.set_ylabel(plot_params["ylabel"])
-            if plot_params["title"] is not None:
-                current_ax.set_title(
-                    self._format_plot_label(plot_params["title"], name, False)
-                )
-            elif ax is None:
-                current_ax.set_title(name)
-            if plot_params["legend"]:
-                current_ax.legend(loc=plot_params["legend_loc"], frameon=True)
-            if plot_params["grid"]:
-                current_ax.grid(True)
-            if (
-                plot_params["xmin"] is not None
-                or plot_params["xmax"] is not None
-            ):
-                current_ax.set_xlim(
-                    left=plot_params["xmin"], right=plot_params["xmax"]
-                )
-            fig.tight_layout()
-            figures.append(fig)
-            axes_list.append(current_ax)
-            if plot_params["show"] and ax is None:
-                plt.show()
+                if show_fit:
+                    current_ax.plot(
+                        x,
+                        ycalc,
+                        plot_params["fit_style"],
+                        label=self._format_plot_label(
+                            plot_params["fit_label"], name, shared_axes
+                        ),
+                        color=plot_params["fit_color"],
+                        linewidth=plot_params["linewidth"],
+                        alpha=plot_params["alpha"],
+                    )
+                if show_diff:
+                    current_ax.plot(
+                        x,
+                        diff + offset,
+                        plot_params["diff_style"],
+                        label=self._format_plot_label(
+                            plot_params["diff_label"], name, shared_axes
+                        ),
+                        color=plot_params["diff_color"],
+                        linewidth=plot_params["linewidth"],
+                        alpha=plot_params["alpha"],
+                    )
+                    current_ax.axhline(
+                        offset,
+                        color="black",
+                    )
+                meta = getattr(profile, "meta", None)
+                if meta:
+                    self._set_axes_labels_from_metadata(meta, plot_params)
+                if plot_params["xlabel"] is not None:
+                    current_ax.set_xlabel(plot_params["xlabel"])
+                if plot_params["ylabel"] is not None:
+                    current_ax.set_ylabel(plot_params["ylabel"])
+                if plot_params["title"] is not None:
+                    current_ax.set_title(
+                        self._format_plot_label(
+                            plot_params["title"], name, False
+                        )
+                    )
+                elif ax is None:
+                    current_ax.set_title(name)
+                if plot_params["legend"]:
+                    current_ax.legend(
+                        loc=plot_params["legend_loc"], frameon=True
+                    )
+                if plot_params["grid"]:
+                    current_ax.grid(True)
+                if (
+                    plot_params["xmin"] is not None
+                    or plot_params["xmax"] is not None
+                ):
+                    current_ax.set_xlim(
+                        left=plot_params["xmin"], right=plot_params["xmax"]
+                    )
+                fig.tight_layout()
+                figures.append(fig)
+                axes_list.append(current_ax)
+                if plot_params["show"] and ax is None:
+                    plt.show()
         if return_fig:
             if len(figures) == 1:
                 return figures[0], axes_list[0]

@@ -20,12 +20,8 @@ import numpy as np
 import pytest
 from scipy.optimize import leastsq
 
-from diffpy.srfit.fitbase.fitrecipe import FitRecipe
-from diffpy.srfit.fitbase.fitresults import (
-    FitResults,
-    initializeRecipe,
-    resultsDictionary,
-)
+from diffpy.srfit import FitRecipe, FitResults
+from diffpy.srfit.fitbase.fitresults import initializeRecipe, resultsDictionary
 
 # The fit results from the recipe fixture in conftest.py
 expected_fitresults = """\

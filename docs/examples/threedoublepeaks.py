@@ -20,7 +20,7 @@ from pathlib import Path
 
 import numpy
 
-from diffpy.srfit.fitbase import (
+from diffpy.srfit import (
     FitContribution,
     FitRecipe,
     FitResults,

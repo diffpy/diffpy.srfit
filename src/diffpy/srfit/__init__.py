@@ -16,6 +16,32 @@
 ##############################################################################
 """Generalized code base for modeling problems."""
 
+__all__ = [
+    "Calculator",
+    "FitContribution",
+    "FitHook",
+    "FitRecipe",
+    "FitResults",
+    "PlotFitHook",
+    "Profile",
+    "ProfileGenerator",
+    "ProfileParser",
+    "SimpleRecipe",
+]
+
+from diffpy.srfit.fitbase import (
+    Calculator,
+    FitContribution,
+    FitHook,
+    FitRecipe,
+    FitResults,
+    PlotFitHook,
+    Profile,
+    ProfileGenerator,
+    ProfileParser,
+    SimpleRecipe,
+)
+
 # package version
 from diffpy.srfit.version import __version__  # noqa
 

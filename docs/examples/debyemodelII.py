@@ -36,7 +36,7 @@ Extensions
 
 from debyemodel import makeRecipe, scipyOptimize
 
-from diffpy.srfit.fitbase import FitRecipe, FitResults
+from diffpy.srfit import FitRecipe, FitResults
 
 ######
 #  Example Code

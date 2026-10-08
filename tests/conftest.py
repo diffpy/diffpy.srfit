@@ -8,7 +8,7 @@ import pytest
 from numpy import linspace, pi, sin
 
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit.fitbase import FitContribution, FitRecipe, Profile
+from diffpy.srfit import FitContribution, FitRecipe, Profile
 
 logger = logging.getLogger(__name__)
 

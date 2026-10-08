@@ -231,7 +231,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         """
         RecipeOrganizer.__init__(self, name)
         self.fithooks = []
-        self.pushFitHook(PrintFitHook())
+        self.push_fit_hook(PrintFitHook())
         self._restraintlist = []
         self._oconstraints = []
         self._ready = False

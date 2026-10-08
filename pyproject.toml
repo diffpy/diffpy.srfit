@@ -58,6 +58,12 @@ diffpy-srfit = "diffpy.srfit.srfit_app:main"
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements/pip.txt"]}
 
+[tool.pytest.ini_options]
+# Fail when srfit source calls one of srfit's own deprecated names.
+filterwarnings = [
+    "error:'diffpy\\.srfit\\.:DeprecationWarning:diffpy\\.srfit",
+]
+
 [tool.codespell]
 exclude-file = ".codespell/ignore_lines.txt"
 ignore-words = ".codespell/ignore_words.txt"

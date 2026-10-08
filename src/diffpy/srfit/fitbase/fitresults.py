@@ -849,8 +849,13 @@ def resultsDictionary(results):
     dict
         The mapping of result names to their string values.
     """
-    resstr = inputToString(results)
+    return _parse_results_dictionary(results)
 
+
+def _parse_results_dictionary(results):
+    """Remove this function when when resultsDictionary and
+    initializeRecipe are removed in 4.0.0."""
+    resstr = inputToString(results)
     rx = {
         "f": r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?",
         "n": r"[a-zA-Z_]\w*",
@@ -892,7 +897,7 @@ def initializeRecipe(recipe, results):
     AttributeError
         If no results can be found in ``results``.
     """
-    mpairs = resultsDictionary(results)
+    mpairs = _parse_results_dictionary(results)
     if not mpairs:
         raise AttributeError("Cannot find results")
 

@@ -1,10 +1,10 @@
 import importlib.resources
+import io
 import logging
 import sys
 from functools import lru_cache
 
 import pytest
-import six
 from numpy import linspace, pi, sin
 
 import diffpy.srfit.equation.literals as literals
@@ -131,7 +131,7 @@ def capturestdout():
     def _capturestdout(f, *args, **kwargs):
         """Capture the standard output from a call of function f."""
         savestdout = sys.stdout
-        fp = six.StringIO()
+        fp = io.StringIO()
         try:
             sys.stdout = fp
             f(*args, **kwargs)

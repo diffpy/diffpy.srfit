@@ -26,7 +26,8 @@ from scipy.optimize import leastsq
 
 from diffpy.srfit import FitContribution, FitRecipe, FitResults, Profile
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.pdf import PDFParser
+from diffpy.srfit.fitbase.profile import Profile
+from diffpy.srfit.fitbase.profileparser import ProfileParser
 
 matplotlib.use("Agg")
 
@@ -593,10 +594,10 @@ def get_labels_and_linecount(ax):
 
 
 def build_recipe_from_datafile(datafile):
-    """Helper to build a FitRecipe from a datafile using PDFParser and
-    PDFGenerator."""
+    """Helper to build a FitRecipe from a datafile using
+    ProfileParser."""
     profile = Profile()
-    parser = PDFParser()
+    parser = ProfileParser()
     parser.parse_file(str(datafile))
     profile.load_parsed_data(parser)
 
@@ -1153,9 +1154,9 @@ def test_residual_is_weighted_by_uncertainty(
 
 # ----------------------------------------------------------------------------
 # addContribution, addParameterSet/removeParameterSet, and
-# PDFParser.parseFile/Profile.loadParsedData are deprecated in favor of
+# ProfileParser.parseFile/Profile.loadParsedData are deprecated in favor of
 # add_contribution, add_parameter_set/remove_parameter_set, and
-# PDFParser.parse_file/Profile.load_parsed_data. The old names must still
+# ProfileParser.parse_file/Profile.load_parsed_data. The old names must still
 # work and forward to the new implementation.
 
 
@@ -1224,12 +1225,12 @@ def test_add_and_remove_parameter_set_deprecated():
 
 def build_recipe_from_datafile_deprecated(datafile):
     """Duplicate of build_recipe_from_datafile to use the deprecated
-    PDFParser.parseFile and Profile.loadParsedData methods.
+    ProfileParser.parseFile and Profile.loadParsedData methods.
 
     Remove in version 4.0.0.
     """
     profile = Profile()
-    parser = PDFParser()
+    parser = ProfileParser()
     parser.parseFile(str(datafile))
     profile.loadParsedData(parser)
 

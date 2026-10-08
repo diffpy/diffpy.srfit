@@ -24,10 +24,14 @@ from bg_mpl_stylesheets.styles import all_styles
 from numpy import array_equal, dot, linspace, ones_like, pi, sin
 from scipy.optimize import leastsq
 
-from diffpy.srfit import FitContribution, FitRecipe, FitResults, Profile
+from diffpy.srfit import (
+    FitContribution,
+    FitRecipe,
+    FitResults,
+    Profile,
+    ProfileParser,
+)
 from diffpy.srfit.fitbase.parameter import Parameter
-from diffpy.srfit.fitbase.profile import Profile
-from diffpy.srfit.fitbase.profileparser import ProfileParser
 
 matplotlib.use("Agg")
 

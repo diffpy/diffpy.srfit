@@ -92,7 +92,7 @@ class SASProfile(Profile):
             self._dyobs = self._datainfo.dy
         return
 
-    def setObservedProfile(self, xobs, yobs, dyobs=None):
+    def set_observed_profile(self, xobs, yobs, dyobs=None):
         """Set the observed profile.
 
         This is overloaded to change the value within the datainfo object.
@@ -105,8 +105,8 @@ class SASProfile(Profile):
             Numpy array of the observed signal.
         dyobs
             Numpy array of the uncertainty in the observed signal. If
-            ``dyobs`` is ``None`` (default), it will be set to 1 at each
-            observed ``xobs``.
+            ``dyobs`` is ``None`` (default), it stays ``None`` to indicate
+            no uncertainty was observed.
 
         Raises
         ------
@@ -115,7 +115,7 @@ class SASProfile(Profile):
         ValueError
             If ``dyobs is not None`` and ``len(dyobs) != len(xobs)``.
         """
-        Profile.setObservedProfile(self, xobs, yobs, dyobs)
+        Profile.set_observed_profile(self, xobs, yobs, dyobs)
         # Copy the arrays to the _datainfo attribute.
         self._datainfo.x = self._xobs
         self._datainfo.y = self._yobs

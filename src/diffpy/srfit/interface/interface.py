@@ -27,8 +27,6 @@ __all__ = [
     "RecipeOrganizerInterface",
 ]
 
-import six
-
 from diffpy.srfit.equation.literals.abcs import ArgumentABC
 
 
@@ -124,7 +122,7 @@ class RecipeOrganizerInterface(object):
 
         # Want to detect _add_parameter or _new_parameter
         def f(*args):
-            if isinstance(args[0], six.string_types):
+            if isinstance(args[0], str):
                 self._new_parameter(*args)
             else:
                 self._add_parameter(*args)
@@ -182,7 +180,7 @@ class FitRecipeInterface(object):
 
         # Want to detect add_variable or create_new_variable
         def f(*args):
-            if isinstance(args[0], six.string_types):
+            if isinstance(args[0], str):
                 self.create_new_variable(*args)
             else:
                 self.add_variable(*args)

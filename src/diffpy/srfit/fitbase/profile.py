@@ -23,7 +23,6 @@ FitContributions to help calculate a residual equation.
 __all__ = ["Parameter", "Profile"]
 
 import numpy
-import six
 
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import Parameter
@@ -272,7 +271,7 @@ class Profile(Observable, Validatable):
 
         # local helper function
         def _isobs(a):
-            if not isinstance(a, six.string_types):
+            if not isinstance(a, str):
                 return False
             if a != "obs":
                 raise ValueError('Must be either float or "obs".')

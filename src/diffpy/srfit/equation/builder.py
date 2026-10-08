@@ -77,12 +77,12 @@ example.
 """
 
 import inspect
+import io
 import numbers
 import token
 import tokenize
 
 import numpy
-import six
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation.equationmod import Equation
@@ -275,7 +275,7 @@ class EquationFactory(object):
         Raises ValueError if the new builder's literal causes a self-
         reference in an existing equation.
         """
-        if not isinstance(name, six.string_types):
+        if not isinstance(name, str):
             raise TypeError("Name must be a string")
         if not isinstance(builder, BaseBuilder):
             raise TypeError("builder must be a BaseBuilder instance")
@@ -389,7 +389,7 @@ class EquationFactory(object):
 
         Raises SyntaxError if the equation string uses invalid syntax.
         """
-        interface = six.StringIO(eqstr).readline
+        interface = io.StringIO(eqstr).readline
         # output is an iterator. Each entry (token) is a 5-tuple
         # token[0] = token type
         # token[1] = token string
@@ -559,14 +559,6 @@ class BaseBuilder(object):
 
     def __rtruediv__(self, other):
         return self.__eval_binary(other, literals.DivisionOperator, False)
-
-    # Python 2 Compatibility -------------------------------------------------
-
-    if six.PY2:
-        __div__ = __truediv__
-        __rdiv__ = __rtruediv__
-
-    # ------------------------------------------------------------------------
 
     def __pow__(self, other):
         return self.__eval_binary(other, literals.ExponentiationOperator)

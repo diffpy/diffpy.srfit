@@ -853,6 +853,8 @@ def resultsDictionary(results):
 
 
 def _parse_results_dictionary(results):
+    """Remove this function when when resultsDictionary and
+    initializeRecipe are removed in 4.0.0."""
     resstr = inputToString(results)
     rx = {
         "f": r"[+-]? *(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?",

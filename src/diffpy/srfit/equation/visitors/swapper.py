@@ -97,7 +97,7 @@ class Swapper(Visitor):
                 # attempt to remove the same observer more than once, which
                 # might happen if the oldlit appears multiple times in op.args.
                 try:
-                    oldlit.removeObserver(op._flush)
+                    oldlit.remove_observer(op._flush)
                 except KeyError:
                     pass
 
@@ -108,12 +108,12 @@ class Swapper(Visitor):
                 except ValueError:
                     # Restore the old literal
                     op.args.insert(idx, oldlit)
-                    oldlit.addObserver(op._flush)
+                    oldlit.add_observer(op._flush)
                     raise
 
                 # If we got here, then go on with replacing the literal
                 op.args.insert(idx, newlit)
-                newlit.addObserver(op._flush)
+                newlit.add_observer(op._flush)
                 op._flush(other=())
 
             self._swap = False

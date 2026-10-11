@@ -33,7 +33,7 @@ from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _parameter_interface
 from diffpy.srfit.util.argbinders import bind2nd
-from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.util.nameutils import validate_name
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 parameter_base = "diffpy.srfit.fitbase.Parameter"
@@ -102,7 +102,7 @@ class Parameter(_parameter_interface, Argument, Validatable):
         """
         self.constrained = False
         self.bounds = [-numpy.inf, +numpy.inf]
-        validateName(name)
+        validate_name(name)
         Argument.__init__(self, name, value, const)
         return
 
@@ -287,7 +287,7 @@ class ParameterProxy(Parameter):
         ValueError
             If the name is not a valid attribute identifier.
         """
-        validateName(name)
+        validate_name(name)
 
         self.name = name
         self.par = par

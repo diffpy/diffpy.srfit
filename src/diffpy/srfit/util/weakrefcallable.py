@@ -21,39 +21,37 @@ import weakref
 class WeakBoundMethod(object):
     """Callable wrapper to a bound method stored as a weak reference.
 
-    Support storage of bound methods without keeping the associated objects
-    alive forever.  Provide facility for a fallback function to be used
-    when method-related object is deleted.
+    This stores a bound method without keeping its object alive, and can
+    call a fallback function once that object has been deleted.
 
     Attributes
     ----------
-    function : MethodType
-        the unbound function extracted from the wrapped bound method.
-    fallback : FunctionType, optional
-        plain function to be called when object holding the bound method
-        gets deallocated.  The fallback function is called with this
-        object as the first argument followed by any positional and
-        keyword arguments passed for the bound method.  The fallback
-        function can be used to deregister this wrapper.
-    _wref : weakref
-        weak reference to the object the wrapped method is bound to.
+    function : FunctionType
+        The unbound function extracted from the wrapped bound method.
+    fallback : FunctionType or None
+        The plain function called when the object holding the bound method
+        has been deleted. It is called with this wrapper as the first
+        argument, followed by any positional and keyword arguments passed
+        for the bound method, and can be used to deregister this wrapper.
+    _wref : weakref.ref
+        The weak reference to the object the wrapped method is bound to.
     _class : type
-        the type of the object to which the method is bound.
-        This is only used for pickling.
+        The type of the object the method is bound to. This is only used
+        for pickling.
     """
 
     __slots__ = ("function", "fallback", "_wref", "_class")
 
     def __init__(self, f, fallback=None):
-        """Create a weak reference wrapper to bound method.
+        """Create a weak reference wrapper to a bound method.
 
         Parameters
         ----------
-        f : bound MethodType
-            instance-bound method to be wrapped.
+        f : MethodType
+            The instance-bound method to wrap.
         fallback : FunctionType, optional
-            plain function to be called instead of the bound method when
-            the method associated object gets deallocated.
+            The plain function called instead of the bound method once the
+            method's object has been deleted. Default is None.
         """
         # This does not handle builtin methods, but that can be added
         # if necessary.
@@ -64,22 +62,27 @@ class WeakBoundMethod(object):
         return
 
     def __call__(self, *args, **kwargs):
-        """Call the wrapped method if the weak-referenced object is
-        alive.
+        """Call the wrapped method if its object is still alive.
 
-        If that object does not exist and the fallback function is defined,
+        If that object has been deleted and a fallback function is set,
         call the fallback function instead.
 
         Parameters
         ----------
         *args, **kwargs
-            same arguments as for the wrapped bound method.
+            The arguments passed to the wrapped bound method.
+
+        Returns
+        -------
+        object
+            The return value of the bound method, or of the fallback
+            function once the object has been deleted.
 
         Raises
         ------
         ReferenceError
-            when the method-bound object does not exist and the fallback
-            function is not defined.
+            If the method's object has been deleted and no fallback
+            function is set.
         """
         mobj = self._wref()
         if mobj is not None:
@@ -141,20 +144,20 @@ def weak_ref(f, fallback=None):
     Parameters
     ----------
     f : callable
-        object-bound method or a plain function.
+        The object-bound method or plain function to wrap.
     fallback : FunctionType, optional
-        plain function to be called when object holding ``f`` gets
-        deallocated.  The fallback function is called with the
-        wrapper object as the first argument followed by positional
-        and keyword arguments passed for the bound method.  The
-        fallback function can be used to deregister the wrapper.
+        The plain function called when the object holding ``f`` has been
+        deleted. It is called with the wrapper as the first argument,
+        followed by the positional and keyword arguments passed for the
+        bound method, and can be used to deregister the wrapper. Default
+        is None.
 
     Returns
     -------
-    WeakBoundMethod
-        when `f` is a bound method.  If `f` is a plain function or
-        already of WeakBoundMethod type, return `f` and ignore the
-        `fallback` argument.
+    WeakBoundMethod or callable
+        The weak wrapper when ``f`` is a bound method. When ``f`` is a
+        plain function or already a WeakBoundMethod, ``f`` itself, and
+        ``fallback`` is ignored.
     """
     # NOTE Weak referencing plain functions is probably not needed,
     # because they are already bound to the defining modules.

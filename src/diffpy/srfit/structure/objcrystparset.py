@@ -1220,9 +1220,9 @@ class StretchModeParameter(Parameter):
         self.matoms.update(atomlist)
         # Make sure we're observing these atoms
         for a in atomlist:
-            a.x.addObserver(self._flush)
-            a.y.addObserver(self._flush)
-            a.z.addObserver(self._flush)
+            a.x.add_observer(self._flush)
+            a.y.add_observer(self._flush)
+            a.z.add_observer(self._flush)
 
         # Record the added atoms in the StretchMode
         scatlist = [a.scat for a in atomlist]
@@ -1349,9 +1349,9 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
 
         # Observe the atom positions
         for a in [atom1, atom2]:
-            a.x.addObserver(self._flush)
-            a.y.addObserver(self._flush)
-            a.z.addObserver(self._flush)
+            a.x.add_observer(self._flush)
+            a.y.add_observer(self._flush)
+            a.z.add_observer(self._flush)
 
         self.atom1 = atom1
         self.atom2 = atom2
@@ -1510,9 +1510,9 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
 
         # Observe the atom positions
         for a in [atom1, atom2, atom3]:
-            a.x.addObserver(self._flush)
-            a.y.addObserver(self._flush)
-            a.z.addObserver(self._flush)
+            a.x.add_observer(self._flush)
+            a.y.add_observer(self._flush)
+            a.z.add_observer(self._flush)
 
         self.atom1 = atom1
         self.atom2 = atom2
@@ -1688,9 +1688,9 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
 
         # Observe the atom positions
         for a in [atom1, atom2, atom3, atom4]:
-            a.x.addObserver(self._flush)
-            a.y.addObserver(self._flush)
-            a.z.addObserver(self._flush)
+            a.x.add_observer(self._flush)
+            a.y.add_observer(self._flush)
+            a.z.add_observer(self._flush)
 
         self.atom1 = atom1
         self.atom2 = atom2

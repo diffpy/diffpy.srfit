@@ -14,28 +14,43 @@
 ##############################################################################
 """Input utilities."""
 
-__all__ = ["inputToString"]
+__all__ = ["convert_input_to_string", "inputToString"]
 
 import os.path
 from pathlib import Path
 
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
-def inputToString(input):
-    """Convert input from various modes to a string.
+inputToString_dep_msg = build_deprecation_message(
+    "diffpy.srfit.util.inpututils",
+    "inputToString",
+    "convert_input_to_string",
+    "4.0.0",
+)
 
-    This is useful when you want a method to accept a string, open file object
-    or file name.
+
+def convert_input_to_string(input):
+    """Return the contents of an open file, a file name, or a string.
+
+    This lets a method accept its input in any of those forms. A string
+    that is an existing file, or that is a single line shorter than 80
+    characters, is treated as a file name. Any other string is returned
+    unchanged.
 
     Parameters
     ----------
-    input
-        An open file-like object, name of a file
-        or a string containing the input.
+    input : file-like or str
+        The open file-like object, the name of a file, or the text itself.
 
+    Returns
+    -------
+    str
+        The contents of the input as a string.
 
-    Returns the input in a string
-    Raises IOError if the input is supected to be a file name, but the file
-    cannot be found.
+    Raises
+    ------
+    FileNotFoundError
+        If ``input`` looks like a file name but the file does not exist.
     """
     # Get the input into a string
     inptstr = ""
@@ -50,6 +65,17 @@ def inputToString(input):
         inptstr = input
 
     return inptstr
+
+
+@deprecated(inputToString_dep_msg)
+def inputToString(input):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.util.inpututils.convert_input_to_string
+    instead.
+    """
+    return convert_input_to_string(input)
 
 
 def get_dict_from_results_file(

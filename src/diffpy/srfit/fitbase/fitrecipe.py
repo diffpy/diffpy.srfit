@@ -1131,7 +1131,7 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
         bool
             True if the variable is free (not fixed), False otherwise.
         """
-        return not self._tagmanager.hasTags(var, self._fixedtag)
+        return not self._tagmanager.has_tags(var, self._fixedtag)
 
     @deprecated(isFree_dep_msg)
     def isFree(self, var):

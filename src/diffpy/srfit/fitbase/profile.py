@@ -125,9 +125,9 @@ class Profile(Observable, Validatable):
         self.meta = {}
 
         # Observable
-        self.xpar.addObserver(self._flush)
-        self.ypar.addObserver(self._flush)
-        self.dypar.addObserver(self._flush)
+        self.xpar.add_observer(self._flush)
+        self.ypar.add_observer(self._flush)
+        self.dypar.add_observer(self._flush)
         return
 
     # We want x, y, ycalc and dy to stay in-sync with xpar, ypar and dypar

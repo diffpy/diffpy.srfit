@@ -31,7 +31,7 @@ __all__ = ["FitHook"]
 
 import numpy
 
-from diffpy.srfit.util import sortKeyForNumericString
+from diffpy.srfit.util import sort_key_for_numeric_string
 
 
 class FitHook(object):
@@ -178,7 +178,7 @@ class PrintFitHook(FitHook):
 
 
 def _byname(nv):
-    return sortKeyForNumericString(nv[0])
+    return sort_key_for_numeric_string(nv[0])
 
 
 # End class PrintFitHook

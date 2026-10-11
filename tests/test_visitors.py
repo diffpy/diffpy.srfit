@@ -181,8 +181,8 @@ class TestSwapper:
 
         # Check that the operator value is invalidated
         assert mult._value is None
-        assert not v2.hasObserver(minus._flush)
-        assert v5.hasObserver(minus._flush)
+        assert not v2.has_observer(minus._flush)
+        assert v5.has_observer(minus._flush)
 
         # now get the args
         args = visitors.getArgs(mult)
@@ -200,8 +200,8 @@ class TestSwapper:
         plus2 = literals.AdditionOperator()
         visitors.swap(mult, minus, plus2)
         assert mult._value is None
-        assert not minus.hasObserver(mult._flush)
-        assert plus2.hasObserver(mult._flush)
+        assert not minus.has_observer(mult._flush)
+        assert plus2.has_observer(mult._flush)
 
         # plus2 has no arguments yet. Verify this.
         with pytest.raises(TypeError):

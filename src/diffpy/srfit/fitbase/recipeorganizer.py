@@ -38,8 +38,8 @@ from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.srfit.fitbase.validatable import Validatable
 from diffpy.srfit.interface import _recipeorganizer_interface
 from diffpy.srfit.util import _DASHEDLINE
-from diffpy.srfit.util import sortKeyForNumericString as numstr
-from diffpy.srfit.util.nameutils import validateName
+from diffpy.srfit.util import sort_key_for_numeric_string as numstr
+from diffpy.srfit.util.nameutils import validate_name
 from diffpy.srfit.util.observable import Observable
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
@@ -218,7 +218,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
     def __init__(self, name):
         Observable.__init__(self)
         Configurable.__init__(self)
-        validateName(name)
+        validate_name(name)
         self.name = name
         self._parameters = OrderedDict()
 
@@ -615,13 +615,13 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         # Detach the old object, if there is one
         if oldobj is not None:
-            oldobj.removeObserver(self._flush)
+            oldobj.remove_observer(self._flush)
 
         # Add the object
         d[obj.name] = obj
 
         # Observe the object
-        obj.addObserver(self._flush)
+        obj.add_observer(self._flush)
 
         # Store this as a configurable object
         self._store_configurable(obj)
@@ -640,7 +640,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
             raise ValueError(m)
 
         del d[obj.name]
-        obj.removeObserver(self._flush)
+        obj.remove_observer(self._flush)
 
         return
 

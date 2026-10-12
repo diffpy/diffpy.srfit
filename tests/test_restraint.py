@@ -31,8 +31,8 @@ class TestRestraint(unittest.TestCase):
 
         factory = EquationFactory()
 
-        factory.registerArgument("p1", p1)
-        factory.registerArgument("p2", p2)
+        factory.register_argument("p1", p1)
+        factory.register_argument("p2", p2)
 
         # Restrain 1 <  p1 + p2 < 5
         eq = get_equation_from_string("p1 + p2", factory)

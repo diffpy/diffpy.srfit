@@ -14,7 +14,7 @@
 ##############################################################################
 """Visitor for extracting the Argument entries in a Literal tree.
 
-ArgFinder extracts all Arguments from a literal true.
+ArgFinder extracts all Arguments from a literal tree.
 """
 
 __all__ = ["ArgFinder"]
@@ -25,23 +25,21 @@ from diffpy.srfit.equation.visitors.visitor import Visitor
 class ArgFinder(Visitor):
     """ArgFinder extracts Arguments from a Literal tree.
 
+    Parameters
+    ----------
+    getconsts : bool, optional
+        The flag that is True (default) to also collect constant
+        Arguments.
+
     Attributes
     ----------
-    args
-        The list of collected Arguments
-    getconsts
-        Flag indicating whether to grab constant arguments.
+    args : list
+        The collected Arguments.
+    getconsts : bool
+        The flag that is True to also collect constant Arguments.
     """
 
     def __init__(self, getconsts=True):
-        """Initialize.
-
-        Parameters
-        ----------
-        getconsts
-            Flag indicating whether to parse constant arguments
-            (default True).
-        """
         self.args = []
         self.getconsts = getconsts
         return
@@ -51,14 +49,36 @@ class ArgFinder(Visitor):
         self.args = []
         return
 
-    def onArgument(self, arg):
-        """Process an Argument node."""
+    def on_argument(self, arg):
+        """Collect an Argument node.
+
+        Parameters
+        ----------
+        arg : Argument
+            The Argument to collect.
+
+        Returns
+        -------
+        list
+            The Arguments collected so far.
+        """
         if self.getconsts or not arg.const:
             self.args.append(arg)
         return self.args
 
-    def onOperator(self, op):
-        """Process an Operator node."""
+    def on_operator(self, op):
+        """Collect the Arguments of an Operator node.
+
+        Parameters
+        ----------
+        op : Operator
+            The Operator whose Arguments are collected.
+
+        Returns
+        -------
+        list
+            The Arguments collected so far.
+        """
         for arg in op.args:
             arg.identify(self)
         return self.args

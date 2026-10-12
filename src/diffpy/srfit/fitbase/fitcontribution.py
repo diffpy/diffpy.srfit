@@ -253,7 +253,7 @@ class FitContribution(ParameterSet):
 
         # Register the generator with the equation factory and add it as a
         # managed object.
-        self._eqfactory.registerOperator(name, gen)
+        self._eqfactory.register_operator(name, gen)
         self._add_object(gen, self._generators, True)
 
         # If we have a profile, set the profile of the generator.
@@ -315,7 +315,7 @@ class FitContribution(ParameterSet):
             self._add_parameter(par)
 
         # Register eq as an operator
-        self._eqfactory.registerOperator("eq", eq)
+        self._eqfactory.register_operator("eq", eq)
         self._eqfactory.wipeout(self._eq)
         self._eq = eq
 
@@ -346,11 +346,11 @@ class FitContribution(ParameterSet):
             The normalized math expression, or an empty string if the
             profile equation has not been set yet.
         """
-        from diffpy.srfit.equation.visitors import getExpression
+        from diffpy.srfit.equation.visitors import get_expression
 
         rv = ""
         if self._eq is not None:
-            rv = getExpression(self._eq)
+            rv = get_expression(self._eq)
         return rv
 
     @deprecated(getequation_dep_msg)
@@ -432,11 +432,11 @@ class FitContribution(ParameterSet):
             The normalized math formula, or an empty string if the
             residual equation has not been configured yet.
         """
-        from diffpy.srfit.equation.visitors import getExpression
+        from diffpy.srfit.equation.visitors import get_expression
 
         rv = ""
         if self._reseq is not None:
-            rv = getExpression(self._reseq, eqskip="eq$")
+            rv = get_expression(self._reseq, eqskip="eq$")
         return rv
 
     @deprecated(getresidualequation_dep_msg)

@@ -805,7 +805,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         RecipeContainer._add_object(self, parameter, self._parameters, check)
 
         # Register the Parameter
-        self._eqfactory.registerArgument(parameter.name, parameter)
+        self._eqfactory.register_argument(parameter.name, parameter)
         return
 
     def _remove_parameter(self, parameter):
@@ -823,7 +823,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             If `parameter` is not part of the RecipeOrganizer.
         """
         self._remove_object(parameter, self._parameters)
-        self._eqfactory.deRegisterBuilder(parameter.name)
+        self._eqfactory.deregister_builder(parameter.name)
         return
 
     def register_calculator(self, calculator, argnames=None):
@@ -850,7 +850,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Equation
             The callable Equation object wrapping `calculator`.
         """
-        self._eqfactory.registerOperator(calculator.name, calculator)
+        self._eqfactory.register_operator(calculator.name, calculator)
         self._add_object(calculator, self._calculators)
         # Register arguments of the calculator
         if argnames is None:
@@ -863,10 +863,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 parameter = self._new_parameter(pname, 0)
             else:
                 parameter = self.get(pname)
-            calculator.addLiteral(parameter)
+            calculator.add_literal(parameter)
 
         # Now return an equation object
-        eq = self._eqfactory.makeEquation(calculator.name)
+        eq = self._eqfactory.make_equation(calculator.name)
         return eq
 
     @deprecated(registerCalculator_deprecation_msg)
@@ -933,7 +933,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                     "Specify a name with the 'name' argument."
                 )
                 raise ValueError(m)
-            self._eqfactory.registerOperator(name, function)
+            self._eqfactory.register_operator(name, function)
             return function
 
         # Introspection code
@@ -993,13 +993,13 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         if isinstance(function, Calculator):
             for pname in argnames:
                 parameter = self.get(pname)
-                function.addLiteral(parameter)
-            self._eqfactory.registerOperator(name, function)
+                function.add_literal(parameter)
+            self._eqfactory.register_operator(name, function)
         else:
             self._eqfactory.register_function(name, function, argnames)
 
         # Now we can create the Equation and return it to the user.
-        equation_object = self._eqfactory.makeEquation(name)
+        equation_object = self._eqfactory.make_equation(name)
 
         return equation_object
 
@@ -1770,13 +1770,13 @@ def get_equation_from_string(
 
     # Register the ns parameters in the equation factory
     for name, arg in ns.items():
-        factory.registerArgument(name, arg)
+        factory.register_argument(name, arg)
 
-    eq = factory.makeEquation(eqstr, buildargs, argclass, argkw)
+    eq = factory.make_equation(eqstr, buildargs, argclass, argkw)
 
     # Clean the ns parameters
     for name in ns:
-        factory.deRegisterBuilder(name)
+        factory.deregister_builder(name)
 
     return eq
 

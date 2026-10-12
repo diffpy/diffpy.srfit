@@ -12,192 +12,239 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Tests for refinableobj module."""
+"""Tests for the equationmod module."""
 
 import pytest
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit.equation import Equation
 
+# Every test builds the equation c*(v1+v3)*(v4-v2) with v1=1, v2=2, v3=3,
+# v4=4 and the constant c=2.5, so it evaluates to 2.5*(1+3)*(4-2) = 20.
+#
+# Every test runs for both kinds of root, given as input_root_kind:
+# - "operator": the operator tree is the equation's root.
+# - "equation": the operator tree is wrapped in its own Equation, which is
+#   then the root (an embedded equation).
+ROOT_KINDS = ["operator", "equation"]
 
-def testSimpleFunction(make_args, noObserversInGlobalBuilders):
-    """Test a simple function."""
-    # Make some variables
+
+def _build_equation(make_args, root_kind):
     v1, v2, v3, v4, c = make_args(5)
     c.name = "c"
     c.const = True
-
-    # Make some operations
-    mult = literals.MultiplicationOperator()
-    root = mult2 = literals.MultiplicationOperator()
-    plus = literals.AdditionOperator()
-    minus = literals.SubtractionOperator()
-
-    # Create the equation c*(v1+v3)*(v4-v2)
-    plus.addLiteral(v1)
-    plus.addLiteral(v3)
-    minus.addLiteral(v4)
-    minus.addLiteral(v2)
-    mult.addLiteral(plus)
-    mult.addLiteral(minus)
-    mult2.addLiteral(mult)
-    mult2.addLiteral(c)
-
-    # Set the values of the variables.
-    # The equation should evaluate to 2.5*(1+3)*(4-2) = 20
-    v1.set_value(1)
-    v2.set_value(2)
-    v3.set_value(3)
-    v4.set_value(4)
     c.set_value(2.5)
-
-    # Make an equation and test
-    eq = Equation("eq", mult2)
-
-    assert eq._value is None
-    args = eq.args
-    assert v1 in args
-    assert v2 in args
-    assert v3 in args
-    assert v4 in args
-    assert c not in args
-    assert root is eq.root
-
-    assert v1 is eq.v1
-    assert v2 is eq.v2
-    assert v3 is eq.v3
-    assert v4 is eq.v4
-
-    assert 20 == eq()  # 20 = 2.5*(1+3)*(4-2)
-    assert 20 == eq.get_value()  # same as above
-    assert 20 == eq.value  # same as above
-    assert 25 == eq(v1=2)  # 25 = 2.5*(2+3)*(4-2)
-    assert 50 == eq(v2=0)  # 50 = 2.5*(2+3)*(4-0)
-    assert 30 == eq(v3=1)  # 30 = 2.5*(2+1)*(4-0)
-    assert 0 == eq(v4=0)  # 20 = 2.5*(2+1)*(0-0)
-
-    # Try some swapping
-    eq.swap(v4, v1)
-    assert eq._value is None
-    assert 15 == eq()  # 15 = 2.5*(2+1)*(2-0)
-    args = eq.args
-    assert v4 not in args
-
-    # Try to create a dependency loop
-    with pytest.raises(ValueError):
-        eq.swap(v1, eq.root)
-
-    with pytest.raises(ValueError):
-        eq.swap(v1, plus)
-
-    with pytest.raises(ValueError):
-        eq.swap(v1, minus)
-
-    with pytest.raises(ValueError):
-        eq.swap(v1, mult)
-
-    with pytest.raises(ValueError):
-        eq.swap(v1, root)
-
-    # Swap the root
-    eq.swap(eq.root, v1)
-    assert eq._value is None
-    assert v1.value, eq()
-
-    assert noObserversInGlobalBuilders
-    return
-
-
-def testEmbeddedEquation(make_args, noObserversInGlobalBuilders):
-    """Test a simple function."""
-    # Make some variables
-    v1, v2, v3, v4, c = make_args(5)
-    c.name = "c"
-    c.const = True
-
-    # Make some operations
-    mult = literals.MultiplicationOperator()
-    mult2 = literals.MultiplicationOperator()
     plus = literals.AdditionOperator()
+    plus.add_literal(v1)
+    plus.add_literal(v3)
     minus = literals.SubtractionOperator()
+    minus.add_literal(v4)
+    minus.add_literal(v2)
+    mult = literals.MultiplicationOperator()
+    mult.add_literal(plus)
+    mult.add_literal(minus)
+    top = literals.MultiplicationOperator()
+    top.add_literal(mult)
+    top.add_literal(c)
+    root = top if root_kind == "operator" else Equation("root", top)
+    equation = Equation("eq", root)
+    parts = {
+        "v1": v1,
+        "v2": v2,
+        "v3": v3,
+        "v4": v4,
+        "c": c,
+        "plus": plus,
+        "minus": minus,
+        "mult": mult,
+        "root": root,
+    }
+    return equation, parts
 
-    # Create the equation c*(v1+v3)*(v4-v2)
-    plus.addLiteral(v1)
-    plus.addLiteral(v3)
-    minus.addLiteral(v4)
-    minus.addLiteral(v2)
-    mult.addLiteral(plus)
-    mult.addLiteral(minus)
-    mult2.addLiteral(mult)
-    mult2.addLiteral(c)
 
-    # Set the values of the variables.
-    # The equation should evaluate to 2.5*(1+3)*(4-2) = 20
-    v1.set_value(1)
-    v2.set_value(2)
-    v3.set_value(3)
-    v4.set_value(4)
-    c.set_value(2.5)
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+def test_equation_args(make_args, input_root_kind):
+    # C1: The equation is built.
+    # Expected: Its arguments are v1 to v4, but not the constant c.
+    equation, _ = _build_equation(make_args, input_root_kind)
+    actual_arg_names = sorted(arg.name for arg in equation.args)
+    expected_arg_names = ["v1", "v2", "v3", "v4"]
+    assert actual_arg_names == expected_arg_names
 
-    # Make an equation and test
-    root = Equation("root", mult2)
-    eq = Equation("eq", root)
 
-    assert eq._value is None
-    args = eq.args
-    assert v1 in args
-    assert v2 in args
-    assert v3 in args
-    assert v4 in args
-    assert c not in args
-    assert root is eq.root
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+def test_equation_root_and_attributes(make_args, input_root_kind):
+    # C1: The equation is built.
+    # Expected: Its root is the given root, and each argument can be read
+    # as an attribute of the same name.
+    equation, parts = _build_equation(make_args, input_root_kind)
+    actual_root = equation.root
+    expected_root = parts["root"]
+    assert actual_root is expected_root
+    actual_attributes = [equation.v1, equation.v2, equation.v3, equation.v4]
+    expected_attributes = [parts["v1"], parts["v2"], parts["v3"], parts["v4"]]
+    assert actual_attributes == expected_attributes
 
-    assert v1 is eq.v1
-    assert v2 is eq.v2
-    assert v3 is eq.v3
-    assert v4 is eq.v4
 
-    # Make sure the right messages get sent
-    v1.value = 0
-    assert root._value is None
-    assert eq._value is None
-    v1.value = 1
+# The value can be read in three equivalent ways.
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+@pytest.mark.parametrize(
+    "input_read",
+    [
+        # C1: The equation is called.
+        # Expected: 20.
+        "call",
+        # C2: get_value is called.
+        # Expected: 20.
+        "get_value",
+        # C3: The value attribute is read.
+        # Expected: 20.
+        "value",
+    ],
+)
+def test_equation_value(make_args, input_root_kind, input_read):
+    equation, _ = _build_equation(make_args, input_root_kind)
+    reads = {
+        "call": equation,
+        "get_value": equation.get_value,
+        "value": lambda: equation.value,
+    }
+    actual_value = reads[input_read]()
+    expected_value = 20
+    assert actual_value == expected_value
 
-    assert 20 == eq()  # 20 = 2.5*(1+3)*(4-2)
-    assert 20 == eq.get_value()  # same as above
-    assert 20 == eq.value  # same as above
-    assert 25 == eq(v1=2)  # 25 = 2.5*(2+3)*(4-2)
-    assert 50 == eq(v2=0)  # 50 = 2.5*(2+3)*(4-0)
-    assert 30 == eq(v3=1)  # 30 = 2.5*(2+1)*(4-0)
-    assert 0 == eq(v4=0)  # 20 = 2.5*(2+1)*(0-0)
 
-    # Try some swapping.
-    eq.swap(v4, v1)
-    assert eq._value is None
-    assert 15 == eq()  # 15 = 2.5*(2+1)*(2-0)
-    args = eq.args
-    assert v4 not in args
+# Calling the equation with a keyword sets that argument before evaluating.
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+@pytest.mark.parametrize(
+    "input_name, input_value, expected_value",
+    [
+        # C1: v1 is set to 2.
+        # Expected: 2.5*(2+3)*(4-2) = 25, and v1 keeps the value 2.
+        ("v1", 2, 25),
+        # C2: v2 is set to 0.
+        # Expected: 2.5*(1+3)*(4-0) = 40, and v2 keeps the value 0.
+        ("v2", 0, 40),
+        # C3: v3 is set to 1.
+        # Expected: 2.5*(1+1)*(4-2) = 10, and v3 keeps the value 1.
+        ("v3", 1, 10),
+        # C4: v4 is set to 0.
+        # Expected: 2.5*(1+3)*(0-2) = -20, and v4 keeps the value 0.
+        ("v4", 0, -20),
+    ],
+)
+def test_equation_call_with_keyword(
+    make_args, input_root_kind, input_name, input_value, expected_value
+):
+    equation, parts = _build_equation(make_args, input_root_kind)
+    actual_value = equation(**{input_name: input_value})
+    assert actual_value == expected_value
+    actual_argument_value = parts[input_name].value
+    expected_argument_value = input_value
+    assert actual_argument_value == expected_argument_value
 
-    # Try to create a dependency loop
+
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+def test_equation_value_cleared_when_argument_changes(
+    make_args, input_root_kind
+):
+    # C1: The equation is evaluated, then v1 is changed.
+    # Expected: The cached values of both the root and the equation are
+    # cleared.
+    equation, parts = _build_equation(make_args, input_root_kind)
+    equation()
+    parts["v1"].value = 0
+    actual_cached_values = (parts["root"]._value, equation._value)
+    expected_cached_values = (None, None)
+    assert actual_cached_values == expected_cached_values
+
+
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+def test_equation_swap_argument(make_args, input_root_kind):
+    # C1: The equation is evaluated, then v4 is swapped for v1.
+    # Expected: The cached value is cleared, v4 is no longer an argument,
+    # and the equation evaluates to 2.5*(1+3)*(1-2) = -10.
+    equation, parts = _build_equation(make_args, input_root_kind)
+    equation()
+    equation.swap(parts["v4"], parts["v1"])
+    actual_cached_value = equation._value
+    expected_cached_value = None
+    assert actual_cached_value == expected_cached_value
+    actual_arg_names = sorted(arg.name for arg in equation.args)
+    expected_arg_names = ["v1", "v2", "v3"]
+    assert actual_arg_names == expected_arg_names
+    actual_value = equation()
+    expected_value = -10
+    assert actual_value == expected_value
+
+
+# Swapping an argument for a literal that contains that argument would make
+# the equation depend on itself.
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+@pytest.mark.parametrize(
+    "input_old_literal, input_new_literal",
+    [
+        # C1: v1 is swapped for the root.
+        # Expected: A ValueError is raised.
+        ("v1", "root"),
+        # C2: v1 is swapped for the multiplication (v1+v3)*(v4-v2).
+        # Expected: A ValueError is raised.
+        ("v1", "mult"),
+        # C3: v1 is swapped for the addition v1+v3.
+        # Expected: A ValueError is raised.
+        ("v1", "plus"),
+        # C4: v4 is swapped for the subtraction v4-v2.
+        # Expected: A ValueError is raised.
+        ("v4", "minus"),
+    ],
+)
+def test_equation_swap_cycle_bad(
+    make_args, input_root_kind, input_old_literal, input_new_literal
+):
+    equation, parts = _build_equation(make_args, input_root_kind)
     with pytest.raises(ValueError):
-        eq.swap(v1, eq.root)
+        equation.swap(parts[input_old_literal], parts[input_new_literal])
 
-    with pytest.raises(ValueError):
-        eq.swap(v1, plus)
 
-    with pytest.raises(ValueError):
-        eq.swap(v1, minus)
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+def test_equation_swap_root(make_args, input_root_kind):
+    # C1: The equation is evaluated, then its root is swapped for v1.
+    # Expected: The cached value is cleared, and the equation evaluates to
+    # the value of v1.
+    equation, parts = _build_equation(make_args, input_root_kind)
+    equation()
+    equation.swap(equation.root, parts["v1"])
+    actual_cached_value = equation._value
+    expected_cached_value = None
+    assert actual_cached_value == expected_cached_value
+    actual_value = equation()
+    expected_value = parts["v1"].value
+    assert actual_value == expected_value
 
-    with pytest.raises(ValueError):
-        eq.swap(v1, mult)
 
-    with pytest.raises(ValueError):
-        eq.swap(v1, root)
+@pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
+def test_equation_set_root(make_args, input_root_kind):
+    # C1: The equation is evaluated, then its root is set to plus = v1+v3.
+    # Expected: The cached value is cleared, the arguments are v1 and v3,
+    # and the equation evaluates to 1+3 = 4.
+    equation, parts = _build_equation(make_args, input_root_kind)
+    equation()
+    equation.set_root(parts["plus"])
+    actual_cached_value = equation._value
+    expected_cached_value = None
+    assert actual_cached_value == expected_cached_value
+    actual_arg_names = [arg.name for arg in equation.args]
+    expected_arg_names = ["v1", "v3"]
+    assert actual_arg_names == expected_arg_names
+    actual_value = equation()
+    expected_value = 4
+    assert actual_value == expected_value
 
-    # Swap the root
-    eq.swap(eq.root, v1)
-    assert eq._value is None
-    assert v1.value == eq()
 
-    assert noObserversInGlobalBuilders
-    return
+def test_equation_add_literal_bad(make_args):
+    # C1: A literal is added to an equation.
+    # Expected: A RuntimeError is raised, because an equation takes its
+    # literals from its root.
+    equation, parts = _build_equation(make_args, "operator")
+    with pytest.raises(RuntimeError):
+        equation.add_literal(parts["v1"])

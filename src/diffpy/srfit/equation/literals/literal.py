@@ -16,7 +16,7 @@
 
 Literals are base pieces of the equation hierarchy. The 'identify'
 method identifies the Literal to a visitor by calling the identifying
-method of the vistior.
+method of the visitor.
 """
 
 __all__ = ["Literal"]
@@ -38,26 +38,38 @@ class Literal(Observable, LiteralABC):
 
     Literal derives from Observable. See diffpy.srfit.util.observable.
 
+    Parameters
+    ----------
+    name : str, optional
+        The name of the Literal. If None (default), the class attribute
+        ``name`` is used.
+
     Attributes
     ----------
-    name
-        A name for this Literal (default None).
-    _value
-        The value of the Literal.
+    name : str or None
+        The name of the Literal.
+    _value : object
+        The cached value of the Literal, or None if it must be
+        recomputed.
     """
 
     name = None
     _value = None
 
     def __init__(self, name=None):
-        """Initialization."""
         Observable.__init__(self)
         if name is not None:
             self.name = name
         return
 
     def get_value(self):
-        """Get the value of the Literal."""
+        """Get the value of the Literal.
+
+        Raises
+        ------
+        NotImplementedError
+            Always, because derived classes must define this method.
+        """
         raise NotImplementedError("Define in derived class")
 
     @deprecated(getValue_dep_msg)
@@ -71,12 +83,23 @@ class Literal(Observable, LiteralABC):
         return self.get_value()
 
     def identify(self, visitor):
-        """Identify self to a visitor."""
+        """Identify this Literal to a visitor.
+
+        Parameters
+        ----------
+        visitor : Visitor
+            The visitor to identify to.
+
+        Raises
+        ------
+        NotImplementedError
+            Always, because derived classes must define this method.
+        """
         m = "'%s' must override 'identify'" % self.__class__.__name__
         raise NotImplementedError(m)
 
     def _flush(self, other):
-        """Invalidate my state and notify observers."""
+        """Clear the cached value and notify observers."""
         if self._value is None:
             return
         self._value = None

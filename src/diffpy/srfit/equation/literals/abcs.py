@@ -79,7 +79,7 @@ class OperatorABC(LiteralABC):
     """
 
     @abstractmethod
-    def addLiteral(self, literal):
+    def add_literal(self, literal):
         """Add a literal argument to the operator."""
         pass
 

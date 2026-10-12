@@ -47,18 +47,18 @@ def make_lazy_equation(make_args):
     mult2 = literals.MultiplicationOperator()
 
     # Create the equation ((v1+v2)*(v3-v4))**v5 * v6^v7
-    plus.addLiteral(v1)
-    plus.addLiteral(v2)
-    minus.addLiteral(v3)
-    minus.addLiteral(v4)
-    mult.addLiteral(plus)
-    mult.addLiteral(minus)
-    pow.addLiteral(mult)
-    pow.addLiteral(v5)
-    exp.addLiteral(v6)
-    exp.addLiteral(v7)
-    mult2.addLiteral(pow)
-    mult2.addLiteral(exp)
+    plus.add_literal(v1)
+    plus.add_literal(v2)
+    minus.add_literal(v3)
+    minus.add_literal(v4)
+    mult.add_literal(plus)
+    mult.add_literal(minus)
+    pow.add_literal(mult)
+    pow.add_literal(v5)
+    exp.add_literal(v6)
+    exp.add_literal(v7)
+    mult2.add_literal(pow)
+    mult2.add_literal(exp)
 
     v2.set_value(x)
     v3.set_value(50 * x)
@@ -138,8 +138,8 @@ def test_speed2(mutate=2):
     A0*exp(-(x*qsig)**2)*(exp(-((x-1.0)/sigma1)**2)+exp(-((x-2.0)/sigma2)**2))\
     + polyval(list(b1, b2, b3, b4, b5, b6, b7, b8), x)\
     """
-    factory.registerConstant("x", x)
-    eq = factory.makeEquation(eqstr)
+    factory.register_constant("x", x)
+    eq = factory.make_equation(eqstr)
     eq.qsig.set_value(qsig)
     eq.sigma1.set_value(sigma)
     eq.sigma2.set_value(sigma)
@@ -215,8 +215,8 @@ def test_speed3(mutate=2):
     A0*exp(-(x*qsig)**2)*(exp(-((x-1.0)/sigma1)**2)+exp(-((x-2.0)/sigma2)**2))\
     + polyval(list(b1, b2, b3, b4, b5, b6, b7, b8), x)\
     """
-    factory.registerConstant("x", x)
-    eq = factory.makeEquation(eqstr)
+    factory.register_constant("x", x)
+    eq = factory.make_equation(eqstr)
     eq.qsig.set_value(qsig)
     eq.sigma1.set_value(sigma)
     eq.sigma2.set_value(sigma)
@@ -300,8 +300,8 @@ def test_speed4(mutate=2):
     eqstr = """\
     b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
     """
-    factory.registerConstant("x", x)
-    eq = factory.makeEquation(eqstr)
+    factory.register_constant("x", x)
+    eq = factory.make_equation(eqstr)
 
     from numpy import polyval
     from sympy import lambdify, var
@@ -358,8 +358,8 @@ def test_weighted(mutate=2):
     eqstr = """\
     b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
     """
-    factory.registerConstant("x", x)
-    eq = factory.makeEquation(eqstr)
+    factory.register_constant("x", x)
+    eq = factory.make_equation(eqstr)
 
     eq.b1.set_value(0)
     eq.b2.set_value(1)
@@ -427,8 +427,8 @@ def test_profile():
     eqstr = """\
     b1 + b2*x + b3*x**2 + b4*x**3 + b5*x**4 + b6*x**5 + b7*x**6 + b8*x**7\
     """
-    factory.registerConstant("x", x)
-    eq = factory.makeEquation(eqstr)
+    factory.register_constant("x", x)
+    eq = factory.make_equation(eqstr)
 
     eq.b1.set_value(0)
     eq.b2.set_value(1)

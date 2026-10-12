@@ -22,28 +22,28 @@ factory will swap out the old Literal for the new one in all equations built by
 the factory.
 
 An example using the EquationFactory:
-The makeEquation method turns the string-representation of an equation into
+The make_equation method turns the string-representation of an equation into
 a callable object.
 > factory = EquationFactory()
-> eq = factory.makeEquation("A*sin(a*x)")
+> eq = factory.make_equation("A*sin(a*x)")
 will create an equation that evaluates as "A*sin(a*x)". The equation takes no
 arguments.
 
 Custom Arguments and constants can be included in the equation:
-> factory.registerConstant("offset", 3)
+> factory.register_constant("offset", 3)
 > A = Argument(name = "A", value = 1.0)
-> factory.registerArgument("A", A)
-> eq = factory.makeEquation("A*sin(a*x) + offset")
+> factory.register_argument("A", A)
+> eq = factory.make_equation("A*sin(a*x) + offset")
 This includes a constant offset in the equation and makes sure that the
 user-defined Argument is in the equation. This can be used to assure that
 the same instance of an Argument appears in multiple equations. Other literals
 can be registered in a similar fashion.
 
 The BaseBuilder class does the hard work of making an equation from a string in
-EquationFactory.makeEquation. BaseBuilder can be used directly to create
+EquationFactory.make_equation. BaseBuilder can be used directly to create
 equations. BaseBuilder is specified in the ArgumentBuilder and OperatorBuilder
 classes.  You can create builders from Literals or equations by using the
-"wrap" methods within this module or by using the builder classes directly.
+"wrap" functions within this module or by using the builder classes directly.
 
 With a collection of BaseBuilder objects, one can simply write the equation
 using normal python syntax:
@@ -51,7 +51,7 @@ using normal python syntax:
 > a = ArgumentBuilder(name = "a")
 > x = ArgumentBuilder(name = "x")
 > # sin is defined in this module as an OperatorBuilder
-> sin = getBuilder("sin")
+> sin = get_builder("sin")
 > beq = A*sin(a*x)
 > eq = beq.get_equation()
 
@@ -64,16 +64,16 @@ or otherwise, must be wrapped as ArgumentBuilders in order to be used in this
 way.
 
 BaseBuilder can make use of user-defined functions.  Any callable python
-object can be wrapped as an OperatorBuilder with the wrapFunction method. For
-example.
+object can be wrapped as an OperatorBuilder with the wrap_function function.
+For example.
 > _f = lambda a, b : (a-b)/(a+b)
-> f = wrapFunction("f", _f)
+> f = wrap_function("f", _f)
 > # Using BaseBuilder
 > a = ArgumentBuilder(name = "a")
 > b = ArgumentBuilder(name = "b")
 > c = ArgumentBuilder(name = "c")
 > beq = c*f(a,b)
-> eq = beq.makeEquation()
+> eq = beq.get_equation()
 """
 
 import inspect
@@ -94,6 +94,10 @@ __all__ = [
     "BaseBuilder",
     "ArgumentBuilder",
     "OperatorBuilder",
+    "wrap_argument",
+    "wrap_operator",
+    "wrap_function",
+    "get_builder",
     "wrapArgument",
     "wrapOperator",
     "wrapFunction",
@@ -108,6 +112,7 @@ __all__ = [
 _builders = {}
 
 EquationFactory_base = "diffpy.srfit.equation.builder.EquationFactory"
+builder_base = "diffpy.srfit.equation.builder"
 removal_version = "4.0.0"
 
 registerFunction_dep_msg = build_deprecation_message(
@@ -116,6 +121,51 @@ registerFunction_dep_msg = build_deprecation_message(
     "register_function",
     removal_version,
 )
+makeEquation_dep_msg = build_deprecation_message(
+    EquationFactory_base, "makeEquation", "make_equation", removal_version
+)
+registerConstant_dep_msg = build_deprecation_message(
+    EquationFactory_base,
+    "registerConstant",
+    "register_constant",
+    removal_version,
+)
+registerArgument_dep_msg = build_deprecation_message(
+    EquationFactory_base,
+    "registerArgument",
+    "register_argument",
+    removal_version,
+)
+registerOperator_dep_msg = build_deprecation_message(
+    EquationFactory_base,
+    "registerOperator",
+    "register_operator",
+    removal_version,
+)
+registerBuilder_dep_msg = build_deprecation_message(
+    EquationFactory_base,
+    "registerBuilder",
+    "register_builder",
+    removal_version,
+)
+deRegisterBuilder_dep_msg = build_deprecation_message(
+    EquationFactory_base,
+    "deRegisterBuilder",
+    "deregister_builder",
+    removal_version,
+)
+wrapArgument_dep_msg = build_deprecation_message(
+    builder_base, "wrapArgument", "wrap_argument", removal_version
+)
+wrapOperator_dep_msg = build_deprecation_message(
+    builder_base, "wrapOperator", "wrap_operator", removal_version
+)
+wrapFunction_dep_msg = build_deprecation_message(
+    builder_base, "wrapFunction", "wrap_function", removal_version
+)
+getBuilder_dep_msg = build_deprecation_message(
+    builder_base, "getBuilder", "get_builder", removal_version
+)
 
 
 class EquationFactory(object):
@@ -123,59 +173,61 @@ class EquationFactory(object):
 
     Attributes
     ----------
-    builders
-        A dictionary of BaseBuilders registered with the
-        factory, indexed by name.
-    newargs
-        A set of new arguments created by makeEquation. This is
-        redefined whenever makeEquation is called.
-    equations
-        Set of equations that have been built by the
-        EquationFactory.
+    builders : dict
+        The BaseBuilders registered with the factory, indexed by name.
+    newargs : set
+        The new arguments created by the last call to ``make_equation``.
+    equations : set
+        The equations that have been built by the factory.
     """
 
     symbols = ("+", "-", "*", "/", "**", "%", "|")
     ignore = ("(", ",", ")")
 
     def __init__(self):
-        """Initialize.
-
-        This registers "pi" and "e" as constants within the factory.
-        """
+        """Initialize the factory and register "pi" and "e" as
+        constants."""
         self.builders = dict(_builders)
         self.newargs = set()
         self.equations = set()
-        self.registerConstant("pi", numpy.pi)
-        self.registerConstant("e", numpy.e)
+        self.register_constant("pi", numpy.pi)
+        self.register_constant("e", numpy.e)
         return
 
-    def makeEquation(
+    def make_equation(
         self, eqstr, buildargs=True, argclass=literals.Argument, argkw={}
     ):
         """Make an equation from an equation string.
 
         Parameters
         ----------
-        eqstr
-            An equation in string form using standard python
-            syntax.  The equation string can use any function
-            registered literal or function, including numpy ufuncs
-            that are automatically registered.
-        buildargs
-            A flag indicating whether missing arguments can be
-            created by the Factory (default True). If False, then
-            the a ValueError will be raised if there are undefined
-            arguments in the eqstr. Built arguments will be of type
-            argclass.
-        argclass
-            Class to use when creating new Arguments (default
-            diffpy.srfit.equation.literals.Argument). The class
-            constructor must accept the 'name' key word.
-        argkw
-            Key word dictionary to pass to the argclass constructor
-            (default {}).
+        eqstr : str
+            The equation in string form using standard python syntax. The
+            equation string can use any registered literal or function,
+            including the numpy ufuncs that are registered automatically.
+        buildargs : bool, optional
+            The flag that is True (default) to let the factory create
+            missing arguments. If False, undefined names in ``eqstr``
+            raise a ValueError.
+        argclass : type, optional
+            The class used to create new arguments. Its constructor must
+            accept the ``name`` keyword. Default is
+            ``diffpy.srfit.equation.literals.Argument``.
+        argkw : dict, optional
+            The keyword arguments passed to the ``argclass`` constructor.
+            Default is an empty dict.
 
-        Returns a callable Literal representing the equation string.
+        Returns
+        -------
+        Equation
+            The callable equation built from ``eqstr``.
+
+        Raises
+        ------
+        ValueError
+            If ``buildargs`` is False and ``eqstr`` uses undefined names.
+        SyntaxError
+            If ``eqstr`` is not valid python syntax.
         """
         self._prepare_builders(eqstr, buildargs, argclass, argkw)
         beq = eval(eqstr, {}, self.builders)
@@ -188,23 +240,43 @@ class EquationFactory(object):
             self.equations.add(eq)
         return eq
 
-    def registerConstant(self, name, value):
+    def register_constant(self, name, value):
         """Register a named constant with the factory.
 
-        Returns the registered builder.
+        Parameters
+        ----------
+        name : str
+            The name of the constant.
+        value : object
+            The value of the constant.
+
+        Returns
+        -------
+        ArgumentBuilder
+            The registered builder.
         """
         arg = literals.Argument(name=name, value=value, const=True)
-        return self.registerArgument(name, arg)
+        return self.register_argument(name, arg)
 
-    def registerArgument(self, name, arg):
+    def register_argument(self, name, arg):
         """Register a named Argument with the factory.
 
-        Returns the registered builder.
-        """
-        argbuilder = wrapArgument(name, arg)
-        return self.registerBuilder(name, argbuilder)
+        Parameters
+        ----------
+        name : str
+            The name to register the argument under.
+        arg : Argument
+            The argument to register.
 
-    def registerOperator(self, name, op):
+        Returns
+        -------
+        ArgumentBuilder
+            The registered builder.
+        """
+        argbuilder = wrap_argument(name, arg)
+        return self.register_builder(name, argbuilder)
+
+    def register_operator(self, name, op):
         """Register an Operator literal with the factory.
 
         Operators can be used with or without arguments (or parentheses)
@@ -214,10 +286,20 @@ class EquationFactory(object):
         operator is already populated with arguments, and those will be
         used.
 
-        Returns the registered builder.
+        Parameters
+        ----------
+        name : str
+            The name to register the operator under.
+        op : Operator
+            The operator to register.
+
+        Returns
+        -------
+        OperatorBuilder
+            The registered builder.
         """
-        opbuilder = wrapOperator(name, op)
-        return self.registerBuilder(name, opbuilder)
+        opbuilder = wrap_operator(name, op)
+        return self.register_builder(name, opbuilder)
 
     def register_function(self, name, func, argnames):
         """Register a named function with the factory.
@@ -227,9 +309,9 @@ class EquationFactory(object):
         Parameters
         ----------
         name : str
-            The name of the function
+            The name of the function.
         func : callable
-            The callable python object
+            The callable python object.
         argnames : list of str
             The argument names for func. If these names do not
             correspond to builders, then new constants with value 0
@@ -242,29 +324,17 @@ class EquationFactory(object):
         """
         for n in argnames:
             if n not in self.builders:
-                self.registerConstant(n, 0)
-        opbuilder = wrapFunction(name, func, len(argnames))
+                self.register_constant(n, 0)
+        opbuilder = wrap_function(name, func, len(argnames))
         for argname in argnames:
             builder = self.builders[argname]
             argliteral = builder.literal
-            opbuilder.literal.addLiteral(argliteral)
-        registered_builder = self.registerBuilder(name, opbuilder)
+            opbuilder.literal.add_literal(argliteral)
+        registered_builder = self.register_builder(name, opbuilder)
         return registered_builder
 
-    @deprecated(registerFunction_dep_msg)
-    def registerFunction(self, name, func, argnames):
-        """This function has been deprecated and will be removed in
-        version 4.0.0.
-
-        Please use
-        diffpy.srfit.equation.builder.EquationFactory.register_function
-        instead.
-        """
-        return self.register_function(name, func, argnames)
-
-    def registerBuilder(self, name, builder):
-        """Register builder in this module so it can be used in
-        makeEquation.
+    def register_builder(self, name, builder):
+        """Register a builder so it can be used in ``make_equation``.
 
         If an extant builder with the given name is already registered,
         this will replace all instances of the old builder's literal in
@@ -272,8 +342,26 @@ class EquationFactory(object):
         that this may lead to errors if one of the replacements causes a
         self-reference.
 
-        Raises ValueError if the new builder's literal causes a self-
-        reference in an existing equation.
+        Parameters
+        ----------
+        name : str
+            The name to register the builder under.
+        builder : BaseBuilder
+            The builder to register.
+
+        Returns
+        -------
+        BaseBuilder
+            The registered builder.
+
+        Raises
+        ------
+        TypeError
+            If ``name`` is not a string or ``builder`` is not a
+            BaseBuilder.
+        ValueError
+            If the new builder's literal causes a self-reference in an
+            existing equation.
         """
         if not isinstance(name, str):
             raise TypeError("Name must be a string")
@@ -297,11 +385,16 @@ class EquationFactory(object):
         self.builders[name] = builder
         return builder
 
-    def deRegisterBuilder(self, name):
-        """De-register a builder by name.
+    def deregister_builder(self, name):
+        """Deregister a builder by name.
 
         This does not change the equations that use the Literal wrapped
-        by the builder.
+        by the builder. Nothing happens if no builder has this name.
+
+        Parameters
+        ----------
+        name : str
+            The name of the builder to deregister.
         """
         if name in self.builders:
             del self.builders[name]
@@ -317,7 +410,10 @@ class EquationFactory(object):
         indirect pickling with the factory because of observer callback
         function.
 
-        No return value.
+        Parameters
+        ----------
+        eq : Equation or None
+            The equation to invalidate. Nothing happens if this is None.
         """
         if eq is None:
             assert eq not in self.equations
@@ -326,8 +422,87 @@ class EquationFactory(object):
         # invalidate this equation to clean up any observer relations of
         # objects in the factory towards its literals tree.
         nan = literals.Argument("nan", value=numpy.nan, const=True)
-        eq.setRoot(nan)
+        eq.set_root(nan)
         return
+
+    @deprecated(makeEquation_dep_msg)
+    def makeEquation(
+        self, eqstr, buildargs=True, argclass=literals.Argument, argkw={}
+    ):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.equation.builder.EquationFactory.make_equation
+        instead.
+        """
+        return self.make_equation(eqstr, buildargs, argclass, argkw)
+
+    @deprecated(registerConstant_dep_msg)
+    def registerConstant(self, name, value):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.equation.builder.EquationFactory.register_constant
+        instead.
+        """
+        return self.register_constant(name, value)
+
+    @deprecated(registerArgument_dep_msg)
+    def registerArgument(self, name, arg):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.equation.builder.EquationFactory.register_argument
+        instead.
+        """
+        return self.register_argument(name, arg)
+
+    @deprecated(registerOperator_dep_msg)
+    def registerOperator(self, name, op):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.equation.builder.EquationFactory.register_operator
+        instead.
+        """
+        return self.register_operator(name, op)
+
+    @deprecated(registerFunction_dep_msg)
+    def registerFunction(self, name, func, argnames):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.equation.builder.EquationFactory.register_function
+        instead.
+        """
+        return self.register_function(name, func, argnames)
+
+    @deprecated(registerBuilder_dep_msg)
+    def registerBuilder(self, name, builder):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.equation.builder.EquationFactory.register_builder
+        instead.
+        """
+        return self.register_builder(name, builder)
+
+    @deprecated(deRegisterBuilder_dep_msg)
+    def deRegisterBuilder(self, name):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use
+        diffpy.srfit.equation.builder.EquationFactory.deregister_builder
+        instead.
+        """
+        return self.deregister_builder(name)
 
     def _prepare_builders(self, eqstr, buildargs, argclass, argkw):
         """Prepare builders so that equation string can be evaluated.
@@ -338,26 +513,22 @@ class EquationFactory(object):
 
         Parameters
         ----------
-        eqstr
-            An equation in string as specified in the makeEquation
-            method.
-        buildargs
-            A flag indicating whether missing arguments can be
-            created by the factory. If False, then the a ValueError
-            will be raised if there are undefined arguments in the
-            eqstr.
-        argclass
-            Class to use when creating new Arguments. The class
-            constructor must accept the 'name' key word.
-        argkw
-            Key word dictionary to pass to the argclass
-            constructor.
+        eqstr : str
+            The equation string, as in ``make_equation``.
+        buildargs : bool
+            The flag that is True to let the factory create missing
+            arguments.
+        argclass : type
+            The class used to create new arguments.
+        argkw : dict
+            The keyword arguments passed to the ``argclass`` constructor.
 
-        Raises ValueError if new arguments must be created, but this is
-        disallowed due to the buildargs flag.
-        Raises SyntaxError if the equation string uses invalid syntax.
-
-        Returns a dictionary of the name, BaseBuilder pairs.
+        Raises
+        ------
+        ValueError
+            If new arguments must be created but ``buildargs`` is False.
+        SyntaxError
+            If the equation string uses invalid syntax.
         """
         eqargs = self._get_undefined_args(eqstr)
 
@@ -374,7 +545,7 @@ class EquationFactory(object):
             arg = argclass(name=argname, **argkw)
             argbuilder = ArgumentBuilder(name=argname, arg=arg)
             newargs.add(arg)
-            self.registerBuilder(argname, argbuilder)
+            self.register_builder(argname, argbuilder)
 
         self.newargs = newargs
 
@@ -450,17 +621,17 @@ class BaseBuilder(object):
 
     Attributes
     ----------
-    literal
+    literal : Literal or None
         The equation Literal being built by this instance.
     """
 
     def __init__(self):
-        """Initialize."""
         self.literal = None
         return
 
     def __call__(self, *args):
-        """Raises exception for easier debugging."""
+        """Raise a TypeError, because a BaseBuilder takes no
+        arguments."""
         m = "%s (%s) cannot accept arguments" % (
             self.literal.name,
             self.__class__.__name__,
@@ -472,6 +643,11 @@ class BaseBuilder(object):
 
         The equation will given the name "_eq_<root>" where "<root>" is
         the name of the root node.
+
+        Returns
+        -------
+        Equation
+            The equation whose root is this builder's literal.
         """
         # We need to make a name for this, so we name it after its root
         name = "_eq_%s" % self.literal.name
@@ -506,7 +682,7 @@ class BaseBuilder(object):
         # ordering is preserved.
         if onleft:
             # Add the literals to the operator
-            op.addLiteral(self.literal)
+            op.add_literal(self.literal)
 
         # Deal with constants
         if isinstance(other, BaseBuilder):
@@ -515,11 +691,11 @@ class BaseBuilder(object):
             literal = other
         else:
             literal = literals.Argument(value=other, const=True)
-        op.addLiteral(literal)
+        op.add_literal(literal)
 
         if not onleft:
             # Add the literals to the operator
-            op.addLiteral(self.literal)
+            op.add_literal(self.literal)
 
         # Create a new OperatorBuilder for the Operator
         opbuilder = OperatorBuilder(op.name)
@@ -529,7 +705,7 @@ class BaseBuilder(object):
     def __eval_unary(self, OperatorClass):
         """Evaluate a unary function."""
         op = OperatorClass()
-        op.addLiteral(self.literal)
+        op.add_literal(self.literal)
         opbuilder = OperatorBuilder(op.name)
         opbuilder.literal = op
         return opbuilder
@@ -587,30 +763,26 @@ class ArgumentBuilder(BaseBuilder):
     Equation builder objects can be composed like a normal function where the
     arguments can be other BaseBuilder instances or constants.
 
+    Parameters
+    ----------
+    value : object, optional
+        The value of the new Argument. Default is None.
+    name : str, optional
+        The name of the new Argument. Default is None.
+    const : bool, optional
+        The flag that is True if the new Argument is constant. Default is
+        False.
+    arg : Argument, optional
+        The existing Argument to wrap. If None (default), a new Argument
+        is created from ``value``, ``name`` and ``const``.
+
     Attributes
     ----------
-    literal
+    literal : Argument
         The Argument wrapped by this instance.
     """
 
     def __init__(self, value=None, name=None, const=False, arg=None):
-        """Create an ArgumentBuilder instance, containing a new
-        Argument.
-
-        Parameters
-        ----------
-        value
-            The value of the wrapped Argument (float, default None)
-        name
-            The name of the wrapped Argument (string, default None)
-        const
-            Flag indicating whether the Argument is constant (bool,
-            default False)
-        arg
-            A pre-defined Argument to use. If this is None (default),
-            then a new Argument will be created from value, name and
-            const.
-        """
         BaseBuilder.__init__(self)
         if arg is None:
             self.literal = literals.Argument(
@@ -627,27 +799,24 @@ class ArgumentBuilder(BaseBuilder):
 class OperatorBuilder(BaseBuilder):
     """BaseBuilder wrapper around an Operator literal.
 
+    Parameters
+    ----------
+    name : str
+        The name of the wrapped Operator.
+    op : Operator, optional
+        The Operator to wrap. If None (default), ``name`` is taken to be
+        the name of a numpy ufunc, which defines the Operator when the
+        builder is called.
+
     Attributes
     ----------
-    literal
+    literal : Operator or None
         The Operator wrapped by this instance.
-    name
-        The name of the operator to be wrapped
+    name : str
+        The name of the wrapped Operator.
     """
 
     def __init__(self, name, op=None):
-        """Wrap an Operator or a function by name.
-
-        Parameters
-        ----------
-        name
-            The name of the wrapped Operator
-        op
-            If specified, this sets the literal attribute as this
-            operator (default None). Otherwise, the name is assumed to
-            be that of a numpy ufunc, which is used to specify the
-            Operator.
-        """
         BaseBuilder.__init__(self)
         self.name = name
         self.literal = op
@@ -660,10 +829,19 @@ class OperatorBuilder(BaseBuilder):
 
         Parameters
         ----------
-        args
-            Arguments of the operation.
+        *args
+            The arguments of the operation.
 
-        Raises ValueError if self.literal.nin >= 0 and len(args) != op.nin
+        Returns
+        -------
+        OperatorBuilder
+            The new builder for the operation applied to ``args``.
+
+        Raises
+        ------
+        ValueError
+            If the operator takes a fixed number of arguments and
+            ``args`` has a different length.
         """
         newobj = OperatorBuilder(self.name)
 
@@ -674,7 +852,7 @@ class OperatorBuilder(BaseBuilder):
             self.literal = literals.UFuncOperator(ufunc)
         # Here the Operator is already specified.  We can copy its attributes
         # to a new Operator inside of the new OperatorBuilder.
-        op = literals.makeOperator(
+        op = literals.make_operator(
             name=self.literal.name,
             symbol=self.literal.symbol,
             nin=self.literal.nin,
@@ -697,7 +875,7 @@ class OperatorBuilder(BaseBuilder):
             if not isinstance(arg, BaseBuilder):
                 name = self.name + "_%i" % i
                 arg = ArgumentBuilder(value=arg, name=name, const=True)
-            newobj.literal.addLiteral(arg.literal)
+            newobj.literal.add_literal(arg.literal)
 
         return newobj
 
@@ -707,35 +885,65 @@ class OperatorBuilder(BaseBuilder):
 # Utility functions
 
 
-def wrapArgument(name, arg):
-    """Wrap an Argument as a builder."""
+def wrap_argument(name, arg):
+    """Wrap an Argument as a builder.
+
+    Parameters
+    ----------
+    name : str
+        The name of the argument. It is not used, because the builder
+        takes its name from ``arg``.
+    arg : Argument
+        The argument to wrap.
+
+    Returns
+    -------
+    ArgumentBuilder
+        The builder that wraps ``arg``.
+    """
     argbuilder = ArgumentBuilder(arg=arg)
     return argbuilder
 
 
-def wrapOperator(name, op):
-    """Wrap an Operator as a builder."""
+def wrap_operator(name, op):
+    """Wrap an Operator as a builder.
+
+    Parameters
+    ----------
+    name : str
+        The name of the builder.
+    op : Operator
+        The operator to wrap.
+
+    Returns
+    -------
+    OperatorBuilder
+        The builder that wraps ``op``.
+    """
     opbuilder = OperatorBuilder(name, op)
     return opbuilder
 
 
-def wrapFunction(name, func, nin=2, nout=1):
+def wrap_function(name, func, nin=2, nout=1):
     """Wrap a function in an OperatorBuilder instance.
 
     Parameters
     ----------
-    name
-        The name of the function
-    func
-        A callable python object
-    nin
-        The number of input arguments (default 2)
-    nout
-        The number of return values (default 1)
+    name : str
+        The name of the function.
+    func : callable
+        The callable python object.
+    nin : int, optional
+        The number of input arguments. Default is 2.
+    nout : int, optional
+        The number of return values. Default is 1.
 
-    Returns the OperatorBuilder instance that wraps the function.
+    Returns
+    -------
+    OperatorBuilder
+        The builder that wraps the function.
     """
-    op = literals.makeOperator(
+    op = literals.make_operator(
         name=name, symbol=name, nin=nin, nout=nout, operation=func
     )
 
@@ -745,9 +953,65 @@ def wrapFunction(name, func, nin=2, nout=1):
     return opbuilder
 
 
-def getBuilder(name):
-    """Get an operator from the global builders dictionary."""
+def get_builder(name):
+    """Get an operator builder from the global builders dictionary.
+
+    Parameters
+    ----------
+    name : str
+        The name of the builder, such as "sin" or "add".
+
+    Returns
+    -------
+    OperatorBuilder
+        The global builder registered under ``name``.
+
+    Raises
+    ------
+    KeyError
+        If no global builder has this name.
+    """
     return _builders[name]
+
+
+@deprecated(wrapArgument_dep_msg)
+def wrapArgument(name, arg):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.equation.builder.wrap_argument instead.
+    """
+    return wrap_argument(name, arg)
+
+
+@deprecated(wrapOperator_dep_msg)
+def wrapOperator(name, op):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.equation.builder.wrap_operator instead.
+    """
+    return wrap_operator(name, op)
+
+
+@deprecated(wrapFunction_dep_msg)
+def wrapFunction(name, func, nin=2, nout=1):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.equation.builder.wrap_function instead.
+    """
+    return wrap_function(name, func, nin, nout)
+
+
+@deprecated(getBuilder_dep_msg)
+def getBuilder(name):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.equation.builder.get_builder instead.
+    """
+    return get_builder(name)
 
 
 def __wrap_numpy_operators():

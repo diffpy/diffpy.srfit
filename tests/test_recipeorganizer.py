@@ -45,8 +45,8 @@ class TestEquationFromString(unittest.TestCase):
 
         factory = EquationFactory()
 
-        factory.registerArgument("p1", p1)
-        factory.registerArgument("p2", p2)
+        factory.register_argument("p1", p1)
+        factory.register_argument("p2", p2)
 
         # Check usage where all parameters are registered with the factory
         eq = get_equation_from_string("p1+p2", factory)
@@ -338,8 +338,8 @@ class TestRecipeOrganizer(unittest.TestCase):
         p1 = Parameter("p1", 1)
         p2 = Parameter("p2", 2)
         p3 = Parameter("p3", 3)
-        self.m._eqfactory.registerArgument("p1", p1)
-        self.m._eqfactory.registerArgument("p2", p2)
+        self.m._eqfactory.register_argument("p1", p1)
+        self.m._eqfactory.register_argument("p2", p2)
 
         self.assertEqual(0, len(self.m._restraints))
         r = self.m.add_soft_bounds("p1+p2", upper_bound=10)

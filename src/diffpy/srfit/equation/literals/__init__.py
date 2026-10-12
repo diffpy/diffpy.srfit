@@ -42,6 +42,7 @@ __all__ = [
     "UFuncOperator",
     "ArrayOperator",
     "PolyvalOperator",
+    "make_operator",
     "makeOperator",
 ]
 
@@ -65,6 +66,7 @@ from diffpy.srfit.equation.literals.operators import (
     SubtractionOperator,
     SumOperator,
     UFuncOperator,
+    make_operator,
     makeOperator,
 )
 

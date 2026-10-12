@@ -107,23 +107,25 @@ def make_args():
 
 
 @pytest.fixture(scope="session")
-def noObserversInGlobalBuilders():
-    def _no_observers_in_global_builders():
-        """True if no observer function leaks to global builder objects.
+def find_builders_with_observers():
+    def _find_builders_with_observers():
+        """Return the names of global builders whose literal has
+        observers.
 
-        Ensure objects are not immortal due to a reference from static
-        value.
+        A global builder lives for the whole session, so an observer
+        attached to it keeps that observer's equation alive forever.
+        Call this at the end of a test; the result should be empty.
         """
         from diffpy.srfit.equation.builder import _builders
 
-        rv = True
-        for n, b in _builders.items():
-            if b.literal and b.literal._observers:
-                rv = False
-                break
-        return rv
+        builders_with_observers = [
+            name
+            for name, builder in _builders.items()
+            if builder.literal and builder.literal._observers
+        ]
+        return builders_with_observers
 
-    return _no_observers_in_global_builders()
+    return _find_builders_with_observers
 
 
 @pytest.fixture(scope="session")

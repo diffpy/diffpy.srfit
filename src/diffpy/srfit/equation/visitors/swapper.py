@@ -27,25 +27,22 @@ class Swapper(Visitor):
     Note that this cannot swap out a root node of a literal tree. This case
     must be tested for explicitly.
 
+    Parameters
+    ----------
+    oldlit : Literal
+        The literal to be replaced.
+    newlit : Literal
+        The literal to be placed into the literal tree.
+
     Attributes
     ----------
-    newlit
+    newlit : Literal
         The literal to be placed into the literal tree.
-    oldlit
+    oldlit : Literal
         The literal to be replaced.
     """
 
     def __init__(self, oldlit, newlit):
-        """Initialize.
-
-        Parameters
-        ----------
-        oldlit
-            The literal to be replaced.
-        newlit
-            The literal to be placed into the literal tree. See the
-            class for how the replacement takes place.
-        """
         self.newlit = newlit
         self.oldlit = oldlit
 
@@ -53,22 +50,37 @@ class Swapper(Visitor):
 
         return
 
-    def onArgument(self, arg):
+    def on_argument(self, arg):
         """Process an Argument node.
 
         Tell the parent to swap the old Argument with the replacement
         Literal.
+
+        Parameters
+        ----------
+        arg : Argument
+            The Argument to check.
         """
         if arg is self.oldlit:
             self._swap = True
 
         return
 
-    def onOperator(self, op):
+    def on_operator(self, op):
         """Process an Operator node.
 
         Tell the parent to swap the old Operator with the replacement
-        Literal.
+        Literal, and swap any of its arguments in place.
+
+        Parameters
+        ----------
+        op : Operator
+            The Operator to check and traverse.
+
+        Raises
+        ------
+        ValueError
+            If the replacement Literal causes a self-reference.
         """
         # Check to see if we need to swap out this Operator. If so, then we
         # don't need to traverse into its arguments.
@@ -120,10 +132,20 @@ class Swapper(Visitor):
 
         return
 
-    def onEquation(self, eq):
+    def on_equation(self, eq):
         """Process an Equation node.
 
         This looks at the equation itself as well as the root.
+
+        Parameters
+        ----------
+        eq : Equation
+            The Equation to check and traverse.
+
+        Raises
+        ------
+        ValueError
+            If the replacement Literal causes a self-reference.
         """
         if eq is self.oldlit:
             self._swap = True
@@ -131,7 +153,7 @@ class Swapper(Visitor):
 
         # If the newlit is the root, then swap that out and move on.
         if eq.root is self.oldlit:
-            eq.setRoot(self.newlit)
+            eq.set_root(self.newlit)
             return
 
         # Now move into the equation. We have to do a _loop_check to make sure
@@ -140,7 +162,7 @@ class Swapper(Visitor):
         eq.root.identify(self)
 
         # Reset the root in case anything changed underneath.
-        eq.setRoot(eq.root)
+        eq.set_root(eq.root)
 
         return
 

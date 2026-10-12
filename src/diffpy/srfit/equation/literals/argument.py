@@ -27,45 +27,73 @@ from diffpy.srfit.equation.literals.literal import Literal
 
 
 class Argument(Literal, ArgumentABC):
-    """Argument class.
+    """A leaf of an equation tree, holding a variable or a constant.
+
+    Parameters
+    ----------
+    name : str, optional
+        The name of the Argument. Default is None.
+    value : object, optional
+        The initial value of the Argument. Default is None.
+    const : bool, optional
+        The flag that is True if the Argument is a constant. Default is
+        False.
 
     Attributes
     ----------
-    name
-        A name for this Argument.
-    const
-        A flag indicating whether this is considered a constant.
-        Constants may be given special treatment by the Visitors.
-    _value
-        The value of the Argument. Modified with 'set_value'.
-    value
-        Property for 'get_value' and 'set_value'.
+    name : str or None
+        The name of the Argument.
+    const : bool
+        The flag that is True if the Argument is a constant. Visitors
+        may treat constants differently.
+    value : object
+        The value of the Argument, read with ``get_value`` and changed
+        with ``set_value``.
     """
 
     const = None
 
     def __init__(self, name=None, value=None, const=False):
-        """Initialization."""
         Literal.__init__(self, name)
         self.const = const
         self.value = value
         return
 
     def identify(self, visitor):
-        """Identify self to a visitor."""
-        return visitor.onArgument(self)
-
-    def get_value(self):
-        """Get the value of this Literal."""
-        return self._value
-
-    def set_value(self, val):
-        """Set the value of the Literal.
+        """Identify this Argument to a visitor.
 
         Parameters
         ----------
-        val
-            The value to assign
+        visitor : Visitor
+            The visitor to identify to.
+
+        Returns
+        -------
+        object
+            The result of ``visitor.on_argument(self)``.
+        """
+        return visitor.on_argument(self)
+
+    def get_value(self):
+        """Get the value of this Argument.
+
+        Returns
+        -------
+        object
+            The current value of the Argument.
+        """
+        return self._value
+
+    def set_value(self, val):
+        """Set the value of this Argument.
+
+        Observers are notified only if the new value differs from the
+        current one.
+
+        Parameters
+        ----------
+        val : object
+            The value to assign.
         """
         if isinstance(self._value, ndarray) or isinstance(val, ndarray):
             notequiv = not array_equal(self._value, val)

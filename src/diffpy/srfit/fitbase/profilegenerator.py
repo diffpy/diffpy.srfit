@@ -90,7 +90,7 @@ class ProfileGenerator(Operator, ParameterSet):
     Operator Attributes
     -------------------
     args
-        List of Literal arguments, set with 'addLiteral'
+        List of Literal arguments, set with 'add_literal'
     name
         A name for this operator. e.g. "add" or "sin"
     nin

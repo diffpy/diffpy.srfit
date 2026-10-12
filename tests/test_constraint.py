@@ -31,8 +31,8 @@ class TestConstraint(unittest.TestCase):
 
         factory = EquationFactory()
 
-        factory.registerArgument("p1", p1)
-        factory.registerArgument("p2", p2)
+        factory.register_argument("p1", p1)
+        factory.register_argument("p2", p2)
 
         c = Constraint()
         # Constrain p1 = 2*p2
@@ -76,8 +76,8 @@ class TestConstraintDeprecated(unittest.TestCase):
 
         factory = EquationFactory()
 
-        factory.registerArgument("p1", p1)
-        factory.registerArgument("p2", p2)
+        factory.register_argument("p1", p1)
+        factory.register_argument("p2", p2)
 
         c = Constraint()
         # Constrain p1 = 2*p2

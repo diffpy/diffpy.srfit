@@ -212,7 +212,7 @@ def _fsquare(x):
     return x**2
 
 
-def testResidual(noObserversInGlobalBuilders):
+def testResidual(find_builders_with_observers):
     """Test the residual, which requires all other methods."""
     gen = ProfileGenerator("test")
     profile = Profile()
@@ -291,11 +291,11 @@ def testResidual(noObserversInGlobalBuilders):
         fc1.set_residual_equation("chiv")
     fc1.set_equation("A * x")
     fc1.set_residual_equation("chiv")
-    assert noObserversInGlobalBuilders
+    assert find_builders_with_observers() == []
     return
 
 
-def test_setEquation(noObserversInGlobalBuilders):
+def test_setEquation(find_builders_with_observers):
     """Check replacement of removed parameters."""
     fc = FitContribution("test")
     fc.setEquation("x + 5")
@@ -305,11 +305,11 @@ def test_setEquation(noObserversInGlobalBuilders):
     x = arange(0, 10, 0.5)
     fc.new_parameter("x", x)
     assert np.array_equal(5 + x, fc.evaluate())
-    assert noObserversInGlobalBuilders
+    assert find_builders_with_observers() == []
     return
 
 
-def test_set_equation(noObserversInGlobalBuilders):
+def test_set_equation(find_builders_with_observers):
     """Check replacement of removed parameters."""
     fc = FitContribution("test")
     fc.set_equation("x + 5")
@@ -319,27 +319,27 @@ def test_set_equation(noObserversInGlobalBuilders):
     x = arange(0, 10, 0.5)
     fc.new_parameter("x", x)
     assert np.array_equal(5 + x, fc.evaluate())
-    assert noObserversInGlobalBuilders
+    assert find_builders_with_observers() == []
     return
 
 
-def test_getEquation(noObserversInGlobalBuilders):
+def test_getEquation(find_builders_with_observers):
     """Check getting the current profile simulation formula."""
     fc = FitContribution("test")
     assert "" == fc.get_equation()
     fc.set_equation("A * sin(x + 5)")
     assert "(A * sin((x + 5)))" == fc.getEquation()
-    assert noObserversInGlobalBuilders
+    assert find_builders_with_observers() == []
     return
 
 
-def test_get_equation(noObserversInGlobalBuilders):
+def test_get_equation(find_builders_with_observers):
     """Check getting the current profile simulation formula."""
     fc = FitContribution("test")
     assert "" == fc.get_equation()
     fc.set_equation("A * sin(x + 5)")
     assert "(A * sin((x + 5)))" == fc.get_equation()
-    assert noObserversInGlobalBuilders
+    assert find_builders_with_observers() == []
     return
 
 

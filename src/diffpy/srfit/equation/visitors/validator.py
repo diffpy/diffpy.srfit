@@ -36,29 +36,38 @@ class Validator(Visitor):
 
     Attributes
     ----------
-    errors
-        List of strings describing errors.
-    _nin
-        Variable for counting the number input arguments for an
-        operator.
+    errors : list of str
+        The descriptions of the errors found.
+    _nin : int
+        The number of outputs of the last node visited, used to count
+        the inputs of its parent operator.
     """
 
     def __init__(self):
-        """Initialize."""
         self.reset()
         return
 
     def reset(self):
-        """Click the clicker and reset non-public data."""
+        """Clear the errors and the input count."""
         self.errors = []
         self._nin = 0
         return
 
-    def onArgument(self, arg):
-        """Process an Argument node.
+    def on_argument(self, arg):
+        """Check an Argument node.
 
         The Argument must be an instance of ArgumentABC from
-        diffpy.srfit.equation.literals.abcs
+        diffpy.srfit.equation.literals.abcs.
+
+        Parameters
+        ----------
+        arg : Argument
+            The Argument to check.
+
+        Returns
+        -------
+        list of str
+            The errors found so far.
         """
         if not isinstance(arg, ArgumentABC):
             m = msg % (arg, ArgumentABC.__name__)
@@ -66,11 +75,23 @@ class Validator(Visitor):
         self._nin = 1
         return self.errors
 
-    def onOperator(self, op):
-        """Process an Operator node.
+    def on_operator(self, op):
+        """Check an Operator node and its arguments.
 
         The Operator must be an instance of OperatorABC from
-        diffpy.srfit.equation.literals.abcs
+        diffpy.srfit.equation.literals.abcs, be single-valued, have a
+        name, symbol and operation, and receive as many inputs as it
+        takes.
+
+        Parameters
+        ----------
+        op : Operator
+            The Operator to check.
+
+        Returns
+        -------
+        list of str
+            The errors found so far.
         """
         if not isinstance(op, OperatorABC):
             m = msg % (op, OperatorABC.__name__)

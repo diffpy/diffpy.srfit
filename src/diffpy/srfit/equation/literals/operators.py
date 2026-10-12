@@ -19,10 +19,10 @@ Operators are non-leaf nodes on a Literal tree. These trees can be
 evaluated by the Evaluator visitor, or otherwise inspected.
 
 The Operator class contains all the information necessary to be
-identified and evaluated by a Visitor. Thus, a single onOperator method
+identified and evaluated by a Visitor. Thus, a single on_operator method
 exists in the Visitor base class. Other Operators can be derived from
 Operator (see AdditionOperator), but they all identify themselves with
-the Visitor.onOperator method.
+the Visitor.on_operator method.
 """
 
 __all__ = [
@@ -39,12 +39,25 @@ __all__ = [
     "UFuncOperator",
     "ArrayOperator",
     "PolyvalOperator",
+    "make_operator",
+    "makeOperator",
 ]
 
 import numpy
 
 from diffpy.srfit.equation.literals.abcs import OperatorABC
 from diffpy.srfit.equation.literals.literal import Literal
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+operator_base = "diffpy.srfit.equation.literals.Operator"
+literals_base = "diffpy.srfit.equation.literals"
+removal_version = "4.0.0"
+addLiteral_dep_msg = build_deprecation_message(
+    operator_base, "addLiteral", "add_literal", removal_version
+)
+makeOperator_dep_msg = build_deprecation_message(
+    literals_base, "makeOperator", "make_operator", removal_version
+)
 
 
 class Operator(Literal, OperatorABC):
@@ -74,7 +87,7 @@ class Operator(Literal, OperatorABC):
     ----------
     args : list
         The list of `Literal` arguments.  Read-only, use the
-        `addLiteral` method to change its content.
+        `add_literal` method to change its content.
     """
 
     # Private Attributes
@@ -102,15 +115,23 @@ class Operator(Literal, OperatorABC):
 
     def identify(self, visitor):
         """Identify self to a visitor."""
-        return visitor.onOperator(self)
+        return visitor.on_operator(self)
 
-    def addLiteral(self, literal):
+    def add_literal(self, literal):
         """Add a literal to this operator.
 
         Note that order of operation matters. The first literal added is
         the leftmost argument. The last is the rightmost.
 
-        Raises ValueError if the literal causes a self-reference.
+        Parameters
+        ----------
+        literal : Literal
+            The literal to add as the next argument.
+
+        Raises
+        ------
+        ValueError
+            If ``literal`` causes a self-reference.
         """
         # Make sure we don't have self-reference
         self._loop_check(literal)
@@ -118,6 +139,16 @@ class Operator(Literal, OperatorABC):
         literal.add_observer(self._flush)
         self._flush(other=(self,))
         return
+
+    @deprecated(addLiteral_dep_msg)
+    def addLiteral(self, literal):
+        """This function has been deprecated and will be removed in
+        version 4.0.0.
+
+        Please use diffpy.srfit.equation.literals.Operator.add_literal
+        instead.
+        """
+        return self.add_literal(literal)
 
     def get_value(self):
         """Get or evaluate the value of the operator."""
@@ -171,7 +202,7 @@ class BinaryOperator(Operator):
 class CustomOperator(Operator):
     """Concrete class for a user-defined Operator.
 
-    Use the `makeOperator` factory function to create an instance.
+    Use the `make_operator` factory function to create an instance.
     """
 
     # declare all abstract attributes from the Operator base.
@@ -182,7 +213,7 @@ class CustomOperator(Operator):
     pass
 
 
-def makeOperator(name, symbol, operation, nin, nout):
+def make_operator(name, symbol, operation, nin, nout):
     """Return a new custom operator object.
 
     Parameters
@@ -197,7 +228,7 @@ def makeOperator(name, symbol, operation, nin, nout):
     nin : int
         Number of input arguments for the operator.  Any number of
         arguments is allowed when -1.
-    nout : in
+    nout : int
         Number of outputs returned by the `operation`.
 
     Returns
@@ -211,6 +242,16 @@ def makeOperator(name, symbol, operation, nin, nout):
     op.nin = nin
     op.nout = nout
     return op
+
+
+@deprecated(makeOperator_dep_msg)
+def makeOperator(name, symbol, operation, nin, nout):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.srfit.equation.literals.make_operator instead.
+    """
+    return make_operator(name, symbol, operation, nin, nout)
 
 
 # Some specified operators

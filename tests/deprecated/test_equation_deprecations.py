@@ -73,6 +73,14 @@ def test_getValue(input_literal_kind):
     assert actual_value == expected_value
 
 
+def _multiply_sums(v1, v2, v3, v4):
+    return (v1 + v2) * (v3 + v4)
+
+
+def _halve(v1):
+    return 0.5 * v1
+
+
 # EquationFactory: see
 # test_builder.py::test_register_function_replaces_existing.
 @pytest.mark.parametrize(
@@ -93,12 +101,12 @@ def test_registerFunction(make_args, input_replacement, expected_value):
         factory.register_argument(argument.name, argument)
     factory.register_function(
         "g",
-        lambda v1, v2, v3, v4: (v1 + v2) * (v3 + v4),
+        _multiply_sums,
         ["v1", "v2", "v3", "v4"],
     )
     equation = factory.make_equation("g")
     if input_replacement == "python_function":
-        new_function, new_arg_names = (lambda v1: 0.5 * v1), ["v1"]
+        new_function, new_arg_names = _halve, ["v1"]
     else:
         new_function = factory.make_equation("v1 + v2")
         new_arg_names = new_function.argdict.keys()

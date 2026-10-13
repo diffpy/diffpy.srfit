@@ -198,7 +198,7 @@ class BasePDFGenerator(ProfileGenerator):
         ValueError
             If stype is not a recognized scattering type.
         """
-        self._calc.setScatteringFactorTableByType(stype)
+        self._calc.scatteringfactortable = stype
         # update the meta dictionary only if there was no exception
         self.meta["stype"] = self.getScatteringType()
         return

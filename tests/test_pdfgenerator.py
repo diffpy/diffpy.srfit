@@ -68,7 +68,7 @@ def testGenerator(diffpy_srreal_available, datafile):
     calc.rmin = r[0]
     calc.rmax = r[-1] + 0.5 * calc.rstep
     calc.qmax = qmax
-    calc.setScatteringFactorTableByType("N")
+    calc.scatteringfactortable = "N"
     calc.eval(stru)
     yref = calc.pdf
 

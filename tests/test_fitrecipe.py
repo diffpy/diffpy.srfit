@@ -12,16 +12,16 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Tests for refinableobj module."""
+"""Tests for the FitRecipe class."""
 
-import unittest
+import re
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 from bg_mpl_stylesheets.styles import all_styles
-from numpy import array_equal, dot, linspace, ones_like, pi, sin
+from numpy import linspace, ones, pi, sin
 from scipy.optimize import leastsq
 
 from diffpy.srfit import (
@@ -36,373 +36,394 @@ from diffpy.srfit.fitbase.parameter import Parameter
 matplotlib.use("Agg")
 
 
-class TestFitRecipe(unittest.TestCase):
-
-    def setUp(self):
-        self.recipe = FitRecipe("recipe")
-        self.recipe.fithooks[0].verbose = 0
-
-        # Set up the Profile
-        self.profile = Profile()
-        x = linspace(0, pi, 10)
-        y = sin(x)
-        self.profile.set_observed_profile(x, y)
-
-        # Set up the FitContribution
-        self.fitcontribution = FitContribution("cont")
-        self.fitcontribution.set_profile(self.profile)
-        self.fitcontribution.set_equation("A*sin(k*x + c)")
-        self.fitcontribution.A.set_value(1)
-        self.fitcontribution.k.set_value(1)
-        self.fitcontribution.c.set_value(0)
-
-        self.recipe.add_contribution(self.fitcontribution)
-        return
-
-    def test_fix_free(self):
-        recipe = self.recipe
-        con = self.fitcontribution
-
-        recipe.add_variable(con.A, 2, tag="tagA")
-        recipe.add_variable(con.k, 1, tag="tagk")
-        recipe.add_variable(con.c, 0)
-        recipe.create_new_variable("B", 0)
-
-        self.assertTrue(recipe.is_free(recipe.A))
-        recipe.fix("tagA")
-        self.assertFalse(recipe.is_free(recipe.A))
-        recipe.free("tagA")
-        self.assertTrue(recipe.is_free(recipe.A))
-        recipe.fix("A")
-        self.assertFalse(recipe.is_free(recipe.A))
-        recipe.free("A")
-        self.assertTrue(recipe.is_free(recipe.A))
-        recipe.fix(recipe.A)
-        self.assertFalse(recipe.is_free(recipe.A))
-        recipe.free(recipe.A)
-        self.assertTrue(recipe.is_free(recipe.A))
-        recipe.fix(recipe.A)
-        self.assertFalse(recipe.is_free(recipe.A))
-        recipe.free("all")
-        self.assertTrue(recipe.is_free(recipe.A))
-        self.assertTrue(recipe.is_free(recipe.k))
-        self.assertTrue(recipe.is_free(recipe.c))
-        self.assertTrue(recipe.is_free(recipe.B))
-        recipe.fix(recipe.A, "tagk", c=3)
-        self.assertFalse(recipe.is_free(recipe.A))
-        self.assertFalse(recipe.is_free(recipe.k))
-        self.assertFalse(recipe.is_free(recipe.c))
-        self.assertTrue(recipe.is_free(recipe.B))
-        self.assertEqual(3, recipe.c.value)
-        recipe.fix("all")
-        self.assertFalse(recipe.is_free(recipe.A))
-        self.assertFalse(recipe.is_free(recipe.k))
-        self.assertFalse(recipe.is_free(recipe.c))
-        self.assertFalse(recipe.isFree(recipe.B))
-
-        self.assertRaises(ValueError, recipe.free, "junk")
-        self.assertRaises(ValueError, recipe.fix, tagA=1)
-        self.assertRaises(ValueError, recipe.fix, "junk")
-        return
-
-    def test_variables(self):
-        """Test to see if variables are added and removed properly."""
-        recipe = self.recipe
-        con = self.fitcontribution
-
-        recipe.add_variable(con.A, 2)
-        recipe.add_variable(con.k, 1)
-        recipe.add_variable(con.c, 0)
-        recipe.create_new_variable("B", 0)
-
-        names = recipe.get_names()
-        self.assertEqual(names, ["A", "k", "c", "B"])
-        values = recipe.get_values()
-        self.assertTrue((values == [2, 1, 0, 0]).all())
-
-        # Constrain a parameter to the B-variable to give it a value
-        p = Parameter("Bpar", -1)
-        recipe.add_constraint(recipe.B, p)
-        values = recipe.get_values()
-        self.assertTrue((values == [2, 1, 0]).all())
-        recipe.delete_variable(recipe.B)
-
-        recipe.fix(recipe.k)
-
-        names = recipe.get_names()
-        self.assertEqual(names, ["A", "c"])
-        values = recipe.get_values()
-        self.assertTrue((values == [2, 0]).all())
-
-        recipe.fix("all")
-        names = recipe.get_names()
-        self.assertEqual(names, [])
-        values = recipe.get_values()
-        self.assertTrue((values == []).all())
-
-        recipe.free("all")
-        names = recipe.get_names()
-        self.assertEqual(3, len(names))
-        self.assertTrue("A" in names)
-        self.assertTrue("k" in names)
-        self.assertTrue("c" in names)
-        values = recipe.get_values()
-        self.assertEqual(3, len(values))
-        self.assertTrue(0 in values)
-        self.assertTrue(1 in values)
-        self.assertTrue(2 in values)
-        return
-
-    def testVars(self):
-        """Test to see if variables are added and removed properly."""
-        recipe = self.recipe
-        con = self.fitcontribution
-
-        recipe.add_variable(con.A, 2)
-        recipe.add_variable(con.k, 1)
-        recipe.addVar(con.c, 0)
-        recipe.newVar("B", 0)
-
-        names = recipe.get_names()
-        self.assertEqual(names, ["A", "k", "c", "B"])
-        values = recipe.get_values()
-        self.assertTrue((values == [2, 1, 0, 0]).all())
-
-        # Constrain a parameter to the B-variable to give it a value
-        p = Parameter("Bpar", -1)
-        recipe.constrain(recipe.B, p)
-        values = recipe.get_values()
-        self.assertTrue((values == [2, 1, 0]).all())
-        recipe.delVar(recipe.B)
-
-        recipe.fix(recipe.k)
-
-        names = recipe.get_names()
-        self.assertEqual(names, ["A", "c"])
-        values = recipe.get_values()
-        self.assertTrue((values == [2, 0]).all())
-
-        recipe.fix("all")
-        names = recipe.get_names()
-        self.assertEqual(names, [])
-        values = recipe.get_values()
-        self.assertTrue((values == []).all())
-
-        recipe.free("all")
-        names = recipe.getNames()
-        self.assertEqual(3, len(names))
-        self.assertTrue("A" in names)
-        self.assertTrue("k" in names)
-        self.assertTrue("c" in names)
-        values = recipe.getValues()
-        self.assertEqual(3, len(values))
-        self.assertTrue(0 in values)
-        self.assertTrue(1 in values)
-        self.assertTrue(2 in values)
-        return
-
-    def testResidual(self):
-        """Test the residual and everything that can change it."""
-        # With thing set up as they are, the residual should be 0
-        res = self.recipe.residual()
-        self.assertAlmostEqual(0, dot(res, res))
-
-        # Change the c value to 1 so that the equation evaluates as sin(x+1)
-        x = self.profile.x
-        y = sin(x + 1)
-        self.recipe.cont.c.set_value(1)
-        res = self.recipe.residual()
-        self.assertTrue(array_equal(y - self.profile.y, res))
-
-        # Try some constraints
-        # Make c = 2*A, A = Avar
-        var = self.recipe.create_new_variable("Avar")
-        self.recipe.add_constraint(
-            self.fitcontribution.c, "2*A", {"A": self.fitcontribution.A}
-        )
-        self.assertEqual(2, self.fitcontribution.c.value)
-        self.recipe.add_constraint(self.fitcontribution.A, var)
-        self.assertEqual(1, var.get_value())
-        self.assertEqual(self.recipe.cont.A.get_value(), var.get_value())
-        # c is constrained to a constrained parameter.
-        self.assertEqual(2, self.fitcontribution.c.value)
-        # The equation should evaluate to sin(x+2)
-        x = self.profile.x
-        y = sin(x + 2)
-        res = self.recipe.residual()
-        self.assertTrue(array_equal(y - self.profile.y, res))
-
-        # Now try some restraints. We want c to be exactly zero. It should give
-        # a penalty of (c-0)**2, which is 4 in this case
-        r1 = self.recipe.add_soft_bounds(self.fitcontribution.c, 0, 0, 1)
-        self.recipe._ready = False
-        res = self.recipe.residual()
-        chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
-        self.assertAlmostEqual(chi2, dot(res, res))
-
-        # Clear the constraint and restore the value of c to 0. This should
-        # give us chi2 = 0 again.
-        self.recipe.remove_constraint(self.fitcontribution.c)
-        self.fitcontribution.c.set_value(0)
-        res = self.recipe.residual([self.recipe.cont.A.get_value()])
-        chi2 = 0
-        self.assertAlmostEqual(chi2, dot(res, res))
-
-        # Remove the restraint and variable
-        self.recipe.remove_soft_bounds(r1)
-        self.recipe.delete_variable(self.recipe.Avar)
-        self.recipe._ready = False
-        res = self.recipe.residual()
-        chi2 = 0
-        self.assertAlmostEqual(chi2, dot(res, res))
-
-        # Add constraints at the fitcontribution level.
-        self.fitcontribution.add_constraint(self.fitcontribution.c, "2*A")
-        # This should evaluate to sin(x+2)
-        x = self.profile.x
-        y = sin(x + 2)
-        res = self.recipe.residual()
-        self.assertTrue(array_equal(y - self.profile.y, res))
-
-        # Add a restraint at the fitcontribution level.
-        r1 = self.fitcontribution.add_soft_bounds(
-            self.fitcontribution.c, 0, 0, 1
-        )
-        self.recipe._ready = False
-        # The chi2 is the same as above, plus 4
-        res = self.recipe.residual()
-        x = self.profile.x
-        y = sin(x + 2)
-        chi2 = 4 + dot(y - self.profile.y, y - self.profile.y)
-        self.assertAlmostEqual(chi2, dot(res, res))
-
-        # Remove those
-        self.fitcontribution.remove_soft_bounds(r1)
-        self.recipe._ready = False
-        self.fitcontribution.unconstrain(self.fitcontribution.c)
-        self.fitcontribution.c.set_value(0)
-        res = self.recipe.residual()
-        chi2 = 0
-        self.assertAlmostEqual(chi2, dot(res, res))
-
-        # Now try to use the observed profile inside of the equation
-        # Set the equation equal to the data
-        self.fitcontribution.set_equation("y")
-        res = self.recipe.residual()
-        self.assertAlmostEqual(0, dot(res, res))
-
-        # Now add the uncertainty. This should give dy/dy = 1 for the residual
-        self.fitcontribution.set_equation("y+dy")
-        res = self.recipe.residual()
-        self.assertAlmostEqual(len(res), dot(res, res))
-
-        return
+# Fix and then free a single variable, selecting it by tag, by name or by
+# the variable itself. A variable is free when it is added.
+@pytest.mark.parametrize(
+    "input_selection",
+    [
+        # C1: Variable A is selected by its tag "tagA".
+        # Expected: A is free, then fixed, then free again.
+        "tag",
+        # C2: Variable A is selected by its name "A".
+        # Expected: A is free, then fixed, then free again.
+        "name",
+        # C3: Variable A is selected by passing the variable itself.
+        # Expected: A is free, then fixed, then free again.
+        "variable",
+    ],
+)
+def test_fix_and_free_one_variable(
+    sine_recipe_with_variables, input_selection
+):
+    recipe = sine_recipe_with_variables
+    identifiers = {"tag": "tagA", "name": "A", "variable": recipe.A}
+    identifier = identifiers[input_selection]
+    actual_is_free_states = [recipe.is_free(recipe.A)]
+    recipe.fix(identifier)
+    actual_is_free_states.append(recipe.is_free(recipe.A))
+    recipe.free(identifier)
+    actual_is_free_states.append(recipe.is_free(recipe.A))
+    expected_is_free_states = [True, False, True]
+    assert actual_is_free_states == expected_is_free_states
 
 
-# End of class TestFitRecipe
+# Fix and then free several variables at once. The recipe has the
+# variables A, k, c and B, which are all free to begin with.
+@pytest.mark.parametrize(
+    "input_fix_args, input_fix_kwargs, input_free_args, "
+    "expected_free_variables, expected_c_value",
+    [
+        # C1: A is fixed, then "all" variables are freed.
+        # Expected: All variables are free and c keeps its value of 0.
+        (["A"], {}, ["all"], ["A", "k", "c", "B"], 0),
+        # C2: A is fixed by name, k by tag and c by name as a keyword with
+        # the value 3.
+        # Expected: Only B is free and c takes the value 3.
+        (["A", "tagk"], {"c": 3}, [], ["B"], 3),
+        # C3: "all" variables are fixed.
+        # Expected: No variable is free and c keeps its value of 0.
+        (["all"], {}, [], [], 0),
+    ],
+)
+def test_fix_and_free_several_variables(
+    sine_recipe_with_variables,
+    input_fix_args,
+    input_fix_kwargs,
+    input_free_args,
+    expected_free_variables,
+    expected_c_value,
+):
+    recipe = sine_recipe_with_variables
+    recipe.fix(*input_fix_args, **input_fix_kwargs)
+    recipe.free(*input_free_args)
+    actual_free_variables = [
+        name
+        for name in ["A", "k", "c", "B"]
+        if recipe.is_free(getattr(recipe, name))
+    ]
+    actual_c_value = recipe.c.value
+    assert actual_free_variables == expected_free_variables
+    assert actual_c_value == expected_c_value
 
 
-# ----------------------------------------------------------------------------
-def test_boundsToRestraints():
-    recipe = FitRecipe("recipe")
+# Fix or free with an identifier that does not select any variable.
+@pytest.mark.parametrize(
+    "input_method_name, input_args, input_kwargs",
+    [
+        # C1: An unknown name is freed.
+        # Expected: Raises a ValueError.
+        ("free", ("junk",), {}),
+        # C2: An unknown name is fixed.
+        # Expected: Raises a ValueError.
+        ("fix", ("junk",), {}),
+        # C3: A tag is fixed as if it were a variable name in a keyword.
+        # Expected: Raises a ValueError.
+        ("fix", (), {"tagA": 1}),
+    ],
+)
+def test_fix_and_free_bad(
+    sine_recipe_with_variables, input_method_name, input_args, input_kwargs
+):
+    recipe = sine_recipe_with_variables
+    with pytest.raises(ValueError):
+        getattr(recipe, input_method_name)(*input_args, **input_kwargs)
 
-    # create a bounded variable
-    recipe.create_new_variable("var1", 1)
-    expected_lower_bound = -1
-    expected_upper_bound = 1
-    expected_sigma = 2
-    recipe.var1.bounds = (expected_lower_bound, expected_upper_bound)
 
-    # apply restraints from bounds
-    recipe.boundsToRestraints(sig=expected_sigma, scaled=True)
-    restraints = list(recipe._restraints)
-    assert len(restraints) == 1
-    r = restraints[0]
-    actual_lower_bound = r.lower_bound
-    actual_upper_bound = r.upper_bound
-    actual_sigma = r.sig
-    assert actual_lower_bound == expected_lower_bound
-    assert actual_upper_bound == expected_upper_bound
-    assert actual_sigma == expected_sigma
-    assert r.scaled is True
+def test_get_names_and_values(sine_recipe_with_variables):
+    # Get the names and values of the free variables after each change to
+    # the variables A=2, k=1, c=0 and B=0, which were added in that order.
+    # Each step changes the recipe left by the step before it.
+    recipe = sine_recipe_with_variables
+    actual_names_and_values = []
+    # C1: The variables are left as they were added.
+    # Expected: All variables are listed in the order they were added.
+    actual_names_and_values.append(
+        (recipe.get_names(), recipe.get_values().tolist())
+    )
+    # C2: B is constrained to a parameter.
+    # Expected: B is fixed by the constraint and no longer listed.
+    recipe.add_constraint(recipe.B, Parameter("Bpar", -1))
+    actual_names_and_values.append(
+        (recipe.get_names(), recipe.get_values().tolist())
+    )
+    # C3: B is deleted and k is fixed.
+    # Expected: Only A and c are listed.
+    recipe.delete_variable(recipe.B)
+    recipe.fix(recipe.k)
+    actual_names_and_values.append(
+        (recipe.get_names(), recipe.get_values().tolist())
+    )
+    # C4: All variables are fixed.
+    # Expected: Nothing is listed.
+    recipe.fix("all")
+    actual_names_and_values.append(
+        (recipe.get_names(), recipe.get_values().tolist())
+    )
+    # C5: All variables are freed.
+    # Expected: The remaining variables A, k and c are all listed.
+    recipe.free("all")
+    actual_names_and_values.append(
+        (recipe.get_names(), recipe.get_values().tolist())
+    )
+    expected_names_and_values = [
+        (["A", "k", "c", "B"], [2, 1, 0, 0]),
+        (["A", "k", "c"], [2, 1, 0]),
+        (["A", "c"], [2, 0]),
+        ([], []),
+        (["A", "k", "c"], [2, 1, 0]),
+    ]
+    assert actual_names_and_values == expected_names_and_values
+
+
+def test_add_constraint_to_constrained_parameter(build_sine_recipe):
+    # C1: c is constrained to 2*A, then A is constrained to the new
+    # variable Avar, which has no value yet.
+    # Expected: Avar takes the value of A, which is 1, and c follows the
+    # chain of constraints to 2.
+    recipe = build_sine_recipe()
+    variable = recipe.create_new_variable("Avar")
+    recipe.add_constraint(recipe.cont.c, "2*A", {"A": recipe.cont.A})
+    recipe.add_constraint(recipe.cont.A, variable)
+    actual_values = [
+        variable.get_value(),
+        recipe.cont.A.get_value(),
+        recipe.cont.c.get_value(),
+    ]
+    expected_values = [1, 1, 2]
+    assert actual_values == expected_values
+
+
+# The residual of the sine recipe is (ycalc - y)/dy, followed by the square
+# root of each restraint penalty. The recipe starts with ycalc = sin(x) = y
+# and its profile has no uncertainties, so dy = 1.
+
+
+# Set the phase c of the sine recipe, so that ycalc = sin(x + c).
+@pytest.mark.parametrize(
+    "input_c_value",
+    [
+        # C1: c is left at 0.
+        # Expected: The residual is sin(x) - y, which is zero.
+        0,
+        # C2: c is set to 1.
+        # Expected: The residual is sin(x + 1) - y.
+        1,
+    ],
+)
+def test_residual_with_parameter_value(build_sine_recipe, input_c_value):
+    recipe = build_sine_recipe()
+    profile = recipe.cont.profile
+    recipe.cont.c.set_value(input_c_value)
+    actual_residual = recipe.residual()
+    expected_residual = sin(profile.x + input_c_value) - profile.y
+    assert actual_residual == pytest.approx(expected_residual)
+
+
+# Replace the equation of an evaluated sine recipe.
+@pytest.mark.parametrize(
+    "input_equation, expected_residual_value",
+    [
+        # C1: The equation is set to the observed profile "y".
+        # Expected: The residual is zero at every point.
+        ("y", 0),
+        # C2: The equation is set to "y+dy".
+        # Expected: The residual is dy/dy = 1 at every point.
+        ("y+dy", 1),
+    ],
+)
+def test_residual_with_new_equation(
+    build_sine_recipe, input_equation, expected_residual_value
+):
+    recipe = build_sine_recipe()
+    profile = recipe.cont.profile
+    recipe.residual()
+    recipe.cont.set_equation(input_equation)
+    actual_residual = recipe.residual()
+    expected_residual = np.full_like(profile.y, expected_residual_value)
+    assert actual_residual == pytest.approx(expected_residual)
+
+
+def test_residual_with_recipe_constraints_and_restraints(build_sine_recipe):
+    # Constrain and restrain c through the recipe, then undo each change.
+    # Each step changes the recipe left by the step before it, and the
+    # residual is evaluated after each step.
+    recipe = build_sine_recipe()
+    x, y = recipe.cont.profile.x, recipe.cont.profile.y
+    # C1: c is constrained to 2*A, and A to the new variable Avar.
+    # Expected: c is 2, so the residual is sin(x + 2) - y.
+    variable = recipe.create_new_variable("Avar")
+    recipe.add_constraint(recipe.cont.c, "2*A", {"A": recipe.cont.A})
+    recipe.add_constraint(recipe.cont.A, variable)
+    actual_constrained_residual = recipe.residual()
+    expected_constrained_residual = sin(x + 2) - y
+    assert actual_constrained_residual == pytest.approx(
+        expected_constrained_residual
+    )
+    # C2: c is also restrained to zero with sig=1.
+    # Expected: As C1, followed by a penalty term of |c - 0| = 2.
+    restraint = recipe.add_soft_bounds(recipe.cont.c, 0, 0, 1)
+    actual_restrained_residual = recipe.residual()
+    expected_restrained_residual = np.append(sin(x + 2) - y, 2)
+    assert actual_restrained_residual == pytest.approx(
+        expected_restrained_residual
+    )
+    # C3: The constraint on c is removed and c is reset to 0.
+    # Expected: The residual is zero, followed by a penalty term of 0 for
+    # the restraint, which is now met.
+    recipe.remove_constraint(recipe.cont.c)
+    recipe.cont.c.set_value(0)
+    actual_unconstrained_residual = recipe.residual()
+    expected_unconstrained_residual = np.append(sin(x) - y, 0)
+    assert actual_unconstrained_residual == pytest.approx(
+        expected_unconstrained_residual
+    )
+    # C4: The restraint and the variable Avar are removed.
+    # Expected: The residual is zero, with no penalty term.
+    recipe.remove_soft_bounds(restraint)
+    recipe.delete_variable(recipe.Avar)
+    actual_final_residual = recipe.residual()
+    expected_final_residual = sin(x) - y
+    assert actual_final_residual == pytest.approx(expected_final_residual)
+
+
+def test_residual_with_contribution_constraints_and_restraints(
+    build_sine_recipe,
+):
+    # Constrain and restrain c through the contribution of an evaluated
+    # recipe, then undo each change. Each step changes the recipe left by
+    # the step before it, and the residual is evaluated after each step.
+    # A change made on a contribution does not tell the recipe that its
+    # configuration changed, so the recipe is reset by hand after adding or
+    # removing a restraint.
+    recipe = build_sine_recipe()
+    x, y = recipe.cont.profile.x, recipe.cont.profile.y
+    recipe.residual()
+    # C1: The contribution constrains c to 2*A.
+    # Expected: c is 2, so the residual is sin(x + 2) - y.
+    recipe.cont.add_constraint(recipe.cont.c, "2*A")
+    actual_constrained_residual = recipe.residual()
+    expected_constrained_residual = sin(x + 2) - y
+    assert actual_constrained_residual == pytest.approx(
+        expected_constrained_residual
+    )
+    # C2: The contribution also restrains c to zero with sig=1.
+    # Expected: As C1, followed by a penalty term of |c - 0| = 2.
+    restraint = recipe.cont.add_soft_bounds(recipe.cont.c, 0, 0, 1)
+    recipe._ready = False
+    actual_restrained_residual = recipe.residual()
+    expected_restrained_residual = np.append(sin(x + 2) - y, 2)
+    assert actual_restrained_residual == pytest.approx(
+        expected_restrained_residual
+    )
+    # C3: The restraint and the constraint on c are removed and c is reset
+    # to 0.
+    # Expected: The residual is zero, with no penalty term.
+    recipe.cont.remove_soft_bounds(restraint)
+    recipe._ready = False
+    recipe.cont.remove_constraint(recipe.cont.c)
+    recipe.cont.c.set_value(0)
+    actual_final_residual = recipe.residual()
+    expected_final_residual = sin(x) - y
+    assert actual_final_residual == pytest.approx(expected_final_residual)
 
 
 def test_convert_bounds_to_restraints():
+    # C1: A variable bounded to [-1, 1] is converted with sig=2 and
+    # scaled=True.
+    # Expected: The recipe holds one restraint with those bounds, sig and
+    # scaling.
     recipe = FitRecipe("recipe")
-    # create a bounded variable
     recipe.create_new_variable("var1", 1)
     recipe.var1.bounds = (-1, 1)
-    # apply restraints from bounds
     recipe.convert_bounds_to_restraints(sig=2, scaled=True)
-    restraints = list(recipe._restraints)
-    assert len(restraints) == 1
-    r = restraints[0]
-    assert r.lower_bound == -1
-    assert r.upper_bound == 1
-    assert r.sig == 2
-    assert r.scaled is True
+    actual_restraints = [
+        (
+            restraint.lower_bound,
+            restraint.upper_bound,
+            restraint.sig,
+            restraint.scaled,
+        )
+        for restraint in recipe._restraints
+    ]
+    expected_restraints = [(-1, 1, 2, True)]
+    assert actual_restraints == expected_restraints
 
 
 def test_add_and_remove_parameter_set():
+    # C1: A parameter is added to the recipe and then removed.
+    # Expected: After adding, the recipe holds the parameter under its
+    # name. After removing, the name is gone.
     recipe = FitRecipe("recipe")
     parameter_to_add = Parameter("added_param", 1)
-    # add a parset
     recipe.add_parameter_set(parameter_to_add)
-    # check that the parameter is added
-    assert recipe.added_param == parameter_to_add
-    assert recipe.added_param.value == 1
-    # remove the added parameter
+    actual_added_parameter = recipe.added_param
+    actual_added_value = recipe.added_param.value
+    expected_added_parameter = parameter_to_add
+    expected_added_value = 1
+    assert actual_added_parameter == expected_added_parameter
+    assert actual_added_value == expected_added_value
     recipe.remove_parameter_set(parameter_to_add)
-    # check that the parameter is removed
-    assert not hasattr(recipe, "added_param")
+    actual_has_parameter = hasattr(recipe, "added_param")
+    expected_has_parameter = False
+    assert actual_has_parameter == expected_has_parameter
 
 
-def test_add_contribution(capturestdout):
-    """Check output from default PrintFitHook using add_contribution.
+def _get_printed_line_labels(output):
+    """Return the label that starts each printed line.
 
-    Covers the same behavior as test_print_fit_hook_deprecated (see the
-    deprecated-API section at the bottom of this file), which uses the
-    deprecated addContribution instead. Once addContribution is removed
-    in 4.0.0, delete that test and keep this one.
+    A line that holds only the iteration count is labelled "count".
     """
-    recipe = FitRecipe("recipe")
-    recipe.fithooks[0].verbose = 0
+    line_labels = []
+    for line in output.splitlines():
+        if line.strip().isdigit():
+            line_labels.append("count")
+        else:
+            line_labels.append(line.split(":")[0].split("=")[0].strip())
+    return line_labels
 
-    # Set up the Profile
-    profile = Profile()
-    x = linspace(0, pi, 10)
-    y = sin(x)
-    profile.set_observed_profile(x, y)
 
-    # Set up the FitContribution
-    fitcontribution = FitContribution("cont")
-    fitcontribution.set_profile(profile)
-    fitcontribution.set_equation("A*sin(k*x + c)")
-    fitcontribution.A.set_value(1)
-    fitcontribution.k.set_value(1)
-    fitcontribution.c.set_value(0)
-
-    recipe.add_contribution(fitcontribution)
-
-    recipe.add_variable(fitcontribution.c)
+# Print the progress of a refinement with the default PrintFitHook. The
+# sine recipe has the variable c and the restraint c >= 5, and each case
+# evaluates the scalar residual once.
+@pytest.mark.parametrize(
+    "input_verbose, expected_line_labels",
+    [
+        # C1: The verbosity is 0.
+        # Expected: Nothing is printed.
+        (0, []),
+        # C2: The verbosity is 1.
+        # Expected: Only the iteration count is printed.
+        (1, ["count"]),
+        # C3: The verbosity is 2.
+        # Expected: The count is followed by the residual, the
+        # contributions and the restraints.
+        (2, ["count", "Residual", "FitContributions", "Restraints"]),
+        # C4: The verbosity is 3.
+        # Expected: As C3, followed by the variables and their values.
+        (
+            3,
+            [
+                "count",
+                "Residual",
+                "FitContributions",
+                "Restraints",
+                "Variables",
+                "c",
+            ],
+        ),
+    ],
+)
+def test_print_fit_hook_output(
+    build_sine_recipe, capturestdout, input_verbose, expected_line_labels
+):
+    recipe = build_sine_recipe()
+    recipe.add_variable(recipe.cont.c)
     recipe.add_soft_bounds("c", lower_bound=5)
-    (pfh,) = recipe.get_fit_hooks()
-    out = capturestdout(recipe.scalar_residual)
-    assert "" == out
-    pfh.verbose = 1
-    out = capturestdout(recipe.scalar_residual)
-    assert out.strip().isdigit()
-    assert "\nRestraints:" not in out
-    pfh.verbose = 2
-    out = capturestdout(recipe.scalar_residual)
-    assert "\nResidual:" in out
-    assert "\nRestraints:" in out
-    assert "\nVariables" not in out
-    pfh.verbose = 3
-    out = capturestdout(recipe.scalar_residual)
-    assert "\nVariables" in out
-    assert "c = " in out
-    return
+    (print_fit_hook,) = recipe.get_fit_hooks()
+    print_fit_hook.verbose = input_verbose
+    actual_output = capturestdout(recipe.scalar_residual)
+    actual_line_labels = _get_printed_line_labels(actual_output)
+    assert actual_line_labels == expected_line_labels
 
 
 def optimize_recipe(recipe):
@@ -413,10 +434,10 @@ def optimize_recipe(recipe):
 
 
 def test_initialize_recipe_from_recipe(build_recipes_one_contribution):
-    # Case: User initializes a FitRecipe from a previously optimized fit
-    # expected: recipe is initialized with everything:
-    # contributions, profiles (contained in contributions),
-    # variables, restraints, and constraints
+    # C1: A FitRecipe is initialized from a previously optimized recipe.
+    # Expected: The recipe gets everything: contributions, profiles
+    # (contained in contributions), variables, restraints and
+    # constraints, and refines to the same variable names and values.
     recipe1, _ = build_recipes_one_contribution
     optimize_recipe(recipe1)
     expected_parameters_dict = recipe1._parameters
@@ -424,75 +445,77 @@ def test_initialize_recipe_from_recipe(build_recipes_one_contribution):
     expected_restraints_set = recipe1._restraints
     expected_contributions_dict = recipe1._contributions
     expected_profiles_list = []
-    for con_name, contribution in expected_contributions_dict.items():
-        expected_profile = contribution.profile
-        expected_profiles_list.append(expected_profile)
+    for contribution in expected_contributions_dict.values():
+        expected_profiles_list.append(contribution.profile)
 
     recipe2 = FitRecipe()
-    assert recipe1 != recipe2
+    actual_recipes_differ = recipe1 != recipe2
+    expected_recipes_differ = True
+    assert actual_recipes_differ == expected_recipes_differ
     recipe2.initialize_recipe_with_recipe(recipe1)
     actual_parameters_dict = recipe2._parameters
     actual_constraints_dict = recipe2._constraints
     actual_restraints_set = recipe2._restraints
     actual_contributions_dict = recipe2._contributions
     actual_profiles_list = []
-    for con_name, contribution in actual_contributions_dict.items():
-        actual_profile = contribution.profile
-        actual_profiles_list.append(actual_profile)
+    for contribution in actual_contributions_dict.values():
+        actual_profiles_list.append(contribution.profile)
 
-    assert expected_parameters_dict == actual_parameters_dict
-    assert expected_constraints_dict == actual_constraints_dict
-    assert expected_restraints_set == actual_restraints_set
-    assert expected_contributions_dict == actual_contributions_dict
-    assert expected_profiles_list == actual_profiles_list
+    assert actual_parameters_dict == expected_parameters_dict
+    assert actual_constraints_dict == expected_constraints_dict
+    assert actual_restraints_set == expected_restraints_set
+    assert actual_contributions_dict == expected_contributions_dict
+    assert actual_profiles_list == expected_profiles_list
 
-    # Check to see if the refined values and variable names are
-    # the same in the results objects for each recipe
+    # Check that the refined values and variable names are the same in
+    # the results objects for each recipe.
     results1 = FitResults(recipe1)
-    # round to account for small numerical differences
-    expected_values = np.round(results1.varvals, 7)
-    expected_names = results1.varnames
+    # Round to account for small numerical differences.
+    expected_values = sorted(np.round(results1.varvals, 7).tolist())
+    expected_names = sorted(results1.varnames)
 
     optimize_recipe(recipe2)
     results2 = FitResults(recipe2)
-    # round to account for small numerical differences
-    actual_values = np.round(results2.varvals, 7)
-    actual_names = results2.varnames
+    # Round to account for small numerical differences.
+    actual_values = sorted(np.round(results2.varvals, 7).tolist())
+    actual_names = sorted(results2.varnames)
 
-    assert sorted(expected_names) == sorted(actual_names)
-    assert sorted(list(expected_values)) == sorted(list(actual_values))
+    assert actual_names == expected_names
+    assert actual_values == expected_values
 
 
 def test_initialize_recipe_from_recipe_bad():
-    # Case: User tries to initialize a FitRecipe from a non recipe object
-    # expected: raised ValueError with message
-    recipe_bad = 12345  # not a FitRecipe object
+    # C1: A FitRecipe is initialized from an integer instead of a recipe.
+    # Expected: Raises a ValueError that names the type it got.
+    recipe_bad = 12345
     recipe2 = FitRecipe()
-    msg = (
+    expected_error_message = (
         "The input recipe_object must be a FitRecipe, "
         "but got <class 'int'>."
     )
-    with pytest.raises(ValueError, match=msg):
+    with pytest.raises(ValueError, match=re.escape(expected_error_message)):
         recipe2.initialize_recipe_with_recipe(recipe_bad)
 
 
 def test_initialize_recipe_from_results_object(build_recipes_one_contribution):
-    # Case: User initializes a FitRecipe from a FitResults object
-    # expected: recipe is initialized with variables from previous fit
-
-    # create unique recipe1
+    # C1: A FitRecipe with an extra variable is initialized from the
+    # FitResults of a previous fit.
+    # Expected: The recipe refines to the variables of the previous fit,
+    # and keeps its extra variable.
     recipe1, recipe2 = build_recipes_one_contribution
     optimize_recipe(recipe1)
     results1 = FitResults(recipe1)
     expected_values = np.round(results1.varvals, 5)
     expected_names = results1.varnames
 
-    assert recipe1 != recipe2
-    # create a new var that should be include in the initialized recipe
+    actual_recipes_differ = recipe1 != recipe2
+    expected_recipes_differ = True
+    assert actual_recipes_differ == expected_recipes_differ
+    # Create a new variable that should be kept in the initialized recipe.
     recipe2.create_new_variable("extra_var", 5)
     actual_values_before_init = [val for val in recipe2.get_values()]
     actual_names_before_init = sorted(recipe2.get_names())
-    # the three variables + the extra_var
+    # The three variables plus extra_var.
     expected_names_before_init = sorted(
         [
             "amplitude",
@@ -507,22 +530,21 @@ def test_initialize_recipe_from_results_object(build_recipes_one_contribution):
     recipe2.initialize_recipe_with_results(results1)
     optimize_recipe(recipe2)
     results2 = FitResults(recipe2)
-    actual_values = np.round(results2.varvals, 5)
-    actual_names = results2.varnames
+    actual_values = sorted(np.round(results2.varvals, 5).tolist())
+    actual_names = sorted(results2.varnames)
 
-    # add the new variable name to expected names
-    expected_names = expected_names + ["extra_var"]
-    # add the value of the new variable to expected values
-    expected_values = list(expected_values) + [5]
-    assert sorted(expected_names) == sorted(actual_names)
-    assert sorted(expected_values) == sorted(list(actual_values))
+    # Add the name and value of the new variable to the expected ones.
+    expected_names = sorted(expected_names + ["extra_var"])
+    expected_values = sorted(expected_values.tolist() + [5])
+    assert actual_names == expected_names
+    assert actual_values == expected_values
 
 
 def test_initialize_recipe_from_results_file(
     build_recipes_one_contribution, temp_data_files
 ):
-    # Case: User initializes a FitRecipe from a FitResults file
-    # expected: recipe is initialized with variables from previous fit
+    # C1: A FitRecipe is initialized from a FitResults file.
+    # Expected: The recipe takes the variable values saved in the file.
     results_file = temp_data_files / "fit_results.res"
     expected_names = ["amplitude", "phase_shift", "wave_number"]
     expected_values = [1, 1, 0]
@@ -530,42 +552,41 @@ def test_initialize_recipe_from_results_file(
     recipe, _ = build_recipes_one_contribution
     recipe.initialize_recipe_with_results(results_file)
     results = FitResults(recipe)
-    actual_values = np.round(results.varvals, 5)
-    actual_names = results.varnames
+    actual_values = np.round(results.varvals, 5).tolist()
+    actual_names = sorted(results.varnames)
 
-    assert sorted(expected_names) == sorted(actual_names)
-    assert list(expected_values) == list(actual_values)
+    assert actual_names == expected_names
+    assert actual_values == expected_values
 
 
 def test_initialize_recipe_from_results_file_bad(
     build_recipes_one_contribution,
 ):
-    # Case: User tries to initialize a recipe with something that
-    #       isn't a path, str, or FitResults object
-    # Expected: raised ValueError with message
+    # C1: A recipe is initialized from an integer, which is not a path,
+    # str or FitResults object.
+    # Expected: Raises a ValueError that names the type it got.
     recipe, _ = build_recipes_one_contribution
-    bad_input = 12345  # not a valid input type
-    msg = (
+    bad_input = 12345
+    expected_error_message = (
         "The input results must be a FitResults object or a path to a "
         "results file, but got <class 'int'>."
     )
-    with pytest.raises(ValueError, match=msg):
+    with pytest.raises(ValueError, match=re.escape(expected_error_message)):
         recipe.initialize_recipe_with_results(bad_input)
 
 
 def test_initialize_recipe_from_results_file_wrong(
     build_recipe_two_contributions, temp_data_files, capsys
 ):
-    # Case: User tries to initialize a FitRecipe from a results file
-    #       that does not match params in the recipe
-    # expected: Warning message is printed and things proceed as
-    #           usual with the variables in the recipe
-
+    # C1: A FitRecipe is initialized from a results file whose
+    # parameters are not in the recipe.
+    # Expected: A warning is printed for each unknown parameter and the
+    # recipe keeps its own variables.
     results_file_from_single_contrib = temp_data_files / "fit_results.res"
     recipe = build_recipe_two_contributions
     recipe.initialize_recipe_with_results(results_file_from_single_contrib)
     captured = capsys.readouterr()
-    actual_print_msg = captured.out  # .strip()
+    actual_print_msg = captured.out
 
     results_file_param_names = ["amplitude", "phase_shift", "wave_number"]
     expected_print_messages = []
@@ -617,8 +638,8 @@ def build_recipe_from_datafile(datafile):
 
 def test_plot_recipe_bad_display(build_recipes_one_contribution):
     recipe, _ = build_recipes_one_contribution
-    # Case: All plots are disabled
-    # expected: raised ValueError with message
+    # C1: The observed, fit and difference curves are all disabled.
+    # Expected: Raises a ValueError with a message.
     plt.close("all")
     msg = "At least one of show_observed, show_fit, or show_diff must be True"
     with pytest.raises(ValueError, match=msg):
@@ -631,8 +652,8 @@ def test_plot_recipe_bad_display(build_recipes_one_contribution):
 
 def test_plot_recipe_no_contribution():
     recipe = FitRecipe()
-    # Case: No contributions in recipe
-    # expected: raised ValueError with message
+    # C1: The recipe has no contributions.
+    # Expected: Raises a ValueError with a message.
     plt.close("all")
     msg = (
         "No contributions found in recipe. "
@@ -643,37 +664,40 @@ def test_plot_recipe_no_contribution():
 
 
 def test_plot_recipe_before_refinement(capsys, build_recipes_one_contribution):
-    # Case: User tries to plot recipe before refinement
-    # expected: Data plotted without fit line or difference curve
-    #          and warning message printed
+    # C1: The recipe is plotted before refinement.
+    # Expected: The observed data is plotted without the fit or
+    # difference curves, and a warning is printed.
     recipe, _ = build_recipes_one_contribution
     plt.close("all")
     before = set(plt.get_fignums())
-    # include fit_label="nothing" to make sure fit line is not plotted
+    # Include fit_label="nothing" to make sure the fit is not plotted.
     fig, ax = recipe.plot_recipe(
         show=False, data_label="my data", fit_label="nothing", return_fig=True
     )
     after = set(plt.get_fignums())
     new_figs = after - before
     captured = capsys.readouterr()
-    actual = captured.out.strip()
-    expected = (
+    actual_message = captured.out.strip()
+    expected_message = (
         "Contribution 'c1' has no calculated values (ycalc is None). "
         "Only observed data will be plotted."
     )
-    # get labels from the plotted line
+    # Get the labels from the plotted line.
     actual_label, actual_line_count = get_labels_and_linecount(ax)
     expected_line_count = 1
     expected_label = ["my data"]
     assert actual_line_count == expected_line_count
     assert actual_label == expected_label
-    assert len(new_figs) == 1
-    assert actual == expected
+    actual_new_figure_count = len(new_figs)
+    expected_new_figure_count = 1
+    assert actual_new_figure_count == expected_new_figure_count
+    assert actual_message == expected_message
 
 
 def test_plot_recipe_after_refinement(build_recipes_one_contribution):
-    # Case: User refines recipe and then plots
-    # expected: Plot generates with no problem
+    # C1: The recipe is refined and then plotted.
+    # Expected: One figure with the observed, calculated and difference
+    # curves is created.
     recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
@@ -686,7 +710,9 @@ def test_plot_recipe_after_refinement(build_recipes_one_contribution):
     expected_line_count = 3
     assert actual_line_count == expected_line_count
     assert actual_label == expected_label
-    assert len(new_figs) == 1
+    actual_new_figure_count = len(new_figs)
+    expected_new_figure_count = 1
+    assert actual_new_figure_count == expected_new_figure_count
 
 
 def test_plot_recipe_styles_only_its_own_figure(
@@ -708,8 +734,9 @@ def test_plot_recipe_styles_only_its_own_figure(
 
 
 def test_plot_recipe_two_contributions(build_recipe_two_contributions):
-    # Case: Two contributions in recipe
-    # expected: two figures created
+    # C1: The recipe has two contributions.
+    # Expected: Two figures are created, each with the observed,
+    # calculated and difference curves.
     recipe = build_recipe_two_contributions
     optimize_recipe(recipe)
     plt.close("all")
@@ -723,12 +750,15 @@ def test_plot_recipe_two_contributions(build_recipe_two_contributions):
         assert actual_label == expected_label
     after = set(plt.get_fignums())
     new_figs = after - before
-    assert len(new_figs) == 2
+    actual_new_figure_count = len(new_figs)
+    expected_new_figure_count = 2
+    assert actual_new_figure_count == expected_new_figure_count
 
 
 def test_plot_recipe_on_existing_plot(build_recipes_one_contribution):
-    # Case: User passes axes to plot_recipe to plot on existing figure
-    # expected: User modifications are present in the final figure
+    # C1: The user passes existing axes, with a title and a curve, to
+    # plot_recipe.
+    # Expected: The user's title and curve are kept in the final figure.
     recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
@@ -740,15 +770,15 @@ def test_plot_recipe_on_existing_plot(build_recipes_one_contribution):
     expected_title = "User Title"
     actual_labels, actual_line_count = get_labels_and_linecount(ax)
     expected_line_count = 4
-    expected_labels = ["Calculated", "Difference", "New Data", "Observed"]
+    expected_labels = ["New Data", "Observed", "Calculated", "Difference"]
     assert actual_line_count == expected_line_count
-    assert sorted(actual_labels) == sorted(expected_labels)
+    assert actual_labels == expected_labels
     assert actual_title == expected_title
 
 
 def test_plot_recipe_add_new_data(build_recipes_one_contribution):
-    # Case: User wants to add data to figure generated by plot_recipe
-    # Expected: New data is added to existing figure (check with labels)
+    # C1: The user adds a curve to the figure returned by plot_recipe.
+    # Expected: The new curve is added to the existing figure.
     recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
@@ -756,21 +786,23 @@ def test_plot_recipe_add_new_data(build_recipes_one_contribution):
     fig, ax = recipe.plot_recipe(return_fig=True, show=False)
     after = set(plt.get_fignums())
     new_figs = after - before
-    # add new data to existing plot
+    # Add new data to the existing plot.
     ax.plot([0, pi], [0, 0], label="New Data")
     ax.legend()
     actual_labels, actual_line_count = get_labels_and_linecount(ax)
     expected_labels = ["Observed", "Calculated", "Difference", "New Data"]
     expected_line_count = 4
-    assert len(new_figs) == 1
+    actual_new_figure_count = len(new_figs)
+    expected_new_figure_count = 1
+    assert actual_new_figure_count == expected_new_figure_count
     assert actual_line_count == expected_line_count
-    assert sorted(actual_labels) == sorted(expected_labels)
+    assert actual_labels == expected_labels
 
 
 def test_plot_recipe_add_new_data_two_figs(build_recipe_two_contributions):
-    # Case: User wants to add data to figure generated by plot_recipe
-    #       with two contributions
-    # Expected: New data is added to existing figure (check with labels)
+    # C1: The user adds a curve to each figure returned by plot_recipe
+    # for a recipe with two contributions.
+    # Expected: The new curve is added to each existing figure.
     recipe = build_recipe_two_contributions
     optimize_recipe(recipe)
     plt.close("all")
@@ -778,7 +810,7 @@ def test_plot_recipe_add_new_data_two_figs(build_recipe_two_contributions):
     figure, axes = recipe.plot_recipe(return_fig=True, show=False)
     after = set(plt.get_fignums())
     new_figs = after - before
-    # add new data to existing plots
+    # Add new data to the existing plots.
     for ax in axes:
         ax.plot([0, pi], [0, 0], label="New Data")
         ax.legend()
@@ -786,13 +818,15 @@ def test_plot_recipe_add_new_data_two_figs(build_recipe_two_contributions):
         expected_labels = ["Observed", "Calculated", "Difference", "New Data"]
         expected_line_count = 4
         assert actual_line_count == expected_line_count
-        assert sorted(actual_labels) == sorted(expected_labels)
-    assert len(new_figs) == 2
+        assert actual_labels == expected_labels
+    actual_new_figure_count = len(new_figs)
+    expected_new_figure_count = 2
+    assert actual_new_figure_count == expected_new_figure_count
 
 
 def test_plot_recipe_set_title(build_recipes_one_contribution):
-    # Case: User sets title via plot_recipe
-    # Expected: Title is set correctly
+    # C1: The user sets the title through plot_recipe.
+    # Expected: The figure has that title.
     recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
@@ -805,7 +839,7 @@ def test_plot_recipe_set_title(build_recipes_one_contribution):
 
 
 def test_plot_recipe_default_title(build_recipes_one_contribution):
-    # Case: A single contribution is plotted with no title given.
+    # C1: A single contribution is plotted with no title given.
     # Expected: The figure is titled with the name of the contribution.
     recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
@@ -817,7 +851,7 @@ def test_plot_recipe_default_title(build_recipes_one_contribution):
 
 
 def test_plot_recipe_titles_two_contributions(build_recipe_two_contributions):
-    # Case: Two contributions are plotted on separate figures with no
+    # C1: Two contributions are plotted on separate figures with no
     # title given.
     # Expected: Each figure is titled with the name of its contribution.
     recipe = build_recipe_two_contributions
@@ -830,7 +864,7 @@ def test_plot_recipe_titles_two_contributions(build_recipe_two_contributions):
 
 
 def test_plot_recipe_labels_shared_axes(build_recipe_two_contributions):
-    # Case: Two contributions are plotted on a single user-supplied axes.
+    # C1: Two contributions are plotted on a single user-supplied axes.
     # Expected: Legend labels are prefixed with the contribution name so
     # that the curves of each contribution can be told apart.
     recipe = build_recipe_two_contributions
@@ -853,7 +887,7 @@ def test_plot_recipe_labels_shared_axes(build_recipe_two_contributions):
 def test_plot_recipe_label_contribution_placeholder(
     build_recipe_two_contributions,
 ):
-    # Case: User passes a label containing the {contribution} placeholder.
+    # C1: User passes a label containing the {contribution} placeholder.
     # Expected: The placeholder is replaced by the contribution name and no
     # prefix is added.
     recipe = build_recipe_two_contributions
@@ -874,14 +908,14 @@ def test_plot_recipe_label_contribution_placeholder(
 def test_plot_recipe_missing_ycalc_one_contribution(
     build_recipe_two_contributions,
 ):
-    # Case: Only the second contribution has been evaluated, so the ycalc of
+    # C1: Only the second contribution has been evaluated, so the ycalc of
     # the first one is None.
     # Expected: The unevaluated contribution shows observed data only while
     # the other one is still plotted in full.
     recipe = build_recipe_two_contributions
     optimize_recipe(recipe)
     plt.close("all")
-    # manually set ycalc to None
+    # Manually set ycalc to None.
     recipe._contributions["c1"].profile.ycalc = None
     _, axes = recipe.plot_recipe(show=False, return_fig=True)
     actual_labels = [get_labels_and_linecount(ax)[0] for ax in axes]
@@ -893,12 +927,13 @@ def test_plot_recipe_missing_ycalc_one_contribution(
 
 
 def test_plot_recipe_set_defaults(build_recipes_one_contribution):
-    # Case: user sets default plot options with set_plot_defaults
-    # Expected: plot_recipe uses the default options for all calls
+    # C1: The user sets default plot options with set_plot_defaults.
+    # Expected: plot_recipe uses the default options when called without
+    # arguments.
     recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
-    # set new defaults
+    # Set new defaults.
     recipe.set_plot_defaults(
         show_observed=False,
         show_fit=True,
@@ -908,7 +943,7 @@ def test_plot_recipe_set_defaults(build_recipes_one_contribution):
         diff_label="Diff Default",
         title="Default Title",
     )
-    # call plot_recipe without any arguments
+    # Call plot_recipe without any arguments.
     figure, ax = recipe.plot_recipe(return_fig=True, show=False)
     actual_title = ax.get_title()
     actual_labels, actual_line_count = get_labels_and_linecount(ax)
@@ -921,8 +956,8 @@ def test_plot_recipe_set_defaults(build_recipes_one_contribution):
 
 
 def test_plot_recipe_set_defaults_bad(capsys, build_recipes_one_contribution):
-    # Case: user tries to set kwargs that are not valid plot_recipe options
-    # Expected: Plot is shown and warning is printed
+    # C1: The user sets a default that is not a plot_recipe option.
+    # Expected: A warning is printed and the recipe is still plotted.
     recipe, _ = build_recipes_one_contribution
     optimize_recipe(recipe)
     plt.close("all")
@@ -940,38 +975,44 @@ def test_plot_recipe_set_defaults_bad(capsys, build_recipes_one_contribution):
     figure, ax = recipe.plot_recipe(return_fig=True, show=False)
     after = set(plt.get_fignums())
     new_figs = after - before
-    assert len(new_figs) == 1
+    actual_new_figure_count = len(new_figs)
+    expected_new_figure_count = 1
+    assert actual_new_figure_count == expected_new_figure_count
 
 
+# Infer the axis labels of the plot from the extension of the data file.
 @pytest.mark.parametrize(
-    "input,expected",
+    "input_filename, expected_xlabel, expected_ylabel",
     [
-        # case1: .gr file
-        # expected: labels are inferred from file
-        ("gr_file.gr", [r"r ($\mathrm{\AA}$)", r"G ($\mathrm{\AA}^{-2}$)"]),
-        # case2: .dat file
-        # expected: default empty labels
-        ("dat_file.dat", ["", ""]),
-        # case3: .cgr file
-        # expected: labels are inferred from file
-        ("cgr_file.cgr", [r"r ($\mathrm{\AA}$)", r"G ($\mathrm{\AA}^{-2}$)"]),
+        # C1: A .gr file.
+        # Expected: The labels of a PDF are used.
+        ("gr_file.gr", r"r ($\mathrm{\AA}$)", r"G ($\mathrm{\AA}^{-2}$)"),
+        # C2: A .cgr file.
+        # Expected: The labels of a PDF are used.
+        ("cgr_file.cgr", r"r ($\mathrm{\AA}$)", r"G ($\mathrm{\AA}^{-2}$)"),
+        # C3: A .dat file, whose kind of data is unknown.
+        # Expected: The labels are empty.
+        ("dat_file.dat", "", ""),
     ],
 )
-def test_plot_recipe_labels_from_gr_file(temp_data_files, input, expected):
-    gr_file = temp_data_files / input
-    recipe = build_recipe_from_datafile(gr_file)
+def test_plot_recipe_labels_from_gr_file(
+    temp_data_files, input_filename, expected_xlabel, expected_ylabel
+):
+    data_file = temp_data_files / input_filename
+    recipe = build_recipe_from_datafile(data_file)
     optimize_recipe(recipe)
     plt.close("all")
-    fig, ax = recipe.plot_recipe(return_fig=True, show=False)
+    _, ax = recipe.plot_recipe(return_fig=True, show=False)
     actual_xlabel = ax.get_xlabel()
     actual_ylabel = ax.get_ylabel()
-    expected_xlabel = expected[0]
-    expected_ylabel = expected[1]
     assert actual_xlabel == expected_xlabel
     assert actual_ylabel == expected_ylabel
 
 
 def test_plot_recipe_labels_from_gr_file_overwrite(temp_data_files):
+    # C1: A recipe loaded from a .gr file is plotted with xlabel and
+    # ylabel given.
+    # Expected: The given labels replace the ones inferred from the file.
     gr_file = temp_data_files / "gr_file.gr"
     recipe = build_recipe_from_datafile(gr_file)
     optimize_recipe(recipe)
@@ -988,6 +1029,9 @@ def test_plot_recipe_labels_from_gr_file_overwrite(temp_data_files):
 
 
 def test_plot_recipe_reset_all_defaults(build_recipes_one_contribution):
+    # C1: Every plot option is given a new default with set_plot_defaults.
+    # Expected: plot_recipe called without arguments uses every one of the
+    # new defaults.
     expected_defaults = {
         "show_observed": True,
         "show_fit": True,
@@ -1053,22 +1097,26 @@ def test_plot_recipe_reset_all_defaults(build_recipes_one_contribution):
     fit_line = lines_by_label[expected_defaults["fit_label"]]
     diff_line = lines_by_label[expected_defaults["diff_label"]]
 
-    assert data_line.get_color() == expected_defaults["data_color"]
-    assert fit_line.get_color() == expected_defaults["fit_color"]
-    assert diff_line.get_color() == expected_defaults["diff_color"]
-
-    assert data_line.get_linestyle() == expected_defaults["data_style"]
-    assert fit_line.get_marker() == expected_defaults["fit_style"]
-    assert diff_line.get_marker() == expected_defaults["diff_style"]
-
-    assert data_line.get_markersize() == expected_defaults["markersize"]
-    assert data_line.get_alpha() == expected_defaults["alpha"]
+    actual_line_styles = {
+        "data_color": data_line.get_color(),
+        "fit_color": fit_line.get_color(),
+        "diff_color": diff_line.get_color(),
+        "data_style": data_line.get_linestyle(),
+        "fit_style": fit_line.get_marker(),
+        "diff_style": diff_line.get_marker(),
+        "markersize": data_line.get_markersize(),
+        "alpha": data_line.get_alpha(),
+    }
+    expected_line_styles = {
+        key: expected_defaults[key] for key in actual_line_styles
+    }
+    assert actual_line_styles == expected_line_styles
 
     actual_xlim = ax.get_xlim()
     expected_xlim = (expected_defaults["xmin"], expected_defaults["xmax"])
     assert actual_xlim == expected_xlim
 
-    # no legend
+    # No legend.
     actual_legend = ax.get_legend() is not None
     expected_legend = expected_defaults["legend"]
 
@@ -1082,29 +1130,32 @@ def test_plot_recipe_reset_all_defaults(build_recipes_one_contribution):
 # (A=1, k=1, c=0) is recovered no matter how the fit is weighted.
 
 
-# make_input_dyobs returns a function that evaluates dyobs on the array
-# of xobs for insertion into the build_recipe_with_uncertainty fixture.
+# The profile of build_recipe_with_uncertainty has 21 points.
+UNIFORM_DYOBS = ones(21)
+VARYING_DYOBS = linspace(0.1, 1.0, 21)
+
+
 @pytest.mark.parametrize(
-    "make_input_dyobs, expected_dyobs_is_set",
+    "input_dyobs, expected_dyobs_is_set",
     [
         # C1: No uncertainties are observed, as for a file with no
         # uncertainty column.
         # Expected: The refinement converges and dyobs stays None.
-        (lambda xobs: None, False),
+        (None, False),
         # C2: Uniform uncertainties of one are observed explicitly.
         # Expected: The refinement converges to the same values as C1,
         # since an unweighted fit is weighted by one everywhere.
-        (lambda xobs: ones_like(xobs), True),
+        (UNIFORM_DYOBS, True),
         # C3: Uncertainties vary across the profile, so the refinement
         # is weighted point by point.
         # Expected: The refinement still converges to the known values.
-        (lambda xobs: linspace(0.1, 1.0, len(xobs)), True),
+        (VARYING_DYOBS, True),
     ],
 )
 def test_refine_with_and_without_uncertainty(
-    build_recipe_with_uncertainty, make_input_dyobs, expected_dyobs_is_set
+    build_recipe_with_uncertainty, input_dyobs, expected_dyobs_is_set
 ):
-    recipe, profile = build_recipe_with_uncertainty(make_input_dyobs)
+    recipe, profile = build_recipe_with_uncertainty(input_dyobs)
     optimize_recipe(recipe)
     actual_dyobs_is_set = profile.dyobs is not None
     actual_names = recipe.get_names()
@@ -1123,147 +1174,28 @@ def test_refine_with_and_without_uncertainty(
 # through to the residual unchanged.
 
 
-# make_input_dyobs returns a function that evaluates dyobs on the array
-# of xobs for insertion into the build_recipe_with_uncertainty fixture.
 @pytest.mark.parametrize(
-    "make_input_dyobs, make_expected_dy",
+    "input_dyobs, expected_dy",
     [
         # C1: No uncertainties are observed.
         # Expected: dy falls back to one everywhere, so the residual is
         # unweighted.
-        (lambda xobs: None, lambda xobs: ones_like(xobs)),
+        (None, UNIFORM_DYOBS),
         # C2: Uniform uncertainties of one are observed explicitly.
         # Expected: dy is one everywhere, matching C1.
-        (lambda xobs: ones_like(xobs), lambda xobs: ones_like(xobs)),
+        (UNIFORM_DYOBS, UNIFORM_DYOBS),
         # C3: Uncertainties vary across the profile.
         # Expected: dy keeps the observed values, so the residual is
         # weighted point by point.
-        (
-            lambda xobs: linspace(0.1, 1.0, len(xobs)),
-            lambda xobs: linspace(0.1, 1.0, len(xobs)),
-        ),
+        (VARYING_DYOBS, VARYING_DYOBS),
     ],
 )
 def test_residual_is_weighted_by_uncertainty(
-    build_recipe_with_uncertainty, make_input_dyobs, make_expected_dy
+    build_recipe_with_uncertainty, input_dyobs, expected_dy
 ):
-    recipe, profile = build_recipe_with_uncertainty(make_input_dyobs)
+    recipe, profile = build_recipe_with_uncertainty(input_dyobs)
     actual_residual = recipe.residual(recipe.values)
     actual_dy = profile.dy
-    expected_dy = make_expected_dy(profile.xobs)
     expected_residual = (profile.ycalc - profile.y) / expected_dy
     assert actual_dy == pytest.approx(expected_dy)
     assert actual_residual == pytest.approx(expected_residual)
-
-
-# ----------------------------------------------------------------------------
-# addContribution, addParameterSet/removeParameterSet, and
-# ProfileParser.parseFile/Profile.loadParsedData are deprecated in favor of
-# add_contribution, add_parameter_set/remove_parameter_set, and
-# ProfileParser.parse_file/Profile.load_parsed_data. The old names must still
-# work and forward to the new implementation.
-
-
-def test_print_fit_hook_deprecated(capturestdout):
-    """Check output from default PrintFitHook using the deprecated
-    addContribution, getFitHooks, and scalarResidual methods.
-
-    Remove this test after addContribution is removed in 4.0.0; see
-    test_add_contribution for the permanent replacement.
-    """
-    recipe = FitRecipe("recipe")
-    recipe.fithooks[0].verbose = 0
-
-    # Set up the Profile
-    profile = Profile()
-    x = linspace(0, pi, 10)
-    y = sin(x)
-    profile.set_observed_profile(x, y)
-
-    # Set up the FitContribution
-    fitcontribution = FitContribution("cont")
-    fitcontribution.set_profile(profile)
-    fitcontribution.set_equation("A*sin(k*x + c)")
-    fitcontribution.A.set_value(1)
-    fitcontribution.k.set_value(1)
-    fitcontribution.c.set_value(0)
-
-    recipe.addContribution(fitcontribution)
-
-    recipe.add_variable(fitcontribution.c)
-    recipe.add_soft_bounds("c", lower_bound=5)
-    (pfh,) = recipe.getFitHooks()
-    out = capturestdout(recipe.scalar_residual)
-    assert "" == out
-    pfh.verbose = 1
-    out = capturestdout(recipe.scalar_residual)
-    assert out.strip().isdigit()
-    assert "\nRestraints:" not in out
-    pfh.verbose = 2
-    out = capturestdout(recipe.scalar_residual)
-    assert "\nResidual:" in out
-    assert "\nRestraints:" in out
-    assert "\nVariables" not in out
-    pfh.verbose = 3
-    out = capturestdout(recipe.scalarResidual)
-    assert "\nVariables" in out
-    assert "c = " in out
-    return
-
-
-def test_add_and_remove_parameter_set_deprecated():
-    """Test the deprecated addParameterSet and removeParameterSet
-    methods."""
-    recipe = FitRecipe("recipe")
-    parameter_to_add = Parameter("added_param", 1)
-    # add a parset
-    recipe.addParameterSet(parameter_to_add)
-    # check that the parameter is added
-    assert recipe.added_param == parameter_to_add
-    assert recipe.added_param.value == 1
-    # remove the added parameter
-    recipe.removeParameterSet(parameter_to_add)
-    # check that the parameter is removed
-    assert not hasattr(recipe, "added_param")
-
-
-def build_recipe_from_datafile_deprecated(datafile):
-    """Duplicate of build_recipe_from_datafile to use the deprecated
-    ProfileParser.parseFile and Profile.loadParsedData methods.
-
-    Remove in version 4.0.0.
-    """
-    profile = Profile()
-    parser = ProfileParser()
-    parser.parseFile(str(datafile))
-    profile.loadParsedData(parser)
-
-    contribution = FitContribution("c")
-    contribution.set_profile(profile)
-    contribution.set_equation("m*x + b")
-    recipe = FitRecipe()
-    recipe.add_contribution(contribution)
-    recipe.add_variable(contribution.m, 1)
-    recipe.add_variable(contribution.b, 0)
-    return recipe
-
-
-def test_plot_recipe_labels_from_gr_file_overwrite_deprecated(temp_data_files):
-    "Remove this test with version 4.0.0."
-    gr_file = temp_data_files / "gr_file.gr"
-    recipe = build_recipe_from_datafile_deprecated(gr_file)
-    optimize_recipe(recipe)
-    plt.close("all")
-    fig, ax = recipe.plot_recipe(
-        return_fig=True, show=False, xlabel="My X", ylabel="My Y"
-    )
-    actual_xlabel = ax.get_xlabel()
-    actual_ylabel = ax.get_ylabel()
-    expected_xlabel = "My X"
-    expected_ylabel = "My Y"
-    assert actual_xlabel == expected_xlabel
-    assert actual_ylabel == expected_ylabel
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -88,30 +88,14 @@ def test_equation_root_and_attributes(make_args, input_root_kind):
 
 # The value can be read in three equivalent ways.
 @pytest.mark.parametrize("input_root_kind", ROOT_KINDS)
-@pytest.mark.parametrize(
-    "input_read",
-    [
-        # C1: The equation is called.
-        # Expected: 20.
-        "call",
-        # C2: get_value is called.
-        # Expected: 20.
-        "get_value",
-        # C3: The value attribute is read.
-        # Expected: 20.
-        "value",
-    ],
-)
-def test_equation_value(make_args, input_root_kind, input_read):
+def test_equation_value(make_args, input_root_kind):
+    # C1: The equation is called, get_value is called and the value
+    # attribute is read.
+    # Expected: Each gives 20.
     equation, _ = _build_equation(make_args, input_root_kind)
-    reads = {
-        "call": equation,
-        "get_value": equation.get_value,
-        "value": lambda: equation.value,
-    }
-    actual_value = reads[input_read]()
-    expected_value = 20
-    assert actual_value == expected_value
+    actual_values = [equation(), equation.get_value(), equation.value]
+    expected_values = [20, 20, 20]
+    assert actual_values == expected_values
 
 
 # Calling the equation with a keyword sets that argument before evaluating.

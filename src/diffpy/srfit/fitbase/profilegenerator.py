@@ -53,66 +53,64 @@ from diffpy.srfit.fitbase.parameterset import ParameterSet
 class ProfileGenerator(Operator, ParameterSet):
     """Base class for profile generators.
 
-    A ProfileGenerator organizes Parameters and has a __call__ method that can
-    generate a profile. ProfileGenerator is also an Operator
-    (diffpy.srfit.equation.literals.operators), so it can be used directly in
-    an evaluation network.
+    A ProfileGenerator organizes Parameters and has a ``__call__`` method
+    that can generate a profile. ProfileGenerator is also an Operator
+    (diffpy.srfit.equation.literals.operators), so it can be used directly
+    in an evaluation network.
+
+    Parameters
+    ----------
+    name : str
+        The name of the ProfileGenerator. It must be a valid attribute
+        name.
 
     Attributes
     ----------
-    name
-        A name for this organizer.
-    profile
-        A Profile instance that contains the calculation range
-        and will contain the generated profile.
-    meta
-        A dictionary of metadata needed by the generator.
-    eq
-        The Equation object used to wrap this ProfileGenerator.
-        This is set when the ProfileGenerator is added to a
-        FitContribution.
-    _calculators
-        A managed dictionary of Calculators, indexed by name.
-    _constraints
-        A set of constrained Parameters. Constraints can be
-        added using the 'constrain' methods.
-    _parameters
-        A managed OrderedDict of contained Parameters.
-    _parsets
-        A managed dictionary of ParameterSets.
-    _restraints
-        A set of Restraints. Restraints can be added using the
-        'restrain' or 'confine' methods.
-    _eqfactory
-        A diffpy.srfit.equation.builder.EquationFactory
-        instance that is used create Equations from string.
-
-    Operator Attributes
-    -------------------
-    args
-        List of Literal arguments, set with 'add_literal'
-    name
-        A name for this operator. e.g. "add" or "sin"
-    nin
-        Number of inputs (<1 means this is variable)
-    nout
-        Number of outputs
-    operation
-        Function that performs the operation. e.g. numpy.add. In
-        this case, operation is an instance method.
-    symbol
-        The symbolic representation. e.g. "+" or "sin"
-    _value
-        The value of the Operator.
-    value
-        Property for 'get_value'.
-
-    Properties
-    ----------
-    names
-        Variable names (read only). See get_names.
-    values
-        Variable values (read only). See get_values.
+    name : str
+        The name of the ProfileGenerator.
+    profile : Profile or None
+        The Profile that contains the calculation range and will contain
+        the generated profile. It is None until ``set_profile`` is called.
+    meta : dict
+        The metadata needed by the generator. It is updated from the
+        Profile metadata whenever the Profile is set or changes.
+    names : list of str
+        The names of the top-level Parameters (read only). See
+        ``get_names``.
+    values : list
+        The values of the top-level Parameters (read only). See
+        ``get_values``.
+    args : list
+        The Literal arguments of the operator, added with
+        ``add_literal``.
+    nin : int
+        The number of inputs, which is 0. The independent variable is
+        taken from ``profile``.
+    nout : int
+        The number of outputs, which is 1.
+    symbol : str
+        The symbolic representation of the operator, which is the same as
+        ``name`` (read only).
+    value : object
+        The value of the operator (read only). See ``get_value``.
+    _value : object
+        The cached value of the operator, or None if it must be
+        recomputed.
+    _calculators : dict
+        The managed dictionary of Calculators, indexed by name.
+    _constraints : dict
+        The dictionary of Constraints, indexed by the constrained
+        Parameter. Constraints can be added using the ``add_constraint``
+        method.
+    _parameters : OrderedDict
+        The managed OrderedDict of contained Parameters.
+    _parsets : OrderedDict
+        The managed OrderedDict of contained ParameterSets.
+    _restraints : set
+        The set of Restraints. Restraints can be added using the
+        ``add_soft_bounds`` method.
+    _eqfactory : diffpy.srfit.equation.builder.EquationFactory
+        The factory that is used to create Equations from strings.
     """
 
     # define abstract attributes from the Operator base.
@@ -120,7 +118,6 @@ class ProfileGenerator(Operator, ParameterSet):
     nout = 1
 
     def __init__(self, name):
-        """Initialize the attributes."""
         Operator.__init__(self)
         ParameterSet.__init__(self, name)
         self.profile = None
@@ -129,6 +126,7 @@ class ProfileGenerator(Operator, ParameterSet):
 
     @property
     def symbol(self):
+        """The symbolic representation, which is the generator name."""
         return self.name
 
     # Overload me!
@@ -154,18 +152,22 @@ class ProfileGenerator(Operator, ParameterSet):
     # No need to overload anything below here
 
     def operation(self):
-        """Evaluate the profile.
+        """Evaluate the profile over the calculation points.
 
         Returns
         -------
         ndarray
-            The result of ``__call__(profile.x)``.
+            The profile calculated by ``__call__`` at ``profile.x``.
         """
         y = self.__call__(self.profile.x)
         return y
 
     def set_profile(self, profile):
         """Assign the profile.
+
+        The generator stops observing any previously assigned Profile and
+        starts observing the new one, so that changes to the Profile
+        update ``meta`` and invalidate the cached value.
 
         Parameters
         ----------

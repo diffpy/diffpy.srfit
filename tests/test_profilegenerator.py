@@ -12,80 +12,81 @@
 # See LICENSE_DANSE.txt for license information.
 #
 ##############################################################################
-"""Tests for profilegenerator module."""
+"""Tests for the profilegenerator module."""
 
 import pickle
-import unittest
 
+import pytest
 from numpy import arange, array_equal
 
-from diffpy.srfit import Profile, ProfileGenerator
+from diffpy.srfit import Profile
 
 
-class TestProfileGenerator(unittest.TestCase):
-
-    def setUp(self):
-        self.gen = ProfileGenerator("test")
-        self.profile = Profile()
-        x = arange(0, 10, 0.1)
-        self.profile.set_calculation_points(x)
-        self.gen.set_profile(self.profile)
-        return
-
-    def testOperation(self):
-        """Test the operation method."""
-        gen = self.gen
-        prof = self.profile
-
-        # Try the direct evaluation
-        val = gen.operation()
-        self.assertTrue(array_equal(prof.x, val))
-
-        # Try evaluation through __call__
-        val = gen(2 * prof.x)
-        self.assertTrue(array_equal(2 * prof.x, val))
-        return
-
-    def testUpdate(self):
-        """Update and change the profile to make sure generator is
-        flushed."""
-        gen = self.gen
-        prof = self.profile
-
-        # Make sure attributes get updated with a change in the calculation
-        # points.
-        x = arange(0, 9, 0.1)
-        prof.set_calculation_points(x)
-        self.assertTrue(gen._value is None)
-        val = gen.value
-        self.assertTrue(array_equal(x, val))
-
-        # Verify generated value listens to changes in profile.x.
-        x3 = x + 3
-        prof.x = x3
-        self.assertTrue(array_equal(x3, gen.value))
-
-        # Make sure attributes get updated with a new profile.
-        x = arange(0, 8, 0.1)
-        prof = Profile()
-        prof.set_calculation_points(x)
-        gen.set_profile(prof)
-        self.assertTrue(gen._value is None)
-        self.assertTrue(array_equal(x, gen.value))
-        return
-
-    def test_pickling(self):
-        """Test pickling of ProfileGenerator."""
-        data = pickle.dumps(self.gen)
-        gen2 = pickle.loads(data)
-        self.assertEqual("test", gen2.name)
-        x = self.profile.x
-        self.assertTrue(array_equal(x, gen2.operation()))
-        self.assertTrue(array_equal(3 * x, gen2(3 * x)))
-        return
+def test_operation(generator_and_profile):
+    # C1: operation is called, and the generator is called with 2*x.
+    # Expected: The base ProfileGenerator returns its input x unchanged,
+    # so operation returns the profile's calculation points x and the
+    # call returns 2*x.
+    generator, profile = generator_and_profile
+    actual_operation_value = generator.operation()
+    expected_operation_value = profile.x
+    assert array_equal(actual_operation_value, expected_operation_value)
+    actual_call_value = generator(2 * profile.x)
+    expected_call_value = 2 * profile.x
+    assert array_equal(actual_call_value, expected_call_value)
 
 
-# End of class TestProfileGenerator
+# A change in the profile flushes the cached value of the generator, so its
+# next value is computed on the new calculation points.
+@pytest.mark.parametrize(
+    "input_update, input_new_x",
+    [
+        # C1: The profile's calculation points are set with
+        # set_calculation_points.
+        # Expected: The cached value is cleared, and the value is the new x.
+        ("set_calculation_points", arange(0, 9, 0.1)),
+        # C2: The profile's x is assigned directly.
+        # Expected: The cached value is cleared, and the value is the new x.
+        ("assign_x", arange(0, 9, 0.1) + 3),
+        # C3: A new profile is assigned with set_profile.
+        # Expected: The cached value is cleared, and the value is the new
+        # profile's x.
+        ("set_profile", arange(0, 8, 0.1)),
+    ],
+)
+def test_update(generator_and_profile, input_update, input_new_x):
+    generator, profile = generator_and_profile
+    # Evaluate once so there is a cached value to flush.
+    actual_initial_value = generator.value
+    expected_initial_value = profile.x
+    assert array_equal(actual_initial_value, expected_initial_value)
+    if input_update == "set_calculation_points":
+        profile.set_calculation_points(input_new_x)
+    elif input_update == "assign_x":
+        profile.x = input_new_x
+    else:
+        new_profile = Profile()
+        new_profile.set_calculation_points(input_new_x)
+        generator.set_profile(new_profile)
+    actual_cached_value = generator._value
+    expected_cached_value = None
+    assert actual_cached_value == expected_cached_value
+    actual_value = generator.value
+    expected_value = input_new_x
+    assert array_equal(actual_value, expected_value)
 
-if __name__ == "__main__":
-    unittest.main()
+
+def test_pickling(generator_and_profile):
+    # C1: A generator with a profile is pickled and unpickled.
+    # Expected: The copy keeps the name and evaluates the same profile.
+    generator, profile = generator_and_profile
+    unpickled_generator = pickle.loads(pickle.dumps(generator))
+    actual_name = unpickled_generator.name
+    expected_name = "test"
+    assert actual_name == expected_name
+    actual_operation_value = unpickled_generator.operation()
+    expected_operation_value = profile.x
+    assert array_equal(actual_operation_value, expected_operation_value)
+    actual_call_value = unpickled_generator(3 * profile.x)
+    expected_call_value = 3 * profile.x
+    assert array_equal(actual_call_value, expected_call_value)

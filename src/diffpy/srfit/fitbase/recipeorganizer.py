@@ -160,8 +160,10 @@ clearRestraints_deprecation_msg = build_deprecation_message(
     removal_version,
 )
 
+recipeorganizer_module_base = "diffpy.srfit.fitbase.recipeorganizer"
+
 equationFromString_deprecation_msg = build_deprecation_message(
-    recipeorganizer_base,
+    recipeorganizer_module_base,
     "equationFromString",
     "get_equation_from_string",
     removal_version,
@@ -176,7 +178,7 @@ class RecipeContainer(Observable, Configurable, Validatable):
     objects.  Parameters and other RecipeContainers can be found within the
     hierarchy with the `_locate_managed_object` method.
 
-    A RecipeContainer can manage dictionaries for that store various objects.
+    A RecipeContainer can manage dictionaries that store various objects.
     These dictionaries can be added to the RecipeContainer using the `_manage`
     method. RecipeContainer methods that add, remove or retrieve objects will
     work with any managed dictionary. This makes it easy to add new types of
@@ -189,27 +191,37 @@ class RecipeContainer(Observable, Configurable, Validatable):
     ProfileGenerator, to detect changes in Parameters and Restraints on which
     it may depend.
 
+    Parameters
+    ----------
+    name : str
+        The name of the RecipeContainer. It must be a valid attribute
+        name.
+
     Attributes
     ----------
-    name
-        A name for this RecipeContainer. Names should be unique
+    name : str
+        The name of this RecipeContainer. Names should be unique
         within a RecipeContainer and should be valid attribute
         names.
-    _parameters
-        A managed OrderedDict of contained Parameters.
-    __managed
-        A list of managed dictionaries. This is used for
+    names : list of str
+        The names of the top-level Parameters (read only). See
+        `get_names`.
+    values : list
+        The values of the top-level Parameters (read only). See
+        `get_values`.
+    _parameters : OrderedDict
+        The managed OrderedDict of contained Parameters.
+    __managed : list
+        The list of managed dictionaries. This is used for
         attribute access, addition and removal.
-    _configobjs
-        A set of configurable objects that must know of
+    _configobjs : set
+        The set of configurable objects that must know of
         configuration changes within this object.
 
-    Properties
-    ----------
-    names
-        Variable names (read only). See get_names.
-    values
-        Variable values (read only). See get_values.
+    Raises
+    ------
+    ValueError
+        If `name` is not a valid attribute name.
     """
 
     names = property(lambda self: self.get_names())
@@ -719,38 +731,42 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
     level and a flattened list of them can be retrieved with the
     `_get_constraints` and `_get_restraints` methods.
 
+    Parameters
+    ----------
+    name : str
+        The name of the RecipeOrganizer. It must be a valid attribute
+        name.
+
     Attributes
     ----------
-    name
-        A name for this organizer. Names should be unique
+    name : str
+        The name of this organizer. Names should be unique
         within a RecipeOrganizer and should be valid attribute
         names.
-    _calculators
-        A managed dictionary of Calculators, indexed by name.
-    _parameters
-        A managed OrderedDict of contained Parameters.
-    _constraints
-        A dictionary of Constraints, indexed by the constrained
+    names : list of str
+        The names of the top-level Parameters (read only). See
+        `get_names`.
+    values : list
+        The values of the top-level Parameters (read only). See
+        `get_values`.
+    _calculators : dict
+        The managed dictionary of Calculators, indexed by name.
+    _parameters : OrderedDict
+        The managed OrderedDict of contained Parameters.
+    _constraints : dict
+        The dictionary of Constraints, indexed by the constrained
         Parameter. Constraints can be added using the
-        'constrain' method.
-    _restraints
-        A set of Restraints. Restraints can be added using the
-        'restrain' method.
-    _eqfactory
-        A diffpy.srfit.equation.builder.EquationFactory
-        instance that is used create Equations from string.
-
-    Properties
-    ----------
-    names
-        Variable names (read only). See get_names.
-    values
-        Variable values (read only). See get_values.
+        `add_constraint` method.
+    _restraints : set
+        The set of Restraints. Restraints can be added using the
+        `add_soft_bounds` method.
+    _eqfactory : diffpy.srfit.equation.builder.EquationFactory
+        The factory that is used to create Equations from strings.
 
     Raises
     ------
     ValueError
-        If the name is not a valid attribute identifier.
+        If `name` is not a valid attribute name.
     """
 
     def __init__(self, name):
@@ -834,16 +850,18 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         This creates a function with this class that can be used within string
         equations. The resulting equation can be used in a string with
         arguments like a function or without, in which case the values of the
-        Parameters created from argnames will be be used to compute the value.
+        Parameters created from argnames will be used to compute the value.
+        Argument names that are not already known to this organizer are
+        added as new Parameters with value 0.
 
         Parameters
         ----------
-        calculator : Calculator object
+        calculator : Calculator
             The Calculator to register.
-        argnames :  list or None, optional
-            The names of the arguments to `calculator` (list or None).
-            If this is None, then the argument names will be
-            extracted from the function.
+        argnames : list of str or None, optional
+            The names of the arguments to `calculator`. If this is None
+            (default), then the argument names will be extracted from
+            the signature of the Calculator's ``__call__`` method.
 
         Returns
         -------
@@ -909,9 +927,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Raises
         ------
-        TypeError
+        ValueError
             If name or argnames cannot be automatically extracted.
-        TypeError
+        ValueError
             If an automatically extracted name is '<lambda>'.
         ValueError
             If function is an Equation object and name is None.
@@ -1024,11 +1042,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Parameters
         ----------
         function_str : str
-            A string equation to register.
+            The string equation to register. Names in the equation that
+            are not yet known are added as new Parameters.
         name : str
             The name of the function to be used in equations.
         func_params : dict, optional
-            A dictionary of Parameters, indexed by name, that are
+            The dictionary of Parameters, indexed by name, that are
             used in `function_str`, but not part of the FitRecipe (default {}).
 
         Returns
@@ -1082,7 +1101,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Parameters
         ----------
-        equation_str
+        equation_str : str
             The string equation to evaluate. The equation is evaluated at
             the current value of the registered Parameters.
         func_params : dict, optional
@@ -1092,7 +1111,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Returns
         -------
-        returned_value : float
+        returned_value : float or numpy.ndarray
             The value of the evaluated equation.
 
         Raises
@@ -1100,6 +1119,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         ValueError
             If `func_params` uses a name that is already used for a
             variable.
+        ValueError
+            If `equation_str` uses a name that is not a known Parameter
+            and is not in `func_params`.
         """
         eq = get_equation_from_string(
             equation_str, self._eqfactory, func_params
@@ -1125,20 +1147,22 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         """Constrain a parameter to an equation.
 
         Note that only one constraint can exist on a Parameter at a time.
+        Adding a constraint to a Parameter that is already constrained
+        replaces the old constraint.
 
         Parameters
         ----------
         parameter : str or Parameter
             The name of a Parameter or a Parameter to constrain.
-        constraint_eq : str or Equation
-            A string representation of the constraint equation or a
+        constraint_eq : str or Parameter
+            The string representation of the constraint equation or a
             Parameter to constrain to. A constraint equation must
             consist of numpy operators and "known" Parameters.
             Parameters are known if they are in the `params`
             argument, or if they are managed by this object.
         params : dict, optional
-            A dictionary of Parameters, indexed by name, that are used
-            in `parameter`, but not part of this object (default {}).
+            The dictionary of Parameters, indexed by name, that are used
+            in `constraint_eq`, but not part of this object (default {}).
 
         Raises
         ------
@@ -1209,8 +1233,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Returns
         -------
         bool
-            True if the Parameter is constrained in this object, False
-            otherwise.
+            The flag that is True if the Parameter is constrained in this
+            object, False otherwise.
         """
         if isinstance(parameter, str):
             name = parameter
@@ -1230,9 +1254,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return self.is_constrained(par)
 
     def remove_constraint(self, *pars):
-        """Unconstrain a Parameter.
+        """Unconstrain one or more Parameters.
 
-        This removes any constraints on a Parameter.
+        This removes any constraints on the given Parameters.
 
         Parameters
         ----------
@@ -1242,7 +1266,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Raises
         ------
         ValueError
-            If the Parameter is not constrained.
+            If a Parameter given by name cannot be found.
+        ValueError
+            If none of the given Parameters is constrained.
         """
         update = False
         for parameter in pars:
@@ -1281,19 +1307,19 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return
 
     def get_constrained_parmeters(self, recurse=False):
-        """Get a list of constrained managed Parameters in this object.
+        """Get the constrained managed Parameters in this object.
 
         Parameters
         ----------
         recurse : bool, optional
-            If False (default), only constrained Parameters in
-            this object are returned. If True, constrained
+            The flag that is False (default) to return only constrained
+            Parameters in this object. If True, constrained
             Parameters in managed sub-objects are also included.
 
         Returns
         -------
-        constrained_params : list of Parameter
-            The list of constrained managed Parameters in this object.
+        constrained_params : dict_keys of Parameter
+            The constrained managed Parameters in this object.
         """
         const = self._get_constraints(recurse)
         constrained_params = const.keys()
@@ -1319,9 +1345,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Parameters
         ----------
         recurse : bool, optional
-            If False (default), only constraints in this object
-            are cleared. If True, constraints in managed
-            sub-objects are also cleared.
+            The flag that is False (default) to clear only constraints in
+            this object. If True, constraints in managed sub-objects are
+            also cleared.
         """
         if self._constraints:
             self.remove_constraint(*self._constraints)
@@ -1357,8 +1383,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
 
         Parameters
         ----------
-        param_or_eq : str
-            The equation or parameter to restrain.
+        param_or_eq : str or Parameter
+            The equation string or Parameter to restrain.
         lower_bound : float, optional
             The lower bound for the restraint evaluation (default is -inf).
         upper_bound : float, optional
@@ -1367,8 +1393,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             The uncertainty associated with the bounds (default is 1).
             Please see Notes for how this is used in the penalty calculation.
         scaled : bool, optional
-            If True, the restraint penalty is scaled by the unrestrained
-            point-average chi^2 (chi^2/numpoints) (default is False).
+            The flag that is True to scale the restraint penalty by the
+            unrestrained point-average chi^2 (chi^2/numpoints)
+            (default is False).
         params : dict, optional
             The dictionary of Parameters, indexed by name, that are used in
             `param_or_eq` (if an equation string is used) but are not part
@@ -1378,7 +1405,16 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         -------
         Restraint
             The created Restraint object, which can be used with the
-            'unrestrain' method.
+            `remove_soft_bounds` method.
+
+        Raises
+        ------
+        ValueError
+            If `params` contains a name that is already used
+            for a Parameter.
+        ValueError
+            If `param_or_eq` depends on a Parameter that is not part of the
+            RecipeOrganizer and is not defined in `params`.
 
         Notes
         -----
@@ -1405,15 +1441,6 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
                 scaled=True,
                 params={"b_ni": Parameter("b_ni", 3.473)}
             )
-
-        Raises
-        ------
-        ValueError
-            If `params` contains a name that is already used
-            for a Parameter.
-        ValueError
-            If `param_or_eq` depends on a Parameter that is not part of the
-            RecipeOrganizer and is not defined in `params`.
         """
         if isinstance(param_or_eq, str):
             eqstr = param_or_eq
@@ -1452,7 +1479,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Parameters
         ----------
         res : Restraint
-            A Restraint instance.
+            The Restraint to add.
         """
         self._restraints.add(res)
         # Our configuration changed. Notify observers.
@@ -1472,13 +1499,15 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         return
 
     def remove_soft_bounds(self, *ress):
-        """Remove a Restraint from the RecipeOrganizer.
+        """Remove Restraints from the RecipeOrganizer.
+
+        Restraints that are not held by this organizer are ignored.
 
         Parameters
         ----------
         *ress : Restraint
-            The Restraints returned from the 'add_soft_bounds' method or added
-            with the 'register_soft_bounds' method.
+            The Restraints returned from the `add_soft_bounds` method or added
+            with the `register_soft_bounds` method.
         """
         update = False
         restuple = tuple(self._restraints)
@@ -1511,8 +1540,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Parameters
         ----------
         recurse : bool, optional
-            If False (default), only restraints in this object are
-            cleared. If True, restraints in managed sub-objects are
+            The flag that is False (default) to clear only restraints in
+            this object. If True, restraints in managed sub-objects are
             also cleared.
         """
         self.remove_soft_bounds(*self._restraints)
@@ -1670,11 +1699,12 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Parameters
         ----------
         pattern : str, optional
-            Limit output to only those parameters that match this regular
-            expression (match all by default).
+            The regular expression that limits the output to the matching
+            parameters (match all by default).
         textwidth : int, optional
-            Trim formatted lines at this text width to avoid folding at
-            the screen width.  Do not trim when negative or 0.
+            The text width at which formatted lines are trimmed to avoid
+            folding at the screen width (default 78). Do not trim when
+            negative or 0.
         """
         regexp = re.compile(pattern)
         _pmatch_with_re = partial(_pmatch, regexp=regexp)
@@ -1730,31 +1760,32 @@ def get_equation_from_string(
     Parameters
     ----------
     eqstr : str
-        A string representation of the equation. The equation must
+        The string representation of the equation. The equation must
         consist of numpy operators and "known" Parameters. Parameters
         are known if they are in ns, or already defined in the factory.
     factory : EquationFactory
-        An EquationFactory instance.
+        The factory used to build the equation.
     ns : dict, optional
         The dictionary of Parameters indexed by name that are used
         in the eqstr but not already defined in the factory
-        (default {}).
+        (default {}). They are registered only while the equation is
+        built.
     buildargs : bool, optional
-        A flag indicating whether missing Parameters can be created
-        by the Factory (default False). If False, then the a ValueError
+        The flag indicating whether missing Parameters can be created
+        by the Factory (default False). If False, then a ValueError
         will be raised if there are undefined arguments in the eqstr.
-    argclass : Parameter class, optional
-        Class to use when creating new Arguments (default
+    argclass : type, optional
+        The class to use when creating new Arguments (default
         Parameter). The class constructor must accept the 'name' key
         word.
     argkw : dict, optional
-        Key word dictionary to pass to the argclass constructor
+        The keyword dictionary to pass to the argclass constructor
         (default {}).
 
     Returns
     -------
     eq : Equation
-        An Equation instance representing the equation in eqstr.
+        The Equation instance representing the equation in eqstr.
 
     Raises
     ------

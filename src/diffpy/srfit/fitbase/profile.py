@@ -72,44 +72,45 @@ class Profile(Observable, Validatable):
 
     Attributes
     ----------
-    _xobs
-        A numpy array of the observed independent variable (default
-        None)
-    xobs
-        Read-only property of _xobs.
-    _yobs
-        A numpy array of the observed signal (default None)
-    yobs
-        Read-only property of _yobs.
-    _dyobs
-        A numpy array of the uncertainty of the observed signal
-        (default None, optional).
-    dyobs
-        Read-only property of _dyobs.
-    x
-        A numpy array of the calculated independent variable (default
-        None, property for ``xpar`` accessors).
-    y
-        The profile over the calculation range (default None, property
-        for ``ypar`` accessors).
-    dy
+    xobs : numpy.ndarray or None
+        The observed independent variable (default None, read only).
+    yobs : numpy.ndarray or None
+        The observed signal (default None, read only).
+    dyobs : numpy.ndarray or None
+        The uncertainty of the observed signal (default None, read
+        only). It stays None when no uncertainty was observed.
+    x : numpy.ndarray or None
+        The calculated independent variable (default None). This
+        property gets and sets the value of ``xpar``.
+    y : numpy.ndarray or None
+        The profile over the calculation range (default None). This
+        property gets and sets the value of ``ypar``.
+    dy : numpy.ndarray or None
         The uncertainty in the profile over the calculation range
-        (default None, property for ``dypar`` accessors).
-    ycalc
-        A numpy array of the calculated signal (default None).
-    xpar
-        A Parameter that stores x (named "x").
-    ypar
-        A Parameter that stores y (named "y").
-    dypar
-        A Parameter that stores dy (named "dy").
-    ycpar
-        A Parameter that stores ycalc (named "ycalc"). This is
+        (default None). This property gets and sets the value of
+        ``dypar``.
+    ycalc : numpy.ndarray or None
+        The calculated signal (default None). This property gets and
+        sets the value of ``ycpar``.
+    xpar : Parameter
+        The Parameter that stores x (named "x").
+    ypar : Parameter
+        The Parameter that stores y (named "y").
+    dypar : Parameter
+        The Parameter that stores dy (named "dy").
+    ycpar : Parameter
+        The Parameter that stores ycalc (named "ycalc"). This is
         not observed by the profile, but it is present so it can be
         constrained to.
-    meta
-        A dictionary of metadata. This is only set if provided by a
-        parser.
+    meta : dict
+        The metadata of the profile. This is only filled if provided by
+        a parser.
+    _xobs : numpy.ndarray or None
+        The storage for ``xobs``.
+    _yobs : numpy.ndarray or None
+        The storage for ``yobs``.
+    _dyobs : numpy.ndarray or None
+        The storage for ``dyobs``.
     """
 
     def __init__(self):
@@ -240,7 +241,9 @@ class Profile(Observable, Validatable):
 
         Adhere to the observed ``xobs`` points when ``dx`` is the same
         as in the data.  ``xmin`` and ``xmax`` are clipped at the bounds
-        of the observed data.
+        of the observed data. ``xmin`` is always inclusive (unless
+        clipped). ``xmax`` is inclusive if it is within the bounds of the
+        observed data.
 
         Parameters
         ----------
@@ -256,15 +259,16 @@ class Profile(Observable, Validatable):
             The sample spacing in the independent variable.  When different
             from the data, resample the ``x`` as anchored at ``xmin``.
 
-        Note that ``xmin`` is always inclusive (unless clipped).
-        ``xmax`` is inclusive if it is within the bounds of the observed data.
-
         Raises
         ------
         AttributeError
             If there is no observed data.
         ValueError
-            When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
+            If ``xmin > xmax``, if ``dx <= 0`` or if
+            ``dx > xmax - xmin``.
+        ValueError
+            If ``xmin``, ``xmax`` or ``dx`` is a string other than
+            "obs".
         """
         if self.xobs is None:
             raise AttributeError("No observed profile")
@@ -452,23 +456,23 @@ class Profile(Observable, Validatable):
         return x, y, dy
 
     def savetxt(self, fname, **kwargs):
-        """Call ``numpy.savetxt`` with x, ycalc, y, dy.
+        """Save x, ycalc, y and dy as columns of a text file.
 
         Parameters
         ----------
-        fname : filename or file handle
+        fname : str, pathlib.Path or file handle
             The filename or file handle passed to ``numpy.savetxt``.
         **kwargs
             The keyword arguments that are passed to ``numpy.savetxt``.
-            We preset file header "x  ycalc  y  dy".  Use ``header=''``
-            to save data without any header.
+            The file header defaults to "x  ycalc  y  dy".  Use
+            ``header=''`` to save data without any header.
 
         Raises
         ------
         SrFitError
-            When ``self.ycalc`` has not been set.
+            If ``ycalc`` has not been set.
 
-        See also
+        See Also
         --------
         numpy.savetxt
         """

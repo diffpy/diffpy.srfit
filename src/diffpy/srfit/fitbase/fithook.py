@@ -15,11 +15,11 @@
 """The FitHook class for inspecting the progress of a FitRecipe
 refinement.
 
-FitHooks are called by a FitRecipe during various times of the residual
-is evaluation. The default FitHook simply counts the number of times the
-residual is called, and reports that number every time the residual is
-calculated. Depending on the verbosity, it will also report the residual
-and the current variable values.
+FitHooks are called by a FitRecipe at various stages of the residual
+evaluation. The default FitHook of a FitRecipe, PrintFitHook, counts the
+number of times the residual is called, and reports that number every
+time the residual is calculated. Depending on the verbosity, it will
+also report the residual and the current variable values.
 
 Custom FitHooks can be added to a FitRecipe with the
 FitRecipe.push_fit_hook method.
@@ -37,44 +37,52 @@ from diffpy.srfit.util import sort_key_for_numeric_string
 class FitHook(object):
     """Base class for inspecting the progress of a FitRecipe refinement.
 
-    Can serve as a fithook for the FitRecipe class (see
-    FitRecipe.push_fit_hook method.) The methods in this class are
+    A FitHook can be added to a FitRecipe with the
+    ``FitRecipe.push_fit_hook`` method. The methods in this class are
     called during the preparation of the FitRecipe for refinement, and
-    during the residual call. See the class methods for a description of
-    their purpose.
+    during the residual call. The base implementations do nothing; derived
+    classes overload them as needed.
     """
 
     def reset(self, recipe):
         """Reset the hook data.
 
-        This is called whenever FitRecipe._prepare is called, which is
-        whenever a configurational change to the fit hierarchy takes
-        place, such as adding a new ParameterSet, constraint or
-        restraint.
+        This is called by ``FitRecipe._prepare`` whenever a
+        configurational change to the fit hierarchy takes place, such as
+        adding a new ParameterSet, constraint or restraint.
+
+        Parameters
+        ----------
+        recipe : FitRecipe
+            The FitRecipe that is being prepared.
         """
         return
 
     def precall(self, recipe):
-        """This is called within FitRecipe.residual, before the
-        calculation.
+        """Inspect the recipe before the residual is calculated.
+
+        This is called within ``FitRecipe.residual``, before the
+        variable values are applied and the residual is calculated.
 
         Parameters
         ----------
         recipe : FitRecipe
-            The FitRecipe instance.
+            The FitRecipe whose residual is being calculated.
         """
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the
-        calculation.
+        """Inspect the recipe after the residual is calculated.
+
+        This is called within ``FitRecipe.residual``, after the residual
+        is calculated.
 
         Parameters
         ----------
         recipe : FitRecipe
-            The FitRecipe instance.
+            The FitRecipe whose residual was calculated.
         chiv : ndarray
-            The residual vector.
+            The residual vector, including the restraint penalties.
         """
         return
 
@@ -90,10 +98,11 @@ class PrintFitHook(FitHook):
 
     Attributes
     ----------
-    count
+    count : int
         The number of times the residual has been called (default 0).
-    verbose
-        An integer telling how verbose to be (default 1).
+    verbose : int
+        The verbosity level (default 1). Each level also prints what the
+        lower levels print.
 
         0
             Print nothing.
@@ -106,30 +115,34 @@ class PrintFitHook(FitHook):
     """
 
     def __init__(self):
-        """Initialize the attributes."""
         self.count = 0
         self.verbose = 1
         return
 
     def reset(self, recipe):
-        """Reset the hook data.
+        """Reset the residual call count to 0.
 
-        This is called whenever FitRecipe._prepare is called, which is
-        whenever a configurational change to the fit hierarchy takes
-        place, such as adding a new ParameterSet, constraint or
-        restraint.
+        This is called by ``FitRecipe._prepare`` whenever a
+        configurational change to the fit hierarchy takes place, such as
+        adding a new ParameterSet, constraint or restraint.
+
+        Parameters
+        ----------
+        recipe : FitRecipe
+            The FitRecipe that is being prepared.
         """
         self.count = 0
         return
 
     def precall(self, recipe):
-        """This is called within FitRecipe.residual, before the
-        calculation.
+        """Increment the residual call count and print it.
+
+        The count is printed when ``verbose`` is at least 1.
 
         Parameters
         ----------
         recipe : FitRecipe
-            The FitRecipe instance.
+            The FitRecipe whose residual is being calculated.
         """
         self.count += 1
         if self.verbose > 0:
@@ -137,15 +150,19 @@ class PrintFitHook(FitHook):
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the
-        calculation.
+        """Print the residual and, optionally, the variable values.
+
+        When ``verbose`` is at least 2, print the total residual and, if
+        the recipe has restraints, its FitContribution and restraint
+        parts. When ``verbose`` is at least 3, also print the name and
+        value of each variable.
 
         Parameters
         ----------
         recipe : FitRecipe
-            The FitRecipe instance.
+            The FitRecipe whose residual was calculated.
         chiv : ndarray
-            The residual vector.
+            The residual vector, including the restraint penalties.
         """
         if self.verbose < 2:
             return
@@ -186,10 +203,30 @@ def _byname(nv):
 
 # TODO - Display the chi^2 on the plot during refinement.
 class PlotFitHook(FitHook):
-    """Live-plot the progress of a FitRecipe refinement."""
+    """Live-plot the progress of a FitRecipe refinement.
+
+    Each FitContribution of the recipe gets a subplot showing the
+    observed profile and the calculated profile, which is updated after
+    every residual call. This requires matplotlib.
+
+    Attributes
+    ----------
+    _plots : list of tuple
+        The (observed, calculated) line pair for each FitContribution.
+        It is created by ``reset``.
+    """
 
     def reset(self, recipe):
-        """Set up the plot."""
+        """Set up the plot.
+
+        Clear the current figure, turn on interactive mode and draw one
+        subplot per FitContribution of the recipe.
+
+        Parameters
+        ----------
+        recipe : FitRecipe
+            The FitRecipe that is being prepared.
+        """
         FitHook.reset(self, recipe)
 
         self._plots = []
@@ -231,17 +268,17 @@ class PlotFitHook(FitHook):
         return
 
     def postcall(self, recipe, chiv):
-        """This is called within FitRecipe.residual, after the
-        calculation.
+        """Update the plots with the latest profiles.
 
-        Find data and plot it.
+        This is called within ``FitRecipe.residual``, after the residual
+        is calculated.
 
         Parameters
         ----------
         recipe : FitRecipe
-            The FitRecipe instance.
+            The FitRecipe whose residual was calculated.
         chiv : ndarray
-            The residual vector.
+            The residual vector, including the restraint penalties.
         """
         FitHook.postcall(self, recipe, chiv)
         import pylab

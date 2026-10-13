@@ -88,46 +88,45 @@ class FitContribution(ParameterSet):
 
     Attributes
     ----------
-    name
-        A name for this FitContribution.
-    profile
-        A Profile that holds the measured (and calculated)
-        signal.
-    _calculators
-        A managed dictionary of Calculators, indexed by name.
-    _constraints
-        A set of constrained Parameters. Constraints can be
-        added using the ``constrain`` methods.
-    _generators
-        A managed dictionary of ProfileGenerators.
-    _parameters
-        A managed OrderedDict of parameters.
-    _restraints
-        A set of Restraints. Restraints can be added using the
-        ``restrain`` method.
-    _parsets
-        A managed dictionary of ParameterSets.
-    _eqfactory
-        A diffpy.srfit.equation.builder.EquationFactory
-        instance that is used to create constraints and
-        restraints from string
-    _eq
-        The FitContribution equation that will be optimized.
-    _reseq
-        The residual equation.
-    _xname
-        Name of the x-variable
-    _yname
-        Name of the y-variable
-    _dyname
-        Name of the dy-variable
-
-    Properties
-    ----------
-    names
-        Variable names (read only). See get_names.
-    values
-        Variable values (read only). See get_values.
+    name : str
+        The name of this FitContribution.
+    profile : Profile or None
+        The Profile that holds the measured (and calculated)
+        signal. It is None until ``set_profile`` is called.
+    names : list of str
+        The names of the top-level Parameters (read only). See
+        ``get_names``.
+    values : list
+        The values of the top-level Parameters (read only). See
+        ``get_values``.
+    _calculators : dict
+        The managed dictionary of Calculators, indexed by name.
+    _constraints : dict
+        The dictionary of Constraints, indexed by the constrained
+        Parameter. Constraints can be added using the
+        ``add_constraint`` method.
+    _generators : dict
+        The managed dictionary of ProfileGenerators, indexed by name.
+    _parameters : OrderedDict
+        The managed OrderedDict of parameters.
+    _restraints : set
+        The set of Restraints. Restraints can be added using the
+        ``add_soft_bounds`` method.
+    _parsets : OrderedDict
+        The managed OrderedDict of ParameterSets.
+    _eqfactory : diffpy.srfit.equation.builder.EquationFactory
+        The factory that is used to create constraints and
+        restraints from strings.
+    _eq : Equation or None
+        The profile equation that calculates the signal.
+    _reseq : Equation or None
+        The residual equation that will be optimized.
+    _xname : str or None
+        The name of the x-variable.
+    _yname : str or None
+        The name of the y-variable.
+    _dyname : str or None
+        The name of the dy-variable.
     """
 
     def __init__(self, name):
@@ -153,6 +152,13 @@ class FitContribution(ParameterSet):
     def set_profile(self, profile, xname=None, yname=None, dyname=None):
         """Assign the Profile for this FitContribution.
 
+        The x, y and dy Parameters of the Profile are added to this
+        FitContribution under the names ``xname``, ``yname`` and
+        ``dyname``. The Profile is also assigned to every
+        ProfileGenerator of this FitContribution, and the residual
+        equation is set to ``"chiv"`` if a profile equation exists but no
+        residual equation has been set.
+
         Parameters
         ----------
         profile : Profile
@@ -173,6 +179,11 @@ class FitContribution(ParameterSet):
             this is None (default), then the name specified by the
             Profile for this parameter will be used.  This variable is
             usable within string equations with the specified name.
+
+        Raises
+        ------
+        TypeError
+            If ``profile`` is not a Profile instance.
         """
         # Enforce type of the profile argument
         if not isinstance(profile, Profile):
@@ -238,8 +249,9 @@ class FitContribution(ParameterSet):
         gen : ProfileGenerator
             The ProfileGenerator instance to add.
         name : str, optional
-            A name for the calculator. If name is None (default), then
-            the ProfileGenerator's name attribute will be used.
+            The name used for the ProfileGenerator in the profile
+            equation. If name is None (default), then the
+            ProfileGenerator's name attribute will be used.
 
         Raises
         ------
@@ -289,14 +301,14 @@ class FitContribution(ParameterSet):
         Parameters
         ----------
         eqstr : str
-            A string representation of the equation. Any Parameter
+            The string representation of the equation. Any Parameter
             registered by ``add_parameter`` or ``set_profile``, or function
             registered by ``register_calculator``, ``register_function`` or
             ``register_string_function`` can be used in the equation
             by name. Other names will be turned into Parameters of this
             FitContribution.
         ns : dict, optional
-            A dictionary of Parameters, indexed by name, that are used
+            The dictionary of Parameters, indexed by name, that are used
             in the eqstr, but not registered (default {}).
 
         Raises
@@ -377,15 +389,13 @@ class FitContribution(ParameterSet):
         Parameters
         ----------
         eqstr : str
-            A string representation of the residual. If eqstr is None
-            (default), then the previous residual equation will be
-            used, or the chi2 residual will be used if that does not
-            exist.
+            The string representation of the residual, or one of the
+            preset names ``"chiv"`` and ``"resv"``.
 
         Raises
         ------
         SrFitError
-            If the Profile is not yet defined.
+            If the Profile or the profile equation is not yet defined.
         ValueError
             If eqstr depends on a Parameter that is not part of the
             FitContribution.
@@ -477,6 +487,9 @@ class FitContribution(ParameterSet):
 
     def evaluate(self):
         """Evaluate the contribution equation and update profile.ycalc.
+
+        The calculated signal is stored in ``profile.ycalc`` only if a
+        Profile has been assigned.
 
         Returns
         -------

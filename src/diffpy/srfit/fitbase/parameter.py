@@ -261,15 +261,23 @@ class Parameter(_parameter_interface, Argument, Validatable):
 class ParameterProxy(Parameter):
     """A Parameter proxy for another parameter.
 
-    This allows for the same parameter to have multiple names.
+    This allows for the same parameter to have multiple names. The value,
+    constant flag, constrained flag, bounds and observers all belong to
+    the proxied Parameter. The ``set_value``, ``get_value``,
+    ``set_constant``, ``bound_range`` and ``bound_window`` methods forward
+    to the proxied Parameter and share its docstrings.
 
     Attributes
     ----------
-    name
-        A name for this ParameterProxy. Names should be unique within a
+    name : str
+        The name of this ParameterProxy. Names should be unique within a
         RecipeOrganizer and should be valid attribute names.
-    par
+    par : Parameter
         The Parameter this is a proxy for.
+    constrained : bool
+        The flag indicating if the proxied Parameter is constrained.
+    bounds : list
+        The lower and upper bounds of the proxied Parameter.
     """
 
     def __init__(self, name, par):
@@ -297,7 +305,8 @@ class ParameterProxy(Parameter):
 
     @property
     def constrained(self):
-        """A flag indicating if the proxied Parameter is constrained."""
+        """The flag indicating if the proxied Parameter is
+        constrained."""
         return self.par.constrained
 
     @constrained.setter
@@ -307,7 +316,7 @@ class ParameterProxy(Parameter):
 
     @property
     def bounds(self):
-        """List of lower and upper bounds of the proxied Parameter.
+        """The list of lower and upper bounds of the proxied Parameter.
 
         This can be used by some optimizers when the Parameter is
         varied. See FitRecipe.get_bounds_pairs and
@@ -368,8 +377,26 @@ class ParameterProxy(Parameter):
 class ParameterAdapter(Parameter):
     """An adapter for parameter-like objects.
 
-    This class wraps an object as a Parameter. The get_value and
-    set_value methods defer to the data of the wrapped object.
+    This class wraps an object as a Parameter. The ``get_value`` and
+    ``set_value`` methods defer to the data of the wrapped object.
+
+    Attributes
+    ----------
+    obj : object
+        The wrapped object.
+    getter : callable
+        The function that takes ``obj`` and returns the parameter value.
+        When ``attr`` is given, this is the ``getter`` passed to the
+        constructor (or ``getattr``) with ``attr`` bound as its second
+        argument.
+    setter : callable
+        The function that takes ``obj`` and a value and sets the parameter
+        value. When ``attr`` is given, this is the ``setter`` passed to the
+        constructor (or ``setattr``) with ``attr`` bound as its second
+        argument.
+    attr : str or None
+        The name of the attribute that contains the parameter value, or
+        None if ``getter`` and ``setter`` access the value directly.
     """
 
     def __init__(self, name, obj, getter=None, setter=None, attr=None):
@@ -433,17 +460,20 @@ class ParameterAdapter(Parameter):
         return
 
     def get_value(self):
-        """Get the value of the Parameter.
+        """Get the value of the Parameter from the wrapped object.
 
         Returns
         -------
         object
-            The current value of the wrapped attribute.
+            The current value returned by ``getter``.
         """
         return self.getter(self.obj)
 
     def set_value(self, value):
-        """Set the value of the Parameter.
+        """Set the value of the Parameter on the wrapped object.
+
+        The value is passed to ``setter`` and observers are notified only
+        if it differs from the current value.
 
         Parameters
         ----------
@@ -453,7 +483,7 @@ class ParameterAdapter(Parameter):
         Returns
         -------
         ParameterAdapter
-            Return self so that mutators can be chained.
+            The ParameterAdapter itself, so that mutators can be chained.
         """
         if value != self.get_value():
             self.setter(self.obj, value)

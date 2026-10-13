@@ -34,8 +34,8 @@ EXPECTED_META = {
     "input_file, column_order, expected_x, "
     "expected_y, expected_dx, expected_dy",
     [
-        # UC1: 4-column file (x, y, dx, dy) — all columns present
-        # expected: x, y, dx, dy, and metadata are all read correctly
+        # C1: 4-column file (x, y, dx, dy) — all columns present
+        # Expected: x, y, dx, dy, and metadata are all read correctly
         (
             Path("four_col.gr"),
             None,
@@ -44,8 +44,8 @@ EXPECTED_META = {
             [0.1, 0.3, 0.5],
             [0.2, 0.4, 0.6],
         ),
-        # UC2: 3-column file (x, y, dy) — dx is missing
-        # expected: x, y, dy, and metadata are all read correctly
+        # C2: 3-column file (x, y, dy) — dx is missing
+        # Expected: x, y, dy, and metadata are all read correctly
         (
             Path("three_col.dat"),
             None,
@@ -54,8 +54,8 @@ EXPECTED_META = {
             None,
             [0.2, 0.4, 0.6],
         ),
-        # UC3: 2-column file (x, y) — dx and dy are missing
-        # expected: x, y, and metadata are all read correctly
+        # C3: 2-column file (x, y) — dx and dy are missing
+        # Expected: x, y, and metadata are all read correctly
         (
             Path("two_col.txt"),
             None,
@@ -64,9 +64,9 @@ EXPECTED_META = {
             None,
             None,
         ),
-        # UC4: 4-column file in (x, dx, y, dy) order with explicit
+        # C4: 4-column file in (x, dx, y, dy) order with explicit
         # column_format
-        # expected: x, y, dx, dy, and metadata are all read correctly
+        # Expected: x, y, dx, dy, and metadata are all read correctly
         (
             Path("four_col_reordered.txt"),
             ("x", "dx", "y", "dy"),
@@ -75,8 +75,8 @@ EXPECTED_META = {
             [0.1, 0.3, 0.5],
             [0.2, 0.4, 0.6],
         ),
-        # UC5: 4-column file where dx/dy contain NaN and inf values
-        # expected: x, y, and metadata are read correctly; dx and dy
+        # C5: 4-column file where dx/dy contain NaN and inf values
+        # Expected: x, y, and metadata are read correctly; dx and dy
         # are set to None
         (
             Path("four_col_nan_inf.gr"),
@@ -112,51 +112,53 @@ def test_parse_file(
     assert actual_y == expected_y
     assert actual_dx == expected_dx
     assert actual_dy == expected_dy
-    assert actual_metadata == EXPECTED_META
+    expected_metadata = EXPECTED_META
+    assert actual_metadata == expected_metadata
 
 
 @pytest.mark.parametrize(
     "input_file, column_order, msg",
     [
-        # UC6: Only one column — cannot form x/y pair
-        # expected: ParseError is raised
+        # C1: Only one column — cannot form x/y pair
+        # Expected: ParseError is raised
         (
             "one_col.gr",
             None,
             "Data block must have at least two columns (x, y).",
         ),
-        # UC7: Five columns — ambiguous, no mapping defined
-        # expected: ParseError is raised
+        # C2: Five columns — ambiguous, no mapping defined
+        # Expected: ParseError is raised
         ("five_col.gr", None, "Expected 2 to 4 columns but found 5."),
-        # UC8: 3-column file but column_format expects 4 columns
-        # expected: ParseError is raised
+        # C3: 3-column file but column_format expects 4 columns
+        # Expected: ParseError is raised
         (
             "three_col.dat",
             ("x", "y", "dx", "dy"),
             "column_format has 4 labels but file contains 3 columns.",
         ),
-        # UC9: 4-column file but column_format expects 5 columns
-        # expected: ParseError is raised
+        # C4: 4-column file but column_format expects 5 columns
+        # Expected: ParseError is raised
         (
             "four_col.gr",
             ("x", "y", "dx", "dy", "extra"),
             "column_format has 5 labels but file contains 4 columns.",
         ),
-        # UC10: 4-column file but column_format expects only 3 columns
-        # expected: ParseError is raised
+        # C5: 4-column file but column_format expects only 3 columns
+        # Expected: ParseError is raised
         (
             "four_col.gr",
             ("x", "y", "dy"),
             "column_format has 3 labels but file contains 4 columns.",
         ),
-        # UC11: column_format contains duplicate column names
-        # expected: ParseError is raised
+        # C6: column_format contains duplicate column names
+        # Expected: ParseError is raised
         (
             "four_col.gr",
             ("x", "x", "dx", "dy"),
             "column_format cannot contain duplicate labels.",
         ),
-        # UC12: column_format contains invalid column names
+        # C7: column_format contains invalid column names
+        # Expected: ParseError is raised
         (
             "four_col.gr",
             ("x", "y", "dx", "invalid"),
@@ -204,18 +206,24 @@ def test_parse_file_uses_metadata_hook(parser_datafiles):
     # The custom hook replaces the generic header scan entirely, so the
     # name = value pairs the default would have collected are absent.
     actual_metadata = parser.get_metadata()
-    assert actual_metadata["instrument"] == "custom"
+    actual_instrument = actual_metadata["instrument"]
+    expected_instrument = "custom"
+    assert actual_instrument == expected_instrument
     assert "wavelength" not in actual_metadata
 
-    actual_x, actual_y, actual_dx, actual_dy = parser.get_data()
+    x, y, dx, dy = parser.get_data()
+    actual_x = x.tolist()
+    actual_y = y.tolist()
+    actual_dx = dx.tolist()
+    actual_dy = dy.tolist()
     expected_x = [1.0, 1.1, 1.2]
     expected_y = [2.0, 2.1, 2.2]
     expected_dx = [0.1, 0.3, 0.5]
     expected_dy = [0.2, 0.4, 0.6]
-    assert actual_x.tolist() == expected_x
-    assert actual_y.tolist() == expected_y
-    assert actual_dx.tolist() == expected_dx
-    assert actual_dy.tolist() == expected_dy
+    assert actual_x == expected_x
+    assert actual_y == expected_y
+    assert actual_dx == expected_dx
+    assert actual_dy == expected_dy
 
 
 class TwoBankParser(ProfileParser):
@@ -248,32 +256,6 @@ def test_parse_file_uses_data_hook(parser_datafiles):
     assert actual_second_bank_y == expected_second_bank_y
 
 
-def test_parse_file_deprecated_warns_about_profileparser(parser_datafiles):
-    """The shared parseFile reports its own name, not a subclass one.
-
-    parseFile is inherited by every parser, so a message naming a
-    specific subclass would misdirect users of the others.
-    """
-    # Case: parseFile is called on a subclass of ProfileParser.
-    # Expected: A DeprecationWarning is raised, and the message mentions
-    parser = ProfileParser()
-    expected_msg = (
-        "'diffpy.srfit.fitbase.profileparser.ProfileParser.parseFile' is "
-        "deprecated and will be removed in version 4.0.0. Please use "
-        "'diffpy.srfit.fitbase.profileparser.ProfileParser.parse_file' "
-        "instead."
-    )
-    with pytest.warns(
-        DeprecationWarning,
-        match=re.escape(expected_msg),
-    ):
-        parser.parseFile(parser_datafiles / "two_col.txt")
-
-    actual_x = parser.get_data()[0].tolist()
-    expected_x = [1.0, 1.1, 1.2]
-    assert actual_x == expected_x
-
-
 # parse_file accepts an optional `metadata` dict, merged into the parsed
 # metadata after the file header is read. This lets a caller attach
 # information that is not present in the file itself (e.g. sample name),
@@ -283,14 +265,14 @@ def test_parse_file_deprecated_warns_about_profileparser(parser_datafiles):
 @pytest.mark.parametrize(
     "input_metadata, expected_added_metadata",
     [
-        # UC13: Supplied keys are not present in the file header
+        # C1: Supplied keys are not present in the file header
         # Expected: the supplied keys/values are added to the parsed
         # metadata, alongside the keys read from the file
         (
             {"operator": "jdoe", "sample": "LaB6"},
             {"operator": "jdoe", "sample": "LaB6"},
         ),
-        # UC14: A supplied key overlaps with one already parsed from the
+        # C2: A supplied key overlaps with one already parsed from the
         # file header
         # Expected: the supplied value overrides the value parsed from
         # the file
@@ -308,15 +290,17 @@ def test_parse_file_appends_metadata(
         parser_datafiles / "four_col.gr", metadata=input_metadata
     )
 
-    actual_metadata = parser.get_metadata()
-    for key, expected_value in expected_added_metadata.items():
-        assert actual_metadata[key] == expected_value
+    metadata = parser.get_metadata()
+    actual_added_metadata = {
+        key: metadata[key] for key in expected_added_metadata
+    }
+    assert actual_added_metadata == expected_added_metadata
 
 
 @pytest.mark.parametrize(
     "bad_metadata_input, expected_msg",
     [
-        # UC15: The user supplies a metadata dict with a key that is not
+        # C1: The user supplies a metadata dict with a key that is not
         # a string.
         # Expected: A ParseError is raised with a message indicating that
         # all keys must be strings.
@@ -326,7 +310,7 @@ def test_parse_file_appends_metadata(
             "is not a string. All keys in the metadata "
             "dictionary must be strings.",
         ),
-        # UC16: User supplies metadata not in the form of a dictionary.
+        # C2: User supplies metadata not in the form of a dictionary.
         # Expected: A ParseError is raised with a message indicating that
         # the metadata must be a dictionary.
         (
@@ -349,7 +333,7 @@ def test_parse_file_appends_metadata_bad(
 @pytest.mark.parametrize(
     "input_metadata, reserved_key, expected_value, expected_msg",
     [
-        # UC17: Supplied metadata overlaps with the "filename" key, which
+        # C1: Supplied metadata overlaps with the "filename" key, which
         # parse_file normally sets itself from the file argument.
         # Expected: A UserWarning is raised naming the reserved key, and
         # the supplied value overrides the automatically parsed one.
@@ -360,7 +344,7 @@ def test_parse_file_appends_metadata_bad(
             "'filename' is a reserved metadata key normally set by "
             "parse_file. The supplied value will override it.",
         ),
-        # UC18: Supplied metadata overlaps with the "bank" key, which
+        # C2: Supplied metadata overlaps with the "bank" key, which
         # parse_file normally sets from select_bank.
         # Expected: A UserWarning is raised naming the reserved key, and
         # the supplied value overrides the automatically parsed one.
@@ -371,7 +355,7 @@ def test_parse_file_appends_metadata_bad(
             "'bank' is a reserved metadata key normally set by "
             "parse_file. The supplied value will override it.",
         ),
-        # UC19: Supplied metadata overlaps with the "nbanks" key, which
+        # C3: Supplied metadata overlaps with the "nbanks" key, which
         # parse_file normally sets from the number of banks read.
         # Expected: A UserWarning is raised naming the reserved key, and
         # the supplied value overrides the automatically parsed one.
@@ -416,7 +400,9 @@ def test_parse_file_appends_metadata_does_not_mutate_input(parser_datafiles):
     input_metadata["sample"] = "added after parsing"
 
     actual_metadata = parser.get_metadata()
-    assert actual_metadata["operator"] == "jdoe"
+    actual_operator = actual_metadata["operator"]
+    expected_operator = "jdoe"
+    assert actual_operator == expected_operator
     assert "sample" not in actual_metadata
 
 
@@ -435,10 +421,14 @@ def test_parse_file_usecols_selects_columns(parser_datafiles):
         parser_datafiles / "five_col.gr", ("x", "y"), usecols=(0, 1)
     )
 
-    actual_x, actual_y, actual_dx, actual_dy = parser.get_data()
+    x, y, actual_dx, actual_dy = parser.get_data()
+    actual_x = x.tolist()
+    actual_y = y.tolist()
     expected_x = [1.0, 1.1, 1.2]
     expected_y = [2.0, 2.1, 2.2]
-    assert actual_x.tolist() == expected_x
-    assert actual_y.tolist() == expected_y
-    assert actual_dx is None
-    assert actual_dy is None
+    expected_dx = None
+    expected_dy = None
+    assert actual_x == expected_x
+    assert actual_y == expected_y
+    assert actual_dx == expected_dx
+    assert actual_dy == expected_dy

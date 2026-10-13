@@ -82,63 +82,33 @@ class SimpleRecipe(FitRecipe):
     these are exposed through this class to facilitate the creation of a simple
     fit recipe.
 
+    Public FitContribution methods that SimpleRecipe does not define
+    itself, such as ``set_residual_equation`` or ``add_profile_generator``,
+    are also made available as SimpleRecipe methods.
+
     Attributes
     ----------
-    profile
+    profile : Profile
         The built-in Profile object.
-    contribution
-        The built-in FitContribution object.
-    results
+    contribution : FitContribution
+        The built-in FitContribution object, named "contribution".
+    results : FitResults
         The built-in FitResults object.
-    name
-        A name for this FitRecipe.
+    name : str
+        The name of this FitRecipe.
     fithooks : list
         The list of FitHook instances that can pass information out
         of the system during a refinement. By default, this is
-        populated by a PrintFitHook instance.
-    _constraints
-        A dictionary of Constraints, indexed by the constrained
-        Parameter. Constraints can be added using the
-        'constrain' method.
-    _oconstraints
-        An ordered list of the constraints from this and all
-        sub-components.
-    _calculators
-        A managed dictionary of Calculators.
-    _contributions
-        A managed OrderedDict of FitContributions.
-    _parameters
-        A managed OrderedDict of parameters (in this case the
-        parameters are varied).
-    _parsets
-        A managed dictionary of ParameterSets.
-    _eqfactory
-        A diffpy.srfit.equation.builder.EquationFactory
-        instance that is used to create constraints and
-        restraints from string equations.
-    _fixed
-        A set of parameters that are not actually varied.
-    _restraintlist
-        A list of restraints from this and all sub-components.
-    _restraints
-        A set of Restraints. Restraints can be added using the
-        'restrain' or 'confine' methods.
-    _ready
-        A flag indicating if all attributes are ready for the
-        calculation.
-    _tagdict
-        A dictionary of tags to variables.
-    _weights
-        List of weighing factors for each FitContribution. The
-        weights are multiplied by the residual of the
-        FitContribution when determining the overall residual.
+        populated by a PrintFitHook instance with verbosity 3.
+    names : list of str
+        The variable names (read only). See ``get_names``.
+    values : numpy.ndarray
+        The variable values (read only). See ``get_values``.
 
-    Properties
-    ----------
-    names
-        Variable names (read only). See get_names.
-    values
-        Variable values (read only). See get_values.
+    See Also
+    --------
+    FitRecipe : The base class, which documents the remaining
+        attributes.
     """
 
     def __init__(self, name="fit", conclass=FitContribution):
@@ -207,13 +177,16 @@ class SimpleRecipe(FitRecipe):
             The observed signal.
         dyobs : ndarray, optional
             The uncertainty in the observed signal. If dyobs is None
-            (default), it will be set to 1 at each observed xobs.
+            (default), dyobs stays None to indicate no uncertainty was
+            observed, and the calculated dy will be set to 1 at each
+            calculation point instead.
 
         Raises
         ------
         ValueError
-            If len(yobs) != len(xobs), or if dyobs is not None and
-            len(dyobs) != len(xobs).
+            If ``len(yobs) != len(xobs)``.
+        ValueError
+            If dyobs is not None and ``len(dyobs) != len(xobs)``.
         """
         return self.profile.set_observed_profile(xobs, yobs, dyobs)
 
@@ -233,31 +206,34 @@ class SimpleRecipe(FitRecipe):
 
         Adhere to the observed ``xobs`` points when ``dx`` is the same
         as in the data.  ``xmin`` and ``xmax`` are clipped at the bounds
-        of the observed data.
+        of the observed data. ``xmin`` is always inclusive (unless
+        clipped). ``xmax`` is inclusive if it is within the bounds of the
+        observed data.
 
         Parameters
         ----------
-        xmin : float or `obs`, optional
+        xmin : float or "obs", optional
             The minimum value of the independent variable.  Keep the
             current minimum when not specified.  If specified as "obs"
             reset to the minimum observed value.
-        xmax : float or `obs`, optional
+        xmax : float or "obs", optional
             The maximum value of the independent variable.  Keep the
             current maximum when not specified.  If specified as "obs"
             reset to the maximum observed value.
-        dx : float or `obs`, optional
+        dx : float or "obs", optional
             The sample spacing in the independent variable.  When different
             from the data, resample the ``x`` as anchored at ``xmin``.
-
-        Note that ``xmin`` is always inclusive (unless clipped).
-        ``xmax`` is inclusive if it is within the bounds of the observed data.
 
         Raises
         ------
         AttributeError
             If there is no observed data.
         ValueError
-            When xmin > xmax or if dx <= 0.  Also if dx > xmax - xmin.
+            If ``xmin > xmax``, if ``dx <= 0`` or if
+            ``dx > xmax - xmin``.
+        ValueError
+            If ``xmin``, ``xmax`` or ``dx`` is a string other than
+            "obs".
         """
         return self.profile.set_calculation_range(xmin, xmax, dx)
 
@@ -298,23 +274,36 @@ class SimpleRecipe(FitRecipe):
         return self.set_calculation_points(x)
 
     def loadtxt(self, *args, **kw):
-        """Use numpy.loadtxt to load data.
+        """Load data using ``numpy.loadtxt``.
 
-        Arguments are passed to numpy.loadtxt. unpack = True is
-        enforced. The first two arrays returned by numpy.loadtxt are
+        Arguments are passed to ``numpy.loadtxt``. ``unpack=True`` is
+        enforced. The first two arrays returned by ``numpy.loadtxt`` are
         assumed to be x and y. If there is a third array, it is assumed
-        to by dy. Any other arrays are ignored. These are passed to
-        set_observed_profile.
+        to be dy. Any other arrays are ignored. The loaded arrays are
+        passed to ``set_observed_profile``.
+
+        Parameters
+        ----------
+        *args
+            The positional arguments passed to ``numpy.loadtxt``.
+        **kw
+            The keyword arguments passed to ``numpy.loadtxt``.
+
+        Returns
+        -------
+        x : numpy.ndarray
+            The array of the independent variable loaded from the
+            file.
+        y : numpy.ndarray
+            The array of the observed signal loaded from the file.
+        dy : numpy.ndarray or None
+            The array of the uncertainty loaded from the file, or None
+            if no third column is present.
 
         Raises
         ------
         ValueError
-            If the call to numpy.loadtxt returns fewer than 2 arrays.
-
-        Returns
-        -------
-        tuple
-            The x, y and dy arrays loaded from the file.
+            If the call to ``numpy.loadtxt`` returns fewer than 2 arrays.
         """
         return self.profile.loadtxt(*args, **kw)
 
@@ -329,9 +318,11 @@ class SimpleRecipe(FitRecipe):
         Parameters
         ----------
         eqstr : str
-            The string representation of the equation. Variables will
-            be extracted from this equation and be given an initial
-            value of 0.
+            The string representation of the equation. After the
+            equation is set, every top-level Parameter of the
+            FitContribution other than x, y and dy is added as a
+            variable of this recipe, unless it is one already.
+            Parameters without a value are given an initial value of 0.
         ns : dict, optional
             The dictionary of Parameters, indexed by name, that are
             used in the eqstr, but not registered (default {}).
@@ -366,12 +357,22 @@ class SimpleRecipe(FitRecipe):
         return
 
     def __call__(self):
-        """Evaluate the contribution equation."""
+        """Evaluate the contribution equation.
+
+        Returns
+        -------
+        numpy.ndarray
+            The calculated signal, which is also stored in
+            ``profile.ycalc``.
+        """
         return self.contribution.evaluate()
 
     # FitResults methods
     def print_results(self, header="", footer=""):
         """Format and print the results.
+
+        The results are updated from the current state of the recipe
+        before they are printed.
 
         Parameters
         ----------
@@ -398,9 +399,12 @@ class SimpleRecipe(FitRecipe):
     def save_results(self, filename, header="", footer=""):
         """Format and save the results.
 
+        The results are updated from the current state of the recipe
+        before they are saved.
+
         Parameters
         ----------
-        filename : str
+        filename : str or pathlib.Path
             The name of the save file.
         header : str, optional
             The header to add to the output (default "").

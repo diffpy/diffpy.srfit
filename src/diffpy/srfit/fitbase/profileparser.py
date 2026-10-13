@@ -30,49 +30,49 @@ from diffpy.srfit.exceptions import ParseError
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 from diffpy.utils.parsers import load_data
 
-removal_verison = "4.0.0"
+removal_version = "4.0.0"
 pp_base = "diffpy.srfit.fitbase.profileparser.ProfileParser"
 
 parseFile_dep_msg = build_deprecation_message(
     pp_base,
     "parseFile",
     "parse_file",
-    removal_verison,
+    removal_version,
 )
 
 getFormat_dep_msg = build_deprecation_message(
     pp_base,
     "getFormat",
     "get_format",
-    removal_verison,
+    removal_version,
 )
 
 getNumBanks_dep_msg = build_deprecation_message(
     pp_base,
     "getNumBanks",
     "get_num_banks",
-    removal_verison,
+    removal_version,
 )
 
 selectBank_dep_msg = build_deprecation_message(
     pp_base,
     "selectBank",
     "select_bank",
-    removal_verison,
+    removal_version,
 )
 
 getData_dep_msg = build_deprecation_message(
     pp_base,
     "getData",
     "get_data",
-    removal_verison,
+    removal_version,
 )
 
 getMetaData_dep_msg = build_deprecation_message(
     pp_base,
     "getMetaData",
     "get_metadata",
-    removal_verison,
+    removal_version,
 )
 
 

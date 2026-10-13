@@ -25,6 +25,10 @@ def _gaussian(x, sigma):
     return numpy.sqrt(numpy.exp(-0.5 * (x / sigma) ** 2))
 
 
+def _halve(v1):
+    return 0.5 * v1
+
+
 def _make_factory_with_function(make_args):
     """Return a factory where g(v1, v2, v3, v4) = (v1 + v2) * (v3 + v4).
 
@@ -210,9 +214,7 @@ def test_register_function_replaces_existing(
     factory, _, (v1, v2, _, _, _), _ = _make_factory_with_function(make_args)
     equation = factory.make_equation("g")
     if input_replacement == "python_function":
-        function_builder = factory.register_function(
-            "g", lambda v1: 0.5 * v1, ["v1"]
-        )
+        function_builder = factory.register_function("g", _halve, ["v1"])
         expected_args = [v1]
     else:
         replacement = factory.make_equation("v1 + v2")

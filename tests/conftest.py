@@ -5,10 +5,16 @@ import sys
 from functools import lru_cache
 
 import pytest
-from numpy import linspace, pi, sin
+from numpy import arange, array, linspace, pi, sin
 
 import diffpy.srfit.equation.literals as literals
-from diffpy.srfit import FitContribution, FitRecipe, Profile
+from diffpy.srfit import (
+    FitContribution,
+    FitRecipe,
+    Profile,
+    ProfileGenerator,
+    SimpleRecipe,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -232,18 +238,18 @@ def as_list():
 
 @pytest.fixture(scope="function")
 def build_recipe_with_uncertainty():
-    """Helper to build a sine recipe whose profile carries the observed
-    uncertainties returned by ``make_dyobs``.
+    """Helper to build a sine recipe on 21 points in [0, pi] whose
+    profile carries the observed uncertainties ``dyobs``.
 
     The observed profile is a noiseless sine, so a refinement recovers
     ``A=1``, ``k=1`` and ``c=0`` regardless of how it is weighted.
     """
 
-    def _build_recipe(make_dyobs):
+    def _build_recipe(dyobs):
         xobs = linspace(0, pi, 21)
         yobs = sin(xobs)
         profile = Profile()
-        profile.set_observed_profile(xobs, yobs, make_dyobs(xobs))
+        profile.set_observed_profile(xobs, yobs, dyobs)
         contribution = FitContribution("c1")
         contribution.set_profile(profile)
         contribution.set_equation("A*sin(k*x + c)")
@@ -466,3 +472,104 @@ def tag_manager():
     manager.tag(3, "3", "number")
     manager.tag(4, "4", "number")
     return manager
+
+
+@pytest.fixture(scope="session")
+def build_sine_recipe():
+    """Return a function that builds a recipe fitting a sine profile.
+
+    The recipe holds the contribution ``cont`` with the equation
+    ``A*sin(k*x + c)``, where ``A=1``, ``k=1`` and ``c=0``, fitted to
+    ``sin(x)`` on ten points in [0, pi]. The calculated profile matches
+    the observed profile exactly, so the residual is zero. The recipe
+    has no variables and its default PrintFitHook is silenced.
+    """
+
+    def _build_sine_recipe():
+        xobs = linspace(0, pi, 10)
+        profile = Profile()
+        profile.set_observed_profile(xobs, sin(xobs))
+        contribution = FitContribution("cont")
+        contribution.set_profile(profile)
+        contribution.set_equation("A*sin(k*x + c)")
+        contribution.A.set_value(1)
+        contribution.k.set_value(1)
+        contribution.c.set_value(0)
+        recipe = FitRecipe("recipe")
+        recipe.fithooks[0].verbose = 0
+        recipe.add_contribution(contribution)
+        return recipe
+
+    return _build_sine_recipe
+
+
+@pytest.fixture(scope="session")
+def make_parameters_with_factory():
+    def _make_parameters_with_factory():
+        """Return the Parameters p1 = 1 and p2 = 2 and an EquationFactory
+        that has both registered under their names.
+
+        Each call returns new objects, so a test can build the same
+        setup twice.
+        """
+        from diffpy.srfit.equation.builder import EquationFactory
+        from diffpy.srfit.fitbase.parameter import Parameter
+
+        p1 = Parameter("p1", 1)
+        p2 = Parameter("p2", 2)
+        factory = EquationFactory()
+        factory.register_argument("p1", p1)
+        factory.register_argument("p2", p2)
+        return p1, p2, factory
+
+    return _make_parameters_with_factory
+
+
+@pytest.fixture
+def observed_profile():
+    """Return a profile observed at x = 2, 2.5, ..., 9.5 with y = dy =
+    x."""
+    xobs = arange(2, 9.6, 0.5)
+    profile = Profile()
+    profile.set_observed_profile(xobs, array(xobs), array(xobs))
+    return profile
+
+
+@pytest.fixture
+def generator_and_profile():
+    """Return a generator named "test" and its profile, whose
+    calculation points are x = 0, 0.1, ..., 9.9."""
+    generator = ProfileGenerator("test")
+    profile = Profile()
+    profile.set_calculation_points(arange(0, 10, 0.1))
+    generator.set_profile(profile)
+    return generator, profile
+
+
+@pytest.fixture
+def sine_recipe_with_variables(build_sine_recipe):
+    """Return the sine recipe with the variables A=2 (tagged "tagA"),
+    k=1 (tagged "tagk"), c=0 and the new variable B=0, in that order."""
+    recipe = build_sine_recipe()
+    recipe.add_variable(recipe.cont.A, 2, tag="tagA")
+    recipe.add_variable(recipe.cont.k, 1, tag="tagk")
+    recipe.add_variable(recipe.cont.c, 0)
+    recipe.create_new_variable("B", 0)
+    return recipe
+
+
+@pytest.fixture
+def linear_recipe():
+    """Return a SimpleRecipe fitting y = 2*x + 1 with A*x + B.
+
+    The variables start at the exact solution A=2.0 and B=1.0, and the
+    default PrintFitHook is silenced.
+    """
+    recipe = SimpleRecipe()
+    recipe.fithooks[0].verbose = 0
+    xobs = linspace(0, 1, 5)
+    recipe.set_observed_profile(xobs, 2 * xobs + 1)
+    recipe.set_equation("A*x + B")
+    recipe.A.set_value(2.0)
+    recipe.B.set_value(1.0)
+    return recipe

@@ -32,54 +32,59 @@ from diffpy.srfit.fitbase.parameterset import ParameterSet
 class Calculator(Operator, ParameterSet):
     """Base class for calculators.
 
-    A Calculator organizes Parameters and has a __call__ method that can
-    calculate a generic signal.
+    A Calculator organizes Parameters and has a ``__call__`` method that
+    can calculate a generic signal. Calculator is also an Operator
+    (diffpy.srfit.equation.literals.operators), so it can be used directly
+    in an evaluation network.
+
+    Parameters
+    ----------
+    name : str
+        The name of the Calculator. It must be a valid attribute name.
 
     Attributes
     ----------
-    name
-        A name for this organizer.
-    meta
-        A dictionary of metadata needed by the calculator.
-    _calculators
-        A managed dictionary of Calculators, indexed by name.
-    _constraints
-        A set of constrained Parameters. Constraints can be
-        added using the 'constrain' methods.
-    _parameters
-        A managed OrderedDict of contained Parameters.
-    _parsets
-        A managed dictionary of ParameterSets.
-    _restraints
-        A set of Restraints. Restraints can be added using the
-        'restrain' or 'confine' methods.
-    _eqfactory
-        A diffpy.srfit.equation.builder.EquationFactory
-        instance that is used create Equations from string.
-
-    Operator Attributes
-    -------------------
-    args
-        List of Literal arguments
-    nin
-        Number of inputs (<1 means this is variable)
-    nout
-        Number of outputs (1)
-    operation
-        Function that performs the operation, self.__call__
-    symbol
-        Same as name
-    _value
-        The value of the Operator.
-    value
-        Property for 'get_value'.
-
-    Properties
-    ----------
-    names
-        Variable names (read only). See get_names.
-    values
-        Variable values (read only). See get_values.
+    name : str
+        The name of the Calculator.
+    meta : dict
+        The metadata needed by the calculator.
+    names : list of str
+        The names of the top-level Parameters (read only). See
+        ``get_names``.
+    values : list
+        The values of the top-level Parameters (read only). See
+        ``get_values``.
+    args : list
+        The Literal arguments of the operator, added with
+        ``add_literal``.
+    nin : int
+        The number of inputs. The class value -1 means that any number of
+        inputs is allowed.
+    nout : int
+        The number of outputs, which is 1.
+    symbol : str
+        The symbolic representation of the operator, which is the same as
+        ``name`` (read only).
+    value : object
+        The value of the operator (read only). See ``get_value``.
+    _value : object
+        The cached value of the operator, or None if it must be
+        recomputed.
+    _calculators : dict
+        The managed dictionary of Calculators, indexed by name.
+    _constraints : dict
+        The dictionary of Constraints, indexed by the constrained
+        Parameter. Constraints can be added using the ``add_constraint``
+        method.
+    _parameters : OrderedDict
+        The managed OrderedDict of contained Parameters.
+    _parsets : OrderedDict
+        The managed OrderedDict of contained ParameterSets.
+    _restraints : set
+        The set of Restraints. Restraints can be added using the
+        ``add_soft_bounds`` method.
+    _eqfactory : diffpy.srfit.equation.builder.EquationFactory
+        The factory that is used to create Equations from strings.
     """
 
     # define abstract attributes from the Operator base.
@@ -97,6 +102,7 @@ class Calculator(Operator, ParameterSet):
 
     @property
     def symbol(self):
+        """The symbolic representation, which is the Calculator name."""
         return self.name
 
     # Overload me!
@@ -121,6 +127,9 @@ class Calculator(Operator, ParameterSet):
 
     def operation(self, *args):
         """Calculate and cache the signal produced by this Calculator.
+
+        This calls ``__call__`` and stores the result as the operator
+        value.
 
         Parameters
         ----------

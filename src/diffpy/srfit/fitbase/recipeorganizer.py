@@ -1674,20 +1674,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
             The list of formatted lines displaying the defined
             restraints. Empty list when no restraints were defined.
         """
-        rset = self._get_restraints()
-        rlines = []
-        for res in rset:
-            line = (
-                "%s: lower_bound = %f, upper_bound = %f, sig = %f, scaled = %s"
-                % (
-                    res.eqstr,
-                    res.lower_bound,
-                    res.upper_bound,
-                    res.sig,
-                    res.scaled,
-                )
-            )
-            rlines.append(line)
+        rlines = [str(restraint) for restraint in self._get_restraints()]
         rlines.sort(key=numstr)
         return rlines
 

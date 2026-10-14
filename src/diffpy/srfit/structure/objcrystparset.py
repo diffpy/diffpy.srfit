@@ -898,6 +898,24 @@ class ObjCrystMoleculeRestraint(object):
         self.scaled = scaled
         return
 
+    def __str__(self):
+        """Return the restrained atoms with the restraint settings."""
+        res = self.res
+        if hasattr(res, "GetLength0"):
+            target = (
+                f"length = {res.GetLength0():f}, "
+                f"sigma = {res.GetLengthSigma():f}, "
+                f"delta = {res.GetLengthDelta():f}"
+            )
+        else:
+            target = (
+                f"angle = {res.GetAngle0():f}, "
+                f"sigma = {res.GetAngleSigma():f}, "
+                f"delta = {res.GetAngleDelta():f}"
+            )
+        restraint_str = f"{res.GetName()}: {target}, scaled = {self.scaled}"
+        return restraint_str
+
     def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 

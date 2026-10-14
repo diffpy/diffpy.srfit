@@ -818,7 +818,10 @@ def test_deprecated_functions_forward_non_physical_input(
 ):
     old_function = getattr(cf, old_name)
     new_function = getattr(cf, new_name)
-    expected_characteristic_function = new_function(*new_args)
+    # Catch the RuntimeWarning to prevent warnings when tests run.
+    # This test passes non-phyiscal inputs so this behavior is expected here.
+    with pytest.warns(RuntimeWarning):
+        expected_characteristic_function = new_function(*new_args)
 
     # The oracle call above already consumed the once-per-process
     # RuntimeWarning for this (function, requirement) pair; clear the

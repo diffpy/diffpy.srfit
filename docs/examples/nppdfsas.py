@@ -26,7 +26,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
-from pyobjcryst import loadCrystal
+from pyobjcryst.crystal import create_crystal_from_cif
 
 from diffpy.srfit.fitbase import (
     FitContribution,
@@ -58,7 +58,7 @@ def makeRecipe(ciffile, grdata, iqdata):
 
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)
-    stru = loadCrystal(ciffile)
+    stru = create_crystal_from_cif(str(ciffile))
     pdfgenerator.setStructure(stru)
     pdfcontribution.add_profile_generator(pdfgenerator)
     pdfcontribution.set_residual_equation("resv")

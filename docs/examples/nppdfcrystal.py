@@ -27,7 +27,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 from gaussianrecipe import scipyOptimize
-from pyobjcryst import loadCrystal
+from pyobjcryst.crystal import create_crystal_from_cif
 
 from diffpy.srfit.fitbase import (
     FitContribution,
@@ -53,7 +53,7 @@ def makeRecipe(ciffile, grdata):
 
     pdfgenerator = PDFGenerator("G")
     pdfgenerator.setQmax(30.0)
-    stru = loadCrystal(ciffile)
+    stru = create_crystal_from_cif(str(ciffile))
     pdfgenerator.setStructure(stru)
     pdfcontribution.add_profile_generator(pdfgenerator)
 
@@ -66,7 +66,7 @@ def makeRecipe(ciffile, grdata):
     pdfcontribution.set_equation("f * G")
 
     # Now make the recipe. Make sure we fit the characteristic function shape
-    # parameters, in this case 'psize', which is the diameter of the particle.
+    # parameters, in this case 'particle_diameter'.
     recipe = FitRecipe()
     recipe.add_contribution(pdfcontribution)
 
@@ -74,7 +74,7 @@ def makeRecipe(ciffile, grdata):
     for par in phase.sgpars:
         recipe.add_variable(par)
 
-    recipe.add_variable(pdfcontribution.psize, 20)
+    recipe.add_variable(pdfcontribution.particle_diameter, 20)
     recipe.add_variable(pdfgenerator.scale, 1)
     recipe.add_variable(pdfgenerator.delta2, 0)
     recipe.B11_0 = 0.1

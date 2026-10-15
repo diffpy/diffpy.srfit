@@ -23,7 +23,7 @@ nickel and silicon to find the structures and phase fractions.
 from pathlib import Path
 
 from gaussianrecipe import scipyOptimize
-from pyobjcryst import loadCrystal
+from pyobjcryst.crystal import create_crystal_from_cif
 
 from diffpy.srfit.fitbase import (
     FitContribution,
@@ -61,11 +61,11 @@ def makeRecipe(niciffile, siciffile, datname):
     # The generator for the nickel phase. We call it "G_ni" and will use this
     # name later when we set the fitting equation in the FitContribution.
     generator_ni = PDFGenerator("G_ni")
-    stru = loadCrystal(niciffile)
+    stru = create_crystal_from_cif(str(niciffile))
     generator_ni.setStructure(stru)
     # The generator for the silicon phase. We call it "G_si".
     generator_si = PDFGenerator("G_si")
-    stru = loadCrystal(siciffile)
+    stru = create_crystal_from_cif(str(siciffile))
     generator_si.setStructure(stru)
 
     # The FitContribution

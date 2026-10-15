@@ -15,8 +15,8 @@
 """Interface enhancements for Parameter-type classes.
 
 Most interface additions can thought of by considering the classes in
-SrFit to be sets of parameters. "+=" adds a new parameter, when that
-makes sense. "|=" is the 'union' of these sets, and in general is used
+SrFit to be sets of parameters. ``+=`` adds a new parameter, when that
+makes sense. ``|=`` is the 'union' of these sets, and in general is used
 to combine different objects. See individual interface classes for
 specifics.
 """

@@ -86,9 +86,9 @@ class ProfileParser(object):
         ``""``). The format string is a unique identifier for the data
         format handled by the parser.
     _banks : list of tuples
-        The data from each bank. Each bank contains a (x, y, dx,
-        dy)
+        The data from each bank. Each bank contains a (x, y, dx, dy)
         tuple:
+
         x : np.ndarray
             The independent variable read from the file.
         y : np.ndarray

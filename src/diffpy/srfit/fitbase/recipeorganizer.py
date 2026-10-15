@@ -282,8 +282,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         Examples
         --------
+        .. code-block:: python
 
-        ..
             for param in recipe.iterate_over_parameters(pattern="scale_"):
                 # print the name and value of parameters containing "scale_"
                 print(f"{param.name}={param.value}")
@@ -1427,7 +1427,8 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         -----
         The penalty is calculated as:
 
-        ..
+        .. code-block:: python
+
             (max(0, lower_bound - val, val - upper_bound) / sig) ** 2
 
         where `val` is the value of the evaluated `param_or_eq`.
@@ -1439,7 +1440,9 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         Restraining the lattice parameters of an Ni lattice to be
         approximately 7.4Å (2x the original lattice param)
         can be done with the following code:
-        ..
+
+        .. code-block:: python
+
             recipe.add_soft_bounds(
                 "a_ni + b_ni",
                 lower_bound=7.0,

@@ -1,15 +1,14 @@
 #!/usr/bin/env python
 ##############################################################################
 #
-# diffpy.srfit      by DANSE Diffraction group
-#                   Simon J. L. Billinge
-#                   (c) 2026 The Trustees of Columbia University
-#                   in the City of New York.  All rights reserved.
+# (c) 2026-present The DiffPy Team. All rights reserved.
 #
-# File coded by:    Caden Myers
+# File coded by: Caden Myers
 #
-# See AUTHORS.txt for a list of people who contributed.
-# See LICENSE_DANSE.txt for license information.
+# See GitHub contributions for a more detailed list of contributors.
+# https://github.com/diffpy/diffpy.srfit/graphs/contributors
+#
+# See LICENSE.rst for license information.
 #
 ##############################################################################
 """Tests for the interface module."""
@@ -27,8 +26,7 @@ def _make_recipe_with_variables():
 
 # Test that "*=" constrains a Parameter to an equation.
 # C1: p1 is constrained to "2*p2" with "*=", and p2 is then set to 3.
-# Expected: p1 is constrained and its value is 6, without a deprecation
-# warning.
+# Expected: p1 is constrained and its value is 6.
 def test_constrain_operator():
     recipe, p1, p2 = _make_recipe_with_variables()
     recipe *= "p1", "2*p2"
@@ -43,8 +41,7 @@ def test_constrain_operator():
 # Test that "%=" restrains an equation between soft bounds.
 # C1: "p1+p2" is restrained between 0 and 10 with "%=", and p2 is then set
 # to 10.
-# Expected: The recipe has one restraint with a penalty of 1, without a
-# deprecation warning.
+# Expected: The recipe has one restraint with a penalty of 1.
 def test_restrain_operator():
     recipe, _, p2 = _make_recipe_with_variables()
     recipe %= "p1+p2", 0, 10

@@ -42,13 +42,22 @@ class Configurable(object):
         return
 
     def _store_configurable(self, obj):
-        """Store a Configurable.
+        """Store a Configurable to notify of configuration changes.
 
         The passed obj is only stored if it is a Configurable, otherwise
-        this method quietly exits.
+        this method quietly exits. Containers store themselves in the
+        objects they hold, so that changes are passed up the hierarchy.
         """
         if isinstance(obj, Configurable):
             self._configobjs.add(obj)
+        return
+
+    def _remove_configurable(self, obj):
+        """Stop notifying a stored Configurable of changes.
+
+        The passed obj is ignored if it is not stored.
+        """
+        self._configobjs.discard(obj)
         return
 
 

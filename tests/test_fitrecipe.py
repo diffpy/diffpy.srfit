@@ -32,6 +32,7 @@ from diffpy.srfit import (
     ProfileParser,
 )
 from diffpy.srfit.fitbase.parameter import Parameter
+from diffpy.srfit.fitbase.parameterset import ParameterSet
 
 matplotlib.use("Agg")
 
@@ -325,6 +326,104 @@ def test_residual_with_contribution_constraints_and_restraints(
     actual_final_residual = recipe.residual()
     expected_final_residual = sin(x) - y
     assert actual_final_residual == pytest.approx(expected_final_residual)
+
+
+def _get_restraint_bounds(restraints):
+    """Return the sorted (lower_bound, upper_bound, sig) of each
+    restraint."""
+    sorted_restraints = sorted(
+        (restraint.lower_bound, restraint.upper_bound, restraint.sig)
+        for restraint in restraints
+    )
+    return sorted_restraints
+
+
+def test_add_bounds_after_recipe_evaluation():
+    # Test that soft bounds added to a contribution after the recipe is
+    # evaluated are used in the next evaluation.
+    profile = Profile()
+    profile.set_observed_profile(linspace(0, 1, 5), ones(5))
+    contribution = FitContribution("contrib")
+    contribution.set_profile(profile)
+    contribution.set_equation("m*x + b")
+    # C1: m is restrained in the contribution before it is added to a recipe.
+    # Expected: The contribution holds the restraint on m.
+    contribution.add_soft_bounds("m", lower_bound=0, upper_bound=2, sig=1)
+    actual_bounds_before_eval = _get_restraint_bounds(
+        contribution._get_restraints()
+    )
+    expected_bounds_before_eval = [(0, 2, 1)]
+    assert actual_bounds_before_eval == expected_bounds_before_eval
+    # C2: The recipe is evaluated, then b is restrained in the contribution
+    # and the recipe is evaluated again.
+    # Expected: The recipe uses the restraints on both m and b.
+    recipe = FitRecipe()
+    recipe.add_contribution(contribution)
+    recipe.add_variable(contribution.m, 1)
+    recipe.add_variable(contribution.b, 0)
+    # Evaluate the recipe.
+    recipe.residual()
+    recipe.contrib.add_soft_bounds("b", lower_bound=-1, upper_bound=1, sig=3)
+    # Evaluate the recipe again to include the new restraint.
+    recipe.residual()
+    actual_bounds_after_eval = _get_restraint_bounds(recipe._restraintlist)
+    expected_bounds_after_eval = [(-1, 1, 3), (0, 2, 1)]
+    assert actual_bounds_after_eval == expected_bounds_after_eval
+
+
+def test_add_bounds_to_nested_parameter_set_after_recipe_evaluation(
+    build_sine_recipe,
+):
+    # Test that soft bounds added to a ParameterSet nested two levels below
+    # the recipe after the recipe is evaluated are used in the next
+    # evaluation.
+    outer = ParameterSet("outer")
+    inner = ParameterSet("inner")
+    inner.new_parameter("p", 1)
+    inner.new_parameter("q", 1)
+    # C1: p is restrained in "inner" before "inner" is added to a recipe.
+    # Expected: "inner" holds the restraint on p.
+    inner.add_soft_bounds("p", lower_bound=0, upper_bound=2, sig=1)
+    actual_bounds_before_eval = _get_restraint_bounds(inner._get_restraints())
+    expected_bounds_before_eval = [(0, 2, 1)]
+    assert actual_bounds_before_eval == expected_bounds_before_eval
+    # C2: The recipe holding "outer", which holds "inner", is evaluated, then
+    # q is restrained in "inner" and the recipe is evaluated again.
+    # Expected: The recipe uses the restraints on both p and q.
+    recipe = build_sine_recipe()
+    outer.add_parameter_set(inner)
+    recipe.add_parameter_set(outer)
+    # Evaluate the recipe.
+    recipe.residual()
+    recipe.outer.inner.add_soft_bounds(
+        "q", lower_bound=-1, upper_bound=1, sig=3
+    )
+    # Evaluate the recipe again to include the new restraint.
+    recipe.residual()
+    actual_bounds_after_eval = _get_restraint_bounds(recipe._restraintlist)
+    expected_bounds_after_eval = [(-1, 1, 3), (0, 2, 1)]
+    assert actual_bounds_after_eval == expected_bounds_after_eval
+
+
+def test_add_constraint_after_recipe_evaluation(build_sine_recipe):
+    # Test that a constraint added to a contribution after the recipe is
+    # evaluated is updated in the next evaluations.
+    recipe = build_sine_recipe()
+    recipe.add_variable(recipe.cont.A)
+    # Evaluate the recipe.
+    recipe.residual()
+    # C1: c is constrained to 2*A in the contribution with A = 1.
+    # Expected: c is 2.
+    recipe.cont.add_constraint(recipe.cont.c, "2*A")
+    actual_c_value = recipe.cont.c.value
+    expected_c_value = 2
+    assert actual_c_value == expected_c_value
+    # C2: The recipe is evaluated again with A = 3.
+    # Expected: c follows A and is 6.
+    recipe.residual([3])
+    actual_c_value = recipe.cont.c.value
+    expected_c_value = 6
+    assert actual_c_value == expected_c_value
 
 
 def test_convert_bounds_to_restraints():

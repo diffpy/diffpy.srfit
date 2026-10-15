@@ -358,15 +358,15 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         # from within this class.
         for b in self.scat.GetBondList():
             res = ObjCrystMoleculeRestraint(b)
-            self._restraints.add(res)
+            self.register_soft_bounds(res)
 
         for ba in self.scat.GetBondAngleList():
             res = ObjCrystMoleculeRestraint(ba)
-            self._restraints.add(res)
+            self.register_soft_bounds(res)
 
         for da in self.scat.GetDihedralAngleList():
             res = ObjCrystMoleculeRestraint(da)
-            self._restraints.add(res)
+            self.register_soft_bounds(res)
 
         return
 
@@ -463,7 +463,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         res = ObjCrystBondLengthRestraint(
             atom1, atom2, length, sigma, delta, scaled
         )
-        self._restraints.add(res)
+        self.register_soft_bounds(res)
 
         return res
 
@@ -537,7 +537,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         res = ObjCrystBondAngleRestraint(
             atom1, atom2, atom3, angle, sigma, delta, scaled
         )
-        self._restraints.add(res)
+        self.register_soft_bounds(res)
 
         return res
 
@@ -612,7 +612,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         res = ObjCrystDihedralAngleRestraint(
             atom1, atom2, atom3, atom4, angle, sigma, delta, scaled
         )
-        self._restraints.add(res)
+        self.register_soft_bounds(res)
 
         return res
 

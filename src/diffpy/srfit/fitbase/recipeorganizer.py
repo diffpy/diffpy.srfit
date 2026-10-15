@@ -628,6 +628,8 @@ class RecipeContainer(Observable, Configurable, Validatable):
         # Detach the old object, if there is one
         if oldobj is not None:
             oldobj.remove_observer(self._flush)
+            if isinstance(oldobj, Configurable):
+                oldobj._remove_configurable(self)
 
         # Add the object
         d[obj.name] = obj
@@ -635,8 +637,10 @@ class RecipeContainer(Observable, Configurable, Validatable):
         # Observe the object
         obj.add_observer(self._flush)
 
-        # Store this as a configurable object
-        self._store_configurable(obj)
+        # Pass configuration changes in the object up to this one
+        if isinstance(obj, Configurable):
+            obj._store_configurable(self)
+            self._update_configuration()
         return
 
     def _remove_object(self, obj, d):
@@ -653,6 +657,9 @@ class RecipeContainer(Observable, Configurable, Validatable):
 
         del d[obj.name]
         obj.remove_observer(self._flush)
+        if isinstance(obj, Configurable):
+            obj._remove_configurable(self)
+            self._update_configuration()
 
         return
 
